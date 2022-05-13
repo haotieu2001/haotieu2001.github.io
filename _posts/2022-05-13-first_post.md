@@ -2,4 +2,4 @@
 ## Hello World!
 ### Hello World!
 
-![](images/bear_pizza.jpg)
+![](/images/logo.png "fast.ai's logo")
