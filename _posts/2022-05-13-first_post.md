@@ -2,4 +2,4 @@
 ## Hello World!
 ### Hello World!
 
-![Bear](iamges/bear_pizza.jpg)
+![](images/bear_pizza.jpg)
