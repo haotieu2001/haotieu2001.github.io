@@ -1,0 +1,1016 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Delta Lake, Under the Hood — A Complete Guide</title>
+<meta name="description" content="A complete, beginner-friendly guide to Delta Lake: the transaction log, ACID, time travel, MERGE, deletion vectors, OPTIMIZE, Z-Order, liquid clustering, streaming, CDC and more — with runnable SQL + PySpark on Databricks."/>
+<!-- Social link preview (Open Graph + Twitter) for haotieu2001.github.io -->
+<meta property="og:type" content="article"/>
+<meta property="og:title" content="Delta Lake, Under the Hood — A Complete Guide"/>
+<meta property="og:description" content="The transaction log, ACID, time travel, MERGE, deletion vectors, OPTIMIZE, Z-Order, liquid clustering, streaming &amp; CDC — with runnable code."/>
+<meta property="og:url" content="https://haotieu2001.github.io/delta-lake/"/>
+<meta property="og:image" content="https://haotieu2001.github.io/delta-lake/og-cover.png"/>
+<meta property="og:image:width" content="1200"/>
+<meta property="og:image:height" content="630"/>
+<meta property="og:image:alt" content="Delta Lake, Under the Hood"/>
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:title" content="Delta Lake, Under the Hood"/>
+<meta name="twitter:image" content="https://haotieu2001.github.io/delta-lake/og-cover.png"/>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,500;0,700;0,800;1,400&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#1A1A1A; --bg2:#121212; --ink:#F1F1F1; --muted:#9aa0b4; --dim:#666666;
+    --blue2:#5C78FF; --cyan:#28B9FF; --cyan2:#5AC8FF; --purple:#905AFF; --magenta2:#BA5AFF;
+    --grad:linear-gradient(90deg,#5C78FF,#28B9FF,#A52AFF);
+    --font:"JetBrainsMono Nerd Font","JetBrains Mono","Symbols Nerd Font",ui-monospace,"Cascadia Code",Menlo,Consolas,monospace;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font);font-size:16px;line-height:1.85;-webkit-font-smoothing:antialiased}
+  #bar{position:fixed;top:0;left:0;height:3px;width:0;z-index:50;background:var(--grad);box-shadow:0 0 12px #5C78FF99;transition:width .1s linear}
+  .page{max-width:880px;margin:0 auto;padding:0 24px}
+  .page > *{max-width:none}
+  header{padding:58px 0 8px}
+  .kicker{font-size:13px;color:var(--dim)}
+  .back{color:var(--cyan2);text-decoration:none;font-size:13px;border-bottom:1px dotted #5AC8FF66}
+  h1{font-size:clamp(28px,4.6vw,46px);line-height:1.12;margin:12px 0 12px;font-weight:800;
+     background:var(--grad);background-size:220% auto;-webkit-background-clip:text;background-clip:text;color:transparent;animation:sheen 9s linear infinite}
+  @keyframes sheen{to{background-position:220% center}}
+  .dek{color:var(--muted);font-size:17px;max-width:none}
+  .byline{margin-top:14px;font-size:13px;color:var(--dim)}
+  .stack{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:16px}
+  .stack .lbl{font-size:12px;color:var(--dim);letter-spacing:.04em}
+  .b2{display:inline-flex;align-items:center;gap:8px;border:1px solid #2c2c36;background:#15151b;border-radius:999px;padding:6px 13px;font-size:13px;font-weight:700;transition:transform .2s ease,border-color .2s ease}
+  .b2:hover{transform:translateY(-2px)}
+  .b2 svg{width:20px;height:20px;display:block}
+  .b2.delta{color:#5AC8FF;border-color:#28B9FF55} .b2.dbx{color:#ff8a6c;border-color:#ff5a3c55}
+  h2{font-size:clamp(21px,3.2vw,28px);margin:52px 0 6px;font-weight:800;line-height:1.22;padding-top:14px;border-top:1px solid #23232e}
+  h2 .n{color:var(--blue2)}
+  h3{font-size:18px;margin:24px 0 4px;color:#fff}
+  p,li{color:#dcdce4}
+  .lead{font-size:18px;color:#e7e7ee}
+  a{color:var(--cyan2)}
+  code{font-family:var(--font);background:#23232b;color:#5AC8FF;padding:1px 6px;border-radius:5px;font-size:.88em;border:1px solid #2f2f3a}
+  .cb{margin:16px 0}
+  .cb .lang{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:#9aa0b4;background:#1b1b24;border:1px solid #2c2c36;border-bottom:none;border-radius:9px 9px 0 0;padding:4px 12px}
+  pre{margin:0;background:#0d0d13;border:1px solid #23232e;border-radius:0 10px 10px 10px;padding:14px 16px;overflow-x:auto;
+      font-family:var(--font);font-size:13px;line-height:1.6;color:#d8dcea;white-space:pre}
+  pre .c{color:#6b7280}
+  .callout{border-left:4px solid var(--blue2);background:#16182a;border-radius:0 12px 12px 0;padding:14px 18px;margin:22px 0}
+  .why{border-left:4px solid var(--cyan);background:#0f1f2b}
+  .why .t{color:var(--cyan2);font-weight:800}
+  .note{border-left:4px solid var(--magenta2);background:#1d1526}
+  .warn{border-left:4px solid #e0a030;background:#241d0f}
+  .tldr{border:1px solid #2f3a66;background:linear-gradient(180deg,#15182a,#121212);border-radius:16px;padding:20px 24px;margin:26px 0}
+  .tldr h4{margin:0 0 8px;font-size:13px;letter-spacing:.2em;text-transform:uppercase;color:var(--cyan2)}
+  .gloss{border:1px solid #2c2c36;background:#141419;border-radius:14px;padding:18px 22px;margin:24px 0}
+  .gloss h4{margin:0 0 6px;color:#fff;font-size:15px}
+  .gloss dl{margin:0;font-size:13.5px}
+  .gloss dt{color:var(--cyan2);font-weight:700;margin-top:9px}
+  .gloss dd{margin:1px 0 0;color:#cdd0dd}
+  .toc{background:#15151b;border:1px solid #2c2c36;border-radius:14px;padding:16px 22px;margin:24px 0;column-count:2;column-gap:28px}
+  .toc a{display:block;color:var(--cyan2);text-decoration:none;font-size:13.5px;line-height:1.9;break-inside:avoid} .toc a:hover{color:#fff}
+  .toc>strong{column-span:all;display:block;margin-bottom:6px;color:#fff}
+  table{border-collapse:collapse;width:100%;font-size:13.5px;margin:16px 0}
+  th,td{border:1px solid #2c2c36;padding:8px 11px;text-align:left;vertical-align:top}
+  th{background:#1d1d27;color:#fff} tr:nth-child(even) td{background:#161620}
+  figure{margin:24px 0;text-align:center} figure svg{max-width:100%;height:auto;border:1px solid #23232e;border-radius:14px;background:#121212}
+  figcaption{font-size:12.5px;color:var(--muted);margin-top:8px;font-style:italic}
+  footer{border-top:1px solid #23232e;margin-top:50px;padding:24px 0 90px;color:var(--dim);font-size:13px}
+  .js .reveal{opacity:0;transform:translateY(16px);transition:opacity .6s ease,transform .6s ease}
+  .js .reveal.in{opacity:1;transform:none}
+  @media (prefers-reduced-motion: reduce){.js .reveal{opacity:1;transform:none}}
+</style>
+<script>document.documentElement.classList.add('js');</script>
+</head>
+<body>
+<div id="bar"></div>
+<div class="page">
+
+<header>
+  <div class="kicker"><a class="back" href="../">❮ Data &amp; AI Engineering, Simply Explained</a></div>
+  <h1>Delta Lake, Under the Hood</h1>
+  <p class="dek">A complete guide to how Delta Lake works — the transaction log, ACID, time travel, MERGE, deletion vectors, OPTIMIZE, Z-Order, liquid clustering, streaming and change data — with simple SQL + PySpark you can run yourself. It is long by design — a reference you can return to.</p>
+  <div class="byline">~40 min read · Data Engineering · SQL + PySpark on Databricks</div>
+  <div class="stack reveal">
+    <span class="lbl">Built on</span>
+    <span class="b2 delta">
+      <svg viewBox="0 0 24 24" role="img" aria-label="Delta Lake (stylized)">
+        <defs><linearGradient id="dlb" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#5C78FF"/><stop offset="1" stop-color="#28B9FF"/></linearGradient></defs>
+        <polygon points="12,3 9.6,8 14.4,8" fill="url(#dlb)"><animate attributeName="opacity" values="0.45;1;0.45" dur="2.4s" begin="0s" repeatCount="indefinite"/></polygon>
+        <polygon points="9,9 15,9 16.8,13.4 7.2,13.4" fill="url(#dlb)"><animate attributeName="opacity" values="0.45;1;0.45" dur="2.4s" begin="0.4s" repeatCount="indefinite"/></polygon>
+        <polygon points="6.6,14.4 17.4,14.4 19.6,19.5 4.4,19.5" fill="url(#dlb)"><animate attributeName="opacity" values="0.45;1;0.45" dur="2.4s" begin="0.8s" repeatCount="indefinite"/></polygon>
+      </svg>
+      Delta Lake
+    </span>
+    <span class="b2 dbx">
+      <svg viewBox="0 0 24 24" role="img" aria-label="Databricks (stylized)">
+        <defs><linearGradient id="dbxg" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#ff8a4c"/><stop offset="1" stop-color="#ff3621"/></linearGradient></defs>
+        <g fill="url(#dbxg)">
+          <path d="M12 3 L20 7 L12 11 L4 7 Z"><animate attributeName="opacity" values="0.55;1;0.55" dur="2.2s" begin="0s" repeatCount="indefinite"/></path>
+          <path d="M4 11 L12 15 L20 11 L20 12.6 L12 16.6 L4 12.6 Z"><animate attributeName="opacity" values="0.55;1;0.55" dur="2.2s" begin="0.5s" repeatCount="indefinite"/></path>
+          <path d="M4 15.4 L12 19.4 L20 15.4 L20 17 L12 21 L4 17 Z"><animate attributeName="opacity" values="0.55;1;0.55" dur="2.2s" begin="1s" repeatCount="indefinite"/></path>
+        </g>
+      </svg>
+      Databricks
+    </span>
+  </div>
+</header>
+
+<div class="callout why reveal">
+  <p style="margin:.2em 0"><span class="t">⚡ Why every example runs on Databricks</span></p>
+  <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">Delta Lake is open source and runs on any Apache Spark. I use <strong>Databricks</strong> for the examples for four simple reasons:</p>
+  <ul style="font-size:14px;color:#cdd0dd;margin:.4em 0 0">
+    <li><strong>Delta is the default format</strong> there — nothing to install or configure.</li>
+    <li><strong>Unity Catalog</strong> (Databricks' built-in governance) gives you storage, permissions and table names that work right away.</li>
+    <li><strong>New features appear here first</strong> — for example deletion vectors, liquid clustering and type widening (each explained in its own section below).</li>
+    <li><strong>Managed Spark + Photon</strong> (Databricks' fast query engine) means you get a working cluster in a couple of clicks and fast queries.</li>
+  </ul>
+  <p style="margin:.5em 0 0;font-size:13.5px;color:var(--muted)">When a feature only exists on Databricks (not in open-source Delta), I point it out in the text.</p>
+</div>
+
+<div class="tldr reveal">
+  <h4>❯ The one idea (read this first)</h4>
+  <p style="margin:.2em 0">Delta Lake = <strong>Parquet data files + a transaction log</strong> (a folder called <code>_delta_log/</code>). The log is an ordered list of "add this file / remove that file" notes. To read the table, Delta replays the log to work out which files count <em>right now</em>. That one idea gives you safe writes (ACID), time travel, safe writing by many jobs at once, and cheap updates and deletes. Almost every feature below comes back to it.</p>
+</div>
+
+<div class="gloss reveal">
+  <h4>Words you'll see (defined once, here)</h4>
+  <dl>
+    <dt>Parquet</dt><dd>The common file type for analytics data. Delta stores its data as Parquet files.</dd>
+    <dt>Transaction log</dt><dd>The ordered list of changes in <code>_delta_log/</code>. Sometimes called a "ledger" (a record book).</dd>
+    <dt>Commit</dt><dd>One change written to the log as one numbered file (e.g. <code>...0001.json</code>). Also called a "version".</dd>
+    <dt>ACID</dt><dd>Four safety promises: a write fully happens or not at all (atomic), rules are kept (consistent), readers don't see half-done work (isolated), and committed data survives crashes (durable).</dd>
+    <dt>Tombstone</dt><dd>A note that marks a file as "no longer used". The file stays on disk until VACUUM deletes it.</dd>
+    <dt>Deletion vector (DV)</dt><dd>A tiny file that marks which rows inside a data file are deleted, so Delta doesn't have to rewrite the whole file. It's a "bitmap" (a compact map of row positions).</dd>
+    <dt>Checkpoint</dt><dd>A saved summary of the log so far, so reading doesn't replay every old commit.</dd>
+    <dt>MERGE / upsert</dt><dd>One command that updates a row if it exists and inserts it if it doesn't. "Upsert" = update-or-insert.</dd>
+    <dt>OPTIMIZE / compaction</dt><dd>Packing many small files into a few right-sized ones.</dd>
+    <dt>Partition</dt><dd>Splitting a table into folders by a column value (often a date) so queries can skip folders.</dd>
+    <dt>Idempotent</dt><dd>Safe to run again. Re-running the same load does not create duplicates.</dd>
+    <dt>Streaming / micro-batch</dt><dd>Processing data continuously in small chunks ("micro-batches") instead of one big run.</dd>
+    <dt>Source / sink</dt><dd>A "source" is where data is read from; a "sink" is where it is written to (the destination).</dd>
+    <dt>Medallion (bronze→silver→gold)</dt><dd>A common pattern of table layers: raw → cleaned → business-ready.</dd>
+    <dt>Metastore / Unity Catalog</dt><dd>The service that stores table names, locations and permissions. Unity Catalog is Databricks' version.</dd>
+      <dt>Protocol version</dt><dd>The lowest Delta version a tool needs to read or write the table. Turning on a new feature can raise it — a one-way change.</dd>
+    <dt>Volume (Unity Catalog)</dt><dd>A place in Unity Catalog to keep files (for example, streaming checkpoints). You use it with a <code>/Volumes/...</code> path.</dd>
+    <dt>SCD</dt><dd>Slowly Changing Dimension — a table that keeps the history of changes.</dd>
+    <dt>ETL</dt><dd>Extract, Transform, Load — moving data and reshaping it into clean tables.</dd>
+</dl>
+</div>
+
+<div class="toc reveal">
+  <strong>Contents</strong>
+  <a href="#setup">00 · Setup (run the examples)</a>
+  <a href="#why">01 · Why Delta Lake exists</a>
+  <a href="#acid">02 · ACID, the foundation</a>
+  <a href="#log">03 · The transaction log</a>
+  <a href="#dml">04 · DML &amp; computing the state</a>
+  <a href="#dv">05 · Copy-on-Write vs Merge-on-Read</a>
+  <a href="#scale">06 · Checkpoints &amp; log compaction</a>
+  <a href="#occ">07 · Optimistic concurrency</a>
+  <a href="#tt">08 · Time travel &amp; RESTORE</a>
+  <a href="#merge">09 · MERGE — the main command</a>
+  <a href="#enforce">10 · Schema enforcement</a>
+  <a href="#evolve">11 · Schema evolution</a>
+  <a href="#colmap">12 · Rename &amp; drop columns</a>
+  <a href="#constraints">13 · Constraints &amp; generated columns</a>
+  <a href="#idem">14 · Idempotent writes</a>
+  <a href="#partition">15 · Partitioning (and when not to)</a>
+  <a href="#optimize">16 · Small files &amp; OPTIMIZE</a>
+  <a href="#zorder">17 · Z-Order &amp; data skipping</a>
+  <a href="#liquid">18 · Liquid clustering</a>
+  <a href="#vacuum">19 · VACUUM &amp; retention</a>
+  <a href="#convert">20 · Converting to Delta</a>
+  <a href="#tables">21 · Managed vs external</a>
+  <a href="#clone">22 · Cloning</a>
+  <a href="#stream">23 · Streaming with Delta</a>
+  <a href="#cdf">24 · Change Data Feed</a>
+  <a href="#share">25 · Sharing &amp; UniForm</a>
+  <a href="#delta4">26 · What's new in Delta 4.0</a>
+  <a href="#cheat">27 · Cheat sheet: when to use what</a>
+</div>
+
+<!-- 00 -->
+<h2 id="setup" class="reveal"><span class="n">00.</span> Setup — so you can run everything</h2>
+<p class="reveal">First, get a place to run code. On Databricks: create a cluster (pick a recent <strong>Databricks Runtime</strong>, e.g. 15.4 LTS or newer, so all features work), open a notebook, and attach it. Then create a catalog + schema and a small sample table. <strong>Every later example uses this <code>invoices</code> table</strong> (full name <code>demo.delta_db.invoices</code>) — no external paths needed.</p>
+<div class="cb reveal"><span class="lang">SQL · run once</span><pre>CREATE CATALOG IF NOT EXISTS demo;
+CREATE SCHEMA  IF NOT EXISTS demo.delta_db;
+USE demo.delta_db;
+
+CREATE OR REPLACE TABLE invoices (
+  customer_id  INT,
+  invoice_no   STRING,
+  quantity     INT,
+  price        DOUBLE,
+  category     STRING,
+  invoice_date DATE
+);
+
+INSERT INTO invoices VALUES
+  (1,'INV001',5,10.0,'clothing',DATE'2026-01-01'),
+  (2,'INV002',3,20.0,'food',    DATE'2026-01-02'),
+  (3,'INV003',1,99.0,'tech',    DATE'2026-01-02'),
+  (4,'INV004',7,15.5,'clothing',DATE'2026-01-03'),
+  (5,'INV005',2,40.0,'food',    DATE'2026-01-03');</pre></div>
+<p class="reveal">Two commands you'll use often to <em>see</em> what Delta did — keep these two nearby:</p>
+<div class="cb reveal"><span class="lang">SQL · inspect any table</span><pre>DESCRIBE HISTORY invoices;   <span class="c">-- every version: who, when, which operation</span>
+DESCRIBE DETAIL  invoices;   <span class="c">-- numFiles, sizeInBytes, location, table format</span></pre></div>
+
+<div class="note reveal" style="font-size:13.5px"><strong>Two tips for running the examples:</strong> (1) The SQL examples assume you ran <code>USE demo.delta_db;</code> — re-run it in a new session, or use the full name <code>demo.delta_db.invoices</code>. (2) For the PySpark examples, load a DataFrame once and reuse it: <code>df = spark.table("demo.delta_db.invoices")</code>. If you can't create a catalog (a permissions issue on shared workspaces), use one you already have access to instead of <code>demo</code>. (3) Run the sections in order — a few build on earlier ones.</div>
+
+<!-- 01 -->
+<h2 id="why" class="reveal"><span class="n">01.</span> Why Delta Lake exists</h2>
+<p class="reveal">A plain <strong>data lake</strong> (files in S3 / ADLS) is cheap, grows without limit, and holds any kind of data. But on its own it has three problems that make it unsafe to trust as your main copy of data:</p>
+<ol class="reveal">
+<li><strong>No ACID</strong> — if a job stops half-way through writing, it leaves broken, half-written files, and the next reader gets bad data.</li>
+<li><strong>No UPDATE / MERGE / DELETE</strong> — Parquet files cannot be changed, so "change one row" means read everything, change it, and write it all back.</li>
+<li><strong>No schema rules</strong> — the same data can arrive in different shapes. One day a row has <code>name</code> and <code>email</code>; the next it has <code>full_name</code> with email inside a nested <code>contact</code> field. These mismatched shapes pile up, so reading the data correctly becomes a guessing game.</li>
+</ol>
+<p class="reveal">Delta Lake fixes all three by adding a <strong>transaction layer on top of Parquet</strong>, and also adds time travel, batch + streaming in one table, and full history for audits.</p>
+
+<!-- 02 -->
+<h2 id="acid" class="reveal"><span class="n">02.</span> ACID, the foundation</h2>
+<p class="reveal">ACID is four promises a plain lake can't give:</p>
+<ul class="reveal">
+<li><strong>Atomicity</strong> — a write fully happens or has no effect. No half-written tables after a crash.</li>
+<li><strong>Consistency</strong> — the table always follows the rules you set. For example, if you say <code>price</code> must be greater than 0, Delta rejects any write that breaks that rule, so the table never ends up in a bad state.</li>
+<li><strong>Isolation</strong> — a reader always sees one fixed version of the table (a snapshot), never your half-done write. Readers get this snapshot from the log; writers avoid clashing with each other using optimistic concurrency (§07).</li>
+<li><strong>Durability</strong> — after a change is committed, it survives crashes, because it was written to the transaction log before the system confirmed it.</li>
+</ul>
+<p class="reveal">Delta writes a change in two steps: first it writes the new data files, then it makes them live with a single, all-or-nothing <strong>commit</strong> — one numbered JSON file in <code>_delta_log</code>. If a crash happens before that commit is written, the new data files are simply never referenced, so readers still see the previous version and there is no half-finished state. That two-step pattern is how the log gives you atomicity and durability.</p>
+
+<!-- 03 -->
+<h2 id="log" class="reveal"><span class="n">03.</span> The transaction log (<code>_delta_log</code>)</h2>
+<p class="reveal">A Delta table on disk is a folder of <code>part-*.parquet</code> data files plus a <code>_delta_log/</code> folder. Every change adds one JSON file, named with leading zeros (<code>00000000000000000000.json</code>, then <code>...0001.json</code>, and so on). The first commit has four parts:</p>
+<div class="cb reveal"><span class="lang">JSON · _delta_log/00000000000000000000.json</span><pre>{
+  "commitInfo": { "operation": "CREATE TABLE", "userName": "hao@..." },   <span class="c">// what + who</span>
+  "metaData":   { "schemaString": "...", "partitionColumns": [] },        <span class="c">// schema + partitions</span>
+  "protocol":   { "minReaderVersion": 1, "minWriterVersion": 2 },         <span class="c">// format version</span>
+  "add": {                                                                <span class="c">// a data file is added</span>
+    "path": "part-00000-...snappy.parquet",
+    "size": 59210,
+    "stats": "{\"numRecords\":5,\"minValues\":{\"customer_id\":1},\"maxValues\":{\"customer_id\":5}}"
+  }
+}</pre></div>
+<p class="reveal">The action types are <code>add</code> (register a data file, with its size and per-column <strong>smallest/largest values</strong>), <code>remove</code> (mark a file as removed — a tombstone), <code>metaData</code>, and <code>protocol</code>. Those smallest/largest values are the engine's key advantage: if a file's range can't match your filter, Delta skips the whole file without opening it. This is called <strong>data skipping</strong> (§17).</p>
+<div class="note reveal" style="font-size:13.5px"><strong>Note:</strong> when you turn on deletion vectors (§05), Delta raises the protocol version (reader 3 / writer 7). The simple <code>1/2</code> above is a basic table with no advanced features yet.</div>
+<div class="cb reveal"><span class="lang">PySpark · peek at the raw log yourself</span><pre>loc = spark.sql("DESCRIBE DETAIL invoices").select("location").first()[0]
+display(spark.read.json(loc + "/_delta_log/00000000000000000000.json"))   <span class="c"># see commit 0's actions</span></pre></div>
+
+<figure class="reveal">
+<svg viewBox="0 0 760 300" font-family="var(--font)">
+  <rect width="760" height="300" rx="12" fill="#121212"/>
+  <text x="24" y="40" font-size="15" font-weight="700" fill="#5AC8FF">The log is an ordered list of add / remove</text>
+  <g font-size="12.5" fill="#d8dcea">
+    <rect x="24" y="60" width="300" height="34" rx="6" fill="#16182e" stroke="#3b6fb0"/><text x="38" y="82">commit 0:  + add A   + add B</text>
+    <rect x="24" y="104" width="300" height="34" rx="6" fill="#16182e" stroke="#3b6fb0"/><text x="38" y="126">commit 1:  + add C   − remove A</text>
+    <rect x="24" y="148" width="300" height="34" rx="6" fill="#16182e" stroke="#3b6fb0"/><text x="38" y="170">commit 2:  + add D</text>
+  </g>
+  <path d="M340 130 L420 130" stroke="#28B9FF" stroke-width="3" fill="none"/><path d="M414 124 l12 6 l-12 6 z" fill="#28B9FF"/>
+  <text x="380" y="120" text-anchor="middle" font-size="12" fill="#28B9FF">replay</text>
+  <rect x="440" y="86" width="296" height="92" rx="10" fill="#10241c" stroke="#3a7d44" stroke-width="2"/>
+  <text x="588" y="120" text-anchor="middle" font-size="15" font-weight="700" fill="#7fe0a0">live files = B, C, D</text>
+  <text x="588" y="150" text-anchor="middle" font-size="12" fill="#9aa0b4">A was added then removed → gone.</text>
+  <text x="24" y="225" font-size="12.5" fill="#9aa0b4">The data files never change. The log decides which files count. That is the core idea.</text>
+</svg>
+<figcaption>Reading a Delta table = applying the add/remove notes in order to get the current file set.</figcaption>
+</figure>
+
+<!-- 04 -->
+<h2 id="dml" class="reveal"><span class="n">04.</span> DML &amp; computing the current state</h2>
+<p class="reveal"><strong>INSERT</strong> adds a new Parquet file and a new commit. <strong>UPDATE</strong> and <strong>DELETE</strong> are smarter — with deletion vectors on (commonly enabled on Databricks; explained next in §05), they avoid rewriting whole files:</p>
+<div class="cb reveal"><span class="lang">SQL</span><pre>INSERT INTO invoices VALUES (6,'INV006',4,12.0,'tech',DATE'2026-01-04');  <span class="c">-- adds 1 file</span>
+UPDATE invoices SET quantity = 10 WHERE customer_id = 1;                  <span class="c">-- writes a deletion vector + 1 tiny file</span>
+DELETE FROM invoices WHERE customer_id = 2;                               <span class="c">-- writes/updates a deletion vector only</span></pre></div>
+<h3 class="reveal">What "compute the current state" means</h3>
+<p class="reveal">To answer <code>SELECT *</code>, Delta works out the file list from the log: it adds and removes files from a list — it does not add up numbers. Start with an empty list, go through the commits in order, add a file on <code>add</code>, and drop it on <code>remove</code>. The files left over are the live files. A file that was added and later removed disappears. Then Delta reads those live files and hides any rows marked by a deletion vector. <strong>No big rewrite happens for an update or delete</strong> — it's just notes in the log.</p>
+
+<!-- 05 -->
+<h2 id="dv" class="reveal"><span class="n">05.</span> Copy-on-Write vs Merge-on-Read (deletion vectors)</h2>
+<p class="reveal">Parquet files can't be changed, so there are two ways to "change" one:</p>
+<table class="reveal">
+<tr><th>&nbsp;</th><th>Copy-on-Write (DV off)</th><th>Merge-on-Read (DV on)</th></tr>
+<tr><td>What a delete does</td><td>Rewrites the whole file without those rows</td><td>Writes a tiny <strong>deletion-vector</strong> map; the file is not touched</td></tr>
+<tr><td>Write cost</td><td>High (rewrite many MB)</td><td>Low (write a few KB)</td></tr>
+<tr><td>Read cost</td><td>Lowest</td><td>A little higher (hide DV rows while reading)</td></tr>
+<tr><td>Best for</td><td>Many reads, few writes</td><td>Tables updated often / change data</td></tr>
+</table>
+<div class="cb reveal"><span class="lang">SQL</span><pre><span class="c">-- Merge-on-Read (default on recent Databricks Runtime)</span>
+CREATE OR REPLACE TABLE invoices_mor
+  TBLPROPERTIES ('delta.enableDeletionVectors' = 'true')
+AS SELECT * FROM invoices;
+
+DELETE FROM invoices_mor WHERE customer_id = 5;
+DESCRIBE HISTORY invoices_mor;   <span class="c">-- metrics: numRemovedFiles=0, a deletion vector added, numDeletedRows=1 (no rewrite!)</span></pre></div>
+<h3 class="reveal">How a read uses the deletion vector</h3>
+<p class="reveal">When you later run <code>SELECT *</code>, Delta opens the data file as normal, but the deletion vector is a small map of the deleted row positions — a row position is just the row's number inside that file (row 0, 1, 2, …); say rows 5 and 88. The engine drops those rows before giving you results — so the deleted rows never reach you, even though they are still physically inside the file.</p>
+<p class="reveal">An UPDATE under Merge-on-Read is really a <em>delete + insert</em>: the old row's position is marked in the deletion vector, and the new value is written to a small new file. <strong>So a reader sees the new row from the small file, and the deletion vector hides the old one — you see the row once, never twice.</strong> The big file is never rewritten. Over time these maps and tiny files build up; <code>OPTIMIZE</code> + <code>VACUUM</code> (§16, §19) clean them up.</p>
+<div class="callout why reveal"><span class="t">⚡ Why Databricks?</span> Databricks <strong>auto-enables</strong> deletion vectors on most <em>new</em> tables (created through Databricks SQL or a recent runtime) — not on every existing Delta table. In open-source Delta you turn them on with the table property shown above. Note: enabling them is a one-way upgrade of the table's protocol version.</div>
+
+<figure class="reveal">
+<svg viewBox="0 0 760 220" font-family="var(--font)">
+  <rect width="760" height="220" rx="12" fill="#121212"/>
+  <rect x="24" y="30" width="340" height="160" rx="10" fill="#16182e" stroke="#5C78FF"/>
+  <text x="194" y="58" text-anchor="middle" font-size="15" font-weight="700" fill="#5C78FF">Copy-on-Write</text>
+  <text x="194" y="86" text-anchor="middle" font-size="12.5" fill="#cdd0dd">delete 2 rows → rewrite whole file</text>
+  <rect x="70" y="104" width="100" height="50" rx="6" fill="#1c1c22" stroke="#5C78FF"/><text x="120" y="134" text-anchor="middle" font-size="11" fill="#fff">file v1 (1000)</text>
+  <text x="186" y="134" font-size="16" fill="#5C78FF">→</text>
+  <rect x="208" y="104" width="110" height="50" rx="6" fill="#0f2230" stroke="#28B9FF"/><text x="263" y="129" text-anchor="middle" font-size="11" fill="#5AC8FF">file v2 (998)</text><text x="263" y="146" text-anchor="middle" font-size="9.5" fill="#9aa0b4">all rewritten</text>
+  <rect x="396" y="30" width="340" height="160" rx="10" fill="#221630" stroke="#BA5AFF"/>
+  <text x="566" y="58" text-anchor="middle" font-size="15" font-weight="700" fill="#BA5AFF">Merge-on-Read</text>
+  <text x="566" y="86" text-anchor="middle" font-size="12.5" fill="#cdd0dd">delete 2 rows → keep file + tiny map</text>
+  <rect x="446" y="104" width="110" height="50" rx="6" fill="#1c1c22" stroke="#BA5AFF"/><text x="501" y="134" text-anchor="middle" font-size="11" fill="#fff">file (untouched)</text>
+  <text x="566" y="134" font-size="16" fill="#BA5AFF">+</text>
+  <rect x="586" y="110" width="90" height="38" rx="6" fill="#2a1630" stroke="#BA5AFF"/><text x="631" y="134" text-anchor="middle" font-size="10.5" fill="#d9b3ff">deletion map</text>
+</svg>
+<figcaption>Deletion vectors turn a big file rewrite into a few-KB map write.</figcaption>
+</figure>
+
+<!-- 06 -->
+<h2 id="scale" class="reveal"><span class="n">06.</span> Checkpoints &amp; log compaction (keeping the log fast)</h2>
+<p class="reveal">Millions of changes = millions of tiny JSON files, and reading them all would be slow. Delta adds two helpers:</p>
+<ul class="reveal">
+<li><strong>Compacted JSON</strong> — every few commits are joined into one file (it just copies the notes together; it does not apply them). It still lists every change — just in fewer files — which saves the cost of opening many small files and makes the next checkpoint cheaper to build.</li>
+<li><strong>Checkpoint Parquet</strong> — every so often, Delta saves a <strong>summary of the live state so far</strong> into one <code>*.checkpoint.parquet</code>. To read the table, it loads the latest checkpoint, then applies only the newer JSON commits — it does not replay the whole history.</li>
+</ul>
+<div class="cb reveal"><span class="lang">PySpark</span><pre>for _ in range(50):                       <span class="c"># 50 small inserts to build up the log</span>
+    spark.sql("""INSERT INTO invoices (customer_id,invoice_no,quantity,price,category,invoice_date)
+               VALUES (99,'X',1,1.0,'tech',current_date())""")
+
+<span class="c"># list the log folder to see compacted JSON + a *.checkpoint.parquet</span>
+loc = spark.sql("DESCRIBE DETAIL invoices").select("location").first()[0]
+display(dbutils.fs.ls(loc + "/_delta_log"))</pre></div>
+<div class="note reveal" style="font-size:13.5px"><strong>Platform note:</strong> open-source Delta saves a checkpoint every <strong>10</strong> commits; Databricks relaxed it to every <strong>100</strong> commits (DBR 11.1+) for faster log listing. You almost never need to change this — just know that reads use <em>checkpoint + newer JSON</em>, not the whole history.</div>
+<figure class="reveal">
+<svg viewBox="0 0 760 210" font-family="var(--font)">
+  <rect width="760" height="210" rx="12" fill="#121212"/>
+  <text x="24" y="34" font-size="15" font-weight="700" fill="#5AC8FF">A checkpoint lets a read skip the old commits</text>
+  <rect x="24" y="64" width="250" height="80" rx="10" fill="#15151b" stroke="#33333d" stroke-dasharray="5 4"/>
+  <text x="149" y="98" text-anchor="middle" font-size="12.5" fill="#7c8090">commits 0–9</text>
+  <text x="149" y="118" text-anchor="middle" font-size="10.5" fill="#7c8090">(JSON — not replayed)</text>
+  <path d="M280 104 L320 104" stroke="#28B9FF" stroke-width="3"/><path d="M314 98 l12 6 l-12 6 z" fill="#28B9FF"/>
+  <rect x="330" y="64" width="170" height="80" rx="10" fill="#0f2230" stroke="#28B9FF" stroke-width="2"/>
+  <text x="415" y="98" text-anchor="middle" font-size="12.5" font-weight="700" fill="#5AC8FF">v10 checkpoint</text>
+  <text x="415" y="118" text-anchor="middle" font-size="10.5" fill="#9aa0b4">summary of live state</text>
+  <text x="512" y="110" font-size="18" fill="#5C78FF">+</text>
+  <rect x="536" y="74" width="92" height="28" rx="6" fill="#16182e" stroke="#5C78FF"/><text x="582" y="93" text-anchor="middle" font-size="11" fill="#9db0ff">v11.json</text>
+  <rect x="536" y="108" width="92" height="28" rx="6" fill="#16182e" stroke="#5C78FF"/><text x="582" y="127" text-anchor="middle" font-size="11" fill="#9db0ff">v12.json</text>
+  <rect x="24" y="160" width="604" height="34" rx="8" fill="#10241c" stroke="#3a7d44"/>
+  <text x="326" y="182" text-anchor="middle" font-size="12.5" fill="#7fe0a0">read = checkpoint(10) + newer JSON(11,12) — history 0–9 is never replayed</text>
+</svg>
+<figcaption>A checkpoint stores the live state so far, so a read loads it plus only the newer commits.</figcaption>
+</figure>
+
+<!-- 07 -->
+<h2 id="occ" class="reveal"><span class="n">07.</span> Optimistic concurrency (safe writes by many jobs)</h2>
+<p class="reveal">Many jobs may try to write to the same table at the same time. Delta keeps them safe <strong>without locking</strong> the table. "Optimistic" means each job assumes there will be no clash, does its work, and only checks at the very end.</p>
+<p class="reveal">Here is the idea with two jobs. Say the table is at <strong>version 4</strong>:</p>
+<ol class="reveal">
+<li>Job A and Job B both start, and both read version 4.</li>
+<li>Each one writes its new data files (not visible yet), then tries to create the next commit file: <code>...0005.json</code>.</li>
+<li>The storage rule is "create this file only if that name does not exist yet" — so only <strong>one</strong> job can succeed. Say Job A wins; the table is now version 5.</li>
+<li>Job B's attempt to create <code>...0005.json</code> fails, because the file already exists. Now Job B knows it worked on old data, so it reads the new version 5 and tries again as <code>...0006.json</code>.</li>
+</ol>
+<p class="reveal">That single "create the file only if it doesn't exist" step is what picks the winner — no separate lock is needed.</p>
+<p class="reveal"><strong>Who does the retry?</strong> For most operations Delta retries by itself. If the two jobs really changed the same data and it can't be combined, the losing job stops with a <code>ConcurrentAppendException</code>, and you re-run it.</p>
+<p class="reveal"><strong>Readers are never blocked</strong> — a reader just sees the latest finished version. And two jobs writing to <em>different</em> files both succeed at once; only two writing to the <em>same</em> files make one retry. This is why Delta works very well when there are many reads and few clashes.</p>
+<figure class="reveal">
+<svg viewBox="0 0 760 232" font-family="var(--font)">
+  <rect width="760" height="232" rx="12" fill="#121212"/>
+  <text x="24" y="34" font-size="15" font-weight="700" fill="#5AC8FF">No lock — whoever creates the next commit file wins</text>
+  <text x="24" y="54" font-size="11" fill="#9aa0b4">Storage rule: "create this file only if that name doesn't exist yet."</text>
+
+  <text x="24" y="98" font-size="11.5" font-weight="700" fill="#9db0ff">Job A</text>
+  <rect x="74" y="80" width="92" height="30" rx="6" fill="#16182e" stroke="#5C78FF"/><text x="120" y="100" text-anchor="middle" font-size="10.5" fill="#cdd0dd">read v4</text>
+  <path d="M170 95 L196 95" stroke="#5C78FF" stroke-width="2.5"/><path d="M191 90 l10 5 l-10 5 z" fill="#5C78FF"/>
+  <rect x="200" y="80" width="120" height="30" rx="6" fill="#16182e" stroke="#28B9FF"/><text x="260" y="100" text-anchor="middle" font-size="10.5" fill="#5AC8FF">create 0005.json</text>
+  <path d="M324 95 L350 95" stroke="#28B9FF" stroke-width="2.5"/><path d="M345 90 l10 5 l-10 5 z" fill="#28B9FF"/>
+  <rect x="354" y="78" width="130" height="34" rx="6" fill="#10241c" stroke="#3a7d44"/><text x="419" y="100" text-anchor="middle" font-size="11" font-weight="700" fill="#7fe0a0">✓ wins → v5</text>
+
+  <text x="24" y="172" font-size="11.5" font-weight="700" fill="#d6a8ff">Job B</text>
+  <rect x="74" y="154" width="92" height="30" rx="6" fill="#16182e" stroke="#BA5AFF"/><text x="120" y="174" text-anchor="middle" font-size="10.5" fill="#cdd0dd">read v4</text>
+  <path d="M170 169 L196 169" stroke="#BA5AFF" stroke-width="2.5"/><path d="M191 164 l10 5 l-10 5 z" fill="#BA5AFF"/>
+  <rect x="200" y="154" width="120" height="30" rx="6" fill="#2a1620" stroke="#E0533D"/><text x="260" y="174" text-anchor="middle" font-size="10.5" fill="#f0a08e">0005 exists ✗</text>
+  <path d="M324 169 L350 169" stroke="#E0533D" stroke-width="2.5"/><path d="M345 164 l10 5 l-10 5 z" fill="#E0533D"/>
+  <rect x="354" y="154" width="200" height="30" rx="6" fill="#16182e" stroke="#28B9FF"/><text x="454" y="174" text-anchor="middle" font-size="10.5" fill="#5AC8FF">re-read v5, create 0006.json</text>
+  <path d="M558 169 L584 169" stroke="#28B9FF" stroke-width="2.5"/><path d="M579 164 l10 5 l-10 5 z" fill="#28B9FF"/>
+  <rect x="588" y="154" width="120" height="30" rx="6" fill="#10241c" stroke="#3a7d44"/><text x="648" y="174" text-anchor="middle" font-size="11" font-weight="700" fill="#7fe0a0">✓ → v6</text>
+
+  <text x="24" y="214" font-size="11.5" fill="#9aa0b4">Delta does the retry for you; only a real clash on the same data stops with ConcurrentAppendException.</text>
+</svg>
+<figcaption>Two writers race to create the next commit file; one wins, the other re-reads and retries — no table lock.</figcaption>
+</figure>
+
+<!-- 08 -->
+<h2 id="tt" class="reveal"><span class="n">08.</span> Time travel &amp; RESTORE</h2>
+<p class="reveal">Because every version is kept, you can read or return to any earlier point:</p>
+<div class="cb reveal"><span class="lang">SQL</span><pre>SELECT * FROM invoices VERSION AS OF 0;
+SELECT * FROM invoices TIMESTAMP AS OF '2026-06-01 09:35:00';
+<span class="c">-- no exact match? Delta returns the latest version that existed BEFORE that time.</span>
+
+RESTORE TABLE invoices TO VERSION AS OF 0;   <span class="c">-- one-line undo; recorded as a new RESTORE version</span></pre></div>
+<div class="cb reveal"><span class="lang">PySpark</span><pre>df = spark.read.option("versionAsOf", 1).table("demo.delta_db.invoices")
+<span class="c"># or .option("timestampAsOf", "2026-06-01")</span></pre></div>
+<p class="reveal">Great for audits ("what did this report show last quarter?"), repeating old results, and fast recovery from a bad load. One warning: VACUUM (§19) can delete the files an old version needs, which limits how far back you can go.</p>
+<figure class="reveal">
+<svg viewBox="0 0 760 200" font-family="var(--font)">
+  <rect width="760" height="200" rx="12" fill="#121212"/>
+  <text x="24" y="34" font-size="15" font-weight="700" fill="#5AC8FF">Every change is a version — read or restore any of them</text>
+  <line x1="90" y1="112" x2="660" y2="112" stroke="#2a2a36" stroke-width="2"/>
+  <circle cx="110" cy="112" r="9" fill="#16182e" stroke="#5C78FF" stroke-width="2"/><text x="110" y="142" text-anchor="middle" font-size="11" fill="#9aa0b4">v0</text><text x="110" y="158" text-anchor="middle" font-size="9.5" fill="#7c8090">created</text>
+  <circle cx="280" cy="112" r="9" fill="#0f2230" stroke="#28B9FF" stroke-width="2"/><text x="280" y="142" text-anchor="middle" font-size="11" fill="#5AC8FF">v1</text><text x="280" y="158" text-anchor="middle" font-size="9.5" fill="#7c8090">insert</text>
+  <circle cx="450" cy="112" r="9" fill="#16182e" stroke="#5C78FF" stroke-width="2"/><text x="450" y="142" text-anchor="middle" font-size="11" fill="#9aa0b4">v2</text><text x="450" y="158" text-anchor="middle" font-size="9.5" fill="#7c8090">update</text>
+  <circle cx="620" cy="112" r="9" fill="#16182e" stroke="#5C78FF" stroke-width="2"/><text x="620" y="142" text-anchor="middle" font-size="11" fill="#9aa0b4">v3</text><text x="620" y="158" text-anchor="middle" font-size="9.5" fill="#7c8090">now</text>
+  <text x="280" y="66" text-anchor="middle" font-size="10.5" fill="#FFB454">SELECT … VERSION AS OF 1</text>
+  <path d="M280 72 L280 100" stroke="#FFB454" stroke-width="2" stroke-dasharray="4 4"/><path d="M275 94 l5 10 l5 -10 z" fill="#FFB454"/>
+  <path d="M620 100 C 560 60, 170 60, 110 100" stroke="#7fe0a0" stroke-width="2" fill="none"/><path d="M104 94 l6 10 l8 -8 z" fill="#7fe0a0"/>
+  <text x="365" y="52" text-anchor="middle" font-size="10.5" fill="#7fe0a0">RESTORE TO 0  (recorded as a new version)</text>
+</svg>
+<figcaption>Read a past version with <code>VERSION AS OF</code>, or jump the table back with <code>RESTORE</code> (kept as a new version).</figcaption>
+</figure>
+
+<!-- 09 MERGE -->
+<h2 id="merge" class="reveal"><span class="n">09.</span> MERGE — the command you'll use most</h2>
+<p class="reveal"><code>MERGE</code> applies a batch of changes in one step: update matching rows, insert new ones, and (optionally) delete rows that are gone. It's the most-used command in production, so it gets its own section.</p>
+<div class="cb reveal"><span class="lang">SQL · the full shape</span><pre>MERGE INTO invoices AS t                              <span class="c">-- target (the table)</span>
+USING updates       AS s                              <span class="c">-- source (the new data)</span>
+ON t.customer_id = s.customer_id                      <span class="c">-- how to match rows</span>
+WHEN MATCHED AND s.quantity = 0 THEN DELETE           <span class="c">-- match + condition → delete</span>
+WHEN MATCHED                    THEN UPDATE SET *      <span class="c">-- match → update all columns</span>
+WHEN NOT MATCHED                THEN INSERT *          <span class="c">-- new key → insert</span>
+WHEN NOT MATCHED BY SOURCE      THEN DELETE;           <span class="c">-- in table but not in source → delete (full sync)</span></pre></div>
+<p class="reveal">First make a small <code>updates</code> source so you can run it:</p>
+<div class="cb reveal"><span class="lang">SQL</span><pre>CREATE OR REPLACE TEMP VIEW updates AS SELECT * FROM VALUES
+  (1,'INV001',9,10.0,'clothing',DATE'2026-02-01'),   <span class="c">-- existing key → will UPDATE</span>
+  (7,'INV007',2,30.0,'tech',    DATE'2026-02-01')    <span class="c">-- new key → will INSERT</span>
+AS s(customer_id,invoice_no,quantity,price,category,invoice_date);
+
+MERGE INTO invoices AS t USING updates AS s
+ON t.customer_id = s.customer_id
+WHEN MATCHED     THEN UPDATE SET *
+WHEN NOT MATCHED THEN INSERT *;</pre></div>
+<div class="callout note reveal"><strong>The big lesson:</strong> <code>MERGE</code> matches columns <strong>by name</strong>, while <code>INSERT … SELECT</code> matches <strong>by position</strong>. With INSERT, if the source columns are in a different order, you can silently write <code>quantity</code> into <code>customer_id</code> — wrong data, and no error. So for production loads where the source might change, prefer MERGE. (More on this in §10.) <strong>Performance tip:</strong> make the <code>ON</code> condition narrow (include the date/partition or a key range) so MERGE doesn't scan the whole table — and remember that with deletion vectors off, MERGE rewrites every file it touches. Also: if two source rows match the same target row, MERGE fails ("multiple source rows matched") — remove duplicates from the source first (keep the latest row per key).</div>
+<p class="reveal"><strong>SCD Type 2</strong> (Slowly Changing Dimension — a table that keeps the history of changes) is also built on MERGE: close the old row (set an end date / <code>is_current = false</code>) and insert a new current row. MERGE's conditions make that one statement.</p>
+<figure class="reveal">
+<svg viewBox="0 0 760 230" font-family="var(--font)">
+  <rect width="760" height="230" rx="12" fill="#121212"/>
+  <text x="24" y="34" font-size="15" font-weight="700" fill="#5AC8FF">MERGE matches on a key, then updates, inserts, or deletes</text>
+  <rect x="24" y="92" width="180" height="50" rx="10" fill="#16182e" stroke="#5C78FF"/>
+  <text x="114" y="114" text-anchor="middle" font-size="12" fill="#cdd0dd">match rows</text>
+  <text x="114" y="131" text-anchor="middle" font-size="10.5" fill="#9aa0b4">ON customer_id</text>
+  <path d="M204 108 C 252 108, 250 72, 296 72" stroke="#28B9FF" stroke-width="2" fill="none"/>
+  <path d="M204 117 L296 124" stroke="#3a7d44" stroke-width="2" fill="none"/>
+  <path d="M204 126 C 252 126, 250 176, 296 176" stroke="#E0533D" stroke-width="2" fill="none"/>
+  <rect x="300" y="56" width="436" height="32" rx="6" fill="#0f2230" stroke="#28B9FF"/><text x="318" y="77" font-size="11.5" fill="#5AC8FF">WHEN MATCHED → UPDATE the existing row</text>
+  <rect x="300" y="108" width="436" height="32" rx="6" fill="#10241c" stroke="#3a7d44"/><text x="318" y="129" font-size="11.5" fill="#7fe0a0">WHEN NOT MATCHED → INSERT the new row</text>
+  <rect x="300" y="160" width="436" height="32" rx="6" fill="#2a1620" stroke="#E0533D"/><text x="318" y="181" font-size="11.5" fill="#f0a08e">WHEN NOT MATCHED BY SOURCE → DELETE (optional)</text>
+  <text x="24" y="214" font-size="11" fill="#9aa0b4">Matching is by column name (not position) — the safe choice for loads that may change.</text>
+</svg>
+<figcaption>One MERGE handles update + insert + delete by matching the source against the target on a key.</figcaption>
+</figure>
+
+<!-- 10 -->
+<h2 id="enforce" class="reveal"><span class="n">10.</span> Schema enforcement (Delta checks before it writes)</h2>
+<p class="reveal">Delta is "schema-on-write": it checks data against the table's columns <em>before</em> writing. It checks in steps:</p>
+<ol class="reveal">
+<li><strong>Safe type conversion first</strong> — a number written as text, <code>'99499'</code> → INT, works; <code>'ABC'</code> → INT fails.</li>
+<li><strong>Then NULL and CHECK rules</strong> — a NULL in a <code>NOT NULL</code> column, or a value that breaks a <code>CHECK</code>, is rejected.</li>
+<li><strong>Then the structure</strong> — the set of columns must match (an extra column in an INSERT fails).</li>
+</ol>
+<p class="reveal">Any failure rejects the whole write and leaves the table unchanged (atomicity again). Remember the key rule from §09: <strong>INSERT matches by position, MERGE matches by name.</strong> Use MERGE when the source order or column set might change.</p>
+<figure class="reveal">
+<svg viewBox="0 0 760 224" font-family="var(--font)">
+  <rect width="760" height="224" rx="12" fill="#121212"/>
+  <text x="24" y="34" font-size="15" font-weight="700" fill="#5AC8FF">Delta checks the data before it writes (schema-on-write)</text>
+  <text x="24" y="54" font-size="11" fill="#9aa0b4">checks in order: type → NULL/CHECK → column set</text>
+  <rect x="24" y="78" width="150" height="32" rx="6" fill="#10241c" stroke="#3a7d44"/><text x="99" y="99" text-anchor="middle" font-size="11" fill="#7fe0a0">'99' → INT  ✓</text>
+  <rect x="24" y="120" width="150" height="32" rx="6" fill="#2a1620" stroke="#E0533D"/><text x="99" y="141" text-anchor="middle" font-size="11" fill="#f0a08e">'ABC' → INT  ✗</text>
+  <path d="M178 110 L246 110" stroke="#9aa0b4" stroke-width="2"/><path d="M240 105 l10 5 l-10 5 z" fill="#9aa0b4"/>
+  <rect x="250" y="84" width="120" height="62" rx="10" fill="#16182e" stroke="#5C78FF" stroke-width="2"/>
+  <text x="310" y="112" text-anchor="middle" font-size="12" font-weight="700" fill="#9db0ff">schema</text>
+  <text x="310" y="130" text-anchor="middle" font-size="12" font-weight="700" fill="#9db0ff">check</text>
+  <path d="M370 105 L470 105" stroke="#28B9FF" stroke-width="2.5"/><path d="M464 99 l12 6 l-12 6 z" fill="#28B9FF"/>
+  <rect x="474" y="86" width="262" height="38" rx="8" fill="#0f2230" stroke="#28B9FF"/><text x="605" y="110" text-anchor="middle" font-size="11.5" fill="#5AC8FF">all rows valid → written</text>
+  <path d="M310 146 L310 172" stroke="#E0533D" stroke-width="2.5"/><path d="M304 166 l6 10 l6 -10 z" fill="#E0533D"/>
+  <rect x="100" y="174" width="540" height="32" rx="8" fill="#2a1620" stroke="#E0533D"/><text x="370" y="195" text-anchor="middle" font-size="11.5" fill="#f0a08e">any bad row → the whole write is rejected, table unchanged</text>
+</svg>
+<figcaption>Bad data never lands: the whole write is rejected and the table stays exactly as it was.</figcaption>
+</figure>
+
+<!-- 11 -->
+<h2 id="evolve" class="reveal"><span class="n">11.</span> Schema evolution (changing the shape, no rewrite)</h2>
+<p class="reveal">Add columns, widen types, or change nested fields without rewriting the data.</p>
+<div class="cb reveal"><span class="lang">SQL</span><pre>ALTER TABLE invoices ADD COLUMNS (payment_method STRING);   <span class="c">-- add a column by hand</span>
+
+SET spark.databricks.delta.schema.autoMerge.enabled = true; <span class="c">-- session setting (this query/session)</span>
+<span class="c">-- now an INSERT/MERGE with a new column auto-adds it; old rows show NULL</span></pre></div>
+<div class="cb reveal"><span class="lang">SQL · type widening (Delta 3.2+ / DBR 15.4)</span><pre>ALTER TABLE invoices SET TBLPROPERTIES ('delta.enableTypeWidening' = 'true');
+ALTER TABLE invoices ALTER COLUMN customer_id TYPE BIGINT;   <span class="c">-- INT → BIGINT, no data rewrite</span></pre></div>
+<div class="cb reveal"><span class="lang">PySpark</span><pre>from pyspark.sql.functions import lit
+df2 = df.withColumn("note", lit("hello"))   <span class="c"># df (the invoices table) + one new column</span>
+
+(df2.write.mode("append").option("mergeSchema","true")
+    .saveAsTable("demo.delta_db.invoices"))   <span class="c"># the new "note" column is added; old rows show NULL</span></pre></div>
+<div class="callout why reveal"><span class="t">⚡ Why Databricks?</span> Type widening is a <strong>preview</strong> in <strong>Delta 3.2</strong> (included in <strong>DBR 15.4 LTS</strong>; older 14.3 has Delta 3.1 and can't widen) and fully supported in Delta 4.0. On Databricks you just pick the runtime from a dropdown; on your own Spark you manage the Delta library (jar) versions yourself.</div>
+<figure class="reveal">
+<svg viewBox="0 0 760 220" font-family="var(--font)">
+  <rect width="760" height="220" rx="12" fill="#121212"/>
+  <text x="24" y="34" font-size="15" font-weight="700" fill="#5AC8FF">Add a column without rewriting old data</text>
+  <text x="24" y="64" font-size="11.5" fill="#9aa0b4">before</text>
+  <g font-size="10.5">
+    <rect x="24" y="72" width="200" height="26" fill="#0f2230" stroke="#28B9FF"/><text x="34" y="89" fill="#5AC8FF">customer_id   amount</text>
+    <rect x="24" y="98" width="200" height="24" fill="#16182e" stroke="#33333d"/><text x="34" y="114" fill="#cdd0dd">1             10.0</text>
+    <rect x="24" y="122" width="200" height="24" fill="#16182e" stroke="#33333d"/><text x="34" y="138" fill="#cdd0dd">2             20.0</text>
+  </g>
+  <path d="M236 110 L300 110" stroke="#28B9FF" stroke-width="2.5"/><path d="M294 104 l12 6 l-12 6 z" fill="#28B9FF"/>
+  <text x="268" y="100" text-anchor="middle" font-size="9.5" fill="#28B9FF">+ note</text>
+  <text x="320" y="64" font-size="11.5" fill="#9aa0b4">after</text>
+  <g font-size="10.5">
+    <rect x="320" y="72" width="320" height="26" fill="#0f2230" stroke="#28B9FF"/><text x="330" y="89" fill="#5AC8FF">customer_id   amount   note</text>
+    <rect x="320" y="98" width="320" height="24" fill="#16182e" stroke="#33333d"/><text x="330" y="114" fill="#cdd0dd">1             10.0     <tspan fill="#7c8090">NULL</tspan></text>
+    <rect x="320" y="122" width="320" height="24" fill="#16182e" stroke="#33333d"/><text x="330" y="138" fill="#cdd0dd">2             20.0     <tspan fill="#7c8090">NULL</tspan></text>
+    <rect x="320" y="146" width="320" height="24" fill="#10241c" stroke="#3a7d44"/><text x="330" y="162" fill="#7fe0a0">7             30.0     hello</text>
+  </g>
+  <text x="24" y="196" font-size="11.5" fill="#9aa0b4">Old rows simply read back as NULL for the new column — no file is rewritten.</text>
+</svg>
+<figcaption>Schema evolution adds the column in the log; existing rows show NULL until they're updated.</figcaption>
+</figure>
+
+<!-- 12 column mapping -->
+<h2 id="colmap" class="reveal"><span class="n">12.</span> Renaming &amp; dropping columns (column mapping)</h2>
+<p class="reveal">A common beginner mistake: you try to rename or drop a column and get an error. That's because, by default, the data files use the column names directly. Turn on <strong>column mapping</strong> first, then it works without rewriting data:</p>
+<div class="cb reveal"><span class="lang">SQL</span><pre>ALTER TABLE invoices SET TBLPROPERTIES (
+  'delta.columnMapping.mode' = 'name',
+  'delta.minReaderVersion' = '2', 'delta.minWriterVersion' = '5'
+);
+ALTER TABLE invoices RENAME COLUMN invoice_no TO invoice_id;
+ALTER TABLE invoices DROP COLUMN payment_method;</pre></div>
+<p class="reveal">Column mapping lets Delta track columns by a hidden id instead of by name, so renames and drops are just metadata changes. (After a DROP, the old data stays in the files until you run <code>REORG TABLE invoices APPLY (PURGE)</code> and then <code>VACUUM</code>.) Turning column mapping on is a one-way change — you can't easily turn it off.</p>
+
+<!-- 13 -->
+<h2 id="constraints" class="reveal"><span class="n">13.</span> Constraints, generated &amp; identity columns</h2>
+<div class="cb reveal"><span class="lang">SQL</span><pre><span class="c">-- CHECK rule: every future write must satisfy it, or it's rejected</span>
+ALTER TABLE invoices ADD CONSTRAINT pos_price CHECK (price &gt; 0);
+
+<span class="c">-- Generated column: Delta computes it for you (good for a date partition key)</span>
+CREATE TABLE events (
+  event_ts   TIMESTAMP,
+  event_date DATE GENERATED ALWAYS AS (CAST(event_ts AS DATE))
+);
+
+<span class="c">-- Identity column: an automatic ID (a "surrogate key" — a system-created id, not a real value from the data)</span>
+CREATE TABLE dim_customer (
+  id   BIGINT GENERATED ALWAYS AS IDENTITY,
+  name STRING
+);</pre></div>
+<div class="cb reveal"><span class="lang">SQL · see a generated value appear</span><pre>INSERT INTO events (event_ts) VALUES (TIMESTAMP'2026-01-02 09:00:00');
+SELECT * FROM events;   <span class="c">-- event_date is filled in automatically as 2026-01-02</span></pre></div>
+<p class="reveal"><strong>Why care:</strong> <code>NOT NULL</code> and <code>CHECK</code> rules reject invalid data at write time, so bad rows never enter the table. A generated <code>event_date</code> means nobody can forget to fill the partition key (which would mess up your file layout). An identity column gives you clean IDs without a separate counter object.</p>
+
+<!-- 14 idempotent -->
+<h2 id="idem" class="reveal"><span class="n">14.</span> Idempotent writes (safe to run again)</h2>
+<p class="reveal"><strong>Idempotent</strong> means re-running the same load does not create duplicates — important when a job retries after a failure. Two common ways:</p>
+<ul class="reveal">
+<li><strong>MERGE on a key</strong> — because MERGE updates the matching row instead of inserting a new one, re-running a backfill is naturally safe.</li>
+<li><strong>Transaction tags for appends</strong> — give a write an app id + a version, and Delta skips it if that version was already written:</li>
+</ul>
+<div class="cb reveal"><span class="lang">PySpark</span><pre>(df.write.format("delta").mode("append")
+   .option("txnAppId", "daily_invoices_load")
+   .option("txnVersion", 20260601)           <span class="c"># re-running with the same version is ignored</span>
+   .saveAsTable("demo.delta_db.invoices"))</pre></div>
+
+<!-- 15 partitioning -->
+<h2 id="partition" class="reveal"><span class="n">15.</span> Partitioning — and when not to</h2>
+<p class="reveal"><strong>Partitioning</strong> splits a table into folders by a column (often a date), so a query that filters on that column reads only the matching folders.</p>
+<div class="cb reveal"><span class="lang">PySpark</span><pre>df.write.partitionBy("invoice_date").saveAsTable("demo.delta_db.invoices_by_date")</pre></div>
+<p class="reveal">Simple tips:</p>
+<ul class="reveal">
+<li><strong>Do</strong> partition large tables by a <em>low-variety</em> column you filter on often — usually a date. Aim for partitions around 1 GB.</li>
+<li><strong>Don't</strong> partition by a <em>high-variety</em> column (like <code>customer_id</code> with millions of values) — you get millions of tiny folders and files (§16).</li>
+<li><strong>Don't</strong> over-partition small tables — the folders cost more than they save.</li>
+<li><strong>Modern advice:</strong> for many tables, skip folder-based ("Hive") partitioning and use <strong>liquid clustering</strong> (§18) instead — it picks the layout for you and you can change it later.</li>
+</ul>
+<figure class="reveal">
+<svg viewBox="0 0 760 300" font-family="var(--font)">
+  <rect width="760" height="300" rx="12" fill="#121212"/>
+  <text x="24" y="38" font-size="15" font-weight="700" fill="#5AC8FF">One folder per date</text>
+  <rect x="438" y="22" width="298" height="26" rx="13" fill="#10241c" stroke="#3a7d44"/>
+  <text x="587" y="39" text-anchor="middle" font-size="11.5" fill="#7fe0a0">WHERE invoice_date = '2026-01-03'</text>
+
+  <!-- folder 1: skipped -->
+  <rect x="24" y="70" width="224" height="160" rx="10" fill="#15151b" stroke="#33333d"/>
+  <text x="136" y="96" text-anchor="middle" font-size="11.5" fill="#7c8090">invoice_date=2026-01-01/</text>
+  <rect x="52" y="110" width="76" height="32" rx="5" fill="#1c1c22"/><rect x="144" y="110" width="76" height="32" rx="5" fill="#1c1c22"/>
+  <rect x="52" y="150" width="76" height="32" rx="5" fill="#1c1c22"/><rect x="144" y="150" width="76" height="32" rx="5" fill="#1c1c22"/>
+  <text x="136" y="214" text-anchor="middle" font-size="12" font-weight="700" fill="#7c8090">skipped</text>
+
+  <!-- folder 2: skipped -->
+  <rect x="268" y="70" width="224" height="160" rx="10" fill="#15151b" stroke="#33333d"/>
+  <text x="380" y="96" text-anchor="middle" font-size="11.5" fill="#7c8090">invoice_date=2026-01-02/</text>
+  <rect x="296" y="110" width="76" height="32" rx="5" fill="#1c1c22"/><rect x="388" y="110" width="76" height="32" rx="5" fill="#1c1c22"/>
+  <rect x="296" y="150" width="76" height="32" rx="5" fill="#1c1c22"/><rect x="388" y="150" width="76" height="32" rx="5" fill="#1c1c22"/>
+  <text x="380" y="214" text-anchor="middle" font-size="12" font-weight="700" fill="#7c8090">skipped</text>
+
+  <!-- folder 3: read -->
+  <rect x="512" y="70" width="224" height="160" rx="10" fill="#0f2230" stroke="#28B9FF" stroke-width="2"/>
+  <text x="624" y="96" text-anchor="middle" font-size="11.5" fill="#5AC8FF">invoice_date=2026-01-03/</text>
+  <rect x="540" y="110" width="76" height="32" rx="5" fill="#13243a" stroke="#28B9FF"/><rect x="632" y="110" width="76" height="32" rx="5" fill="#13243a" stroke="#28B9FF"/>
+  <rect x="540" y="150" width="76" height="32" rx="5" fill="#13243a" stroke="#28B9FF"/><rect x="632" y="150" width="76" height="32" rx="5" fill="#13243a" stroke="#28B9FF"/>
+  <text x="624" y="214" text-anchor="middle" font-size="12" font-weight="700" fill="#5AC8FF">read this one only</text>
+
+  <text x="24" y="270" font-size="12.5" fill="#9aa0b4">A date filter opens just one folder. The other days are never touched — that is the whole win.</text>
+</svg>
+<figcaption>Partitioning by date: a query for one day reads only that day's folder and skips the rest.</figcaption>
+</figure>
+
+<!-- 16 -->
+<h2 id="optimize" class="reveal"><span class="n">16.</span> The small-file problem &amp; OPTIMIZE</h2>
+<p class="reveal">Thousands of tiny files = thousands of open/close steps = wasted compute. (Imagine a 300-page book saved as 300 one-page PDFs — you'd spend all your time opening files.) <code>OPTIMIZE</code> packs small files into a few large ones — it fits small pieces together like packing boxes (this is called "bin-packing") — toward a target file size.</p>
+<div class="cb reveal"><span class="lang">SQL</span><pre>OPTIMIZE invoices;                          <span class="c">-- whole table</span>
+OPTIMIZE invoices WHERE invoice_date = '2026-01-03';   <span class="c">-- just one partition (cheap, common)</span></pre></div>
+<p class="reveal">Three ways to reduce small files, often used together:</p>
+<table class="reveal">
+<tr><th>Way</th><th>How it works</th><th>Use it when</th></tr>
+<tr><td>Manual OPTIMIZE</td><td>You run <code>OPTIMIZE</code> on demand</td><td>Batch pipelines with a scheduled step after loading</td></tr>
+<tr><td>Optimized Write</td><td>Reshuffles each partition into one well-sized write</td><td>Many workers would each write a tiny file</td></tr>
+<tr><td>Auto Compaction</td><td>Auto-packs after a write passes a minimum number of small files</td><td>Streaming / 5-minute loads between OPTIMIZE runs</td></tr>
+</table>
+<div class="cb reveal"><span class="lang">PySpark</span><pre>(df.write.mode("overwrite").partitionBy("category")
+   .option("optimizeWrite","true")            <span class="c"># e.g. hundreds of tiny files → a few right-sized ones</span>
+   .saveAsTable("demo.delta_db.orders"))
+
+<span class="c"># or set it on the table, for streaming tables:</span>
+<span class="c"># TBLPROPERTIES ('delta.autoOptimize.optimizeWrite'='true','delta.autoOptimize.autoCompact'='true')</span></pre></div>
+<div class="note reveal" style="font-size:13.5px"><strong>About the target size:</strong> Databricks <strong>auto-tunes</strong> the target file size by how big the table is — about <strong>256 MB</strong> for most tables, rising toward ~1 GB only for very large (10&nbsp;TB+) tables. You rarely set it by hand.</div>
+<div class="note reveal" style="font-size:13.5px"><strong>How often should you run it?</strong> A common pattern is <code>OPTIMIZE</code> daily and <code>VACUUM</code> weekly. On Databricks, <strong>Predictive Optimization</strong> can run <code>OPTIMIZE</code> and <code>VACUUM</code> for you automatically, so you don't have to schedule them.</div>
+<div class="callout why reveal"><span class="t">⚡ Why Databricks?</span> <code>optimizeWrite</code> and <code>autoCompact</code> are <strong>Databricks features</strong> (and Photon makes OPTIMIZE fast). Open-source Delta has <code>OPTIMIZE</code> but not these automatic behaviours, so you'd build the equivalent yourself.</div>
+<figure class="reveal">
+<svg viewBox="0 0 760 200" font-family="var(--font)">
+  <rect width="760" height="200" rx="12" fill="#121212"/>
+  <text x="24" y="34" font-size="15" font-weight="700" fill="#5AC8FF">OPTIMIZE packs many tiny files into a few big ones</text>
+  <text x="135" y="62" text-anchor="middle" font-size="11.5" fill="#9aa0b4">before: many tiny files (slow)</text>
+  <g fill="#1c1c22" stroke="#44444e">
+    <rect x="36" y="74" width="22" height="22" rx="3"/><rect x="64" y="74" width="22" height="22" rx="3"/><rect x="92" y="74" width="22" height="22" rx="3"/><rect x="120" y="74" width="22" height="22" rx="3"/><rect x="148" y="74" width="22" height="22" rx="3"/><rect x="176" y="74" width="22" height="22" rx="3"/><rect x="204" y="74" width="22" height="22" rx="3"/>
+    <rect x="36" y="102" width="22" height="22" rx="3"/><rect x="64" y="102" width="22" height="22" rx="3"/><rect x="92" y="102" width="22" height="22" rx="3"/><rect x="120" y="102" width="22" height="22" rx="3"/><rect x="148" y="102" width="22" height="22" rx="3"/><rect x="176" y="102" width="22" height="22" rx="3"/><rect x="204" y="102" width="22" height="22" rx="3"/>
+    <rect x="36" y="130" width="22" height="22" rx="3"/><rect x="64" y="130" width="22" height="22" rx="3"/><rect x="92" y="130" width="22" height="22" rx="3"/><rect x="120" y="130" width="22" height="22" rx="3"/><rect x="148" y="130" width="22" height="22" rx="3"/>
+  </g>
+  <path d="M270 113 L356 113" stroke="#28B9FF" stroke-width="3"/><path d="M350 107 l12 6 l-12 6 z" fill="#28B9FF"/>
+  <text x="316" y="103" text-anchor="middle" font-size="10.5" fill="#28B9FF">OPTIMIZE</text>
+  <text x="316" y="132" text-anchor="middle" font-size="9.5" fill="#7c8090">bin-pack</text>
+  <text x="560" y="62" text-anchor="middle" font-size="11.5" fill="#5AC8FF">after: a few ~256 MB files (fast)</text>
+  <g fill="#13243a" stroke="#28B9FF">
+    <rect x="430" y="78" width="80" height="74" rx="5"/><rect x="520" y="78" width="80" height="74" rx="5"/><rect x="610" y="78" width="80" height="74" rx="5"/>
+  </g>
+  <text x="24" y="186" font-size="11.5" fill="#9aa0b4">Fewer files = fewer open/close steps = less wasted compute on every read.</text>
+</svg>
+<figcaption>OPTIMIZE bin-packs small files toward a target size, so reads open far fewer files.</figcaption>
+</figure>
+
+<!-- 17 -->
+<h2 id="zorder" class="reveal"><span class="n">17.</span> Z-Order &amp; data skipping</h2>
+<p class="reveal">Data skipping uses each file's smallest/largest values to avoid reading files that can't match your filter. It only helps if file ranges <em>don't overlap</em>. <strong>Z-Order</strong> sorts and re-packs the data so similar values are stored together, which reduces overlap:</p>
+<div class="cb reveal"><span class="lang">SQL</span><pre>OPTIMIZE invoices ZORDER BY (customer_id);
+OPTIMIZE invoices WHERE invoice_date = '2026-01-03' ZORDER BY (customer_id);</pre></div>
+<p class="reveal">In a test, a <code>customer_id = 201</code> query went from reading all ~255 files (~785 ms) to reading <strong>one</strong> file (~144 ms — about 5× faster) after <code>ZORDER BY (customer_id)</code>. OPTIMIZE and Z-Order work together: OPTIMIZE packs small files, Z-Order groups similar data. By default Delta keeps min/max stats only for the <strong>first 32 columns</strong>, so put the columns you filter on early in the table and avoid very long text columns at the front. To confirm skipping actually happened, compare the number of files read (in the Spark UI or query metrics) before and after.</p>
+<p class="reveal">For <strong>two or more columns</strong>, there's no single sort order. Z-Order combines the values of both columns, so rows that are similar in both columns are stored near each other. A filter on either column can then still skip files. (You don't need the math — the goal is simply "less overlap, so more files can be skipped.") Z-Order is an expensive sort, so run it now and then (often nightly, limited to the latest partition).</p>
+<figure class="reveal">
+<svg viewBox="0 0 760 432" font-family="var(--font)">
+  <rect width="760" height="432" rx="12" fill="#121212"/>
+  <text x="24" y="34" font-size="15" font-weight="700" fill="#5AC8FF">Read a file only if its range can match</text>
+  <text x="736" y="34" text-anchor="end" font-size="11.5" fill="#FFB454">↓ filter: customer_id = 201</text>
+  <text x="24" y="54" font-size="11.5" fill="#9aa0b4">Each bar is one file. Its width = the span of customer_id values stored inside it.</text>
+
+  <!-- ===== BEFORE ===== -->
+  <text x="24" y="84" font-size="13" fill="#cdd0dd">Before Z-Order — file ranges overlap</text>
+  <text x="420" y="84" text-anchor="middle" font-size="10.5" font-weight="700" fill="#FFB454">201</text>
+  <line x1="420" y1="90" x2="420" y2="180" stroke="#FFB454" stroke-width="2" stroke-dasharray="4 4"/>
+  <!-- four files, all crossing 201 -> all read (cyan) -->
+  <text x="24" y="109" font-size="11" fill="#9aa0b4">file 1</text><rect x="140" y="98"  width="420" height="14" rx="4" fill="#13243a" stroke="#28B9FF"/>
+  <text x="24" y="129" font-size="11" fill="#9aa0b4">file 2</text><rect x="170" y="118" width="470" height="14" rx="4" fill="#13243a" stroke="#28B9FF"/>
+  <text x="24" y="149" font-size="11" fill="#9aa0b4">file 3</text><rect x="110" y="138" width="410" height="14" rx="4" fill="#13243a" stroke="#28B9FF"/>
+  <text x="24" y="169" font-size="11" fill="#9aa0b4">file 4</text><rect x="220" y="158" width="480" height="14" rx="4" fill="#13243a" stroke="#28B9FF"/>
+  <!-- value axis -->
+  <line x1="110" y1="186" x2="727" y2="186" stroke="#2a2a36"/>
+  <g font-size="9.5" fill="#7c8090" text-anchor="middle">
+    <text x="110" y="200">0</text><text x="264" y="200">100</text><text x="418" y="200">200</text><text x="573" y="200">300</text><text x="727" y="200">400</text>
+  </g>
+  <text x="24" y="200" font-size="9.5" fill="#7c8090">customer_id</text>
+  <text x="24" y="222" font-size="12.5" fill="#FFB454">All 4 ranges cover 201 → all 4 files read (slow).</text>
+
+  <!-- divider -->
+  <line x1="24" y1="240" x2="736" y2="240" stroke="#23232e"/>
+
+  <!-- ===== AFTER ===== -->
+  <text x="24" y="266" font-size="13" fill="#cdd0dd">After Z-Order — ranges sorted, no overlap</text>
+  <text x="420" y="266" text-anchor="middle" font-size="10.5" font-weight="700" fill="#FFB454">201</text>
+  <line x1="420" y1="272" x2="420" y2="362" stroke="#FFB454" stroke-width="2" stroke-dasharray="4 4"/>
+  <!-- file 2 holds 201 -> read; others skipped (grey) -->
+  <text x="24" y="291" font-size="11" fill="#9aa0b4">file 1</text><rect x="110" y="280" width="170" height="14" rx="4" fill="#1c1c22" stroke="#44444e"/>
+  <text x="24" y="311" font-size="11" font-weight="700" fill="#5AC8FF">file 2</text><rect x="290" y="300" width="140" height="14" rx="4" fill="#13243a" stroke="#28B9FF" stroke-width="2"/>
+  <text x="24" y="331" font-size="11" fill="#9aa0b4">file 3</text><rect x="440" y="320" width="150" height="14" rx="4" fill="#1c1c22" stroke="#44444e"/>
+  <text x="24" y="351" font-size="11" fill="#9aa0b4">file 4</text><rect x="600" y="340" width="120" height="14" rx="4" fill="#1c1c22" stroke="#44444e"/>
+  <!-- value axis -->
+  <line x1="110" y1="368" x2="727" y2="368" stroke="#2a2a36"/>
+  <g font-size="9.5" fill="#7c8090" text-anchor="middle">
+    <text x="110" y="382">0</text><text x="264" y="382">100</text><text x="418" y="382">200</text><text x="573" y="382">300</text><text x="727" y="382">400</text>
+  </g>
+  <text x="24" y="382" font-size="9.5" fill="#7c8090">customer_id</text>
+  <text x="24" y="404" font-size="12.5" fill="#7fe0a0">Only file 2's range holds 201 → 1 file read, 3 skipped (grey, fast).</text>
+</svg>
+<figcaption>Z-Order sorts similar values together so file ranges stop overlapping — then a filter on <code>customer_id</code> can skip almost every file.</figcaption>
+</figure>
+
+<!-- 18 -->
+<h2 id="liquid" class="reveal"><span class="n">18.</span> Liquid clustering (the modern layout)</h2>
+<p class="reveal">Folder-based partitioning ("Hive" partitioning, from an older big-data system) and Z-Order both make you decide the layout column in advance; if your filter pattern changes later, you must rewrite the data. <strong>Liquid clustering</strong> lets you change the clustering keys at any time and keeps the data balanced — similar file sizes, a good file count, and no single folder that's far too big.</p>
+<div class="cb reveal"><span class="lang">PySpark / SQL</span><pre>df.write.clusterBy("invoice_date","customer_id").saveAsTable("demo.delta_db.sales_lc")
+<span class="c">-- SQL: CREATE TABLE sales_lc CLUSTER BY (invoice_date, customer_id) AS SELECT ...</span>
+<span class="c">-- change the keys later: ALTER TABLE sales_lc CLUSTER BY (category);</span></pre></div>
+<p class="reveal">It <strong>merges</strong> small files and <strong>splits</strong> oversized ones so every Spark task gets an even amount of work — this fixes <em>skew</em> (uneven data, where one giant folder slows down the whole job). Pick your most-filtered 1–4 column(s). Don't combine it with Z-Order or Hive partitioning — it decides the layout itself.</p>
+<div class="callout why reveal"><span class="t">⚡ Why Databricks?</span> Liquid clustering is a newer Delta feature. On Databricks you get the table syntax and the background re-packing is run for you; on open-source Delta support is more limited and you'd schedule the optimization yourself.</div>
+<figure class="reveal">
+<svg viewBox="0 0 760 286" font-family="var(--font)">
+  <rect width="760" height="286" rx="12" fill="#121212"/>
+  <text x="24" y="36" font-size="15" font-weight="700" fill="#5AC8FF">Merge the tiny, split the giant → files of even size</text>
+
+  <!-- BEFORE: skewed -->
+  <rect x="24" y="58" width="300" height="172" rx="10" fill="#15151b" stroke="#33333d"/>
+  <text x="174" y="82" text-anchor="middle" font-size="12.5" font-weight="700" fill="#cdd0dd">before — uneven (skew)</text>
+  <line x1="44" y1="208" x2="304" y2="208" stroke="#33333d"/>
+  <rect x="52"  y="182" width="34" height="26"  fill="#44444e"/>
+  <rect x="104" y="190" width="34" height="18"  fill="#44444e"/>
+  <rect x="156" y="90"  width="34" height="118" fill="#E0533D"/>
+  <rect x="208" y="168" width="34" height="40"  fill="#44444e"/>
+  <rect x="260" y="188" width="34" height="20"  fill="#44444e"/>
+  <text x="174" y="224" text-anchor="middle" font-size="10.5" fill="#e07a6a">one giant file = one slow task</text>
+
+  <!-- arrow -->
+  <text x="383" y="120" text-anchor="middle" font-size="11.5" fill="#28B9FF">liquid</text>
+  <text x="383" y="135" text-anchor="middle" font-size="11.5" fill="#28B9FF">clustering</text>
+  <path d="M338 150 L420 150" stroke="#28B9FF" stroke-width="3" fill="none"/><path d="M414 144 l12 6 l-12 6 z" fill="#28B9FF"/>
+  <text x="383" y="172" text-anchor="middle" font-size="10.5" fill="#9aa0b4">merge + split</text>
+
+  <!-- AFTER: balanced -->
+  <rect x="436" y="58" width="300" height="172" rx="10" fill="#0f2230" stroke="#28B9FF" stroke-width="2"/>
+  <text x="586" y="82" text-anchor="middle" font-size="12.5" font-weight="700" fill="#5AC8FF">after — balanced</text>
+  <line x1="456" y1="208" x2="716" y2="208" stroke="#1d3a4d"/>
+  <rect x="470" y="138" width="40" height="70" fill="#13243a" stroke="#28B9FF"/>
+  <rect x="524" y="138" width="40" height="70" fill="#13243a" stroke="#28B9FF"/>
+  <rect x="578" y="138" width="40" height="70" fill="#13243a" stroke="#28B9FF"/>
+  <rect x="632" y="138" width="40" height="70" fill="#13243a" stroke="#28B9FF"/>
+  <text x="586" y="224" text-anchor="middle" font-size="10.5" fill="#7fe0a0">even sizes = every task equal work</text>
+
+  <text x="24" y="262" font-size="12.5" fill="#9aa0b4">You can change the keys any time — Delta re-balances in the background, no full rewrite.</text>
+</svg>
+<figcaption>Liquid clustering merges small files and splits oversized ones, so data stays balanced — and the keys can change later.</figcaption>
+</figure>
+
+<!-- 19 -->
+<h2 id="vacuum" class="reveal"><span class="n">19.</span> VACUUM &amp; retention</h2>
+<p class="reveal">DELETE/UPDATE/OPTIMIZE only <strong>tombstone</strong> (mark as removed) old files; <code>VACUUM</code> actually deletes them from storage.</p>
+<div class="cb reveal"><span class="lang">SQL</span><pre>VACUUM invoices;                       <span class="c">-- removes tombstoned files older than the retention window (default 7 days)</span>
+<span class="c">-- lab only — never in production:</span>
+SET spark.databricks.delta.retentionDurationCheck.enabled = false;
+VACUUM invoices RETAIN 0 HOURS;</pre></div>
+<p class="reveal">Two things people get wrong:</p>
+<ul class="reveal">
+<li><strong>VACUUM saves storage but does NOT make queries faster</strong> — Delta decides which files to read from the log, with or without tombstones.</li>
+<li><strong>VACUUM limits time travel</strong> — once a version's files are deleted, you can't go back to it. Set the retention window to at least the longest time any process (audit, reconciliation, re-processing) might need old data. Also run VACUUM <em>after</em> OPTIMIZE.</li>
+</ul>
+<figure class="reveal">
+<svg viewBox="0 0 760 210" font-family="var(--font)">
+  <rect width="760" height="210" rx="12" fill="#121212"/>
+  <text x="24" y="34" font-size="15" font-weight="700" fill="#5AC8FF">VACUUM deletes the files that were only marked removed</text>
+  <text x="150" y="62" text-anchor="middle" font-size="11.5" fill="#9aa0b4">storage now</text>
+  <rect x="40" y="74" width="220" height="92" rx="10" fill="#15151b" stroke="#33333d"/>
+  <rect x="56" y="90" width="86" height="28" rx="5" fill="#13243a" stroke="#28B9FF"/><text x="99" y="108" text-anchor="middle" font-size="10" fill="#5AC8FF">live</text>
+  <rect x="158" y="90" width="86" height="28" rx="5" fill="#13243a" stroke="#28B9FF"/><text x="201" y="108" text-anchor="middle" font-size="10" fill="#5AC8FF">live</text>
+  <rect x="56" y="126" width="86" height="28" rx="5" fill="#1c1c22" stroke="#44444e" stroke-dasharray="4 3"/><text x="99" y="144" text-anchor="middle" font-size="9.5" fill="#7c8090">tombstoned</text>
+  <rect x="158" y="126" width="86" height="28" rx="5" fill="#1c1c22" stroke="#44444e" stroke-dasharray="4 3"/><text x="201" y="144" text-anchor="middle" font-size="9.5" fill="#7c8090">tombstoned</text>
+  <path d="M276 120 L356 120" stroke="#28B9FF" stroke-width="3"/><path d="M350 114 l12 6 l-12 6 z" fill="#28B9FF"/>
+  <text x="316" y="110" text-anchor="middle" font-size="10" fill="#28B9FF">VACUUM</text>
+  <text x="316" y="138" text-anchor="middle" font-size="9" fill="#7c8090">after 7 days</text>
+  <text x="500" y="62" text-anchor="middle" font-size="11.5" fill="#5AC8FF">after VACUUM</text>
+  <rect x="390" y="74" width="220" height="92" rx="10" fill="#0f2230" stroke="#28B9FF"/>
+  <rect x="406" y="104" width="86" height="28" rx="5" fill="#13243a" stroke="#28B9FF"/><text x="449" y="122" text-anchor="middle" font-size="10" fill="#5AC8FF">live</text>
+  <rect x="508" y="104" width="86" height="28" rx="5" fill="#13243a" stroke="#28B9FF"/><text x="551" y="122" text-anchor="middle" font-size="10" fill="#5AC8FF">live</text>
+  <text x="624" y="116" font-size="11" fill="#9aa0b4">only the</text><text x="624" y="130" font-size="11" fill="#9aa0b4">live files</text>
+  <text x="24" y="192" font-size="11.5" fill="#FFB454">⚠ Time travel to versions that needed the deleted files is no longer possible.</text>
+</svg>
+<figcaption>Tombstoned files stay on disk until VACUUM removes them after the retention window — which also caps how far back time travel can go.</figcaption>
+</figure>
+
+<!-- 20 -->
+<h2 id="convert" class="reveal"><span class="n">20.</span> Converting Parquet / CSV / JSON to Delta</h2>
+<div class="cb reveal"><span class="lang">PySpark</span><pre><span class="c"># A) rewrite as Delta — gives fresh files + good sizes + stats (more work, moves data)</span>
+spark.read.parquet("/path/raw").write.format("delta").mode("overwrite").save("/path/delta")
+
+<span class="c"># B) in-place — keeps the existing Parquet files, just adds a _delta_log (instant, no data moved)</span>
+from delta.tables import DeltaTable
+DeltaTable.convertToDelta(spark, "parquet.`/path/raw`")
+<span class="c"># if the Parquet is partitioned, pass the partition schema:</span>
+<span class="c"># DeltaTable.convertToDelta(spark, "parquet.`/path/raw`", "invoice_date DATE")</span>
+
+<span class="c"># CSV/JSON: read into a DataFrame, then write as delta</span>
+spark.read.option("header", True).csv("/path/file").write.format("delta").save("/path/delta")</pre></div>
+<p class="reveal"><strong>Which to pick?</strong> Use <strong>B (in-place)</strong> for a quick migration with no data movement. Use <strong>A (rewrite)</strong> when you also want well-sized files and good statistics from the start.</p>
+
+<!-- 21 -->
+<h2 id="tables" class="reveal"><span class="n">21.</span> Managed vs external tables</h2>
+<table class="reveal">
+<tr><th>&nbsp;</th><th>Managed</th><th>External</th></tr>
+<tr><td>Data location</td><td>Chosen by Unity Catalog</td><td>You choose (S3 / ADLS / GCS)</td></tr>
+<tr><td>DROP TABLE</td><td>data is <strong>deleted</strong> (after retention)</td><td>data is <strong>kept</strong></td></tr>
+<tr><td>Format</td><td>Delta only</td><td>Delta / Parquet / CSV / JSON</td></tr>
+</table>
+<div class="warn reveal" style="font-size:13.5px"><strong>⚠ Be careful:</strong> <code>DROP TABLE</code> on a <em>managed</em> table also deletes the data. Use an <em>external</em> table (with <code>LOCATION</code>) when you must keep the files even if the table is dropped.</div>
+<div class="cb reveal"><span class="lang">SQL</span><pre>CREATE OR REPLACE TABLE invoices_ext
+USING delta LOCATION 'abfss://lab-data@.../invoices_ext'   <span class="c">-- replace with your own storage path</span>
+AS SELECT * FROM invoices;</pre></div>
+
+<!-- 22 -->
+<h2 id="clone" class="reveal"><span class="n">22.</span> Cloning: shallow &amp; deep</h2>
+<p class="reveal"><strong>Cloning</strong> copies a table into its own new table. There are two kinds, and the difference is simple: a <strong>shallow clone</strong> copies only the log (the list of files), so it <em>shares</em> the source's data files; a <strong>deep clone</strong> also copies the data files, so it stands completely on its own.</p>
+<div class="cb reveal"><span class="lang">SQL</span><pre>CREATE TABLE sales_shallow SHALLOW CLONE invoices;   <span class="c">-- copies only the log; shares the source's data files (instant, cheap)</span>
+CREATE TABLE sales_deep    DEEP CLONE   invoices;   <span class="c">-- copies the log AND the data (independent, self-contained)</span>
+CREATE TABLE sales_v0      SHALLOW CLONE invoices VERSION AS OF 0;   <span class="c">-- clone the table as it looked at version 0</span></pre></div>
+<table class="reveal">
+<tr><th>&nbsp;</th><th>Shallow clone</th><th>Deep clone</th></tr>
+<tr><td>What it copies</td><td>Only the log (file list)</td><td>The log <strong>and</strong> all data files</td></tr>
+<tr><td>Speed &amp; cost</td><td>Instant, almost free</td><td>Slower, uses real storage</td></tr>
+<tr><td>Shares source's files?</td><td>Yes — points at them</td><td>No — keeps its own copy</td></tr>
+<tr><td>Independent of source?</td><td>No — breaks if the source's files are removed</td><td>Yes — fully self-contained</td></tr>
+<tr><td>Re-cloning the same target</td><td>—</td><td>Copies only what changed (incremental)</td></tr>
+<tr><td>Best for</td><td>Quick, one-time analysis or experiments</td><td>Disaster-recovery copies; filling <code>dev</code>/<code>uat</code> from <code>prod</code></td></tr>
+</table>
+<p class="reveal">Both clones start at their own <strong>version 0</strong>. A deep clone also keeps the source's partitioning, constraints and table properties — a plain CTAS (<code>CREATE TABLE AS SELECT</code>) does not.</p>
+<div class="warn reveal" style="font-size:13.5px"><strong>⚠ Shallow-clone warning:</strong> a shallow clone still points at the source's files. So <code>VACUUM</code> on the source will <em>not</em> delete a file the clone still uses — and if you force it, the clone breaks. Use a deep clone when the copy must be fully independent.</div>
+
+<!-- 23 -->
+<h2 id="stream" class="reveal"><span class="n">23.</span> Streaming with Delta (one table, batch + streaming)</h2>
+<p class="reveal">A Delta table is both a batch table and a streaming source/sink (a source is read-from, a sink is written-to) — the same table, no separate system.</p>
+<div class="note reveal" style="font-size:13.5px">The streaming examples use a <code>bronze</code> source and a <code>silver</code> target — create them like the <code>invoices</code> table in §00, and create a checkpoint Volume once: <code>CREATE VOLUME demo.delta_db.chk;</code>. (A Volume is a Unity Catalog place to store files.)</div>
+<div class="cb reveal"><span class="lang">PySpark</span><pre>from delta.tables import DeltaTable
+
+stream = spark.readStream.table("demo.delta_db.bronze")     <span class="c"># read a Delta table as a stream</span>
+
+(stream.writeStream
+   .option("checkpointLocation", "/Volumes/demo/delta_db/chk/silver")  <span class="c"># tracks progress for exactly-once (no duplicates, no misses)</span>
+   .trigger(availableNow=True)      <span class="c"># process all new data once, then stop (or processingTime="5 minutes" to keep running)</span>
+   .toTable("demo.delta_db.silver"))</pre></div>
+<div class="cb reveal"><span class="lang">PySpark · upsert each micro-batch with MERGE</span><pre>def upsert(batch_df, _):
+    (DeltaTable.forName(spark, "demo.delta_db.silver").alias("t")
+       .merge(batch_df.alias("s"), "t.customer_id = s.customer_id")
+       .whenMatchedUpdateAll().whenNotMatchedInsertAll().execute())
+
+(stream.writeStream.foreachBatch(upsert)
+   .option("checkpointLocation", "/Volumes/demo/delta_db/chk/up").start())</pre></div>
+<p class="reveal">The checkpoint location stores how far the stream has read. On Unity Catalog, use a <strong>Volume</strong> path (<code>/Volumes/...</code>) for it.</p>
+<div class="callout why reveal"><span class="t">⚡ Why Databricks?</span> Databricks adds <strong>Auto Loader</strong> (<code>spark.readStream.format("cloudFiles")</code>) for cheap incremental file ingestion, and <strong>Delta Live Tables</strong> for pipelines you define by describing the result. Both build on this same Delta streaming base.</div>
+<div class="note reveal" style="font-size:13.5px"><strong>Two streaming gotchas:</strong> (1) updates or deletes on a streaming <em>source</em> table will stop the stream — add <code>.option("skipChangeCommits","true")</code> to ignore them. (2) Use <code>maxFilesPerTrigger</code> or <code>maxBytesPerTrigger</code> to limit how much each micro-batch reads.</div>
+<figure class="reveal">
+<svg viewBox="0 0 760 200" font-family="var(--font)">
+  <rect width="760" height="200" rx="12" fill="#121212"/>
+  <text x="24" y="34" font-size="15" font-weight="700" fill="#5AC8FF">One Delta table feeds the next as a stream</text>
+  <rect x="30" y="74" width="150" height="56" rx="10" fill="#16182e" stroke="#5C78FF"/><text x="105" y="100" text-anchor="middle" font-size="12" fill="#9db0ff">bronze</text><text x="105" y="118" text-anchor="middle" font-size="10" fill="#9aa0b4">Delta table</text>
+  <path d="M184 102 L250 102" stroke="#28B9FF" stroke-width="2.5"/><path d="M244 96 l12 6 l-12 6 z" fill="#28B9FF"/><text x="217" y="92" text-anchor="middle" font-size="9.5" fill="#28B9FF">readStream</text>
+  <rect x="254" y="74" width="190" height="56" rx="10" fill="#0f2230" stroke="#28B9FF"/><text x="349" y="100" text-anchor="middle" font-size="11.5" fill="#5AC8FF">micro-batches</text><text x="349" y="118" text-anchor="middle" font-size="10" fill="#9aa0b4">writeStream + MERGE</text>
+  <path d="M448 102 L514 102" stroke="#28B9FF" stroke-width="2.5"/><path d="M508 96 l12 6 l-12 6 z" fill="#28B9FF"/><text x="481" y="92" text-anchor="middle" font-size="9.5" fill="#28B9FF">toTable</text>
+  <rect x="518" y="74" width="150" height="56" rx="10" fill="#16182e" stroke="#5C78FF"/><text x="593" y="100" text-anchor="middle" font-size="12" fill="#9db0ff">silver</text><text x="593" y="118" text-anchor="middle" font-size="10" fill="#9aa0b4">Delta table</text>
+  <path d="M349 130 L349 150" stroke="#3a7d44" stroke-width="2"/>
+  <rect x="254" y="152" width="190" height="32" rx="8" fill="#10241c" stroke="#3a7d44"/><text x="349" y="172" text-anchor="middle" font-size="10.5" fill="#7fe0a0">checkpoint = how far read</text>
+  <text x="462" y="172" font-size="10.5" fill="#9aa0b4">→ exactly-once (no dupes)</text>
+</svg>
+<figcaption>The same Delta table is a streaming source and sink; the checkpoint remembers progress for exactly-once processing.</figcaption>
+</figure>
+
+<!-- 24 -->
+<h2 id="cdf" class="reveal"><span class="n">24.</span> Change Data Feed (CDF)</h2>
+<p class="reveal">CDF makes Delta produce the exact row-level changes between versions — so later steps (silver, gold) can process <em>only what changed</em> instead of re-reading everything.</p>
+<div class="cb reveal"><span class="lang">SQL</span><pre>ALTER TABLE invoices SET TBLPROPERTIES ('delta.enableChangeDataFeed' = 'true');
+
+SELECT * FROM table_changes('invoices', 5);   <span class="c">-- changes since version 5</span>
+<span class="c">-- extra columns you get back:</span>
+<span class="c">--   _change_type    = insert | update_preimage (row before) | update_postimage (row after) | delete</span>
+<span class="c">--   _commit_version = which commit</span>
+<span class="c">--   _commit_timestamp</span></pre></div>
+<p class="reveal">This is the clean way to do incremental ETL (Extract, Transform, Load) and to keep <strong>SCD</strong> tables up to date, instead of recomputing everything. <strong>Note:</strong> CDF only records changes made <em>after</em> you enable it.</p>
+<div class="cb reveal"><span class="lang">PySpark · consume the feed downstream</span><pre>changes = (spark.read.format("delta")
+   .option("readChangeFeed", "true").option("startingVersion", 5)
+   .table("demo.delta_db.invoices"))
+<span class="c"># keep only the latest row per key, then MERGE those changes into a gold table</span>
+<span class="c"># inserts/updates -&gt; upsert; _change_type = 'delete' -&gt; delete</span></pre></div>
+<figure class="reveal">
+<svg viewBox="0 0 760 250" font-family="var(--font)">
+  <rect width="760" height="250" rx="12" fill="#121212"/>
+  <text x="24" y="34" font-size="15" font-weight="700" fill="#5AC8FF">CDF gives you the exact row changes between versions</text>
+  <text x="24" y="62" font-size="11.5" fill="#9aa0b4">changes on the table:</text>
+  <rect x="24" y="70" width="250" height="30" rx="6" fill="#16182e" stroke="#5C78FF"/><text x="36" y="90" font-size="10.5" fill="#cdd0dd">UPDATE customer 1: qty 5 → 9</text>
+  <rect x="24" y="104" width="250" height="28" rx="6" fill="#16182e" stroke="#5C78FF"/><text x="36" y="123" font-size="10.5" fill="#cdd0dd">INSERT customer 7</text>
+  <rect x="24" y="136" width="250" height="28" rx="6" fill="#16182e" stroke="#5C78FF"/><text x="36" y="155" font-size="10.5" fill="#cdd0dd">DELETE customer 2</text>
+  <path d="M280 116 L338 116" stroke="#28B9FF" stroke-width="3"/><path d="M332 110 l12 6 l-12 6 z" fill="#28B9FF"/>
+  <text x="309" y="106" text-anchor="middle" font-size="9" fill="#28B9FF">table_changes</text>
+  <text x="344" y="62" font-size="11.5" fill="#5AC8FF">the change feed (_change_type):</text>
+  <g font-size="10.5">
+    <rect x="344" y="70" width="392" height="26" fill="#0f2230" stroke="#28B9FF"/><text x="354" y="87" fill="#5AC8FF">_change_type       row</text>
+    <rect x="344" y="96" width="392" height="24" fill="#16182e" stroke="#33333d"/><text x="354" y="112" fill="#FFB454">update_preimage    qty=5 (before)</text>
+    <rect x="344" y="120" width="392" height="24" fill="#16182e" stroke="#33333d"/><text x="354" y="136" fill="#7fe0a0">update_postimage   qty=9 (after)</text>
+    <rect x="344" y="144" width="392" height="24" fill="#16182e" stroke="#33333d"/><text x="354" y="160" fill="#7fe0a0">insert             customer 7</text>
+    <rect x="344" y="168" width="392" height="24" fill="#16182e" stroke="#33333d"/><text x="354" y="184" fill="#f0a08e">delete             customer 2</text>
+  </g>
+  <text x="24" y="214" font-size="11.5" fill="#9aa0b4">Downstream (silver / gold) reads only these rows — incremental ETL, no full re-scan.</text>
+  <text x="24" y="233" font-size="10" fill="#7c8090">Each row also carries _commit_version and _commit_timestamp. CDF records changes made after you enable it.</text>
+</svg>
+<figcaption>Change Data Feed turns each commit into row-level change records, so later layers process only what changed.</figcaption>
+</figure>
+
+<!-- 25 -->
+<h2 id="share" class="reveal"><span class="n">25.</span> Sharing &amp; UniForm (working with other tools)</h2>
+<ul class="reveal">
+<li><strong>Delta Sharing</strong> — an open way to share a live table with another team or company <em>without copying it</em>; they read your latest data through a secure connection.</li>
+<li><strong>UniForm</strong> — Delta also writes <em>Iceberg</em> (and Hudi) metadata next to its own log, so Iceberg/Hudi readers can read your Delta table. It means choosing Delta does not block other engines.</li>
+</ul>
+<div class="cb reveal"><span class="lang">SQL</span><pre><span class="c">-- UniForm: also expose this table as Iceberg</span>
+ALTER TABLE invoices SET TBLPROPERTIES ('delta.universalFormat.enabledFormats' = 'iceberg');
+
+<span class="c">-- Delta Sharing: publish a share, then add a table to it (Unity Catalog)</span>
+CREATE SHARE sales_share;
+ALTER SHARE sales_share ADD TABLE demo.delta_db.invoices;</pre></div>
+<div class="callout note reveal"><strong>Important limit:</strong> UniForm works in one direction only — other engines should only <em>read</em>. It can also become unreliable with the newest features such as deletion vectors. So it's a good safety option, not a perfect automatic solution.</div>
+<figure class="reveal">
+<svg viewBox="0 0 760 230" font-family="var(--font)">
+  <rect width="760" height="230" rx="12" fill="#121212"/>
+  <text x="24" y="34" font-size="15" font-weight="700" fill="#5AC8FF">One Delta table, readable by other tools and teams</text>
+  <rect x="300" y="92" width="160" height="64" rx="10" fill="#16203f" stroke="#5C78FF" stroke-width="2"/>
+  <text x="380" y="120" text-anchor="middle" font-size="13" font-weight="700" fill="#9db0ff">Delta table</text>
+  <text x="380" y="140" text-anchor="middle" font-size="10" fill="#9aa0b4">_delta_log + Parquet</text>
+  <path d="M300 112 L180 100" stroke="#28B9FF" stroke-width="2"/><path d="M186 94 l-11 5 l10 7 z" fill="#28B9FF"/>
+  <text x="232" y="74" text-anchor="middle" font-size="9.5" fill="#28B9FF">UniForm: + Iceberg metadata</text>
+  <rect x="24" y="100" width="150" height="48" rx="8" fill="#13243a" stroke="#28B9FF"/><text x="99" y="122" text-anchor="middle" font-size="10.5" fill="#5AC8FF">Iceberg / Hudi</text><text x="99" y="138" text-anchor="middle" font-size="9.5" fill="#9aa0b4">readers (read-only)</text>
+  <path d="M460 136 L586 150" stroke="#BA5AFF" stroke-width="2"/><path d="M580 144 l12 6 l-13 5 z" fill="#BA5AFF"/>
+  <text x="540" y="184" text-anchor="middle" font-size="9.5" fill="#d6a8ff">Delta Sharing: secure, no copy</text>
+  <rect x="586" y="100" width="150" height="48" rx="8" fill="#241a30" stroke="#BA5AFF"/><text x="661" y="122" text-anchor="middle" font-size="10.5" fill="#d6a8ff">another team /</text><text x="661" y="138" text-anchor="middle" font-size="10.5" fill="#d6a8ff">company</text>
+  <text x="24" y="210" font-size="11" fill="#9aa0b4">UniForm is read-only for other engines; Delta Sharing gives others your live data without copying it.</text>
+</svg>
+<figcaption>UniForm exposes the same table to Iceberg/Hudi readers; Delta Sharing lets other teams read it live without a copy.</figcaption>
+</figure>
+
+<!-- 26 -->
+<h2 id="delta4" class="reveal"><span class="n">26.</span> What's new in Delta 4.0 (2025)</h2>
+<ul class="reveal">
+<li><strong>Variant type</strong> (preview) — store free-form, JSON-like data efficiently, without first splitting it into columns.</li>
+<li><strong>Type widening</strong> — safe column type changes (int → bigint) with no data rewrite and a history of the change (§11).</li>
+<li><strong>Coordinated commits</strong> (preview) — a "commit coordinator" (such as Unity Catalog) lets several engines/clouds write to one table safely, and prepares for changes across multiple tables at once.</li>
+<li><strong>Delta Kernel &amp; Delta Connect</strong> — a small, portable library so non-Spark tools can read Delta correctly, plus a client/server way to use Delta.</li>
+</ul>
+
+<h2 class="reveal" id="errors"><span class="n">★</span> Common errors &amp; quick fixes</h2>
+<table class="reveal">
+<tr><th>Error you might see</th><th>What it means / fix</th></tr>
+<tr><td><code>ConcurrentAppendException</code> (or similar)</td><td>Two jobs changed the same files. Delta already retries; if it keeps failing, write to different partitions, or serialize the jobs.</td></tr>
+<tr><td>"schema mismatch detected"</td><td>Your write has different columns than the table. Add the column first, or use <code>MERGE</code> / <code>mergeSchema</code> (§10–§11).</td></tr>
+<tr><td><code>FileNotFound</code> on time travel</td><td>VACUUM deleted that old version's files (§19). Increase the retention window if you need to go back further.</td></tr>
+<tr><td>"table or view not found"</td><td>You're in a new session — re-run <code>USE demo.delta_db;</code> or use the full name <code>demo.delta_db.invoices</code>.</td></tr>
+<tr><td>Can't RENAME/DROP a column</td><td>Turn on column mapping first (§12).</td></tr>
+</table>
+
+<!-- 27 cheat sheet -->
+<h2 id="cheat" class="reveal"><span class="n">27.</span> Cheat sheet — when to use what</h2>
+<table class="reveal">
+<tr><th>Question</th><th>Answer</th></tr>
+<tr><td>Update a copy from a source?</td><td><strong>MERGE</strong> on a key (safe by name, idempotent)</td></tr>
+<tr><td>Table updated often / change data?</td><td><strong>Deletion vectors</strong> (Merge-on-Read) — auto-enabled on new Databricks tables</td></tr>
+<tr><td>Read-heavy, rarely updated?</td><td>Copy-on-Write is fine (deletion vectors off)</td></tr>
+<tr><td>Big table, filtered by date?</td><td>Partition by date (≈1 GB partitions) <em>or</em> liquid clustering</td></tr>
+<tr><td>Fast filtering on another key?</td><td><strong>Z-Order</strong> that key (within the partition) — or use liquid clustering</td></tr>
+<tr><td>Filter pattern keeps changing?</td><td><strong>Liquid clustering</strong> (change keys anytime)</td></tr>
+<tr><td>Too many small files?</td><td><strong>OPTIMIZE</strong> (+ optimizeWrite / autoCompact for streaming)</td></tr>
+<tr><td>Free disk / not keeping old versions?</td><td><strong>VACUUM</strong> (but it limits time travel — set retention first)</td></tr>
+<tr><td>Must keep data if table dropped?</td><td><strong>External</strong> table (with LOCATION)</td></tr>
+<tr><td>Continuous data?</td><td><strong>Streaming</strong> (readStream/writeStream) + <code>foreachBatch</code> MERGE</td></tr>
+<tr><td>Send only what changed downstream?</td><td><strong>Change Data Feed</strong></td></tr>
+<tr><td>Recover a bad load / audit?</td><td><strong>Time travel</strong> + <strong>RESTORE</strong></td></tr>
+</table>
+
+<footer class="reveal">
+<p><strong>Putting it together.</strong> In real work you'll use a few of these very often: <code>MERGE</code> for safe, repeatable loads; deletion vectors for cheap updates; partitioning or liquid clustering plus a scheduled <code>OPTIMIZE</code> for fast reads; <code>VACUUM</code> for cleanup; time travel for audits and recovery; and Change Data Feed to pass only what changed to the next layer. Learn the transaction log once, and the rest follows from it.</p>
+<p style="margin-top:14px">← Back to <a href="../">Data &amp; AI Engineering, Simply Explained</a> · © 2026 Hao Tieu</p>
+</footer>
+
+</div><!-- /page -->
+<script>
+  var bar=document.getElementById('bar');
+  function prog(){var h=document.documentElement;var s=h.scrollTop||document.body.scrollTop;var m=(h.scrollHeight-h.clientHeight)||1;bar.style.width=(s/m*100)+'%';}
+  document.addEventListener('scroll',prog,{passive:true});prog();
+  function revealAll(){document.querySelectorAll('.reveal').forEach(function(el){el.classList.add('in');});}
+  try{var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}});},{threshold:.05});
+    document.querySelectorAll('.reveal').forEach(function(el){io.observe(el);});
+    window.addEventListener('load',function(){setTimeout(revealAll,1500);});setTimeout(revealAll,2200);
+  }catch(e){revealAll();}
+</script>
+</body>
+</html>
