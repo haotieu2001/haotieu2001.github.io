@@ -224,25 +224,6 @@
   <p style="margin:.2em 0">A <strong>Data Lake</strong> = cheap cloud storage (S3 / ADLS) full of Parquet files. It's cheap and flexible, but writing to it is like dropping files into a shared folder — no rules, no safety net. A <strong>Data Lakehouse</strong> = the same cheap storage, but with a smart transaction layer on top (Delta Lake). That layer adds the reliability of a database without giving up the flexibility or low cost of a lake.</p>
 </div>
 
-<div class="gloss reveal">
-  <h4>Words you'll see (defined once, here)</h4>
-  <dl>
-    <dt>Object storage</dt><dd>A type of cloud file storage (Amazon S3, Azure ADLS, Google GCS) built for storing massive amounts of files cheaply. Unlike a hard drive, you can't edit a file in place — you write new files and delete old ones. Very cheap ($0.02/GB/month), infinitely scalable, but has no built-in query engine or transaction support.</dd>
-    <dt>Data Lake</dt><dd>A collection of raw files (CSV, JSON, Parquet, images, logs...) sitting in object storage. No fixed structure required — you store data as-is and figure out its shape when you read it.</dd>
-    <dt>Data Warehouse</dt><dd>A structured database optimised for analytics (BigQuery, Snowflake, Redshift). Fast and reliable, but expensive and rigid — data must be in a defined format before it goes in.</dd>
-    <dt>Data Lakehouse</dt><dd>A hybrid: cheap lake storage + database-style reliability (ACID, schema, fast queries) layered on top. Delta Lake, Apache Iceberg and Apache Hudi all build a Lakehouse.</dd>
-    <dt>Parquet</dt><dd>A popular file format for analytics. Stores data in columns (not rows), compresses well, and includes statistics that let query engines skip irrelevant data without reading it.</dd>
-    <dt>Immutable</dt><dd>Cannot be changed after it's written. Parquet files on object storage are immutable — once saved, you can't edit a single cell. To "change" data, you write a new file and delete the old one.</dd>
-    <dt>ACID</dt><dd>Four safety promises that databases give you: <strong>A</strong>tomic (a write fully completes or has no effect — no half-done states), <strong>C</strong>onsistent (rules like "price must be positive" are always enforced), <strong>I</strong>solated (readers never see a half-finished write), <strong>D</strong>urable (once committed, data survives crashes). A plain Data Lake gives you none of these.</dd>
-    <dt>Schema</dt><dd>The list of column names and their data types for a table. Like a contract: "this table will always have order_id (integer), customer_name (string), amount (decimal)."</dd>
-    <dt>Partition</dt><dd>Splitting data into sub-folders by a column value (e.g. by date). A query filtering on that date only reads the matching sub-folder and skips everything else.</dd>
-    <dt>Cluster</dt><dd>A group of virtual machines (rented cloud servers) that work together. When you "spin up a cluster" in Spark or Databricks, you're renting, say, 10 virtual machines and linking them so Spark can split work across all of them. When you're done, you release the machines and stop paying.</dd>
-    <dt>Delta Lake</dt><dd>An open-source software library that adds a transaction log on top of Parquet files, giving you ACID, time travel, safe updates/deletes, and schema enforcement — without moving your data out of cheap cloud storage.</dd>
-    <dt>ETL / ELT</dt><dd>Moving and transforming data. ETL = transform first, then load. ELT = load raw data first, then transform inside the lake.</dd>
-    <dt>Medallion (Bronze → Silver → Gold)</dt><dd>A common pattern: Bronze = raw data, Silver = cleaned data, Gold = business-ready aggregates.</dd>
-  </dl>
-</div>
-
 <div class="toc reveal">
   <strong>Contents</strong>
   <a href="#what-is-lake">01 · What is a Data Lake?</a>
@@ -253,6 +234,7 @@
   <a href="#lakehouse">06 · Enter the Lakehouse</a>
   <a href="#delta-fixes">07 · How Delta Lake fixes each problem</a>
   <a href="#summary">08 · Summary &amp; what to read next</a>
+  <a href="#glossary">＊ · Glossary</a>
 </div>
 
 <!-- 01 -->
@@ -1332,6 +1314,27 @@ DESCRIBE HISTORY orders;</pre></div>
     <li><a href="../delta-lake/">Delta Lake, Under the Hood</a> — go deeper: the transaction log in detail, MERGE patterns, OPTIMIZE + Z-Order, liquid clustering, streaming, change data capture, and time travel — with runnable SQL and PySpark code.</li>
     <li><a href="../lakehouse-guide/">Delta Lake vs Iceberg vs Hudi</a> — once you understand the Lakehouse, learn how the three main open table formats compare and which to choose for your stack.</li>
   </ul>
+</div>
+
+<!-- Glossary -->
+<h2 id="glossary" class="reveal">Glossary</h2>
+<p class="reveal">Every term used in this article, defined in one place. Skim it first if you're new, or jump back here whenever a word feels rushed.</p>
+<div class="gloss reveal">
+  <dl>
+    <dt>Object storage</dt><dd>A type of cloud file storage (Amazon S3, Azure ADLS, Google GCS) built for storing massive amounts of files cheaply. Unlike a hard drive, you can't edit a file in place — you write new files and delete old ones. Very cheap ($0.02/GB/month), infinitely scalable, but has no built-in query engine or transaction support.</dd>
+    <dt>Data Lake</dt><dd>A collection of raw files (CSV, JSON, Parquet, images, logs...) sitting in object storage. No fixed structure required — you store data as-is and figure out its shape when you read it.</dd>
+    <dt>Data Warehouse</dt><dd>A structured database optimised for analytics (BigQuery, Snowflake, Redshift). Fast and reliable, but expensive and rigid — data must be in a defined format before it goes in.</dd>
+    <dt>Data Lakehouse</dt><dd>A hybrid: cheap lake storage + database-style reliability (ACID, schema, fast queries) layered on top. Delta Lake, Apache Iceberg and Apache Hudi all build a Lakehouse.</dd>
+    <dt>Parquet</dt><dd>A popular file format for analytics. Stores data in columns (not rows), compresses well, and includes statistics that let query engines skip irrelevant data without reading it.</dd>
+    <dt>Immutable</dt><dd>Cannot be changed after it's written. Parquet files on object storage are immutable — once saved, you can't edit a single cell. To "change" data, you write a new file and delete the old one.</dd>
+    <dt>ACID</dt><dd>Four safety promises that databases give you: <strong>A</strong>tomic (a write fully completes or has no effect — no half-done states), <strong>C</strong>onsistent (rules like "price must be positive" are always enforced), <strong>I</strong>solated (readers never see a half-finished write), <strong>D</strong>urable (once committed, data survives crashes). A plain Data Lake gives you none of these.</dd>
+    <dt>Schema</dt><dd>The list of column names and their data types for a table. Like a contract: "this table will always have order_id (integer), customer_name (string), amount (decimal)."</dd>
+    <dt>Partition</dt><dd>Splitting data into sub-folders by a column value (e.g. by date). A query filtering on that date only reads the matching sub-folder and skips everything else.</dd>
+    <dt>Cluster</dt><dd>A group of virtual machines (rented cloud servers) that work together. When you "spin up a cluster" in Spark or Databricks, you're renting, say, 10 virtual machines and linking them so Spark can split work across all of them. When you're done, you release the machines and stop paying.</dd>
+    <dt>Delta Lake</dt><dd>An open-source software library that adds a transaction log on top of Parquet files, giving you ACID, time travel, safe updates/deletes, and schema enforcement — without moving your data out of cheap cloud storage.</dd>
+    <dt>ETL / ELT</dt><dd>Moving and transforming data. ETL = transform first, then load. ELT = load raw data first, then transform inside the lake.</dd>
+    <dt>Medallion (Bronze → Silver → Gold)</dt><dd>A common pattern: Bronze = raw data, Silver = cleaned data, Gold = business-ready aggregates.</dd>
+  </dl>
 </div>
 
 <hr/>

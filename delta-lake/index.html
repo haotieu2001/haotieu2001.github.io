@@ -137,31 +137,6 @@
   <p style="margin:.2em 0">Delta Lake = <strong>Parquet data files + a transaction log</strong> (a folder called <code>_delta_log/</code>). The log is an ordered list of "add this file / remove that file" notes. To read the table, Delta replays the log to work out which files count <em>right now</em>. That one idea gives you safe writes (ACID), time travel, safe writing by many jobs at once, and cheap updates and deletes. Almost every feature below comes back to it.</p>
 </div>
 
-<div class="gloss reveal">
-  <h4>Words you'll see (defined once, here)</h4>
-  <dl>
-    <dt>Parquet</dt><dd>The common file type for analytics data. Delta stores its data as Parquet files.</dd>
-    <dt>Transaction log</dt><dd>The ordered list of changes in <code>_delta_log/</code>. Sometimes called a "ledger" (a record book).</dd>
-    <dt>Commit</dt><dd>One change written to the log as one numbered file (e.g. <code>...0001.json</code>). Also called a "version".</dd>
-    <dt>ACID</dt><dd>Four safety promises: a write fully happens or not at all (atomic), rules are kept (consistent), readers don't see half-done work (isolated), and committed data survives crashes (durable).</dd>
-    <dt>Tombstone</dt><dd>A note that marks a file as "no longer used". The file stays on disk until VACUUM deletes it.</dd>
-    <dt>Deletion vector (DV)</dt><dd>A tiny file that marks which rows inside a data file are deleted, so Delta doesn't have to rewrite the whole file. It's a "bitmap" (a compact map of row positions).</dd>
-    <dt>Checkpoint</dt><dd>A saved summary of the log so far, so reading doesn't replay every old commit.</dd>
-    <dt>MERGE / upsert</dt><dd>One command that updates a row if it exists and inserts it if it doesn't. "Upsert" = update-or-insert.</dd>
-    <dt>OPTIMIZE / compaction</dt><dd>Packing many small files into a few right-sized ones.</dd>
-    <dt>Partition</dt><dd>Splitting a table into folders by a column value (often a date) so queries can skip folders.</dd>
-    <dt>Idempotent</dt><dd>Safe to run again. Re-running the same load does not create duplicates.</dd>
-    <dt>Streaming / micro-batch</dt><dd>Processing data continuously in small chunks ("micro-batches") instead of one big run.</dd>
-    <dt>Source / sink</dt><dd>A "source" is where data is read from; a "sink" is where it is written to (the destination).</dd>
-    <dt>Medallion (bronze→silver→gold)</dt><dd>A common pattern of table layers: raw → cleaned → business-ready.</dd>
-    <dt>Metastore / Unity Catalog</dt><dd>The service that stores table names, locations and permissions. Unity Catalog is Databricks' version.</dd>
-      <dt>Protocol version</dt><dd>The lowest Delta version a tool needs to read or write the table. Turning on a new feature can raise it — a one-way change.</dd>
-    <dt>Volume (Unity Catalog)</dt><dd>A place in Unity Catalog to keep files (for example, streaming checkpoints). You use it with a <code>/Volumes/...</code> path.</dd>
-    <dt>SCD</dt><dd>Slowly Changing Dimension — a table that keeps the history of changes.</dd>
-    <dt>ETL</dt><dd>Extract, Transform, Load — moving data and reshaping it into clean tables.</dd>
-</dl>
-</div>
-
 <div class="toc reveal">
   <strong>Contents</strong>
   <a href="#setup">00 · Setup (run the examples)</a>
@@ -192,6 +167,7 @@
   <a href="#share">25 · Sharing &amp; UniForm</a>
   <a href="#delta4">26 · What's new in Delta 4.0</a>
   <a href="#cheat">27 · Cheat sheet: when to use what</a>
+  <a href="#glossary">＊ · Glossary</a>
 </div>
 
 <!-- 00 -->
@@ -995,6 +971,33 @@ ALTER SHARE sales_share ADD TABLE demo.delta_db.invoices;</pre></div>
 <tr><td>Send only what changed downstream?</td><td><strong>Change Data Feed</strong></td></tr>
 <tr><td>Recover a bad load / audit?</td><td><strong>Time travel</strong> + <strong>RESTORE</strong></td></tr>
 </table>
+
+<!-- Glossary -->
+<h2 id="glossary" class="reveal">Glossary</h2>
+<p class="reveal">Every term used in this article, defined in one place. Skim it first if you're new, or jump back here whenever a word feels rushed.</p>
+<div class="gloss reveal">
+  <dl>
+    <dt>Parquet</dt><dd>The common file type for analytics data. Delta stores its data as Parquet files.</dd>
+    <dt>Transaction log</dt><dd>The ordered list of changes in <code>_delta_log/</code>. Sometimes called a "ledger" (a record book).</dd>
+    <dt>Commit</dt><dd>One change written to the log as one numbered file (e.g. <code>...0001.json</code>). Also called a "version".</dd>
+    <dt>ACID</dt><dd>Four safety promises: a write fully happens or not at all (atomic), rules are kept (consistent), readers don't see half-done work (isolated), and committed data survives crashes (durable).</dd>
+    <dt>Tombstone</dt><dd>A note that marks a file as "no longer used". The file stays on disk until VACUUM deletes it.</dd>
+    <dt>Deletion vector (DV)</dt><dd>A tiny file that marks which rows inside a data file are deleted, so Delta doesn't have to rewrite the whole file. It's a "bitmap" (a compact map of row positions).</dd>
+    <dt>Checkpoint</dt><dd>A saved summary of the log so far, so reading doesn't replay every old commit.</dd>
+    <dt>MERGE / upsert</dt><dd>One command that updates a row if it exists and inserts it if it doesn't. "Upsert" = update-or-insert.</dd>
+    <dt>OPTIMIZE / compaction</dt><dd>Packing many small files into a few right-sized ones.</dd>
+    <dt>Partition</dt><dd>Splitting a table into folders by a column value (often a date) so queries can skip folders.</dd>
+    <dt>Idempotent</dt><dd>Safe to run again. Re-running the same load does not create duplicates.</dd>
+    <dt>Streaming / micro-batch</dt><dd>Processing data continuously in small chunks ("micro-batches") instead of one big run.</dd>
+    <dt>Source / sink</dt><dd>A "source" is where data is read from; a "sink" is where it is written to (the destination).</dd>
+    <dt>Medallion (bronze→silver→gold)</dt><dd>A common pattern of table layers: raw → cleaned → business-ready.</dd>
+    <dt>Metastore / Unity Catalog</dt><dd>The service that stores table names, locations and permissions. Unity Catalog is Databricks' version.</dd>
+    <dt>Protocol version</dt><dd>The lowest Delta version a tool needs to read or write the table. Turning on a new feature can raise it — a one-way change.</dd>
+    <dt>Volume (Unity Catalog)</dt><dd>A place in Unity Catalog to keep files (for example, streaming checkpoints). You use it with a <code>/Volumes/...</code> path.</dd>
+    <dt>SCD</dt><dd>Slowly Changing Dimension — a table that keeps the history of changes.</dd>
+    <dt>ETL</dt><dd>Extract, Transform, Load — moving data and reshaping it into clean tables.</dd>
+  </dl>
+</div>
 
 <footer class="reveal">
 <p><strong>Putting it together.</strong> In real work you'll use a few of these very often: <code>MERGE</code> for safe, repeatable loads; deletion vectors for cheap updates; partitioning or liquid clustering plus a scheduled <code>OPTIMIZE</code> for fast reads; <code>VACUUM</code> for cleanup; time travel for audits and recovery; and Change Data Feed to pass only what changed to the next layer. Learn the transaction log once, and the rest follows from it.</p>
