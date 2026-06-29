@@ -496,6 +496,17 @@ gitGraph
   <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">Rebasing or <code>--amend</code>-ing rewrites commit IDs, so a normal <code>git push</code> is rejected as "non-fast-forward." On <em>your own</em> feature/PR branch this is fine and expected — push with <code>git push --force-with-lease</code>. Always prefer <code>--force-with-lease</code> over a bare <code>--force</code>: it refuses to push if someone else has added commits to the branch since you last fetched, so you can't silently clobber a teammate's work.</p>
 </div>
 
+<div class="diagram reveal"><span class="dim"># "non-fast-forward" = your history diverged from the remote, instead of just</span>
+<span class="dim"># adding on top of it — so Git won't push without an explicit force.</span>
+
+  you last saw the remote at <span class="hl">C</span>, then rebased <span class="hl">C</span> → <span class="ok">C'</span>; meanwhile a teammate pushed <span class="warn">D</span>:
+
+     A ─ B ─ C ─ <span class="warn">D</span>     <span class="dim">origin/feature   (you don't have D yet)</span>
+     A ─ B ─ <span class="ok">C'</span>         <span class="dim">your rebased local branch</span>
+
+  <span class="bad">git push --force</span>            → remote becomes A ─ B ─ C'   <span class="bad">… D is gone 💥</span>
+  <span class="ok">git push --force-with-lease</span> → "remote moved past C?"     <span class="ok">rejected ✓ — D is safe</span></div>
+
 <h3 class="reveal">Merge conflicts — what they are and how to fix them</h3>
 <p class="reveal">A <strong>conflict</strong> happens when two branches changed <em>the same lines of the same file</em> in different ways. Git can't know which version is right, so it stops and asks you. This is normal — not an error you did wrong. Git marks the clashing spot inside the file like this:</p>
 <div class="cb reveal"><span class="lang">transform.sql — a conflict</span><pre><span class="r">&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD</span>            <span class="c">← your version (current branch)</span>
@@ -510,6 +521,23 @@ SELECT revenue, country
 
 <span class="c"># escape hatch — bail out and go back to before the merge/rebase:</span>
 <span class="k">git merge</span> --abort           <span class="c"># (or git rebase --abort)</span></pre></div>
+<h3 class="reveal">Steering a paused merge or rebase</h3>
+<p class="reveal">When Git can't auto-combine, it <strong>pauses mid-operation</strong> and hands control to you — you're neither finished nor reverted until you say so. The difference between merge and rebase explains the steering commands: a <strong>merge</strong> combines everything in one step, so it pauses at most once. A <strong>rebase</strong> replays your commits <em>one at a time</em> onto the new base, so it can pause at <em>each</em> commit — which is exactly why rebase has a <code>--continue</code> and merge doesn't.</p>
+<ul class="reveal">
+  <li><strong><code>git rebase --continue</code></strong> — after you've fixed the current conflict and <code>git add</code>-ed the files, this finishes re-creating that commit and moves on to replay the next one. If that one conflicts too, it pauses again — resolve, <code>add</code>, <code>--continue</code>, repeat until done. <em>(<code>git rebase --skip</code> instead drops the conflicting commit entirely.)</em></li>
+  <li><strong><code>git rebase --abort</code></strong> — the rebase escape hatch: cancel the whole thing and restore your branch to its <em>original</em> commits, exactly as before you started. Because rebase saved your starting point, nothing is lost.</li>
+  <li><strong><code>git merge --abort</code></strong> — the same escape hatch for a merge: throw away the half-done merge and return to the pre-merge state, with the conflict markers removed.</li>
+</ul>
+<p class="reveal">Notice there's no <code>--continue</code> for finishing a merge: once you've resolved a conflicted merge you simply <code>git add</code> the files and <code>git commit</code>, and that commit becomes the merge commit. <em>(Modern Git also accepts <code>git merge --continue</code> as an alias for that final commit.)</em></p>
+<table class="reveal">
+  <tr><th>Command</th><th>When</th><th>What it does</th></tr>
+  <tr><td><code>git rebase --continue</code></td><td>After resolving a rebase conflict</td><td>Finish this commit, replay the next one</td></tr>
+  <tr><td><code>git rebase --abort</code></td><td>Mid-rebase, any point</td><td>Cancel the whole rebase; restore your original branch</td></tr>
+  <tr><td><code>git merge --abort</code></td><td>Mid-merge, conflicted</td><td>Cancel the merge; restore the pre-merge state</td></tr>
+  <tr><td><code>git add</code> + <code>git commit</code></td><td>After resolving a merge conflict</td><td>Complete the merge (creates the merge commit)</td></tr>
+</table>
+<p class="reveal">The reassuring part: a paused merge or rebase always offers two doors — <em>resolve and proceed</em>, or <em>abort</em> and land back exactly where you started. You can never get irreversibly stuck.</p>
+
 <div class="callout gr reveal">
   <p style="margin:.2em 0"><span class="t">✅ Conflicts get smaller the more often you sync</span></p>
   <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">Big, scary conflicts come from branches that drifted apart for weeks. Pull <code>main</code> into your branch (or rebase onto it) <em>frequently</em> — daily — and each reconciliation is tiny. Small, short-lived branches are the single best defence against conflict pain.</p>
