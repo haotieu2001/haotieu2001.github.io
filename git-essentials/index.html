@@ -203,7 +203,8 @@
 <p class="reveal lead">Most early confusion with Git comes from skipping its mental model and memorising commands instead. Spend five minutes here and the commands stop feeling arbitrary. There are two ideas: <strong>commits are snapshots</strong>, and your files pass through <strong>three areas</strong> on the way into one.</p>
 
 <h3 class="reveal">A commit is a snapshot, not a "change"</h3>
-<p class="reveal">It's tempting to think Git stores a list of changes (a diff for each edit). Mentally, it's cleaner — and closer to the truth — to picture each <strong>commit</strong> as a complete <strong>photograph of every file in the project</strong> at one instant, with a label attached. Each commit also records a pointer back to the commit that came before it (its <strong>parent</strong>), so the commits form a chain you can walk backwards through time.</p>
+<p class="reveal">When you picture "a commit," it's tempting to imagine Git saving only your latest edit — the handful of lines you just changed. It actually does something simpler to reason about: <strong>every commit saves a complete snapshot of all your files</strong>, exactly as they stood at that instant, with a label attached (a message, your name, and the time). Think of each commit as a <strong>photograph of the whole project</strong> — not a note about what moved.</p>
+<p class="reveal">Each commit also stores a pointer back to the one right before it — its <strong>parent</strong>. Follow those pointers backwards and you walk the entire history one snapshot at a time, like stepping back through the frames of a film. That chain of linked snapshots <em>is</em> your project's history.</p>
 
 <figure class="mm reveal">
   <figcaption>A commit chain — each snapshot points back to its parent</figcaption>
