@@ -656,6 +656,22 @@ gitGraph
   <li><strong>Cons:</strong> demands excellent automated testing and CI discipline — without guardrails the trunk gets messy. Requires team maturity.</li>
 </ul>
 
+<h3 class="reveal">⑤ GitLab Flow — GitHub Flow plus environment branches</h3>
+<p class="reveal">A middle ground that keeps GitHub Flow's simplicity but adds <strong>long-lived branches that mirror your deployment environments</strong>. You still do feature branches and PRs into <code>main</code>, but <code>main</code> isn't the end of the line: code is <em>promoted</em> downstream by merging <code>main</code> → <code>staging</code> → <code>production</code>, one environment at a time. Each promotion is a deploy to that environment, and because code only ever flows one direction, what's running in production is exactly what already passed through staging.</p>
+
+<div class="diagram reveal">  feature/* ──PR──▶ <span class="hl">main</span> ──promote──▶ <span class="warn">staging</span> ──promote──▶ <span class="ok">production</span>
+                  <span class="dim">default branch    pre-prod, tested     what users</span>
+                  <span class="dim">always deployable  in a prod-like env   actually run</span>
+
+  <span class="dim">each "promote" is a merge downstream = a deploy to that environment;</span>
+  <span class="dim">code flows one way only, so prod == what already passed staging</span></div>
+
+<ul class="reveal">
+  <li><strong>Pros:</strong> an explicit, visible mapping between branches and environments; easy to reason about; supports staged rollouts without Gitflow's full ceremony.</li>
+  <li><strong>Cons:</strong> more branches to keep in sync than plain GitHub Flow, and you must always merge strictly <em>downstream</em> (never the reverse) or the environments drift apart.</li>
+</ul>
+<p class="reveal">GitLab Flow also has a lighter second variant — short <strong>release branches</strong> off <code>main</code> for versioned software — but the environment-branch form above is the one <strong>data teams</strong> reach for, because those branches line up cleanly with <code>dev</code>/<code>staging</code>/<code>prod</code> data environments (see <a href="#de">§10</a>).</p>
+
 <h3 class="reveal">Which one should you use?</h3>
 <table class="reveal">
   <tr><th>Workflow</th><th>Long-lived branches</th><th>Best when…</th><th>Release style</th></tr>
