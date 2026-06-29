@@ -612,9 +612,15 @@ gitGraph
   <tr><td><code>main</code></td><td>Production-ready code only; every commit is a tagged release</td><td>Permanent</td></tr>
   <tr><td><code>develop</code></td><td>The integration branch where finished features accumulate</td><td>Permanent</td></tr>
   <tr><td><code>feature/*</code></td><td>One per new feature; branches off and back into <code>develop</code></td><td>Short-lived</td></tr>
-  <tr><td><code>release/*</code></td><td>Stabilise a batch of features for release (bug-fixes only)</td><td>Short-lived</td></tr>
+  <tr><td><code>release/*</code></td><td>Freeze a batch of finished features and stabilise it for shipping — bug-fixes only, no new features</td><td>Short-lived</td></tr>
   <tr><td><code>hotfix/*</code></td><td>Emergency fix branched off <code>main</code>, merged to both <code>main</code> &amp; <code>develop</code></td><td>Short-lived</td></tr>
 </table>
+
+<div class="callout cy reveal">
+  <p style="margin:.2em 0"><span class="t">🔎 What a <code>release/*</code> branch is really for</span></p>
+  <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">It fills the gap between "all the features for this version are done" and "it's actually shipped." When <code>develop</code> has gathered enough for, say, <strong>v1.4</strong>, you cut a <code>release/1.4</code> branch off it. From that moment the release is <strong>frozen to new features</strong> — only bug-fixes, version-number bumps, and last-minute polish are allowed in. That freeze <em>is</em> the point: testers can stabilise a <em>fixed</em> target instead of chasing a branch that keeps changing, while the rest of the team carries on adding new features to <code>develop</code> for the version <em>after</em> this one. When it's solid, <code>release/1.4</code> is merged into <code>main</code> and tagged <code>v1.4</code> (the shipped version) <em>and</em> merged back into <code>develop</code> so those bug-fixes aren't lost.</p>
+  <p style="margin:.6em 0 0;font-size:14.5px;color:#cdd0dd">A <code>hotfix/*</code> branch is the same idea for an emergency: a fix to code that's <em>already live</em>, so it branches off <code>main</code> (not <code>develop</code>), then merges back into both <code>main</code> and <code>develop</code>.</p>
+</div>
 <ul class="reveal">
   <li><strong>Pros:</strong> strict control, clear separation of in-progress vs released code, room for parallel release maintenance. Great for desktop/mobile apps, libraries, and on-prem products with scheduled releases.</li>
   <li><strong>Cons:</strong> complex; the many branches and merge steps slow things down and fit <em>poorly</em> with continuous delivery. Often overkill for a web service or a data platform that deploys continuously.</li>
