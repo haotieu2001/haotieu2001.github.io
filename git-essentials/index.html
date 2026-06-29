@@ -1,0 +1,826 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Git Essentials for Data Engineers</title>
+<meta name="description" content="A complete, beginner-friendly reference to Git — how it thinks, the everyday commands, branching, merging vs rebasing, remotes, undoing mistakes, the common Git workflows (Gitflow, GitHub Flow, trunk-based), and how Git is really used in data engineering."/>
+<meta property="og:type" content="article"/>
+<meta property="og:title" content="Git Essentials for Data Engineers"/>
+<meta property="og:description" content="From zero to confident: Git's mental model, every core command, branching & merging, the common team workflows, and the data-engineering-specific bits (dbt, notebooks, CI/CD, data versioning)."/>
+<meta property="og:url" content="https://haotieu2001.github.io/git-essentials/"/>
+<meta property="og:image" content="https://haotieu2001.github.io/og-cover.png"/>
+<meta property="og:image:width" content="1200"/>
+<meta property="og:image:height" content="630"/>
+<meta property="og:image:alt" content="Git Essentials for Data Engineers"/>
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:title" content="Git Essentials for Data Engineers"/>
+<meta name="twitter:description" content="A complete, beginner-friendly Git reference, with a data-engineering lens."/>
+<meta name="twitter:image" content="https://haotieu2001.github.io/og-cover.png"/>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,500;0,700;0,800;1,400&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#1A1A1A; --bg2:#121212; --ink:#F1F1F1; --muted:#9aa0b4; --dim:#666666;
+    --blue2:#5C78FF; --cyan:#28B9FF; --cyan2:#5AC8FF; --purple:#905AFF; --magenta2:#BA5AFF;
+    --grad:linear-gradient(90deg,#5C78FF,#28B9FF,#A52AFF);
+    --font:"JetBrainsMono Nerd Font","JetBrains Mono","Symbols Nerd Font",ui-monospace,"Cascadia Code",Menlo,Consolas,monospace;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font);font-size:16px;line-height:1.85;-webkit-font-smoothing:antialiased}
+  #bar{position:fixed;top:0;left:0;height:3px;width:0;z-index:50;background:var(--grad);box-shadow:0 0 12px #5C78FF99;transition:width .1s linear}
+  .page{max-width:880px;margin:0 auto;padding:0 24px}
+  header{padding:30px 0 6px}
+  .kicker{font-size:13px;color:var(--dim)}
+  .back{color:var(--cyan2);text-decoration:none;font-size:13px;border-bottom:1px dotted #5AC8FF66}
+  h1{font-size:clamp(28px,4.6vw,46px);line-height:1.12;margin:12px 0 12px;font-weight:800;
+     background:var(--grad);background-size:220% auto;-webkit-background-clip:text;background-clip:text;color:transparent;animation:sheen 9s linear infinite}
+  @keyframes sheen{to{background-position:220% center}}
+  .dek{color:var(--muted);font-size:17px}
+  .byline{margin-top:14px;font-size:13px;color:var(--dim)}
+  h2{font-size:clamp(21px,3.2vw,28px);margin:52px 0 6px;font-weight:800;line-height:1.22;padding-top:14px;border-top:1px solid #23232e}
+  h2 .n{color:var(--blue2)}
+  h3{font-size:18px;margin:28px 0 4px;color:#fff;font-weight:700}
+  h4{font-size:15px;margin:20px 0 4px;color:var(--cyan2);font-weight:700}
+  p,li{color:#dcdce4}
+  .lead{font-size:18px;color:#e7e7ee}
+  a{color:var(--cyan2)}
+  hr{border:0;border-top:1px solid #2c2c36;margin:36px 0}
+  code{font-family:var(--font);background:#23232b;color:#5AC8FF;padding:1px 6px;border-radius:5px;font-size:.88em;border:1px solid #2f2f3a}
+  .cb{margin:16px 0}
+  .cb .lang{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:#9aa0b4;background:#1b1b24;border:1px solid #2c2c36;border-bottom:none;border-radius:9px 9px 0 0;padding:4px 12px}
+  pre{margin:0;background:#0d0d13;border:1px solid #23232e;border-radius:0 10px 10px 10px;padding:14px 16px;overflow-x:auto;
+      font-family:var(--font);font-size:13px;line-height:1.65;color:#d8dcea;white-space:pre}
+  pre .c{color:#6b7280}
+  pre .o{color:#9aa0b4}
+  pre .k{color:#5AC8FF}
+  pre .g{color:#34d399}
+  pre .y{color:#f0b429}
+  pre .r{color:#f87171}
+  .callout{border-left:4px solid var(--blue2);background:#16182a;border-radius:0 12px 12px 0;padding:14px 18px;margin:22px 0}
+  .callout.cy{border-color:var(--cyan);background:#0f1f2b}
+  .callout.mg{border-color:var(--magenta2);background:#1d1526}
+  .callout.gd{border-color:#f0b429;background:#241d0f}
+  .callout.gr{border-color:#34d399;background:#0d1f18}
+  .callout .t{color:var(--cyan2);font-weight:800}
+  .callout.gd .t{color:#f0b429}
+  .callout.gr .t{color:#34d399}
+  .callout.mg .t{color:var(--magenta2)}
+  .tldr{border:1px solid #2f3a66;background:linear-gradient(180deg,#15182a,#121212);border-radius:16px;padding:20px 24px;margin:26px 0}
+  .tldr h4{margin:0 0 8px;font-size:13px;letter-spacing:.2em;text-transform:uppercase;color:var(--cyan2)}
+  .gloss{border:1px solid #2c2c36;background:#141419;border-radius:14px;padding:18px 22px;margin:24px 0}
+  .gloss h4{margin:0 0 6px;color:#fff;font-size:15px}
+  .gloss dl{margin:0;font-size:13.5px}
+  .gloss dt{color:var(--cyan2);font-weight:700;margin-top:9px}
+  .gloss dd{margin:1px 0 0;color:#cdd0dd}
+  .toc{background:#15151b;border:1px solid #2c2c36;border-radius:14px;padding:16px 22px;margin:24px 0;column-count:2;column-gap:28px}
+  .toc a{display:block;color:var(--cyan2);text-decoration:none;font-size:13.5px;line-height:1.9;break-inside:avoid}
+  .toc a:hover{color:#fff}
+  .toc>strong{column-span:all;display:block;margin-bottom:6px;color:#fff}
+  table{border-collapse:collapse;width:100%;font-size:13.5px;margin:16px 0}
+  th,td{border:1px solid #2c2c36;padding:8px 11px;text-align:left;vertical-align:top}
+  th{background:#1d1d27;color:#fff}
+  tr:nth-child(even) td{background:#161620}
+  .diagram{background:#0d0d13;border:1px solid #23232e;border-radius:14px;padding:18px;margin:20px 0;overflow-x:auto;font-size:12.5px;line-height:1.7;color:#d8dcea;white-space:pre;font-family:var(--font)}
+  .diagram .hl{color:#5AC8FF}
+  .diagram .dim{color:#6b7280}
+  .diagram .ok{color:#34d399}
+  .diagram .warn{color:#f0b429}
+  .diagram .bad{color:#f87171}
+  .diagram .pu{color:#b98cff}
+  .pain{border:1px solid #3a2020;background:#1c1212;border-radius:14px;padding:16px 20px;margin:14px 0}
+  .pain h4{margin:0 0 4px;color:#f87171}
+  .fix{border:1px solid #1a3020;background:#0d1f14;border-radius:14px;padding:16px 20px;margin:14px 0}
+  .fix h4{margin:0 0 4px;color:#34d399}
+  .step{display:flex;gap:12px;align-items:flex-start;margin:14px 0}
+  .step .num-bubble{flex:0 0 28px;height:28px;border-radius:50%;background:var(--grad);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:#fff;margin-top:2px}
+  .step .body{flex:1}
+  figure.mm{background:radial-gradient(130% 150% at 50% 0%,#16182a 0%,#0d0d13 72%);border:1px solid #23232e;border-radius:14px;padding:14px 10px 6px;margin:20px 0;overflow-x:auto}
+  figure.mm figcaption{font-size:12px;color:#555;text-align:center;margin-bottom:.4em;letter-spacing:.06em;text-transform:uppercase}
+  .mermaid{display:flex;justify-content:center;font-family:var(--font)!important}
+  footer{border-top:1px solid #23232e;margin-top:50px;padding:24px 0 90px;color:var(--dim);font-size:13px}
+  footer a{color:var(--cyan2)}
+  .js .reveal{opacity:0;transform:translateY(16px);transition:opacity .6s ease,transform .6s ease}
+  .js .reveal.in{opacity:1;transform:none}
+  @media (prefers-reduced-motion:reduce){.js .reveal{opacity:1;transform:none}}
+</style>
+<script>document.documentElement.classList.add('js');</script>
+</head>
+<body>
+<div id="bar"></div>
+<div class="page">
+
+<header>
+  <div class="kicker"><a class="back" href="../">❮ Data &amp; AI Engineering, Simply Explained</a></div>
+  <h1>Git Essentials for Data Engineers</h1>
+  <p class="dek"><strong>Git</strong> is the tool that remembers every version of your code, lets a whole team work on the same project without stepping on each other, and makes "undo" possible even weeks later. This is a from-zero reference: it assumes <em>no</em> prior experience, builds Git's mental model one piece at a time, walks through every command you'll actually use, then covers the team <strong>workflows</strong> (Gitflow, GitHub Flow, trunk-based) and the parts that matter specifically for <strong>data engineering</strong> — dbt, notebooks, CI/CD, and versioning data itself.</p>
+  <div class="byline">~35 min read · Essentials · Reference</div>
+</header>
+
+<figure class="reveal" style="margin:18px 0 6px;background:radial-gradient(130% 150% at 50% 0%,#16182a 0%,#0d0d13 72%);border:1px solid #23232e;border-radius:16px;padding:10px 10px;overflow:hidden">
+<svg viewBox="0 0 880 210" width="100%" style="display:block" aria-label="A line of commits with a branch splitting off and merging back">
+  <defs>
+    <linearGradient id="hero-grad" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#5C78FF"/><stop offset=".5" stop-color="#28B9FF"/><stop offset="1" stop-color="#A52AFF"/>
+    </linearGradient>
+    <style>
+      .h-mono{font-family:'JetBrains Mono',monospace;}
+      .h-lbl{font-family:'JetBrains Mono',monospace;font-size:11px;fill:#8a90a6;}
+    </style>
+  </defs>
+  <!-- main line -->
+  <line x1="60" y1="120" x2="820" y2="120" stroke="#2c2c36" stroke-width="2"/>
+  <text x="60" y="150" class="h-lbl" fill="#5AC8FF">main</text>
+  <!-- feature line -->
+  <path d="M250 120 C 300 120 300 64 350 64 L 560 64 C 610 64 610 120 660 120" fill="none" stroke="#2c2c36" stroke-width="2"/>
+  <text x="350" y="48" class="h-lbl" fill="#34d399">feature/new-pipeline</text>
+  <!-- main commits -->
+  <g>
+    <circle cx="120" cy="120" r="10" fill="#0e1f3d" stroke="#5AC8FF" stroke-width="2.4"/>
+    <circle cx="250" cy="120" r="10" fill="#0e1f3d" stroke="#5AC8FF" stroke-width="2.4"/>
+    <circle cx="660" cy="120" r="11" fill="#0e1f3d" stroke="url(#hero-grad)" stroke-width="3"><animate attributeName="r" values="11;13;11" dur="2.4s" repeatCount="indefinite"/></circle>
+    <circle cx="790" cy="120" r="10" fill="#0e1f3d" stroke="#5AC8FF" stroke-width="2.4"/>
+  </g>
+  <text x="660" y="156" class="h-lbl" fill="#A52AFF" text-anchor="middle">merge</text>
+  <!-- feature commits -->
+  <g>
+    <circle cx="380" cy="64" r="10" fill="#0f1f17" stroke="#34d399" stroke-width="2.4"/>
+    <circle cx="470" cy="64" r="10" fill="#0f1f17" stroke="#34d399" stroke-width="2.4"/>
+    <circle cx="560" cy="64" r="10" fill="#0f1f17" stroke="#34d399" stroke-width="2.4"/>
+  </g>
+  <!-- travelling commit particle -->
+  <circle r="4" fill="#5AC8FF"><animate attributeName="cx" values="120;790" dur="4s" repeatCount="indefinite"/><animate attributeName="cy" values="120;120" dur="4s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;1;1;0" dur="4s" repeatCount="indefinite"/></circle>
+  <text x="440" y="186" class="h-mono" font-size="12" fill="#6b7280" text-anchor="middle">each circle is a commit — a complete, named snapshot of the whole project</text>
+</svg>
+</figure>
+
+<div class="tldr reveal">
+  <h4>❯ The one idea (read this first)</h4>
+  <p style="margin:.2em 0">Git is a <strong>time machine + collaboration tool</strong> for a folder of files. Every time you reach a good stopping point you take a <strong>commit</strong> — a labelled snapshot of the entire project at that moment. Git keeps every snapshot forever, linked in a chain, so you can look back, compare, or jump to any past version. A <strong>branch</strong> is just a lightweight pointer to one snapshot, which lets several people (or several ideas) move forward in parallel and later <strong>merge</strong> their work back together. Almost everything else in Git is a variation on those three words: <em>commit, branch, merge</em>.</p>
+</div>
+
+<div class="toc reveal">
+  <strong>Contents</strong>
+  <a href="#why">01 · What Git is &amp; why it exists</a>
+  <a href="#model">02 · How Git thinks (the mental model)</a>
+  <a href="#everyday">03 · The everyday commands</a>
+  <a href="#branches">04 · Branches — just movable pointers</a>
+  <a href="#remotes">05 · Remotes — sharing with a team</a>
+  <a href="#merge-rebase">06 · Merge vs rebase (&amp; conflicts)</a>
+  <a href="#undo">07 · Undoing things safely</a>
+  <a href="#workflows">08 · Git workflows &amp; Gitflow</a>
+  <a href="#pr">09 · Pull requests &amp; code review</a>
+  <a href="#de">10 · Git for data engineers</a>
+  <a href="#best">11 · Best practices &amp; commit style</a>
+  <a href="#cheatsheet">12 · Quick-reference cheat sheet</a>
+  <a href="#glossary">＊ · Glossary</a>
+</div>
+
+<!-- 01 -->
+<h2 id="why" class="reveal"><span class="n">01.</span> What Git is &amp; why it exists</h2>
+<p class="reveal lead">Imagine writing an important document and saving copies named <code>report_final.doc</code>, <code>report_final_v2.doc</code>, <code>report_final_REALLY_final.doc</code>. That's <em>version control</em> done by hand — and it falls apart the moment a second person joins. Git is the tool that does this properly: it tracks every change to a set of files, remembers who changed what and why, and lets many people work on the same project at once without overwriting each other.</p>
+
+<p class="reveal">Concretely, Git gives you four superpowers over a plain folder:</p>
+<ul class="reveal">
+  <li><strong>History</strong> — every saved version is kept forever. You can see exactly what the project looked like last Tuesday, and what changed since.</li>
+  <li><strong>Undo</strong> — broke something? Roll any file, or the whole project, back to a known-good version.</li>
+  <li><strong>Collaboration</strong> — many people edit the same files in parallel; Git stitches their changes together and flags the rare spots where two people changed the same line.</li>
+  <li><strong>Accountability</strong> — every change is stamped with an author, a timestamp, and a message explaining <em>why</em> — an invaluable record when you're debugging "why is this pipeline suddenly broken?" six months later.</li>
+</ul>
+
+<h3 class="reveal">"Distributed": the one word that defines Git</h3>
+<p class="reveal">Older version-control tools (like SVN) were <strong>centralized</strong>: there was one server holding the history, and you needed a network connection to do almost anything. Git is <strong>distributed</strong> — when you <code>clone</code> a project, you get a <em>complete copy</em> of the entire history on your own machine. You can commit, branch, look at history, and compare versions entirely offline. You only need the network for the moments you deliberately <em>share</em>: pushing your work up, or pulling other people's work down.</p>
+
+<div class="callout cy reveal">
+  <p style="margin:.2em 0"><span class="t">🔑 Git ≠ GitHub</span></p>
+  <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd"><strong>Git</strong> is the version-control tool that runs on your computer — free, open-source, works with no internet. <strong>GitHub</strong> (and GitLab, Bitbucket, Azure Repos) is a <em>website</em> that hosts a shared copy of your Git project in the cloud and adds team features on top: pull requests, code review, issue tracking, and automation. You can use Git with no GitHub at all; GitHub is just the most popular place to put the shared copy. The relationship is like a camera (Git) versus a photo-sharing site (GitHub).</p>
+</div>
+
+<!-- 02 -->
+<h2 id="model" class="reveal"><span class="n">02.</span> How Git thinks (the mental model)</h2>
+<p class="reveal lead">Most early confusion with Git comes from skipping its mental model and memorising commands instead. Spend five minutes here and the commands stop feeling arbitrary. There are two ideas: <strong>commits are snapshots</strong>, and your files pass through <strong>three areas</strong> on the way into one.</p>
+
+<h3 class="reveal">A commit is a snapshot, not a "change"</h3>
+<p class="reveal">It's tempting to think Git stores a list of changes (a diff for each edit). Mentally, it's cleaner — and closer to the truth — to picture each <strong>commit</strong> as a complete <strong>photograph of every file in the project</strong> at one instant, with a label attached. Each commit also records a pointer back to the commit that came before it (its <strong>parent</strong>), so the commits form a chain you can walk backwards through time.</p>
+
+<figure class="mm reveal">
+  <figcaption>A commit chain — each snapshot points back to its parent</figcaption>
+  <div class="diagram" style="background:none;border:none;padding:6px 4px;margin:0">  <span class="dim">(older)</span>                                            <span class="dim">(newer / now)</span>
+  <span class="hl">A</span> ◀──── <span class="hl">B</span> ◀──── <span class="hl">C</span> ◀──── <span class="hl">D</span> ◀──── <span class="hl">E</span>   ⟵ <span class="ok">HEAD</span> (you are here)
+  <span class="dim">│       │       │       │       │</span>
+  <span class="dim">each letter = one commit = a full snapshot + a message + author + time</span>
+  <span class="dim">the arrows mean "my parent is…" — Git walks them to reconstruct history</span></div>
+</figure>
+
+<p class="reveal">Every commit has a unique ID — a 40-character <strong>hash</strong> like <code>9f2c1ab…</code> (you'll usually see just the first 7, e.g. <code>9f2c1ab</code>). That hash is a fingerprint of the commit's exact contents, so it's impossible to alter history without it being obvious.</p>
+
+<h3 class="reveal">The three areas every change passes through</h3>
+<p class="reveal">This is <em>the</em> diagram to burn into memory. A file moves through three places before it's safely in history:</p>
+
+<figure class="reveal" style="margin:1.4em 0;background:#0d0d13;border:1px solid #23232e;border-radius:10px;padding:1.2em 1em 1em;overflow:hidden">
+<figcaption style="font-size:12px;color:#555;text-align:center;margin-bottom:.8em;letter-spacing:.06em;text-transform:uppercase">The three areas — and the commands that move files between them</figcaption>
+<svg viewBox="0 0 760 240" width="100%" style="display:block;max-width:760px;margin:0 auto" aria-label="Working directory, staging area, and repository with git add and git commit between them">
+  <defs><style>.b{font-family:'JetBrains Mono',monospace;}</style></defs>
+  <!-- boxes -->
+  <rect x="20" y="60" width="200" height="110" rx="10" fill="#1c1212" stroke="#f87171" stroke-width="1.6"/>
+  <text x="120" y="48" class="b" font-size="12" fill="#f87171" text-anchor="middle" font-weight="700">WORKING DIRECTORY</text>
+  <text x="120" y="112" class="b" font-size="11" fill="#b7c0cc" text-anchor="middle">your actual files,</text>
+  <text x="120" y="130" class="b" font-size="11" fill="#b7c0cc" text-anchor="middle">as you edit them</text>
+
+  <rect x="280" y="60" width="200" height="110" rx="10" fill="#1a180d" stroke="#f0b429" stroke-width="1.6"/>
+  <text x="380" y="48" class="b" font-size="12" fill="#f0b429" text-anchor="middle" font-weight="700">STAGING AREA</text>
+  <text x="380" y="106" class="b" font-size="11" fill="#b7c0cc" text-anchor="middle">the "shortlist" of</text>
+  <text x="380" y="124" class="b" font-size="11" fill="#b7c0cc" text-anchor="middle">changes for the</text>
+  <text x="380" y="142" class="b" font-size="11" fill="#b7c0cc" text-anchor="middle">next snapshot</text>
+
+  <rect x="540" y="60" width="200" height="110" rx="10" fill="#0d1820" stroke="#5AC8FF" stroke-width="1.6"/>
+  <text x="640" y="48" class="b" font-size="12" fill="#5AC8FF" text-anchor="middle" font-weight="700">REPOSITORY (.git)</text>
+  <text x="640" y="106" class="b" font-size="11" fill="#b7c0cc" text-anchor="middle">permanent history</text>
+  <text x="640" y="124" class="b" font-size="11" fill="#b7c0cc" text-anchor="middle">of every commit</text>
+
+  <!-- arrows -->
+  <line x1="220" y1="100" x2="278" y2="100" stroke="#f0b429" stroke-width="1.8"/>
+  <polygon points="278,95 288,100 278,105" fill="#f0b429"/>
+  <text x="249" y="90" class="b" font-size="11" fill="#f0b429" text-anchor="middle">git add</text>
+
+  <line x1="480" y1="100" x2="538" y2="100" stroke="#5AC8FF" stroke-width="1.8"/>
+  <polygon points="538,95 548,100 538,105" fill="#5AC8FF"/>
+  <text x="510" y="90" class="b" font-size="11" fill="#5AC8FF" text-anchor="middle">git commit</text>
+
+  <!-- checkout/restore back arrow -->
+  <path d="M540 150 C 380 200 380 200 220 150" fill="none" stroke="#34d399" stroke-width="1.4" stroke-dasharray="4,3"/>
+  <polygon points="226,152 216,148 222,160" fill="#34d399"/>
+  <text x="380" y="195" class="b" font-size="10.5" fill="#34d399" text-anchor="middle">git checkout / git restore  (pull an old version back out)</text>
+</svg>
+</figure>
+
+<div class="step reveal"><div class="num-bubble">1</div><div class="body"><strong>Working directory</strong> — the real files on disk that you open and edit. Git sees them as "modified" but hasn't recorded anything yet.</div></div>
+<div class="step reveal"><div class="num-bubble">2</div><div class="body"><strong>Staging area</strong> (also called the <em>index</em>) — a holding pen. With <code>git add</code> you pick exactly which changes go into the next snapshot. This lets you commit <em>some</em> of your edits and leave others for a later commit — the key to making small, focused commits.</div></div>
+<div class="step reveal"><div class="num-bubble">3</div><div class="body"><strong>Repository</strong> — the <code>.git</code> folder. <code>git commit</code> takes everything in the staging area and writes it into history permanently as a new commit.</div></div>
+
+<div class="callout reveal">
+  <p style="margin:.2em 0"><span class="t">💡 Why a staging area at all?</span></p>
+  <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">It seems like an extra step, but it's what lets you craft <em>clean</em> history. Say you fixed a bug <em>and</em> renamed a variable in the same editing session. You can <code>git add</code> just the bug-fix files, commit them with the message "fix null check," then <code>git add</code> the rest and commit "rename for clarity." Two tidy commits instead of one muddled one — much easier for a reviewer (and future-you) to read.</p>
+</div>
+
+<h3 class="reveal">HEAD — the "you are here" marker</h3>
+<p class="reveal"><strong>HEAD</strong> is Git's name for "the commit you're currently sitting on." Normally HEAD points at the latest commit of your current branch. When you make a new commit, HEAD (and the branch) move forward to it. When you switch branches, HEAD moves to point at that other branch's latest commit. Whenever a command mentions <code>HEAD</code>, read it as "where I am right now." (One gotcha: if you check out a raw commit hash instead of a branch, you land in a "<strong>detached HEAD</strong>" — you're sitting on a commit that no branch points to, so new commits there can be lost. To keep them, make a branch: <code>git switch -c new-branch</code>.)</p>
+
+<!-- 03 -->
+<h2 id="everyday" class="reveal"><span class="n">03.</span> The everyday commands</h2>
+<p class="reveal lead">Ninety percent of daily Git is a handful of commands. Here they are in the order you'd naturally use them, each with what it does and why.</p>
+
+<h3 class="reveal">Starting a project: <code>init</code> or <code>clone</code></h3>
+<div class="cb reveal"><span class="lang">bash</span><pre><span class="c"># Option A: turn an existing folder into a Git project</span>
+<span class="k">git init</span>                 <span class="c"># creates the hidden .git folder; history starts here</span>
+
+<span class="c"># Option B: copy an existing project (e.g. from GitHub) onto your machine</span>
+<span class="k">git clone</span> https://github.com/acme/data-pipelines.git
+<span class="c"># downloads the full project AND its entire history</span></pre></div>
+<p class="reveal">Use <code>init</code> when starting fresh; use <code>clone</code> when joining a project that already lives somewhere. <code>clone</code> is what you'll do most often at work.</p>
+
+<h3 class="reveal">Configure who you are (once per machine)</h3>
+<div class="cb reveal"><span class="lang">bash</span><pre><span class="k">git config</span> --global user.name  <span class="g">"Hao Tieu"</span>
+<span class="k">git config</span> --global user.email <span class="g">"hao@example.com"</span>
+<span class="c"># every commit you make gets stamped with this name + email</span></pre></div>
+
+<h3 class="reveal">The core loop: status → add → commit</h3>
+<p class="reveal">This three-step cycle is the heartbeat of Git. You'll run it dozens of times a day.</p>
+<div class="cb reveal"><span class="lang">bash</span><pre><span class="k">git status</span>               <span class="c"># what's changed? what's staged? — run this constantly</span>
+
+<span class="k">git add</span> transform.sql    <span class="c"># stage one file for the next snapshot</span>
+<span class="k">git add</span> .               <span class="c"># …or stage everything that changed</span>
+
+<span class="k">git commit</span> -m <span class="g">"Add revenue-by-region transform"</span>
+<span class="c"># take the snapshot. -m is the message explaining WHY.</span></pre></div>
+
+<div class="callout cy reveal">
+  <p style="margin:.2em 0"><span class="t">🧭 <code>git status</code> is your best friend</span></p>
+  <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">When you're unsure what state things are in — what's modified, what's staged, what branch you're on, whether you're ahead of the server — run <code>git status</code>. It also <em>suggests the next command</em> for common situations. There's no such thing as running it too often.</p>
+</div>
+
+<h3 class="reveal">Looking at history &amp; differences</h3>
+<div class="cb reveal"><span class="lang">bash</span><pre><span class="k">git log</span>                       <span class="c"># full history, newest first</span>
+<span class="k">git log</span> --oneline --graph     <span class="c"># compact, with a visual branch graph</span>
+
+<span class="k">git diff</span>                      <span class="c"># unstaged changes (working dir vs last commit)</span>
+<span class="k">git diff</span> --staged             <span class="c"># what you've staged but not yet committed</span>
+<span class="k">git show</span> 9f2c1ab               <span class="c"># everything a specific commit changed</span></pre></div>
+<p class="reveal"><code>git diff</code> answers "what exactly did I change?" and <code>git log</code> answers "how did we get here?" — together they're how you understand any codebase's evolution.</p>
+
+<h3 class="reveal"><code>.gitignore</code> — telling Git what to <em>not</em> track</h3>
+<p class="reveal">Some files should never go into Git: secrets, huge data files, and machine-generated junk. You list patterns for them in a file named <code>.gitignore</code> at the project root, and Git pretends those files don't exist.</p>
+<div class="cb reveal"><span class="lang">.gitignore</span><pre><span class="c"># secrets — NEVER commit these</span>
+.env
+*.key
+credentials.json
+
+<span class="c"># data — too big / not code (version it elsewhere — see §10)</span>
+*.csv
+*.parquet
+/data/
+
+<span class="c"># machine-generated clutter</span>
+__pycache__/
+.ipynb_checkpoints/
+.DS_Store</pre></div>
+<div class="callout cy reveal">
+  <p style="margin:.2em 0"><span class="t">⚠️ <code>.gitignore</code> only affects <em>untracked</em> files</span></p>
+  <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">A crucial catch: ignoring a file that Git is <em>already tracking</em> does nothing — Git keeps tracking it. So if you accidentally committed a big <code>data.parquet</code> (or a secret) and only added the pattern afterwards, you must stop tracking it explicitly: <code>git rm --cached data.parquet</code>, then commit. (The <code>--cached</code> flag removes it from Git but leaves the file on your disk.)</p>
+</div>
+
+<div class="callout gd reveal">
+  <p style="margin:.2em 0"><span class="t">⚠️ The cardinal sin: committing secrets</span></p>
+  <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">Because Git keeps history <em>forever</em>, a password or API key committed once stays in the history even after you "delete" it in a later commit — anyone who clones the repo can dig it out. Add secrets to <code>.gitignore</code> <em>before</em> your first commit. If one slips through, treat it as leaked: rotate the credential immediately, then scrub history with a tool like <code>git filter-repo</code>.</p>
+</div>
+
+<!-- 04 -->
+<h2 id="branches" class="reveal"><span class="n">04.</span> Branches — just movable pointers</h2>
+<p class="reveal lead">Branches sound advanced but are mechanically trivial — and that triviality is Git's secret weapon. A <strong>branch is simply a lightweight, movable label pointing at one commit.</strong> That's the whole thing. Creating one writes a tiny file with a commit ID in it; that's why Git branching is instant and cheap, where older tools made branching a heavyweight ordeal.</p>
+
+<p class="reveal">Why branch? So you can build a new feature, experiment, or fix a bug <em>without touching the known-good main code</em>. You branch off, do messy work in isolation, and only fold it back in when it's ready and reviewed. The main line stays stable the whole time.</p>
+
+<figure class="mm reveal">
+  <figcaption>A feature branch splitting off <code>main</code> and merging back</figcaption>
+  <pre class="mermaid">
+gitGraph
+   commit id: "init"
+   commit id: "add ingest"
+   branch feature/revenue
+   checkout feature/revenue
+   commit id: "draft model"
+   commit id: "add tests"
+   checkout main
+   commit id: "hotfix typo"
+   merge feature/revenue id: "merge PR"
+   commit id: "next work"
+  </pre>
+</figure>
+
+<h3 class="reveal">The branch commands</h3>
+<div class="cb reveal"><span class="lang">bash</span><pre><span class="k">git branch</span>                        <span class="c"># list branches; * marks the one you're on</span>
+<span class="k">git switch</span> -c feature/revenue     <span class="c"># create a new branch AND move onto it</span>
+<span class="c">#  (older syntax, still everywhere: git checkout -b feature/revenue)</span>
+
+<span class="c"># …make commits on the branch…</span>
+
+<span class="k">git switch</span> main                   <span class="c"># hop back to main (your work is safe on the branch)</span>
+<span class="k">git merge</span> feature/revenue         <span class="c"># fold the branch's work into main</span>
+<span class="k">git branch</span> -d feature/revenue     <span class="c"># delete the branch once it's merged</span></pre></div>
+
+<div class="callout cy reveal">
+  <p style="margin:.2em 0"><span class="t">🔀 <code>switch</code>/<code>restore</code> vs the old <code>checkout</code></span></p>
+  <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">For years one overloaded command, <code>git checkout</code>, did two unrelated jobs: switching branches <em>and</em> restoring files. Modern Git split them into <code>git switch</code> (change branch) and <code>git restore</code> (discard file changes) — clearer and safer. You'll still see <code>checkout</code> everywhere in older docs and tutorials; just know it's the same machinery.</p>
+</div>
+
+<h3 class="reveal">What "switching branches" actually does</h3>
+<p class="reveal">When you <code>git switch</code> to another branch, Git moves <strong>HEAD</strong> to that branch and rewrites the files in your working directory to match that branch's latest commit. Your other branch's work doesn't vanish — it's safely stored in commits, waiting where you left it. Switching feels like teleporting between parallel versions of the project.</p>
+
+<!-- 05 -->
+<h2 id="remotes" class="reveal"><span class="n">05.</span> Remotes — sharing with a team</h2>
+<p class="reveal lead">Everything so far happens on your laptop. A <strong>remote</strong> is a shared copy of the project living somewhere else — usually on GitHub. It's the meeting point where the team's work comes together. The default remote is conventionally named <strong><code>origin</code></strong>.</p>
+
+<figure class="reveal" style="margin:1.4em 0;background:#0d0d13;border:1px solid #23232e;border-radius:10px;padding:1.2em 1em 1em;overflow:hidden">
+<figcaption style="font-size:12px;color:#555;text-align:center;margin-bottom:.8em;letter-spacing:.06em;text-transform:uppercase">push sends your commits up · pull brings others' commits down</figcaption>
+<svg viewBox="0 0 720 220" width="100%" style="display:block;max-width:720px;margin:0 auto" aria-label="Two laptops syncing through a remote on GitHub via push and pull">
+  <defs><style>.r2{font-family:'JetBrains Mono',monospace;}</style></defs>
+  <!-- remote -->
+  <rect x="270" y="20" width="180" height="74" rx="10" fill="#15151b" stroke="url(#hero-grad)" stroke-width="2"/>
+  <text x="360" y="50" class="r2" font-size="13" fill="#5AC8FF" text-anchor="middle" font-weight="700">origin (GitHub)</text>
+  <text x="360" y="72" class="r2" font-size="11" fill="#8a90a6" text-anchor="middle">the shared copy</text>
+  <!-- your laptop -->
+  <rect x="40" y="150" width="200" height="56" rx="9" fill="#0f1f17" stroke="#34d399" stroke-width="1.6"/>
+  <text x="140" y="183" class="r2" font-size="12" fill="#34d399" text-anchor="middle" font-weight="700">your laptop (clone)</text>
+  <!-- teammate -->
+  <rect x="480" y="150" width="200" height="56" rx="9" fill="#1a180d" stroke="#f0b429" stroke-width="1.6"/>
+  <text x="580" y="183" class="r2" font-size="12" fill="#f0b429" text-anchor="middle" font-weight="700">teammate's laptop</text>
+  <!-- push arrow -->
+  <line x1="170" y1="150" x2="300" y2="92" stroke="#34d399" stroke-width="1.8"/>
+  <polygon points="296,86 306,90 297,98" fill="#34d399"/>
+  <text x="205" y="118" class="r2" font-size="11" fill="#34d399">git push ▲</text>
+  <!-- pull arrow -->
+  <line x1="300" y1="98" x2="150" y2="150" stroke="#5AC8FF" stroke-width="1.8" stroke-dasharray="4,3"/>
+  <polygon points="156,146 146,150 158,156" fill="#5AC8FF"/>
+  <text x="120" y="140" class="r2" font-size="11" fill="#5AC8FF">▼ git pull</text>
+  <!-- teammate arrows -->
+  <line x1="550" y1="150" x2="420" y2="92" stroke="#f0b429" stroke-width="1.8"/>
+  <polygon points="424,86 414,90 423,98" fill="#f0b429"/>
+  <text x="500" y="118" class="r2" font-size="11" fill="#f0b429">push ▲</text>
+  <line x1="420" y1="98" x2="570" y2="150" stroke="#5AC8FF" stroke-width="1.8" stroke-dasharray="4,3"/>
+  <polygon points="564,146 574,150 562,156" fill="#5AC8FF"/>
+</svg>
+</figure>
+
+<div class="cb reveal"><span class="lang">bash</span><pre><span class="k">git remote</span> -v                       <span class="c"># show the remote(s) this project is linked to</span>
+
+<span class="k">git push</span>                            <span class="c"># upload your new commits to origin</span>
+<span class="k">git push</span> -u origin feature/revenue  <span class="c"># first push of a new branch (-u sets the upstream, so later just `git push`)</span>
+
+<span class="k">git pull</span>                            <span class="c"># download teammates' new commits AND merge them in</span>
+<span class="k">git fetch</span>                           <span class="c"># download them but DON'T merge yet (just look)</span></pre></div>
+
+<div class="callout reveal">
+  <p style="margin:.2em 0"><span class="t">💡 <code>fetch</code> vs <code>pull</code></span></p>
+  <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd"><code>git fetch</code> = "show me what's new on the server, but don't change my files yet." <code>git pull</code> = <code>fetch</code> <em>plus</em> immediately merge those changes into your current branch. <code>pull</code> is the convenient default; <code>fetch</code> is the cautious one when you want to inspect incoming changes before letting them touch your work. Fetched commits land in a read-only mirror called <code>origin/main</code> (your local snapshot of the server's branch), kept separate from your own <code>main</code> until you merge.</p>
+</div>
+
+<h3 class="reveal">The typical day, end to end</h3>
+<div class="cb reveal"><span class="lang">bash</span><pre><span class="k">git switch</span> main && <span class="k">git pull</span>            <span class="c"># 1. start from the latest shared code</span>
+<span class="k">git switch</span> -c feature/add-dq-checks    <span class="c"># 2. branch off for your task</span>
+<span class="c"># … edit files …</span>
+<span class="k">git add</span> . && <span class="k">git commit</span> -m <span class="g">"Add row-count check"</span>  <span class="c"># 3. commit as you go</span>
+<span class="k">git push</span> -u origin feature/add-dq-checks <span class="c"># 4. share your branch</span>
+<span class="c"># 5. open a Pull Request on GitHub → review → merge (see §09)</span></pre></div>
+
+<!-- 06 -->
+<h2 id="merge-rebase" class="reveal"><span class="n">06.</span> Merge vs rebase (&amp; resolving conflicts)</h2>
+<p class="reveal lead">Eventually two lines of work need to become one. Git has two ways to do that — <strong>merge</strong> and <strong>rebase</strong> — and understanding the difference (plus how to handle conflicts) is the thing that separates a nervous beginner from a confident user.</p>
+
+<h3 class="reveal">Merge: join two histories with a "knot" commit</h3>
+<p class="reveal">A <strong>merge</strong> ties two branches together by creating a special <em>merge commit</em> that has <strong>two parents</strong> — one from each branch. Nothing is rewritten; both histories are preserved exactly as they happened, and the merge commit records where they reunited.</p>
+<p class="reveal">A special easy case is the <strong>fast-forward</strong>: if <code>main</code> hasn't moved at all since you branched off, Git can simply slide the <code>main</code> pointer forward to your branch's tip — no merge commit needed, because there's nothing to reconcile.</p>
+
+<figure class="mm reveal">
+  <figcaption>Merge — a two-parent commit reunites the branches</figcaption>
+  <pre class="mermaid">
+gitGraph
+   commit id: "A"
+   commit id: "B"
+   branch feature
+   checkout feature
+   commit id: "C"
+   commit id: "D"
+   checkout main
+   commit id: "E"
+   merge feature id: "M (merge)"
+  </pre>
+</figure>
+
+<h3 class="reveal">Rebase: replay your commits onto a new base</h3>
+<p class="reveal">A <strong>rebase</strong> takes your branch's commits, sets them aside, moves your branch's starting point to the tip of <code>main</code>, and then <em>re-applies</em> your commits one by one on top. The result is a perfectly straight line of history — as if you'd started your work from the latest <code>main</code> all along. No merge commit, no fork in the graph.</p>
+
+<figure class="reveal" style="margin:1.4em 0;background:#0d0d13;border:1px solid #23232e;border-radius:10px;padding:1.2em 1em 1em;overflow:hidden">
+<figcaption style="font-size:12px;color:#555;text-align:center;margin-bottom:.8em;letter-spacing:.06em;text-transform:uppercase">Same work, two shapes of history</figcaption>
+<div class="diagram" style="background:none;border:none;padding:6px 2px;margin:0"><span class="warn">MERGE</span> keeps the fork and adds a knot:        <span class="ok">REBASE</span> rewrites to a straight line:
+
+  A─B───E──<span class="pu">M</span>   <span class="hl">main</span>                        A─B─E─<span class="ok">C'</span>─<span class="ok">D'</span>   <span class="hl">main</span>
+      \   /                                       <span class="dim">(C' and D' are NEW copies of your</span>
+       C─D     <span class="dim">feature</span>                          <span class="dim"> commits, replayed on top of E)</span>
+
+  <span class="dim">history shows exactly what happened</span>      <span class="dim">history is clean &amp; linear, but rewritten</span></div>
+</figure>
+
+<table class="reveal">
+  <tr><th></th><th>Merge</th><th>Rebase</th></tr>
+  <tr><td><strong>History shape</strong></td><td>Branching, with merge commits</td><td>Flat, linear</td></tr>
+  <tr><td><strong>Truthfulness</strong></td><td>Records exactly how it happened</td><td>Rewrites into a tidier story</td></tr>
+  <tr><td><strong>Commit IDs</strong></td><td>Unchanged</td><td>Changed (commits are recreated)</td></tr>
+  <tr><td><strong>Best for</strong></td><td>Merging finished work into a shared branch</td><td>Tidying <em>your own</em> branch before sharing</td></tr>
+</table>
+
+<div class="callout gd reveal">
+  <p style="margin:.2em 0"><span class="t">⚠️ The golden rule of rebase</span></p>
+  <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd"><strong>Never rebase commits that other people have already pulled.</strong> Because rebase <em>recreates</em> commits with new IDs, rebasing shared history makes everyone else's copy disagree with the server — a painful mess. Rule of thumb: rebase freely on your <em>own</em> un-pushed branch to clean it up; once work is shared, <strong>merge</strong> instead.</p>
+</div>
+
+<div class="callout reveal">
+  <p style="margin:.2em 0"><span class="t">💡 Rebased a branch you'd already pushed? You'll need to force-push</span></p>
+  <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">Rebasing or <code>--amend</code>-ing rewrites commit IDs, so a normal <code>git push</code> is rejected as "non-fast-forward." On <em>your own</em> feature/PR branch this is fine and expected — push with <code>git push --force-with-lease</code>. Always prefer <code>--force-with-lease</code> over a bare <code>--force</code>: it refuses to push if someone else has added commits to the branch since you last fetched, so you can't silently clobber a teammate's work.</p>
+</div>
+
+<h3 class="reveal">Merge conflicts — what they are and how to fix them</h3>
+<p class="reveal">A <strong>conflict</strong> happens when two branches changed <em>the same lines of the same file</em> in different ways. Git can't know which version is right, so it stops and asks you. This is normal — not an error you did wrong. Git marks the clashing spot inside the file like this:</p>
+<div class="cb reveal"><span class="lang">transform.sql — a conflict</span><pre><span class="r">&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD</span>            <span class="c">← your version (current branch)</span>
+SELECT revenue, region
+<span class="y">=======</span>                  <span class="c">← divider</span>
+SELECT revenue, country
+<span class="r">&gt;&gt;&gt;&gt;&gt;&gt;&gt; feature/geo</span>      <span class="c">← the incoming version</span></pre></div>
+<p class="reveal">To resolve it, you <strong>edit the file by hand</strong>: keep whichever lines are correct (maybe a blend of both), and delete the <code>&lt;&lt;&lt;</code>, <code>===</code>, <code>&gt;&gt;&gt;</code> marker lines entirely. Then:</p>
+<div class="cb reveal"><span class="lang">bash</span><pre><span class="c"># 1. open each conflicted file, edit to the correct final version</span>
+<span class="k">git add</span> transform.sql        <span class="c"># 2. mark it resolved by staging it</span>
+<span class="k">git commit</span>                  <span class="c"># 3. finish the merge (or: git rebase --continue)</span>
+
+<span class="c"># escape hatch — bail out and go back to before the merge/rebase:</span>
+<span class="k">git merge</span> --abort           <span class="c"># (or git rebase --abort)</span></pre></div>
+<div class="callout gr reveal">
+  <p style="margin:.2em 0"><span class="t">✅ Conflicts get smaller the more often you sync</span></p>
+  <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">Big, scary conflicts come from branches that drifted apart for weeks. Pull <code>main</code> into your branch (or rebase onto it) <em>frequently</em> — daily — and each reconciliation is tiny. Small, short-lived branches are the single best defence against conflict pain.</p>
+</div>
+
+<!-- 07 -->
+<h2 id="undo" class="reveal"><span class="n">07.</span> Undoing things safely</h2>
+<p class="reveal lead">A huge part of Git's value is that mistakes are recoverable. The trick is knowing <em>which</em> undo to reach for — they differ in how much they touch, and whether they're safe on shared history. (In the commands below, <code>HEAD~1</code> means "one commit before HEAD," <code>HEAD~2</code> two before, and so on.)</p>
+
+<table class="reveal">
+  <tr><th>You want to…</th><th>Command</th><th>Notes</th></tr>
+  <tr><td>Throw away un-staged edits to a file</td><td><code>git restore file</code></td><td>Reverts the file to the last commit. The edits are gone — use with care.</td></tr>
+  <tr><td>Un-stage a file (keep the edits)</td><td><code>git restore --staged file</code></td><td>Moves it out of the staging area; your changes stay in the working dir.</td></tr>
+  <tr><td>Fix the <em>last</em> commit's message or contents</td><td><code>git commit --amend</code></td><td>Replaces the last commit. Don't amend commits you've already pushed.</td></tr>
+  <tr><td>Undo a commit but <em>keep</em> the changes to re-do</td><td><code>git reset --soft HEAD~1</code></td><td>Moves the branch back one commit; changes return to staging.</td></tr>
+  <tr><td>Undo a commit and discard its changes</td><td><code>git reset --hard HEAD~1</code></td><td><strong>Destructive.</strong> Wipes the commit and its edits. Be sure.</td></tr>
+  <tr><td>Undo a commit that's already public</td><td><code>git revert &lt;hash&gt;</code></td><td>Creates a <em>new</em> commit that cancels the old one. Safe to share.</td></tr>
+  <tr><td>Stash work temporarily without committing</td><td><code>git stash</code> / <code>git stash pop</code></td><td>Pockets your changes so you can switch tasks, then brings them back.</td></tr>
+</table>
+
+<h3 class="reveal"><code>reset</code> vs <code>revert</code>: the key safety distinction</h3>
+<p class="reveal">Both "undo" a commit, but very differently:</p>
+<ul class="reveal">
+  <li><strong><code>reset</code></strong> <em>rewrites history</em> — it moves your branch pointer backwards as if the commit never happened. Great for cleaning up <em>local, un-pushed</em> work. <strong>Dangerous on shared branches</strong> (it's history-rewriting, same hazard as rebase).</li>
+  <li><strong><code>revert</code></strong> <em>adds history</em> — it makes a brand-new commit that undoes the changes of an earlier one. The original stays in the record. Because it doesn't rewrite anything, it's the <strong>safe</strong> way to undo something already on the shared remote.</li>
+</ul>
+
+<h3 class="reveal">The reflog — Git's undo for your undos</h3>
+<p class="reveal">Terrified of losing work to a bad <code>reset --hard</code>? Git quietly records every place HEAD has been in the <strong>reflog</strong>. Even "deleted" commits usually linger there for weeks, so you can almost always get back:</p>
+<div class="cb reveal"><span class="lang">bash</span><pre><span class="k">git reflog</span>                  <span class="c"># a timeline of everywhere HEAD has been</span>
+<span class="k">git reset</span> --hard HEAD@{2}   <span class="c"># jump back to how things were 2 moves ago</span></pre></div>
+<div class="callout gr reveal">
+  <p style="margin:.2em 0"><span class="t">✅ The reassuring truth</span></p>
+  <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">Once something is <em>committed</em> in Git, it's very hard to truly lose — even after a scary reset, the reflog usually has your back. The things that <em>are</em> easy to lose are changes you never committed (un-staged edits wiped by <code>restore</code> or <code>reset --hard</code>). Lesson: commit early, commit often, and your work is safe.</p>
+</div>
+
+<!-- 08 -->
+<h2 id="workflows" class="reveal"><span class="n">08.</span> Git workflows &amp; Gitflow</h2>
+<p class="reveal lead">The commands so far are the <em>mechanics</em>. A <strong>workflow</strong> (or "branching strategy") is the <em>team agreement</em> about how to use them: which branches exist, what each is for, and how work flows from idea to production. Picking one keeps a team coordinated. Here are the four you'll actually meet, from simplest to most structured.</p>
+
+<h3 class="reveal">① Feature-branch workflow (the foundation)</h3>
+<p class="reveal">The baseline every modern workflow builds on: <code>main</code> always holds working code; <em>all</em> new work happens on short-lived branches that merge back via review. Never commit straight to <code>main</code>. Everything below is a variation on this theme.</p>
+
+<h3 class="reveal">② GitHub Flow — simple &amp; continuous</h3>
+<p class="reveal">The lightweight favourite for web apps and services that deploy often. There's exactly <strong>one long-lived branch (<code>main</code>)</strong>, which is always deployable. For any work you branch off <code>main</code>, open a <strong>pull request</strong> (a request to review and merge your branch — see <a href="#pr">§09</a>), get it reviewed and CI-tested (automated tests run on every push), and merge back — then deploy. That's it.</p>
+<ul class="reveal">
+  <li><strong>Pros:</strong> easy to learn, fast, perfect for continuous deployment.</li>
+  <li><strong>Cons:</strong> relies on strong automated tests — without them <code>main</code> can break. No built-in concept of "supported old releases."</li>
+</ul>
+
+<figure class="mm reveal">
+  <figcaption>GitHub Flow — branch off main, PR, merge, repeat</figcaption>
+  <pre class="mermaid">
+gitGraph
+   commit
+   branch feature-a
+   commit
+   commit
+   checkout main
+   merge feature-a tag: "deploy"
+   branch feature-b
+   commit
+   checkout main
+   merge feature-b tag: "deploy"
+  </pre>
+</figure>
+
+<h3 class="reveal">③ Gitflow — structured, release-oriented</h3>
+<p class="reveal">The classic heavyweight model (coined by Vincent Driessen in 2010), built for software shipped as <strong>versioned releases</strong> (v1.0, v1.1…) where multiple versions may be supported at once. It uses several long-lived and supporting branches, each with a strict role:</p>
+<table class="reveal">
+  <tr><th>Branch</th><th>Role</th><th>Lifetime</th></tr>
+  <tr><td><code>main</code></td><td>Production-ready code only; every commit is a tagged release</td><td>Permanent</td></tr>
+  <tr><td><code>develop</code></td><td>The integration branch where finished features accumulate</td><td>Permanent</td></tr>
+  <tr><td><code>feature/*</code></td><td>One per new feature; branches off and back into <code>develop</code></td><td>Short-lived</td></tr>
+  <tr><td><code>release/*</code></td><td>Stabilise a batch of features for release (bug-fixes only)</td><td>Short-lived</td></tr>
+  <tr><td><code>hotfix/*</code></td><td>Emergency fix branched off <code>main</code>, merged to both <code>main</code> &amp; <code>develop</code></td><td>Short-lived</td></tr>
+</table>
+<ul class="reveal">
+  <li><strong>Pros:</strong> strict control, clear separation of in-progress vs released code, room for parallel release maintenance. Great for desktop/mobile apps, libraries, and on-prem products with scheduled releases.</li>
+  <li><strong>Cons:</strong> complex; the many branches and merge steps slow things down and fit <em>poorly</em> with continuous delivery. Often overkill for a web service or a data platform that deploys continuously.</li>
+</ul>
+
+<figure class="mm reveal">
+  <figcaption>Gitflow — feature → develop → release → main, with a hotfix</figcaption>
+  <pre class="mermaid">
+gitGraph
+   commit id: "start"
+   branch develop
+   checkout develop
+   commit id: "dev base"
+   branch feature/x
+   checkout feature/x
+   commit id: "feature work"
+   checkout develop
+   merge feature/x
+   branch release/1.0
+   checkout release/1.0
+   commit id: "stabilise"
+   checkout main
+   merge release/1.0 tag: "v1.0"
+   checkout develop
+   merge release/1.0
+  </pre>
+</figure>
+
+<h3 class="reveal">④ Trunk-based development — fast &amp; CI-native</h3>
+<p class="reveal">The model behind most high-performing teams and a <em>prerequisite</em> for true continuous integration. Everyone commits to a single <strong>trunk</strong> (<code>main</code>) in <strong>small, frequent increments</strong> — often several times a day — through very short-lived branches (hours, not days). Unfinished features are hidden behind <strong>feature flags</strong> — runtime on/off switches that let half-built code ship to <code>main</code> while staying invisible to users — rather than long branches, so the trunk is always releasable.</p>
+<ul class="reveal">
+  <li><strong>Pros:</strong> minimal merge pain (everyone's always near the tip), continuous integration in the truest sense, fastest delivery.</li>
+  <li><strong>Cons:</strong> demands excellent automated testing and CI discipline — without guardrails the trunk gets messy. Requires team maturity.</li>
+</ul>
+
+<h3 class="reveal">Which one should you use?</h3>
+<table class="reveal">
+  <tr><th>Workflow</th><th>Long-lived branches</th><th>Best when…</th><th>Release style</th></tr>
+  <tr><td><strong>GitHub Flow</strong></td><td>1 (<code>main</code>)</td><td>Web apps/services, small-to-mid teams, deploy often</td><td>Continuous</td></tr>
+  <tr><td><strong>Gitflow</strong></td><td>2 (<code>main</code>+<code>develop</code>)</td><td>Versioned products, scheduled releases, multiple supported versions</td><td>Periodic / versioned</td></tr>
+  <tr><td><strong>Trunk-based</strong></td><td>1 (<code>main</code>)</td><td>Mature teams with strong CI/CD chasing maximum velocity</td><td>Continuous</td></tr>
+  <tr><td><strong>GitLab Flow</strong></td><td>1 + environment branches</td><td>You want GitHub Flow but with explicit <code>staging</code>/<code>production</code> branches</td><td>Continuous w/ stages</td></tr>
+</table>
+<div class="callout cy reveal">
+  <p style="margin:.2em 0"><span class="t">🧭 The honest recommendation</span></p>
+  <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">For most <strong>data teams</strong>, start with <strong>GitHub Flow</strong> (or GitLab Flow if you want explicit <code>dev</code>/<code>staging</code>/<code>prod</code> branches that map to your data environments). It's simple and pairs naturally with PR review and CI. Reach for <strong>Gitflow</strong> only if you genuinely ship versioned releases that need parallel maintenance. Aim for <strong>trunk-based</strong> as your team's testing and automation mature — it's where velocity peaks. <em>The biggest mistake is adopting Gitflow's complexity for a project that deploys continuously.</em></p>
+</div>
+
+<!-- 09 -->
+<h2 id="pr" class="reveal"><span class="n">09.</span> Pull requests &amp; code review</h2>
+<p class="reveal lead">A <strong>pull request</strong> (PR) — called a "merge request" on GitLab — is where collaboration actually happens. It's a GitHub feature (not a Git command) that says: <em>"here's the work on my branch; please review it and merge it into <code>main</code>."</em> It turns a raw <code>git merge</code> into a reviewed, discussed, tested gate.</p>
+
+<p class="reveal">The PR lifecycle, step by step:</p>
+<div class="step reveal"><div class="num-bubble">1</div><div class="body"><strong>Push your branch</strong> and open a PR on GitHub, targeting <code>main</code>. Write a clear title and a description of <em>what</em> changed and <em>why</em>.</div></div>
+<div class="step reveal"><div class="num-bubble">2</div><div class="body"><strong>Automated checks run (CI).</strong> Tests, linters, and builds fire automatically. A red ✗ blocks the merge until fixed.</div></div>
+<div class="step reveal"><div class="num-bubble">3</div><div class="body"><strong>Teammates review.</strong> They read the diff, leave inline comments, ask questions, and request changes. You push more commits to address them — the PR updates live.</div></div>
+<div class="step reveal"><div class="num-bubble">4</div><div class="body"><strong>Approve &amp; merge.</strong> Once approved and green, the PR is merged into <code>main</code>. The feature branch is then deleted.</div></div>
+
+<div class="callout reveal">
+  <p style="margin:.2em 0"><span class="t">💡 Three merge buttons, briefly</span></p>
+  <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">GitHub offers three ways to merge a PR: a <strong>merge commit</strong> (keeps every commit + adds a knot), <strong>squash and merge</strong> (collapses the whole branch into one tidy commit on <code>main</code> — very popular for keeping history clean), and <strong>rebase and merge</strong> (replays your commits onto <code>main</code> for a linear history with no merge commit). When unsure, <em>squash and merge</em> is the friendliest default.</p>
+</div>
+
+<div class="callout gr reveal">
+  <p style="margin:.2em 0"><span class="t">✅ What makes a PR easy to review</span></p>
+  <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">Keep it <strong>small</strong> (a few hundred lines beats a few thousand), <strong>focused</strong> on one logical change, well-described, and green on CI. A reviewer can give a thoughtful read to 200 lines; faced with 2,000 they'll rubber-stamp it. Small PRs get better review <em>and</em> merge faster — the rare win-win.</p>
+</div>
+
+<!-- 10 -->
+<h2 id="de" class="reveal"><span class="n">10.</span> Git for data engineers</h2>
+<p class="reveal lead">Everything above applies to any code. But data engineering has its own quirks — SQL and pipeline configs, notebooks, environments that mirror branches, and the big one: <strong>Git is for your code, not your data.</strong> This section covers what's different.</p>
+
+<h3 class="reveal">What you <em>do</em> version in a data project</h3>
+<ul class="reveal">
+  <li><strong>Transformation code</strong> — dbt models, SQL, PySpark/Python jobs, Airflow/Dagster DAGs.</li>
+  <li><strong>Configuration</strong> — pipeline YAML, schema definitions, environment configs, IaC (Terraform).</li>
+  <li><strong>Tests &amp; data-quality checks</strong> — dbt tests, Great Expectations suites.</li>
+  <li><strong>Notebooks</strong> — but with care (see below).</li>
+</ul>
+
+<h3 class="reveal">dbt: the model citizen of Git in data</h3>
+<p class="reveal"><strong>dbt</strong> made software engineering practices mainstream in analytics, and it's built around Git. A typical flow: each analyst branches off <code>main</code>, edits SQL models, opens a PR; CI spins up the models in a temporary schema and runs the tests; on merge, the changes deploy to production. Branches commonly map to <strong>environments</strong> — e.g. a <code>dev</code> branch builds into a <code>dev</code> schema, <code>main</code> into <code>prod</code> — so your Git branches commonly correspond to your data environments. (In practice it's looser than a strict 1:1: developers often share a <code>dev</code> target with per-user schemas, CI builds each PR into a throwaway schema, and prod is a scheduled job on <code>main</code>.) This is exactly where GitLab Flow's environment branches shine.</p>
+
+<h3 class="reveal">Notebooks: the awkward case</h3>
+<p class="reveal">Jupyter/Databricks notebooks (<code>.ipynb</code>) are stored as <strong>JSON that mixes your code with cell outputs, images, and an execution counter that changes every run.</strong> That wrecks Git: diffs are unreadable, and merge conflicts are common and ugly — if two people just <em>run</em> the same notebook, every cell's execution count clashes, and Git's conflict markers can even make the JSON invalid so the notebook won't open.</p>
+<div class="pain reveal">
+  <h4>The pain</h4>
+  <p style="margin:.2em 0;color:#dcdce4">You open a PR changing two lines of notebook code, and the diff shows hundreds of changed lines of output JSON and execution counts. Reviewers can't see what you actually did, and merging triggers conflicts in machine-generated noise.</p>
+</div>
+<div class="fix reveal">
+  <h4>The fixes</h4>
+  <p style="margin:.2em 0;color:#dcdce4"><strong>(a)</strong> Use <code>nbstripout</code> — a Git filter that strips outputs and execution counts before committing, so Git tracks only the code (note: each collaborator must enable it locally, and stripped outputs won't live in the repo). <strong>(b)</strong> Use a rich-diff tool like <strong>ReviewNB</strong> to review notebook PRs visually. <strong>(c)</strong> On Databricks, use <strong>Git folders / Repos</strong>, which store notebooks as source files and integrate Git directly into the workspace. <strong>(d)</strong> Best of all: move reusable logic <em>out</em> of notebooks into plain <code>.py</code> modules that version and review cleanly, keeping notebooks thin.</p>
+</div>
+
+<h3 class="reveal">CI/CD for data pipelines</h3>
+<p class="reveal">The same PR-and-CI gate from <a href="#pr">§09</a>, applied to data. On a pull request, automation typically: lints SQL, compiles/parses the pipeline, runs unit tests and a sample data-quality run, and (for dbt) builds models in a throwaway schema. On merge to <code>main</code>, a CD step deploys — via the <strong>Databricks CLI / Asset Bundles</strong>, GitHub Actions calling the Databricks REST API, or your orchestrator picking up the new code. The branch you merge into decides which environment gets the deploy.</p>
+
+<h3 class="reveal">The big one: Git versions <em>code</em>, not <em>data</em></h3>
+<p class="reveal">New data engineers often ask "can I just put my datasets in Git?" — and the answer is a firm <strong>no</strong>. Git was designed for small text files. It chokes on large binary data: a multi-gigabyte Parquet file bloats the repo, every clone becomes enormous, and Git can't meaningfully diff or merge it. Data needs <em>its own</em> versioning tools built for scale:</p>
+<table class="reveal">
+  <tr><th>Tool</th><th>What it versions</th><th>How it works</th></tr>
+  <tr><td><strong>Delta Lake "time travel"</strong></td><td>A single table's history</td><td>Its transaction log lets you query a past version by number (<code>VERSION AS OF 5</code>) or time (<code>TIMESTAMP AS OF '…'</code>). Not unbounded, though — old versions expire once <code>VACUUM</code> / log retention removes them.</td></tr>
+  <tr><td><strong>lakeFS</strong></td><td>An entire data lake / object store</td><td>Adds Git-like <em>branches, commits &amp; merges</em> over S3/ADLS/GCS — branch your whole lake, validate, then merge</td></tr>
+  <tr><td><strong>DVC</strong></td><td>ML datasets &amp; models, alongside code</td><td>Stores small pointer files in Git; the actual large files live in object storage, linked by hash</td></tr>
+</table>
+<div class="callout cy reveal">
+  <p style="margin:.2em 0"><span class="t">🔑 The mental split that ties it together</span></p>
+  <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd"><strong>Code → Git.</strong> <strong>Data → Delta/lakeFS/DVC.</strong> Your transformation logic lives in Git and flows through branches, PRs, and CI like any software. The <em>data those transforms produce</em> is versioned separately by tools built for big files. Keeping that boundary clear is the core of doing version control right in data engineering — put <code>*.parquet</code> and <code>*.csv</code> in <code>.gitignore</code> and reach for the data tools instead.</p>
+</div>
+
+<!-- 11 -->
+<h2 id="best" class="reveal"><span class="n">11.</span> Best practices &amp; commit style</h2>
+<ul class="reveal">
+  <li><strong>Commit small and often.</strong> One logical change per commit. Small commits are easy to review, easy to understand later, and easy to revert if one turns out wrong.</li>
+  <li><strong>Write meaningful messages.</strong> The message explains <em>why</em>, not just what. "Fix bug" is useless; "Handle null customer_id in revenue join" is gold six months later.</li>
+  <li><strong>Branch for everything; protect <code>main</code>.</strong> Never commit directly to <code>main</code>. Turn on branch protection so changes must arrive via reviewed PRs that pass CI.</li>
+  <li><strong>Pull/sync frequently.</strong> Integrate others' work daily so conflicts stay tiny and you're never building on stale code.</li>
+  <li><strong>Keep branches short-lived.</strong> Hours-to-days, not weeks. Long branches drift far from <code>main</code> and become merge nightmares.</li>
+  <li><strong>Never commit secrets or big data.</strong> <code>.gitignore</code> them from day one (<a href="#everyday">§03</a>, <a href="#de">§10</a>).</li>
+  <li><strong>Don't rewrite shared history.</strong> Rebase/amend/reset only on your own un-pushed work; use <code>revert</code> to undo anything public (<a href="#undo">§07</a>).</li>
+</ul>
+
+<h3 class="reveal">Conventional Commits — a tidy message format</h3>
+<p class="reveal">Many teams adopt the <strong>Conventional Commits</strong> convention: prefix each message with a <em>type</em>. It makes history scannable and can even auto-generate changelogs and version numbers.</p>
+<div class="cb reveal"><span class="lang">commit messages</span><pre><span class="g">feat:</span>     add revenue-by-region dbt model
+<span class="g">fix:</span>      handle null customer_id in orders join
+<span class="g">docs:</span>     document the ingestion DAG
+<span class="g">refactor:</span> split monolithic notebook into modules
+<span class="g">test:</span>     add row-count check to silver layer
+<span class="g">chore:</span>    bump dbt to 1.8</pre></div>
+
+<!-- 12 -->
+<h2 id="cheatsheet" class="reveal"><span class="n">12.</span> Quick-reference cheat sheet</h2>
+<p class="reveal">The commands you'll reach for most, in one place.</p>
+<div class="cb reveal"><span class="lang">everyday git — keep this handy</span><pre><span class="c">── start ─────────────────────────────────────────────</span>
+<span class="k">git init</span>                      <span class="c"># new repo here</span>
+<span class="k">git clone</span> &lt;url&gt;                <span class="c"># copy a repo + its history</span>
+
+<span class="c">── the core loop ─────────────────────────────────────</span>
+<span class="k">git status</span>                    <span class="c"># what's going on (run constantly)</span>
+<span class="k">git add</span> &lt;file&gt; / <span class="k">git add</span> .     <span class="c"># stage changes</span>
+<span class="k">git commit</span> -m "message"       <span class="c"># snapshot staged changes</span>
+<span class="k">git log</span> --oneline --graph     <span class="c"># view history</span>
+<span class="k">git diff</span>                      <span class="c"># see unstaged changes</span>
+<span class="k">git blame</span> &lt;file&gt;              <span class="c"># who last changed each line, and when</span>
+
+<span class="c">── branching &amp; tags ──────────────────────────────────</span>
+<span class="k">git switch</span> -c &lt;branch&gt;         <span class="c"># create + switch to a branch</span>
+<span class="k">git switch</span> &lt;branch&gt;            <span class="c"># move to an existing branch</span>
+<span class="k">git merge</span> &lt;branch&gt;             <span class="c"># merge a branch into this one</span>
+<span class="k">git branch</span> -d &lt;branch&gt;         <span class="c"># delete a merged branch</span>
+<span class="k">git tag</span> -a v1.2 -m "release"   <span class="c"># mark this commit as a named version</span>
+<span class="k">git push</span> origin v1.2          <span class="c"># tags aren't pushed by default</span>
+
+<span class="c">── syncing with the team ─────────────────────────────</span>
+<span class="k">git pull</span>                      <span class="c"># fetch + merge others' work</span>
+<span class="k">git push</span>                      <span class="c"># upload your commits</span>
+<span class="k">git push</span> -u origin &lt;branch&gt;    <span class="c"># first push of a new branch</span>
+<span class="k">git push</span> --force-with-lease   <span class="c"># after a rebase/amend on YOUR branch</span>
+<span class="k">git fetch</span>                     <span class="c"># download without merging</span>
+
+<span class="c">── undo (see <a href="#undo" style="color:#5AC8FF">§07</a> for which to use) ───────────────────</span>
+<span class="k">git restore</span> &lt;file&gt;            <span class="c"># discard unstaged edits</span>
+<span class="k">git restore</span> --staged &lt;file&gt;   <span class="c"># un-stage, keep edits</span>
+<span class="k">git commit</span> --amend           <span class="c"># fix the last commit</span>
+<span class="k">git reset</span> --soft HEAD~1      <span class="c"># undo last commit, keep changes</span>
+<span class="k">git revert</span> &lt;hash&gt;             <span class="c"># safe undo of a public commit</span>
+<span class="k">git stash</span> / <span class="k">git stash</span> pop    <span class="c"># shelve / restore work-in-progress</span>
+<span class="k">git reflog</span>                   <span class="c"># find "lost" commits</span></pre></div>
+
+<!-- glossary -->
+<h2 id="glossary" class="reveal"><span class="n">＊</span> Glossary</h2>
+<div class="gloss reveal">
+  <dl>
+    <dt>Repository (repo)</dt><dd>A project tracked by Git — your files plus the hidden <code>.git</code> folder holding all history.</dd>
+    <dt>Commit</dt><dd>A saved snapshot of the whole project at one moment, with a message, author, time, and unique hash.</dd>
+    <dt>Hash / SHA</dt><dd>A commit's unique 40-character fingerprint (usually shortened to 7 chars, e.g. <code>9f2c1ab</code>).</dd>
+    <dt>Working directory</dt><dd>The actual files on disk you edit, before staging or committing.</dd>
+    <dt>Staging area (index)</dt><dd>The shortlist of changes you've marked (via <code>git add</code>) to include in the next commit.</dd>
+    <dt>Branch</dt><dd>A lightweight movable pointer to a commit — a parallel line of development.</dd>
+    <dt>HEAD</dt><dd>"You are here" — the commit/branch you currently have checked out.</dd>
+    <dt>Detached HEAD</dt><dd>Sitting on a specific commit that no branch points to; commits made here can be lost unless you create a branch.</dd>
+    <dt>main / master</dt><dd>The default primary branch holding the canonical, production-ready code.</dd>
+    <dt>Tag</dt><dd>A permanent label on a specific commit, typically marking a released version (e.g. <code>v1.2</code>).</dd>
+    <dt>Remote / origin</dt><dd>A shared copy of the repo elsewhere (e.g. GitHub); <code>origin</code> is its conventional name.</dd>
+    <dt>Clone</dt><dd>A full local copy of a remote repository, including its complete history.</dd>
+    <dt>Push / Pull / Fetch</dt><dd>Send commits up to the remote / download-and-merge from it / download without merging.</dd>
+    <dt>Merge</dt><dd>Combine two branches, creating a two-parent merge commit (unless it can fast-forward).</dd>
+    <dt>Rebase</dt><dd>Replay your commits onto a new base for a linear history — rewrites commit IDs.</dd>
+    <dt>Conflict</dt><dd>When two branches change the same lines and Git needs you to choose the result.</dd>
+    <dt>Pull request (PR)</dt><dd>A hosted request to review and merge a branch; where code review and CI happen.</dd>
+    <dt>CI/CD</dt><dd>Automated testing (Continuous Integration) and deployment (Continuous Delivery) triggered by Git events.</dd>
+    <dt>Workflow / branching strategy</dt><dd>A team's agreed rules for branches and how work flows to production (e.g. GitHub Flow, Gitflow).</dd>
+    <dt>Stash</dt><dd>A temporary shelf for uncommitted changes so you can switch context and restore them later.</dd>
+    <dt>reflog</dt><dd>Git's private log of every position HEAD has held — your safety net for recovering "lost" commits.</dd>
+    <dt>.gitignore</dt><dd>A file listing patterns Git should never track (secrets, data, build artefacts).</dd>
+  </dl>
+</div>
+
+<hr/>
+<p class="reveal" style="color:#9aa0b4;font-size:14.5px">That's the full toolkit: Git's mental model, the everyday commands, branching and merging, the team workflows, and the data-engineering specifics. Bookmark <a href="#cheatsheet">§12</a> as your day-to-day cheat sheet — and remember the through-line: <em>commit small, branch freely, sync often, and keep code in Git but data in data tools.</em></p>
+
+<footer class="reveal">
+  <p>Part of <a href="../">Data &amp; AI Engineering, Simply Explained</a> · an <a href="../#essentials">Essentials</a> reference.</p>
+  <p>© 2026 · Hao Tieu · Built with GitHub Pages · <a href="https://linkedin.com/in/haotieu2001" target="_blank" rel="noopener">LinkedIn</a></p>
+</footer>
+</div><!-- /page -->
+
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<script>
+  // Mermaid — themed to match the site's dark palette
+  try{
+    mermaid.initialize({
+      startOnLoad:true,
+      theme:'base',
+      themeVariables:{
+        background:'#0d0d13', primaryColor:'#15151b', secondaryColor:'#15151b',
+        primaryBorderColor:'#5AC8FF', primaryTextColor:'#e7e7ee', lineColor:'#5C78FF',
+        fontFamily:"'JetBrains Mono',monospace", fontSize:'13px',
+        git0:'#5AC8FF', git1:'#34d399', git2:'#f0b429', git3:'#BA5AFF', git4:'#5C78FF',
+        gitBranchLabel0:'#0d0d13', gitBranchLabel1:'#0d0d13', gitBranchLabel2:'#0d0d13',
+        gitBranchLabel3:'#fff', gitBranchLabel4:'#fff',
+        commitLabelColor:'#e7e7ee', commitLabelBackground:'#15151b', commitLabelFontSize:'11px',
+        tagLabelColor:'#0d0d13', tagLabelBackground:'#34d399', tagLabelBorder:'#34d399',
+        gitInv0:'#0d0d13'
+      }
+    });
+  }catch(e){}
+</script>
+<script>
+  var bar=document.getElementById('bar');
+  function prog(){var h=document.documentElement;var s=h.scrollTop||document.body.scrollTop;var max=(h.scrollHeight-h.clientHeight)||1;bar.style.width=(s/max*100)+'%';}
+  document.addEventListener('scroll',prog,{passive:true});prog();
+  function revealAll(){document.querySelectorAll('.reveal').forEach(function(el){el.classList.add('in');});}
+  try{
+    var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}});},{threshold:.06});
+    document.querySelectorAll('.reveal').forEach(function(el){io.observe(el);});
+    window.addEventListener('load',function(){setTimeout(revealAll,1500);});
+    setTimeout(revealAll,2200);
+  }catch(e){revealAll();}
+</script>
+</body>
+</html>
