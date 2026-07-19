@@ -24,9 +24,9 @@
   :root{
     --bg:#111117; --bg2:#16161d; --panel:#191921; --line:#2c2c38;
     --ink:#F1F1F1; --soft:#cdd0dd; --muted:#9aa0b4; --dim:#6b6b78;
-    --blue:#5C78FF; --cyan:#28B9FF; --cyan2:#5AC8FF; --purple:#A56BFF; --magenta:#FF6B9D; --amber:#FFB454;
-    --grad:linear-gradient(90deg,#5C78FF,#28B9FF,#A52AFF);
-    --grad2:linear-gradient(90deg,#5C78FF,#28B9FF,#A56BFF,#FF6B9D,#FFB454);
+    --blue:#5C78FF; --cyan:#28B9FF; --cyan2:#5AC8FF; --purple:#28B9FF; --magenta:#28B9FF; --amber:#28B9FF;
+    --grad:linear-gradient(90deg,#5C78FF,#28B9FF,#5C78FF);
+    --grad2:linear-gradient(90deg,#28B9FF,#5C78FF);
     --font:"JetBrainsMono Nerd Font","JetBrains Mono","Symbols Nerd Font",ui-monospace,"Cascadia Code",Menlo,Consolas,monospace;
     --s1:8px; --s2:16px; --s3:24px; --s4:32px; --s5:48px; --s6:64px; --s7:96px;
   }
@@ -78,8 +78,8 @@
   .fact{font-size:12px;font-weight:700;color:var(--soft);border:1px solid var(--line);background:var(--bg2);padding:4px 11px;border-radius:7px}
   .fact:nth-child(1){border-color:#28B9FF55;color:#5AC8FF}
   .fact:nth-child(2){border-color:#5C78FF55;color:#8AA0FF}
-  .fact:nth-child(3){border-color:#A56BFF55;color:#C69BFF}
-  .fact:nth-child(4){border-color:#FFB45455;color:#FFC978}
+  .fact:nth-child(3){border-color:#28B9FF55;color:#5AC8FF}
+  .fact:nth-child(4){border-color:#28B9FF55;color:#5AC8FF}
   .herobar{height:3px;border-radius:3px;background:var(--grad2);margin:2px 0 20px;max-width:520px;box-shadow:0 0 16px -4px #28B9FF88}
 
   .cta{display:flex;gap:12px;flex-wrap:wrap;align-items:center}
@@ -130,8 +130,8 @@
   .skills{display:grid;grid-template-columns:repeat(2,1fr);gap:var(--s2)}
   @media (max-width:640px){.skills{grid-template-columns:1fr}}
   .skillcard{border:1px solid var(--line);border-radius:12px;background:var(--bg2);padding:16px 18px;transition:border-color .2s ease,transform .2s ease,box-shadow .2s ease}
-  .skillcard:hover{border-color:#A56BFF66;transform:translateY(-3px);box-shadow:0 0 22px -10px #A56BFF}
-  .skillcard h3{margin:0 0 6px;font-size:14px;color:#C69BFF;letter-spacing:.02em}
+  .skillcard:hover{border-color:#28B9FF66;transform:translateY(-3px);box-shadow:0 0 22px -10px #28B9FF}
+  .skillcard h3{margin:0 0 6px;font-size:14px;color:#5AC8FF;letter-spacing:.02em}
   .skillcard .bar{height:2px;background:var(--grad2);border-radius:2px;opacity:.55;margin:0 0 12px}
 
   /* two-up grids */
@@ -146,10 +146,10 @@
   /* writing cards */
   .postcard{display:block;text-decoration:none;color:inherit;border:1px solid var(--line);border-radius:12px;background:var(--bg2);
             padding:16px 18px;transition:transform .2s ease,border-color .2s ease,box-shadow .2s ease}
-  .postcard:hover{transform:translateY(-4px);border-color:#FFB45466;box-shadow:0 14px 36px -14px #FFB454}
+  .postcard:hover{transform:translateY(-4px);border-color:#28B9FF66;box-shadow:0 14px 36px -14px #28B9FF}
   .postcard h3{margin:0 0 6px;font-size:16px;color:#fff}
   .postcard p{margin:0 0 10px;color:var(--soft);font-size:13.5px}
-  .postcard .when{color:#FFC978;font-size:12px;font-weight:700}
+  .postcard .when{color:#5AC8FF;font-size:12px;font-weight:700}
   .morelink{display:inline-flex;align-items:center;gap:7px;margin-top:var(--s3);color:var(--amber);font-weight:800;font-size:14px;text-decoration:none}
   .morelink:hover{color:#fff}
   .lead{color:var(--muted);font-size:14px;margin:0 0 var(--s3)}
@@ -164,8 +164,8 @@
   .facts-grid .box .row small{display:block;color:var(--muted);font-size:12.5px;font-weight:400;margin-top:3px}
 
   /* contact */
-  .contact{position:relative;border:1px solid #FF6B9D55;border-radius:16px;background:linear-gradient(160deg,#1a1420,#121018);
-           padding:var(--s5) var(--s4);text-align:center;box-shadow:0 0 40px -18px #FF6B9D}
+  .contact{position:relative;border:1px solid #28B9FF55;border-radius:16px;background:linear-gradient(160deg,#16161d,#121018);
+           padding:var(--s5) var(--s4);text-align:center;box-shadow:0 0 40px -18px #28B9FF}
   .contact h2{font-size:26px;margin:0 0 8px;color:#fff}
   .contact p{color:var(--muted);margin:0 auto var(--s3);max-width:52ch;font-size:15px}
 
@@ -296,7 +296,7 @@
   </section>
 
   <!-- SKILLS -->
-  <section class="panel reveal" id="skills" style="--a:#A56BFF">
+  <section class="panel reveal" id="skills" style="--a:#28B9FF">
     <span class="tab"><span class="n">03</span> Skills &amp; Tools</span>
     <div class="skills">
       <div class="skillcard">
@@ -319,24 +319,24 @@
   </section>
 
   <!-- EDUCATION -->
-  <section class="panel reveal" id="education" style="--a:#FF6B9D">
+  <section class="panel reveal" id="education" style="--a:#5C78FF">
     <span class="tab"><span class="n">04</span> Education</span>
     <div class="grid2">
       <div class="box">
         <h3>Bachelor of Data Science</h3>
-        <p class="sub" style="color:#FF8FB4">University of Information Technology — VNU-HCM</p>
+        <p class="sub" style="color:#5AC8FF">University of Information Technology — VNU-HCM</p>
         <p class="when">Sep 2019 – Jun 2023 · GPA 3.3 / 4.0</p>
       </div>
       <div class="box">
         <h3>Natural Science (Gifted class)</h3>
-        <p class="sub" style="color:#FF8FB4">Nguyen Thi Minh Khai High School for the Gifted</p>
+        <p class="sub" style="color:#5AC8FF">Nguyen Thi Minh Khai High School for the Gifted</p>
         <p class="when">Sep 2016 – Jun 2019 · GPA 3.3 / 4.0</p>
       </div>
     </div>
   </section>
 
   <!-- WRITING -->
-  <section class="panel reveal" id="writing" style="--a:#FFB454">
+  <section class="panel reveal" id="writing" style="--a:#28B9FF">
     <span class="tab"><span class="n">05</span> Writing</span>
     <p class="lead">Long-form, example-driven guides on data engineering — a few recent posts.</p>
     <div class="grid2">
@@ -367,7 +367,7 @@
   </section>
 
   <!-- CERTS & AWARDS -->
-  <section class="panel reveal" id="highlights" style="--a:#28B9FF">
+  <section class="panel reveal" id="highlights" style="--a:#5C78FF">
     <span class="tab"><span class="n">06</span> Certifications &amp; Awards</span>
     <div class="facts-grid">
       <div class="box">

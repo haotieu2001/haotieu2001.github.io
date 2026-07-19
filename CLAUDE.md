@@ -31,8 +31,17 @@ follow the conventions below.
 - **Font:** JetBrains Mono everywhere (headings, body, code). `line-height` 1.7–1.85.
 - **Canvas:** near-black `--bg` background, off-white `--ink`/`--soft` text.
   Body copy uses `--soft` (#cdd0dd); secondary uses `--muted`; captions `--dim`.
-- **Accent = one colour.** Use **cyan** (`--cyan` / `--cyan2`) as the single accent:
-  links, active states, section numbers, card borders on hover, code, ✓ marks.
+- **Accent = one primary + at most one support.** Primary = **cyan**
+  (`--cyan` / `--cyan2`) for links, active states, section numbers, card
+  borders/hover, code, key figures. A single **cool support** (blue `#5C78FF`)
+  may appear for secondary/alternating elements. That's it — no third brand
+  hue. (Benchmark: Chiang / Linear / Stripe / Vercel all use ~1 accent; >3
+  hues reads busy/junior. Validated 2026.)
+- **Amber / magenta / red are functional only** — a warning/highlight metric
+  or an error state where the hue *carries meaning*. Never cycle them per
+  section as decoration, and never a rainbow gradient.
+- **Gradient ≤ 2 stops, same cool family** (e.g. cyan→blue), used at one
+  hero moment + the scroll bar — not on every card/heading.
 - **Gradient is reserved.** Use `--grad` ONLY for: the `h1` (background-clip text
   with the slow `sheen` animation), the top scroll-progress `#bar`, the primary
   button, and thin dividers/rings. Never gradient body text or many elements.
