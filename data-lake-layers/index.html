@@ -54,16 +54,16 @@
   pre{margin:0;background:#101017;border:1px solid #34343F;border-radius:0 10px 10px 10px;padding:14px 16px;overflow-x:auto;
       font-family:var(--font);font-size:13px;line-height:1.6;color:#d8dcea;white-space:pre}
   pre .c{color:#6B6B78}
-  .callout{border-left:4px solid var(--blue2);background:#16182a;border-radius:0 12px 12px 0;padding:14px 18px;margin:22px 0}
-  .callout.cy{border-color:var(--cyan);background:#0f1f2b}
-  .callout.mg{border-color:var(--magenta2);background:#23232C}
-  .callout.gd{border-color:#9AA0B4;background:#1D1D26}
-  .callout.gr{border-color:#5AC8FF;background:#1D1D26}
+  .callout{border-left:4px solid #28B9FF;background:linear-gradient(160deg,#12202e,#101019);border-radius:0 12px 12px 0;padding:14px 18px;margin:22px 0;box-shadow:0 0 16px -8px #28B9FF66}
+  .callout.cy{border-color:#5AC8FF;background:linear-gradient(160deg,#0f2233,#101019)}
+  .callout.mg{border-color:#BA5AFF;background:linear-gradient(160deg,#1b1330,#121018)}
+  .callout.gd{border-color:#5C78FF;background:linear-gradient(160deg,#141a33,#101019)}
+  .callout.gr{border-color:#28B9FF;background:linear-gradient(160deg,#0f2233,#101019)}
   .callout .t{color:var(--cyan2);font-weight:800}
-  .callout.gd .t{color:#9AA0B4}
+  .callout.gd .t{color:#8AA0FF}
   .callout.gr .t{color:#5AC8FF}
-  .callout.mg .t{color:var(--magenta2)}
-  .tldr{border:1px solid #2f3a66;background:linear-gradient(180deg,#15182a,#20202A);border-radius:16px;padding:20px 24px;margin:26px 0}
+  .callout.mg .t{color:#C77DFF}
+  .tldr{border:1px solid #28B9FF44;background:linear-gradient(180deg,#12161d,#0d0d12);border-radius:16px;padding:20px 24px;margin:26px 0;box-shadow:0 0 24px -10px #28B9FF55}
   .tldr h4{margin:0 0 8px;font-size:13px;letter-spacing:.2em;text-transform:uppercase;color:var(--cyan2)}
   .gloss{border:1px solid #34343F;background:#1D1D26;border-radius:14px;padding:18px 22px;margin:24px 0}
   .gloss h4{margin:0 0 6px;color:#fff;font-size:15px}
@@ -84,9 +84,9 @@
   .diagram .ok{color:#5AC8FF}
   .diagram .warn{color:#BA5AFF}
   .diagram .bad{color:#5C78FF}
-  .pain{border:1px solid #3a2020;background:#1c1212;border-radius:14px;padding:16px 20px;margin:14px 0}
-  .pain h4{margin:0 0 4px;color:#9AA0B4}
-  .fix{border:1px solid #1a3020;background:#1D1D26;border-radius:14px;padding:16px 20px;margin:14px 0}
+  .pain{border:1px solid #3a2452;border-left:4px solid #BA5AFF;background:linear-gradient(160deg,#1c1330,#121018);border-radius:0 14px 14px 0;padding:16px 20px;margin:14px 0;box-shadow:0 0 20px -6px #BA5AFF55}
+  .pain h4{margin:0 0 4px;color:#C77DFF}
+  .fix{border:1px solid #123246;border-left:4px solid #28B9FF;background:linear-gradient(160deg,#0e2030,#101019);border-radius:0 14px 14px 0;padding:16px 20px;margin:14px 0;box-shadow:0 0 20px -6px #28B9FF55}
   .fix h4{margin:0 0 4px;color:#5AC8FF}
   .step{display:flex;gap:12px;align-items:flex-start;margin:14px 0}
   .step .num-bubble{flex:0 0 28px;height:28px;border-radius:50%;background:var(--grad);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:#fff;margin-top:2px}
@@ -658,15 +658,17 @@ GROUP BY category;</pre></div>
   <text x="80" y="271" font-size="11" fill="#cdd0dd">read each footer → skip row groups where amount.max ≤ 500</text>
   <text x="80" y="288" font-size="11" fill="#cdd0dd">read only the category + amount column chunks that survive</text>
 
-  <!-- right rail: query descending -->
-  <line x1="628" y1="46" x2="628" y2="270" stroke="#5C78FF" stroke-width="2" opacity=".45" marker-end="url(#qj-down)"/>
+  <!-- right rail: query descending (arrow points DOWN at the bottom) -->
+  <line x1="628" y1="46" x2="628" y2="286" stroke="#5C78FF" stroke-width="2" opacity=".5"/>
+  <polygon points="621,286 635,286 628,299" fill="#5C78FF"/>
   <text x="628" y="320" font-size="10" font-weight="700" fill="#5C78FF" text-anchor="middle">query ↓</text>
-  <circle r="4.5" cx="628" fill="#5C78FF"><animate attributeName="cy" values="46;262" dur="4s" keyTimes="0;.55" repeatCount="indefinite"/><animate attributeName="opacity" values="1;1;0;0" keyTimes="0;.5;.55;1" dur="4s" repeatCount="indefinite"/></circle>
+  <circle r="4.5" cx="628" fill="#5C78FF"><animate attributeName="cy" values="48;284" dur="4s" keyTimes="0;.55" repeatCount="indefinite"/><animate attributeName="opacity" values="0;1;1;0" keyTimes="0;.05;.53;.57" dur="4s" repeatCount="indefinite"/></circle>
 
-  <!-- left rail: rows ascending -->
-  <line x1="34" y1="270" x2="34" y2="46" stroke="#5AC8FF" stroke-width="2" opacity=".45" marker-end="url(#qj-up)"/>
+  <!-- left rail: rows ascending (arrow points UP at the top) -->
+  <line x1="34" y1="286" x2="34" y2="46" stroke="#5AC8FF" stroke-width="2" opacity=".5"/>
+  <polygon points="27,59 41,59 34,46" fill="#5AC8FF"/>
   <text x="34" y="320" font-size="10" font-weight="700" fill="#5AC8FF" text-anchor="middle">rows ↑</text>
-  <circle r="4.5" cx="34" fill="#5AC8FF"><animate attributeName="cy" values="270;46" dur="4s" keyTimes="0;.45" begin="2.2s" repeatCount="indefinite"/><animate attributeName="opacity" values="1;1;0;0" keyTimes="0;.4;.45;1" dur="4s" begin="2.2s" repeatCount="indefinite"/></circle>
+  <circle r="4.5" cx="34" fill="#5AC8FF"><animate attributeName="cy" values="284;48" dur="4s" keyTimes="0;.45" begin="2.2s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;1;1;0" keyTimes="0;.05;.43;.47" dur="4s" begin="2.2s" repeatCount="indefinite"/></circle>
 </svg>
 </figure>
 
