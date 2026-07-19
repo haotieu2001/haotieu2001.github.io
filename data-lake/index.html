@@ -66,7 +66,7 @@
 
   .cb{margin:16px 0}
   .cb .lang{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);background:#20202E;border:1px solid var(--line);border-bottom:none;border-radius:9px 9px 0 0;padding:4px 12px}
-  pre{margin:0;background:#1C1C2A;border:1px solid var(--line);border-radius:0 10px 10px 10px;padding:14px 16px;overflow-x:auto;
+  pre{margin:0;background:radial-gradient(130% 150% at 50% 0%,#223650 0%,#141826 72%);border:1px solid var(--line);border-radius:0 10px 10px 10px;padding:14px 16px;overflow-x:auto;
       font-family:var(--font);font-size:13px;line-height:1.6;color:var(--soft);white-space:pre}
   pre .c{color:var(--dim)}
   pre .k{color:var(--cyan2);font-weight:700}
@@ -96,7 +96,7 @@
   th{background:#20202E;color:#fff}
   tr:nth-child(even) td{background:#17171E}
 
-  .diagram{background:#1C1C2A;border:1px solid var(--line);border-radius:14px;padding:18px;margin:20px 0;overflow-x:auto;font-size:12.5px;line-height:1.7;color:var(--soft);white-space:pre;font-family:var(--font)}
+  .diagram{background:radial-gradient(130% 150% at 50% 0%,#223650 0%,#141826 72%);border:1px solid var(--line);border-radius:14px;padding:18px;margin:20px 0;overflow-x:auto;font-size:12.5px;line-height:1.7;color:var(--soft);white-space:pre;font-family:var(--font)}
   .diagram .hl{color:var(--cyan2)}
   .diagram .dim{color:var(--dim)}
   .diagram .ok{color:var(--cyan2)}
@@ -119,6 +119,8 @@
   .js .reveal{opacity:0;transform:translateY(16px);transition:opacity .6s ease,transform .6s ease}
   .js .reveal.in{opacity:1;transform:none}
   @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{animation:none !important;transition:none !important}.js .reveal{opacity:1;transform:none}}
+  figure[class]{box-shadow:0 0 36px -14px #28B9FF66}
+  figure svg{filter:drop-shadow(0 0 5px rgba(90,200,255,.18))}
 </style>
 
 <script>document.documentElement.classList.add('js');</script>
@@ -166,23 +168,23 @@
     <g transform="rotate(-8)">
       <rect x="0" y="0" width="54" height="64" rx="6" fill="#242739" stroke="#5C78FF" stroke-width="1.4"/>
       <line x1="9" y1="13" x2="45" y2="13" stroke="#5C78FF" stroke-width="1.3" opacity=".5"/>
-      <text x="27" y="40" class="hero-tag" fill="#9AA0B4">CSV</text>
+      <text x="27" y="40" class="hero-tag" fill="#E7E7EE">CSV</text>
       <line x1="9" y1="52" x2="38" y2="52" stroke="#5C78FF" stroke-width="1.3" opacity=".5"/>
     </g>
     <g transform="translate(15,-5) rotate(-2)">
       <rect x="0" y="0" width="54" height="64" rx="6" fill="#242739" stroke="#5C78FF" stroke-width="1.4"/>
       <line x1="9" y1="13" x2="45" y2="13" stroke="#5C78FF" stroke-width="1.3" opacity=".5"/>
-      <text x="27" y="40" class="hero-tag" fill="#9AA0B4">JSON</text>
+      <text x="27" y="40" class="hero-tag" fill="#E7E7EE">JSON</text>
       <line x1="9" y1="52" x2="38" y2="52" stroke="#5C78FF" stroke-width="1.3" opacity=".5"/>
     </g>
     <g transform="translate(32,4) rotate(7)">
       <rect x="0" y="0" width="54" height="64" rx="6" fill="#242739" stroke="#6B6B78" stroke-width="1.4"/>
       <line x1="9" y1="13" x2="45" y2="13" stroke="#6B6B78" stroke-width="1.3" opacity=".5"/>
-      <text x="27" y="40" class="hero-tag" fill="#6B6B78">LOGS</text>
+      <text x="27" y="40" class="hero-tag" fill="#E7E7EE">LOGS</text>
       <line x1="9" y1="52" x2="38" y2="52" stroke="#6B6B78" stroke-width="1.3" opacity=".5"/>
     </g>
   </g>
-  <text x="88" y="150" class="hero-cap" fill="#CDD0DD" font-size="15">RAW FILES</text>
+  <text x="88" y="150" class="hero-cap" fill="#E7E7EE" font-size="15">RAW FILES</text>
   <text x="88" y="168" class="hero-sub">any format</text>
 
   <!-- flow 1 -->
@@ -319,7 +321,7 @@
 <h2 id="architecture" class="reveal"><span class="n">02.</span> Data Lake architecture — what it's actually made of</h2>
 <p class="reveal">A Data Lake has three layers stacked on top of each other. Each layer builds on the one below it:</p>
 
-<figure class="reveal" style="margin:1.6em 0;background:#1C1C2A;border:1px solid #3C4356;border-radius:10px;padding:1.2em 1em 1em;overflow:hidden">
+<figure class="reveal" style="margin:1.6em 0;background:radial-gradient(130% 150% at 50% 0%,#223650 0%,#141826 72%);border:1px solid #3C4356;border-radius:10px;padding:1.2em 1em 1em;overflow:hidden">
 <figcaption style="font-size:12px;color:#555;text-align:center;margin-bottom:.8em;letter-spacing:.06em;text-transform:uppercase">Data Lake — Three-Layer Architecture</figcaption>
 <svg viewBox="0 0 740 440" width="100%" style="display:block;max-width:740px;margin:0 auto" aria-label="Data Lake Three-Layer Architecture">
   <defs>
@@ -343,7 +345,7 @@
     <!-- Trino circle T -->
     <symbol id="ico-trino" viewBox="0 0 24 24">
       <circle cx="12" cy="12" r="11" fill="none" stroke="#5AC8FF" stroke-width="2"/>
-      <text x="12" y="17" text-anchor="middle" font-size="13" font-weight="700" fill="#E7E7EE" font-family="sans-serif">T</text>
+      <text x="12" y="17" text-anchor="middle" font-size="13" font-weight="700" fill="#14141C" font-family="sans-serif">T</text>
     </symbol>
     <!-- Hive hexagon -->
     <symbol id="ico-hive" viewBox="0 0 24 24">
@@ -405,7 +407,7 @@
   <rect class="layer-box" x="10" y="152" width="720" height="130" fill="#242739" stroke="#5C78FF" stroke-width="1.8">
     <animate attributeName="stroke-opacity" values=".5;1;.5" dur="3.4s" repeatCount="indefinite" begin="0.5s"/>
   </rect>
-  <text x="28" y="182" class="layer-title" fill="#9AA0B4">LAYER 2 (middle) — Metadata Layer</text>
+  <text x="28" y="182" class="layer-title" fill="#E7E7EE">LAYER 2 (middle) — Metadata Layer</text>
   <text x="28" y="204" class="layer-sub">The catalogue: "table X = S3 path Y, with these columns"</text>
   <!-- Hive icon -->
   <use href="#ico-hive" x="42" y="218" width="38" height="38"/>
@@ -468,7 +470,7 @@
 <h3 class="reveal">Layer 1 — Storage (the files)</h3>
 <p class="reveal">The base layer is a folder structure in cloud object storage. A typical layout looks like this:</p>
 
-<figure class="reveal" style="margin:1.6em 0;background:#1C1C2A;border:1px solid #3C4356;border-radius:10px;padding:1.2em 1em 1em;overflow:hidden">
+<figure class="reveal" style="margin:1.6em 0;background:radial-gradient(130% 150% at 50% 0%,#223650 0%,#141826 72%);border:1px solid #3C4356;border-radius:10px;padding:1.2em 1em 1em;overflow:hidden">
 <figcaption style="font-size:12px;color:#555;text-align:center;margin-bottom:.8em;letter-spacing:.06em;text-transform:uppercase">S3 Bucket — Typical Data Lake Folder Layout</figcaption>
 <svg viewBox="0 0 700 340" width="100%" style="display:block;max-width:700px;margin:0 auto" aria-label="S3 folder tree">
   <defs>
@@ -518,7 +520,7 @@
   <!-- orders/ -->
   <g class="row-anim-2">
     <line x1="86" y1="90" x2="106" y2="90" stroke="#444" stroke-width="1"/>
-    <text x="110" y="93" class="tree-text" fill="#7A8099">orders/</text>
+    <text x="110" y="93" class="tree-text" fill="#E7E7EE">orders/</text>
   </g>
   <line x1="108" y1="98" x2="108" y2="165" stroke="#3C4356" stroke-width="1" stroke-dasharray="2,3"/>
   <!-- partition day 01 -->
@@ -544,7 +546,7 @@
   <!-- customers/ -->
   <g class="row-anim-7">
     <line x1="86" y1="182" x2="106" y2="182" stroke="#444" stroke-width="1"/>
-    <text x="110" y="185" class="tree-text" fill="#7A8099">customers/</text>
+    <text x="110" y="185" class="tree-text" fill="#E7E7EE">customers/</text>
   </g>
   <g class="row-anim-8">
     <line x1="108" y1="199" x2="128" y2="199" stroke="#444" stroke-width="1"/>
@@ -555,13 +557,13 @@
   <g class="row-anim-9">
     <line x1="42" y1="222" x2="62" y2="222" stroke="#444" stroke-width="1"/>
     <use href="#folder" x="63" y="212" width="20" height="17" color="#9AA0B4"/>
-    <text x="90" y="225" class="tree-text" fill="#9AA0B4" font-weight="600">processed/</text>
+    <text x="90" y="225" class="tree-text" fill="#E7E7EE" font-weight="600">processed/</text>
     <text x="370" y="225" class="tree-text" fill="#444" font-size="11px">← cleaned and transformed data</text>
   </g>
   <line x1="86" y1="232" x2="86" y2="270" stroke="#333" stroke-width="1" stroke-dasharray="2,3"/>
   <g class="row-anim-10">
     <line x1="86" y1="242" x2="106" y2="242" stroke="#444" stroke-width="1"/>
-    <text x="110" y="245" class="tree-text" fill="#7A8099">orders_clean/</text>
+    <text x="110" y="245" class="tree-text" fill="#E7E7EE">orders_clean/</text>
   </g>
   <g class="row-anim-11">
     <line x1="108" y1="259" x2="128" y2="259" stroke="#444" stroke-width="1"/>
@@ -578,7 +580,7 @@
   <line x1="86" y1="292" x2="86" y2="320" stroke="#333" stroke-width="1" stroke-dasharray="2,3"/>
   <g class="row-anim-13">
     <line x1="86" y1="302" x2="106" y2="302" stroke="#444" stroke-width="1"/>
-    <text x="110" y="305" class="tree-text" fill="#7A8099">daily_revenue/</text>
+    <text x="110" y="305" class="tree-text" fill="#E7E7EE">daily_revenue/</text>
   </g>
   <g class="row-anim-13">
     <line x1="108" y1="320" x2="128" y2="320" stroke="#444" stroke-width="1"/>
@@ -640,7 +642,7 @@ GROUP BY category;</pre></div>
 <h3 class="reveal">The physical layout of a Parquet file</h3>
 <p class="reveal">A single Parquet file is organised in three nested layers — row groups contain column chunks, which contain pages:</p>
 
-<figure class="reveal" style="margin:1.6em 0;background:#1C1C2A;border:1px solid #3C4356;border-radius:10px;padding:1.2em 1em 1em;overflow:hidden">
+<figure class="reveal" style="margin:1.6em 0;background:radial-gradient(130% 150% at 50% 0%,#223650 0%,#141826 72%);border:1px solid #3C4356;border-radius:10px;padding:1.2em 1em 1em;overflow:hidden">
 <figcaption style="font-size:12px;color:#555;text-align:center;margin-bottom:.8em;letter-spacing:.06em;text-transform:uppercase">Parquet File — Physical Layout</figcaption>
 <svg viewBox="0 0 700 420" width="100%" style="display:block;max-width:700px;margin:0 auto" aria-label="Parquet file internal structure">
   <defs>
@@ -662,7 +664,7 @@ GROUP BY category;</pre></div>
 
   <!-- ROW GROUP 1 -->
   <rect x="20" y="38" width="660" height="165" rx="6" fill="#1C1C2A" stroke="#5C78FF" stroke-width="1.2"/>
-  <text x="32" y="56" class="pq-title" fill="#9AA0B4">ROW GROUP 1</text>
+  <text x="32" y="56" class="pq-title" fill="#E7E7EE">ROW GROUP 1</text>
   <text x="185" y="56" class="pq-sub"> — a horizontal slice, ~128 MB of rows</text>
 
   <!-- Column chunk: order_id -->
@@ -704,7 +706,7 @@ GROUP BY category;</pre></div>
 
   <!-- ROW GROUP 2 (collapsed) -->
   <rect x="20" y="215" width="660" height="44" rx="6" fill="#1C1C2A" stroke="#5C78FF" stroke-width="1.2" stroke-dasharray="4,3"/>
-  <text x="32" y="237" class="pq-title" fill="#9AA0B4">ROW GROUP 2</text>
+  <text x="32" y="237" class="pq-title" fill="#E7E7EE">ROW GROUP 2</text>
   <text x="185" y="237" class="pq-sub"> — next 128 MB of rows</text>
   <text x="400" y="237" class="pq-sub">  [same column chunks as RG1…]</text>
   <!-- Collapse indicator dots -->
@@ -728,7 +730,7 @@ GROUP BY category;</pre></div>
   <text x="42" y="377" class="pq-label" fill="#555">order_date→ DATE</text>
 
   <rect x="244" y="300" width="220" height="88" rx="4" fill="#1C1C2A" stroke="#5C78FF" stroke-width=".8"/>
-  <text x="354" y="316" class="pq-label" fill="#9AA0B4" text-anchor="middle" font-weight="700">Row Group Byte Offsets</text>
+  <text x="354" y="316" class="pq-label" fill="#E7E7EE" text-anchor="middle" font-weight="700">Row Group Byte Offsets</text>
   <text x="254" y="332" class="pq-label" fill="#555">RG1 starts at offset 0</text>
   <text x="254" y="347" class="pq-label" fill="#555">RG2 starts at offset 67,108,864</text>
   <text x="254" y="362" class="pq-label" fill="#555">RG3 starts at offset 134,217,728</text>
@@ -737,7 +739,7 @@ GROUP BY category;</pre></div>
   <rect x="476" y="300" width="196" height="88" rx="4" fill="#1C1C2A" stroke="#5C78FF" stroke-width=".8"/>
   <text x="574" y="316" class="pq-label" fill="#5C78FF" text-anchor="middle" font-weight="700">Column Statistics / RG</text>
   <text x="486" y="332" class="pq-label" fill="#555">amount: min=10 max=200 ← skip!</text>
-  <text x="486" y="347" class="pq-label" fill="#9AA0B4">amount: min=100 max=9000 ← read</text>
+  <text x="486" y="347" class="pq-label" fill="#E7E7EE">amount: min=100 max=9000 ← read</text>
   <text x="486" y="362" class="pq-label" fill="#555">amount: min=1 max=50   ← skip!</text>
   <text x="486" y="377" class="pq-label" fill="#5AC8FF">→ data skipping / pushdown</text>
 
@@ -815,13 +817,13 @@ GROUP BY category;</pre></div>
 <h2 id="medallion" class="reveal"><span class="n">04.</span> Zones in a Data Lake: Bronze, Silver, Gold</h2>
 <p class="reveal">Real-world Data Lakes divide storage into <strong>zones</strong> (also called <em>layers</em>). The most popular pattern is the <strong>Medallion Architecture</strong>:</p>
 
-<figure class="reveal" style="margin:1.4em 0;background:#16161d;border:1px solid #2c2c38;border-radius:10px;padding:1.2em 1em 1em;overflow:hidden">
+<figure class="reveal" style="margin:1.4em 0;background:radial-gradient(130% 150% at 50% 0%,#223650 0%,#141826 72%);border:1px solid #2c2c38;border-radius:10px;padding:1.2em 1em 1em;overflow:hidden">
 <figcaption style="font-size:12px;color:#8a90a6;text-align:center;margin-bottom:.8em;letter-spacing:.06em;text-transform:uppercase">Medallion Architecture — Data Flow</figcaption>
 <svg viewBox="0 0 880 250" width="100%" style="display:block;max-width:880px;margin:0 auto" font-family="'JetBrains Mono',monospace" aria-label="Data flows from sources into Bronze (raw), then Silver (cleaned), then Gold (business-ready), then out to BI and ML">
   <!-- SOURCES -->
   <rect x="14" y="80" width="104" height="60" rx="12" fill="#1B2A46" stroke="#28B9FF" stroke-opacity=".6" stroke-width="1.6"/>
   <text x="66" y="106" font-size="12" font-weight="700" fill="#5AC8FF" text-anchor="middle">SOURCES</text>
-  <text x="66" y="124" font-size="9" fill="#9aa0b4" text-anchor="middle">apps · files · APIs</text>
+  <text x="66" y="124" font-size="9" fill="#E7E7EE" text-anchor="middle">apps · files · APIs</text>
 
   <!-- BRONZE (blue = raw) -->
   <circle cx="250" cy="110" r="54" fill="none" stroke="#5C78FF" stroke-width="3" opacity="0"><animate attributeName="opacity" values="0;.5;0" dur="2.6s" repeatCount="indefinite"/><animate attributeName="r" values="54;60;54" dur="2.6s" repeatCount="indefinite"/></circle>
@@ -829,7 +831,7 @@ GROUP BY category;</pre></div>
   <text x="250" y="104" font-size="15" font-weight="800" fill="#8AA0FF" text-anchor="middle">BRONZE</text>
   <text x="250" y="122" font-size="10" font-weight="700" fill="#5C78FF" text-anchor="middle">RAW</text>
   <text x="250" y="186" font-size="12" font-weight="700" fill="#8AA0FF" text-anchor="middle">Raw landing</text>
-  <text x="250" y="203" font-size="10" fill="#9aa0b4" text-anchor="middle">append-only · untouched</text>
+  <text x="250" y="203" font-size="10" fill="#E7E7EE" text-anchor="middle">append-only · untouched</text>
 
   <!-- SILVER (cyan = cleaned) -->
   <circle cx="445" cy="110" r="54" fill="none" stroke="#5AC8FF" stroke-width="3" opacity="0"><animate attributeName="opacity" values="0;.5;0" dur="2.9s" begin=".5s" repeatCount="indefinite"/><animate attributeName="r" values="54;60;54" dur="2.9s" begin=".5s" repeatCount="indefinite"/></circle>
@@ -837,41 +839,41 @@ GROUP BY category;</pre></div>
   <text x="445" y="104" font-size="15" font-weight="800" fill="#5AC8FF" text-anchor="middle">SILVER</text>
   <text x="445" y="122" font-size="10" font-weight="700" fill="#28B9FF" text-anchor="middle">CLEAN</text>
   <text x="445" y="186" font-size="12" font-weight="700" fill="#5AC8FF" text-anchor="middle">Cleaned &amp; conformed</text>
-  <text x="445" y="203" font-size="10" fill="#9aa0b4" text-anchor="middle">cast · dedupe · join</text>
+  <text x="445" y="203" font-size="10" fill="#E7E7EE" text-anchor="middle">cast · dedupe · join</text>
 
   <!-- GOLD (amber = business) -->
-  <circle cx="640" cy="110" r="54" fill="none" stroke="#FFB454" stroke-width="3" opacity="0"><animate attributeName="opacity" values="0;.55;0" dur="2.3s" begin="1s" repeatCount="indefinite"/><animate attributeName="r" values="54;61;54" dur="2.3s" begin="1s" repeatCount="indefinite"/></circle>
-  <circle cx="640" cy="110" r="52" fill="#1B2A46" stroke="#FFB454" stroke-width="2.5"/>
-  <text x="640" y="104" font-size="15" font-weight="800" fill="#FFC978" text-anchor="middle">GOLD</text>
-  <text x="640" y="122" font-size="10" font-weight="700" fill="#FFB454" text-anchor="middle">SERVE</text>
-  <text x="640" y="186" font-size="12" font-weight="700" fill="#FFC978" text-anchor="middle">Business-ready</text>
-  <text x="640" y="203" font-size="10" fill="#9aa0b4" text-anchor="middle">aggregates · KPIs</text>
+  <circle cx="640" cy="110" r="54" fill="none" stroke="#FF9E3D" stroke-width="3" opacity="0"><animate attributeName="opacity" values="0;.55;0" dur="2.3s" begin="1s" repeatCount="indefinite"/><animate attributeName="r" values="54;61;54" dur="2.3s" begin="1s" repeatCount="indefinite"/></circle>
+  <circle cx="640" cy="110" r="52" fill="#1B2A46" stroke="#FF9E3D" stroke-width="2.5"/>
+  <text x="640" y="104" font-size="15" font-weight="800" fill="#FFC066" text-anchor="middle">GOLD</text>
+  <text x="640" y="122" font-size="10" font-weight="700" fill="#FF9E3D" text-anchor="middle">SERVE</text>
+  <text x="640" y="186" font-size="12" font-weight="700" fill="#FFC066" text-anchor="middle">Business-ready</text>
+  <text x="640" y="203" font-size="10" fill="#E7E7EE" text-anchor="middle">aggregates · KPIs</text>
 
   <!-- BI & ML -->
   <rect x="766" y="80" width="100" height="60" rx="12" fill="#1B2A46" stroke="#28B9FF" stroke-opacity=".6" stroke-width="1.6"/>
   <text x="816" y="106" font-size="12" font-weight="700" fill="#5AC8FF" text-anchor="middle">BI &amp; ML</text>
-  <text x="816" y="124" font-size="9" fill="#9aa0b4" text-anchor="middle">dashboards</text>
+  <text x="816" y="124" font-size="9" fill="#E7E7EE" text-anchor="middle">dashboards</text>
 
   <!-- flow arrows + particles (per segment) -->
   <g stroke-linecap="round">
     <line x1="120" y1="110" x2="192" y2="110" stroke="#3C4356" stroke-width="1.6" stroke-dasharray="4,3"/>
     <polygon points="192,105 202,110 192,115" fill="#5C78FF"/>
-    <text x="158" y="100" font-size="8.5" fill="#9aa0b4" text-anchor="middle">ingest</text>
+    <text x="158" y="100" font-size="8.5" fill="#E7E7EE" text-anchor="middle">ingest</text>
     <circle cy="110" r="3.5" fill="#5C78FF"><animate attributeName="cx" values="122;190" dur="1.8s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;1;1;0" dur="1.8s" repeatCount="indefinite"/></circle>
 
     <line x1="304" y1="110" x2="389" y2="110" stroke="#3C4356" stroke-width="1.6" stroke-dasharray="4,3"/>
     <polygon points="389,105 399,110 389,115" fill="#5AC8FF"/>
-    <text x="346" y="100" font-size="8.5" fill="#9aa0b4" text-anchor="middle">clean · cast</text>
+    <text x="346" y="100" font-size="8.5" fill="#E7E7EE" text-anchor="middle">clean · cast</text>
     <circle cy="110" r="3.5" fill="#5AC8FF"><animate attributeName="cx" values="306;387" dur="1.8s" begin=".4s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;1;1;0" dur="1.8s" begin=".4s" repeatCount="indefinite"/></circle>
 
     <line x1="499" y1="110" x2="584" y2="110" stroke="#3C4356" stroke-width="1.6" stroke-dasharray="4,3"/>
-    <polygon points="584,105 594,110 584,115" fill="#FFB454"/>
-    <text x="541" y="100" font-size="8.5" fill="#9aa0b4" text-anchor="middle">aggregate</text>
-    <circle cy="110" r="3.5" fill="#FFB454"><animate attributeName="cx" values="501;582" dur="1.8s" begin=".8s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;1;1;0" dur="1.8s" begin=".8s" repeatCount="indefinite"/></circle>
+    <polygon points="584,105 594,110 584,115" fill="#FF9E3D"/>
+    <text x="541" y="100" font-size="8.5" fill="#E7E7EE" text-anchor="middle">aggregate</text>
+    <circle cy="110" r="3.5" fill="#FF9E3D"><animate attributeName="cx" values="501;582" dur="1.8s" begin=".8s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;1;1;0" dur="1.8s" begin=".8s" repeatCount="indefinite"/></circle>
 
     <line x1="694" y1="110" x2="762" y2="110" stroke="#3C4356" stroke-width="1.6" stroke-dasharray="4,3"/>
     <polygon points="762,105 772,110 762,115" fill="#5AC8FF"/>
-    <text x="728" y="100" font-size="8.5" fill="#9aa0b4" text-anchor="middle">serve</text>
+    <text x="728" y="100" font-size="8.5" fill="#E7E7EE" text-anchor="middle">serve</text>
     <circle cy="110" r="3.5" fill="#5AC8FF"><animate attributeName="cx" values="696;760" dur="1.8s" begin="1.2s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;1;1;0" dur="1.8s" begin="1.2s" repeatCount="indefinite"/></circle>
   </g>
 </svg>
@@ -941,7 +943,7 @@ GROUP BY category;</pre></div>
 <p class="reveal lead">The Data Lakehouse is the answer to all six problems above. The key idea: keep the cheap cloud storage (S3 / ADLS / GCS) as the foundation, but add a thin software layer on top that gives you database-style reliability.</p>
 <p class="reveal">That software layer is <strong>Delta Lake</strong> (open source, from Databricks, now a Linux Foundation project). It's not a separate database server, a cloud service you pay for, or a different file format. It's an <strong>open-source library</strong> that sits between your query engine (Spark, Databricks, Trino) and your Parquet files, adding a transaction log that makes everything safe.</p>
 
-<figure class="reveal" style="margin:1.6em 0;background:#1C1C2A;border:1px solid #3C4356;border-radius:10px;padding:1.2em 1em 1em;overflow:hidden">
+<figure class="reveal" style="margin:1.6em 0;background:radial-gradient(130% 150% at 50% 0%,#223650 0%,#141826 72%);border:1px solid #3C4356;border-radius:10px;padding:1.2em 1em 1em;overflow:hidden">
 <figcaption style="font-size:12px;color:#555;text-align:center;margin-bottom:.8em;letter-spacing:.06em;text-transform:uppercase">Data Warehouse vs Plain Data Lake vs Data Lakehouse</figcaption>
 <svg viewBox="0 0 744 310" width="100%" style="display:block;max-width:744px;margin:0 auto" aria-label="Comparison of Data Warehouse, Plain Data Lake, and Data Lakehouse">
   <defs>
@@ -965,7 +967,7 @@ GROUP BY category;</pre></div>
 
   <!-- Lake card -->
   <rect x="244" y="8" width="210" height="290" rx="8" fill="#1C1C2A" stroke="#5C78FF" stroke-width="1.2"/>
-  <text x="349" y="34" class="col-head" fill="#9AA0B4">PLAIN DATA LAKE</text>
+  <text x="349" y="34" class="col-head" fill="#E7E7EE">PLAIN DATA LAKE</text>
   <text x="349" y="52" font-family="'JetBrains Mono',monospace" font-size="10" fill="#555" text-anchor="middle">S3 + raw Parquet files</text>
   <line x1="252" y1="60" x2="446" y2="60" stroke="#3C4356" stroke-width="1"/>
 
@@ -980,14 +982,14 @@ GROUP BY category;</pre></div>
 
   <!-- Feature rows -->
   <!-- Row labels (left margin) -->
-  <text x="8" y="90" class="col-feat" fill="#7A8099" text-anchor="start" opacity="0"><animate attributeName="opacity" values="0;1" dur=".3s" fill="freeze" begin=".5s"/></text>
+  <text x="8" y="90" class="col-feat" fill="#E7E7EE" text-anchor="start" opacity="0"><animate attributeName="opacity" values="0;1" dur=".3s" fill="freeze" begin=".5s"/></text>
 
   <!-- Row 1: ACID -->
   <text x="113" y="92" class="col-val" fill="#5AC8FF" font-size="13">
     + ACID
     <animate attributeName="opacity" values="0;1" dur=".3s" fill="freeze" begin=".3s"/>
   </text>
-  <text x="349" y="92" class="col-val" fill="#9AA0B4" font-size="13">
+  <text x="349" y="92" class="col-val" fill="#E7E7EE" font-size="13">
     − ACID
     <animate attributeName="opacity" values="0;1" dur=".3s" fill="freeze" begin=".5s"/>
   </text>
@@ -999,37 +1001,37 @@ GROUP BY category;</pre></div>
 
   <!-- Row 2: UPDATE / DELETE -->
   <text x="113" y="118" class="col-val" fill="#5AC8FF" font-size="11">+ UPDATE / DELETE<animate attributeName="opacity" values="0;1" dur=".3s" fill="freeze" begin=".4s"/></text>
-  <text x="349" y="118" class="col-val" fill="#9AA0B4" font-size="11">− UPDATE / DELETE<animate attributeName="opacity" values="0;1" dur=".3s" fill="freeze" begin=".6s"/></text>
+  <text x="349" y="118" class="col-val" fill="#E7E7EE" font-size="11">− UPDATE / DELETE<animate attributeName="opacity" values="0;1" dur=".3s" fill="freeze" begin=".6s"/></text>
   <text x="587" y="118" class="col-val" fill="#5AC8FF" font-size="11">+ UPDATE / DELETE<animate attributeName="opacity" values="0;1" dur=".3s" fill="freeze" begin=".8s"/></text>
   <line x1="8" y1="126" x2="694" y2="126" stroke="#3C4356" stroke-width="1"/>
 
   <!-- Row 3: Schema -->
   <text x="113" y="146" class="col-val" fill="#5AC8FF" font-size="11">+ Schema enforced<animate attributeName="opacity" values="0;1" dur=".3s" fill="freeze" begin=".5s"/></text>
-  <text x="349" y="146" class="col-val" fill="#9AA0B4" font-size="11">− Schema optional<animate attributeName="opacity" values="0;1" dur=".3s" fill="freeze" begin=".7s"/></text>
+  <text x="349" y="146" class="col-val" fill="#E7E7EE" font-size="11">− Schema optional<animate attributeName="opacity" values="0;1" dur=".3s" fill="freeze" begin=".7s"/></text>
   <text x="587" y="146" class="col-val" fill="#5AC8FF" font-size="11">+ Schema enforced<animate attributeName="opacity" values="0;1" dur=".3s" fill="freeze" begin=".9s"/></text>
   <line x1="8" y1="154" x2="694" y2="154" stroke="#3C4356" stroke-width="1"/>
 
   <!-- Row 4: History -->
   <text x="113" y="174" class="col-val" fill="#5AC8FF" font-size="11">+ Time travel / undo<animate attributeName="opacity" values="0;1" dur=".3s" fill="freeze" begin=".6s"/></text>
-  <text x="349" y="174" class="col-val" fill="#9AA0B4" font-size="11">− No history<animate attributeName="opacity" values="0;1" dur=".3s" fill="freeze" begin=".8s"/></text>
+  <text x="349" y="174" class="col-val" fill="#E7E7EE" font-size="11">− No history<animate attributeName="opacity" values="0;1" dur=".3s" fill="freeze" begin=".8s"/></text>
   <text x="587" y="174" class="col-val" fill="#5AC8FF" font-size="11">+ Time travel / undo<animate attributeName="opacity" values="0;1" dur=".3s" fill="freeze" begin="1s"/></text>
   <line x1="8" y1="182" x2="694" y2="182" stroke="#3C4356" stroke-width="1"/>
 
   <!-- Row 5: Storage cost -->
-  <text x="113" y="202" class="col-val" fill="#9AA0B4" font-size="11">− Expensive storage<animate attributeName="opacity" values="0;1" dur=".3s" fill="freeze" begin=".7s"/></text>
+  <text x="113" y="202" class="col-val" fill="#E7E7EE" font-size="11">− Expensive storage<animate attributeName="opacity" values="0;1" dur=".3s" fill="freeze" begin=".7s"/></text>
   <text x="349" y="202" class="col-val" fill="#5AC8FF" font-size="11">+ Cheap storage<animate attributeName="opacity" values="0;1" dur=".3s" fill="freeze" begin=".9s"/></text>
   <text x="587" y="202" class="col-val" fill="#5AC8FF" font-size="11">+ Cheap storage<animate attributeName="opacity" values="0;1" dur=".3s" fill="freeze" begin="1.1s"/></text>
   <line x1="8" y1="210" x2="694" y2="210" stroke="#3C4356" stroke-width="1"/>
 
   <!-- Row 6: File format -->
-  <text x="113" y="230" class="col-val" fill="#9AA0B4" font-size="11">− Proprietary format<animate attributeName="opacity" values="0;1" dur=".3s" fill="freeze" begin=".8s"/></text>
+  <text x="113" y="230" class="col-val" fill="#E7E7EE" font-size="11">− Proprietary format<animate attributeName="opacity" values="0;1" dur=".3s" fill="freeze" begin=".8s"/></text>
   <text x="349" y="230" class="col-val" fill="#5AC8FF" font-size="11">+ Any file type<animate attributeName="opacity" values="0;1" dur=".3s" fill="freeze" begin="1s"/></text>
   <text x="587" y="230" class="col-val" fill="#5AC8FF" font-size="11">+ Open Parquet+log<animate attributeName="opacity" values="0;1" dur=".3s" fill="freeze" begin="1.2s"/></text>
   <line x1="8" y1="238" x2="694" y2="238" stroke="#3C4356" stroke-width="1"/>
 
   <!-- Row 7: Streaming -->
-  <text x="113" y="258" class="col-val" fill="#9AA0B4" font-size="11">~ Batch primary<animate attributeName="opacity" values="0;1" dur=".3s" fill="freeze" begin=".9s"/></text>
-  <text x="349" y="258" class="col-val" fill="#9AA0B4" font-size="11">~ Manual streaming<animate attributeName="opacity" values="0;1" dur=".3s" fill="freeze" begin="1.1s"/></text>
+  <text x="113" y="258" class="col-val" fill="#E7E7EE" font-size="11">~ Batch primary<animate attributeName="opacity" values="0;1" dur=".3s" fill="freeze" begin=".9s"/></text>
+  <text x="349" y="258" class="col-val" fill="#E7E7EE" font-size="11">~ Manual streaming<animate attributeName="opacity" values="0;1" dur=".3s" fill="freeze" begin="1.1s"/></text>
   <text x="587" y="258" class="col-val" fill="#5AC8FF" font-size="11">+ Batch + streaming<animate attributeName="opacity" values="0;1" dur=".3s" fill="freeze" begin="1.3s"/></text>
   <line x1="8" y1="266" x2="694" y2="266" stroke="#3C4356" stroke-width="1"/>
 
@@ -1050,7 +1052,7 @@ GROUP BY category;</pre></div>
   <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">It's like a bank ledger: your account balance isn't stored as a single number — it's computed from the full history of deposits and withdrawals. The current table state is computed from the full history of commits.</p>
 </div>
 
-<figure class="reveal" style="margin:1.6em 0;background:#1C1C2A;border:1px solid #3C4356;border-radius:10px;padding:1.2em 1em 1em;overflow:hidden">
+<figure class="reveal" style="margin:1.6em 0;background:radial-gradient(130% 150% at 50% 0%,#223650 0%,#141826 72%);border:1px solid #3C4356;border-radius:10px;padding:1.2em 1em 1em;overflow:hidden">
 <figcaption style="font-size:12px;color:#555;text-align:center;margin-bottom:.8em;letter-spacing:.06em;text-transform:uppercase">Delta Lake — _delta_log/ Transaction Log Structure</figcaption>
 <svg viewBox="0 0 700 360" width="100%" style="display:block;max-width:700px;margin:0 auto" aria-label="Delta Lake transaction log folder structure">
   <defs>
@@ -1122,7 +1124,7 @@ GROUP BY category;</pre></div>
     <line x1="163" y1="191" x2="163" y2="205" stroke="#5C78FF" stroke-width="2"/>
     <line x1="169" y1="191" x2="169" y2="205" stroke="#5C78FF" stroke-width="2"/>
     <line x1="175" y1="191" x2="175" y2="205" stroke="#5C78FF" stroke-width="2"/>
-    <text x="188" y="202" class="dl-file" fill="#9AA0B4">00000000000000000010.checkpoint.parquet</text>
+    <text x="188" y="202" class="dl-file" fill="#E7E7EE">00000000000000000010.checkpoint.parquet</text>
     <text x="188" y="216" class="dl-comment">← snapshot of all active files after 10 commits (save point)</text>
   </g>
 
@@ -1131,9 +1133,9 @@ GROUP BY category;</pre></div>
   <g style="animation:commit-appear .4s ease both 1.6s;opacity:.35">
     <line x1="35" y1="246" x2="58" y2="246" stroke="#444" stroke-width="1.2"/>
     <rect x="60" y="237" width="120" height="18" rx="3" fill="#111" stroke="#5C78FF" stroke-width="1" stroke-dasharray="3,2"/>
-    <text x="120" y="250" class="dl-file" fill="#9AA0B4" text-anchor="middle">part-A.parquet</text>
+    <text x="120" y="250" class="dl-file" fill="#E7E7EE" text-anchor="middle">part-A.parquet</text>
     <line x1="60" y1="246" x2="180" y2="246" stroke="#5C78FF" stroke-width="1.2" opacity=".6"/>
-    <text x="190" y="250" class="dl-comment" fill="#9AA0B4">removed by commit 2 → no longer active</text>
+    <text x="190" y="250" class="dl-comment" fill="#E7E7EE">removed by commit 2 → no longer active</text>
   </g>
 
   <!-- part-B (active) -->
