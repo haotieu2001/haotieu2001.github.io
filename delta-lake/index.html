@@ -22,7 +22,7 @@
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,500;0,700;0,800;1,400&display=swap" rel="stylesheet">
 <style>
   :root{
-    --bg:#111117; --bg2:#16161D; --ink:#F1F1F1; --muted:#9aa0b4; --dim:#6b6b78;
+    --bg:#111117; --bg2:#16161d; --ink:#F1F1F1; --muted:#9aa0b4; --dim:#6b6b78;
     --blue2:#5C78FF; --cyan:#28B9FF; --cyan2:#5AC8FF; --purple:#5C78FF; --magenta2:#5AC8FF;
     --grad:linear-gradient(90deg,#28B9FF,#5C78FF);
     --font:"JetBrainsMono Nerd Font","JetBrains Mono","Symbols Nerd Font",ui-monospace,"Cascadia Code",Menlo,Consolas,monospace;
@@ -43,53 +43,53 @@
   .byline{margin-top:14px;font-size:13px;color:var(--dim)}
   .stack{display:flex;gap:10px;align-items:center;flex-wrap:wrap;margin-top:16px}
   .stack .lbl{font-size:12px;color:var(--dim);letter-spacing:.04em}
-  .b2{display:inline-flex;align-items:center;gap:8px;border:1px solid #2C2C38;background:#191921;border-radius:999px;padding:6px 13px;font-size:13px;font-weight:700;transition:transform .2s ease,border-color .2s ease}
+  .b2{display:inline-flex;align-items:center;gap:8px;border:1px solid #3C4356;background:#242739;border-radius:999px;padding:6px 13px;font-size:13px;font-weight:700;transition:transform .2s ease,border-color .2s ease}
   .b2:hover{transform:translateY(-2px)}
   .b2 svg{width:20px;height:20px;display:block}
   .b2.delta{color:#5AC8FF;border-color:#28B9FF55} .b2.dbx{color:#9AA0B4;border-color:#9AA0B455}
-  h2{font-size:clamp(21px,3.2vw,28px);margin:52px 0 6px;font-weight:800;line-height:1.22;padding-top:14px;border-top:1px solid #2C2C38}
+  h2{font-size:clamp(21px,3.2vw,28px);margin:52px 0 6px;font-weight:800;line-height:1.22;padding-top:14px;border-top:1px solid #3C4356}
   h2 .n{color:var(--blue2)}
   h3{font-size:18px;margin:24px 0 4px;color:#fff}
   p,li{color:#dcdce4}
   .lead{font-size:18px;color:#e7e7ee}
   a{color:var(--cyan2)}
-  code{font-family:var(--font);background:#23232b;color:#5AC8FF;padding:1px 6px;border-radius:5px;font-size:.88em;border:1px solid #2C2C38}
+  code{font-family:var(--font);background:#23232b;color:#5AC8FF;padding:1px 6px;border-radius:5px;font-size:.88em;border:1px solid #3C4356}
   .cb{margin:16px 0}
-  .cb .lang{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:#9aa0b4;background:#1b1b24;border:1px solid #2C2C38;border-bottom:none;border-radius:9px 9px 0 0;padding:4px 12px}
-  pre{margin:0;background:#101017;border:1px solid #2C2C38;border-radius:0 10px 10px 10px;padding:14px 16px;overflow-x:auto;
+  .cb .lang{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:#9aa0b4;background:#1b1b24;border:1px solid #3C4356;border-bottom:none;border-radius:9px 9px 0 0;padding:4px 12px}
+  pre{margin:0;background:#1C1C2A;border:1px solid #3C4356;border-radius:0 10px 10px 10px;padding:14px 16px;overflow-x:auto;
       font-family:var(--font);font-size:13px;line-height:1.6;color:#d8dcea;white-space:pre}
   pre .c{color:#6B6B78}
-  .callout{border-left:4px solid #28B9FF;background:linear-gradient(160deg,#12202e,#101019);border-radius:0 12px 12px 0;padding:14px 18px;margin:22px 0;box-shadow:0 0 16px -8px #28B9FF66}
-  .why{border-left:4px solid var(--cyan);background:#0f1f2b}
+  .callout{border-left:4px solid #28B9FF;background:linear-gradient(160deg,#12202e,#1C1C2A);border-radius:0 12px 12px 0;padding:14px 18px;margin:22px 0;box-shadow:0 0 16px -8px #28B9FF66}
+  .why{border-left:4px solid var(--cyan);background:#22344F}
   .why .t{color:var(--cyan2);font-weight:800}
-  .note{border-left:4px solid var(--magenta2);background:#191921}
+  .note{border-left:4px solid var(--magenta2);background:#242739}
   .warn{border-left:4px solid #9AA0B4;background:#1D1D26}
-  .tldr{border:1px solid #28B9FF44;background:linear-gradient(180deg,#12161d,#0d0d12);border-radius:16px;padding:20px 24px;margin:26px 0;box-shadow:0 0 24px -10px #28B9FF55}
+  .tldr{border:1px solid #28B9FF44;background:linear-gradient(180deg,#12161d,#1C1C2A);border-radius:16px;padding:20px 24px;margin:26px 0;box-shadow:0 0 24px -10px #28B9FF55}
   .tldr h4{margin:0 0 8px;font-size:13px;letter-spacing:.2em;text-transform:uppercase;color:var(--cyan2)}
-  .gloss{border:1px solid #2C2C38;background:#1D1D26;border-radius:14px;padding:18px 22px;margin:24px 0}
+  .gloss{border:1px solid #3C4356;background:#1D1D26;border-radius:14px;padding:18px 22px;margin:24px 0}
   .gloss h4{margin:0 0 6px;color:#fff;font-size:15px}
   .gloss dl{margin:0;font-size:13.5px}
   .gloss dt{color:var(--cyan2);font-weight:700;margin-top:9px}
   .gloss dd{margin:1px 0 0;color:#cdd0dd}
-  .toc{background:#191921;border:1px solid #2C2C38;border-radius:14px;padding:16px 22px;margin:24px 0;column-count:2;column-gap:28px}
+  .toc{background:#242739;border:1px solid #3C4356;border-radius:14px;padding:16px 22px;margin:24px 0;column-count:2;column-gap:28px}
   .toc a{display:block;color:var(--cyan2);text-decoration:none;font-size:13.5px;line-height:1.9;break-inside:avoid} .toc a:hover{color:#fff}
   .toc>strong{column-span:all;display:block;margin-bottom:6px;color:#fff}
   table{border-collapse:collapse;width:100%;font-size:13.5px;margin:16px 0}
-  th,td{border:1px solid #2C2C38;padding:8px 11px;text-align:left;vertical-align:top}
+  th,td{border:1px solid #3C4356;padding:8px 11px;text-align:left;vertical-align:top}
   th{background:#17171E;color:#fff} tr:nth-child(even) td{background:#17171E}
-  figure{margin:24px 0;text-align:center} figure svg{max-width:100%;height:auto;border:1px solid #2C2C38;border-radius:14px;background:#16161D}
+  figure{margin:24px 0;text-align:center} figure svg{max-width:100%;height:auto;border:1px solid #3C4356;border-radius:14px;background:#20202C}
   figcaption{font-size:12.5px;color:var(--muted);margin-top:8px;font-style:italic}
-  footer{border-top:1px solid #2C2C38;margin-top:50px;padding:24px 0 90px;color:var(--dim);font-size:13px}
+  footer{border-top:1px solid #3C4356;margin-top:50px;padding:24px 0 90px;color:var(--dim);font-size:13px}
   .js .reveal{opacity:0;transform:translateY(16px);transition:opacity .6s ease,transform .6s ease}
   .js .reveal.in{opacity:1;transform:none}
   @media (prefers-reduced-motion: reduce){.js .reveal{opacity:1;transform:none}}
   /* ---- shared theme: top nav + a11y (appended) ---- */
-  .nav{position:sticky;top:0;z-index:60;background:rgba(25,25,33,.82);backdrop-filter:blur(10px);border-bottom:1px solid #2C2C38}
+  .nav{position:sticky;top:0;z-index:60;background:rgba(25,25,33,.82);backdrop-filter:blur(10px);border-bottom:1px solid #3C4356}
   .nav-inner{max-width:1040px;margin:0 auto;padding:12px 24px;display:flex;align-items:center;gap:18px;flex-wrap:wrap}
   .nav-brand{font-weight:800;letter-spacing:.16em;font-size:15px;text-decoration:none;border:0;color:#5AC8FF}
   .nav-links{display:flex;gap:6px;flex-wrap:wrap;margin-left:auto}
   .nav-links a{text-decoration:none;border:1px solid transparent;color:#9aa0b4;font-weight:700;font-size:13.5px;padding:6px 14px;border-radius:999px;transition:.2s}
-  .nav-links a:hover{color:#fff;border-color:#2C2C38;background:#191921}
+  .nav-links a:hover{color:#fff;border-color:#3C4356;background:#242739}
   .nav-links a.active{color:#5AC8FF;border-color:#28B9FF55;background:#28B9FF14}
   :focus-visible{outline:2px solid #5AC8FF;outline-offset:3px;border-radius:6px}
   @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{animation:none !important;transition:none !important}.js .reveal{opacity:1 !important;transform:none !important}}
@@ -252,16 +252,16 @@ display(spark.read.json(loc + "/_delta_log/00000000000000000000.json"))   <span 
 
 <figure class="reveal">
 <svg viewBox="0 0 760 300" font-family="var(--font)">
-  <rect width="760" height="300" rx="12" fill="#16161D"/>
+  <rect width="760" height="300" rx="12" fill="#20202C"/>
   <text x="24" y="40" font-size="15" font-weight="700" fill="#5AC8FF">The log is an ordered list of add / remove</text>
   <g font-size="12.5" fill="#D8DCEA">
-    <rect x="24" y="60" width="300" height="34" rx="6" fill="#16202E" stroke="#5C78FF"/><text x="38" y="82">commit 0:  + add A   + add B</text>
-    <rect x="24" y="104" width="300" height="34" rx="6" fill="#16202E" stroke="#5C78FF"/><text x="38" y="126">commit 1:  + add C   − remove A</text>
-    <rect x="24" y="148" width="300" height="34" rx="6" fill="#16202E" stroke="#5C78FF"/><text x="38" y="170">commit 2:  + add D</text>
+    <rect x="24" y="60" width="300" height="34" rx="6" fill="#223650" stroke="#5C78FF"/><text x="38" y="82">commit 0:  + add A   + add B</text>
+    <rect x="24" y="104" width="300" height="34" rx="6" fill="#223650" stroke="#5C78FF"/><text x="38" y="126">commit 1:  + add C   − remove A</text>
+    <rect x="24" y="148" width="300" height="34" rx="6" fill="#223650" stroke="#5C78FF"/><text x="38" y="170">commit 2:  + add D</text>
   </g>
   <path d="M340 130 L420 130" stroke="#28B9FF" stroke-width="3" fill="none"/><path d="M414 124 l12 6 l-12 6 z" fill="#28B9FF"/>
   <text x="380" y="120" text-anchor="middle" font-size="12" fill="#28B9FF">replay</text>
-  <rect x="440" y="86" width="296" height="92" rx="10" fill="#191921" stroke="#5AC8FF" stroke-width="2"/>
+  <rect x="440" y="86" width="296" height="92" rx="10" fill="#242739" stroke="#5AC8FF" stroke-width="2"/>
   <text x="588" y="120" text-anchor="middle" font-size="15" font-weight="700" fill="#5AC8FF">live files = B, C, D</text>
   <text x="588" y="150" text-anchor="middle" font-size="12" fill="#9AA0B4">A was added then removed → gone.</text>
   <text x="24" y="225" font-size="12.5" fill="#9AA0B4">The data files never change. The log decides which files count. That is the core idea.</text>
@@ -302,19 +302,19 @@ DESCRIBE HISTORY invoices_mor;   <span class="c">-- metrics: numRemovedFiles=0, 
 
 <figure class="reveal">
 <svg viewBox="0 0 760 220" font-family="var(--font)">
-  <rect width="760" height="220" rx="12" fill="#16161D"/>
-  <rect x="24" y="30" width="340" height="160" rx="10" fill="#16202E" stroke="#5C78FF"/>
-  <text x="194" y="58" text-anchor="middle" font-size="15" font-weight="700" fill="#5C78FF">Copy-on-Write</text>
+  <rect width="760" height="220" rx="12" fill="#20202C"/>
+  <rect x="24" y="30" width="340" height="160" rx="10" fill="#223650" stroke="#5C78FF"/>
+  <text x="194" y="58" text-anchor="middle" font-size="15" font-weight="700" fill="#E7E7EE">Copy-on-Write</text>
   <text x="194" y="86" text-anchor="middle" font-size="12.5" fill="#CDD0DD">delete 2 rows → rewrite whole file</text>
-  <rect x="70" y="104" width="100" height="50" rx="6" fill="#191921" stroke="#5C78FF"/><text x="120" y="134" text-anchor="middle" font-size="11" fill="#fff">file v1 (1000)</text>
-  <text x="186" y="134" font-size="16" fill="#5C78FF">→</text>
-  <rect x="208" y="104" width="110" height="50" rx="6" fill="#16202E" stroke="#28B9FF"/><text x="263" y="129" text-anchor="middle" font-size="11" fill="#5AC8FF">file v2 (998)</text><text x="263" y="146" text-anchor="middle" font-size="9.5" fill="#9AA0B4">all rewritten</text>
-  <rect x="396" y="30" width="340" height="160" rx="10" fill="#16202E" stroke="#5AC8FF"/>
+  <rect x="70" y="104" width="100" height="50" rx="6" fill="#242739" stroke="#5C78FF"/><text x="120" y="134" text-anchor="middle" font-size="11" fill="#fff">file v1 (1000)</text>
+  <text x="186" y="134" font-size="16" fill="#E7E7EE">→</text>
+  <rect x="208" y="104" width="110" height="50" rx="6" fill="#223650" stroke="#28B9FF"/><text x="263" y="129" text-anchor="middle" font-size="11" fill="#5AC8FF">file v2 (998)</text><text x="263" y="146" text-anchor="middle" font-size="9.5" fill="#9AA0B4">all rewritten</text>
+  <rect x="396" y="30" width="340" height="160" rx="10" fill="#223650" stroke="#5AC8FF"/>
   <text x="566" y="58" text-anchor="middle" font-size="15" font-weight="700" fill="#5AC8FF">Merge-on-Read</text>
   <text x="566" y="86" text-anchor="middle" font-size="12.5" fill="#CDD0DD">delete 2 rows → keep file + tiny map</text>
-  <rect x="446" y="104" width="110" height="50" rx="6" fill="#191921" stroke="#5AC8FF"/><text x="501" y="134" text-anchor="middle" font-size="11" fill="#fff">file (untouched)</text>
+  <rect x="446" y="104" width="110" height="50" rx="6" fill="#242739" stroke="#5AC8FF"/><text x="501" y="134" text-anchor="middle" font-size="11" fill="#fff">file (untouched)</text>
   <text x="566" y="134" font-size="16" fill="#5AC8FF">+</text>
-  <rect x="586" y="110" width="90" height="38" rx="6" fill="#16202E" stroke="#5AC8FF"/><text x="631" y="134" text-anchor="middle" font-size="10.5" fill="#C69BFF">deletion map</text>
+  <rect x="586" y="110" width="90" height="38" rx="6" fill="#223650" stroke="#5AC8FF"/><text x="631" y="134" text-anchor="middle" font-size="10.5" fill="#C69BFF">deletion map</text>
 </svg>
 <figcaption>Deletion vectors turn a big file rewrite into a few-KB map write.</figcaption>
 </figure>
@@ -336,19 +336,19 @@ display(dbutils.fs.ls(loc + "/_delta_log"))</pre></div>
 <div class="note reveal" style="font-size:13.5px"><strong>Platform note:</strong> open-source Delta saves a checkpoint every <strong>10</strong> commits; Databricks relaxed it to every <strong>100</strong> commits (DBR 11.1+) for faster log listing. You almost never need to change this — just know that reads use <em>checkpoint + newer JSON</em>, not the whole history.</div>
 <figure class="reveal">
 <svg viewBox="0 0 760 210" font-family="var(--font)">
-  <rect width="760" height="210" rx="12" fill="#16161D"/>
+  <rect width="760" height="210" rx="12" fill="#20202C"/>
   <text x="24" y="34" font-size="15" font-weight="700" fill="#5AC8FF">A checkpoint lets a read skip the old commits</text>
-  <rect x="24" y="64" width="250" height="80" rx="10" fill="#191921" stroke="#6B6B78" stroke-dasharray="5 4"/>
+  <rect x="24" y="64" width="250" height="80" rx="10" fill="#242739" stroke="#6B6B78" stroke-dasharray="5 4"/>
   <text x="149" y="98" text-anchor="middle" font-size="12.5" fill="#9AA0B4">commits 0–9</text>
   <text x="149" y="118" text-anchor="middle" font-size="10.5" fill="#9AA0B4">(JSON — not replayed)</text>
   <path d="M280 104 L320 104" stroke="#28B9FF" stroke-width="3"/><path d="M314 98 l12 6 l-12 6 z" fill="#28B9FF"/>
-  <rect x="330" y="64" width="170" height="80" rx="10" fill="#16202E" stroke="#28B9FF" stroke-width="2"/>
+  <rect x="330" y="64" width="170" height="80" rx="10" fill="#223650" stroke="#28B9FF" stroke-width="2"/>
   <text x="415" y="98" text-anchor="middle" font-size="12.5" font-weight="700" fill="#5AC8FF">v10 checkpoint</text>
   <text x="415" y="118" text-anchor="middle" font-size="10.5" fill="#9AA0B4">summary of live state</text>
   <text x="512" y="110" font-size="18" fill="#5C78FF">+</text>
-  <rect x="536" y="74" width="92" height="28" rx="6" fill="#16202E" stroke="#5C78FF"/><text x="582" y="93" text-anchor="middle" font-size="11" fill="#8AA0FF">v11.json</text>
-  <rect x="536" y="108" width="92" height="28" rx="6" fill="#16202E" stroke="#5C78FF"/><text x="582" y="127" text-anchor="middle" font-size="11" fill="#8AA0FF">v12.json</text>
-  <rect x="24" y="160" width="604" height="34" rx="8" fill="#191921" stroke="#5AC8FF"/>
+  <rect x="536" y="74" width="92" height="28" rx="6" fill="#223650" stroke="#5C78FF"/><text x="582" y="93" text-anchor="middle" font-size="11" fill="#8AA0FF">v11.json</text>
+  <rect x="536" y="108" width="92" height="28" rx="6" fill="#223650" stroke="#5C78FF"/><text x="582" y="127" text-anchor="middle" font-size="11" fill="#8AA0FF">v12.json</text>
+  <rect x="24" y="160" width="604" height="34" rx="8" fill="#242739" stroke="#5AC8FF"/>
   <text x="326" y="182" text-anchor="middle" font-size="12.5" fill="#5AC8FF">read = checkpoint(10) + newer JSON(11,12) — history 0–9 is never replayed</text>
 </svg>
 <figcaption>A checkpoint stores the live state so far, so a read loads it plus only the newer commits.</figcaption>
@@ -369,25 +369,25 @@ display(dbutils.fs.ls(loc + "/_delta_log"))</pre></div>
 <p class="reveal"><strong>Readers are never blocked</strong> — a reader just sees the latest finished version. And two jobs writing to <em>different</em> files both succeed at once; only two writing to the <em>same</em> files make one retry. This is why Delta works very well when there are many reads and few clashes.</p>
 <figure class="reveal">
 <svg viewBox="0 0 760 232" font-family="var(--font)">
-  <rect width="760" height="232" rx="12" fill="#16161D"/>
+  <rect width="760" height="232" rx="12" fill="#20202C"/>
   <text x="24" y="34" font-size="15" font-weight="700" fill="#5AC8FF">No lock — whoever creates the next commit file wins</text>
   <text x="24" y="54" font-size="11" fill="#9AA0B4">Storage rule: "create this file only if that name doesn't exist yet."</text>
 
   <text x="24" y="98" font-size="11.5" font-weight="700" fill="#8AA0FF">Job A</text>
-  <rect x="74" y="80" width="92" height="30" rx="6" fill="#16202E" stroke="#5C78FF"/><text x="120" y="100" text-anchor="middle" font-size="10.5" fill="#CDD0DD">read v4</text>
+  <rect x="74" y="80" width="92" height="30" rx="6" fill="#223650" stroke="#5C78FF"/><text x="120" y="100" text-anchor="middle" font-size="10.5" fill="#CDD0DD">read v4</text>
   <path d="M170 95 L196 95" stroke="#5C78FF" stroke-width="2.5"/><path d="M191 90 l10 5 l-10 5 z" fill="#5C78FF"/>
-  <rect x="200" y="80" width="120" height="30" rx="6" fill="#16202E" stroke="#28B9FF"/><text x="260" y="100" text-anchor="middle" font-size="10.5" fill="#5AC8FF">create 0005.json</text>
+  <rect x="200" y="80" width="120" height="30" rx="6" fill="#223650" stroke="#28B9FF"/><text x="260" y="100" text-anchor="middle" font-size="10.5" fill="#5AC8FF">create 0005.json</text>
   <path d="M324 95 L350 95" stroke="#28B9FF" stroke-width="2.5"/><path d="M345 90 l10 5 l-10 5 z" fill="#28B9FF"/>
-  <rect x="354" y="78" width="130" height="34" rx="6" fill="#191921" stroke="#5AC8FF"/><text x="419" y="100" text-anchor="middle" font-size="11" font-weight="700" fill="#5AC8FF">+ wins → v5</text>
+  <rect x="354" y="78" width="130" height="34" rx="6" fill="#242739" stroke="#5AC8FF"/><text x="419" y="100" text-anchor="middle" font-size="11" font-weight="700" fill="#5AC8FF">+ wins → v5</text>
 
   <text x="24" y="172" font-size="11.5" font-weight="700" fill="#5AC8FF">Job B</text>
-  <rect x="74" y="154" width="92" height="30" rx="6" fill="#16202E" stroke="#5AC8FF"/><text x="120" y="174" text-anchor="middle" font-size="10.5" fill="#CDD0DD">read v4</text>
+  <rect x="74" y="154" width="92" height="30" rx="6" fill="#223650" stroke="#5AC8FF"/><text x="120" y="174" text-anchor="middle" font-size="10.5" fill="#CDD0DD">read v4</text>
   <path d="M170 169 L196 169" stroke="#5AC8FF" stroke-width="2.5"/><path d="M191 164 l10 5 l-10 5 z" fill="#5AC8FF"/>
-  <rect x="200" y="154" width="120" height="30" rx="6" fill="#191921" stroke="#5C78FF"/><text x="260" y="174" text-anchor="middle" font-size="10.5" fill="#9AA0B4">0005 exists −</text>
+  <rect x="200" y="154" width="120" height="30" rx="6" fill="#242739" stroke="#5C78FF"/><text x="260" y="174" text-anchor="middle" font-size="10.5" fill="#9AA0B4">0005 exists −</text>
   <path d="M324 169 L350 169" stroke="#5C78FF" stroke-width="2.5"/><path d="M345 164 l10 5 l-10 5 z" fill="#5C78FF"/>
-  <rect x="354" y="154" width="200" height="30" rx="6" fill="#16202E" stroke="#28B9FF"/><text x="454" y="174" text-anchor="middle" font-size="10.5" fill="#5AC8FF">re-read v5, create 0006.json</text>
+  <rect x="354" y="154" width="200" height="30" rx="6" fill="#223650" stroke="#28B9FF"/><text x="454" y="174" text-anchor="middle" font-size="10.5" fill="#5AC8FF">re-read v5, create 0006.json</text>
   <path d="M558 169 L584 169" stroke="#28B9FF" stroke-width="2.5"/><path d="M579 164 l10 5 l-10 5 z" fill="#28B9FF"/>
-  <rect x="588" y="154" width="120" height="30" rx="6" fill="#191921" stroke="#5AC8FF"/><text x="648" y="174" text-anchor="middle" font-size="11" font-weight="700" fill="#5AC8FF">+ → v6</text>
+  <rect x="588" y="154" width="120" height="30" rx="6" fill="#242739" stroke="#5AC8FF"/><text x="648" y="174" text-anchor="middle" font-size="11" font-weight="700" fill="#5AC8FF">+ → v6</text>
 
   <text x="24" y="214" font-size="11.5" fill="#9AA0B4">Delta does the retry for you; only a real clash on the same data stops with ConcurrentAppendException.</text>
 </svg>
@@ -407,13 +407,13 @@ RESTORE TABLE invoices TO VERSION AS OF 0;   <span class="c">-- one-line undo; r
 <p class="reveal">Great for audits ("what did this report show last quarter?"), repeating old results, and fast recovery from a bad load. One warning: VACUUM (§19) can delete the files an old version needs, which limits how far back you can go.</p>
 <figure class="reveal">
 <svg viewBox="0 0 760 200" font-family="var(--font)">
-  <rect width="760" height="200" rx="12" fill="#16161D"/>
+  <rect width="760" height="200" rx="12" fill="#20202C"/>
   <text x="24" y="34" font-size="15" font-weight="700" fill="#5AC8FF">Every change is a version — read or restore any of them</text>
-  <line x1="90" y1="112" x2="660" y2="112" stroke="#191921" stroke-width="2"/>
-  <circle cx="110" cy="112" r="9" fill="#16202E" stroke="#5C78FF" stroke-width="2"/><text x="110" y="142" text-anchor="middle" font-size="11" fill="#9AA0B4">v0</text><text x="110" y="158" text-anchor="middle" font-size="9.5" fill="#9AA0B4">created</text>
-  <circle cx="280" cy="112" r="9" fill="#16202E" stroke="#28B9FF" stroke-width="2"/><text x="280" y="142" text-anchor="middle" font-size="11" fill="#5AC8FF">v1</text><text x="280" y="158" text-anchor="middle" font-size="9.5" fill="#9AA0B4">insert</text>
-  <circle cx="450" cy="112" r="9" fill="#16202E" stroke="#5C78FF" stroke-width="2"/><text x="450" y="142" text-anchor="middle" font-size="11" fill="#9AA0B4">v2</text><text x="450" y="158" text-anchor="middle" font-size="9.5" fill="#9AA0B4">update</text>
-  <circle cx="620" cy="112" r="9" fill="#16202E" stroke="#5C78FF" stroke-width="2"/><text x="620" y="142" text-anchor="middle" font-size="11" fill="#9AA0B4">v3</text><text x="620" y="158" text-anchor="middle" font-size="9.5" fill="#9AA0B4">now</text>
+  <line x1="90" y1="112" x2="660" y2="112" stroke="#242739" stroke-width="2"/>
+  <circle cx="110" cy="112" r="9" fill="#223650" stroke="#5C78FF" stroke-width="2"/><text x="110" y="142" text-anchor="middle" font-size="11" fill="#9AA0B4">v0</text><text x="110" y="158" text-anchor="middle" font-size="9.5" fill="#9AA0B4">created</text>
+  <circle cx="280" cy="112" r="9" fill="#223650" stroke="#28B9FF" stroke-width="2"/><text x="280" y="142" text-anchor="middle" font-size="11" fill="#5AC8FF">v1</text><text x="280" y="158" text-anchor="middle" font-size="9.5" fill="#9AA0B4">insert</text>
+  <circle cx="450" cy="112" r="9" fill="#223650" stroke="#5C78FF" stroke-width="2"/><text x="450" y="142" text-anchor="middle" font-size="11" fill="#9AA0B4">v2</text><text x="450" y="158" text-anchor="middle" font-size="9.5" fill="#9AA0B4">update</text>
+  <circle cx="620" cy="112" r="9" fill="#223650" stroke="#5C78FF" stroke-width="2"/><text x="620" y="142" text-anchor="middle" font-size="11" fill="#9AA0B4">v3</text><text x="620" y="158" text-anchor="middle" font-size="9.5" fill="#9AA0B4">now</text>
   <text x="280" y="66" text-anchor="middle" font-size="10.5" fill="#9AA0B4">SELECT … VERSION AS OF 1</text>
   <path d="M280 72 L280 100" stroke="#5C78FF" stroke-width="2" stroke-dasharray="4 4"/><path d="M275 94 l5 10 l5 -10 z" fill="#5C78FF"/>
   <path d="M620 100 C 560 60, 170 60, 110 100" stroke="#5AC8FF" stroke-width="2" fill="none"/><path d="M104 94 l6 10 l8 -8 z" fill="#5AC8FF"/>
@@ -446,17 +446,17 @@ WHEN NOT MATCHED THEN INSERT *;</pre></div>
 <p class="reveal"><strong>SCD Type 2</strong> (Slowly Changing Dimension — a table that keeps the history of changes) is also built on MERGE: close the old row (set an end date / <code>is_current = false</code>) and insert a new current row. MERGE's conditions make that one statement.</p>
 <figure class="reveal">
 <svg viewBox="0 0 760 230" font-family="var(--font)">
-  <rect width="760" height="230" rx="12" fill="#16161D"/>
+  <rect width="760" height="230" rx="12" fill="#20202C"/>
   <text x="24" y="34" font-size="15" font-weight="700" fill="#5AC8FF">MERGE matches on a key, then updates, inserts, or deletes</text>
-  <rect x="24" y="92" width="180" height="50" rx="10" fill="#16202E" stroke="#5C78FF"/>
+  <rect x="24" y="92" width="180" height="50" rx="10" fill="#223650" stroke="#5C78FF"/>
   <text x="114" y="114" text-anchor="middle" font-size="12" fill="#CDD0DD">match rows</text>
   <text x="114" y="131" text-anchor="middle" font-size="10.5" fill="#9AA0B4">ON customer_id</text>
   <path d="M204 108 C 252 108, 250 72, 296 72" stroke="#28B9FF" stroke-width="2" fill="none"/>
   <path d="M204 117 L296 124" stroke="#5AC8FF" stroke-width="2" fill="none"/>
   <path d="M204 126 C 252 126, 250 176, 296 176" stroke="#5C78FF" stroke-width="2" fill="none"/>
-  <rect x="300" y="56" width="436" height="32" rx="6" fill="#16202E" stroke="#28B9FF"/><text x="318" y="77" font-size="11.5" fill="#5AC8FF">WHEN MATCHED → UPDATE the existing row</text>
-  <rect x="300" y="108" width="436" height="32" rx="6" fill="#191921" stroke="#5AC8FF"/><text x="318" y="129" font-size="11.5" fill="#5AC8FF">WHEN NOT MATCHED → INSERT the new row</text>
-  <rect x="300" y="160" width="436" height="32" rx="6" fill="#191921" stroke="#5C78FF"/><text x="318" y="181" font-size="11.5" fill="#9AA0B4">WHEN NOT MATCHED BY SOURCE → DELETE (optional)</text>
+  <rect x="300" y="56" width="436" height="32" rx="6" fill="#223650" stroke="#28B9FF"/><text x="318" y="77" font-size="11.5" fill="#5AC8FF">WHEN MATCHED → UPDATE the existing row</text>
+  <rect x="300" y="108" width="436" height="32" rx="6" fill="#242739" stroke="#5AC8FF"/><text x="318" y="129" font-size="11.5" fill="#5AC8FF">WHEN NOT MATCHED → INSERT the new row</text>
+  <rect x="300" y="160" width="436" height="32" rx="6" fill="#242739" stroke="#5C78FF"/><text x="318" y="181" font-size="11.5" fill="#9AA0B4">WHEN NOT MATCHED BY SOURCE → DELETE (optional)</text>
   <text x="24" y="214" font-size="11" fill="#9AA0B4">Matching is by column name (not position) — the safe choice for loads that may change.</text>
 </svg>
 <figcaption>One MERGE handles update + insert + delete by matching the source against the target on a key.</figcaption>
@@ -473,19 +473,19 @@ WHEN NOT MATCHED THEN INSERT *;</pre></div>
 <p class="reveal">Any failure rejects the whole write and leaves the table unchanged (atomicity again). Remember the key rule from §09: <strong>INSERT matches by position, MERGE matches by name.</strong> Use MERGE when the source order or column set might change.</p>
 <figure class="reveal">
 <svg viewBox="0 0 760 224" font-family="var(--font)">
-  <rect width="760" height="224" rx="12" fill="#16161D"/>
+  <rect width="760" height="224" rx="12" fill="#20202C"/>
   <text x="24" y="34" font-size="15" font-weight="700" fill="#5AC8FF">Delta checks the data before it writes (schema-on-write)</text>
   <text x="24" y="54" font-size="11" fill="#9AA0B4">checks in order: type → NULL/CHECK → column set</text>
-  <rect x="24" y="78" width="150" height="32" rx="6" fill="#191921" stroke="#5AC8FF"/><text x="99" y="99" text-anchor="middle" font-size="11" fill="#5AC8FF">'99' → INT  +</text>
-  <rect x="24" y="120" width="150" height="32" rx="6" fill="#191921" stroke="#5C78FF"/><text x="99" y="141" text-anchor="middle" font-size="11" fill="#9AA0B4">'ABC' → INT  −</text>
+  <rect x="24" y="78" width="150" height="32" rx="6" fill="#242739" stroke="#5AC8FF"/><text x="99" y="99" text-anchor="middle" font-size="11" fill="#5AC8FF">'99' → INT  +</text>
+  <rect x="24" y="120" width="150" height="32" rx="6" fill="#242739" stroke="#5C78FF"/><text x="99" y="141" text-anchor="middle" font-size="11" fill="#9AA0B4">'ABC' → INT  −</text>
   <path d="M178 110 L246 110" stroke="#5C78FF" stroke-width="2"/><path d="M240 105 l10 5 l-10 5 z" fill="#5C78FF"/>
-  <rect x="250" y="84" width="120" height="62" rx="10" fill="#16202E" stroke="#5C78FF" stroke-width="2"/>
+  <rect x="250" y="84" width="120" height="62" rx="10" fill="#223650" stroke="#5C78FF" stroke-width="2"/>
   <text x="310" y="112" text-anchor="middle" font-size="12" font-weight="700" fill="#8AA0FF">schema</text>
   <text x="310" y="130" text-anchor="middle" font-size="12" font-weight="700" fill="#8AA0FF">check</text>
   <path d="M370 105 L470 105" stroke="#28B9FF" stroke-width="2.5"/><path d="M464 99 l12 6 l-12 6 z" fill="#28B9FF"/>
-  <rect x="474" y="86" width="262" height="38" rx="8" fill="#16202E" stroke="#28B9FF"/><text x="605" y="110" text-anchor="middle" font-size="11.5" fill="#5AC8FF">all rows valid → written</text>
+  <rect x="474" y="86" width="262" height="38" rx="8" fill="#223650" stroke="#28B9FF"/><text x="605" y="110" text-anchor="middle" font-size="11.5" fill="#5AC8FF">all rows valid → written</text>
   <path d="M310 146 L310 172" stroke="#5C78FF" stroke-width="2.5"/><path d="M304 166 l6 10 l6 -10 z" fill="#5C78FF"/>
-  <rect x="100" y="174" width="540" height="32" rx="8" fill="#191921" stroke="#5C78FF"/><text x="370" y="195" text-anchor="middle" font-size="11.5" fill="#9AA0B4">any bad row → the whole write is rejected, table unchanged</text>
+  <rect x="100" y="174" width="540" height="32" rx="8" fill="#242739" stroke="#5C78FF"/><text x="370" y="195" text-anchor="middle" font-size="11.5" fill="#9AA0B4">any bad row → the whole write is rejected, table unchanged</text>
 </svg>
 <figcaption>Bad data never lands: the whole write is rejected and the table stays exactly as it was.</figcaption>
 </figure>
@@ -507,22 +507,22 @@ df2 = df.withColumn("note", lit("hello"))   <span class="c"># df (the invoices t
 <div class="callout why reveal"><span class="t">Why Databricks?</span> Type widening is a <strong>preview</strong> in <strong>Delta 3.2</strong> (included in <strong>DBR 15.4 LTS</strong>; older 14.3 has Delta 3.1 and can't widen) and fully supported in Delta 4.0. On Databricks you just pick the runtime from a dropdown; on your own Spark you manage the Delta library (jar) versions yourself.</div>
 <figure class="reveal">
 <svg viewBox="0 0 760 220" font-family="var(--font)">
-  <rect width="760" height="220" rx="12" fill="#16161D"/>
+  <rect width="760" height="220" rx="12" fill="#20202C"/>
   <text x="24" y="34" font-size="15" font-weight="700" fill="#5AC8FF">Add a column without rewriting old data</text>
   <text x="24" y="64" font-size="11.5" fill="#9AA0B4">before</text>
   <g font-size="10.5">
-    <rect x="24" y="72" width="200" height="26" fill="#16202E" stroke="#28B9FF"/><text x="34" y="89" fill="#5AC8FF">customer_id   amount</text>
-    <rect x="24" y="98" width="200" height="24" fill="#16202E" stroke="#6B6B78"/><text x="34" y="114" fill="#CDD0DD">1             10.0</text>
-    <rect x="24" y="122" width="200" height="24" fill="#16202E" stroke="#6B6B78"/><text x="34" y="138" fill="#CDD0DD">2             20.0</text>
+    <rect x="24" y="72" width="200" height="26" fill="#223650" stroke="#28B9FF"/><text x="34" y="89" fill="#5AC8FF">customer_id   amount</text>
+    <rect x="24" y="98" width="200" height="24" fill="#223650" stroke="#6B6B78"/><text x="34" y="114" fill="#CDD0DD">1             10.0</text>
+    <rect x="24" y="122" width="200" height="24" fill="#223650" stroke="#6B6B78"/><text x="34" y="138" fill="#CDD0DD">2             20.0</text>
   </g>
   <path d="M236 110 L300 110" stroke="#28B9FF" stroke-width="2.5"/><path d="M294 104 l12 6 l-12 6 z" fill="#28B9FF"/>
   <text x="268" y="100" text-anchor="middle" font-size="9.5" fill="#28B9FF">+ note</text>
   <text x="320" y="64" font-size="11.5" fill="#9AA0B4">after</text>
   <g font-size="10.5">
-    <rect x="320" y="72" width="320" height="26" fill="#16202E" stroke="#28B9FF"/><text x="330" y="89" fill="#5AC8FF">customer_id   amount   note</text>
-    <rect x="320" y="98" width="320" height="24" fill="#16202E" stroke="#6B6B78"/><text x="330" y="114" fill="#CDD0DD">1             10.0     <tspan fill="#9AA0B4">NULL</tspan></text>
-    <rect x="320" y="122" width="320" height="24" fill="#16202E" stroke="#6B6B78"/><text x="330" y="138" fill="#CDD0DD">2             20.0     <tspan fill="#9AA0B4">NULL</tspan></text>
-    <rect x="320" y="146" width="320" height="24" fill="#191921" stroke="#5AC8FF"/><text x="330" y="162" fill="#5AC8FF">7             30.0     hello</text>
+    <rect x="320" y="72" width="320" height="26" fill="#223650" stroke="#28B9FF"/><text x="330" y="89" fill="#5AC8FF">customer_id   amount   note</text>
+    <rect x="320" y="98" width="320" height="24" fill="#223650" stroke="#6B6B78"/><text x="330" y="114" fill="#CDD0DD">1             10.0     <tspan fill="#9AA0B4">NULL</tspan></text>
+    <rect x="320" y="122" width="320" height="24" fill="#223650" stroke="#6B6B78"/><text x="330" y="138" fill="#CDD0DD">2             20.0     <tspan fill="#9AA0B4">NULL</tspan></text>
+    <rect x="320" y="146" width="320" height="24" fill="#242739" stroke="#5AC8FF"/><text x="330" y="162" fill="#5AC8FF">7             30.0     hello</text>
   </g>
   <text x="24" y="196" font-size="11.5" fill="#9AA0B4">Old rows simply read back as NULL for the new column — no file is rewritten.</text>
 </svg>
@@ -585,30 +585,30 @@ SELECT * FROM events;   <span class="c">-- event_date is filled in automatically
 </ul>
 <figure class="reveal">
 <svg viewBox="0 0 760 300" font-family="var(--font)">
-  <rect width="760" height="300" rx="12" fill="#16161D"/>
+  <rect width="760" height="300" rx="12" fill="#20202C"/>
   <text x="24" y="38" font-size="15" font-weight="700" fill="#5AC8FF">One folder per date</text>
-  <rect x="438" y="22" width="298" height="26" rx="13" fill="#191921" stroke="#5AC8FF"/>
+  <rect x="438" y="22" width="298" height="26" rx="13" fill="#242739" stroke="#5AC8FF"/>
   <text x="587" y="39" text-anchor="middle" font-size="11.5" fill="#5AC8FF">WHERE invoice_date = '2026-01-03'</text>
 
   <!-- folder 1: skipped -->
-  <rect x="24" y="70" width="224" height="160" rx="10" fill="#191921" stroke="#6B6B78"/>
+  <rect x="24" y="70" width="224" height="160" rx="10" fill="#242739" stroke="#6B6B78"/>
   <text x="136" y="96" text-anchor="middle" font-size="11.5" fill="#9AA0B4">invoice_date=2026-01-01/</text>
-  <rect x="52" y="110" width="76" height="32" rx="5" fill="#191921"/><rect x="144" y="110" width="76" height="32" rx="5" fill="#191921"/>
-  <rect x="52" y="150" width="76" height="32" rx="5" fill="#191921"/><rect x="144" y="150" width="76" height="32" rx="5" fill="#191921"/>
+  <rect x="52" y="110" width="76" height="32" rx="5" fill="#242739"/><rect x="144" y="110" width="76" height="32" rx="5" fill="#242739"/>
+  <rect x="52" y="150" width="76" height="32" rx="5" fill="#242739"/><rect x="144" y="150" width="76" height="32" rx="5" fill="#242739"/>
   <text x="136" y="214" text-anchor="middle" font-size="12" font-weight="700" fill="#9AA0B4">skipped</text>
 
   <!-- folder 2: skipped -->
-  <rect x="268" y="70" width="224" height="160" rx="10" fill="#191921" stroke="#6B6B78"/>
+  <rect x="268" y="70" width="224" height="160" rx="10" fill="#242739" stroke="#6B6B78"/>
   <text x="380" y="96" text-anchor="middle" font-size="11.5" fill="#9AA0B4">invoice_date=2026-01-02/</text>
-  <rect x="296" y="110" width="76" height="32" rx="5" fill="#191921"/><rect x="388" y="110" width="76" height="32" rx="5" fill="#191921"/>
-  <rect x="296" y="150" width="76" height="32" rx="5" fill="#191921"/><rect x="388" y="150" width="76" height="32" rx="5" fill="#191921"/>
+  <rect x="296" y="110" width="76" height="32" rx="5" fill="#242739"/><rect x="388" y="110" width="76" height="32" rx="5" fill="#242739"/>
+  <rect x="296" y="150" width="76" height="32" rx="5" fill="#242739"/><rect x="388" y="150" width="76" height="32" rx="5" fill="#242739"/>
   <text x="380" y="214" text-anchor="middle" font-size="12" font-weight="700" fill="#9AA0B4">skipped</text>
 
   <!-- folder 3: read -->
-  <rect x="512" y="70" width="224" height="160" rx="10" fill="#16202E" stroke="#28B9FF" stroke-width="2"/>
+  <rect x="512" y="70" width="224" height="160" rx="10" fill="#223650" stroke="#28B9FF" stroke-width="2"/>
   <text x="624" y="96" text-anchor="middle" font-size="11.5" fill="#5AC8FF">invoice_date=2026-01-03/</text>
-  <rect x="540" y="110" width="76" height="32" rx="5" fill="#16202E" stroke="#28B9FF"/><rect x="632" y="110" width="76" height="32" rx="5" fill="#16202E" stroke="#28B9FF"/>
-  <rect x="540" y="150" width="76" height="32" rx="5" fill="#16202E" stroke="#28B9FF"/><rect x="632" y="150" width="76" height="32" rx="5" fill="#16202E" stroke="#28B9FF"/>
+  <rect x="540" y="110" width="76" height="32" rx="5" fill="#223650" stroke="#28B9FF"/><rect x="632" y="110" width="76" height="32" rx="5" fill="#223650" stroke="#28B9FF"/>
+  <rect x="540" y="150" width="76" height="32" rx="5" fill="#223650" stroke="#28B9FF"/><rect x="632" y="150" width="76" height="32" rx="5" fill="#223650" stroke="#28B9FF"/>
   <text x="624" y="214" text-anchor="middle" font-size="12" font-weight="700" fill="#5AC8FF">read this one only</text>
 
   <text x="24" y="270" font-size="12.5" fill="#9AA0B4">A date filter opens just one folder. The other days are never touched — that is the whole win.</text>
@@ -639,10 +639,10 @@ OPTIMIZE invoices WHERE invoice_date = '2026-01-03';   <span class="c">-- just o
 <div class="callout why reveal"><span class="t">Why Databricks?</span> <code>optimizeWrite</code> and <code>autoCompact</code> are <strong>Databricks features</strong> (and Photon makes OPTIMIZE fast). Open-source Delta has <code>OPTIMIZE</code> but not these automatic behaviours, so you'd build the equivalent yourself.</div>
 <figure class="reveal">
 <svg viewBox="0 0 760 200" font-family="var(--font)">
-  <rect width="760" height="200" rx="12" fill="#16161D"/>
+  <rect width="760" height="200" rx="12" fill="#20202C"/>
   <text x="24" y="34" font-size="15" font-weight="700" fill="#5AC8FF">OPTIMIZE packs many tiny files into a few big ones</text>
   <text x="135" y="62" text-anchor="middle" font-size="11.5" fill="#9AA0B4">before: many tiny files (slow)</text>
-  <g fill="#191921" stroke="#6B6B78">
+  <g fill="#242739" stroke="#6B6B78">
     <rect x="36" y="74" width="22" height="22" rx="3"/><rect x="64" y="74" width="22" height="22" rx="3"/><rect x="92" y="74" width="22" height="22" rx="3"/><rect x="120" y="74" width="22" height="22" rx="3"/><rect x="148" y="74" width="22" height="22" rx="3"/><rect x="176" y="74" width="22" height="22" rx="3"/><rect x="204" y="74" width="22" height="22" rx="3"/>
     <rect x="36" y="102" width="22" height="22" rx="3"/><rect x="64" y="102" width="22" height="22" rx="3"/><rect x="92" y="102" width="22" height="22" rx="3"/><rect x="120" y="102" width="22" height="22" rx="3"/><rect x="148" y="102" width="22" height="22" rx="3"/><rect x="176" y="102" width="22" height="22" rx="3"/><rect x="204" y="102" width="22" height="22" rx="3"/>
     <rect x="36" y="130" width="22" height="22" rx="3"/><rect x="64" y="130" width="22" height="22" rx="3"/><rect x="92" y="130" width="22" height="22" rx="3"/><rect x="120" y="130" width="22" height="22" rx="3"/><rect x="148" y="130" width="22" height="22" rx="3"/>
@@ -651,7 +651,7 @@ OPTIMIZE invoices WHERE invoice_date = '2026-01-03';   <span class="c">-- just o
   <text x="316" y="103" text-anchor="middle" font-size="10.5" fill="#28B9FF">OPTIMIZE</text>
   <text x="316" y="132" text-anchor="middle" font-size="9.5" fill="#9AA0B4">bin-pack</text>
   <text x="560" y="62" text-anchor="middle" font-size="11.5" fill="#5AC8FF">after: a few ~256 MB files (fast)</text>
-  <g fill="#16202E" stroke="#28B9FF">
+  <g fill="#223650" stroke="#28B9FF">
     <rect x="430" y="78" width="80" height="74" rx="5"/><rect x="520" y="78" width="80" height="74" rx="5"/><rect x="610" y="78" width="80" height="74" rx="5"/>
   </g>
   <text x="24" y="186" font-size="11.5" fill="#9AA0B4">Fewer files = fewer open/close steps = less wasted compute on every read.</text>
@@ -668,7 +668,7 @@ OPTIMIZE invoices WHERE invoice_date = '2026-01-03' ZORDER BY (customer_id);</pr
 <p class="reveal">For <strong>two or more columns</strong>, there's no single sort order. Z-Order combines the values of both columns, so rows that are similar in both columns are stored near each other. A filter on either column can then still skip files. (You don't need the math — the goal is simply "less overlap, so more files can be skipped.") Z-Order is an expensive sort, so run it now and then (often nightly, limited to the latest partition).</p>
 <figure class="reveal">
 <svg viewBox="0 0 760 432" font-family="var(--font)">
-  <rect width="760" height="432" rx="12" fill="#16161D"/>
+  <rect width="760" height="432" rx="12" fill="#20202C"/>
   <text x="24" y="34" font-size="15" font-weight="700" fill="#5AC8FF">Read a file only if its range can match</text>
   <text x="736" y="34" text-anchor="end" font-size="11.5" fill="#9AA0B4">↓ filter: customer_id = 201</text>
   <text x="24" y="54" font-size="11.5" fill="#9AA0B4">Each bar is one file. Its width = the span of customer_id values stored inside it.</text>
@@ -678,12 +678,12 @@ OPTIMIZE invoices WHERE invoice_date = '2026-01-03' ZORDER BY (customer_id);</pr
   <text x="420" y="84" text-anchor="middle" font-size="10.5" font-weight="700" fill="#9AA0B4">201</text>
   <line x1="420" y1="90" x2="420" y2="180" stroke="#5C78FF" stroke-width="2" stroke-dasharray="4 4"/>
   <!-- four files, all crossing 201 -> all read (cyan) -->
-  <text x="24" y="109" font-size="11" fill="#9AA0B4">file 1</text><rect x="140" y="98"  width="420" height="14" rx="4" fill="#16202E" stroke="#28B9FF"/>
-  <text x="24" y="129" font-size="11" fill="#9AA0B4">file 2</text><rect x="170" y="118" width="470" height="14" rx="4" fill="#16202E" stroke="#28B9FF"/>
-  <text x="24" y="149" font-size="11" fill="#9AA0B4">file 3</text><rect x="110" y="138" width="410" height="14" rx="4" fill="#16202E" stroke="#28B9FF"/>
-  <text x="24" y="169" font-size="11" fill="#9AA0B4">file 4</text><rect x="220" y="158" width="480" height="14" rx="4" fill="#16202E" stroke="#28B9FF"/>
+  <text x="24" y="109" font-size="11" fill="#9AA0B4">file 1</text><rect x="140" y="98"  width="420" height="14" rx="4" fill="#223650" stroke="#28B9FF"/>
+  <text x="24" y="129" font-size="11" fill="#9AA0B4">file 2</text><rect x="170" y="118" width="470" height="14" rx="4" fill="#223650" stroke="#28B9FF"/>
+  <text x="24" y="149" font-size="11" fill="#9AA0B4">file 3</text><rect x="110" y="138" width="410" height="14" rx="4" fill="#223650" stroke="#28B9FF"/>
+  <text x="24" y="169" font-size="11" fill="#9AA0B4">file 4</text><rect x="220" y="158" width="480" height="14" rx="4" fill="#223650" stroke="#28B9FF"/>
   <!-- value axis -->
-  <line x1="110" y1="186" x2="727" y2="186" stroke="#191921"/>
+  <line x1="110" y1="186" x2="727" y2="186" stroke="#242739"/>
   <g font-size="9.5" fill="#9AA0B4" text-anchor="middle">
     <text x="110" y="200">0</text><text x="264" y="200">100</text><text x="418" y="200">200</text><text x="573" y="200">300</text><text x="727" y="200">400</text>
   </g>
@@ -691,19 +691,19 @@ OPTIMIZE invoices WHERE invoice_date = '2026-01-03' ZORDER BY (customer_id);</pr
   <text x="24" y="222" font-size="12.5" fill="#9AA0B4">All 4 ranges cover 201 → all 4 files read (slow).</text>
 
   <!-- divider -->
-  <line x1="24" y1="240" x2="736" y2="240" stroke="#2C2C38"/>
+  <line x1="24" y1="240" x2="736" y2="240" stroke="#3C4356"/>
 
   <!-- ===== AFTER ===== -->
   <text x="24" y="266" font-size="13" fill="#CDD0DD">After Z-Order — ranges sorted, no overlap</text>
   <text x="420" y="266" text-anchor="middle" font-size="10.5" font-weight="700" fill="#9AA0B4">201</text>
   <line x1="420" y1="272" x2="420" y2="362" stroke="#5C78FF" stroke-width="2" stroke-dasharray="4 4"/>
   <!-- file 2 holds 201 -> read; others skipped (grey) -->
-  <text x="24" y="291" font-size="11" fill="#9AA0B4">file 1</text><rect x="110" y="280" width="170" height="14" rx="4" fill="#191921" stroke="#6B6B78"/>
-  <text x="24" y="311" font-size="11" font-weight="700" fill="#5AC8FF">file 2</text><rect x="290" y="300" width="140" height="14" rx="4" fill="#16202E" stroke="#28B9FF" stroke-width="2"/>
-  <text x="24" y="331" font-size="11" fill="#9AA0B4">file 3</text><rect x="440" y="320" width="150" height="14" rx="4" fill="#191921" stroke="#6B6B78"/>
-  <text x="24" y="351" font-size="11" fill="#9AA0B4">file 4</text><rect x="600" y="340" width="120" height="14" rx="4" fill="#191921" stroke="#6B6B78"/>
+  <text x="24" y="291" font-size="11" fill="#9AA0B4">file 1</text><rect x="110" y="280" width="170" height="14" rx="4" fill="#242739" stroke="#6B6B78"/>
+  <text x="24" y="311" font-size="11" font-weight="700" fill="#5AC8FF">file 2</text><rect x="290" y="300" width="140" height="14" rx="4" fill="#223650" stroke="#28B9FF" stroke-width="2"/>
+  <text x="24" y="331" font-size="11" fill="#9AA0B4">file 3</text><rect x="440" y="320" width="150" height="14" rx="4" fill="#242739" stroke="#6B6B78"/>
+  <text x="24" y="351" font-size="11" fill="#9AA0B4">file 4</text><rect x="600" y="340" width="120" height="14" rx="4" fill="#242739" stroke="#6B6B78"/>
   <!-- value axis -->
-  <line x1="110" y1="368" x2="727" y2="368" stroke="#191921"/>
+  <line x1="110" y1="368" x2="727" y2="368" stroke="#242739"/>
   <g font-size="9.5" fill="#9AA0B4" text-anchor="middle">
     <text x="110" y="382">0</text><text x="264" y="382">100</text><text x="418" y="382">200</text><text x="573" y="382">300</text><text x="727" y="382">400</text>
   </g>
@@ -723,11 +723,11 @@ OPTIMIZE invoices WHERE invoice_date = '2026-01-03' ZORDER BY (customer_id);</pr
 <div class="callout why reveal"><span class="t">Why Databricks?</span> Liquid clustering is a newer Delta feature. On Databricks you get the table syntax and the background re-packing is run for you; on open-source Delta support is more limited and you'd schedule the optimization yourself.</div>
 <figure class="reveal">
 <svg viewBox="0 0 760 286" font-family="var(--font)">
-  <rect width="760" height="286" rx="12" fill="#16161D"/>
+  <rect width="760" height="286" rx="12" fill="#20202C"/>
   <text x="24" y="36" font-size="15" font-weight="700" fill="#5AC8FF">Merge the tiny, split the giant → files of even size</text>
 
   <!-- BEFORE: skewed -->
-  <rect x="24" y="58" width="300" height="172" rx="10" fill="#191921" stroke="#6B6B78"/>
+  <rect x="24" y="58" width="300" height="172" rx="10" fill="#242739" stroke="#6B6B78"/>
   <text x="174" y="82" text-anchor="middle" font-size="12.5" font-weight="700" fill="#CDD0DD">before — uneven (skew)</text>
   <line x1="44" y1="208" x2="304" y2="208" stroke="#6B6B78"/>
   <rect x="52"  y="182" width="34" height="26"  fill="#6B6B78"/>
@@ -744,13 +744,13 @@ OPTIMIZE invoices WHERE invoice_date = '2026-01-03' ZORDER BY (customer_id);</pr
   <text x="383" y="172" text-anchor="middle" font-size="10.5" fill="#9AA0B4">merge + split</text>
 
   <!-- AFTER: balanced -->
-  <rect x="436" y="58" width="300" height="172" rx="10" fill="#16202E" stroke="#28B9FF" stroke-width="2"/>
+  <rect x="436" y="58" width="300" height="172" rx="10" fill="#223650" stroke="#28B9FF" stroke-width="2"/>
   <text x="586" y="82" text-anchor="middle" font-size="12.5" font-weight="700" fill="#5AC8FF">after — balanced</text>
   <line x1="456" y1="208" x2="716" y2="208" stroke="#5C78FF"/>
-  <rect x="470" y="138" width="40" height="70" fill="#16202E" stroke="#28B9FF"/>
-  <rect x="524" y="138" width="40" height="70" fill="#16202E" stroke="#28B9FF"/>
-  <rect x="578" y="138" width="40" height="70" fill="#16202E" stroke="#28B9FF"/>
-  <rect x="632" y="138" width="40" height="70" fill="#16202E" stroke="#28B9FF"/>
+  <rect x="470" y="138" width="40" height="70" fill="#223650" stroke="#28B9FF"/>
+  <rect x="524" y="138" width="40" height="70" fill="#223650" stroke="#28B9FF"/>
+  <rect x="578" y="138" width="40" height="70" fill="#223650" stroke="#28B9FF"/>
+  <rect x="632" y="138" width="40" height="70" fill="#223650" stroke="#28B9FF"/>
   <text x="586" y="224" text-anchor="middle" font-size="10.5" fill="#5AC8FF">even sizes = every task equal work</text>
 
   <text x="24" y="262" font-size="12.5" fill="#9AA0B4">You can change the keys any time — Delta re-balances in the background, no full rewrite.</text>
@@ -772,21 +772,21 @@ VACUUM invoices RETAIN 0 HOURS;</pre></div>
 </ul>
 <figure class="reveal">
 <svg viewBox="0 0 760 210" font-family="var(--font)">
-  <rect width="760" height="210" rx="12" fill="#16161D"/>
+  <rect width="760" height="210" rx="12" fill="#20202C"/>
   <text x="24" y="34" font-size="15" font-weight="700" fill="#5AC8FF">VACUUM deletes the files that were only marked removed</text>
   <text x="150" y="62" text-anchor="middle" font-size="11.5" fill="#9AA0B4">storage now</text>
-  <rect x="40" y="74" width="220" height="92" rx="10" fill="#191921" stroke="#6B6B78"/>
-  <rect x="56" y="90" width="86" height="28" rx="5" fill="#16202E" stroke="#28B9FF"/><text x="99" y="108" text-anchor="middle" font-size="10" fill="#5AC8FF">live</text>
-  <rect x="158" y="90" width="86" height="28" rx="5" fill="#16202E" stroke="#28B9FF"/><text x="201" y="108" text-anchor="middle" font-size="10" fill="#5AC8FF">live</text>
-  <rect x="56" y="126" width="86" height="28" rx="5" fill="#191921" stroke="#6B6B78" stroke-dasharray="4 3"/><text x="99" y="144" text-anchor="middle" font-size="9.5" fill="#9AA0B4">tombstoned</text>
-  <rect x="158" y="126" width="86" height="28" rx="5" fill="#191921" stroke="#6B6B78" stroke-dasharray="4 3"/><text x="201" y="144" text-anchor="middle" font-size="9.5" fill="#9AA0B4">tombstoned</text>
+  <rect x="40" y="74" width="220" height="92" rx="10" fill="#242739" stroke="#6B6B78"/>
+  <rect x="56" y="90" width="86" height="28" rx="5" fill="#223650" stroke="#28B9FF"/><text x="99" y="108" text-anchor="middle" font-size="10" fill="#5AC8FF">live</text>
+  <rect x="158" y="90" width="86" height="28" rx="5" fill="#223650" stroke="#28B9FF"/><text x="201" y="108" text-anchor="middle" font-size="10" fill="#5AC8FF">live</text>
+  <rect x="56" y="126" width="86" height="28" rx="5" fill="#242739" stroke="#6B6B78" stroke-dasharray="4 3"/><text x="99" y="144" text-anchor="middle" font-size="9.5" fill="#9AA0B4">tombstoned</text>
+  <rect x="158" y="126" width="86" height="28" rx="5" fill="#242739" stroke="#6B6B78" stroke-dasharray="4 3"/><text x="201" y="144" text-anchor="middle" font-size="9.5" fill="#9AA0B4">tombstoned</text>
   <path d="M276 120 L356 120" stroke="#28B9FF" stroke-width="3"/><path d="M350 114 l12 6 l-12 6 z" fill="#28B9FF"/>
   <text x="316" y="110" text-anchor="middle" font-size="10" fill="#28B9FF">VACUUM</text>
   <text x="316" y="138" text-anchor="middle" font-size="9" fill="#9AA0B4">after 7 days</text>
   <text x="500" y="62" text-anchor="middle" font-size="11.5" fill="#5AC8FF">after VACUUM</text>
-  <rect x="390" y="74" width="220" height="92" rx="10" fill="#16202E" stroke="#28B9FF"/>
-  <rect x="406" y="104" width="86" height="28" rx="5" fill="#16202E" stroke="#28B9FF"/><text x="449" y="122" text-anchor="middle" font-size="10" fill="#5AC8FF">live</text>
-  <rect x="508" y="104" width="86" height="28" rx="5" fill="#16202E" stroke="#28B9FF"/><text x="551" y="122" text-anchor="middle" font-size="10" fill="#5AC8FF">live</text>
+  <rect x="390" y="74" width="220" height="92" rx="10" fill="#223650" stroke="#28B9FF"/>
+  <rect x="406" y="104" width="86" height="28" rx="5" fill="#223650" stroke="#28B9FF"/><text x="449" y="122" text-anchor="middle" font-size="10" fill="#5AC8FF">live</text>
+  <rect x="508" y="104" width="86" height="28" rx="5" fill="#223650" stroke="#28B9FF"/><text x="551" y="122" text-anchor="middle" font-size="10" fill="#5AC8FF">live</text>
   <text x="624" y="116" font-size="11" fill="#9AA0B4">only the</text><text x="624" y="130" font-size="11" fill="#9AA0B4">live files</text>
   <text x="24" y="192" font-size="11.5" fill="#9AA0B4">Time travel to versions that needed the deleted files is no longer possible.</text>
 </svg>
@@ -863,15 +863,15 @@ stream = spark.readStream.table("demo.delta_db.bronze")     <span class="c"># re
 <div class="note reveal" style="font-size:13.5px"><strong>Two streaming gotchas:</strong> (1) updates or deletes on a streaming <em>source</em> table will stop the stream — add <code>.option("skipChangeCommits","true")</code> to ignore them. (2) Use <code>maxFilesPerTrigger</code> or <code>maxBytesPerTrigger</code> to limit how much each micro-batch reads.</div>
 <figure class="reveal">
 <svg viewBox="0 0 760 200" font-family="var(--font)">
-  <rect width="760" height="200" rx="12" fill="#16161D"/>
+  <rect width="760" height="200" rx="12" fill="#20202C"/>
   <text x="24" y="34" font-size="15" font-weight="700" fill="#5AC8FF">One Delta table feeds the next as a stream</text>
-  <rect x="30" y="74" width="150" height="56" rx="10" fill="#16202E" stroke="#5C78FF"/><text x="105" y="100" text-anchor="middle" font-size="12" fill="#8AA0FF">bronze</text><text x="105" y="118" text-anchor="middle" font-size="10" fill="#9AA0B4">Delta table</text>
+  <rect x="30" y="74" width="150" height="56" rx="10" fill="#223650" stroke="#5C78FF"/><text x="105" y="100" text-anchor="middle" font-size="12" fill="#8AA0FF">bronze</text><text x="105" y="118" text-anchor="middle" font-size="10" fill="#9AA0B4">Delta table</text>
   <path d="M184 102 L250 102" stroke="#28B9FF" stroke-width="2.5"/><path d="M244 96 l12 6 l-12 6 z" fill="#28B9FF"/><text x="217" y="92" text-anchor="middle" font-size="9.5" fill="#28B9FF">readStream</text>
-  <rect x="254" y="74" width="190" height="56" rx="10" fill="#16202E" stroke="#28B9FF"/><text x="349" y="100" text-anchor="middle" font-size="11.5" fill="#5AC8FF">micro-batches</text><text x="349" y="118" text-anchor="middle" font-size="10" fill="#9AA0B4">writeStream + MERGE</text>
+  <rect x="254" y="74" width="190" height="56" rx="10" fill="#223650" stroke="#28B9FF"/><text x="349" y="100" text-anchor="middle" font-size="11.5" fill="#5AC8FF">micro-batches</text><text x="349" y="118" text-anchor="middle" font-size="10" fill="#9AA0B4">writeStream + MERGE</text>
   <path d="M448 102 L514 102" stroke="#28B9FF" stroke-width="2.5"/><path d="M508 96 l12 6 l-12 6 z" fill="#28B9FF"/><text x="481" y="92" text-anchor="middle" font-size="9.5" fill="#28B9FF">toTable</text>
-  <rect x="518" y="74" width="150" height="56" rx="10" fill="#16202E" stroke="#5C78FF"/><text x="593" y="100" text-anchor="middle" font-size="12" fill="#8AA0FF">silver</text><text x="593" y="118" text-anchor="middle" font-size="10" fill="#9AA0B4">Delta table</text>
+  <rect x="518" y="74" width="150" height="56" rx="10" fill="#223650" stroke="#5C78FF"/><text x="593" y="100" text-anchor="middle" font-size="12" fill="#8AA0FF">silver</text><text x="593" y="118" text-anchor="middle" font-size="10" fill="#9AA0B4">Delta table</text>
   <path d="M349 130 L349 150" stroke="#5AC8FF" stroke-width="2"/>
-  <rect x="254" y="152" width="190" height="32" rx="8" fill="#191921" stroke="#5AC8FF"/><text x="349" y="172" text-anchor="middle" font-size="10.5" fill="#5AC8FF">checkpoint = how far read</text>
+  <rect x="254" y="152" width="190" height="32" rx="8" fill="#242739" stroke="#5AC8FF"/><text x="349" y="172" text-anchor="middle" font-size="10.5" fill="#5AC8FF">checkpoint = how far read</text>
   <text x="462" y="172" font-size="10.5" fill="#9AA0B4">→ exactly-once (no dupes)</text>
 </svg>
 <figcaption>The same Delta table is a streaming source and sink; the checkpoint remembers progress for exactly-once processing.</figcaption>
@@ -895,21 +895,21 @@ SELECT * FROM table_changes('invoices', 5);   <span class="c">-- changes since v
 <span class="c"># inserts/updates -&gt; upsert; _change_type = 'delete' -&gt; delete</span></pre></div>
 <figure class="reveal">
 <svg viewBox="0 0 760 250" font-family="var(--font)">
-  <rect width="760" height="250" rx="12" fill="#16161D"/>
+  <rect width="760" height="250" rx="12" fill="#20202C"/>
   <text x="24" y="34" font-size="15" font-weight="700" fill="#5AC8FF">CDF gives you the exact row changes between versions</text>
   <text x="24" y="62" font-size="11.5" fill="#9AA0B4">changes on the table:</text>
-  <rect x="24" y="70" width="250" height="30" rx="6" fill="#16202E" stroke="#5C78FF"/><text x="36" y="90" font-size="10.5" fill="#CDD0DD">UPDATE customer 1: qty 5 → 9</text>
-  <rect x="24" y="104" width="250" height="28" rx="6" fill="#16202E" stroke="#5C78FF"/><text x="36" y="123" font-size="10.5" fill="#CDD0DD">INSERT customer 7</text>
-  <rect x="24" y="136" width="250" height="28" rx="6" fill="#16202E" stroke="#5C78FF"/><text x="36" y="155" font-size="10.5" fill="#CDD0DD">DELETE customer 2</text>
+  <rect x="24" y="70" width="250" height="30" rx="6" fill="#223650" stroke="#5C78FF"/><text x="36" y="90" font-size="10.5" fill="#CDD0DD">UPDATE customer 1: qty 5 → 9</text>
+  <rect x="24" y="104" width="250" height="28" rx="6" fill="#223650" stroke="#5C78FF"/><text x="36" y="123" font-size="10.5" fill="#CDD0DD">INSERT customer 7</text>
+  <rect x="24" y="136" width="250" height="28" rx="6" fill="#223650" stroke="#5C78FF"/><text x="36" y="155" font-size="10.5" fill="#CDD0DD">DELETE customer 2</text>
   <path d="M280 116 L338 116" stroke="#28B9FF" stroke-width="3"/><path d="M332 110 l12 6 l-12 6 z" fill="#28B9FF"/>
   <text x="309" y="106" text-anchor="middle" font-size="9" fill="#28B9FF">table_changes</text>
   <text x="344" y="62" font-size="11.5" fill="#5AC8FF">the change feed (_change_type):</text>
   <g font-size="10.5">
-    <rect x="344" y="70" width="392" height="26" fill="#16202E" stroke="#28B9FF"/><text x="354" y="87" fill="#5AC8FF">_change_type       row</text>
-    <rect x="344" y="96" width="392" height="24" fill="#16202E" stroke="#6B6B78"/><text x="354" y="112" fill="#9AA0B4">update_preimage    qty=5 (before)</text>
-    <rect x="344" y="120" width="392" height="24" fill="#16202E" stroke="#6B6B78"/><text x="354" y="136" fill="#5AC8FF">update_postimage   qty=9 (after)</text>
-    <rect x="344" y="144" width="392" height="24" fill="#16202E" stroke="#6B6B78"/><text x="354" y="160" fill="#5AC8FF">insert             customer 7</text>
-    <rect x="344" y="168" width="392" height="24" fill="#16202E" stroke="#6B6B78"/><text x="354" y="184" fill="#9AA0B4">delete             customer 2</text>
+    <rect x="344" y="70" width="392" height="26" fill="#223650" stroke="#28B9FF"/><text x="354" y="87" fill="#5AC8FF">_change_type       row</text>
+    <rect x="344" y="96" width="392" height="24" fill="#223650" stroke="#6B6B78"/><text x="354" y="112" fill="#9AA0B4">update_preimage    qty=5 (before)</text>
+    <rect x="344" y="120" width="392" height="24" fill="#223650" stroke="#6B6B78"/><text x="354" y="136" fill="#5AC8FF">update_postimage   qty=9 (after)</text>
+    <rect x="344" y="144" width="392" height="24" fill="#223650" stroke="#6B6B78"/><text x="354" y="160" fill="#5AC8FF">insert             customer 7</text>
+    <rect x="344" y="168" width="392" height="24" fill="#223650" stroke="#6B6B78"/><text x="354" y="184" fill="#9AA0B4">delete             customer 2</text>
   </g>
   <text x="24" y="214" font-size="11.5" fill="#9AA0B4">Downstream (silver / gold) reads only these rows — incremental ETL, no full re-scan.</text>
   <text x="24" y="233" font-size="10" fill="#9AA0B4">Each row also carries _commit_version and _commit_timestamp. CDF records changes made after you enable it.</text>
@@ -932,17 +932,17 @@ ALTER SHARE sales_share ADD TABLE demo.delta_db.invoices;</pre></div>
 <div class="callout note reveal"><strong>Important limit:</strong> UniForm works in one direction only — other engines should only <em>read</em>. It can also become unreliable with the newest features such as deletion vectors. So it's a good safety option, not a perfect automatic solution.</div>
 <figure class="reveal">
 <svg viewBox="0 0 760 230" font-family="var(--font)">
-  <rect width="760" height="230" rx="12" fill="#16161D"/>
+  <rect width="760" height="230" rx="12" fill="#20202C"/>
   <text x="24" y="34" font-size="15" font-weight="700" fill="#5AC8FF">One Delta table, readable by other tools and teams</text>
-  <rect x="300" y="92" width="160" height="64" rx="10" fill="#16202E" stroke="#5C78FF" stroke-width="2"/>
+  <rect x="300" y="92" width="160" height="64" rx="10" fill="#223650" stroke="#5C78FF" stroke-width="2"/>
   <text x="380" y="120" text-anchor="middle" font-size="13" font-weight="700" fill="#8AA0FF">Delta table</text>
   <text x="380" y="140" text-anchor="middle" font-size="10" fill="#9AA0B4">_delta_log + Parquet</text>
   <path d="M300 112 L180 100" stroke="#28B9FF" stroke-width="2"/><path d="M186 94 l-11 5 l10 7 z" fill="#28B9FF"/>
   <text x="232" y="74" text-anchor="middle" font-size="9.5" fill="#28B9FF">UniForm: + Iceberg metadata</text>
-  <rect x="24" y="100" width="150" height="48" rx="8" fill="#16202E" stroke="#28B9FF"/><text x="99" y="122" text-anchor="middle" font-size="10.5" fill="#5AC8FF">Iceberg / Hudi</text><text x="99" y="138" text-anchor="middle" font-size="9.5" fill="#9AA0B4">readers (read-only)</text>
+  <rect x="24" y="100" width="150" height="48" rx="8" fill="#223650" stroke="#28B9FF"/><text x="99" y="122" text-anchor="middle" font-size="10.5" fill="#5AC8FF">Iceberg / Hudi</text><text x="99" y="138" text-anchor="middle" font-size="9.5" fill="#9AA0B4">readers (read-only)</text>
   <path d="M460 136 L586 150" stroke="#5AC8FF" stroke-width="2"/><path d="M580 144 l12 6 l-13 5 z" fill="#5AC8FF"/>
   <text x="540" y="184" text-anchor="middle" font-size="9.5" fill="#5AC8FF">Delta Sharing: secure, no copy</text>
-  <rect x="586" y="100" width="150" height="48" rx="8" fill="#16202E" stroke="#5AC8FF"/><text x="661" y="122" text-anchor="middle" font-size="10.5" fill="#5AC8FF">another team /</text><text x="661" y="138" text-anchor="middle" font-size="10.5" fill="#5AC8FF">company</text>
+  <rect x="586" y="100" width="150" height="48" rx="8" fill="#223650" stroke="#5AC8FF"/><text x="661" y="122" text-anchor="middle" font-size="10.5" fill="#5AC8FF">another team /</text><text x="661" y="138" text-anchor="middle" font-size="10.5" fill="#5AC8FF">company</text>
   <text x="24" y="210" font-size="11" fill="#9AA0B4">UniForm is read-only for other engines; Delta Sharing gives others your live data without copying it.</text>
 </svg>
 <figcaption>UniForm exposes the same table to Iceberg/Hudi readers; Delta Sharing lets other teams read it live without a copy.</figcaption>

@@ -22,7 +22,7 @@
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,500;0,700;0,800;1,400&display=swap" rel="stylesheet">
 <style>
   :root{
-    --bg:#111117; --bg2:#16161D; --ink:#F1F1F1; --muted:#9aa0b4; --dim:#6b6b78;
+    --bg:#111117; --bg2:#16161d; --ink:#F1F1F1; --muted:#9aa0b4; --dim:#6b6b78;
     --blue2:#5C78FF; --cyan:#28B9FF; --cyan2:#5AC8FF; --purple:#5C78FF; --magenta2:#5AC8FF;
     --grad:linear-gradient(90deg,#28B9FF,#5C78FF);
     --font:"JetBrainsMono Nerd Font","JetBrains Mono","Symbols Nerd Font",ui-monospace,"Cascadia Code",Menlo,Consolas,monospace;
@@ -40,18 +40,18 @@
   @keyframes sheen{to{background-position:220% center}}
   .dek{color:var(--muted);font-size:17px}
   .byline{margin-top:14px;font-size:13px;color:var(--dim)}
-  h2{font-size:clamp(21px,3.2vw,28px);margin:52px 0 6px;font-weight:800;line-height:1.22;padding-top:14px;border-top:1px solid #2C2C38}
+  h2{font-size:clamp(21px,3.2vw,28px);margin:52px 0 6px;font-weight:800;line-height:1.22;padding-top:14px;border-top:1px solid #3C4356}
   h2 .n{color:var(--blue2)}
   h3{font-size:18px;margin:28px 0 4px;color:#fff;font-weight:700}
   h4{font-size:15px;margin:20px 0 4px;color:var(--cyan2);font-weight:700}
   p,li{color:#dcdce4}
   .lead{font-size:18px;color:#e7e7ee}
   a{color:var(--cyan2)}
-  hr{border:0;border-top:1px solid #2C2C38;margin:36px 0}
-  code{font-family:var(--font);background:#23232b;color:#5AC8FF;padding:1px 6px;border-radius:5px;font-size:.88em;border:1px solid #2C2C38}
+  hr{border:0;border-top:1px solid #3C4356;margin:36px 0}
+  code{font-family:var(--font);background:#23232b;color:#5AC8FF;padding:1px 6px;border-radius:5px;font-size:.88em;border:1px solid #3C4356}
   .cb{margin:16px 0}
-  .cb .lang{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:#9aa0b4;background:#1b1b24;border:1px solid #2C2C38;border-bottom:none;border-radius:9px 9px 0 0;padding:4px 12px}
-  pre{margin:0;background:#101017;border:1px solid #2C2C38;border-radius:0 10px 10px 10px;padding:14px 16px;overflow-x:auto;
+  .cb .lang{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:#9aa0b4;background:#1b1b24;border:1px solid #3C4356;border-bottom:none;border-radius:9px 9px 0 0;padding:4px 12px}
+  pre{margin:0;background:#1C1C2A;border:1px solid #3C4356;border-radius:0 10px 10px 10px;padding:14px 16px;overflow-x:auto;
       font-family:var(--font);font-size:13px;line-height:1.65;color:#d8dcea;white-space:pre}
   pre .c{color:#6B6B78}
   pre .o{color:#9aa0b4}
@@ -60,28 +60,28 @@
   pre .y{color:#9AA0B4}
   pre .r{color:#9AA0B4}
   pre .p{color:#5AC8FF}
-  .callout{border-left:4px solid #28B9FF;background:linear-gradient(160deg,#12202e,#101019);border-radius:0 12px 12px 0;padding:14px 18px;margin:22px 0;box-shadow:0 0 16px -8px #28B9FF66}
-  .callout.cy{border-color:#5AC8FF;background:linear-gradient(160deg,#0f2233,#101019)}
-  .callout.mg{border-color:#5C78FF;background:linear-gradient(160deg,#141a33,#101019)}
-  .callout.gd{border-color:#5C78FF;background:linear-gradient(160deg,#141a33,#101019)}
-  .callout.gr{border-color:#28B9FF;background:linear-gradient(160deg,#0f2233,#101019)}
+  .callout{border-left:4px solid #28B9FF;background:linear-gradient(160deg,#12202e,#1C1C2A);border-radius:0 12px 12px 0;padding:14px 18px;margin:22px 0;box-shadow:0 0 16px -8px #28B9FF66}
+  .callout.cy{border-color:#5AC8FF;background:linear-gradient(160deg,#0f2233,#1C1C2A)}
+  .callout.mg{border-color:#5C78FF;background:linear-gradient(160deg,#141a33,#1C1C2A)}
+  .callout.gd{border-color:#5C78FF;background:linear-gradient(160deg,#141a33,#1C1C2A)}
+  .callout.gr{border-color:#28B9FF;background:linear-gradient(160deg,#0f2233,#1C1C2A)}
   .callout .t{color:var(--cyan2);font-weight:800}
   .callout.gd .t{color:#8AA0FF}
   .callout.gr .t{color:#5AC8FF}
   .callout.mg .t{color:#8AA0FF}
-  .tldr{border:1px solid #28B9FF44;background:linear-gradient(180deg,#12161d,#0d0d12);border-radius:16px;padding:20px 24px;margin:26px 0;box-shadow:0 0 24px -10px #28B9FF55}
+  .tldr{border:1px solid #28B9FF44;background:linear-gradient(180deg,#12161d,#1C1C2A);border-radius:16px;padding:20px 24px;margin:26px 0;box-shadow:0 0 24px -10px #28B9FF55}
   .tldr h4{margin:0 0 8px;font-size:13px;letter-spacing:.2em;text-transform:uppercase;color:var(--cyan2)}
-  .gloss{border:1px solid #2C2C38;background:#1D1D26;border-radius:14px;padding:18px 22px;margin:24px 0}
+  .gloss{border:1px solid #3C4356;background:#1D1D26;border-radius:14px;padding:18px 22px;margin:24px 0}
   .gloss h4{margin:0 0 6px;color:#fff;font-size:15px}
   .gloss dl{margin:0;font-size:13.5px}
   .gloss dt{color:var(--cyan2);font-weight:700;margin-top:9px}
   .gloss dd{margin:1px 0 0;color:#cdd0dd}
-  .toc{background:#191921;border:1px solid #2C2C38;border-radius:14px;padding:16px 22px;margin:24px 0;column-count:2;column-gap:28px}
+  .toc{background:#242739;border:1px solid #3C4356;border-radius:14px;padding:16px 22px;margin:24px 0;column-count:2;column-gap:28px}
   .toc a{display:block;color:var(--cyan2);text-decoration:none;font-size:13.5px;line-height:1.9;break-inside:avoid}
   .toc a:hover{color:#fff}
   .toc>strong{column-span:all;display:block;margin-bottom:6px;color:#fff}
   table{border-collapse:collapse;width:100%;font-size:13.5px;margin:16px 0}
-  th,td{border:1px solid #2C2C38;padding:8px 11px;text-align:left;vertical-align:top}
+  th,td{border:1px solid #3C4356;padding:8px 11px;text-align:left;vertical-align:top}
   th{background:#17171E;color:#fff}
   tr:nth-child(even) td{background:#17171E}
   .ico{width:1em;height:1em;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
@@ -98,23 +98,23 @@
         border:1px solid #3a2f66;background:#1c1230;color:#5AC8FF;font-weight:700;font-size:11.5px}
   .chip .ico{width:13px;height:13px}
   figure.fig{margin:26px 0;text-align:center}
-  figure.fig svg{display:block;width:100%;max-width:100%;height:auto;border:1px solid #2C2C38;border-radius:14px;background:#101017}
+  figure.fig svg{display:block;width:100%;max-width:100%;height:auto;border:1px solid #3C4356;border-radius:14px;background:#1C1C2A}
   figure.fig figcaption{font-size:12.5px;color:var(--muted);margin-top:9px;font-style:italic;line-height:1.6}
   .step{display:flex;gap:12px;align-items:flex-start;margin:14px 0}
   .step .num-bubble{flex:0 0 28px;height:28px;border-radius:50%;background:var(--grad);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:#fff;margin-top:2px}
   .step .body{flex:1}
-  footer{border-top:1px solid #2C2C38;margin-top:50px;padding:24px 0 90px;color:var(--dim);font-size:13px}
+  footer{border-top:1px solid #3C4356;margin-top:50px;padding:24px 0 90px;color:var(--dim);font-size:13px}
   footer a{color:var(--cyan2)}
   .js .reveal{opacity:0;transform:translateY(16px);transition:opacity .6s ease,transform .6s ease}
   .js .reveal.in{opacity:1;transform:none}
   @media (prefers-reduced-motion:reduce){.js .reveal{opacity:1;transform:none}}
   /* ---- shared theme: top nav + a11y (appended) ---- */
-  .nav{position:sticky;top:0;z-index:60;background:rgba(25,25,33,.82);backdrop-filter:blur(10px);border-bottom:1px solid #2C2C38}
+  .nav{position:sticky;top:0;z-index:60;background:rgba(25,25,33,.82);backdrop-filter:blur(10px);border-bottom:1px solid #3C4356}
   .nav-inner{max-width:1040px;margin:0 auto;padding:12px 24px;display:flex;align-items:center;gap:18px;flex-wrap:wrap}
   .nav-brand{font-weight:800;letter-spacing:.16em;font-size:15px;text-decoration:none;border:0;color:#5AC8FF}
   .nav-links{display:flex;gap:6px;flex-wrap:wrap;margin-left:auto}
   .nav-links a{text-decoration:none;border:1px solid transparent;color:#9aa0b4;font-weight:700;font-size:13.5px;padding:6px 14px;border-radius:999px;transition:.2s}
-  .nav-links a:hover{color:#fff;border-color:#2C2C38;background:#191921}
+  .nav-links a:hover{color:#fff;border-color:#3C4356;background:#242739}
   .nav-links a.active{color:#5AC8FF;border-color:#28B9FF55;background:#28B9FF14}
   :focus-visible{outline:2px solid #5AC8FF;outline-offset:3px;border-radius:6px}
   @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{animation:none !important;transition:none !important}.js .reveal{opacity:1 !important;transform:none !important}}
@@ -175,7 +175,7 @@
   </div>
 </header>
 
-<figure class="reveal" style="margin:18px 0 6px;background:radial-gradient(130% 150% at 50% 0%,#191233 0%,#101017 72%);border:1px solid #2C2C38;border-radius:16px;padding:10px 10px;overflow:hidden">
+<figure class="reveal" style="margin:18px 0 6px;background:radial-gradient(130% 150% at 50% 0%,#191233 0%,#1C1C2A 72%);border:1px solid #3C4356;border-radius:16px;padding:10px 10px;overflow:hidden">
 <svg viewBox="0 0 880 190" width="100%" style="display:block" font-family="var(--font)" aria-label="Terraform's loop: write config, init, plan, apply, and the real cloud appears">
   <defs>
     <linearGradient id="tf-grad" x1="0" y1="0" x2="1" y2="0">
@@ -183,7 +183,7 @@
     </linearGradient>
     <marker id="ha" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#5C78FF"/></marker>
   </defs>
-  <line x1="84" y1="84" x2="790" y2="84" stroke="#2C2C38" stroke-width="2"/>
+  <line x1="84" y1="84" x2="790" y2="84" stroke="#3C4356" stroke-width="2"/>
   <g stroke="#6B6B78" stroke-width="1.5" fill="none">
     <line x1="100" y1="84" x2="144" y2="84" marker-end="url(#ha)"/>
     <line x1="266" y1="84" x2="304" y2="84" marker-end="url(#ha)"/>
@@ -191,27 +191,27 @@
     <line x1="596" y1="84" x2="634" y2="84" marker-end="url(#ha)"/>
   </g>
   <g font-size="12" text-anchor="middle">
-    <circle cx="84" cy="84" r="13" fill="#191921" stroke="#5AC8FF" stroke-width="2.4"/>
+    <circle cx="84" cy="84" r="13" fill="#242739" stroke="#5AC8FF" stroke-width="2.4"/>
     <circle cx="84" cy="84" r="4" fill="#5AC8FF"/>
     <text x="84" y="124" fill="#5AC8FF" font-size="11">write</text>
     <text x="84" y="140" fill="#6B6B78" font-size="9.5">main.tf</text>
 
-    <rect x="146" y="62" width="120" height="44" rx="10" fill="#16202E" stroke="#5AC8FF" stroke-width="1.8"/>
+    <rect x="146" y="62" width="120" height="44" rx="10" fill="#223650" stroke="#5AC8FF" stroke-width="1.8"/>
     <use href="#i-plug" x="162" y="78" width="14" height="14" fill="none" stroke="#5AC8FF" stroke-width="2.2"/>
     <text x="216" y="89" fill="#5AC8FF">init</text>
     <text x="206" y="124" fill="#6B6B78" font-size="9.5">get the providers</text>
 
-    <rect x="306" y="62" width="120" height="44" rx="10" fill="#191921" stroke="#5C78FF" stroke-width="1.8"/>
+    <rect x="306" y="62" width="120" height="44" rx="10" fill="#242739" stroke="#5C78FF" stroke-width="1.8"/>
     <use href="#i-eye" x="322" y="78" width="14" height="14" fill="none" stroke="#5C78FF" stroke-width="2.2"/>
     <text x="376" y="89" fill="#9AA0B4">plan</text>
     <text x="366" y="124" fill="#6B6B78" font-size="9.5">preview the diff</text>
 
-    <rect x="466" y="62" width="130" height="44" rx="10" fill="#16202E" stroke="#5AC8FF" stroke-width="1.8"/>
+    <rect x="466" y="62" width="130" height="44" rx="10" fill="#223650" stroke="#5AC8FF" stroke-width="1.8"/>
     <use href="#i-zap" x="482" y="78" width="14" height="14" fill="none" stroke="#5AC8FF" stroke-width="2.2"/>
     <text x="541" y="89" fill="#5AC8FF">apply</text>
     <text x="531" y="124" fill="#6B6B78" font-size="9.5">make it real</text>
 
-    <rect x="636" y="60" width="150" height="48" rx="10" fill="#16202E" stroke="url(#tf-grad)" stroke-width="2.4"/>
+    <rect x="636" y="60" width="150" height="48" rx="10" fill="#223650" stroke="url(#tf-grad)" stroke-width="2.4"/>
     <use href="#i-cloud" x="650" y="78" width="14" height="14" fill="none" stroke="#5AC8FF" stroke-width="2.2"/>
     <text x="721" y="89" fill="#5AC8FF">your cloud</text>
     <text x="711" y="124" fill="#6B6B78" font-size="9.5">buckets · roles · jobs</text>
@@ -291,14 +291,14 @@
   </defs>
 
   <!-- config -->
-  <rect x="278" y="22" width="204" height="76" rx="11" fill="#16202E" stroke="#7B42BC" stroke-width="1.8"/>
+  <rect x="278" y="22" width="204" height="76" rx="11" fill="#223650" stroke="#7B42BC" stroke-width="1.8"/>
   <use href="#i-code" x="292" y="36" width="14" height="14" fill="none" stroke="#5AC8FF" stroke-width="2.2"/>
   <text x="388" y="46" font-size="12" fill="#5AC8FF" font-weight="700" text-anchor="middle">1 · YOUR .tf CONFIG</text>
   <text x="380" y="66" font-size="10.5" fill="#E7E7EE" text-anchor="middle">what you WANT to exist</text>
-  <text x="380" y="84" font-size="9.5" fill="#6B6B78" text-anchor="middle">you write this · lives in Git</text>
+  <text x="380" y="84" font-size="9.5" fill="#E7E7EE" text-anchor="middle">you write this · lives in Git</text>
 
   <!-- state -->
-  <rect x="26" y="204" width="222" height="82" rx="11" fill="#191921" stroke="#5C78FF" stroke-width="1.8"/>
+  <rect x="26" y="204" width="222" height="82" rx="11" fill="#242739" stroke="#5C78FF" stroke-width="1.8"/>
   <use href="#i-file" x="40" y="218" width="14" height="14" fill="none" stroke="#5C78FF" stroke-width="2.2"/>
   <text x="145" y="228" font-size="12" fill="#9AA0B4" font-weight="700" text-anchor="middle">2 · THE STATE</text>
   <text x="137" y="248" font-size="10.5" fill="#E7E7EE" text-anchor="middle">what Terraform THINKS</text>
@@ -306,12 +306,12 @@
   <text x="137" y="279" font-size="9.5" fill="#6B6B78" text-anchor="middle">terraform.tfstate</text>
 
   <!-- reality -->
-  <rect x="512" y="204" width="222" height="82" rx="11" fill="#16202E" stroke="#5AC8FF" stroke-width="1.8"/>
+  <rect x="512" y="204" width="222" height="82" rx="11" fill="#223650" stroke="#5AC8FF" stroke-width="1.8"/>
   <use href="#i-cloud" x="526" y="218" width="14" height="14" fill="none" stroke="#5AC8FF" stroke-width="2.2"/>
   <text x="631" y="228" font-size="12" fill="#5AC8FF" font-weight="700" text-anchor="middle">3 · THE REAL CLOUD</text>
   <text x="623" y="248" font-size="10.5" fill="#E7E7EE" text-anchor="middle">what ACTUALLY exists</text>
   <text x="623" y="263" font-size="10.5" fill="#E7E7EE" text-anchor="middle">right now</text>
-  <text x="623" y="279" font-size="9.5" fill="#6B6B78" text-anchor="middle">S3 · IAM · clusters</text>
+  <text x="623" y="279" font-size="9.5" fill="#E7E7EE" text-anchor="middle">S3 · IAM · clusters</text>
 
   <!-- edges -->
   <line x1="292" y1="100" x2="196" y2="198" stroke="#5AC8FF" stroke-width="1.6" marker-end="url(#m2)"/>
@@ -327,8 +327,8 @@
   <text x="380" y="266" font-size="9.5" fill="#9AA0B4" text-anchor="middle">if these two disagree, that's DRIFT</text>
 
   <!-- centre chip -->
-  <rect x="308" y="140" width="144" height="34" rx="8" fill="#16202E" stroke="#5C78FF" stroke-width="1.5"/>
-  <text x="380" y="162" font-size="11" fill="#5C78FF" text-anchor="middle">plan = the diff</text>
+  <rect x="308" y="140" width="144" height="34" rx="8" fill="#223650" stroke="#5C78FF" stroke-width="1.5"/>
+  <text x="380" y="162" font-size="11" fill="#E7E7EE" text-anchor="middle">plan = the diff</text>
 
   <text x="380" y="316" font-size="10.5" fill="#6B6B78" text-anchor="middle">Terraform's whole job: make 3 look like 1 — and keep 2 an honest record of it.</text>
 </svg>
@@ -362,19 +362,19 @@
     <line x1="510" y1="96" x2="532" y2="96" marker-end="url(#m3)"/>
   </g>
 
-  <rect x="30" y="72" width="132" height="48" rx="9" fill="#16202E" stroke="#5AC8FF"/>
+  <rect x="30" y="72" width="132" height="48" rx="9" fill="#223650" stroke="#5AC8FF"/>
   <text x="96" y="94" font-size="11" fill="#5AC8FF" text-anchor="middle">terraform init</text>
-  <text x="96" y="110" font-size="9" fill="#6B6B78" text-anchor="middle">once per project</text>
+  <text x="96" y="110" font-size="9" fill="#E7E7EE" text-anchor="middle">once per project</text>
 
-  <rect x="186" y="72" width="150" height="48" rx="9" fill="#191921" stroke="#5C78FF"/>
+  <rect x="186" y="72" width="150" height="48" rx="9" fill="#242739" stroke="#5C78FF"/>
   <text x="261" y="94" font-size="11" fill="#9AA0B4" text-anchor="middle">terraform plan</text>
   <text x="261" y="110" font-size="9" fill="#6B6B78" text-anchor="middle">read-only · changes nothing</text>
 
-  <rect x="360" y="72" width="150" height="48" rx="9" fill="#16202E" stroke="#5AC8FF"/>
+  <rect x="360" y="72" width="150" height="48" rx="9" fill="#223650" stroke="#5AC8FF"/>
   <text x="435" y="94" font-size="11" fill="#5AC8FF" text-anchor="middle">terraform apply</text>
-  <text x="435" y="110" font-size="9" fill="#6B6B78" text-anchor="middle">asks &quot;yes?&quot; then acts</text>
+  <text x="435" y="110" font-size="9" fill="#E7E7EE" text-anchor="middle">asks &quot;yes?&quot; then acts</text>
 
-  <rect x="534" y="72" width="150" height="48" rx="9" fill="#191921" stroke="#5AC8FF"/>
+  <rect x="534" y="72" width="150" height="48" rx="9" fill="#242739" stroke="#5AC8FF"/>
   <text x="602" y="94" font-size="11" fill="#5AC8FF" text-anchor="middle">it exists</text>
   <use href="#i-check" x="646" y="85" width="13" height="13" fill="none" stroke="#5AC8FF" stroke-width="2.2"/>
   <text x="609" y="110" font-size="9" fill="#6B6B78" text-anchor="middle">state updated</text>
@@ -385,7 +385,7 @@
 
   <!-- destroy -->
   <path d="M609 120 V 174 H 476" fill="none" stroke="#5C78FF" stroke-width="1.4" marker-end="url(#m3r)"/>
-  <rect x="290" y="152" width="184" height="46" rx="9" fill="#191921" stroke="#5C78FF"/>
+  <rect x="290" y="152" width="184" height="46" rx="9" fill="#242739" stroke="#5C78FF"/>
   <text x="382" y="174" font-size="11" fill="#9AA0B4" text-anchor="middle">terraform destroy</text>
   <text x="382" y="190" font-size="9" fill="#9AA0B4" text-anchor="middle">tears down everything it manages</text>
 
@@ -609,12 +609,12 @@ Plan: <span class="g">2 to add</span>, <span class="y">1 to change</span>, <span
   </defs>
 
   <!-- engineers -->
-  <rect x="20" y="84" width="112" height="46" rx="9" fill="#191921" stroke="#5AC8FF"/>
+  <rect x="20" y="84" width="112" height="46" rx="9" fill="#242739" stroke="#5AC8FF"/>
   <use href="#i-user" x="30" y="98" width="13" height="13" fill="none" stroke="#5AC8FF" stroke-width="2.2"/>
   <text x="84" y="106" font-size="11" fill="#5AC8FF" text-anchor="middle">Alice</text>
   <text x="76" y="121" font-size="9" fill="#6B6B78" text-anchor="middle">terraform apply</text>
 
-  <rect x="20" y="178" width="112" height="46" rx="9" fill="#191921" stroke="#5C78FF"/>
+  <rect x="20" y="178" width="112" height="46" rx="9" fill="#242739" stroke="#5C78FF"/>
   <use href="#i-user" x="30" y="192" width="13" height="13" fill="none" stroke="#5C78FF" stroke-width="2.2"/>
   <text x="84" y="200" font-size="11" fill="#9AA0B4" text-anchor="middle">Bob</text>
   <text x="76" y="215" font-size="9" fill="#6B6B78" text-anchor="middle">terraform apply</text>
@@ -625,19 +625,19 @@ Plan: <span class="g">2 to add</span>, <span class="y">1 to change</span>, <span
   <text x="180" y="192" font-size="9" fill="#9AA0B4" text-anchor="middle">blocked · waits</text>
 
   <!-- backend -->
-  <rect x="228" y="52" width="312" height="212" rx="12" fill="#16202E" stroke="#5AC8FF" stroke-width="1.6"/>
+  <rect x="228" y="52" width="312" height="212" rx="12" fill="#223650" stroke="#5AC8FF" stroke-width="1.6"/>
   <text x="244" y="76" font-size="11.5" fill="#5AC8FF" font-weight="700">REMOTE BACKEND</text>
-  <text x="244" y="92" font-size="9" fill="#6B6B78">S3 · Azure Blob · GCS · HCP Terraform</text>
+  <text x="244" y="92" font-size="9" fill="#E7E7EE">S3 · Azure Blob · GCS · HCP Terraform</text>
 
-  <rect x="244" y="106" width="152" height="128" rx="8" fill="#16202E" stroke="#5C78FF"/>
+  <rect x="244" y="106" width="152" height="128" rx="8" fill="#223650" stroke="#5C78FF"/>
   <use href="#i-file" x="252" y="117" width="12" height="12" fill="none" stroke="#5C78FF" stroke-width="2.2"/>
-  <text x="328" y="126" font-size="10" fill="#5C78FF" text-anchor="middle">terraform.tfstate</text>
+  <text x="328" y="126" font-size="10" fill="#E7E7EE" text-anchor="middle">terraform.tfstate</text>
   <text x="256" y="152" font-size="9" fill="#9AA0B4">aws_s3_bucket.raw</text>
   <text x="266" y="167" font-size="9" fill="#5AC8FF">→ acme-prod-raw</text>
   <text x="256" y="192" font-size="9" fill="#9AA0B4">aws_iam_role.etl</text>
   <text x="266" y="207" font-size="9" fill="#5AC8FF">→ arn:aws:iam::…</text>
 
-  <rect x="412" y="128" width="112" height="76" rx="8" fill="#191921" stroke="#5C78FF" stroke-width="1.6"/>
+  <rect x="412" y="128" width="112" height="76" rx="8" fill="#242739" stroke="#5C78FF" stroke-width="1.6"/>
   <use href="#i-lock" x="444" y="145" width="13" height="13" fill="none" stroke="#5C78FF" stroke-width="2.2"/>
   <text x="484" y="155" font-size="10.5" fill="#9AA0B4" text-anchor="middle">LOCK</text>
   <text x="468" y="176" font-size="9" fill="#9AA0B4" text-anchor="middle">held by</text>
@@ -645,10 +645,10 @@ Plan: <span class="g">2 to add</span>, <span class="y">1 to change</span>, <span
 
   <!-- cloud -->
   <line x1="544" y1="158" x2="586" y2="158" stroke="#5AC8FF" stroke-width="1.5" marker-end="url(#m6p)"/>
-  <rect x="590" y="120" width="146" height="76" rx="9" fill="#16202E" stroke="#5AC8FF"/>
+  <rect x="590" y="120" width="146" height="76" rx="9" fill="#223650" stroke="#5AC8FF"/>
   <use href="#i-cloud" x="600" y="141" width="13" height="13" fill="none" stroke="#5AC8FF" stroke-width="2.2"/>
   <text x="671" y="150" font-size="11" fill="#5AC8FF" text-anchor="middle">the real cloud</text>
-  <text x="663" y="170" font-size="9" fill="#6B6B78" text-anchor="middle">S3 · IAM · clusters</text>
+  <text x="663" y="170" font-size="9" fill="#E7E7EE" text-anchor="middle">S3 · IAM · clusters</text>
 
   <text x="380" y="288" font-size="10.5" fill="#6B6B78" text-anchor="middle">the state file maps each name in your code → the real resource ID in the cloud</text>
   <text x="380" y="304" font-size="10.5" fill="#6B6B78" text-anchor="middle">two applies at once would corrupt it — so the backend hands out a lock</text>
@@ -718,25 +718,25 @@ terraform import aws_s3_bucket.raw acme-prod-raw   <span class="c"># old way</sp
     <marker id="m7" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#5C78FF"/></marker>
   </defs>
 
-  <rect x="30" y="48" width="180" height="48" rx="9" fill="#16202E" stroke="#7B42BC"/>
+  <rect x="30" y="48" width="180" height="48" rx="9" fill="#223650" stroke="#7B42BC"/>
   <text x="120" y="70" font-size="10.5" fill="#5AC8FF" text-anchor="middle">aws_iam_role</text>
-  <text x="120" y="86" font-size="9" fill="#6B6B78" text-anchor="middle">.etl</text>
+  <text x="120" y="86" font-size="9" fill="#E7E7EE" text-anchor="middle">.etl</text>
 
-  <rect x="30" y="150" width="180" height="48" rx="9" fill="#16202E" stroke="#7B42BC"/>
+  <rect x="30" y="150" width="180" height="48" rx="9" fill="#223650" stroke="#7B42BC"/>
   <text x="120" y="172" font-size="10.5" fill="#5AC8FF" text-anchor="middle">aws_s3_bucket</text>
-  <text x="120" y="188" font-size="9" fill="#6B6B78" text-anchor="middle">.raw</text>
+  <text x="120" y="188" font-size="9" fill="#E7E7EE" text-anchor="middle">.raw</text>
 
-  <rect x="250" y="48" width="190" height="48" rx="9" fill="#16202E" stroke="#5C78FF"/>
-  <text x="345" y="70" font-size="10.5" fill="#5C78FF" text-anchor="middle">aws_iam_role_policy</text>
-  <text x="345" y="86" font-size="9" fill="#6B6B78" text-anchor="middle">uses role.id</text>
+  <rect x="250" y="48" width="190" height="48" rx="9" fill="#223650" stroke="#5C78FF"/>
+  <text x="345" y="70" font-size="10.5" fill="#E7E7EE" text-anchor="middle">aws_iam_role_policy</text>
+  <text x="345" y="86" font-size="9" fill="#E7E7EE" text-anchor="middle">uses role.id</text>
 
-  <rect x="250" y="150" width="190" height="48" rx="9" fill="#16202E" stroke="#5C78FF"/>
-  <text x="345" y="172" font-size="10.5" fill="#5C78FF" text-anchor="middle">…bucket_versioning</text>
-  <text x="345" y="188" font-size="9" fill="#6B6B78" text-anchor="middle">uses bucket.id</text>
+  <rect x="250" y="150" width="190" height="48" rx="9" fill="#223650" stroke="#5C78FF"/>
+  <text x="345" y="172" font-size="10.5" fill="#E7E7EE" text-anchor="middle">…bucket_versioning</text>
+  <text x="345" y="188" font-size="9" fill="#E7E7EE" text-anchor="middle">uses bucket.id</text>
 
-  <rect x="500" y="90" width="200" height="64" rx="10" fill="#16202E" stroke="#5AC8FF" stroke-width="1.8"/>
+  <rect x="500" y="90" width="200" height="64" rx="10" fill="#223650" stroke="#5AC8FF" stroke-width="1.8"/>
   <text x="600" y="116" font-size="11" fill="#5AC8FF" text-anchor="middle">aws_glue_job.etl</text>
-  <text x="600" y="136" font-size="9" fill="#6B6B78" text-anchor="middle">needs BOTH branches</text>
+  <text x="600" y="136" font-size="9" fill="#E7E7EE" text-anchor="middle">needs BOTH branches</text>
 
   <g stroke="#5C78FF" stroke-width="1.5" fill="none">
     <line x1="214" y1="72" x2="244" y2="72" marker-end="url(#m7)"/>
@@ -878,42 +878,42 @@ terraform import aws_s3_bucket.raw acme-prod-raw   <span class="c"># old way</sp
   </defs>
 
   <!-- COUNT -->
-  <rect x="14" y="14" width="732" height="132" rx="12" fill="#191921" stroke="#191921"/>
+  <rect x="14" y="14" width="732" height="132" rx="12" fill="#242739" stroke="#242739"/>
   <text x="32" y="40" font-size="12" fill="#9AA0B4" font-weight="700">count</text>
   <text x="94" y="40" font-size="10.5" fill="#9AA0B4">items are identified by POSITION — so removing one renumbers the rest</text>
 
   <g font-size="10">
-    <rect x="90" y="76" width="92" height="30" rx="6" fill="#16202E" stroke="#5C78FF"/><text x="136" y="96" fill="#5C78FF" text-anchor="middle">0 · raw</text>
-    <rect x="190" y="76" width="92" height="30" rx="6" fill="#16202E" stroke="#5C78FF"/><text x="236" y="96" fill="#5C78FF" text-anchor="middle">1 · clean</text>
-    <rect x="290" y="76" width="92" height="30" rx="6" fill="#16202E" stroke="#5C78FF"/><text x="336" y="96" fill="#5C78FF" text-anchor="middle">2 · curated</text>
+    <rect x="90" y="76" width="92" height="30" rx="6" fill="#223650" stroke="#5C78FF"/><text x="136" y="96" fill="#E7E7EE" text-anchor="middle">0 · raw</text>
+    <rect x="190" y="76" width="92" height="30" rx="6" fill="#223650" stroke="#5C78FF"/><text x="236" y="96" fill="#E7E7EE" text-anchor="middle">1 · clean</text>
+    <rect x="290" y="76" width="92" height="30" rx="6" fill="#223650" stroke="#5C78FF"/><text x="336" y="96" fill="#E7E7EE" text-anchor="middle">2 · curated</text>
   </g>
   <line x1="392" y1="91" x2="432" y2="91" stroke="#5C78FF" stroke-width="1.4" marker-end="url(#m9)"/>
   <text x="412" y="70" font-size="9" fill="#9AA0B4" text-anchor="middle">drop 'clean'</text>
 
   <g font-size="10">
-    <rect x="442" y="76" width="92" height="30" rx="6" fill="#191921" stroke="#5AC8FF"/><text x="488" y="96" fill="#5AC8FF" text-anchor="middle">0 · raw</text>
-    <rect x="542" y="76" width="92" height="30" rx="6" fill="#191921" stroke="#5C78FF" stroke-width="1.6"/><text x="588" y="96" fill="#9AA0B4" text-anchor="middle">1 · curated</text>
+    <rect x="442" y="76" width="92" height="30" rx="6" fill="#242739" stroke="#5AC8FF"/><text x="488" y="96" fill="#5AC8FF" text-anchor="middle">0 · raw</text>
+    <rect x="542" y="76" width="92" height="30" rx="6" fill="#242739" stroke="#5C78FF" stroke-width="1.6"/><text x="588" y="96" fill="#9AA0B4" text-anchor="middle">1 · curated</text>
   </g>
   <text x="644" y="80" font-size="9" fill="#9AA0B4">curated: 2 → 1</text>
   <text x="644" y="96" font-size="9" fill="#9AA0B4">→ destroyed &amp;</text>
   <text x="644" y="112" font-size="9" fill="#9AA0B4">   recreated!</text>
 
   <!-- FOR_EACH -->
-  <rect x="14" y="160" width="732" height="132" rx="12" fill="#191921" stroke="#191921"/>
+  <rect x="14" y="160" width="732" height="132" rx="12" fill="#242739" stroke="#242739"/>
   <text x="32" y="186" font-size="12" fill="#5AC8FF" font-weight="700">for_each</text>
   <text x="106" y="186" font-size="10.5" fill="#9AA0B4">items are identified by NAME — so the others never move</text>
 
   <g font-size="10">
-    <rect x="90" y="222" width="92" height="30" rx="6" fill="#16202E" stroke="#5C78FF"/><text x="136" y="242" fill="#5C78FF" text-anchor="middle">&quot;raw&quot;</text>
-    <rect x="190" y="222" width="92" height="30" rx="6" fill="#16202E" stroke="#5C78FF"/><text x="236" y="242" fill="#5C78FF" text-anchor="middle">&quot;clean&quot;</text>
-    <rect x="290" y="222" width="92" height="30" rx="6" fill="#16202E" stroke="#5C78FF"/><text x="336" y="242" fill="#5C78FF" text-anchor="middle">&quot;curated&quot;</text>
+    <rect x="90" y="222" width="92" height="30" rx="6" fill="#223650" stroke="#5C78FF"/><text x="136" y="242" fill="#E7E7EE" text-anchor="middle">&quot;raw&quot;</text>
+    <rect x="190" y="222" width="92" height="30" rx="6" fill="#223650" stroke="#5C78FF"/><text x="236" y="242" fill="#E7E7EE" text-anchor="middle">&quot;clean&quot;</text>
+    <rect x="290" y="222" width="92" height="30" rx="6" fill="#223650" stroke="#5C78FF"/><text x="336" y="242" fill="#E7E7EE" text-anchor="middle">&quot;curated&quot;</text>
   </g>
   <line x1="392" y1="237" x2="432" y2="237" stroke="#5C78FF" stroke-width="1.4" marker-end="url(#m9)"/>
   <text x="412" y="216" font-size="9" fill="#9AA0B4" text-anchor="middle">drop 'clean'</text>
 
   <g font-size="10">
-    <rect x="442" y="222" width="92" height="30" rx="6" fill="#191921" stroke="#5AC8FF"/><text x="488" y="242" fill="#5AC8FF" text-anchor="middle">&quot;raw&quot;</text>
-    <rect x="542" y="222" width="92" height="30" rx="6" fill="#191921" stroke="#5AC8FF"/><text x="588" y="242" fill="#5AC8FF" text-anchor="middle">&quot;curated&quot;</text>
+    <rect x="442" y="222" width="92" height="30" rx="6" fill="#242739" stroke="#5AC8FF"/><text x="488" y="242" fill="#5AC8FF" text-anchor="middle">&quot;raw&quot;</text>
+    <rect x="542" y="222" width="92" height="30" rx="6" fill="#242739" stroke="#5AC8FF"/><text x="588" y="242" fill="#5AC8FF" text-anchor="middle">&quot;curated&quot;</text>
   </g>
   <text x="644" y="226" font-size="9" fill="#5AC8FF">+ untouched</text>
   <text x="644" y="242" font-size="9" fill="#9AA0B4">only &quot;clean&quot; is</text>
@@ -995,20 +995,20 @@ terraform import aws_s3_bucket.raw acme-prod-raw   <span class="c"># old way</sp
   </defs>
 
   <!-- callers -->
-  <rect x="20" y="46" width="200" height="86" rx="10" fill="#16202E" stroke="#7B42BC" stroke-dasharray="5 4"/>
+  <rect x="20" y="46" width="200" height="86" rx="10" fill="#223650" stroke="#7B42BC" stroke-dasharray="5 4"/>
   <text x="120" y="70" font-size="10.5" fill="#5AC8FF" text-anchor="middle">envs/dev/main.tf</text>
   <text x="36" y="92" font-size="9.5" fill="#9AA0B4">module "storage" {</text>
   <text x="36" y="107" font-size="9.5" fill="#9AA0B4">  env  = "dev"</text>
   <text x="36" y="122" font-size="9.5" fill="#9AA0B4">  size = "small"  }</text>
 
-  <rect x="20" y="168" width="200" height="86" rx="10" fill="#16202E" stroke="#5AC8FF" stroke-dasharray="5 4"/>
+  <rect x="20" y="168" width="200" height="86" rx="10" fill="#223650" stroke="#5AC8FF" stroke-dasharray="5 4"/>
   <text x="120" y="192" font-size="10.5" fill="#5AC8FF" text-anchor="middle">envs/prod/main.tf</text>
   <text x="36" y="214" font-size="9.5" fill="#9AA0B4">module "storage" {</text>
   <text x="36" y="229" font-size="9.5" fill="#9AA0B4">  env  = "prod"</text>
   <text x="36" y="244" font-size="9.5" fill="#9AA0B4">  size = "large"  }</text>
 
   <!-- module -->
-  <rect x="292" y="86" width="216" height="128" rx="11" fill="#191921" stroke="#5AC8FF" stroke-width="1.8"/>
+  <rect x="292" y="86" width="216" height="128" rx="11" fill="#242739" stroke="#5AC8FF" stroke-width="1.8"/>
   <text x="400" y="110" font-size="11" fill="#5AC8FF" text-anchor="middle" font-weight="700">modules/storage/</text>
   <text x="308" y="136" font-size="9.5" fill="#9AA0B4">variables.tf → the inputs</text>
   <text x="308" y="158" font-size="9.5" fill="#9AA0B4">main.tf      → the resources</text>
@@ -1023,13 +1023,13 @@ terraform import aws_s3_bucket.raw acme-prod-raw   <span class="c"># old way</sp
   <line x1="512" y1="122" x2="574" y2="100" stroke="#5AC8FF" stroke-width="1.5" marker-end="url(#m10)"/>
   <line x1="512" y1="178" x2="574" y2="200" stroke="#5AC8FF" stroke-width="1.5" marker-end="url(#m10p)"/>
 
-  <rect x="578" y="70" width="160" height="60" rx="9" fill="#16202E" stroke="#7B42BC"/>
+  <rect x="578" y="70" width="160" height="60" rx="9" fill="#223650" stroke="#7B42BC"/>
   <text x="658" y="94" font-size="10.5" fill="#5AC8FF" text-anchor="middle">dev bucket</text>
-  <text x="658" y="112" font-size="9" fill="#6B6B78" text-anchor="middle">cheap · no versioning</text>
+  <text x="658" y="112" font-size="9" fill="#E7E7EE" text-anchor="middle">cheap · no versioning</text>
 
-  <rect x="578" y="170" width="160" height="60" rx="9" fill="#16202E" stroke="#5AC8FF"/>
+  <rect x="578" y="170" width="160" height="60" rx="9" fill="#223650" stroke="#5AC8FF"/>
   <text x="658" y="194" font-size="10.5" fill="#5AC8FF" text-anchor="middle">prod bucket</text>
-  <text x="658" y="212" font-size="9" fill="#6B6B78" text-anchor="middle">versioned · locked down</text>
+  <text x="658" y="212" font-size="9" fill="#E7E7EE" text-anchor="middle">versioned · locked down</text>
 
   <text x="380" y="282" font-size="10.5" fill="#6B6B78" text-anchor="middle">one definition · many calls · the inputs are the only thing that differs</text>
 </svg>
@@ -1129,31 +1129,31 @@ cd envs/prod &amp;&amp; terraform init &amp;&amp; terraform plan</pre></div>
     <line x1="606" y1="96" x2="626" y2="96" marker-end="url(#m12)"/>
   </g>
 
-  <rect x="24" y="72" width="110" height="48" rx="9" fill="#191921" stroke="#5C78FF"/>
+  <rect x="24" y="72" width="110" height="48" rx="9" fill="#242739" stroke="#5C78FF"/>
   <text x="79" y="94" font-size="11" fill="#E7E7EE" text-anchor="middle">open a PR</text>
   <text x="79" y="110" font-size="9" fill="#6B6B78" text-anchor="middle">edit the .tf</text>
 
-  <rect x="158" y="72" width="140" height="48" rx="9" fill="#191921" stroke="#5C78FF"/>
+  <rect x="158" y="72" width="140" height="48" rx="9" fill="#242739" stroke="#5C78FF"/>
   <text x="228" y="94" font-size="10.5" fill="#9AA0B4" text-anchor="middle">terraform plan</text>
   <text x="228" y="110" font-size="9" fill="#6B6B78" text-anchor="middle">-out=tfplan</text>
 
-  <rect x="322" y="72" width="150" height="48" rx="9" fill="#16202E" stroke="#7B42BC"/>
+  <rect x="322" y="72" width="150" height="48" rx="9" fill="#223650" stroke="#7B42BC"/>
   <text x="397" y="94" font-size="10.5" fill="#5AC8FF" text-anchor="middle">post the diff</text>
-  <text x="397" y="110" font-size="9" fill="#6B6B78" text-anchor="middle">a human reviews it</text>
+  <text x="397" y="110" font-size="9" fill="#E7E7EE" text-anchor="middle">a human reviews it</text>
 
-  <rect x="496" y="72" width="110" height="48" rx="9" fill="#191921" stroke="#5AC8FF"/>
+  <rect x="496" y="72" width="110" height="48" rx="9" fill="#242739" stroke="#5AC8FF"/>
   <text x="551" y="94" font-size="11" fill="#5AC8FF" text-anchor="middle">merge</text>
   <text x="551" y="110" font-size="9" fill="#6B6B78" text-anchor="middle">approved +</text>
 
-  <rect x="630" y="70" width="106" height="52" rx="9" fill="#16202E" stroke="#5AC8FF" stroke-width="1.8"/>
+  <rect x="630" y="70" width="106" height="52" rx="9" fill="#223650" stroke="#5AC8FF" stroke-width="1.8"/>
   <text x="683" y="92" font-size="10" fill="#5AC8FF" text-anchor="middle">apply</text>
   <use href="#i-lock" x="641" y="100" width="9" height="9" fill="none" stroke="#6B6B78" stroke-width="2.6"/>
-  <text x="656" y="108" font-size="8.5" fill="#6B6B78">prod env gate</text>
+  <text x="656" y="108" font-size="8.5" fill="#E7E7EE">prod env gate</text>
 
   <!-- the saved plan artifact -->
   <path d="M228 124 V 176 H 356" fill="none" stroke="#5C78FF" stroke-width="1.4" marker-end="url(#m12a)"/>
   <path d="M524 176 H 683 V 128" fill="none" stroke="#5C78FF" stroke-width="1.4" marker-end="url(#m12a)"/>
-  <rect x="360" y="154" width="164" height="44" rx="8" fill="#191921" stroke="#5C78FF"/>
+  <rect x="360" y="154" width="164" height="44" rx="8" fill="#242739" stroke="#5C78FF"/>
   <text x="442" y="172" font-size="10" fill="#9AA0B4" text-anchor="middle">tfplan (artifact)</text>
   <text x="442" y="188" font-size="8.5" fill="#9AA0B4" text-anchor="middle">the exact reviewed diff</text>
 
@@ -1324,51 +1324,51 @@ cd envs/prod &amp;&amp; terraform init &amp;&amp; terraform plan</pre></div>
   </defs>
 
   <!-- dev root -->
-  <rect x="24" y="54" width="176" height="76" rx="10" fill="#16202E" stroke="#5C78FF" stroke-dasharray="5 4"/>
+  <rect x="24" y="54" width="176" height="76" rx="10" fill="#223650" stroke="#5C78FF" stroke-dasharray="5 4"/>
   <use href="#i-code" x="36" y="66" width="12" height="12" fill="none" stroke="#5C78FF" stroke-width="2.2"/>
-  <text x="54" y="76" font-size="11" fill="#5C78FF">envs/dev/</text>
-  <text x="36" y="97" font-size="8.5" fill="#6B6B78">main.tf · providers.tf</text>
-  <text x="36" y="112" font-size="8.5" fill="#6B6B78">backend.tf · tfvars</text>
-  <rect x="24" y="140" width="176" height="26" rx="7" fill="#191921" stroke="#5C78FF"/>
+  <text x="54" y="76" font-size="11" fill="#E7E7EE">envs/dev/</text>
+  <text x="36" y="97" font-size="8.5" fill="#E7E7EE">main.tf · providers.tf</text>
+  <text x="36" y="112" font-size="8.5" fill="#E7E7EE">backend.tf · tfvars</text>
+  <rect x="24" y="140" width="176" height="26" rx="7" fill="#242739" stroke="#5C78FF"/>
   <use href="#i-file" x="34" y="146" width="11" height="11" fill="none" stroke="#5C78FF" stroke-width="2.4"/>
   <text x="52" y="158" font-size="9.5" fill="#9AA0B4">dev.tfstate</text>
 
   <!-- prod root -->
-  <rect x="24" y="176" width="176" height="76" rx="10" fill="#16202E" stroke="#5AC8FF" stroke-dasharray="5 4"/>
+  <rect x="24" y="176" width="176" height="76" rx="10" fill="#223650" stroke="#5AC8FF" stroke-dasharray="5 4"/>
   <use href="#i-code" x="36" y="188" width="12" height="12" fill="none" stroke="#5AC8FF" stroke-width="2.2"/>
   <text x="54" y="198" font-size="11" fill="#5AC8FF">envs/prod/</text>
-  <text x="36" y="219" font-size="8.5" fill="#6B6B78">main.tf · providers.tf</text>
-  <text x="36" y="234" font-size="8.5" fill="#6B6B78">backend.tf · tfvars</text>
-  <rect x="24" y="262" width="176" height="26" rx="7" fill="#191921" stroke="#5C78FF"/>
+  <text x="36" y="219" font-size="8.5" fill="#E7E7EE">main.tf · providers.tf</text>
+  <text x="36" y="234" font-size="8.5" fill="#E7E7EE">backend.tf · tfvars</text>
+  <rect x="24" y="262" width="176" height="26" rx="7" fill="#242739" stroke="#5C78FF"/>
   <use href="#i-file" x="34" y="268" width="11" height="11" fill="none" stroke="#5C78FF" stroke-width="2.4"/>
   <text x="52" y="280" font-size="9.5" fill="#9AA0B4">prod.tfstate</text>
 
   <!-- modules -->
-  <rect x="246" y="40" width="220" height="218" rx="11" fill="#191921" stroke="#5AC8FF" stroke-width="1.6"/>
+  <rect x="246" y="40" width="220" height="218" rx="11" fill="#242739" stroke="#5AC8FF" stroke-width="1.6"/>
   <use href="#i-package" x="256" y="48" width="13" height="13" fill="none" stroke="#5AC8FF" stroke-width="2.2"/>
   <text x="276" y="59" font-size="11" fill="#5AC8FF" font-weight="700">modules/</text>
-  <rect x="256" y="70" width="200" height="48" rx="8" fill="#191921" stroke="#5AC8FF"/>
+  <rect x="256" y="70" width="200" height="48" rx="8" fill="#242739" stroke="#5AC8FF"/>
   <text x="270" y="90" font-size="11" fill="#5AC8FF">data-lake</text>
   <text x="270" y="105" font-size="8.5" fill="#6B6B78">S3 + IAM + lifecycle rules</text>
-  <rect x="256" y="132" width="200" height="48" rx="8" fill="#191921" stroke="#5AC8FF"/>
+  <rect x="256" y="132" width="200" height="48" rx="8" fill="#242739" stroke="#5AC8FF"/>
   <text x="270" y="152" font-size="11" fill="#5AC8FF">etl-job</text>
   <text x="270" y="167" font-size="8.5" fill="#6B6B78">Glue / Databricks job</text>
-  <rect x="256" y="194" width="200" height="48" rx="8" fill="#191921" stroke="#5AC8FF"/>
+  <rect x="256" y="194" width="200" height="48" rx="8" fill="#242739" stroke="#5AC8FF"/>
   <text x="270" y="214" font-size="11" fill="#5AC8FF">warehouse</text>
   <text x="270" y="229" font-size="8.5" fill="#6B6B78">Snowflake WH + grants</text>
 
   <!-- clouds -->
-  <rect x="520" y="64" width="216" height="76" rx="10" fill="#16202E" stroke="#5C78FF"/>
+  <rect x="520" y="64" width="216" height="76" rx="10" fill="#223650" stroke="#5C78FF"/>
   <use href="#i-cloud" x="532" y="76" width="13" height="13" fill="none" stroke="#5C78FF" stroke-width="2.2"/>
-  <text x="552" y="86" font-size="11" fill="#5C78FF">dev cloud</text>
-  <text x="532" y="107" font-size="8.5" fill="#6B6B78">1 worker · no versioning</text>
-  <text x="532" y="122" font-size="8.5" fill="#6B6B78">destroy it any time</text>
+  <text x="552" y="86" font-size="11" fill="#E7E7EE">dev cloud</text>
+  <text x="532" y="107" font-size="8.5" fill="#E7E7EE">1 worker · no versioning</text>
+  <text x="532" y="122" font-size="8.5" fill="#E7E7EE">destroy it any time</text>
 
-  <rect x="520" y="182" width="216" height="76" rx="10" fill="#16202E" stroke="#5AC8FF" stroke-width="1.6"/>
+  <rect x="520" y="182" width="216" height="76" rx="10" fill="#223650" stroke="#5AC8FF" stroke-width="1.6"/>
   <use href="#i-cloud" x="532" y="194" width="13" height="13" fill="none" stroke="#5AC8FF" stroke-width="2.2"/>
   <text x="552" y="204" font-size="11" fill="#5AC8FF">prod cloud</text>
-  <text x="532" y="225" font-size="8.5" fill="#6B6B78">8 workers · versioned</text>
-  <text x="532" y="240" font-size="8.5" fill="#6B6B78">prevent_destroy on</text>
+  <text x="532" y="225" font-size="8.5" fill="#E7E7EE">8 workers · versioned</text>
+  <text x="532" y="240" font-size="8.5" fill="#E7E7EE">prevent_destroy on</text>
 
   <!-- arrows -->
   <line x1="204" y1="92" x2="242" y2="94" stroke="#5C78FF" stroke-width="1.5" marker-end="url(#m14)"/>

@@ -22,7 +22,7 @@
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,500;0,700;0,800;1,400&display=swap" rel="stylesheet">
 <style>
   :root{
-    --bg:#111117; --bg2:#16161D; --ink:#F1F1F1; --muted:#9aa0b4; --dim:#6b6b78;
+    --bg:#111117; --bg2:#16161d; --ink:#F1F1F1; --muted:#9aa0b4; --dim:#6b6b78;
     --blue2:#5C78FF; --cyan:#28B9FF; --cyan2:#5AC8FF; --purple:#5C78FF; --magenta2:#5AC8FF;
     --grad:linear-gradient(90deg,#28B9FF,#5C78FF);
     --font:"JetBrainsMono Nerd Font","JetBrains Mono","Symbols Nerd Font",ui-monospace,"Cascadia Code",Menlo,Consolas,monospace;
@@ -50,8 +50,8 @@
   hr{border:0;border-top:1px solid #2f2823;margin:36px 0}
   code{font-family:var(--font);background:#241a15;color:#9AA0B4;padding:1px 6px;border-radius:5px;font-size:.88em;border:1px solid #4a2a1c2f3a}
   .cb{margin:16px 0}
-  .cb .lang{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:#9aa0b4;background:#1b1b24;border:1px solid #2C2C38;border-bottom:none;border-radius:9px 9px 0 0;padding:4px 12px}
-  pre{margin:0;background:#101017;border:1px solid #2C2C38;border-radius:0 10px 10px 10px;padding:14px 16px;overflow-x:auto;
+  .cb .lang{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:#9aa0b4;background:#1b1b24;border:1px solid #3C4356;border-bottom:none;border-radius:9px 9px 0 0;padding:4px 12px}
+  pre{margin:0;background:#1C1C2A;border:1px solid #3C4356;border-radius:0 10px 10px 10px;padding:14px 16px;overflow-x:auto;
       font-family:var(--font);font-size:13px;line-height:1.65;color:#d8dcea;white-space:pre}
   pre .c{color:#6B6B78}
   pre .o{color:#9aa0b4}
@@ -59,16 +59,16 @@
   pre .g{color:#5AC8FF}
   pre .y{color:#9AA0B4}
   pre .r{color:#9AA0B4}
-  .callout{border-left:4px solid #28B9FF;background:linear-gradient(160deg,#12202e,#101019);border-radius:0 12px 12px 0;padding:14px 18px;margin:22px 0;box-shadow:0 0 16px -8px #28B9FF66}
-  .callout.cy{border-color:#5AC8FF;background:linear-gradient(160deg,#0f2233,#101019)}
-  .callout.mg{border-color:#5C78FF;background:linear-gradient(160deg,#141a33,#101019)}
-  .callout.gd{border-color:#5C78FF;background:linear-gradient(160deg,#141a33,#101019)}
-  .callout.gr{border-color:#28B9FF;background:linear-gradient(160deg,#0f2233,#101019)}
+  .callout{border-left:4px solid #28B9FF;background:linear-gradient(160deg,#12202e,#1C1C2A);border-radius:0 12px 12px 0;padding:14px 18px;margin:22px 0;box-shadow:0 0 16px -8px #28B9FF66}
+  .callout.cy{border-color:#5AC8FF;background:linear-gradient(160deg,#0f2233,#1C1C2A)}
+  .callout.mg{border-color:#5C78FF;background:linear-gradient(160deg,#141a33,#1C1C2A)}
+  .callout.gd{border-color:#5C78FF;background:linear-gradient(160deg,#141a33,#1C1C2A)}
+  .callout.gr{border-color:#28B9FF;background:linear-gradient(160deg,#0f2233,#1C1C2A)}
   .callout .t{color:var(--cyan2);font-weight:800}
   .callout.gd .t{color:#8AA0FF}
   .callout.gr .t{color:#5AC8FF}
   .callout.mg .t{color:#8AA0FF}
-  .tldr{border:1px solid #28B9FF44;background:linear-gradient(180deg,#12161d,#0d0d12);border-radius:16px;padding:20px 24px;margin:26px 0;box-shadow:0 0 24px -10px #28B9FF55}
+  .tldr{border:1px solid #28B9FF44;background:linear-gradient(180deg,#12161d,#1C1C2A);border-radius:16px;padding:20px 24px;margin:26px 0;box-shadow:0 0 24px -10px #28B9FF55}
   .tldr h4{margin:0 0 8px;font-size:13px;letter-spacing:.2em;text-transform:uppercase;color:var(--cyan2)}
   .gloss{border:1px solid #302823;background:#171411;border-radius:14px;padding:18px 22px;margin:24px 0}
   .gloss h4{margin:0 0 6px;color:#fff;font-size:15px}
@@ -85,27 +85,27 @@
   tr:nth-child(even) td{background:#1a1614}
 
   figure.fig{margin:26px 0;text-align:center}
-  figure.fig svg{display:block;width:100%;max-width:100%;height:auto;border:1px solid #2a2622;border-radius:14px;background:#101017}
+  figure.fig svg{display:block;width:100%;max-width:100%;height:auto;border:1px solid #2a2622;border-radius:14px;background:#1C1C2A}
   figure.fig figcaption{font-size:12.5px;color:var(--muted);margin-top:9px;font-style:italic;line-height:1.6}
   .pain{border:1px solid #4a3a1a;border-left:4px solid #FFB454;background:linear-gradient(160deg,#221b0e,#141019);border-radius:0 14px 14px 0;padding:16px 20px;margin:14px 0;box-shadow:0 0 20px -8px #FFB45444}
   .pain h4{margin:0 0 4px;color:#FFC978}
-  .fix{border:1px solid #123246;border-left:4px solid #28B9FF;background:linear-gradient(160deg,#0e2030,#101019);border-radius:0 14px 14px 0;padding:16px 20px;margin:14px 0;box-shadow:0 0 20px -6px #28B9FF55}
+  .fix{border:1px solid #123246;border-left:4px solid #28B9FF;background:linear-gradient(160deg,#1A3452,#1C1C2A);border-radius:0 14px 14px 0;padding:16px 20px;margin:14px 0;box-shadow:0 0 20px -6px #28B9FF55}
   .fix h4{margin:0 0 4px;color:#5AC8FF}
   .step{display:flex;gap:12px;align-items:flex-start;margin:14px 0}
   .step .num-bubble{flex:0 0 28px;height:28px;border-radius:50%;background:var(--grad);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:#fff;margin-top:2px}
   .step .body{flex:1}
-  footer{border-top:1px solid #2C2C38;margin-top:50px;padding:24px 0 90px;color:var(--dim);font-size:13px}
+  footer{border-top:1px solid #3C4356;margin-top:50px;padding:24px 0 90px;color:var(--dim);font-size:13px}
   footer a{color:var(--cyan2)}
   .js .reveal{opacity:0;transform:translateY(16px);transition:opacity .6s ease,transform .6s ease}
   .js .reveal.in{opacity:1;transform:none}
   @media (prefers-reduced-motion:reduce){.js .reveal{opacity:1;transform:none}}
   /* ---- shared theme: top nav + a11y (appended) ---- */
-  .nav{position:sticky;top:0;z-index:60;background:rgba(25,25,33,.82);backdrop-filter:blur(10px);border-bottom:1px solid #2C2C38}
+  .nav{position:sticky;top:0;z-index:60;background:rgba(25,25,33,.82);backdrop-filter:blur(10px);border-bottom:1px solid #3C4356}
   .nav-inner{max-width:1040px;margin:0 auto;padding:12px 24px;display:flex;align-items:center;gap:18px;flex-wrap:wrap}
   .nav-brand{font-weight:800;letter-spacing:.16em;font-size:15px;text-decoration:none;border:0;color:#5AC8FF}
   .nav-links{display:flex;gap:6px;flex-wrap:wrap;margin-left:auto}
   .nav-links a{text-decoration:none;border:1px solid transparent;color:#9aa0b4;font-weight:700;font-size:13.5px;padding:6px 14px;border-radius:999px;transition:.2s}
-  .nav-links a:hover{color:#fff;border-color:#2C2C38;background:#191921}
+  .nav-links a:hover{color:#fff;border-color:#3C4356;background:#242739}
   .nav-links a.active{color:#5AC8FF;border-color:#28B9FF55;background:#28B9FF14}
   :focus-visible{outline:2px solid #5AC8FF;outline-offset:3px;border-radius:6px}
   @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{animation:none !important;transition:none !important}.js .reveal{opacity:1 !important;transform:none !important}}
@@ -135,7 +135,7 @@
     <marker id="gr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#5C78FF"/></marker>
     <marker id="gm" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#6B6B78"/></marker>
   </defs>
-  <line x1="60" y1="164" x2="826" y2="164" stroke="#2C2C38" stroke-width="1.4"/>
+  <line x1="60" y1="164" x2="826" y2="164" stroke="#3C4356" stroke-width="1.4"/>
   <path d="M250 164 C 286 164 296 84 332 84" fill="none" stroke="#5AC8FF" stroke-width="1.8"/>
   <path d="M512 84 C 560 84 588 164 632 164" fill="none" stroke="#5AC8FF" stroke-width="1.8"/>
   <line x1="332" y1="84" x2="512" y2="84" stroke="#5AC8FF" stroke-width="1.8"/>
@@ -143,9 +143,9 @@
   <text x="46" y="168" font-size="11" fill="#5AC8FF" font-weight="700" text-anchor="end">main</text>
   <text x="332" y="52" font-size="11" fill="#5AC8FF" font-weight="700">feature/revenue</text>
 
-  <circle cx="90" cy="164" r="9" fill="#101017" stroke="#5AC8FF" stroke-width="2"/><circle cx="170" cy="164" r="9" fill="#101017" stroke="#5AC8FF" stroke-width="2"/><circle cx="250" cy="164" r="9" fill="#101017" stroke="#5AC8FF" stroke-width="2"/><circle cx="450" cy="164" r="9" fill="#101017" stroke="#5AC8FF" stroke-width="2"/>
-  <circle cx="632" cy="164" r="11" fill="#101017" stroke="#F05032" stroke-width="2.4"/><circle cx="740" cy="164" r="9" fill="#101017" stroke="#5AC8FF" stroke-width="2"/>
-  <circle cx="332" cy="84" r="9" fill="#101017" stroke="#5AC8FF" stroke-width="2"/><circle cx="422" cy="84" r="9" fill="#101017" stroke="#5AC8FF" stroke-width="2"/><circle cx="512" cy="84" r="9" fill="#101017" stroke="#5AC8FF" stroke-width="2"/>
+  <circle cx="90" cy="164" r="9" fill="#1C1C2A" stroke="#5AC8FF" stroke-width="2"/><circle cx="170" cy="164" r="9" fill="#1C1C2A" stroke="#5AC8FF" stroke-width="2"/><circle cx="250" cy="164" r="9" fill="#1C1C2A" stroke="#5AC8FF" stroke-width="2"/><circle cx="450" cy="164" r="9" fill="#1C1C2A" stroke="#5AC8FF" stroke-width="2"/>
+  <circle cx="632" cy="164" r="11" fill="#1C1C2A" stroke="#F05032" stroke-width="2.4"/><circle cx="740" cy="164" r="9" fill="#1C1C2A" stroke="#5AC8FF" stroke-width="2"/>
+  <circle cx="332" cy="84" r="9" fill="#1C1C2A" stroke="#5AC8FF" stroke-width="2"/><circle cx="422" cy="84" r="9" fill="#1C1C2A" stroke="#5AC8FF" stroke-width="2"/><circle cx="512" cy="84" r="9" fill="#1C1C2A" stroke="#5AC8FF" stroke-width="2"/>
 
   <text x="90"  y="192" font-size="9.5" fill="#6B6B78" text-anchor="middle">init</text>
   <text x="170" y="192" font-size="9.5" fill="#6B6B78" text-anchor="middle">add ingest</text>
@@ -222,16 +222,16 @@
   </defs>
   <text x="380" y="26" font-size="10.5" fill="#9AA0B4" text-anchor="middle" letter-spacing="1.6">EVERY COMMIT IS A FULL SNAPSHOT — NOT A DIFF</text>
 
-  <rect x="35" y="70" width="138" height="96" rx="10" fill="#191921" stroke="#5AC8FF" stroke-width="1.6"/>
+  <rect x="35" y="70" width="138" height="96" rx="10" fill="#242739" stroke="#5AC8FF" stroke-width="1.6"/>
   <text x="51" y="92" font-size="11" fill="#5AC8FF" font-weight="700">9f2c1ab</text>
   <text x="51" y="106" font-size="9" fill="#6B6B78">init repo</text><rect x="51" y="110" width="92" height="5" rx="2.5" fill="#6B6B78"/><rect x="51" y="121" width="70" height="5" rx="2.5" fill="#6B6B78"/><rect x="51" y="132" width="84" height="5" rx="2.5" fill="#6B6B78"/>
-  <rect x="219" y="70" width="138" height="96" rx="10" fill="#191921" stroke="#5AC8FF" stroke-width="1.6"/>
+  <rect x="219" y="70" width="138" height="96" rx="10" fill="#242739" stroke="#5AC8FF" stroke-width="1.6"/>
   <text x="235" y="92" font-size="11" fill="#5AC8FF" font-weight="700">3ba91cd</text>
   <text x="235" y="106" font-size="9" fill="#6B6B78">add ingest</text><rect x="235" y="110" width="92" height="5" rx="2.5" fill="#6B6B78"/><rect x="235" y="121" width="70" height="5" rx="2.5" fill="#6B6B78"/><rect x="235" y="132" width="84" height="5" rx="2.5" fill="#6B6B78"/>
-  <rect x="403" y="70" width="138" height="96" rx="10" fill="#191921" stroke="#5AC8FF" stroke-width="1.6"/>
+  <rect x="403" y="70" width="138" height="96" rx="10" fill="#242739" stroke="#5AC8FF" stroke-width="1.6"/>
   <text x="419" y="92" font-size="11" fill="#5AC8FF" font-weight="700">7de40f2</text>
   <text x="419" y="106" font-size="9" fill="#6B6B78">add tests</text><rect x="419" y="110" width="92" height="5" rx="2.5" fill="#6B6B78"/><rect x="419" y="121" width="70" height="5" rx="2.5" fill="#6B6B78"/><rect x="419" y="132" width="84" height="5" rx="2.5" fill="#6B6B78"/>
-  <rect x="587" y="70" width="138" height="96" rx="10" fill="#191921" stroke="#F05032" stroke-width="1.6"/>
+  <rect x="587" y="70" width="138" height="96" rx="10" fill="#242739" stroke="#F05032" stroke-width="1.6"/>
   <text x="603" y="92" font-size="11" fill="#F05032" font-weight="700">c81b5aa</text>
   <text x="603" y="106" font-size="9" fill="#6B6B78">fix null check</text><rect x="603" y="110" width="92" height="5" rx="2.5" fill="#FF6B9D"/><rect x="603" y="121" width="70" height="5" rx="2.5" fill="#FF6B9D"/><rect x="603" y="132" width="84" height="5" rx="2.5" fill="#FF6B9D"/>
 
@@ -239,7 +239,7 @@
   <line x1="397" y1="118" x2="363" y2="118" stroke="#6B6B78" stroke-width="1.4" marker-end="url(#gm)"/>
   <line x1="581" y1="118" x2="547" y2="118" stroke="#6B6B78" stroke-width="1.4" marker-end="url(#gm)"/>
 
-  <rect x="596" y="34" width="120" height="22" rx="6" fill="#191921" stroke="#F05032" stroke-width="1.4"/>
+  <rect x="596" y="34" width="120" height="22" rx="6" fill="#242739" stroke="#F05032" stroke-width="1.4"/>
   <text x="656" y="49" font-size="10" fill="#F05032" font-weight="700" text-anchor="middle">HEAD → main</text>
   <line x1="656" y1="58" x2="656" y2="68" stroke="#F05032" stroke-width="1.4" marker-end="url(#go)"/>
 
@@ -265,7 +265,7 @@
   </defs>
   <text x="380" y="26" font-size="10.5" fill="#9AA0B4" text-anchor="middle" letter-spacing="1.6">THE THREE AREAS — AND THE COMMANDS THAT MOVE FILES BETWEEN THEM</text>
 
-  <rect x="30" y="60" width="190" height="112" rx="10" fill="#191921" stroke="#5C78FF" stroke-width="1.6"/>
+  <rect x="30" y="60" width="190" height="112" rx="10" fill="#242739" stroke="#5C78FF" stroke-width="1.6"/>
   <text x="125" y="48" font-size="11" fill="#9AA0B4" font-weight="700" text-anchor="middle">WORKING DIRECTORY</text>
   <text x="125" y="84" font-size="9.5" fill="#9AA0B4" text-anchor="middle">the real files on disk</text>
   <rect x="52" y="98" width="146" height="7" rx="3.5" fill="#5C78FF" opacity=".75"/>
@@ -273,7 +273,7 @@
   <rect x="52" y="126" width="130" height="7" rx="3.5" fill="#5C78FF" opacity=".6"/>
   <text x="125" y="156" font-size="9" fill="#6B6B78" text-anchor="middle">edited · not recorded yet</text>
 
-  <rect x="285" y="60" width="190" height="112" rx="10" fill="#191921" stroke="#F05032" stroke-width="1.6"/>
+  <rect x="285" y="60" width="190" height="112" rx="10" fill="#242739" stroke="#F05032" stroke-width="1.6"/>
   <text x="380" y="48" font-size="11" fill="#F05032" font-weight="700" text-anchor="middle">STAGING AREA</text>
   <text x="380" y="82" font-size="9" fill="#9AA0B4" text-anchor="middle">the shortlist for</text>
   <text x="380" y="94" font-size="9" fill="#9AA0B4" text-anchor="middle">the next commit</text>
@@ -281,10 +281,10 @@
   <rect x="307" y="120" width="112" height="7" rx="3.5" fill="#F05032" opacity=".5"/>
   <text x="380" y="156" font-size="9" fill="#6B6B78" text-anchor="middle">you choose exactly what goes in</text>
 
-  <rect x="540" y="60" width="190" height="112" rx="10" fill="#0D1820" stroke="#5AC8FF" stroke-width="1.6"/>
+  <rect x="540" y="60" width="190" height="112" rx="10" fill="#18293E" stroke="#5AC8FF" stroke-width="1.6"/>
   <text x="635" y="48" font-size="11" fill="#5AC8FF" font-weight="700" text-anchor="middle">REPOSITORY (.git)</text>
   <text x="635" y="84" font-size="9.5" fill="#9AA0B4" text-anchor="middle">permanent history</text>
-  <circle cx="585" cy="116" r="8" fill="#101017" stroke="#5AC8FF" stroke-width="1.8"/><circle cx="615" cy="116" r="8" fill="#101017" stroke="#5AC8FF" stroke-width="1.8"/><circle cx="645" cy="116" r="8" fill="#101017" stroke="#5AC8FF" stroke-width="1.8"/><circle cx="675" cy="116" r="8" fill="#101017" stroke="#5AC8FF" stroke-width="1.8"/>
+  <circle cx="585" cy="116" r="8" fill="#1C1C2A" stroke="#5AC8FF" stroke-width="1.8"/><circle cx="615" cy="116" r="8" fill="#1C1C2A" stroke="#5AC8FF" stroke-width="1.8"/><circle cx="645" cy="116" r="8" fill="#1C1C2A" stroke="#5AC8FF" stroke-width="1.8"/><circle cx="675" cy="116" r="8" fill="#1C1C2A" stroke="#5AC8FF" stroke-width="1.8"/>
   <line x1="593" y1="116" x2="607" y2="116" stroke="#5AC8FF" stroke-width="1.3"/>
   <line x1="623" y1="116" x2="637" y2="116" stroke="#5AC8FF" stroke-width="1.3"/>
   <line x1="653" y1="116" x2="667" y2="116" stroke="#5AC8FF" stroke-width="1.3"/>
@@ -395,26 +395,26 @@ __pycache__/
   <text x="380" y="24" font-size="10.5" fill="#9AA0B4" text-anchor="middle" letter-spacing="1.6">A BRANCH IS JUST A LABEL POINTING AT ONE COMMIT</text>
 
   <text x="70" y="128" font-size="9.5" fill="#6B6B78">before</text>
-  <line x1="150" y1="124" x2="560" y2="124" stroke="#2C2C38" stroke-width="1.4"/>
-  <circle cx="190" cy="124" r="9" fill="#101017" stroke="#5AC8FF" stroke-width="2"/><circle cx="280" cy="124" r="9" fill="#101017" stroke="#5AC8FF" stroke-width="2"/><circle cx="370" cy="124" r="9" fill="#101017" stroke="#5AC8FF" stroke-width="2"/><circle cx="460" cy="124" r="9" fill="#101017" stroke="#5AC8FF" stroke-width="2"/>
-  <rect x="412" y="62" width="96" height="23" rx="6" fill="#191921" stroke="#F05032" stroke-width="1.6"/>
+  <line x1="150" y1="124" x2="560" y2="124" stroke="#3C4356" stroke-width="1.4"/>
+  <circle cx="190" cy="124" r="9" fill="#1C1C2A" stroke="#5AC8FF" stroke-width="2"/><circle cx="280" cy="124" r="9" fill="#1C1C2A" stroke="#5AC8FF" stroke-width="2"/><circle cx="370" cy="124" r="9" fill="#1C1C2A" stroke="#5AC8FF" stroke-width="2"/><circle cx="460" cy="124" r="9" fill="#1C1C2A" stroke="#5AC8FF" stroke-width="2"/>
+  <rect x="412" y="62" width="96" height="23" rx="6" fill="#242739" stroke="#F05032" stroke-width="1.6"/>
   <text x="460" y="78" font-size="10.5" fill="#F05032" font-weight="700" text-anchor="middle">main</text>
   <line x1="460" y1="87" x2="460" y2="112" stroke="#F05032" stroke-width="1.5" marker-end="url(#go)"/>
-  <rect x="396" y="30" width="128" height="21" rx="6" fill="#101017" stroke="#F05032" stroke-width="1.4" stroke-dasharray="4,3"/>
+  <rect x="396" y="30" width="128" height="21" rx="6" fill="#1C1C2A" stroke="#F05032" stroke-width="1.4" stroke-dasharray="4,3"/>
   <text x="460" y="45" font-size="10" fill="#F05032" font-weight="700" text-anchor="middle">HEAD → main</text>
   <line x1="460" y1="53" x2="460" y2="58" stroke="#F05032" stroke-width="1.3"/>
 
-  <line x1="40" y1="168" x2="720" y2="168" stroke="#2C2C38" stroke-width="1" stroke-dasharray="3,4"/>
+  <line x1="40" y1="168" x2="720" y2="168" stroke="#3C4356" stroke-width="1" stroke-dasharray="3,4"/>
   <text x="380" y="186" font-size="9.5" fill="#6B6B78" text-anchor="middle">git commit</text>
   <line x1="330" y1="182" x2="300" y2="182" stroke="#6B6B78" stroke-width="1.2" marker-end="url(#gm)"/>
   <line x1="430" y1="182" x2="460" y2="182" stroke="#6B6B78" stroke-width="1.2" marker-end="url(#gm)"/>
 
   <text x="70" y="248" font-size="9.5" fill="#6B6B78">after</text>
-  <line x1="150" y1="244" x2="620" y2="244" stroke="#2C2C38" stroke-width="1.4"/>
-  <circle cx="190" cy="244" r="9" fill="#101017" stroke="#5AC8FF" stroke-width="2"/><circle cx="280" cy="244" r="9" fill="#101017" stroke="#5AC8FF" stroke-width="2"/><circle cx="370" cy="244" r="9" fill="#101017" stroke="#5AC8FF" stroke-width="2"/><circle cx="460" cy="244" r="9" fill="#101017" stroke="#5AC8FF" stroke-width="2"/>
-  <circle cx="550" cy="244" r="10" fill="#191921" stroke="#F05032" stroke-width="2.4"/>
+  <line x1="150" y1="244" x2="620" y2="244" stroke="#3C4356" stroke-width="1.4"/>
+  <circle cx="190" cy="244" r="9" fill="#1C1C2A" stroke="#5AC8FF" stroke-width="2"/><circle cx="280" cy="244" r="9" fill="#1C1C2A" stroke="#5AC8FF" stroke-width="2"/><circle cx="370" cy="244" r="9" fill="#1C1C2A" stroke="#5AC8FF" stroke-width="2"/><circle cx="460" cy="244" r="9" fill="#1C1C2A" stroke="#5AC8FF" stroke-width="2"/>
+  <circle cx="550" cy="244" r="10" fill="#242739" stroke="#F05032" stroke-width="2.4"/>
   <rect x="502" y="288" width="96" height="0" rx="6" fill="none"/>
-  <rect x="502" y="196" width="96" height="23" rx="6" fill="#191921" stroke="#F05032" stroke-width="1.6"/>
+  <rect x="502" y="196" width="96" height="23" rx="6" fill="#242739" stroke="#F05032" stroke-width="1.6"/>
   <text x="550" y="212" font-size="10.5" fill="#F05032" font-weight="700" text-anchor="middle">main</text>
   <line x1="550" y1="221" x2="550" y2="232" stroke="#F05032" stroke-width="1.5" marker-end="url(#go)"/>
   <text x="640" y="248" font-size="9" fill="#6B6B78">new commit</text>
@@ -456,31 +456,31 @@ __pycache__/
     <marker id="gr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#5C78FF"/></marker>
     <marker id="gm" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#6B6B78"/></marker>
   </defs>
-  <rect x="270" y="30" width="220" height="76" rx="12" fill="#0D1820" stroke="#5AC8FF" stroke-width="1.8"/>
+  <rect x="270" y="30" width="220" height="76" rx="12" fill="#18293E" stroke="#5AC8FF" stroke-width="1.8"/>
   <text x="380" y="58" font-size="12" fill="#5AC8FF" font-weight="700" text-anchor="middle">origin (GitHub)</text>
   <text x="380" y="78" font-size="9.5" fill="#9AA0B4" text-anchor="middle">the shared copy everyone</text>
   <text x="380" y="92" font-size="9.5" fill="#9AA0B4" text-anchor="middle">agrees to sync through</text>
 
-  <rect x="20" y="184" width="210" height="80" rx="12" fill="#191921" stroke="#F05032" stroke-width="1.6"/>
+  <rect x="20" y="184" width="210" height="80" rx="12" fill="#242739" stroke="#F05032" stroke-width="1.6"/>
   <text x="125" y="212" font-size="11.5" fill="#F05032" font-weight="700" text-anchor="middle">your laptop</text>
   <text x="125" y="232" font-size="9.5" fill="#9AA0B4" text-anchor="middle">a FULL copy of the</text>
   <text x="125" y="246" font-size="9.5" fill="#9AA0B4" text-anchor="middle">entire history</text>
 
-  <rect x="530" y="184" width="210" height="80" rx="12" fill="#16202E" stroke="#5AC8FF" stroke-width="1.6"/>
+  <rect x="530" y="184" width="210" height="80" rx="12" fill="#223650" stroke="#5AC8FF" stroke-width="1.6"/>
   <text x="635" y="212" font-size="11.5" fill="#5AC8FF" font-weight="700" text-anchor="middle">teammate's laptop</text>
   <text x="635" y="232" font-size="9.5" fill="#9AA0B4" text-anchor="middle">also a full copy —</text>
   <text x="635" y="246" font-size="9.5" fill="#9AA0B4" text-anchor="middle">Git is distributed</text>
 
   <path d="M150 180 C 150 120 210 92 266 82" fill="none" stroke="#F05032" stroke-width="1.6" marker-end="url(#go)"/>
-  <rect x="146" y="118" width="66" height="17" rx="4" fill="#101017"/>
+  <rect x="146" y="118" width="66" height="17" rx="4" fill="#1C1C2A"/>
   <text x="179" y="131" font-size="9.5" fill="#F05032" text-anchor="middle">git push</text>
 
   <path d="M300 108 C 250 140 210 160 196 180" fill="none" stroke="#5AC8FF" stroke-width="1.6" marker-end="url(#ga)"/>
-  <rect x="228" y="152" width="66" height="17" rx="4" fill="#101017"/>
+  <rect x="228" y="152" width="66" height="17" rx="4" fill="#1C1C2A"/>
   <text x="261" y="165" font-size="9.5" fill="#5AC8FF" text-anchor="middle">git pull</text>
 
   <path d="M494 82 C 550 92 610 120 610 180" fill="none" stroke="#5AC8FF" stroke-width="1.6" marker-end="url(#gv)"/>
-  <rect x="546" y="118" width="74" height="17" rx="4" fill="#101017"/>
+  <rect x="546" y="118" width="74" height="17" rx="4" fill="#1C1C2A"/>
   <text x="583" y="131" font-size="9.5" fill="#5AC8FF" text-anchor="middle">git clone</text>
 
   <text x="380" y="284" font-size="10.5" fill="#CDD0DD" text-anchor="middle">Every clone holds the whole history — origin has no special powers, it is just the copy you all agree on.</text>
@@ -525,7 +525,7 @@ __pycache__/
     <marker id="gr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#5C78FF"/></marker>
     <marker id="gm" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#6B6B78"/></marker>
   </defs>
-  <line x1="60" y1="168" x2="700" y2="168" stroke="#2C2C38" stroke-width="1.4"/>
+  <line x1="60" y1="168" x2="700" y2="168" stroke="#3C4356" stroke-width="1.4"/>
   <text x="46" y="172" font-size="10.5" fill="#5AC8FF" font-weight="700" text-anchor="end">main</text>
   <text x="240" y="62" font-size="10.5" fill="#5AC8FF" font-weight="700">feature</text>
 
@@ -533,10 +533,10 @@ __pycache__/
   <line x1="260" y1="88" x2="380" y2="88" stroke="#5AC8FF" stroke-width="1.8"/>
   <path d="M380 88 C 460 88 480 168 540 168" fill="none" stroke="#5AC8FF" stroke-width="1.8"/>
 
-  <circle cx="100" cy="168" r="9" fill="#101017" stroke="#5AC8FF" stroke-width="2"/><circle cx="180" cy="168" r="9" fill="#101017" stroke="#5AC8FF" stroke-width="2"/><circle cx="420" cy="168" r="9" fill="#101017" stroke="#5AC8FF" stroke-width="2"/>
-  <circle cx="260" cy="88" r="9" fill="#101017" stroke="#5AC8FF" stroke-width="2"/><circle cx="380" cy="88" r="9" fill="#101017" stroke="#5AC8FF" stroke-width="2"/>
-  <circle cx="540" cy="168" r="12" fill="#191921" stroke="#F05032" stroke-width="2.6"/>
-  <circle cx="640" cy="168" r="9" fill="#101017" stroke="#5AC8FF" stroke-width="2"/>
+  <circle cx="100" cy="168" r="9" fill="#1C1C2A" stroke="#5AC8FF" stroke-width="2"/><circle cx="180" cy="168" r="9" fill="#1C1C2A" stroke="#5AC8FF" stroke-width="2"/><circle cx="420" cy="168" r="9" fill="#1C1C2A" stroke="#5AC8FF" stroke-width="2"/>
+  <circle cx="260" cy="88" r="9" fill="#1C1C2A" stroke="#5AC8FF" stroke-width="2"/><circle cx="380" cy="88" r="9" fill="#1C1C2A" stroke="#5AC8FF" stroke-width="2"/>
+  <circle cx="540" cy="168" r="12" fill="#242739" stroke="#F05032" stroke-width="2.6"/>
+  <circle cx="640" cy="168" r="9" fill="#1C1C2A" stroke="#5AC8FF" stroke-width="2"/>
 
   <text x="100" y="196" font-size="9.5" fill="#6B6B78" text-anchor="middle">A</text>
   <text x="180" y="196" font-size="9.5" fill="#6B6B78" text-anchor="middle">B</text>
@@ -546,7 +546,7 @@ __pycache__/
   <text x="380" y="70" font-size="9.5" fill="#9AA0B4" text-anchor="middle">D</text>
 
   <text x="540" y="200" font-size="10" fill="#F05032" font-weight="700" text-anchor="middle">M</text>
-  <rect x="452" y="26" width="176" height="20" rx="6" fill="#191921" stroke="#F05032" stroke-width="1.3"/>
+  <rect x="452" y="26" width="176" height="20" rx="6" fill="#242739" stroke="#F05032" stroke-width="1.3"/>
   <text x="540" y="40" font-size="9.5" fill="#F05032" font-weight="700" text-anchor="middle">merge commit · two parents</text>
   <line x1="540" y1="48" x2="540" y2="152" stroke="#F05032" stroke-width="1.3" stroke-dasharray="4,3"/>
 
@@ -569,25 +569,25 @@ __pycache__/
   </defs>
   <text x="380" y="24" font-size="10.5" fill="#9AA0B4" text-anchor="middle">same work · two very different shapes of history</text>
 
-  <rect x="20" y="40" width="350" height="200" rx="12" fill="#0D1820" stroke="#5C78FF"/>
+  <rect x="20" y="40" width="350" height="200" rx="12" fill="#18293E" stroke="#5C78FF"/>
   <text x="195" y="66" font-size="11.5" fill="#5AC8FF" font-weight="700" text-anchor="middle">MERGE — keep the true shape</text>
-  <line x1="50" y1="160" x2="340" y2="160" stroke="#2C2C38" stroke-width="1.3"/>
+  <line x1="50" y1="160" x2="340" y2="160" stroke="#3C4356" stroke-width="1.3"/>
   <path d="M110 160 C 132 160 138 112 160 112" fill="none" stroke="#5AC8FF" stroke-width="1.6"/>
   <line x1="160" y1="112" x2="220" y2="112" stroke="#5AC8FF" stroke-width="1.6"/>
   <path d="M220 112 C 258 112 262 160 290 160" fill="none" stroke="#5AC8FF" stroke-width="1.6"/>
-  <circle cx="70" cy="160" r="7" fill="#101017" stroke="#5AC8FF" stroke-width="1.7"/><circle cx="110" cy="160" r="7" fill="#101017" stroke="#5AC8FF" stroke-width="1.7"/><circle cx="220" cy="160" r="7" fill="#101017" stroke="#5AC8FF" stroke-width="1.7"/>
-  <circle cx="160" cy="112" r="7" fill="#101017" stroke="#5AC8FF" stroke-width="1.7"/><circle cx="220" cy="112" r="7" fill="#101017" stroke="#5AC8FF" stroke-width="1.7"/>
-  <circle cx="290" cy="160" r="9" fill="#191921" stroke="#F05032" stroke-width="2.2"/>
+  <circle cx="70" cy="160" r="7" fill="#1C1C2A" stroke="#5AC8FF" stroke-width="1.7"/><circle cx="110" cy="160" r="7" fill="#1C1C2A" stroke="#5AC8FF" stroke-width="1.7"/><circle cx="220" cy="160" r="7" fill="#1C1C2A" stroke="#5AC8FF" stroke-width="1.7"/>
+  <circle cx="160" cy="112" r="7" fill="#1C1C2A" stroke="#5AC8FF" stroke-width="1.7"/><circle cx="220" cy="112" r="7" fill="#1C1C2A" stroke="#5AC8FF" stroke-width="1.7"/>
+  <circle cx="290" cy="160" r="9" fill="#242739" stroke="#F05032" stroke-width="2.2"/>
   <text x="290" y="184" font-size="9" fill="#F05032" text-anchor="middle">M</text>
   <text x="195" y="212" font-size="9.5" fill="#9AA0B4" text-anchor="middle">the fork stays visible forever</text>
   <text x="195" y="228" font-size="9.5" fill="#5AC8FF" text-anchor="middle">safe on shared branches · nothing rewritten</text>
 
-  <rect x="390" y="40" width="350" height="200" rx="12" fill="#191921" stroke="#191921"/>
+  <rect x="390" y="40" width="350" height="200" rx="12" fill="#242739" stroke="#242739"/>
   <text x="565" y="66" font-size="11.5" fill="#F05032" font-weight="700" text-anchor="middle">REBASE — replay into a line</text>
-  <line x1="420" y1="160" x2="710" y2="160" stroke="#2C2C38" stroke-width="1.3"/>
-  <circle cx="450" cy="160" r="7" fill="#101017" stroke="#5AC8FF" stroke-width="1.7"/><circle cx="500" cy="160" r="7" fill="#101017" stroke="#5AC8FF" stroke-width="1.7"/><circle cx="550" cy="160" r="7" fill="#101017" stroke="#5AC8FF" stroke-width="1.7"/>
-  <circle cx="610" cy="160" r="7" fill="#101017" stroke="#5AC8FF" stroke-width="1.7" stroke-dasharray="3,2"/>
-  <circle cx="670" cy="160" r="7" fill="#101017" stroke="#5AC8FF" stroke-width="1.7" stroke-dasharray="3,2"/>
+  <line x1="420" y1="160" x2="710" y2="160" stroke="#3C4356" stroke-width="1.3"/>
+  <circle cx="450" cy="160" r="7" fill="#1C1C2A" stroke="#5AC8FF" stroke-width="1.7"/><circle cx="500" cy="160" r="7" fill="#1C1C2A" stroke="#5AC8FF" stroke-width="1.7"/><circle cx="550" cy="160" r="7" fill="#1C1C2A" stroke="#5AC8FF" stroke-width="1.7"/>
+  <circle cx="610" cy="160" r="7" fill="#1C1C2A" stroke="#5AC8FF" stroke-width="1.7" stroke-dasharray="3,2"/>
+  <circle cx="670" cy="160" r="7" fill="#1C1C2A" stroke="#5AC8FF" stroke-width="1.7" stroke-dasharray="3,2"/>
   <text x="610" y="184" font-size="9" fill="#5AC8FF" text-anchor="middle">C&#8242;</text>
   <text x="670" y="184" font-size="9" fill="#5AC8FF" text-anchor="middle">D&#8242;</text>
   <text x="640" y="114" font-size="9" fill="#5AC8FF" text-anchor="middle">same changes,</text>
@@ -721,28 +721,28 @@ SELECT revenue, country
   </defs>
   <text x="380" y="24" font-size="10.5" fill="#9AA0B4" text-anchor="middle" letter-spacing="1.4">GITHUB FLOW — ONE LONG-LIVED BRANCH, MANY SHORT ONES</text>
 
-  <line x1="60" y1="170" x2="712" y2="170" stroke="#2C2C38" stroke-width="1.4"/>
+  <line x1="60" y1="170" x2="712" y2="170" stroke="#3C4356" stroke-width="1.4"/>
   <text x="48" y="174" font-size="10.5" fill="#F05032" font-weight="700" text-anchor="end">main</text>
 
   <path d="M150 170 C 178 170 182 100 210 100" fill="none" stroke="#5AC8FF" stroke-width="1.6"/>
   <line x1="210" y1="100" x2="270" y2="100" stroke="#5AC8FF" stroke-width="1.6"/>
   <path d="M270 100 C 306 100 310 170 340 170" fill="none" stroke="#5AC8FF" stroke-width="1.6"/>
-  <circle cx="210" cy="100" r="7" fill="#101017" stroke="#5AC8FF" stroke-width="1.7"/><circle cx="270" cy="100" r="7" fill="#101017" stroke="#5AC8FF" stroke-width="1.7"/>
+  <circle cx="210" cy="100" r="7" fill="#1C1C2A" stroke="#5AC8FF" stroke-width="1.7"/><circle cx="270" cy="100" r="7" fill="#1C1C2A" stroke="#5AC8FF" stroke-width="1.7"/>
   <text x="240" y="86" font-size="9" fill="#5AC8FF" text-anchor="middle">feature-a</text>
 
   <path d="M420 170 C 448 170 452 100 480 100" fill="none" stroke="#5AC8FF" stroke-width="1.6"/>
   <line x1="480" y1="100" x2="540" y2="100" stroke="#5AC8FF" stroke-width="1.6"/>
   <path d="M540 100 C 576 100 580 170 610 170" fill="none" stroke="#5AC8FF" stroke-width="1.6"/>
-  <circle cx="480" cy="100" r="7" fill="#101017" stroke="#5AC8FF" stroke-width="1.7"/><circle cx="540" cy="100" r="7" fill="#101017" stroke="#5AC8FF" stroke-width="1.7"/>
+  <circle cx="480" cy="100" r="7" fill="#1C1C2A" stroke="#5AC8FF" stroke-width="1.7"/><circle cx="540" cy="100" r="7" fill="#1C1C2A" stroke="#5AC8FF" stroke-width="1.7"/>
   <text x="510" y="86" font-size="9" fill="#5AC8FF" text-anchor="middle">feature-b</text>
 
-  <circle cx="90" cy="170" r="8" fill="#101017" stroke="#5AC8FF" stroke-width="1.8"/><circle cx="150" cy="170" r="8" fill="#101017" stroke="#5AC8FF" stroke-width="1.8"/><circle cx="420" cy="170" r="8" fill="#101017" stroke="#5AC8FF" stroke-width="1.8"/><circle cx="680" cy="170" r="8" fill="#101017" stroke="#5AC8FF" stroke-width="1.8"/>
-  <circle cx="340" cy="170" r="10" fill="#191921" stroke="#F05032" stroke-width="2.2"/>
-  <circle cx="610" cy="170" r="10" fill="#191921" stroke="#F05032" stroke-width="2.2"/>
+  <circle cx="90" cy="170" r="8" fill="#1C1C2A" stroke="#5AC8FF" stroke-width="1.8"/><circle cx="150" cy="170" r="8" fill="#1C1C2A" stroke="#5AC8FF" stroke-width="1.8"/><circle cx="420" cy="170" r="8" fill="#1C1C2A" stroke="#5AC8FF" stroke-width="1.8"/><circle cx="680" cy="170" r="8" fill="#1C1C2A" stroke="#5AC8FF" stroke-width="1.8"/>
+  <circle cx="340" cy="170" r="10" fill="#242739" stroke="#F05032" stroke-width="2.2"/>
+  <circle cx="610" cy="170" r="10" fill="#242739" stroke="#F05032" stroke-width="2.2"/>
 
-  <rect x="296" y="196" width="88" height="19" rx="5" fill="#191921" stroke="#F05032" stroke-width="1.2"/>
+  <rect x="296" y="196" width="88" height="19" rx="5" fill="#242739" stroke="#F05032" stroke-width="1.2"/>
   <text x="340" y="209" font-size="9" fill="#F05032" font-weight="700" text-anchor="middle">PR → deploy</text>
-  <rect x="566" y="196" width="88" height="19" rx="5" fill="#191921" stroke="#F05032" stroke-width="1.2"/>
+  <rect x="566" y="196" width="88" height="19" rx="5" fill="#242739" stroke="#F05032" stroke-width="1.2"/>
   <text x="610" y="209" font-size="9" fill="#F05032" font-weight="700" text-anchor="middle">PR → deploy</text>
 
   <text x="380" y="238" font-size="10.5" fill="#CDD0DD" text-anchor="middle">main is always deployable. Branch, open a PR, review, merge, ship — then delete the branch.</text>
@@ -782,10 +782,10 @@ SELECT revenue, country
   </defs>
   <text x="380" y="24" font-size="10.5" fill="#9AA0B4" text-anchor="middle" letter-spacing="1.4">GITFLOW — MORE LANES, MORE CEREMONY</text>
 
-  <line x1="130" y1="66"  x2="716" y2="66"  stroke="#2C2C38" stroke-width="1.3"/>
-  <line x1="130" y1="140" x2="716" y2="140" stroke="#2C2C38" stroke-width="1.3"/>
-  <line x1="130" y1="214" x2="716" y2="214" stroke="#2C2C38" stroke-width="1.3"/>
-  <line x1="130" y1="284" x2="716" y2="284" stroke="#2C2C38" stroke-width="1.3"/>
+  <line x1="130" y1="66"  x2="716" y2="66"  stroke="#3C4356" stroke-width="1.3"/>
+  <line x1="130" y1="140" x2="716" y2="140" stroke="#3C4356" stroke-width="1.3"/>
+  <line x1="130" y1="214" x2="716" y2="214" stroke="#3C4356" stroke-width="1.3"/>
+  <line x1="130" y1="284" x2="716" y2="284" stroke="#3C4356" stroke-width="1.3"/>
 
   <text x="118" y="70"  font-size="10" fill="#F05032"  font-weight="700" text-anchor="end">main</text>
   <text x="118" y="144" font-size="10" fill="#9AA0B4" font-weight="700" text-anchor="end">release</text>
@@ -801,13 +801,13 @@ SELECT revenue, country
   <path d="M566 140 C 592 140 596 66 620 66" fill="none" stroke="#5C78FF" stroke-width="1.5"/>
   <path d="M566 140 C 596 140 600 214 640 214" fill="none" stroke="#5C78FF" stroke-width="1.5" stroke-dasharray="4,3"/>
 
-  <circle cx="160" cy="66" r="8" fill="#101017" stroke="#F05032" stroke-width="1.8"/>
-  <circle cx="620" cy="66" r="10" fill="#191921" stroke="#F05032" stroke-width="2.2"/>
-  <circle cx="200" cy="214" r="7" fill="#101017" stroke="#5AC8FF" stroke-width="1.7"/><circle cx="240" cy="214" r="7" fill="#101017" stroke="#5AC8FF" stroke-width="1.7"/><circle cx="416" cy="214" r="7" fill="#101017" stroke="#5AC8FF" stroke-width="1.7"/><circle cx="470" cy="214" r="7" fill="#101017" stroke="#5AC8FF" stroke-width="1.7"/><circle cx="640" cy="214" r="7" fill="#101017" stroke="#5AC8FF" stroke-width="1.7"/>
-  <circle cx="286" cy="284" r="7" fill="#101017" stroke="#5AC8FF" stroke-width="1.7"/><circle cx="356" cy="284" r="7" fill="#101017" stroke="#5AC8FF" stroke-width="1.7"/>
-  <circle cx="516" cy="140" r="7" fill="#101017" stroke="#5C78FF" stroke-width="1.7"/><circle cx="566" cy="140" r="7" fill="#101017" stroke="#5C78FF" stroke-width="1.7"/>
+  <circle cx="160" cy="66" r="8" fill="#1C1C2A" stroke="#F05032" stroke-width="1.8"/>
+  <circle cx="620" cy="66" r="10" fill="#242739" stroke="#F05032" stroke-width="2.2"/>
+  <circle cx="200" cy="214" r="7" fill="#1C1C2A" stroke="#5AC8FF" stroke-width="1.7"/><circle cx="240" cy="214" r="7" fill="#1C1C2A" stroke="#5AC8FF" stroke-width="1.7"/><circle cx="416" cy="214" r="7" fill="#1C1C2A" stroke="#5AC8FF" stroke-width="1.7"/><circle cx="470" cy="214" r="7" fill="#1C1C2A" stroke="#5AC8FF" stroke-width="1.7"/><circle cx="640" cy="214" r="7" fill="#1C1C2A" stroke="#5AC8FF" stroke-width="1.7"/>
+  <circle cx="286" cy="284" r="7" fill="#1C1C2A" stroke="#5AC8FF" stroke-width="1.7"/><circle cx="356" cy="284" r="7" fill="#1C1C2A" stroke="#5AC8FF" stroke-width="1.7"/>
+  <circle cx="516" cy="140" r="7" fill="#1C1C2A" stroke="#5C78FF" stroke-width="1.7"/><circle cx="566" cy="140" r="7" fill="#1C1C2A" stroke="#5C78FF" stroke-width="1.7"/>
 
-  <rect x="580" y="30" width="80" height="19" rx="5" fill="#191921" stroke="#F05032" stroke-width="1.2"/>
+  <rect x="580" y="30" width="80" height="19" rx="5" fill="#242739" stroke="#F05032" stroke-width="1.2"/>
   <text x="620" y="43" font-size="9" fill="#F05032" font-weight="700" text-anchor="middle">tag v1.0</text>
   <text x="321" y="306" font-size="9" fill="#5AC8FF" text-anchor="middle">build the feature</text>
   <text x="516" y="122" font-size="9" fill="#9AA0B4" text-anchor="middle">only bug fixes</text>

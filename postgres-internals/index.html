@@ -21,7 +21,7 @@
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
 <style>
   :root{
-    --bg:#111117; --bg2:#16161D; --ink:#F1F1F1; --muted:#9aa0b4; --dim:#6b6b78;
+    --bg:#111117; --bg2:#16161d; --ink:#F1F1F1; --muted:#9aa0b4; --dim:#6b6b78;
     --blue2:#5C78FF; --cyan:#28B9FF; --cyan2:#5AC8FF; --purple:#5C78FF; --magenta2:#5AC8FF;
     --grad:linear-gradient(90deg,#28B9FF,#5C78FF);
     --font:"JetBrainsMono Nerd Font","JetBrains Mono","Symbols Nerd Font",ui-monospace,"Cascadia Code",Menlo,Consolas,monospace;
@@ -39,18 +39,18 @@
   @keyframes sheen{to{background-position:220% center}}
   .dek{color:var(--muted);font-size:17px}
   .byline{margin-top:14px;font-size:13px;color:var(--dim)}
-  h2{font-size:clamp(21px,3.2vw,28px);margin:52px 0 6px;font-weight:800;line-height:1.22;padding-top:14px;border-top:1px solid #2C2C38;display:flex;align-items:center;gap:10px}
+  h2{font-size:clamp(21px,3.2vw,28px);margin:52px 0 6px;font-weight:800;line-height:1.22;padding-top:14px;border-top:1px solid #3C4356;display:flex;align-items:center;gap:10px}
   h2 .n{color:var(--blue2)}
   h3{font-size:18px;margin:28px 0 4px;color:#fff;font-weight:700}
   h4{font-size:15px;margin:20px 0 4px;color:var(--cyan2);font-weight:700}
   p,li{color:#dcdce4}
   .lead{font-size:18px;color:#e7e7ee}
   a{color:var(--cyan2)}
-  hr{border:0;border-top:1px solid #2C2C38;margin:36px 0}
-  code{font-family:var(--font);background:#23232b;color:#9AA0B4;padding:1px 6px;border-radius:5px;font-size:.88em;border:1px solid #2C2C38}
+  hr{border:0;border-top:1px solid #3C4356;margin:36px 0}
+  code{font-family:var(--font);background:#23232b;color:#9AA0B4;padding:1px 6px;border-radius:5px;font-size:.88em;border:1px solid #3C4356}
   .cb{margin:16px 0}
-  .cb .lang{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:#9aa0b4;background:#1b1b24;border:1px solid #2C2C38;border-bottom:none;border-radius:9px 9px 0 0;padding:4px 12px}
-  pre{margin:0;background:#101017;border:1px solid #2C2C38;border-radius:0 10px 10px 10px;padding:14px 16px;overflow-x:auto;
+  .cb .lang{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:#9aa0b4;background:#1b1b24;border:1px solid #3C4356;border-bottom:none;border-radius:9px 9px 0 0;padding:4px 12px}
+  pre{margin:0;background:#1C1C2A;border:1px solid #3C4356;border-radius:0 10px 10px 10px;padding:14px 16px;overflow-x:auto;
       font-family:var(--font);font-size:13px;line-height:1.65;color:#d8dcea;white-space:pre}
   pre .c{color:#6B6B78}
   pre .o{color:#9aa0b4}
@@ -59,31 +59,31 @@
   pre .y{color:#9AA0B4}
   pre .r{color:#9AA0B4}
   pre .p{color:#9AA0B4}
-  .callout{border-left:4px solid #28B9FF;background:linear-gradient(160deg,#12202e,#101019);border-radius:0 12px 12px 0;padding:14px 18px;margin:22px 0;box-shadow:0 0 16px -8px #28B9FF66}
-  .callout.cy{border-color:#5AC8FF;background:linear-gradient(160deg,#0f2233,#101019)}
-  .callout.mg{border-color:#5C78FF;background:linear-gradient(160deg,#141a33,#101019)}
-  .callout.gd{border-color:#5C78FF;background:linear-gradient(160deg,#141a33,#101019)}
-  .callout.gr{border-color:#28B9FF;background:linear-gradient(160deg,#0f2233,#101019)}
+  .callout{border-left:4px solid #28B9FF;background:linear-gradient(160deg,#12202e,#1C1C2A);border-radius:0 12px 12px 0;padding:14px 18px;margin:22px 0;box-shadow:0 0 16px -8px #28B9FF66}
+  .callout.cy{border-color:#5AC8FF;background:linear-gradient(160deg,#0f2233,#1C1C2A)}
+  .callout.mg{border-color:#5C78FF;background:linear-gradient(160deg,#141a33,#1C1C2A)}
+  .callout.gd{border-color:#5C78FF;background:linear-gradient(160deg,#141a33,#1C1C2A)}
+  .callout.gr{border-color:#28B9FF;background:linear-gradient(160deg,#0f2233,#1C1C2A)}
   .callout.rd{border-color:#9AA0B4;background:#241014}
   .callout .t{color:var(--cyan2);font-weight:800}
   .callout.gd .t{color:#8AA0FF}
   .callout.gr .t{color:#5AC8FF}
   .callout.mg .t{color:#8AA0FF}
   .callout.rd .t{color:#9AA0B4}
-  .tldr{border:1px solid #28B9FF44;background:linear-gradient(180deg,#12161d,#0d0d12);border-radius:16px;padding:20px 24px;margin:26px 0;box-shadow:0 0 24px -10px #28B9FF55}
+  .tldr{border:1px solid #28B9FF44;background:linear-gradient(180deg,#12161d,#1C1C2A);border-radius:16px;padding:20px 24px;margin:26px 0;box-shadow:0 0 24px -10px #28B9FF55}
   .tldr h4{margin:0 0 8px;font-size:13px;letter-spacing:.2em;text-transform:uppercase;color:var(--cyan2)}
-  .gloss{border:1px solid #2C2C38;background:#1D1D26;border-radius:14px;padding:18px 22px;margin:24px 0}
+  .gloss{border:1px solid #3C4356;background:#1D1D26;border-radius:14px;padding:18px 22px;margin:24px 0}
   .gloss h4{margin:0 0 6px;color:#fff;font-size:15px}
   .gloss dl{margin:0;font-size:13.5px}
   .gloss dt{color:var(--cyan2);font-weight:700;margin-top:9px}
   .gloss dd{margin:1px 0 0;color:#cdd0dd}
-  .toc{background:#191921;border:1px solid #2C2C38;border-radius:14px;padding:16px 22px;margin:24px 0;column-count:2;column-gap:28px}
+  .toc{background:#242739;border:1px solid #3C4356;border-radius:14px;padding:16px 22px;margin:24px 0;column-count:2;column-gap:28px}
   .toc a{display:block;color:var(--cyan2);text-decoration:none;font-size:13.5px;line-height:1.9;break-inside:avoid}
   .toc a:hover{color:#fff}
   .toc>strong{column-span:all;display:block;margin-bottom:6px;color:#fff}
   .tw{overflow-x:auto;margin:16px 0}
   table{border-collapse:collapse;width:100%;font-size:13.5px;margin:0}
-  th,td{border:1px solid #2C2C38;padding:8px 11px;text-align:left;vertical-align:top}
+  th,td{border:1px solid #3C4356;padding:8px 11px;text-align:left;vertical-align:top}
   th{background:#17171E;color:#fff}
   tr:nth-child(even) td{background:#17171E}
   td.ok{color:#5AC8FF}
@@ -101,23 +101,23 @@
         border:1px solid #1D1D26;background:#1D1D26;color:#9AA0B4;font-weight:700;font-size:11.5px}
   .chip .ico{width:14px;height:14px}
   figure.fig{margin:26px 0;text-align:center}
-  figure.fig svg{display:block;width:100%;max-width:100%;height:auto;border:1px solid #2C2C38;border-radius:14px;background:#101017}
+  figure.fig svg{display:block;width:100%;max-width:100%;height:auto;border:1px solid #3C4356;border-radius:14px;background:#1C1C2A}
   figure.fig figcaption{font-size:12.5px;color:var(--muted);margin-top:9px;font-style:italic;line-height:1.6}
   .step{display:flex;gap:12px;align-items:flex-start;margin:14px 0}
   .step .num-bubble{flex:0 0 28px;height:28px;border-radius:50%;background:var(--grad);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:#fff;margin-top:2px}
   .step .body{flex:1}
-  footer{border-top:1px solid #2C2C38;margin-top:50px;padding:24px 0 90px;color:var(--dim);font-size:13px}
+  footer{border-top:1px solid #3C4356;margin-top:50px;padding:24px 0 90px;color:var(--dim);font-size:13px}
   footer a{color:var(--cyan2)}
   .js .reveal{opacity:0;transform:translateY(16px);transition:opacity .6s ease,transform .6s ease}
   .js .reveal.in{opacity:1;transform:none}
   @media (prefers-reduced-motion:reduce){.js .reveal{opacity:1;transform:none}}
   /* ---- shared theme: top nav + a11y (appended) ---- */
-  .nav{position:sticky;top:0;z-index:60;background:rgba(25,25,33,.82);backdrop-filter:blur(10px);border-bottom:1px solid #2C2C38}
+  .nav{position:sticky;top:0;z-index:60;background:rgba(25,25,33,.82);backdrop-filter:blur(10px);border-bottom:1px solid #3C4356}
   .nav-inner{max-width:1040px;margin:0 auto;padding:12px 24px;display:flex;align-items:center;gap:18px;flex-wrap:wrap}
   .nav-brand{font-weight:800;letter-spacing:.16em;font-size:15px;text-decoration:none;border:0;color:#5AC8FF}
   .nav-links{display:flex;gap:6px;flex-wrap:wrap;margin-left:auto}
   .nav-links a{text-decoration:none;border:1px solid transparent;color:#9aa0b4;font-weight:700;font-size:13.5px;padding:6px 14px;border-radius:999px;transition:.2s}
-  .nav-links a:hover{color:#fff;border-color:#2C2C38;background:#191921}
+  .nav-links a:hover{color:#fff;border-color:#3C4356;background:#242739}
   .nav-links a.active{color:#5AC8FF;border-color:#28B9FF55;background:#28B9FF14}
   :focus-visible{outline:2px solid #5AC8FF;outline-offset:3px;border-radius:6px}
   @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{animation:none !important;transition:none !important}.js .reveal{opacity:1 !important;transform:none !important}}
@@ -271,30 +271,30 @@ postgres: <span class="g">client backend</span>                  <span class="c"
 
   <text x="475" y="40" font-size="8.5" fill="#5AC8FF" text-anchor="middle" font-weight="700">&#9312; COMMIT PATH &#183; synchronous</text>
 
-  <rect x="30" y="115" width="120" height="56" rx="7" fill="#191921" stroke="#5C78FF"/>
+  <rect x="30" y="115" width="120" height="56" rx="7" fill="#242739" stroke="#5C78FF"/>
   <text x="90" y="139" font-size="10" fill="#9AA0B4" text-anchor="middle" font-weight="700">BACKEND</text>
   <text x="90" y="157" font-size="8" fill="#9AA0B4" text-anchor="middle">your connection</text>
 
-  <rect x="220" y="50" width="180" height="60" rx="7" fill="#191921" stroke="#5AC8FF"/>
+  <rect x="220" y="50" width="180" height="60" rx="7" fill="#242739" stroke="#5AC8FF"/>
   <text x="310" y="74" font-size="10" fill="#5AC8FF" text-anchor="middle" font-weight="700">WAL BUFFER</text>
   <text x="310" y="92" font-size="8.5" fill="#CDD0DD" text-anchor="middle">the change record</text>
 
-  <rect x="540" y="50" width="190" height="60" rx="7" fill="#191921" stroke="#5AC8FF" stroke-width="2"/>
+  <rect x="540" y="50" width="190" height="60" rx="7" fill="#242739" stroke="#5AC8FF" stroke-width="2"/>
   <text x="635" y="74" font-size="10" fill="#5AC8FF" text-anchor="middle" font-weight="700">WAL FILE &#183; on disk</text>
   <text x="635" y="92" font-size="8.5" fill="#5AC8FF" text-anchor="middle">fsync at COMMIT</text>
 
   <path d="M154 132 L 214 86" stroke="#5AC8FF" stroke-width="1.6" fill="none" marker-end="url(#w-g)"/>
   <path d="M404 80 H 534" stroke="#5AC8FF" stroke-width="2.4" fill="none" marker-end="url(#w-g)"/>
 
-  <rect x="190" y="190" width="155" height="60" rx="7" fill="#191921" stroke="#5C78FF"/>
+  <rect x="190" y="190" width="155" height="60" rx="7" fill="#242739" stroke="#5C78FF"/>
   <text x="267" y="214" font-size="9" fill="#9AA0B4" text-anchor="middle" font-weight="700">SHARED_BUFFERS</text>
   <text x="267" y="232" font-size="7.5" fill="#CDD0DD" text-anchor="middle">dirty page in RAM</text>
 
-  <rect x="375" y="190" width="155" height="60" rx="7" fill="#14141C" stroke="#5C78FF"/>
+  <rect x="375" y="190" width="155" height="60" rx="7" fill="#20202E" stroke="#5C78FF"/>
   <text x="452" y="214" font-size="9" fill="#CDD0DD" text-anchor="middle" font-weight="700">CHECKPOINTER</text>
   <text x="452" y="232" font-size="7.5" fill="#9AA0B4" text-anchor="middle">flushes dirty pages</text>
 
-  <rect x="560" y="190" width="170" height="60" rx="7" fill="#14141C" stroke="#5C78FF"/>
+  <rect x="560" y="190" width="170" height="60" rx="7" fill="#20202E" stroke="#5C78FF"/>
   <text x="645" y="214" font-size="9" fill="#CDD0DD" text-anchor="middle" font-weight="700">DATA FILE &#183; on disk</text>
   <text x="645" y="232" font-size="7.5" fill="#9AA0B4" text-anchor="middle">written LATER</text>
 
@@ -350,31 +350,31 @@ postgres: <span class="g">client backend</span>                  <span class="c"
 <svg viewBox="0 0 760 396" width="100%" aria-label="Six nested layers of Postgres storage: cluster, database, tablespace, table, segment file, page, and tuple">
   <text x="380" y="20" font-size="10.5" fill="#9AA0B4" text-anchor="middle" letter-spacing="1.5">FROM THE SERVER DOWN TO ONE ROW</text>
 
-  <rect x="30" y="40" width="700" height="38" rx="6" fill="#14141C" stroke="#5C78FF"/>
+  <rect x="30" y="40" width="700" height="38" rx="6" fill="#20202E" stroke="#5C78FF"/>
   <text x="44" y="57" font-size="11" fill="#CDD0DD" font-weight="700">CLUSTER</text>
   <text x="44" y="71" font-size="8.5" fill="#6B6B78">one server &#183; one data directory ($PGDATA)</text>
 
-  <rect x="52" y="86" width="656" height="38" rx="6" fill="#14141C" stroke="#5C78FF"/>
+  <rect x="52" y="86" width="656" height="38" rx="6" fill="#20202E" stroke="#5C78FF"/>
   <text x="66" y="103" font-size="11" fill="#CDD0DD" font-weight="700">DATABASE</text>
   <text x="66" y="117" font-size="8.5" fill="#6B6B78">one subdirectory per database &#183; base/5/</text>
 
-  <rect x="74" y="132" width="612" height="38" rx="6" fill="#191921" stroke="#5C78FF"/>
+  <rect x="74" y="132" width="612" height="38" rx="6" fill="#242739" stroke="#5C78FF"/>
   <text x="88" y="149" font-size="11" fill="#9AA0B4" font-weight="700">TABLESPACE</text>
   <text x="88" y="163" font-size="8.5" fill="#9AA0B4">a location on disk &#183; SQL Server calls this a FILEGROUP</text>
 
-  <rect x="96" y="178" width="568" height="38" rx="6" fill="#191921" stroke="#5C78FF"/>
+  <rect x="96" y="178" width="568" height="38" rx="6" fill="#242739" stroke="#5C78FF"/>
   <text x="110" y="195" font-size="11" fill="#9AA0B4" font-weight="700">TABLE &#183; the heap</text>
   <text x="110" y="209" font-size="8.5" fill="#9AA0B4">an unordered pile of pages &#183; base/5/16385</text>
 
-  <rect x="118" y="224" width="524" height="38" rx="6" fill="#191921" stroke="#5C78FF"/>
+  <rect x="118" y="224" width="524" height="38" rx="6" fill="#242739" stroke="#5C78FF"/>
   <text x="132" y="241" font-size="11" fill="#9AA0B4" font-weight="700">SEGMENT FILE</text>
   <text x="132" y="255" font-size="8.5" fill="#CDD0DD">split every 1 GB: 16385, 16385.1, 16385.2 …</text>
 
-  <rect x="140" y="270" width="480" height="38" rx="6" fill="#191921" stroke="#5C78FF"/>
+  <rect x="140" y="270" width="480" height="38" rx="6" fill="#242739" stroke="#5C78FF"/>
   <text x="154" y="287" font-size="11" fill="#9AA0B4" font-weight="700">PAGE &#183; BLOCK</text>
   <text x="154" y="301" font-size="8.5" fill="#CDD0DD">8 KB &#183; the unit of I/O &#183; nothing smaller is read</text>
 
-  <rect x="162" y="316" width="436" height="38" rx="6" fill="#191921" stroke="#5AC8FF"/>
+  <rect x="162" y="316" width="436" height="38" rx="6" fill="#242739" stroke="#5AC8FF"/>
   <text x="176" y="333" font-size="11" fill="#5AC8FF" font-weight="700">TUPLE</text>
   <text x="176" y="347" font-size="8.5" fill="#CDD0DD">one row version &#183; addressed by ctid = (page, slot)</text>
 
@@ -405,26 +405,26 @@ postgres: <span class="g">client backend</span>                  <span class="c"
   </defs>
   <text x="380" y="20" font-size="10.5" fill="#9AA0B4" text-anchor="middle" letter-spacing="1.5">ONE PAGE &#183; THE UNIT OF EVERYTHING</text>
 
-  <path d="M60 62 V 56 H 700 V 62" stroke="#191921" stroke-width="1.2" fill="none"/>
+  <path d="M60 62 V 56 H 700 V 62" stroke="#242739" stroke-width="1.2" fill="none"/>
   <text x="380" y="50" font-size="9" fill="#9AA0B4" text-anchor="middle">8 KB &#183; 8192 bytes</text>
 
-  <rect x="60" y="70" width="70" height="90" fill="#191921" stroke="#5C78FF"/>
+  <rect x="60" y="70" width="70" height="90" fill="#242739" stroke="#5C78FF"/>
   <text x="95" y="108" font-size="9" fill="#9AA0B4" text-anchor="middle">header</text>
   <text x="95" y="122" font-size="7.5" fill="#6B6B78" text-anchor="middle">24 B</text>
 
-  <rect x="130" y="70" width="130" height="90" fill="#16202E" stroke="#5AC8FF"/>
+  <rect x="130" y="70" width="130" height="90" fill="#223650" stroke="#5AC8FF"/>
   <text x="195" y="108" font-size="9" fill="#5AC8FF" text-anchor="middle">line pointers</text>
-  <text x="195" y="122" font-size="7.5" fill="#6B6B78" text-anchor="middle">4 B each</text>
+  <text x="195" y="122" font-size="7.5" fill="#E7E7EE" text-anchor="middle">4 B each</text>
 
-  <rect x="260" y="70" width="180" height="90" fill="#191921" stroke="#2C2C38"/>
+  <rect x="260" y="70" width="180" height="90" fill="#242739" stroke="#3C4356"/>
   <text x="350" y="108" font-size="9" fill="#6B6B78" text-anchor="middle">free space</text>
   <text x="350" y="122" font-size="7.5" fill="#6B6B78" text-anchor="middle">shrinks</text>
 
-  <rect x="440" y="70" width="200" height="90" fill="#191921" stroke="#5C78FF"/>
+  <rect x="440" y="70" width="200" height="90" fill="#242739" stroke="#5C78FF"/>
   <text x="540" y="108" font-size="9" fill="#9AA0B4" text-anchor="middle">tuples &#183; the rows</text>
   <text x="540" y="122" font-size="7.5" fill="#6B6B78" text-anchor="middle">variable size</text>
 
-  <rect x="640" y="70" width="60" height="90" fill="#191921" stroke="#5C78FF"/>
+  <rect x="640" y="70" width="60" height="90" fill="#242739" stroke="#5C78FF"/>
   <text x="670" y="108" font-size="8" fill="#9AA0B4" text-anchor="middle">special</text>
   <text x="670" y="122" font-size="7.5" fill="#E7E7EE" text-anchor="middle">idx only</text>
 
@@ -475,35 +475,35 @@ postgres: <span class="g">client backend</span>                  <span class="c"
   <text x="380" y="20" font-size="10.5" fill="#9AA0B4" text-anchor="middle" letter-spacing="1.5">THE INDEX IS THE TABLE &#183; vs &#183; THE INDEX POINTS AT THE TABLE</text>
 
   <text x="188" y="46" font-size="10.5" fill="#5AC8FF" text-anchor="middle" font-weight="700">SQL SERVER · clustered index</text>
-  <rect x="88" y="58" width="200" height="30" rx="5" fill="#16202E" stroke="#5AC8FF"/>
+  <rect x="88" y="58" width="200" height="30" rx="5" fill="#223650" stroke="#5AC8FF"/>
   <text x="188" y="77" font-size="9" fill="#5AC8FF" text-anchor="middle">B-tree root</text>
-  <rect x="60" y="106" width="118" height="30" rx="5" fill="#16202E" stroke="#5AC8FF"/>
+  <rect x="60" y="106" width="118" height="30" rx="5" fill="#223650" stroke="#5AC8FF"/>
   <text x="119" y="125" font-size="8.5" fill="#5AC8FF" text-anchor="middle">internal</text>
-  <rect x="198" y="106" width="118" height="30" rx="5" fill="#16202E" stroke="#5AC8FF"/>
+  <rect x="198" y="106" width="118" height="30" rx="5" fill="#223650" stroke="#5AC8FF"/>
   <text x="257" y="125" font-size="8.5" fill="#5AC8FF" text-anchor="middle">internal</text>
-  <rect x="60" y="154" width="256" height="52" rx="5" fill="#16202E" stroke="#5AC8FF" stroke-width="1.6"/>
+  <rect x="60" y="154" width="256" height="52" rx="5" fill="#223650" stroke="#5AC8FF" stroke-width="1.6"/>
   <text x="188" y="174" font-size="9" fill="#fff" text-anchor="middle" font-weight="700">LEAF = THE ACTUAL ROWS</text>
   <text x="188" y="192" font-size="8.5" fill="#CDD0DD" text-anchor="middle">sorted by the key, on disk</text>
   <text x="188" y="228" font-size="8.5" fill="#5AC8FF" text-anchor="middle">one traversal → you have the data</text>
   <text x="188" y="246" font-size="8.5" fill="#6B6B78" text-anchor="middle">there is no separate table</text>
 
-  <path d="M380 56 V 296" stroke="#2C2C38" stroke-width="1" stroke-dasharray="4,4"/>
+  <path d="M380 56 V 296" stroke="#3C4356" stroke-width="1" stroke-dasharray="4,4"/>
 
   <text x="572" y="46" font-size="10.5" fill="#9AA0B4" text-anchor="middle" font-weight="700">POSTGRES · always a heap</text>
-  <rect x="446" y="58" width="150" height="28" rx="5" fill="#191921" stroke="#5C78FF"/>
+  <rect x="446" y="58" width="150" height="28" rx="5" fill="#242739" stroke="#5C78FF"/>
   <text x="521" y="76" font-size="8.5" fill="#9AA0B4" text-anchor="middle">B-tree root</text>
-  <rect x="446" y="96" width="150" height="28" rx="5" fill="#191921" stroke="#5C78FF"/>
+  <rect x="446" y="96" width="150" height="28" rx="5" fill="#242739" stroke="#5C78FF"/>
   <text x="521" y="114" font-size="8.5" fill="#9AA0B4" text-anchor="middle">leaf: key → ctid</text>
 
-  <rect x="620" y="58" width="110" height="148" rx="5" fill="#191921" stroke="#5C78FF"/>
+  <rect x="620" y="58" width="110" height="148" rx="5" fill="#242739" stroke="#5C78FF"/>
   <text x="675" y="76" font-size="8.5" fill="#9AA0B4" text-anchor="middle" font-weight="700">HEAP</text>
-  <rect x="630" y="86" width="90" height="22" rx="3" fill="#101017" stroke="#191921"/>
+  <rect x="630" y="86" width="90" height="22" rx="3" fill="#1C1C2A" stroke="#242739"/>
   <text x="675" y="101" font-size="7.5" fill="#CDD0DD" text-anchor="middle">page 0</text>
-  <rect x="630" y="112" width="90" height="22" rx="3" fill="#101017" stroke="#191921"/>
+  <rect x="630" y="112" width="90" height="22" rx="3" fill="#1C1C2A" stroke="#242739"/>
   <text x="675" y="127" font-size="7.5" fill="#CDD0DD" text-anchor="middle">page 1</text>
-  <rect x="630" y="138" width="90" height="22" rx="3" fill="#101017" stroke="#191921"/>
+  <rect x="630" y="138" width="90" height="22" rx="3" fill="#1C1C2A" stroke="#242739"/>
   <text x="675" y="153" font-size="7.5" fill="#CDD0DD" text-anchor="middle">page 2</text>
-  <rect x="630" y="164" width="90" height="22" rx="3" fill="#101017" stroke="#191921"/>
+  <rect x="630" y="164" width="90" height="22" rx="3" fill="#1C1C2A" stroke="#242739"/>
   <text x="675" y="179" font-size="7.5" fill="#CDD0DD" text-anchor="middle">…unordered</text>
 
   <path d="M600 110 H 616" stroke="#5C78FF" stroke-width="1.4" fill="none" marker-end="url(#h-a)"/>
@@ -563,22 +563,22 @@ postgres: <span class="g">client backend</span>                  <span class="c"
   <text x="380" y="20" font-size="10.5" fill="#9AA0B4" text-anchor="middle" letter-spacing="1.5">UPDATE events SET status = 'x' WHERE id = 1</text>
 
   <text x="150" y="48" font-size="9.5" fill="#9AA0B4" text-anchor="middle">BEFORE</text>
-  <rect x="40" y="58" width="220" height="76" rx="7" fill="#191921" stroke="#5C78FF"/>
+  <rect x="40" y="58" width="220" height="76" rx="7" fill="#242739" stroke="#5C78FF"/>
   <text x="150" y="76" font-size="9" fill="#9AA0B4" text-anchor="middle">page 0</text>
-  <rect x="54" y="86" width="192" height="36" rx="4" fill="#191921" stroke="#5AC8FF"/>
+  <rect x="54" y="86" width="192" height="36" rx="4" fill="#242739" stroke="#5AC8FF"/>
   <text x="150" y="102" font-size="8.5" fill="#5AC8FF" text-anchor="middle">(0,1) id=1 status='shipped'</text>
   <text x="150" y="115" font-size="7.5" fill="#6B6B78" text-anchor="middle">xmin 752 · LIVE</text>
 
   <text x="610" y="48" font-size="9.5" fill="#9AA0B4" text-anchor="middle">AFTER</text>
-  <rect x="500" y="58" width="220" height="76" rx="7" fill="#191921" stroke="#5C78FF"/>
+  <rect x="500" y="58" width="220" height="76" rx="7" fill="#242739" stroke="#5C78FF"/>
   <text x="610" y="76" font-size="9" fill="#9AA0B4" text-anchor="middle">page 0</text>
-  <rect x="514" y="86" width="192" height="36" rx="4" fill="#191921" stroke="#5C78FF"/>
+  <rect x="514" y="86" width="192" height="36" rx="4" fill="#242739" stroke="#5C78FF"/>
   <text x="610" y="102" font-size="8.5" fill="#9AA0B4" text-anchor="middle">(0,1) id=1 status='shipped'</text>
   <text x="610" y="115" font-size="7.5" fill="#9AA0B4" text-anchor="middle">xmax set · DEAD TUPLE</text>
 
-  <rect x="500" y="146" width="220" height="76" rx="7" fill="#191921" stroke="#5C78FF"/>
+  <rect x="500" y="146" width="220" height="76" rx="7" fill="#242739" stroke="#5C78FF"/>
   <text x="610" y="164" font-size="9" fill="#9AA0B4" text-anchor="middle">page 14285</text>
-  <rect x="514" y="174" width="192" height="36" rx="4" fill="#191921" stroke="#5AC8FF"/>
+  <rect x="514" y="174" width="192" height="36" rx="4" fill="#242739" stroke="#5AC8FF"/>
   <text x="610" y="190" font-size="8.5" fill="#5AC8FF" text-anchor="middle">(14285,51) id=1 status='x'</text>
   <text x="610" y="203" font-size="7.5" fill="#6B6B78" text-anchor="middle">xmin 757 · LIVE</text>
 
@@ -697,21 +697,21 @@ postgres: <span class="g">client backend</span>                  <span class="c"
   </defs>
   <text x="380" y="20" font-size="10.5" fill="#9AA0B4" text-anchor="middle" letter-spacing="1.5">SORTED TREE &#8594; ctid &#8594; UNSORTED HEAP</text>
 
-  <rect x="170" y="38" width="150" height="30" rx="5" fill="#191921" stroke="#5C78FF"/>
+  <rect x="170" y="38" width="150" height="30" rx="5" fill="#242739" stroke="#5C78FF"/>
   <text x="245" y="57" font-size="9" fill="#9AA0B4" text-anchor="middle">ROOT &#183; one page</text>
 
-  <rect x="86" y="92" width="120" height="30" rx="5" fill="#191921" stroke="#5C78FF"/>
+  <rect x="86" y="92" width="120" height="30" rx="5" fill="#242739" stroke="#5C78FF"/>
   <text x="146" y="111" font-size="8.5" fill="#9AA0B4" text-anchor="middle">internal</text>
-  <rect x="284" y="92" width="120" height="30" rx="5" fill="#191921" stroke="#5C78FF"/>
+  <rect x="284" y="92" width="120" height="30" rx="5" fill="#242739" stroke="#5C78FF"/>
   <text x="344" y="111" font-size="8.5" fill="#9AA0B4" text-anchor="middle">internal</text>
 
-  <rect x="40" y="146" width="106" height="44" rx="5" fill="#191921" stroke="#5C78FF"/>
+  <rect x="40" y="146" width="106" height="44" rx="5" fill="#242739" stroke="#5C78FF"/>
   <text x="93" y="164" font-size="8" fill="#9AA0B4" text-anchor="middle">leaf</text>
   <text x="93" y="179" font-size="7.5" fill="#CDD0DD" text-anchor="middle">42 &#8594; (107,3)</text>
-  <rect x="156" y="146" width="106" height="44" rx="5" fill="#191921" stroke="#5C78FF"/>
+  <rect x="156" y="146" width="106" height="44" rx="5" fill="#242739" stroke="#5C78FF"/>
   <text x="209" y="164" font-size="8" fill="#9AA0B4" text-anchor="middle">leaf</text>
   <text x="209" y="179" font-size="7.5" fill="#CDD0DD" text-anchor="middle">57 &#8594; (2,11)</text>
-  <rect x="272" y="146" width="106" height="44" rx="5" fill="#191921" stroke="#5C78FF"/>
+  <rect x="272" y="146" width="106" height="44" rx="5" fill="#242739" stroke="#5C78FF"/>
   <text x="325" y="164" font-size="8" fill="#9AA0B4" text-anchor="middle">leaf</text>
   <text x="325" y="179" font-size="7.5" fill="#CDD0DD" text-anchor="middle">63 &#8594; (901,7)</text>
 
@@ -726,13 +726,13 @@ postgres: <span class="g">client backend</span>                  <span class="c"
   <text x="570" y="160" font-size="8" fill="#5AC8FF" text-anchor="middle">leaves are SORTED and linked &#8596;</text>
   <text x="570" y="174" font-size="8" fill="#6B6B78" text-anchor="middle">(that is how range scans work)</text>
 
-  <rect x="470" y="196" width="240" height="130" rx="7" fill="#191921" stroke="#5C78FF"/>
+  <rect x="470" y="196" width="240" height="130" rx="7" fill="#242739" stroke="#5C78FF"/>
   <text x="590" y="216" font-size="9.5" fill="#9AA0B4" text-anchor="middle" font-weight="700">THE HEAP &#183; unordered</text>
-  <rect x="484" y="224" width="212" height="24" rx="3" fill="#101017" stroke="#191921"/>
+  <rect x="484" y="224" width="212" height="24" rx="3" fill="#1C1C2A" stroke="#242739"/>
   <text x="590" y="240" font-size="7.5" fill="#CDD0DD" text-anchor="middle">page 2 &#8230; slot 11</text>
-  <rect x="484" y="252" width="212" height="24" rx="3" fill="#101017" stroke="#191921"/>
+  <rect x="484" y="252" width="212" height="24" rx="3" fill="#1C1C2A" stroke="#242739"/>
   <text x="590" y="268" font-size="7.5" fill="#CDD0DD" text-anchor="middle">page 107 &#8230; slot 3</text>
-  <rect x="484" y="280" width="212" height="24" rx="3" fill="#101017" stroke="#191921"/>
+  <rect x="484" y="280" width="212" height="24" rx="3" fill="#1C1C2A" stroke="#242739"/>
   <text x="590" y="296" font-size="7.5" fill="#CDD0DD" text-anchor="middle">page 901 &#8230; slot 7</text>
   <text x="590" y="318" font-size="7.5" fill="#6B6B78" text-anchor="middle">rows sit wherever there was room</text>
 
@@ -841,11 +841,11 @@ Index Only Scan using idx_user on events (actual rows=109 loops=1)
 <svg viewBox="0 0 760 290" width="100%" aria-label="The three Postgres join algorithms compared: nested loop, hash join and merge join, with what each is best at and what to watch for">
   <text x="380" y="20" font-size="10.5" fill="#9AA0B4" text-anchor="middle" letter-spacing="1.5">THREE ALGORITHMS &#183; SAME ROWS &#183; VERY DIFFERENT COSTS</text>
 
-  <rect x="20" y="44" width="230" height="204" rx="8" fill="#191921" stroke="#5C78FF"/>
+  <rect x="20" y="44" width="230" height="204" rx="8" fill="#242739" stroke="#5C78FF"/>
   <text x="135" y="68" font-size="11" fill="#9AA0B4" text-anchor="middle" font-weight="700">NESTED LOOP</text>
   <text x="135" y="94" font-size="8.5" fill="#CDD0DD" text-anchor="middle">for each outer row,</text>
   <text x="135" y="108" font-size="8.5" fill="#CDD0DD" text-anchor="middle">look up the inner side</text>
-  <path d="M36 124 H 234" stroke="#191921" stroke-width="1"/>
+  <path d="M36 124 H 234" stroke="#242739" stroke-width="1"/>
   <text x="135" y="144" font-size="7.5" fill="#6B6B78" text-anchor="middle" letter-spacing="1">BEST WHEN</text>
   <text x="135" y="159" font-size="8.5" fill="#5AC8FF" text-anchor="middle">few outer rows, and</text>
   <text x="135" y="172" font-size="8.5" fill="#5AC8FF" text-anchor="middle">an INDEX on the inner</text>
@@ -854,20 +854,20 @@ Index Only Scan using idx_user on events (actual rows=109 loops=1)
   <text x="135" y="224" font-size="8.5" fill="#9AA0B4" text-anchor="middle">shown are PER LOOP</text>
   <text x="135" y="240" font-size="8" fill="#9AA0B4" text-anchor="middle">no index → N × M. Death.</text>
 
-  <rect x="265" y="44" width="230" height="204" rx="8" fill="#16202E" stroke="#5AC8FF"/>
+  <rect x="265" y="44" width="230" height="204" rx="8" fill="#223650" stroke="#5AC8FF"/>
   <text x="380" y="68" font-size="11" fill="#5AC8FF" text-anchor="middle" font-weight="700">HASH JOIN</text>
   <text x="380" y="94" font-size="8.5" fill="#CDD0DD" text-anchor="middle">hash the smaller side,</text>
   <text x="380" y="108" font-size="8.5" fill="#CDD0DD" text-anchor="middle">then probe it with the big</text>
   <path d="M281 124 H 479" stroke="#5C78FF" stroke-width="1"/>
-  <text x="380" y="144" font-size="7.5" fill="#6B6B78" text-anchor="middle" letter-spacing="1">BEST WHEN</text>
+  <text x="380" y="144" font-size="7.5" fill="#E7E7EE" text-anchor="middle" letter-spacing="1">BEST WHEN</text>
   <text x="380" y="159" font-size="8.5" fill="#5AC8FF" text-anchor="middle">big joins, no index —</text>
   <text x="380" y="172" font-size="8.5" fill="#5AC8FF" text-anchor="middle">the workhorse for DE</text>
-  <text x="380" y="196" font-size="7.5" fill="#6B6B78" text-anchor="middle" letter-spacing="1">WATCH FOR</text>
+  <text x="380" y="196" font-size="7.5" fill="#E7E7EE" text-anchor="middle" letter-spacing="1">WATCH FOR</text>
   <text x="380" y="211" font-size="8.5" fill="#9AA0B4" text-anchor="middle">Batches &gt; 1 = spilled</text>
   <text x="380" y="224" font-size="8.5" fill="#9AA0B4" text-anchor="middle">to disk. Raise work_mem.</text>
   <text x="380" y="240" font-size="8" fill="#9AA0B4" text-anchor="middle">equality joins only (=)</text>
 
-  <rect x="510" y="44" width="230" height="204" rx="8" fill="#191921" stroke="#5AC8FF"/>
+  <rect x="510" y="44" width="230" height="204" rx="8" fill="#242739" stroke="#5AC8FF"/>
   <text x="625" y="68" font-size="11" fill="#5AC8FF" text-anchor="middle" font-weight="700">MERGE JOIN</text>
   <text x="625" y="94" font-size="8.5" fill="#CDD0DD" text-anchor="middle">sort BOTH sides, then</text>
   <text x="625" y="108" font-size="8.5" fill="#CDD0DD" text-anchor="middle">walk them in lockstep</text>
@@ -962,29 +962,29 @@ Hash Join (actual rows=81184 loops=3)
   </defs>
   <text x="380" y="20" font-size="10.5" fill="#9AA0B4" text-anchor="middle" letter-spacing="1.5">THE INDEX HAS THE VALUE — BUT IS THE ROW VISIBLE?</text>
 
-  <rect x="30" y="52" width="150" height="60" rx="7" fill="#191921" stroke="#5C78FF"/>
+  <rect x="30" y="52" width="150" height="60" rx="7" fill="#242739" stroke="#5C78FF"/>
   <text x="105" y="76" font-size="9.5" fill="#9AA0B4" text-anchor="middle" font-weight="700">INDEX LEAF</text>
   <text x="105" y="94" font-size="8" fill="#CDD0DD" text-anchor="middle">42 → (107,3)</text>
 
-  <rect x="256" y="46" width="180" height="72" rx="7" fill="#16202E" stroke="#5AC8FF"/>
+  <rect x="256" y="46" width="180" height="72" rx="7" fill="#223650" stroke="#5AC8FF"/>
   <text x="346" y="70" font-size="9.5" fill="#5AC8FF" text-anchor="middle" font-weight="700">VISIBILITY MAP</text>
   <text x="346" y="88" font-size="8" fill="#CDD0DD" text-anchor="middle">1 bit per heap page</text>
   <text x="346" y="104" font-size="8" fill="#9AA0B4" text-anchor="middle">"is page 107 all-visible?"</text>
 
   <path d="M184 82 H 250" stroke="#5C78FF" stroke-width="1.5" fill="none" marker-end="url(#v-g)"/>
 
-  <rect x="530" y="40" width="200" height="52" rx="7" fill="#191921" stroke="#5AC8FF"/>
+  <rect x="530" y="40" width="200" height="52" rx="7" fill="#242739" stroke="#5AC8FF"/>
   <text x="630" y="60" font-size="9" fill="#5AC8FF" text-anchor="middle" font-weight="700">BIT SET → skip the heap</text>
   <text x="630" y="78" font-size="8" fill="#CDD0DD" text-anchor="middle">Heap Fetches: 0 · 4 pages</text>
 
-  <rect x="530" y="106" width="200" height="52" rx="7" fill="#191921" stroke="#5C78FF"/>
+  <rect x="530" y="106" width="200" height="52" rx="7" fill="#242739" stroke="#5C78FF"/>
   <text x="630" y="126" font-size="9" fill="#9AA0B4" text-anchor="middle" font-weight="700">BIT NOT SET → fetch anyway</text>
   <text x="630" y="144" font-size="8" fill="#CDD0DD" text-anchor="middle">Heap Fetches: 109 · 110 pages</text>
 
   <path d="M440 72 L 524 62" stroke="#5AC8FF" stroke-width="1.5" fill="none" marker-end="url(#v-g)"/>
   <path d="M440 96 L 524 128" stroke="#5C78FF" stroke-width="1.5" fill="none" marker-end="url(#v-r)"/>
 
-  <rect x="80" y="176" width="600" height="52" rx="7" fill="#191921" stroke="#5C78FF"/>
+  <rect x="80" y="176" width="600" height="52" rx="7" fill="#242739" stroke="#5C78FF"/>
   <text x="380" y="198" font-size="9.5" fill="#9AA0B4" text-anchor="middle" font-weight="700">Only VACUUM sets those bits.</text>
   <text x="380" y="216" font-size="8.5" fill="#CDD0DD" text-anchor="middle">A heavily-written table that autovacuum can't keep up with gets NO index-only scans.</text>
 
@@ -1039,13 +1039,13 @@ Hash Join (actual rows=81184 loops=3)
 <svg viewBox="0 0 760 262" width="100%" aria-label="On a time-correlated column a B-tree index is 21 MB while a BRIN index over the same column is 24 kB">
   <text x="380" y="20" font-size="10.5" fill="#9AA0B4" text-anchor="middle" letter-spacing="1.5">SAME COLUMN &#183; SAME TABLE &#183; 1,000,000 ROWS</text>
 
-  <rect x="60" y="44" width="290" height="132" rx="8" fill="#191921" stroke="#5C78FF"/>
+  <rect x="60" y="44" width="290" height="132" rx="8" fill="#242739" stroke="#5C78FF"/>
   <text x="205" y="68" font-size="11" fill="#9AA0B4" text-anchor="middle" font-weight="700">B-TREE on created_at</text>
   <rect x="80" y="82" width="250" height="36" rx="4" fill="#5C78FF" fill-opacity="0.25" stroke="#5C78FF"/>
   <text x="205" y="142" font-size="16" fill="#9AA0B4" text-anchor="middle" font-weight="800">21 MB</text>
   <text x="205" y="163" font-size="8" fill="#9AA0B4" text-anchor="middle">one entry per row &#183; 1,000,000 entries</text>
 
-  <rect x="410" y="44" width="290" height="132" rx="8" fill="#191921" stroke="#5AC8FF"/>
+  <rect x="410" y="44" width="290" height="132" rx="8" fill="#242739" stroke="#5AC8FF"/>
   <text x="555" y="68" font-size="11" fill="#5AC8FF" text-anchor="middle" font-weight="700">BRIN on created_at</text>
   <rect x="543" y="82" width="24" height="36" rx="3" fill="#5AC8FF" fill-opacity="0.35" stroke="#5AC8FF"/>
   <text x="555" y="142" font-size="16" fill="#5AC8FF" text-anchor="middle" font-weight="800">24 kB</text>
@@ -1253,22 +1253,22 @@ Aggregate
   </defs>
   <text x="380" y="20" font-size="10.5" fill="#9AA0B4" text-anchor="middle" letter-spacing="1.5">MEASURE · DIAGNOSE · CHANGE ONE THING · MEASURE AGAIN</text>
 
-  <rect x="24" y="52" width="150" height="72" rx="8" fill="#191921" stroke="#5C78FF"/>
+  <rect x="24" y="52" width="150" height="72" rx="8" fill="#242739" stroke="#5C78FF"/>
   <text x="99" y="76" font-size="10" fill="#9AA0B4" text-anchor="middle" font-weight="700">1 · FIND IT</text>
   <text x="99" y="94" font-size="8" fill="#CDD0DD" text-anchor="middle">pg_stat_statements</text>
   <text x="99" y="108" font-size="8" fill="#6B6B78" text-anchor="middle">slowest total time</text>
 
-  <rect x="198" y="52" width="150" height="72" rx="8" fill="#191921" stroke="#5C78FF"/>
+  <rect x="198" y="52" width="150" height="72" rx="8" fill="#242739" stroke="#5C78FF"/>
   <text x="273" y="76" font-size="10" fill="#9AA0B4" text-anchor="middle" font-weight="700">2 · EXPLAIN IT</text>
   <text x="273" y="94" font-size="8" fill="#CDD0DD" text-anchor="middle">ANALYZE, BUFFERS</text>
   <text x="273" y="108" font-size="8" fill="#6B6B78" text-anchor="middle">read it bottom-up</text>
 
-  <rect x="372" y="52" width="150" height="72" rx="8" fill="#16202E" stroke="#5AC8FF"/>
+  <rect x="372" y="52" width="150" height="72" rx="8" fill="#223650" stroke="#5AC8FF"/>
   <text x="447" y="76" font-size="10" fill="#5AC8FF" text-anchor="middle" font-weight="700">3 · DIAGNOSE</text>
   <text x="447" y="94" font-size="8" fill="#CDD0DD" text-anchor="middle">est vs actual rows</text>
-  <text x="447" y="108" font-size="8" fill="#6B6B78" text-anchor="middle">rows removed · buffers</text>
+  <text x="447" y="108" font-size="8" fill="#E7E7EE" text-anchor="middle">rows removed · buffers</text>
 
-  <rect x="546" y="52" width="150" height="72" rx="8" fill="#191921" stroke="#5AC8FF"/>
+  <rect x="546" y="52" width="150" height="72" rx="8" fill="#242739" stroke="#5AC8FF"/>
   <text x="621" y="76" font-size="10" fill="#5AC8FF" text-anchor="middle" font-weight="700">4 · ONE CHANGE</text>
   <text x="621" y="94" font-size="8" fill="#CDD0DD" text-anchor="middle">index · ANALYZE · rewrite</text>
   <text x="621" y="108" font-size="8" fill="#6B6B78" text-anchor="middle">then measure again</text>

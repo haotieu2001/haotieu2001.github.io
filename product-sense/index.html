@@ -21,7 +21,7 @@
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
 <style>
   :root{
-    --bg:#111117; --bg2:#16161D; --ink:#F1F1F1; --muted:#9aa0b4; --dim:#6b6b78;
+    --bg:#111117; --bg2:#16161d; --ink:#F1F1F1; --muted:#9aa0b4; --dim:#6b6b78;
     --blue2:#5C78FF; --cyan:#28B9FF; --cyan2:#5AC8FF; --purple:#5C78FF; --magenta2:#5AC8FF;
     --grad:linear-gradient(90deg,#28B9FF,#5C78FF);
     --font:"JetBrainsMono Nerd Font","JetBrains Mono","Symbols Nerd Font",ui-monospace,"Cascadia Code",Menlo,Consolas,monospace;
@@ -39,18 +39,18 @@
   @keyframes sheen{to{background-position:220% center}}
   .dek{color:var(--muted);font-size:17px}
   .byline{margin-top:14px;font-size:13px;color:var(--dim)}
-  h2{font-size:clamp(21px,3.2vw,28px);margin:52px 0 6px;font-weight:800;line-height:1.22;padding-top:14px;border-top:1px solid #2C2C38;display:flex;align-items:center;gap:10px}
+  h2{font-size:clamp(21px,3.2vw,28px);margin:52px 0 6px;font-weight:800;line-height:1.22;padding-top:14px;border-top:1px solid #3C4356;display:flex;align-items:center;gap:10px}
   h2 .n{color:var(--blue2)}
   h3{font-size:18px;margin:28px 0 4px;color:#fff;font-weight:700}
   h4{font-size:15px;margin:20px 0 4px;color:var(--cyan2);font-weight:700}
   p,li{color:#dcdce4}
   .lead{font-size:18px;color:#e7e7ee}
   a{color:var(--cyan2)}
-  hr{border:0;border-top:1px solid #2C2C38;margin:36px 0}
-  code{font-family:var(--font);background:#23232b;color:#7AD1FF;padding:1px 6px;border-radius:5px;font-size:.88em;border:1px solid #2C2C38}
+  hr{border:0;border-top:1px solid #3C4356;margin:36px 0}
+  code{font-family:var(--font);background:#23232b;color:#7AD1FF;padding:1px 6px;border-radius:5px;font-size:.88em;border:1px solid #3C4356}
   .cb{margin:16px 0}
-  .cb .lang{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:#9aa0b4;background:#1b1b24;border:1px solid #2C2C38;border-bottom:none;border-radius:9px 9px 0 0;padding:4px 12px}
-  pre{margin:0;background:#101017;border:1px solid #2C2C38;border-radius:0 10px 10px 10px;padding:14px 16px;overflow-x:auto;
+  .cb .lang{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:#9aa0b4;background:#1b1b24;border:1px solid #3C4356;border-bottom:none;border-radius:9px 9px 0 0;padding:4px 12px}
+  pre{margin:0;background:#1C1C2A;border:1px solid #3C4356;border-radius:0 10px 10px 10px;padding:14px 16px;overflow-x:auto;
       font-family:var(--font);font-size:13px;line-height:1.65;color:#d8dcea;white-space:pre}
   pre .c{color:#6B6B78}
   pre .o{color:#9aa0b4}
@@ -59,60 +59,60 @@
   pre .y{color:#9AA0B4}
   pre .r{color:#9AA0B4}
   pre .p{color:#5AC8FF}
-  .callout{border-left:4px solid #28B9FF;background:linear-gradient(160deg,#12202e,#101019);border-radius:0 12px 12px 0;padding:14px 18px;margin:22px 0;box-shadow:0 0 16px -8px #28B9FF66}
-  .callout.cy{border-color:#5AC8FF;background:linear-gradient(160deg,#0f2233,#101019)}
-  .callout.mg{border-color:#5C78FF;background:linear-gradient(160deg,#141a33,#101019)}
-  .callout.gd{border-color:#5C78FF;background:linear-gradient(160deg,#141a33,#101019)}
-  .callout.gr{border-color:#28B9FF;background:linear-gradient(160deg,#0f2233,#101019)}
+  .callout{border-left:4px solid #28B9FF;background:linear-gradient(160deg,#12202e,#1C1C2A);border-radius:0 12px 12px 0;padding:14px 18px;margin:22px 0;box-shadow:0 0 16px -8px #28B9FF66}
+  .callout.cy{border-color:#5AC8FF;background:linear-gradient(160deg,#0f2233,#1C1C2A)}
+  .callout.mg{border-color:#5C78FF;background:linear-gradient(160deg,#141a33,#1C1C2A)}
+  .callout.gd{border-color:#5C78FF;background:linear-gradient(160deg,#141a33,#1C1C2A)}
+  .callout.gr{border-color:#28B9FF;background:linear-gradient(160deg,#0f2233,#1C1C2A)}
   .callout .t{color:var(--cyan2);font-weight:800}
   .callout.gd .t{color:#8AA0FF}
   .callout.gr .t{color:#5AC8FF}
   .callout.mg .t{color:#8AA0FF}
-  .tldr{border:1px solid #28B9FF44;background:linear-gradient(180deg,#12161d,#0d0d12);border-radius:16px;padding:20px 24px;margin:26px 0;box-shadow:0 0 24px -10px #28B9FF55}
+  .tldr{border:1px solid #28B9FF44;background:linear-gradient(180deg,#12161d,#1C1C2A);border-radius:16px;padding:20px 24px;margin:26px 0;box-shadow:0 0 24px -10px #28B9FF55}
   .tldr h4{margin:0 0 8px;font-size:13px;letter-spacing:.2em;text-transform:uppercase;color:var(--cyan2)}
-  .gloss{border:1px solid #2C2C38;background:#1D1D26;border-radius:14px;padding:18px 22px;margin:24px 0}
+  .gloss{border:1px solid #3C4356;background:#1D1D26;border-radius:14px;padding:18px 22px;margin:24px 0}
   .gloss h4{margin:0 0 6px;color:#fff;font-size:15px}
   .gloss dl{margin:0;font-size:13.5px}
   .gloss dt{color:var(--cyan2);font-weight:700;margin-top:9px}
   .gloss dd{margin:1px 0 0;color:#cdd0dd}
-  .toc{background:#191921;border:1px solid #2C2C38;border-radius:14px;padding:16px 22px;margin:24px 0;column-count:2;column-gap:28px}
+  .toc{background:#242739;border:1px solid #3C4356;border-radius:14px;padding:16px 22px;margin:24px 0;column-count:2;column-gap:28px}
   .toc a{display:block;color:var(--cyan2);text-decoration:none;font-size:13.5px;line-height:1.9;break-inside:avoid}
   .toc a:hover{color:#fff}
   .toc>strong{column-span:all;display:block;margin-bottom:6px;color:#fff}
   table{border-collapse:collapse;width:100%;font-size:13.5px;margin:16px 0}
-  th,td{border:1px solid #2C2C38;padding:8px 11px;text-align:left;vertical-align:top}
+  th,td{border:1px solid #3C4356;padding:8px 11px;text-align:left;vertical-align:top}
   th{background:#17171E;color:#fff}
   tr:nth-child(even) td{background:#17171E}
   .ico{width:1em;height:1em;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
   .ico.f{fill:currentColor;stroke:none}
   .hico{display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;border-radius:11px;flex:0 0 36px;
-        background:#161233;border:1px solid #191921;color:var(--cyan2)}
+        background:#161233;border:1px solid #242739;color:var(--cyan2)}
   .hico .ico{width:19px;height:19px}
   .toc a .ico{width:14px;height:14px;margin-right:9px;vertical-align:-2px;opacity:.85}
   .callout .t .ico{width:16px;height:16px;vertical-align:-3px;margin-right:5px}
   .tldr h4 .ico,.gloss h4 .ico{width:15px;height:15px;vertical-align:-2px;margin-right:6px}
   .stack{margin-top:14px;display:flex;align-items:center;gap:10px;font-size:12px;color:var(--dim);flex-wrap:wrap}
   .chip{display:inline-flex;align-items:center;gap:7px;padding:5px 12px;border-radius:999px;
-        border:1px solid #191921;background:#161233;color:#5AC8FF;font-weight:700;font-size:11.5px}
+        border:1px solid #242739;background:#161233;color:#5AC8FF;font-weight:700;font-size:11.5px}
   .chip .ico{width:14px;height:14px}
   figure.fig{margin:26px 0;text-align:center}
-  figure.fig svg{display:block;width:100%;max-width:100%;height:auto;border:1px solid #2C2C38;border-radius:14px;background:#101017}
+  figure.fig svg{display:block;width:100%;max-width:100%;height:auto;border:1px solid #3C4356;border-radius:14px;background:#1C1C2A}
   figure.fig figcaption{font-size:12.5px;color:var(--muted);margin-top:9px;font-style:italic;line-height:1.6}
   .step{display:flex;gap:12px;align-items:flex-start;margin:14px 0}
   .step .num-bubble{flex:0 0 28px;height:28px;border-radius:50%;background:var(--grad);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:#fff;margin-top:2px}
   .step .body{flex:1}
-  footer{border-top:1px solid #2C2C38;margin-top:50px;padding:24px 0 90px;color:var(--dim);font-size:13px}
+  footer{border-top:1px solid #3C4356;margin-top:50px;padding:24px 0 90px;color:var(--dim);font-size:13px}
   footer a{color:var(--cyan2)}
   .js .reveal{opacity:0;transform:translateY(16px);transition:opacity .6s ease,transform .6s ease}
   .js .reveal.in{opacity:1;transform:none}
   @media (prefers-reduced-motion:reduce){.js .reveal{opacity:1;transform:none}}
   /* ---- shared theme: top nav + a11y (appended) ---- */
-  .nav{position:sticky;top:0;z-index:60;background:rgba(25,25,33,.82);backdrop-filter:blur(10px);border-bottom:1px solid #2C2C38}
+  .nav{position:sticky;top:0;z-index:60;background:rgba(25,25,33,.82);backdrop-filter:blur(10px);border-bottom:1px solid #3C4356}
   .nav-inner{max-width:1040px;margin:0 auto;padding:12px 24px;display:flex;align-items:center;gap:18px;flex-wrap:wrap}
   .nav-brand{font-weight:800;letter-spacing:.16em;font-size:15px;text-decoration:none;border:0;color:#5AC8FF}
   .nav-links{display:flex;gap:6px;flex-wrap:wrap;margin-left:auto}
   .nav-links a{text-decoration:none;border:1px solid transparent;color:#9aa0b4;font-weight:700;font-size:13.5px;padding:6px 14px;border-radius:999px;transition:.2s}
-  .nav-links a:hover{color:#fff;border-color:#2C2C38;background:#191921}
+  .nav-links a:hover{color:#fff;border-color:#3C4356;background:#242739}
   .nav-links a.active{color:#5AC8FF;border-color:#28B9FF55;background:#28B9FF14}
   :focus-visible{outline:2px solid #5AC8FF;outline-offset:3px;border-radius:6px}
   @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{animation:none !important;transition:none !important}.js .reveal{opacity:1 !important;transform:none !important}}
@@ -215,31 +215,31 @@
     <marker id="p-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#5C78FF"/></marker>
   </defs>
   <text x="440" y="30" font-size="10.5" fill="#9AA0B4" text-anchor="middle" letter-spacing="1.5">THE INTERVIEWER IS FOLLOWING YOUR NARRATIVE — NOT YOUR IDEA</text>
-  <rect x="22" y="66" width="116" height="52" rx="10" fill="#191921" stroke="#6B6B78" stroke-width="1.6"/>
+  <rect x="22" y="66" width="116" height="52" rx="10" fill="#242739" stroke="#6B6B78" stroke-width="1.6"/>
   <text x="80" y="88" font-size="10" fill="#6B6B78" font-weight="700" text-anchor="middle">the prompt</text>
   <text x="80" y="105" font-size="8" fill="#6B6B78" text-anchor="middle">deliberately vague</text>
   <line x1="144" y1="92" x2="160" y2="92" stroke="#6B6B78" stroke-width="1.4" marker-end="url(#p-m)"/>
-  <rect x="166" y="66" width="116" height="52" rx="10" fill="#16202E" stroke="#5AC8FF" stroke-width="1.6"/>
+  <rect x="166" y="66" width="116" height="52" rx="10" fill="#223650" stroke="#5AC8FF" stroke-width="1.6"/>
   <text x="224" y="88" font-size="10" fill="#5AC8FF" font-weight="700" text-anchor="middle">mission</text>
-  <text x="224" y="105" font-size="8" fill="#6B6B78" text-anchor="middle">why this exists</text>
+  <text x="224" y="105" font-size="8" fill="#E7E7EE" text-anchor="middle">why this exists</text>
   <line x1="288" y1="92" x2="304" y2="92" stroke="#6B6B78" stroke-width="1.4" marker-end="url(#p-m)"/>
-  <rect x="310" y="66" width="116" height="52" rx="10" fill="#16202E" stroke="#5AC8FF" stroke-width="1.6"/>
+  <rect x="310" y="66" width="116" height="52" rx="10" fill="#223650" stroke="#5AC8FF" stroke-width="1.6"/>
   <text x="368" y="88" font-size="10" fill="#5AC8FF" font-weight="700" text-anchor="middle">segment</text>
-  <text x="368" y="105" font-size="8" fill="#6B6B78" text-anchor="middle">one person</text>
+  <text x="368" y="105" font-size="8" fill="#E7E7EE" text-anchor="middle">one person</text>
   <line x1="432" y1="92" x2="448" y2="92" stroke="#6B6B78" stroke-width="1.4" marker-end="url(#p-m)"/>
-  <rect x="454" y="66" width="116" height="52" rx="10" fill="#191921" stroke="#5C78FF" stroke-width="1.6"/>
+  <rect x="454" y="66" width="116" height="52" rx="10" fill="#242739" stroke="#5C78FF" stroke-width="1.6"/>
   <text x="512" y="88" font-size="10" fill="#9AA0B4" font-weight="700" text-anchor="middle">pain</text>
   <text x="512" y="105" font-size="8" fill="#6B6B78" text-anchor="middle">one obstacle</text>
   <line x1="576" y1="92" x2="592" y2="92" stroke="#6B6B78" stroke-width="1.4" marker-end="url(#p-m)"/>
-  <rect x="598" y="66" width="116" height="52" rx="10" fill="#16202E" stroke="#28B9FF" stroke-width="1.6"/>
+  <rect x="598" y="66" width="116" height="52" rx="10" fill="#223650" stroke="#28B9FF" stroke-width="1.6"/>
   <text x="656" y="88" font-size="10" fill="#28B9FF" font-weight="700" text-anchor="middle">solution + V1</text>
-  <text x="656" y="105" font-size="8" fill="#6B6B78" text-anchor="middle">smallest real thing</text>
+  <text x="656" y="105" font-size="8" fill="#E7E7EE" text-anchor="middle">smallest real thing</text>
   <line x1="720" y1="92" x2="736" y2="92" stroke="#6B6B78" stroke-width="1.4" marker-end="url(#p-m)"/>
-  <rect x="742" y="66" width="116" height="52" rx="10" fill="#16202E" stroke="#5AC8FF" stroke-width="1.6"/>
+  <rect x="742" y="66" width="116" height="52" rx="10" fill="#223650" stroke="#5AC8FF" stroke-width="1.6"/>
   <text x="800" y="88" font-size="10" fill="#5AC8FF" font-weight="700" text-anchor="middle">metric</text>
-  <text x="800" y="105" font-size="8" fill="#6B6B78" text-anchor="middle">how you'd know</text>
+  <text x="800" y="105" font-size="8" fill="#E7E7EE" text-anchor="middle">how you'd know</text>
   <path d="M80 124 C 80 160, 800 160, 800 124" fill="none" stroke="#5AC8FF" stroke-width="1.3" stroke-dasharray="5,3"/>
-  <rect x="298" y="146" width="284" height="17" rx="4" fill="#101017"/>
+  <rect x="298" y="146" width="284" height="17" rx="4" fill="#1C1C2A"/>
   <text x="440" y="159" font-size="9" fill="#5AC8FF" text-anchor="middle">every step must constrain the next one</text>
   <text x="440" y="190" font-size="10.5" fill="#CDD0DD" text-anchor="middle">A great answer is one chain of reasoning. A weak answer is a pile of good ideas.</text>
   </svg>
@@ -280,27 +280,27 @@
     <marker id="p-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#5C78FF"/></marker>
   </defs>
   <text x="380" y="28" font-size="10.5" fill="#9AA0B4" text-anchor="middle" letter-spacing="1.5">FIVE DIALS — AND YOU MUST CLEAR THE BAR ON ALL FIVE</text>
-  <rect x="30" y="50" width="700" height="40" rx="8" fill="#191921" stroke="#5AC8FF" stroke-width="1.4"/>
+  <rect x="30" y="50" width="700" height="40" rx="8" fill="#242739" stroke="#5AC8FF" stroke-width="1.4"/>
   <circle cx="52" cy="70" r="4.5" fill="#5AC8FF"/>
   <text x="70" y="75" font-size="11" fill="#5AC8FF" font-weight="700">Communication</text>
   <text x="716" y="75" font-size="9.5" fill="#9AA0B4" text-anchor="end">can I follow you without doing work?</text>
-  <rect x="30" y="98" width="700" height="40" rx="8" fill="#191921" stroke="#5AC8FF" stroke-width="1.4"/>
+  <rect x="30" y="98" width="700" height="40" rx="8" fill="#242739" stroke="#5AC8FF" stroke-width="1.4"/>
   <circle cx="52" cy="118" r="4.5" fill="#5AC8FF"/>
   <text x="70" y="123" font-size="11" fill="#5AC8FF" font-weight="700">Product motivation</text>
   <text x="716" y="123" font-size="9.5" fill="#9AA0B4" text-anchor="end">do you know why this product exists?</text>
-  <rect x="30" y="146" width="700" height="40" rx="8" fill="#191921" stroke="#5AC8FF" stroke-width="1.4"/>
+  <rect x="30" y="146" width="700" height="40" rx="8" fill="#242739" stroke="#5AC8FF" stroke-width="1.4"/>
   <circle cx="52" cy="166" r="4.5" fill="#5AC8FF"/>
   <text x="70" y="171" font-size="11" fill="#5AC8FF" font-weight="700">Segmentation</text>
   <text x="716" y="171" font-size="9.5" fill="#9AA0B4" text-anchor="end">did you choose ONE user — and defend it?</text>
-  <rect x="30" y="194" width="700" height="40" rx="8" fill="#191921" stroke="#5C78FF" stroke-width="1.4"/>
+  <rect x="30" y="194" width="700" height="40" rx="8" fill="#242739" stroke="#5C78FF" stroke-width="1.4"/>
   <circle cx="52" cy="214" r="4.5" fill="#5C78FF"/>
   <text x="70" y="219" font-size="11" fill="#9AA0B4" font-weight="700">Problem finding</text>
   <text x="716" y="219" font-size="9.5" fill="#9AA0B4" text-anchor="end">is the pain real, specific, prioritised?</text>
-  <rect x="30" y="242" width="700" height="40" rx="8" fill="#191921" stroke="#28B9FF" stroke-width="1.4"/>
+  <rect x="30" y="242" width="700" height="40" rx="8" fill="#242739" stroke="#28B9FF" stroke-width="1.4"/>
   <circle cx="52" cy="262" r="4.5" fill="#28B9FF"/>
   <text x="70" y="267" font-size="11" fill="#28B9FF" font-weight="700">Solution + V1</text>
   <text x="716" y="267" font-size="9.5" fill="#9AA0B4" text-anchor="end">is it concrete, and does it solve THAT pain?</text>
-  <rect x="30" y="292" width="700" height="26" rx="7" fill="#191921" stroke="#5C78FF" stroke-width="1.3"/>
+  <rect x="30" y="292" width="700" height="26" rx="7" fill="#242739" stroke="#5C78FF" stroke-width="1.3"/>
   <text x="380" y="309" font-size="9.5" fill="#9AA0B4" text-anchor="middle">a brilliant solution does NOT rescue a vague segment — the dials do not average out</text>
   </svg>
 <figcaption>The five dials. Interviewers usually have a scorecard with something very close to these on it, and they are listening for each one in turn.</figcaption>
@@ -326,27 +326,27 @@
     <marker id="p-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#5C78FF"/></marker>
   </defs>
   <text x="380" y="28" font-size="10.5" fill="#9AA0B4" text-anchor="middle" letter-spacing="1.5">FIVE ENTRY POINTS — ONE SPINE</text>
-  <rect x="24" y="48" width="342" height="76" rx="10" fill="#16202E" stroke="#5AC8FF" stroke-width="1.5"/>
+  <rect x="24" y="48" width="342" height="76" rx="10" fill="#223650" stroke="#5AC8FF" stroke-width="1.5"/>
   <text x="40" y="70" font-size="9.5" fill="#5AC8FF" font-weight="700">PRODUCT DESIGN</text>
   <text x="40" y="91" font-size="9" fill="#CDD0DD">"Design a parking solution."</text>
-  <text x="40" y="110" font-size="8.5" fill="#6B6B78">Meta · Discord</text>
-  <rect x="394" y="48" width="342" height="76" rx="10" fill="#16202E" stroke="#5AC8FF" stroke-width="1.5"/>
+  <text x="40" y="110" font-size="8.5" fill="#E7E7EE">Meta · Discord</text>
+  <rect x="394" y="48" width="342" height="76" rx="10" fill="#223650" stroke="#5AC8FF" stroke-width="1.5"/>
   <text x="410" y="70" font-size="9.5" fill="#5AC8FF" font-weight="700">PRODUCT IMPROVEMENT</text>
   <text x="410" y="91" font-size="9" fill="#CDD0DD">"Favourite product — improve it."</text>
-  <text x="410" y="110" font-size="8.5" fill="#6B6B78">Google · most others</text>
-  <rect x="24" y="140" width="342" height="76" rx="10" fill="#16202E" stroke="#5AC8FF" stroke-width="1.5"/>
+  <text x="410" y="110" font-size="8.5" fill="#E7E7EE">Google · most others</text>
+  <rect x="24" y="140" width="342" height="76" rx="10" fill="#223650" stroke="#5AC8FF" stroke-width="1.5"/>
   <text x="40" y="162" font-size="9.5" fill="#5AC8FF" font-weight="700">STRATEGY</text>
   <text x="40" y="183" font-size="9" fill="#CDD0DD">"You’re CPO of Zoom. Teams is winning."</text>
-  <text x="40" y="202" font-size="8.5" fill="#6B6B78">Google · Stripe</text>
-  <rect x="394" y="140" width="342" height="76" rx="10" fill="#191921" stroke="#5C78FF" stroke-width="1.5"/>
+  <text x="40" y="202" font-size="8.5" fill="#E7E7EE">Google · Stripe</text>
+  <rect x="394" y="140" width="342" height="76" rx="10" fill="#242739" stroke="#5C78FF" stroke-width="1.5"/>
   <text x="410" y="162" font-size="9.5" fill="#9AA0B4" font-weight="700">METRICS / DIAGNOSIS</text>
   <text x="410" y="183" font-size="9" fill="#CDD0DD">"Messenger DAU fell 5%. Why?"</text>
   <text x="410" y="202" font-size="8.5" fill="#6B6B78">Meta · Uber · data roles</text>
-  <rect x="24" y="232" width="342" height="76" rx="10" fill="#16202E" stroke="#28B9FF" stroke-width="1.5"/>
+  <rect x="24" y="232" width="342" height="76" rx="10" fill="#223650" stroke="#28B9FF" stroke-width="1.5"/>
   <text x="40" y="254" font-size="9.5" fill="#28B9FF" font-weight="700">NOVEL TECH / AI</text>
   <text x="40" y="275" font-size="9" fill="#CDD0DD">"10x Claude Code weekly actives."</text>
-  <text x="40" y="294" font-size="8.5" fill="#6B6B78">OpenAI · Anthropic · DeepMind</text>
-  <rect x="394" y="232" width="342" height="76" rx="10" fill="#191921" stroke="#2C2C38" stroke-dasharray="5,3"/>
+  <text x="40" y="294" font-size="8.5" fill="#E7E7EE">OpenAI · Anthropic · DeepMind</text>
+  <rect x="394" y="232" width="342" height="76" rx="10" fill="#242739" stroke="#3C4356" stroke-dasharray="5,3"/>
   <text x="565" y="262" font-size="9.5" fill="#CDD0DD" text-anchor="middle">Only the first move differs.</text>
   <text x="565" y="282" font-size="9.5" fill="#CDD0DD" text-anchor="middle">User → pain → solution → metric</text>
   <text x="565" y="298" font-size="8.5" fill="#6B6B78" text-anchor="middle">is the spine under all five.</text>
@@ -375,21 +375,21 @@
     <marker id="p-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#5C78FF"/></marker>
   </defs>
   <text x="380" y="30" font-size="10.5" fill="#9AA0B4" text-anchor="middle" letter-spacing="1.5">35 MINUTES OF ACTUAL WORK</text>
-  <rect x="40" y="70" width="78" height="46" rx="7" fill="#191921" stroke="#6B6B78" stroke-width="1.5"/>
+  <rect x="40" y="70" width="78" height="46" rx="7" fill="#242739" stroke="#6B6B78" stroke-width="1.5"/>
   <text x="79" y="90" font-size="9.5" fill="#6B6B78" font-weight="700" text-anchor="middle">frame</text>
   <text x="79" y="106" font-size="8.5" fill="#6B6B78" text-anchor="middle">4 min</text>
-  <rect x="118" y="70" width="78" height="46" rx="7" fill="#16202E" stroke="#5AC8FF" stroke-width="1.5"/>
+  <rect x="118" y="70" width="78" height="46" rx="7" fill="#223650" stroke="#5AC8FF" stroke-width="1.5"/>
   <text x="157" y="90" font-size="9.5" fill="#5AC8FF" font-weight="700" text-anchor="middle">mission</text>
-  <text x="157" y="106" font-size="8.5" fill="#6B6B78" text-anchor="middle">4 min</text>
-  <rect x="195" y="70" width="175" height="46" rx="7" fill="#16202E" stroke="#5AC8FF" stroke-width="1.5"/>
+  <text x="157" y="106" font-size="8.5" fill="#E7E7EE" text-anchor="middle">4 min</text>
+  <rect x="195" y="70" width="175" height="46" rx="7" fill="#223650" stroke="#5AC8FF" stroke-width="1.5"/>
   <text x="283" y="90" font-size="9.5" fill="#5AC8FF" font-weight="700" text-anchor="middle">segment</text>
-  <text x="283" y="106" font-size="8.5" fill="#6B6B78" text-anchor="middle">9 min</text>
-  <rect x="370" y="70" width="175" height="46" rx="7" fill="#191921" stroke="#5C78FF" stroke-width="1.5"/>
+  <text x="283" y="106" font-size="8.5" fill="#E7E7EE" text-anchor="middle">9 min</text>
+  <rect x="370" y="70" width="175" height="46" rx="7" fill="#242739" stroke="#5C78FF" stroke-width="1.5"/>
   <text x="458" y="90" font-size="9.5" fill="#9AA0B4" font-weight="700" text-anchor="middle">pain</text>
   <text x="458" y="106" font-size="8.5" fill="#6B6B78" text-anchor="middle">9 min</text>
-  <rect x="545" y="70" width="175" height="46" rx="7" fill="#16202E" stroke="#28B9FF" stroke-width="1.5"/>
+  <rect x="545" y="70" width="175" height="46" rx="7" fill="#223650" stroke="#28B9FF" stroke-width="1.5"/>
   <text x="633" y="90" font-size="9.5" fill="#28B9FF" font-weight="700" text-anchor="middle">solution + V1</text>
-  <text x="633" y="106" font-size="8.5" fill="#6B6B78" text-anchor="middle">9 min</text>
+  <text x="633" y="106" font-size="8.5" fill="#E7E7EE" text-anchor="middle">9 min</text>
   <path d="M235 122 V 132 H 720 V 122" fill="none" stroke="#6B6B78" stroke-width="1.2"/>
   <text x="478" y="150" font-size="9" fill="#CDD0DD" text-anchor="middle">77% of the clock lives here — segment, pain, and the build</text>
   <text x="380" y="184" font-size="10.5" fill="#CDD0DD" text-anchor="middle">The three long blocks carry almost all the signal.</text>
@@ -459,10 +459,10 @@
   <text x="380" y="24" font-size="10.5" fill="#9AA0B4" text-anchor="middle" letter-spacing="1.5">THE SAME 2×2, THREE TIMES</text>
 
   <text x="130" y="52" font-size="10" fill="#5AC8FF" font-weight="700" text-anchor="middle">1 · WHICH USER?</text>
-  <rect x="30" y="64" width="200" height="200" rx="8" fill="#191921" stroke="#2C2C38"/>
+  <rect x="30" y="64" width="200" height="200" rx="8" fill="#242739" stroke="#3C4356"/>
   <rect x="130" y="64" width="100" height="100" fill="#5AC8FF" opacity=".10"/>
-  <line x1="130" y1="64" x2="130" y2="264" stroke="#2C2C38" stroke-dasharray="4,3"/>
-  <line x1="30" y1="164" x2="230" y2="164" stroke="#2C2C38" stroke-dasharray="4,3"/>
+  <line x1="130" y1="64" x2="130" y2="264" stroke="#3C4356" stroke-dasharray="4,3"/>
+  <line x1="30" y1="164" x2="230" y2="164" stroke="#3C4356" stroke-dasharray="4,3"/>
   <text x="130" y="282" font-size="8.5" fill="#6B6B78" text-anchor="middle">reach →</text>
   <text x="16" y="164" font-size="8.5" fill="#6B6B78" text-anchor="middle" transform="rotate(-90 16 164)">underserved →</text>
   <circle cx="78" cy="106" r="4.5" fill="#6B6B78"/>
@@ -471,14 +471,14 @@
   <text x="180" y="233" font-size="8.5" fill="#6B6B78" text-anchor="middle">already served</text>
   <circle cx="180" cy="106" r="9" fill="none" stroke="#5AC8FF" opacity=".35"/>
   <circle cx="180" cy="106" r="5.5" fill="#5AC8FF"/>
-  <text x="180" y="130" font-size="9" fill="#14141C" font-weight="700" text-anchor="middle">PICK</text>
+  <text x="180" y="130" font-size="9" fill="#20202E" font-weight="700" text-anchor="middle">PICK</text>
   <text x="130" y="304" font-size="9.5" fill="#CDD0DD" text-anchor="middle">big + badly served</text>
 
   <text x="380" y="52" font-size="10" fill="#9AA0B4" font-weight="700" text-anchor="middle">2 · WHICH PAIN?</text>
-  <rect x="280" y="64" width="200" height="200" rx="8" fill="#191921" stroke="#2C2C38"/>
+  <rect x="280" y="64" width="200" height="200" rx="8" fill="#242739" stroke="#3C4356"/>
   <rect x="380" y="64" width="100" height="100" fill="#5C78FF" opacity=".10"/>
-  <line x1="380" y1="64" x2="380" y2="264" stroke="#2C2C38" stroke-dasharray="4,3"/>
-  <line x1="280" y1="164" x2="480" y2="164" stroke="#2C2C38" stroke-dasharray="4,3"/>
+  <line x1="380" y1="64" x2="380" y2="264" stroke="#3C4356" stroke-dasharray="4,3"/>
+  <line x1="280" y1="164" x2="480" y2="164" stroke="#3C4356" stroke-dasharray="4,3"/>
   <text x="380" y="282" font-size="8.5" fill="#6B6B78" text-anchor="middle">frequency →</text>
   <text x="266" y="164" font-size="8.5" fill="#6B6B78" text-anchor="middle" transform="rotate(-90 266 164)">severity →</text>
   <circle cx="328" cy="106" r="4.5" fill="#6B6B78"/>
@@ -487,14 +487,14 @@
   <text x="430" y="233" font-size="8.5" fill="#6B6B78" text-anchor="middle">daily + trivial</text>
   <circle cx="430" cy="106" r="9" fill="none" stroke="#5C78FF" opacity=".35"/>
   <circle cx="430" cy="106" r="5.5" fill="#5C78FF"/>
-  <text x="430" y="130" font-size="9" fill="#14141C" font-weight="700" text-anchor="middle">PICK</text>
+  <text x="430" y="130" font-size="9" fill="#20202E" font-weight="700" text-anchor="middle">PICK</text>
   <text x="380" y="304" font-size="9.5" fill="#CDD0DD" text-anchor="middle">often + genuinely hurts</text>
 
   <text x="630" y="52" font-size="10" fill="#28B9FF" font-weight="700" text-anchor="middle">3 · WHICH V1?</text>
-  <rect x="530" y="64" width="200" height="200" rx="8" fill="#191921" stroke="#2C2C38"/>
+  <rect x="530" y="64" width="200" height="200" rx="8" fill="#242739" stroke="#3C4356"/>
   <rect x="530" y="64" width="100" height="100" fill="#28B9FF" opacity=".10"/>
-  <line x1="630" y1="64" x2="630" y2="264" stroke="#2C2C38" stroke-dasharray="4,3"/>
-  <line x1="530" y1="164" x2="730" y2="164" stroke="#2C2C38" stroke-dasharray="4,3"/>
+  <line x1="630" y1="64" x2="630" y2="264" stroke="#3C4356" stroke-dasharray="4,3"/>
+  <line x1="530" y1="164" x2="730" y2="164" stroke="#3C4356" stroke-dasharray="4,3"/>
   <text x="630" y="282" font-size="8.5" fill="#6B6B78" text-anchor="middle">effort →</text>
   <text x="516" y="164" font-size="8.5" fill="#6B6B78" text-anchor="middle" transform="rotate(-90 516 164)">impact →</text>
   <circle cx="682" cy="106" r="4.5" fill="#6B6B78"/>
@@ -503,7 +503,7 @@
   <text x="578" y="233" font-size="8.5" fill="#6B6B78" text-anchor="middle">busywork</text>
   <circle cx="578" cy="106" r="9" fill="none" stroke="#28B9FF" opacity=".35"/>
   <circle cx="578" cy="106" r="5.5" fill="#28B9FF"/>
-  <text x="578" y="130" font-size="9" fill="#14141C" font-weight="700" text-anchor="middle">PICK</text>
+  <text x="578" y="130" font-size="9" fill="#20202E" font-weight="700" text-anchor="middle">PICK</text>
   <text x="630" y="304" font-size="9.5" fill="#CDD0DD" text-anchor="middle">high impact, small build</text>
 
   <text x="380" y="338" font-size="10.5" fill="#CDD0DD" text-anchor="middle">Prioritisation is the whole job. Saying "these all matter" is the same as saying nothing.</text>
@@ -531,25 +531,25 @@
     <marker id="p-r" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#5C78FF"/></marker>
     <marker id="p-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#5C78FF"/></marker>
   </defs>
-  <rect x="250" y="34" width="260" height="52" rx="10" fill="#16202E" stroke="#5AC8FF" stroke-width="1.8"/>
+  <rect x="250" y="34" width="260" height="52" rx="10" fill="#223650" stroke="#5AC8FF" stroke-width="1.8"/>
   <text x="380" y="56" font-size="11.5" fill="#5AC8FF" font-weight="700" text-anchor="middle">NORTH STAR</text>
   <text x="380" y="74" font-size="9" fill="#9AA0B4" text-anchor="middle">earnings per online hour</text>
   <line x1="380" y1="90" x2="380" y2="106" stroke="#5AC8FF" stroke-width="1.4"/>
   <line x1="140" y1="106" x2="620" y2="106" stroke="#5AC8FF" stroke-width="1.4"/>
   <line x1="140" y1="106" x2="140" y2="126" stroke="#5AC8FF" stroke-width="1.4" marker-end="url(#p-v)"/>
-  <rect x="50" y="130" width="180" height="48" rx="9" fill="#16202E" stroke="#5AC8FF" stroke-width="1.5"/>
+  <rect x="50" y="130" width="180" height="48" rx="9" fill="#223650" stroke="#5AC8FF" stroke-width="1.5"/>
   <text x="140" y="150" font-size="10" fill="#5AC8FF" font-weight="700" text-anchor="middle">adoption</text>
-  <text x="140" y="167" font-size="8.5" fill="#6B6B78" text-anchor="middle">do they try it?</text>
+  <text x="140" y="167" font-size="8.5" fill="#E7E7EE" text-anchor="middle">do they try it?</text>
   <line x1="380" y1="106" x2="380" y2="126" stroke="#5AC8FF" stroke-width="1.4" marker-end="url(#p-v)"/>
-  <rect x="290" y="130" width="180" height="48" rx="9" fill="#16202E" stroke="#5AC8FF" stroke-width="1.5"/>
+  <rect x="290" y="130" width="180" height="48" rx="9" fill="#223650" stroke="#5AC8FF" stroke-width="1.5"/>
   <text x="380" y="150" font-size="10" fill="#5AC8FF" font-weight="700" text-anchor="middle">frequency</text>
-  <text x="380" y="167" font-size="8.5" fill="#6B6B78" text-anchor="middle">do they repeat?</text>
+  <text x="380" y="167" font-size="8.5" fill="#E7E7EE" text-anchor="middle">do they repeat?</text>
   <line x1="620" y1="106" x2="620" y2="126" stroke="#5AC8FF" stroke-width="1.4" marker-end="url(#p-v)"/>
-  <rect x="530" y="130" width="180" height="48" rx="9" fill="#16202E" stroke="#5AC8FF" stroke-width="1.5"/>
+  <rect x="530" y="130" width="180" height="48" rx="9" fill="#223650" stroke="#5AC8FF" stroke-width="1.5"/>
   <text x="620" y="150" font-size="10" fill="#5AC8FF" font-weight="700" text-anchor="middle">yield</text>
-  <text x="620" y="167" font-size="8.5" fill="#6B6B78" text-anchor="middle">does it pay?</text>
+  <text x="620" y="167" font-size="8.5" fill="#E7E7EE" text-anchor="middle">does it pay?</text>
   <text x="380" y="200" font-size="9" fill="#6B6B78" text-anchor="middle">input drivers — the things a team can actually move</text>
-  <rect x="60" y="216" width="640" height="62" rx="10" fill="#191921" stroke="#5C78FF" stroke-width="1.5"/>
+  <rect x="60" y="216" width="640" height="62" rx="10" fill="#242739" stroke="#5C78FF" stroke-width="1.5"/>
   <text x="80" y="238" font-size="10" fill="#9AA0B4" font-weight="700">GUARDRAILS — what must NOT get worse while you win</text>
   <text x="80" y="262" font-size="8.5" fill="#CDD0DD">· cancellation rate</text>
   <text x="240" y="262" font-size="8.5" fill="#CDD0DD">· p95 latency</text>
@@ -579,30 +579,30 @@
     <marker id="p-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#5C78FF"/></marker>
   </defs>
   <text x="380" y="28" font-size="10.5" fill="#9AA0B4" text-anchor="middle" letter-spacing="1.5">"DAU IS DOWN 5%." — WORK DOWN, NEVER GUESS</text>
-  <rect x="30" y="46" width="700" height="52" rx="9" fill="#191921" stroke="#5C78FF" stroke-width="1.5"/>
+  <rect x="30" y="46" width="700" height="52" rx="9" fill="#242739" stroke="#5C78FF" stroke-width="1.5"/>
   <text x="48" y="67" font-size="10" fill="#9AA0B4" font-weight="700">1 · IS IT REAL?</text>
   <text x="48" y="86" font-size="8.5" fill="#CDD0DD">logging change · pipeline broke · a bot left</text>
   <text x="712" y="79" font-size="8.5" fill="#6B6B78" text-anchor="end">rule out the instrument before the world</text>
   <line x1="380" y1="100" x2="380" y2="110" stroke="#6B6B78" stroke-width="1.3" marker-end="url(#p-m)"/>
-  <rect x="30" y="112" width="700" height="52" rx="9" fill="#191921" stroke="#5C78FF" stroke-width="1.5"/>
+  <rect x="30" y="112" width="700" height="52" rx="9" fill="#242739" stroke="#5C78FF" stroke-width="1.5"/>
   <text x="48" y="133" font-size="10" fill="#9AA0B4" font-weight="700">2 · IS IT US, OR THE WORLD?</text>
   <text x="48" y="152" font-size="8.5" fill="#CDD0DD">seasonality · holiday · competitor · outage · press</text>
   <text x="712" y="145" font-size="8.5" fill="#6B6B78" text-anchor="end">external first — it is free to check</text>
   <line x1="380" y1="166" x2="380" y2="176" stroke="#6B6B78" stroke-width="1.3" marker-end="url(#p-m)"/>
-  <rect x="30" y="178" width="700" height="52" rx="9" fill="#16202E" stroke="#5AC8FF" stroke-width="1.5"/>
+  <rect x="30" y="178" width="700" height="52" rx="9" fill="#223650" stroke="#5AC8FF" stroke-width="1.5"/>
   <text x="48" y="199" font-size="10" fill="#5AC8FF" font-weight="700">3 · WHO EXACTLY?</text>
   <text x="48" y="218" font-size="8.5" fill="#CDD0DD">cut by platform, geo, tenure, new vs existing</text>
-  <text x="712" y="211" font-size="8.5" fill="#6B6B78" text-anchor="end">a flat 5% is never flat underneath</text>
+  <text x="712" y="211" font-size="8.5" fill="#E7E7EE" text-anchor="end">a flat 5% is never flat underneath</text>
   <line x1="380" y1="232" x2="380" y2="242" stroke="#6B6B78" stroke-width="1.3" marker-end="url(#p-m)"/>
-  <rect x="30" y="244" width="700" height="52" rx="9" fill="#16202E" stroke="#5AC8FF" stroke-width="1.5"/>
+  <rect x="30" y="244" width="700" height="52" rx="9" fill="#223650" stroke="#5AC8FF" stroke-width="1.5"/>
   <text x="48" y="265" font-size="10" fill="#5AC8FF" font-weight="700">4 · WHAT CHANGED?</text>
   <text x="48" y="284" font-size="8.5" fill="#CDD0DD">release log · experiment ramp · pricing · ranking</text>
-  <text x="712" y="277" font-size="8.5" fill="#6B6B78" text-anchor="end">line the drop up against the deploy</text>
+  <text x="712" y="277" font-size="8.5" fill="#E7E7EE" text-anchor="end">line the drop up against the deploy</text>
   <line x1="380" y1="298" x2="380" y2="308" stroke="#6B6B78" stroke-width="1.3" marker-end="url(#p-m)"/>
-  <rect x="30" y="310" width="700" height="52" rx="9" fill="#16202E" stroke="#28B9FF" stroke-width="1.5"/>
+  <rect x="30" y="310" width="700" height="52" rx="9" fill="#223650" stroke="#28B9FF" stroke-width="1.5"/>
   <text x="48" y="331" font-size="10" fill="#28B9FF" font-weight="700">5 · SO WHAT?</text>
   <text x="48" y="350" font-size="8.5" fill="#CDD0DD">size it, name the fix, name the guardrail</text>
-  <text x="712" y="343" font-size="8.5" fill="#6B6B78" text-anchor="end">end with a decision, not a list</text>
+  <text x="712" y="343" font-size="8.5" fill="#E7E7EE" text-anchor="end">end with a decision, not a list</text>
   <text x="380" y="386" font-size="10" fill="#CDD0DD" text-anchor="middle">The candidate who says "probably a bug in logging — may I check that first?" has already passed.</text>
   </svg>
 <figcaption>Work down the ladder. Almost everyone leaps to step 4 — a product theory — and skips the two steps that are cheap, fast, and most often correct.</figcaption>
@@ -623,31 +623,31 @@
     <marker id="p-r" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#5C78FF"/></marker>
     <marker id="p-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#5C78FF"/></marker>
   </defs>
-  <rect x="20" y="40" width="340" height="196" rx="12" fill="#16202E" stroke="#5C78FF"/>
+  <rect x="20" y="40" width="340" height="196" rx="12" fill="#223650" stroke="#5C78FF"/>
   <text x="190" y="64" font-size="11" fill="#5AC8FF" font-weight="700" text-anchor="middle">CLASSIC FEATURE</text>
-  <text x="190" y="82" font-size="9" fill="#6B6B78" text-anchor="middle">same input → same output</text>
-  <rect x="52" y="98" width="276" height="24" rx="6" fill="#0D1420" stroke="#5AC8FF" stroke-width="1.2"/>
+  <text x="190" y="82" font-size="9" fill="#E7E7EE" text-anchor="middle">same input → same output</text>
+  <rect x="52" y="98" width="276" height="24" rx="6" fill="#1B2A46" stroke="#5AC8FF" stroke-width="1.2"/>
   <text x="190" y="114" font-size="9" fill="#CDD0DD" text-anchor="middle">spec it</text>
-  <rect x="52" y="130" width="276" height="24" rx="6" fill="#0D1420" stroke="#5AC8FF" stroke-width="1.2"/>
+  <rect x="52" y="130" width="276" height="24" rx="6" fill="#1B2A46" stroke="#5AC8FF" stroke-width="1.2"/>
   <text x="190" y="146" font-size="9" fill="#CDD0DD" text-anchor="middle">build it</text>
-  <rect x="52" y="162" width="276" height="24" rx="6" fill="#0D1420" stroke="#5AC8FF" stroke-width="1.2"/>
+  <rect x="52" y="162" width="276" height="24" rx="6" fill="#1B2A46" stroke="#5AC8FF" stroke-width="1.2"/>
   <text x="190" y="178" font-size="9" fill="#CDD0DD" text-anchor="middle">test: pass / fail</text>
-  <rect x="52" y="194" width="276" height="24" rx="6" fill="#0D1420" stroke="#5AC8FF" stroke-width="1.2"/>
+  <rect x="52" y="194" width="276" height="24" rx="6" fill="#1B2A46" stroke="#5AC8FF" stroke-width="1.2"/>
   <text x="190" y="210" font-size="9" fill="#CDD0DD" text-anchor="middle">ship it</text>
   <text x="190" y="252" font-size="9" fill="#5AC8FF" text-anchor="middle">correctness is binary</text>
-  <rect x="400" y="40" width="340" height="196" rx="12" fill="#16202E" stroke="#191921"/>
+  <rect x="400" y="40" width="340" height="196" rx="12" fill="#223650" stroke="#242739"/>
   <text x="570" y="64" font-size="11" fill="#5AC8FF" font-weight="700" text-anchor="middle">AI FEATURE</text>
-  <text x="570" y="82" font-size="9" fill="#6B6B78" text-anchor="middle">same input → a distribution</text>
-  <rect x="432" y="98" width="276" height="24" rx="6" fill="#16202E" stroke="#5AC8FF" stroke-width="1.2"/>
+  <text x="570" y="82" font-size="9" fill="#E7E7EE" text-anchor="middle">same input → a distribution</text>
+  <rect x="432" y="98" width="276" height="24" rx="6" fill="#223650" stroke="#5AC8FF" stroke-width="1.2"/>
   <text x="570" y="114" font-size="8.5" fill="#CDD0DD" text-anchor="middle">what can the model actually do?</text>
-  <rect x="432" y="130" width="276" height="24" rx="6" fill="#16202E" stroke="#28B9FF" stroke-width="1.2"/>
+  <rect x="432" y="130" width="276" height="24" rx="6" fill="#223650" stroke="#28B9FF" stroke-width="1.2"/>
   <text x="570" y="146" font-size="8.5" fill="#CDD0DD" text-anchor="middle">build an EVAL SET first</text>
-  <rect x="432" y="162" width="276" height="24" rx="6" fill="#16202E" stroke="#5AC8FF" stroke-width="1.2"/>
+  <rect x="432" y="162" width="276" height="24" rx="6" fill="#223650" stroke="#5AC8FF" stroke-width="1.2"/>
   <text x="570" y="178" font-size="8.5" fill="#CDD0DD" text-anchor="middle">measure: % good, not pass/fail</text>
-  <rect x="432" y="194" width="276" height="24" rx="6" fill="#16202E" stroke="#5AC8FF" stroke-width="1.2"/>
+  <rect x="432" y="194" width="276" height="24" rx="6" fill="#223650" stroke="#5AC8FF" stroke-width="1.2"/>
   <text x="570" y="210" font-size="8.5" fill="#CDD0DD" text-anchor="middle">design for the 10% it gets wrong</text>
   <text x="570" y="252" font-size="9" fill="#5AC8FF" text-anchor="middle">correctness is a rate — and the UX must absorb it</text>
-  <rect x="20" y="256" width="720" height="44" rx="9" fill="#191921" stroke="#5C78FF" stroke-width="1.4"/>
+  <rect x="20" y="256" width="720" height="44" rx="9" fill="#242739" stroke="#5C78FF" stroke-width="1.4"/>
   <text x="380" y="274" font-size="9.5" fill="#9AA0B4" font-weight="700" text-anchor="middle">the four questions they are really asking</text>
   <text x="380" y="291" font-size="8.5" fill="#CDD0DD" text-anchor="middle">what breaks when it is wrong? · how do you evaluate it? · what does a token cost you? · why not just prompt GPT?</text>
   <text x="380" y="326" font-size="10.5" fill="#CDD0DD" text-anchor="middle">"I would add AI" is a non-answer. Name the capability, the eval, and the failure UX.</text>
@@ -681,15 +681,15 @@
     <marker id="p-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#5C78FF"/></marker>
   </defs>
   <text x="380" y="28" font-size="10.5" fill="#9AA0B4" text-anchor="middle" letter-spacing="1.5">THE LEVEL IS AUDIBLE IN THE FIRST FIVE MINUTES</text>
-  <rect x="30" y="46" width="700" height="60" rx="10" fill="#191921" stroke="#6B6B78" stroke-width="1.6"/>
+  <rect x="30" y="46" width="700" height="60" rx="10" fill="#242739" stroke="#6B6B78" stroke-width="1.6"/>
   <text x="52" y="70" font-size="11" fill="#6B6B78" font-weight="700">MID</text>
   <text x="128" y="70" font-size="9" fill="#9AA0B4">solves the problem you were handed</text>
   <text x="52" y="91" font-size="9" fill="#CDD0DD">“I’d build the feature they asked for.”</text>
-  <rect x="30" y="120" width="700" height="60" rx="10" fill="#16202E" stroke="#5AC8FF" stroke-width="1.6"/>
+  <rect x="30" y="120" width="700" height="60" rx="10" fill="#223650" stroke="#5AC8FF" stroke-width="1.6"/>
   <text x="52" y="144" font-size="11" fill="#5AC8FF" font-weight="700">SENIOR</text>
   <text x="128" y="144" font-size="9" fill="#9AA0B4">chooses which problem is worth solving</text>
   <text x="52" y="165" font-size="9" fill="#CDD0DD">“I’d cut scope to this one segment, and here is why the rest can wait.”</text>
-  <rect x="30" y="194" width="700" height="60" rx="10" fill="#16202E" stroke="#5AC8FF" stroke-width="1.6"/>
+  <rect x="30" y="194" width="700" height="60" rx="10" fill="#223650" stroke="#5AC8FF" stroke-width="1.6"/>
   <text x="52" y="218" font-size="11" fill="#5AC8FF" font-weight="700">STAFF+</text>
   <text x="128" y="218" font-size="9" fill="#9AA0B4">changes what the team believes about the user</text>
   <text x="52" y="239" font-size="9" fill="#CDD0DD">“The metric we picked is the bug. Here is the one I’d ship against, and the guardrail.”</text>

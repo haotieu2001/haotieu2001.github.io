@@ -22,7 +22,7 @@
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,500;0,700;0,800;1,400&display=swap" rel="stylesheet">
 <style>
   :root{
-    --bg:#111117; --bg2:#16161D; --ink:#F1F1F1; --muted:#9aa0b4; --dim:#6b6b78;
+    --bg:#111117; --bg2:#16161d; --ink:#F1F1F1; --muted:#9aa0b4; --dim:#6b6b78;
     --blue2:#5C78FF; --cyan:#28B9FF; --cyan2:#5AC8FF; --purple:#5C78FF; --magenta2:#5AC8FF;
     --grad:linear-gradient(90deg,#28B9FF,#5C78FF);
     --font:"JetBrainsMono Nerd Font","JetBrains Mono","Symbols Nerd Font",ui-monospace,"Cascadia Code",Menlo,Consolas,monospace;
@@ -40,18 +40,18 @@
   @keyframes sheen{to{background-position:220% center}}
   .dek{color:var(--muted);font-size:17px}
   .byline{margin-top:14px;font-size:13px;color:var(--dim)}
-  h2{font-size:clamp(21px,3.2vw,28px);margin:52px 0 6px;font-weight:800;line-height:1.22;padding-top:14px;border-top:1px solid #2C2C38}
+  h2{font-size:clamp(21px,3.2vw,28px);margin:52px 0 6px;font-weight:800;line-height:1.22;padding-top:14px;border-top:1px solid #3C4356}
   h2 .n{color:var(--blue2)}
   h3{font-size:18px;margin:28px 0 4px;color:#fff;font-weight:700}
   h4{font-size:15px;margin:20px 0 4px;color:var(--cyan2);font-weight:700}
   p,li{color:#dcdce4}
   .lead{font-size:18px;color:#e7e7ee}
   a{color:var(--cyan2)}
-  hr{border:0;border-top:1px solid #2C2C38;margin:36px 0}
-  code{font-family:var(--font);background:#23232b;color:#5AC8FF;padding:1px 6px;border-radius:5px;font-size:.88em;border:1px solid #2C2C38}
+  hr{border:0;border-top:1px solid #3C4356;margin:36px 0}
+  code{font-family:var(--font);background:#23232b;color:#5AC8FF;padding:1px 6px;border-radius:5px;font-size:.88em;border:1px solid #3C4356}
   .cb{margin:16px 0}
-  .cb .lang{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:#9aa0b4;background:#1b1b24;border:1px solid #2C2C38;border-bottom:none;border-radius:9px 9px 0 0;padding:4px 12px}
-  pre{margin:0;background:#101017;border:1px solid #2C2C38;border-radius:0 10px 10px 10px;padding:14px 16px;overflow-x:auto;
+  .cb .lang{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:#9aa0b4;background:#1b1b24;border:1px solid #3C4356;border-bottom:none;border-radius:9px 9px 0 0;padding:4px 12px}
+  pre{margin:0;background:#1C1C2A;border:1px solid #3C4356;border-radius:0 10px 10px 10px;padding:14px 16px;overflow-x:auto;
       font-family:var(--font);font-size:13px;line-height:1.65;color:#d8dcea;white-space:pre}
   pre .c{color:#6B6B78}
   pre .o{color:#9aa0b4}
@@ -59,31 +59,31 @@
   pre .g{color:#5AC8FF}
   pre .y{color:#9AA0B4}
   pre .r{color:#9AA0B4}
-  .callout{border-left:4px solid #28B9FF;background:linear-gradient(160deg,#12202e,#101019);border-radius:0 12px 12px 0;padding:14px 18px;margin:22px 0;box-shadow:0 0 16px -8px #28B9FF66}
-  .callout.cy{border-color:#5AC8FF;background:linear-gradient(160deg,#0f2233,#101019)}
-  .callout.mg{border-color:#5C78FF;background:linear-gradient(160deg,#141a33,#101019)}
-  .callout.gd{border-color:#5C78FF;background:linear-gradient(160deg,#141a33,#101019)}
-  .callout.gr{border-color:#28B9FF;background:linear-gradient(160deg,#0f2233,#101019)}
+  .callout{border-left:4px solid #28B9FF;background:linear-gradient(160deg,#12202e,#1C1C2A);border-radius:0 12px 12px 0;padding:14px 18px;margin:22px 0;box-shadow:0 0 16px -8px #28B9FF66}
+  .callout.cy{border-color:#5AC8FF;background:linear-gradient(160deg,#0f2233,#1C1C2A)}
+  .callout.mg{border-color:#5C78FF;background:linear-gradient(160deg,#141a33,#1C1C2A)}
+  .callout.gd{border-color:#5C78FF;background:linear-gradient(160deg,#141a33,#1C1C2A)}
+  .callout.gr{border-color:#28B9FF;background:linear-gradient(160deg,#0f2233,#1C1C2A)}
   .callout .t{color:var(--cyan2);font-weight:800}
   .callout.gd .t{color:#8AA0FF}
   .callout.gr .t{color:#5AC8FF}
   .callout.mg .t{color:#8AA0FF}
-  .tldr{border:1px solid #28B9FF44;background:linear-gradient(180deg,#12161d,#0d0d12);border-radius:16px;padding:20px 24px;margin:26px 0;box-shadow:0 0 24px -10px #28B9FF55}
+  .tldr{border:1px solid #28B9FF44;background:linear-gradient(180deg,#12161d,#1C1C2A);border-radius:16px;padding:20px 24px;margin:26px 0;box-shadow:0 0 24px -10px #28B9FF55}
   .tldr h4{margin:0 0 8px;font-size:13px;letter-spacing:.2em;text-transform:uppercase;color:var(--cyan2)}
-  .gloss{border:1px solid #2C2C38;background:#1D1D26;border-radius:14px;padding:18px 22px;margin:24px 0}
+  .gloss{border:1px solid #3C4356;background:#1D1D26;border-radius:14px;padding:18px 22px;margin:24px 0}
   .gloss h4{margin:0 0 6px;color:#fff;font-size:15px}
   .gloss dl{margin:0;font-size:13.5px}
   .gloss dt{color:var(--cyan2);font-weight:700;margin-top:9px}
   .gloss dd{margin:1px 0 0;color:#cdd0dd}
-  .toc{background:#191921;border:1px solid #2C2C38;border-radius:14px;padding:16px 22px;margin:24px 0;column-count:2;column-gap:28px}
+  .toc{background:#242739;border:1px solid #3C4356;border-radius:14px;padding:16px 22px;margin:24px 0;column-count:2;column-gap:28px}
   .toc a{display:block;color:var(--cyan2);text-decoration:none;font-size:13.5px;line-height:1.9;break-inside:avoid}
   .toc a:hover{color:#fff}
   .toc>strong{column-span:all;display:block;margin-bottom:6px;color:#fff}
   table{border-collapse:collapse;width:100%;font-size:13.5px;margin:16px 0}
-  th,td{border:1px solid #2C2C38;padding:8px 11px;text-align:left;vertical-align:top}
+  th,td{border:1px solid #3C4356;padding:8px 11px;text-align:left;vertical-align:top}
   th{background:#17171E;color:#fff}
   tr:nth-child(even) td{background:#17171E}
-  .diagram{background:#101017;border:1px solid #2C2C38;border-radius:14px;padding:18px;margin:20px 0;overflow-x:auto;font-size:12.5px;line-height:1.7;color:#d8dcea;white-space:pre;font-family:var(--font)}
+  .diagram{background:#1C1C2A;border:1px solid #3C4356;border-radius:14px;padding:18px;margin:20px 0;overflow-x:auto;font-size:12.5px;line-height:1.7;color:#d8dcea;white-space:pre;font-family:var(--font)}
   .diagram .hl{color:#5AC8FF}
   .diagram .dim{color:#6B6B78}
   .diagram .ok{color:#5AC8FF}
@@ -92,26 +92,26 @@
   .diagram .pu{color:#A56BFF}
   .pain{border:1px solid #4a3a1a;border-left:4px solid #FFB454;background:linear-gradient(160deg,#221b0e,#141019);border-radius:0 14px 14px 0;padding:16px 20px;margin:14px 0;box-shadow:0 0 20px -8px #FFB45444}
   .pain h4{margin:0 0 4px;color:#FFC978}
-  .fix{border:1px solid #123246;border-left:4px solid #28B9FF;background:linear-gradient(160deg,#0e2030,#101019);border-radius:0 14px 14px 0;padding:16px 20px;margin:14px 0;box-shadow:0 0 20px -6px #28B9FF55}
+  .fix{border:1px solid #123246;border-left:4px solid #28B9FF;background:linear-gradient(160deg,#1A3452,#1C1C2A);border-radius:0 14px 14px 0;padding:16px 20px;margin:14px 0;box-shadow:0 0 20px -6px #28B9FF55}
   .fix h4{margin:0 0 4px;color:#5AC8FF}
   .step{display:flex;gap:12px;align-items:flex-start;margin:14px 0}
   .step .num-bubble{flex:0 0 28px;height:28px;border-radius:50%;background:var(--grad);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:#fff;margin-top:2px}
   .step .body{flex:1}
-  figure.mm{background:radial-gradient(130% 150% at 50% 0%,#16182a 0%,#101017 72%);border:1px solid #2C2C38;border-radius:14px;padding:14px 10px 6px;margin:20px 0;overflow-x:auto}
+  figure.mm{background:radial-gradient(130% 150% at 50% 0%,#223650 0%,#1C1C2A 72%);border:1px solid #3C4356;border-radius:14px;padding:14px 10px 6px;margin:20px 0;overflow-x:auto}
   figure.mm figcaption{font-size:12px;color:#555;text-align:center;margin-bottom:.4em;letter-spacing:.06em;text-transform:uppercase}
   .mermaid{display:flex;justify-content:center;font-family:var(--font)!important}
-  footer{border-top:1px solid #2C2C38;margin-top:50px;padding:24px 0 90px;color:var(--dim);font-size:13px}
+  footer{border-top:1px solid #3C4356;margin-top:50px;padding:24px 0 90px;color:var(--dim);font-size:13px}
   footer a{color:var(--cyan2)}
   .js .reveal{opacity:0;transform:translateY(16px);transition:opacity .6s ease,transform .6s ease}
   .js .reveal.in{opacity:1;transform:none}
   @media (prefers-reduced-motion:reduce){.js .reveal{opacity:1;transform:none}}
   /* ---- shared theme: top nav + a11y (appended) ---- */
-  .nav{position:sticky;top:0;z-index:60;background:rgba(25,25,33,.82);backdrop-filter:blur(10px);border-bottom:1px solid #2C2C38}
+  .nav{position:sticky;top:0;z-index:60;background:rgba(25,25,33,.82);backdrop-filter:blur(10px);border-bottom:1px solid #3C4356}
   .nav-inner{max-width:1040px;margin:0 auto;padding:12px 24px;display:flex;align-items:center;gap:18px;flex-wrap:wrap}
   .nav-brand{font-weight:800;letter-spacing:.16em;font-size:15px;text-decoration:none;border:0;color:#5AC8FF}
   .nav-links{display:flex;gap:6px;flex-wrap:wrap;margin-left:auto}
   .nav-links a{text-decoration:none;border:1px solid transparent;color:#9aa0b4;font-weight:700;font-size:13.5px;padding:6px 14px;border-radius:999px;transition:.2s}
-  .nav-links a:hover{color:#fff;border-color:#2C2C38;background:#191921}
+  .nav-links a:hover{color:#fff;border-color:#3C4356;background:#242739}
   .nav-links a.active{color:#5AC8FF;border-color:#28B9FF55;background:#28B9FF14}
   :focus-visible{outline:2px solid #5AC8FF;outline-offset:3px;border-radius:6px}
   @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{animation:none !important;transition:none !important}.js .reveal{opacity:1 !important;transform:none !important}}
@@ -132,7 +132,7 @@
   <div class="byline">~30 min read · Deep dive · Fundamentals</div>
 </header>
 
-<figure class="reveal" style="margin:18px 0 6px;background:radial-gradient(130% 150% at 50% 0%,#16182a 0%,#101017 72%);border:1px solid #2C2C38;border-radius:16px;padding:14px 10px;overflow:hidden">
+<figure class="reveal" style="margin:18px 0 6px;background:radial-gradient(130% 150% at 50% 0%,#223650 0%,#1C1C2A 72%);border:1px solid #3C4356;border-radius:16px;padding:14px 10px;overflow:hidden">
 <figcaption style="font-size:12px;color:#555;text-align:center;margin-bottom:.6em;letter-spacing:.06em;text-transform:uppercase">The one picture: the same table, stored two ways</figcaption>
 <svg viewBox="0 0 860 250" width="100%" style="display:block;max-width:860px;margin:0 auto" aria-label="Row storage keeps each row's fields together; column storage keeps each column's values together">
   <defs>
@@ -143,22 +143,22 @@
   <text x="200" y="28" class="hm" font-size="13" fill="#9AA0B4" text-anchor="middle" font-weight="700">ROW STORE  (OLTP)</text>
   <text x="200" y="46" class="hm" font-size="10.5" fill="#8A90A6" text-anchor="middle">one row = one contiguous block</text>
   <g class="hm" font-size="11">
-    <rect x="40" y="62" width="320" height="26" rx="4" fill="#191921" stroke="#5C78FF"/><text x="50" y="79" fill="#9AA0B4">id1</text><text x="100" y="79" fill="#D8DCEA">name1</text><text x="200" y="79" fill="#5AC8FF">city1</text><text x="290" y="79" fill="#5AC8FF">price1</text>
-    <rect x="40" y="92" width="320" height="26" rx="4" fill="#191921" stroke="#5C78FF"/><text x="50" y="109" fill="#9AA0B4">id2</text><text x="100" y="109" fill="#D8DCEA">name2</text><text x="200" y="109" fill="#5AC8FF">city2</text><text x="290" y="109" fill="#5AC8FF">price2</text>
-    <rect x="40" y="122" width="320" height="26" rx="4" fill="#191921" stroke="#5C78FF"/><text x="50" y="139" fill="#9AA0B4">id3</text><text x="100" y="139" fill="#D8DCEA">name3</text><text x="200" y="139" fill="#5AC8FF">city3</text><text x="290" y="139" fill="#5AC8FF">price3</text>
+    <rect x="40" y="62" width="320" height="26" rx="4" fill="#242739" stroke="#5C78FF"/><text x="50" y="79" fill="#9AA0B4">id1</text><text x="100" y="79" fill="#D8DCEA">name1</text><text x="200" y="79" fill="#5AC8FF">city1</text><text x="290" y="79" fill="#5AC8FF">price1</text>
+    <rect x="40" y="92" width="320" height="26" rx="4" fill="#242739" stroke="#5C78FF"/><text x="50" y="109" fill="#9AA0B4">id2</text><text x="100" y="109" fill="#D8DCEA">name2</text><text x="200" y="109" fill="#5AC8FF">city2</text><text x="290" y="109" fill="#5AC8FF">price2</text>
+    <rect x="40" y="122" width="320" height="26" rx="4" fill="#242739" stroke="#5C78FF"/><text x="50" y="139" fill="#9AA0B4">id3</text><text x="100" y="139" fill="#D8DCEA">name3</text><text x="200" y="139" fill="#5AC8FF">city3</text><text x="290" y="139" fill="#5AC8FF">price3</text>
   </g>
   <text x="200" y="172" class="hm" font-size="10.5" fill="#5AC8FF" text-anchor="middle">+ grab a whole row in one read</text>
   <text x="200" y="190" class="hm" font-size="10.5" fill="#9AA0B4" text-anchor="middle">− to sum prices, you touch every row</text>
   <!-- divider -->
-  <line x1="430" y1="58" x2="430" y2="200" stroke="#2C2C38" stroke-width="1.5" stroke-dasharray="4,4"/>
+  <line x1="430" y1="58" x2="430" y2="200" stroke="#3C4356" stroke-width="1.5" stroke-dasharray="4,4"/>
   <!-- COLUMN side -->
   <text x="650" y="28" class="hm" font-size="13" fill="#5AC8FF" text-anchor="middle" font-weight="700">COLUMN STORE  (OLAP)</text>
   <text x="650" y="46" class="hm" font-size="10.5" fill="#8A90A6" text-anchor="middle">one column = one contiguous block</text>
   <g class="hm" font-size="11">
-    <rect x="500" y="62" width="300" height="26" rx="4" fill="#0D1820" stroke="#5C78FF"/><text x="510" y="79" fill="#9AA0B4">id1 · id2 · id3 · id4 · id5 …</text>
-    <rect x="500" y="92" width="300" height="26" rx="4" fill="#0D1820" stroke="#D8DCEA"/><text x="510" y="109" fill="#D8DCEA">name1 · name2 · name3 …</text>
-    <rect x="500" y="122" width="300" height="26" rx="4" fill="#0D1820" stroke="#5AC8FF"/><text x="510" y="139" fill="#5AC8FF">city1 · city2 · city3 …</text>
-    <rect x="500" y="152" width="300" height="26" rx="4" fill="#0D1820" stroke="#5AC8FF"/><text x="510" y="169" fill="#5AC8FF">price1 · price2 · price3 …</text>
+    <rect x="500" y="62" width="300" height="26" rx="4" fill="#18293E" stroke="#5C78FF"/><text x="510" y="79" fill="#9AA0B4">id1 · id2 · id3 · id4 · id5 …</text>
+    <rect x="500" y="92" width="300" height="26" rx="4" fill="#18293E" stroke="#D8DCEA"/><text x="510" y="109" fill="#D8DCEA">name1 · name2 · name3 …</text>
+    <rect x="500" y="122" width="300" height="26" rx="4" fill="#18293E" stroke="#5AC8FF"/><text x="510" y="139" fill="#5AC8FF">city1 · city2 · city3 …</text>
+    <rect x="500" y="152" width="300" height="26" rx="4" fill="#18293E" stroke="#5AC8FF"/><text x="510" y="169" fill="#5AC8FF">price1 · price2 · price3 …</text>
   </g>
   <text x="650" y="196" class="hm" font-size="10.5" fill="#5AC8FF" text-anchor="middle">+ sum prices = read just the price block</text>
   <circle r="4" fill="#5AC8FF"><animate attributeName="cx" values="500;800" dur="3s" repeatCount="indefinite"/><animate attributeName="cy" values="165;165" dur="3s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;1;1;0" dur="3s" repeatCount="indefinite"/></circle>
@@ -197,16 +197,16 @@
   <li><strong>OLAP — Online Analytical Processing.</strong> An <em>analytical</em> query reads huge swaths of history to compute a summary: total revenue by region, average session length by month, the funnel conversion rate. Each query scans <em>millions to billions</em> of rows, runs for <em>seconds to minutes</em>, and there are relatively <em>few</em> of them. This is the database <em>behind your dashboards and reports</em>. Think BigQuery, Snowflake, Redshift, Spark, ClickHouse, Databricks.</li>
 </ul>
 
-<figure class="reveal" style="margin:1.4em 0;background:#101017;border:1px solid #2C2C38;border-radius:10px;padding:1.2em 1em 1em;overflow:hidden">
+<figure class="reveal" style="margin:1.4em 0;background:#1C1C2A;border:1px solid #3C4356;border-radius:10px;padding:1.2em 1em 1em;overflow:hidden">
 <figcaption style="font-size:12px;color:#555;text-align:center;margin-bottom:.8em;letter-spacing:.06em;text-transform:uppercase">Same company, two databases, two jobs</figcaption>
 <svg viewBox="0 0 760 220" width="100%" style="display:block;max-width:760px;margin:0 auto" aria-label="The app writes to OLTP; data is copied into OLAP where analysts run reports">
   <defs><style>.s1{font-family:'JetBrains Mono',monospace;}</style></defs>
   <!-- app users -->
-  <rect x="20" y="80" width="150" height="60" rx="9" fill="#16202E" stroke="#5C78FF" stroke-width="1.6"/>
+  <rect x="20" y="80" width="150" height="60" rx="9" fill="#223650" stroke="#5C78FF" stroke-width="1.6"/>
   <text x="95" y="106" class="s1" font-size="11.5" fill="#8AA0FF" text-anchor="middle" font-weight="700">the app</text>
   <text x="95" y="124" class="s1" font-size="10" fill="#8A90A6" text-anchor="middle">millions of users</text>
   <!-- oltp -->
-  <rect x="240" y="70" width="170" height="80" rx="9" fill="#191921" stroke="#5C78FF" stroke-width="1.8"/>
+  <rect x="240" y="70" width="170" height="80" rx="9" fill="#242739" stroke="#5C78FF" stroke-width="1.8"/>
   <text x="325" y="98" class="s1" font-size="12" fill="#9AA0B4" text-anchor="middle" font-weight="700">OLTP (row store)</text>
   <text x="325" y="118" class="s1" font-size="10" fill="#B7C0CC" text-anchor="middle">Postgres / MySQL</text>
   <text x="325" y="134" class="s1" font-size="10" fill="#8A90A6" text-anchor="middle">tiny, fast writes</text>
@@ -216,7 +216,7 @@
   <text x="449" y="100" class="s1" font-size="9.5" fill="#5AC8FF" text-anchor="middle">ETL / ELT</text>
   <text x="449" y="128" class="s1" font-size="9.5" fill="#8A90A6" text-anchor="middle">nightly / streaming</text>
   <!-- olap -->
-  <rect x="500" y="70" width="170" height="80" rx="9" fill="#0D1820" stroke="#5AC8FF" stroke-width="1.8"/>
+  <rect x="500" y="70" width="170" height="80" rx="9" fill="#18293E" stroke="#5AC8FF" stroke-width="1.8"/>
   <text x="585" y="98" class="s1" font-size="12" fill="#5AC8FF" text-anchor="middle" font-weight="700">OLAP (column store)</text>
   <text x="585" y="118" class="s1" font-size="10" fill="#B7C0CC" text-anchor="middle">BigQuery / Snowflake</text>
   <text x="585" y="134" class="s1" font-size="10" fill="#8A90A6" text-anchor="middle">huge, fast scans</text>
@@ -224,7 +224,7 @@
   <line x1="170" y1="110" x2="238" y2="110" stroke="#5C78FF" stroke-width="1.8"/>
   <polygon points="238,105 248,110 238,115" fill="#5C78FF"/>
   <!-- analysts -->
-  <rect x="500" y="178" width="170" height="34" rx="8" fill="#191921" stroke="#5AC8FF" stroke-width="1.4"/>
+  <rect x="500" y="178" width="170" height="34" rx="8" fill="#242739" stroke="#5AC8FF" stroke-width="1.4"/>
   <text x="585" y="200" class="s1" font-size="10.5" fill="#5AC8FF" text-anchor="middle">analysts · dashboards · BI</text>
   <line x1="585" y1="150" x2="585" y2="176" stroke="#5AC8FF" stroke-width="1.6"/>
   <polygon points="580,176 585,186 590,176" fill="#5AC8FF"/>
@@ -265,23 +265,23 @@
 <h3 class="reveal">The page: the unit of everything</h3>
 <p class="reveal">Disks (and the operating system) move data in blocks, not bytes. So databases adopt a fixed <strong>page</strong> size — typically <strong>8&nbsp;KB</strong> (PostgreSQL) or <strong>16&nbsp;KB</strong> (MySQL/InnoDB) — as the smallest unit they ever read from or write to disk. A table is, on disk, just a long sequence of these pages. Each page holds a small header, a slot directory (pointers to where each row lives inside the page), and then the rows themselves packed in.</p>
 
-<figure class="reveal" style="margin:1.4em 0;background:#101017;border:1px solid #2C2C38;border-radius:10px;padding:1.2em 1em 1em;overflow:hidden">
+<figure class="reveal" style="margin:1.4em 0;background:#1C1C2A;border:1px solid #3C4356;border-radius:10px;padding:1.2em 1em 1em;overflow:hidden">
 <figcaption style="font-size:12px;color:#555;text-align:center;margin-bottom:.8em;letter-spacing:.06em;text-transform:uppercase">One 8&nbsp;KB page — rows of all columns, packed together</figcaption>
 <svg viewBox="0 0 720 230" width="100%" style="display:block;max-width:720px;margin:0 auto" aria-label="A page contains a header, a slot directory, and several whole rows stored contiguously">
   <defs><style>.p1{font-family:'JetBrains Mono',monospace;}</style></defs>
-  <rect x="40" y="20" width="640" height="190" rx="10" fill="#0F0F17" stroke="#5C78FF" stroke-width="1.6"/>
+  <rect x="40" y="20" width="640" height="190" rx="10" fill="#1C1C2A" stroke="#5C78FF" stroke-width="1.6"/>
   <text x="360" y="14" class="p1" font-size="11" fill="#9AA0B4" text-anchor="middle" font-weight="700">PAGE  (8 KB block — the unit of disk I/O)</text>
   <!-- header -->
-  <rect x="54" y="34" width="612" height="26" rx="5" fill="#16202E" stroke="#5C78FF" stroke-width="1.2"/>
+  <rect x="54" y="34" width="612" height="26" rx="5" fill="#223650" stroke="#5C78FF" stroke-width="1.2"/>
   <text x="360" y="51" class="p1" font-size="10.5" fill="#8AA0FF" text-anchor="middle">page header · slot directory → [ptr row1][ptr row2][ptr row3]…</text>
   <!-- rows -->
   <g class="p1" font-size="10.5">
-    <rect x="54" y="72" width="612" height="30" rx="5" fill="#191921" stroke="#5C78FF" stroke-width="1.1"/>
+    <rect x="54" y="72" width="612" height="30" rx="5" fill="#242739" stroke="#5C78FF" stroke-width="1.1"/>
     <text x="64" y="91" fill="#9AA0B4">8842</text><text x="130" y="91" fill="#D8DCEA">"Hao Tieu Kim"</text><text x="280" y="91" fill="#5AC8FF">"Hanoi"</text><text x="420" y="91" fill="#5AC8FF">"gold"</text><text x="540" y="91" fill="#5AC8FF">2021-06-01</text>
     <text x="64" y="116" fill="#6B6B78" font-size="9">└─ row 8842: ALL columns of this customer, side by side ─────────────┘</text>
-    <rect x="54" y="128" width="612" height="30" rx="5" fill="#191921" stroke="#5C78FF" stroke-width="1.1"/>
+    <rect x="54" y="128" width="612" height="30" rx="5" fill="#242739" stroke="#5C78FF" stroke-width="1.1"/>
     <text x="64" y="147" fill="#9AA0B4">8843</text><text x="130" y="147" fill="#D8DCEA">"Mai Le"</text><text x="280" y="147" fill="#5AC8FF">"Da Nang"</text><text x="420" y="147" fill="#5AC8FF">"silver"</text><text x="540" y="147" fill="#5AC8FF">2022-03-12</text>
-    <rect x="54" y="166" width="612" height="30" rx="5" fill="#191921" stroke="#5C78FF" stroke-width="1.1"/>
+    <rect x="54" y="166" width="612" height="30" rx="5" fill="#242739" stroke="#5C78FF" stroke-width="1.1"/>
     <text x="64" y="185" fill="#9AA0B4">8844</text><text x="130" y="185" fill="#D8DCEA">"Quan Vo"</text><text x="280" y="185" fill="#5AC8FF">"Hue"</text><text x="420" y="185" fill="#5AC8FF">"gold"</text><text x="540" y="185" fill="#5AC8FF">2020-11-30</text>
   </g>
 </svg>
@@ -317,7 +317,7 @@
 <h3 class="reveal">What a B-tree is</h3>
 <p class="reveal">A <strong>B-tree</strong> is a balanced tree kept sorted by the indexed column. The top <em>root</em> node and middle <em>branch</em> nodes hold only signposts ("keys 1–1000 are this way, 1001–2000 that way"); the bottom <em>leaf</em> nodes hold the actual keys in sorted order, each pointing to the row's location on disk. Because the tree is balanced and very wide (each node fans out to hundreds of children), it stays only 3–4 levels deep even for billions of rows.</p>
 
-<figure class="reveal" style="margin:1.4em 0;background:#101017;border:1px solid #2C2C38;border-radius:10px;padding:1.2em 1em 1em;overflow:hidden">
+<figure class="reveal" style="margin:1.4em 0;background:#1C1C2A;border:1px solid #3C4356;border-radius:10px;padding:1.2em 1em 1em;overflow:hidden">
 <figcaption style="font-size:12px;color:#8a90a6;text-align:center;margin-bottom:.8em;letter-spacing:.06em;text-transform:uppercase">Finding id = 8842 — 3 hops instead of millions of reads</figcaption>
 <svg viewBox="0 0 640 320" width="100%" style="display:block;max-width:640px;margin:0 auto" font-family="'JetBrains Mono',monospace" aria-label="B-tree lookup: root to branch to leaf, then one page read to the row">
   <defs><marker id="bt2" markerWidth="9" markerHeight="9" refX="4.5" refY="6" orient="auto"><path d="M0 0 L4.5 6 L9 0 z" fill="#5C78FF"/></marker></defs>
@@ -328,29 +328,29 @@
   <line x1="320" y1="226" x2="320" y2="250" stroke="#5C78FF" stroke-width="1.6" marker-end="url(#bt2)"/>
 
   <!-- ROOT -->
-  <rect x="120" y="28" width="400" height="46" rx="9" fill="#0D1420" stroke="#2C2C38" stroke-width="1.4"/>
+  <rect x="120" y="28" width="400" height="46" rx="9" fill="#1B2A46" stroke="#3C4356" stroke-width="1.4"/>
   <text x="136" y="55" font-size="10.5" font-weight="700" fill="#8AA0FF">ROOT</text>
   <text x="330" y="56" font-size="11.5" fill="#CDD0DD" text-anchor="middle">&lt;5000  ·  <tspan fill="#5AC8FF" font-weight="700">5000–9999</tspan>  ·  ≥10000</text>
   <text x="330" y="90" font-size="9.5" fill="#9AA0B4" text-anchor="middle">8842 falls in 5000–9999</text>
 
   <!-- BRANCH -->
-  <rect x="120" y="102" width="400" height="46" rx="9" fill="#0D1420" stroke="#2C2C38" stroke-width="1.4"/>
+  <rect x="120" y="102" width="400" height="46" rx="9" fill="#1B2A46" stroke="#3C4356" stroke-width="1.4"/>
   <text x="136" y="129" font-size="10.5" font-weight="700" fill="#8AA0FF">BRANCH</text>
   <text x="336" y="130" font-size="11.5" fill="#CDD0DD" text-anchor="middle">5000–7000 · <tspan fill="#5AC8FF" font-weight="700">7000–9000</tspan> · 9000–9999</text>
   <text x="330" y="164" font-size="9.5" fill="#9AA0B4" text-anchor="middle">8842 falls in 7000–9000</text>
 
   <!-- LEAF -->
-  <rect x="120" y="176" width="400" height="50" rx="9" fill="#0D1420" stroke="#5AC8FF" stroke-width="1.5"/>
+  <rect x="120" y="176" width="400" height="50" rx="9" fill="#1B2A46" stroke="#5AC8FF" stroke-width="1.5"/>
   <text x="136" y="197" font-size="10.5" font-weight="700" fill="#5AC8FF">LEAF</text>
   <text x="330" y="199" font-size="11.5" fill="#CDD0DD" text-anchor="middle">… 8841 · <tspan fill="#5AC8FF" font-weight="700">8842</tspan> · 8843 …</text>
   <text x="330" y="216" font-size="9.5" fill="#8A90A6" text-anchor="middle">sorted keys → row pointers</text>
 
   <!-- result -->
-  <rect x="150" y="252" width="150" height="30" rx="8" fill="#191921" stroke="#5C78FF" stroke-width="1.3"/>
+  <rect x="150" y="252" width="150" height="30" rx="8" fill="#242739" stroke="#5C78FF" stroke-width="1.3"/>
   <text x="225" y="271" font-size="10.5" fill="#CDD0DD" text-anchor="middle">page 412, slot 3</text>
   <text x="330" y="271" font-size="10" fill="#8A90A6" text-anchor="middle">one read</text>
   <line x1="356" y1="267" x2="384" y2="267" stroke="#5C78FF" stroke-width="1.4"/><polygon points="384,263 392,267 384,271" fill="#5C78FF"/>
-  <rect x="398" y="252" width="92" height="30" rx="8" fill="#16202E" stroke="#28B9FF" stroke-width="1.4"/>
+  <rect x="398" y="252" width="92" height="30" rx="8" fill="#223650" stroke="#28B9FF" stroke-width="1.4"/>
   <text x="444" y="271" font-size="10.5" font-weight="700" fill="#5AC8FF" text-anchor="middle">the row</text>
 
   <text x="320" y="308" font-size="10" fill="#8A90A6" text-anchor="middle">≈ 4 page reads total — O(log n), not a full table scan</text>
@@ -373,7 +373,7 @@
 <h2 id="oltp-query" class="reveal"><span class="n">05.</span> How an OLTP query runs, step by step</h2>
 <p class="reveal lead">Let's trace one query — <code>SELECT * FROM customers WHERE id = 8842</code> — from the text you type to the row you get back. Every relational database follows the same five stages.</p>
 
-<figure class="reveal" style="margin:1.4em 0;background:#101017;border:1px solid #2C2C38;border-radius:10px;padding:1.2em 1em 1em;overflow:hidden">
+<figure class="reveal" style="margin:1.4em 0;background:#1C1C2A;border:1px solid #3C4356;border-radius:10px;padding:1.2em 1em 1em;overflow:hidden">
 <figcaption style="font-size:12px;color:#555;text-align:center;margin-bottom:.8em;letter-spacing:.06em;text-transform:uppercase">The five stages of running a SQL query</figcaption>
 <div class="diagram" style="background:none;border:none;padding:6px 4px;margin:0">  SQL text
      │
@@ -475,7 +475,7 @@
 <h2 id="olap-store" class="reveal"><span class="n">09.</span> How OLAP stores data (columnar &amp; Parquet)</h2>
 <p class="reveal lead">The core move is <strong>column-oriented storage</strong>: instead of keeping each row's fields together, keep each <em>column's</em> values together. All the <code>city</code> values in one run, all the <code>total</code> values in another, all the <code>created_at</code> values in another.</p>
 
-<figure class="reveal" style="margin:1.4em 0;background:#101017;border:1px solid #2C2C38;border-radius:10px;padding:1.2em 1em 1em;overflow:hidden">
+<figure class="reveal" style="margin:1.4em 0;background:#1C1C2A;border:1px solid #3C4356;border-radius:10px;padding:1.2em 1em 1em;overflow:hidden">
 <figcaption style="font-size:12px;color:#555;text-align:center;margin-bottom:.8em;letter-spacing:.06em;text-transform:uppercase">Same rows, stored by column — read only what you need</figcaption>
 <div class="diagram" style="background:none;border:none;padding:6px 4px;margin:0">  the logical table:                          stored on disk as columns:
 
@@ -497,24 +497,24 @@
 <h3 class="reveal">Parquet: a columnar file, opened up</h3>
 <p class="reveal">In the modern data world the data usually lives in <strong>files</strong> (in cloud object storage like S3), and the dominant columnar file format is <strong>Apache Parquet</strong>. Understanding its layout makes every OLAP optimization obvious. A Parquet file is organised into a hierarchy:</p>
 
-<figure class="reveal" style="margin:1.4em 0;background:#101017;border:1px solid #2C2C38;border-radius:10px;padding:1.2em 1em 1em;overflow:hidden">
+<figure class="reveal" style="margin:1.4em 0;background:#1C1C2A;border:1px solid #3C4356;border-radius:10px;padding:1.2em 1em 1em;overflow:hidden">
 <figcaption style="font-size:12px;color:#8a90a6;text-align:center;margin-bottom:.8em;letter-spacing:.06em;text-transform:uppercase">Inside one Parquet file</figcaption>
 <svg viewBox="0 0 700 340" width="100%" style="display:block;max-width:700px;margin:0 auto" font-family="'JetBrains Mono',monospace" aria-label="A Parquet file: two row groups each with column chunks, plus a footer with min/max stats">
   <!-- outer file -->
-  <rect x="18" y="30" width="664" height="286" rx="10" fill="#191921" stroke="#5C78FF" stroke-width="1.5"/>
+  <rect x="18" y="30" width="664" height="286" rx="10" fill="#242739" stroke="#5C78FF" stroke-width="1.5"/>
   <text x="36" y="24" font-size="11" font-weight="700" fill="#9AA0B4">PARQUET FILE</text>
   <!-- row group 1 -->
-  <rect x="38" y="46" width="624" height="104" rx="8" fill="#0D1420" stroke="#28B9FF55" stroke-width="1.3"/>
+  <rect x="38" y="46" width="624" height="104" rx="8" fill="#1B2A46" stroke="#28B9FF55" stroke-width="1.3"/>
   <text x="52" y="68" font-size="11.5" font-weight="700" fill="#5AC8FF">ROW GROUP 1<tspan fill="#8A90A6" font-weight="400">   · a horizontal slice of ~1M rows</tspan></text>
-  <rect x="56" y="78" width="380" height="20" rx="5" fill="#16202E"/><text x="66" y="92" font-size="10.5" fill="#CDD0DD">column chunk: city    [ data pages ]</text><text x="452" y="92" font-size="10.5" fill="#9AA0B4">+ stats: min/max</text>
-  <rect x="56" y="101" width="380" height="20" rx="5" fill="#16202E"/><text x="66" y="115" font-size="10.5" fill="#CDD0DD">column chunk: total   [ data pages ]</text><text x="452" y="115" font-size="10.5" fill="#9AA0B4">+ stats: min/max</text>
-  <rect x="56" y="124" width="380" height="20" rx="5" fill="#191921"/><text x="66" y="138" font-size="10.5" fill="#7A8099">column chunk: notes   [ data pages ]</text><text x="452" y="138" font-size="10.5" fill="#7A8099">(skipped)</text>
+  <rect x="56" y="78" width="380" height="20" rx="5" fill="#223650"/><text x="66" y="92" font-size="10.5" fill="#CDD0DD">column chunk: city    [ data pages ]</text><text x="452" y="92" font-size="10.5" fill="#9AA0B4">+ stats: min/max</text>
+  <rect x="56" y="101" width="380" height="20" rx="5" fill="#223650"/><text x="66" y="115" font-size="10.5" fill="#CDD0DD">column chunk: total   [ data pages ]</text><text x="452" y="115" font-size="10.5" fill="#9AA0B4">+ stats: min/max</text>
+  <rect x="56" y="124" width="380" height="20" rx="5" fill="#242739"/><text x="66" y="138" font-size="10.5" fill="#7A8099">column chunk: notes   [ data pages ]</text><text x="452" y="138" font-size="10.5" fill="#7A8099">(skipped)</text>
   <!-- row group 2 -->
-  <rect x="38" y="160" width="624" height="60" rx="8" fill="#0D1420" stroke="#2C2C38" stroke-width="1.2"/>
+  <rect x="38" y="160" width="624" height="60" rx="8" fill="#1B2A46" stroke="#3C4356" stroke-width="1.2"/>
   <text x="52" y="182" font-size="11.5" font-weight="700" fill="#5AC8FF">ROW GROUP 2<tspan fill="#8A90A6" font-weight="400">   · next ~1M rows</tspan></text>
   <text x="56" y="204" font-size="10.5" fill="#7A8099">column chunk: city …   column chunk: total …   …</text>
   <!-- footer -->
-  <rect x="38" y="230" width="624" height="46" rx="8" fill="#16202E" stroke="#28B9FF" stroke-width="1.4"/>
+  <rect x="38" y="230" width="624" height="46" rx="8" fill="#223650" stroke="#28B9FF" stroke-width="1.4"/>
   <text x="52" y="252" font-size="11.5" font-weight="700" fill="#5AC8FF">FOOTER</text>
   <text x="120" y="252" font-size="10.5" fill="#CDD0DD">◀── schema + min/max stats of every column chunk</text>
   <text x="52" y="268" font-size="10" fill="#9AA0B4">read first · tells the engine which row groups &amp; columns it even needs</text>
@@ -546,13 +546,13 @@
 <h2 id="olap-query" class="reveal"><span class="n">10.</span> How an OLAP query runs, step by step</h2>
 <p class="reveal lead">Now the payoff. Let's run the same query that broke the row store — <code>SELECT city, AVG(total) FROM orders WHERE created_at &gt;= '2023-01-01' GROUP BY city</code> — but on a columnar, distributed OLAP engine. The same parse → bind → plan front-end from §05 still runs first; what's different — and what makes analytics fast — is the <em>execute</em> stage. It works like a funnel: each stage throws away data so the next stage does less.</p>
 
-<figure class="reveal" style="margin:1.4em 0;background:#101017;border:1px solid #2C2C38;border-radius:10px;padding:1.2em 1em 1em;overflow:hidden">
+<figure class="reveal" style="margin:1.4em 0;background:#1C1C2A;border:1px solid #3C4356;border-radius:10px;padding:1.2em 1em 1em;overflow:hidden">
 <figcaption style="font-size:12px;color:#8a90a6;text-align:center;margin-bottom:.8em;letter-spacing:.06em;text-transform:uppercase">The OLAP funnel — drop data at every stage before reading it</figcaption>
 <svg viewBox="0 0 700 424" width="100%" style="display:block;max-width:700px;margin:0 auto" font-family="'JetBrains Mono',monospace" aria-label="Seven stages, each dropping data before the next: partition pruning, data skipping, column pruning, predicate pushdown, vectorized scan, partial aggregate, shuffle and merge">
-  <rect x="20" y="22" width="620" height="40" rx="8" fill="#191921" stroke="#5C78FF" stroke-width="1.3"/>
+  <rect x="20" y="22" width="620" height="40" rx="8" fill="#242739" stroke="#5C78FF" stroke-width="1.3"/>
   <text x="330" y="47" font-size="12" font-weight="700" fill="#CDD0DD" text-anchor="middle">500,000,000 rows × 50 columns — the whole dataset</text>
-  <rect x="20" y="74" width="620" height="34" rx="7" fill="#0D1420" stroke="#2C2C38" stroke-width="1.2"/><circle cx="42" cy="91" r="11" fill="#16202E" stroke="#28B9FF55"/><text x="42" y="95" font-size="11" font-weight="700" fill="#5AC8FF" text-anchor="middle">1</text><text x="64" y="89" font-size="11.5" font-weight="700" fill="#5AC8FF">PARTITION PRUNING</text><text x="64" y="103" font-size="10" fill="#9AA0B4">skip date folders before 2023</text><text x="632" y="95" font-size="10" fill="#8A90A6" text-anchor="end">▾ fewer files</text><rect x="20" y="114" width="620" height="34" rx="7" fill="#0D1420" stroke="#2C2C38" stroke-width="1.2"/><circle cx="42" cy="131" r="11" fill="#16202E" stroke="#28B9FF55"/><text x="42" y="135" font-size="11" font-weight="700" fill="#5AC8FF" text-anchor="middle">2</text><text x="64" y="129" font-size="11.5" font-weight="700" fill="#5AC8FF">DATA SKIPPING</text><text x="64" y="143" font-size="10" fill="#9AA0B4">drop row groups whose min/max can't match</text><text x="632" y="135" font-size="10" fill="#8A90A6" text-anchor="end">▾ fewer row groups</text><rect x="20" y="154" width="620" height="34" rx="7" fill="#0D1420" stroke="#2C2C38" stroke-width="1.2"/><circle cx="42" cy="171" r="11" fill="#16202E" stroke="#28B9FF55"/><text x="42" y="175" font-size="11" font-weight="700" fill="#5AC8FF" text-anchor="middle">3</text><text x="64" y="169" font-size="11.5" font-weight="700" fill="#5AC8FF">COLUMN PRUNING</text><text x="64" y="183" font-size="10" fill="#9AA0B4">read only city, total, created_at (3 of 50)</text><text x="632" y="175" font-size="10" fill="#8A90A6" text-anchor="end">▾ fewer columns</text><rect x="20" y="194" width="620" height="34" rx="7" fill="#0D1420" stroke="#2C2C38" stroke-width="1.2"/><circle cx="42" cy="211" r="11" fill="#16202E" stroke="#28B9FF55"/><text x="42" y="215" font-size="11" font-weight="700" fill="#5AC8FF" text-anchor="middle">4</text><text x="64" y="209" font-size="11.5" font-weight="700" fill="#5AC8FF">PREDICATE PUSHDOWN</text><text x="64" y="223" font-size="10" fill="#9AA0B4">apply created_at filter while scanning</text><text x="632" y="215" font-size="10" fill="#8A90A6" text-anchor="end">▾ fewer rows</text><rect x="20" y="234" width="620" height="34" rx="7" fill="#0D1420" stroke="#2C2C38" stroke-width="1.2"/><circle cx="42" cy="251" r="11" fill="#16202E" stroke="#28B9FF55"/><text x="42" y="255" font-size="11" font-weight="700" fill="#5AC8FF" text-anchor="middle">5</text><text x="64" y="249" font-size="11.5" font-weight="700" fill="#5AC8FF">VECTORIZED SCAN</text><text x="64" y="263" font-size="10" fill="#9AA0B4">decode &amp; filter columns in batches (SIMD)</text><rect x="20" y="274" width="620" height="34" rx="7" fill="#0D1420" stroke="#2C2C38" stroke-width="1.2"/><circle cx="42" cy="291" r="11" fill="#16202E" stroke="#28B9FF55"/><text x="42" y="295" font-size="11" font-weight="700" fill="#5AC8FF" text-anchor="middle">6</text><text x="64" y="289" font-size="11.5" font-weight="700" fill="#5AC8FF">PARTIAL AGGREGATE</text><text x="64" y="303" font-size="10" fill="#9AA0B4">each node sums its slice locally</text><rect x="20" y="314" width="620" height="34" rx="7" fill="#0D1420" stroke="#2C2C38" stroke-width="1.2"/><circle cx="42" cy="331" r="11" fill="#16202E" stroke="#28B9FF55"/><text x="42" y="335" font-size="11" font-weight="700" fill="#5AC8FF" text-anchor="middle">7</text><text x="64" y="329" font-size="11.5" font-weight="700" fill="#5AC8FF">SHUFFLE + MERGE</text><text x="64" y="343" font-size="10" fill="#9AA0B4">combine partials by city → final answer</text>
-  <rect x="196" y="364" width="308" height="38" rx="9" fill="#16202E" stroke="#28B9FF" stroke-width="1.5"/>
+  <rect x="20" y="74" width="620" height="34" rx="7" fill="#1B2A46" stroke="#3C4356" stroke-width="1.2"/><circle cx="42" cy="91" r="11" fill="#223650" stroke="#28B9FF55"/><text x="42" y="95" font-size="11" font-weight="700" fill="#5AC8FF" text-anchor="middle">1</text><text x="64" y="89" font-size="11.5" font-weight="700" fill="#5AC8FF">PARTITION PRUNING</text><text x="64" y="103" font-size="10" fill="#9AA0B4">skip date folders before 2023</text><text x="632" y="95" font-size="10" fill="#8A90A6" text-anchor="end">▾ fewer files</text><rect x="20" y="114" width="620" height="34" rx="7" fill="#1B2A46" stroke="#3C4356" stroke-width="1.2"/><circle cx="42" cy="131" r="11" fill="#223650" stroke="#28B9FF55"/><text x="42" y="135" font-size="11" font-weight="700" fill="#5AC8FF" text-anchor="middle">2</text><text x="64" y="129" font-size="11.5" font-weight="700" fill="#5AC8FF">DATA SKIPPING</text><text x="64" y="143" font-size="10" fill="#9AA0B4">drop row groups whose min/max can't match</text><text x="632" y="135" font-size="10" fill="#8A90A6" text-anchor="end">▾ fewer row groups</text><rect x="20" y="154" width="620" height="34" rx="7" fill="#1B2A46" stroke="#3C4356" stroke-width="1.2"/><circle cx="42" cy="171" r="11" fill="#223650" stroke="#28B9FF55"/><text x="42" y="175" font-size="11" font-weight="700" fill="#5AC8FF" text-anchor="middle">3</text><text x="64" y="169" font-size="11.5" font-weight="700" fill="#5AC8FF">COLUMN PRUNING</text><text x="64" y="183" font-size="10" fill="#9AA0B4">read only city, total, created_at (3 of 50)</text><text x="632" y="175" font-size="10" fill="#8A90A6" text-anchor="end">▾ fewer columns</text><rect x="20" y="194" width="620" height="34" rx="7" fill="#1B2A46" stroke="#3C4356" stroke-width="1.2"/><circle cx="42" cy="211" r="11" fill="#223650" stroke="#28B9FF55"/><text x="42" y="215" font-size="11" font-weight="700" fill="#5AC8FF" text-anchor="middle">4</text><text x="64" y="209" font-size="11.5" font-weight="700" fill="#5AC8FF">PREDICATE PUSHDOWN</text><text x="64" y="223" font-size="10" fill="#9AA0B4">apply created_at filter while scanning</text><text x="632" y="215" font-size="10" fill="#8A90A6" text-anchor="end">▾ fewer rows</text><rect x="20" y="234" width="620" height="34" rx="7" fill="#1B2A46" stroke="#3C4356" stroke-width="1.2"/><circle cx="42" cy="251" r="11" fill="#223650" stroke="#28B9FF55"/><text x="42" y="255" font-size="11" font-weight="700" fill="#5AC8FF" text-anchor="middle">5</text><text x="64" y="249" font-size="11.5" font-weight="700" fill="#5AC8FF">VECTORIZED SCAN</text><text x="64" y="263" font-size="10" fill="#9AA0B4">decode &amp; filter columns in batches (SIMD)</text><rect x="20" y="274" width="620" height="34" rx="7" fill="#1B2A46" stroke="#3C4356" stroke-width="1.2"/><circle cx="42" cy="291" r="11" fill="#223650" stroke="#28B9FF55"/><text x="42" y="295" font-size="11" font-weight="700" fill="#5AC8FF" text-anchor="middle">6</text><text x="64" y="289" font-size="11.5" font-weight="700" fill="#5AC8FF">PARTIAL AGGREGATE</text><text x="64" y="303" font-size="10" fill="#9AA0B4">each node sums its slice locally</text><rect x="20" y="314" width="620" height="34" rx="7" fill="#1B2A46" stroke="#3C4356" stroke-width="1.2"/><circle cx="42" cy="331" r="11" fill="#223650" stroke="#28B9FF55"/><text x="42" y="335" font-size="11" font-weight="700" fill="#5AC8FF" text-anchor="middle">7</text><text x="64" y="329" font-size="11.5" font-weight="700" fill="#5AC8FF">SHUFFLE + MERGE</text><text x="64" y="343" font-size="10" fill="#9AA0B4">combine partials by city → final answer</text>
+  <rect x="196" y="364" width="308" height="38" rx="9" fill="#223650" stroke="#28B9FF" stroke-width="1.5"/>
   <text x="350" y="388" font-size="12" font-weight="700" fill="#5AC8FF" text-anchor="middle">a few rows: city, avg(total)</text>
 </svg>
 </figure>
@@ -565,13 +565,13 @@
 <div class="step reveal"><div class="num-bubble">6</div><div class="body"><strong>Distributed partial aggregation.</strong> The data is spread across many worker nodes (this is <strong>MPP</strong> — Massively Parallel Processing). Each node computes a <em>partial</em> result over its slice — its own running sum and count of <code>total</code> per <code>city</code>.</div></div>
 <div class="step reveal"><div class="num-bubble">7</div><div class="body"><strong>Shuffle &amp; final merge.</strong> Partial results are <em>shuffled</em> so all partials for the same <code>city</code> meet on one node, which combines them into the final average. The handful of result rows go back to the client.</div></div>
 
-<figure class="reveal" style="margin:1.4em 0;background:#101017;border:1px solid #2C2C38;border-radius:10px;padding:1.2em 1em 1em;overflow:hidden">
+<figure class="reveal" style="margin:1.4em 0;background:#1C1C2A;border:1px solid #3C4356;border-radius:10px;padding:1.2em 1em 1em;overflow:hidden">
 <figcaption style="font-size:12px;color:#8a90a6;text-align:center;margin-bottom:.8em;letter-spacing:.06em;text-transform:uppercase">MPP — split the scan across nodes, then combine</figcaption>
 <svg viewBox="0 0 720 250" width="100%" style="display:block;max-width:720px;margin:0 auto" font-family="'JetBrains Mono',monospace" aria-label="A coordinator splits work across four worker nodes; their partial sums are shuffled by city and merged into the final result">
   <defs><marker id="mpp" markerWidth="9" markerHeight="9" refX="4.5" refY="6" orient="auto"><path d="M0 0 L4.5 6 L9 0 z" fill="#5C78FF"/></marker></defs>
 
   <!-- coordinator -->
-  <rect x="278" y="12" width="164" height="34" rx="8" fill="#16202E" stroke="#5C78FF" stroke-width="1.6"/>
+  <rect x="278" y="12" width="164" height="34" rx="8" fill="#223650" stroke="#5C78FF" stroke-width="1.6"/>
   <text x="360" y="33" font-size="11" font-weight="700" fill="#8AA0FF" text-anchor="middle">COORDINATOR / PLANNER</text>
 
   <!-- coordinator -> workers -->
@@ -584,10 +584,10 @@
 
   <!-- workers -->
   <g>
-    <rect x="30"  y="76" width="150" height="50" rx="8" fill="#0D1820" stroke="#5AC8FF" stroke-width="1.4"/><text x="105" y="98" font-size="10.5" font-weight="700" fill="#5AC8FF" text-anchor="middle">worker 1</text><text x="105" y="114" font-size="9.5" fill="#9AA0B4" text-anchor="middle">scans files A–C</text>
-    <rect x="200" y="76" width="150" height="50" rx="8" fill="#0D1820" stroke="#5AC8FF" stroke-width="1.4"/><text x="275" y="98" font-size="10.5" font-weight="700" fill="#5AC8FF" text-anchor="middle">worker 2</text><text x="275" y="114" font-size="9.5" fill="#9AA0B4" text-anchor="middle">scans files D–F</text>
-    <rect x="370" y="76" width="150" height="50" rx="8" fill="#0D1820" stroke="#5AC8FF" stroke-width="1.4"/><text x="445" y="98" font-size="10.5" font-weight="700" fill="#5AC8FF" text-anchor="middle">worker 3</text><text x="445" y="114" font-size="9.5" fill="#9AA0B4" text-anchor="middle">scans files G–I</text>
-    <rect x="540" y="76" width="150" height="50" rx="8" fill="#0D1820" stroke="#5AC8FF" stroke-width="1.4"/><text x="615" y="98" font-size="10.5" font-weight="700" fill="#5AC8FF" text-anchor="middle">worker 4</text><text x="615" y="114" font-size="9.5" fill="#9AA0B4" text-anchor="middle">scans files J–L</text>
+    <rect x="30"  y="76" width="150" height="50" rx="8" fill="#18293E" stroke="#5AC8FF" stroke-width="1.4"/><text x="105" y="98" font-size="10.5" font-weight="700" fill="#5AC8FF" text-anchor="middle">worker 1</text><text x="105" y="114" font-size="9.5" fill="#9AA0B4" text-anchor="middle">scans files A–C</text>
+    <rect x="200" y="76" width="150" height="50" rx="8" fill="#18293E" stroke="#5AC8FF" stroke-width="1.4"/><text x="275" y="98" font-size="10.5" font-weight="700" fill="#5AC8FF" text-anchor="middle">worker 2</text><text x="275" y="114" font-size="9.5" fill="#9AA0B4" text-anchor="middle">scans files D–F</text>
+    <rect x="370" y="76" width="150" height="50" rx="8" fill="#18293E" stroke="#5AC8FF" stroke-width="1.4"/><text x="445" y="98" font-size="10.5" font-weight="700" fill="#5AC8FF" text-anchor="middle">worker 3</text><text x="445" y="114" font-size="9.5" fill="#9AA0B4" text-anchor="middle">scans files G–I</text>
+    <rect x="540" y="76" width="150" height="50" rx="8" fill="#18293E" stroke="#5AC8FF" stroke-width="1.4"/><text x="615" y="98" font-size="10.5" font-weight="700" fill="#5AC8FF" text-anchor="middle">worker 4</text><text x="615" y="114" font-size="9.5" fill="#9AA0B4" text-anchor="middle">scans files J–L</text>
   </g>
 
   <!-- workers -> shuffle (short stubs) -->
@@ -599,14 +599,14 @@
   </g>
 
   <!-- shuffle bar -->
-  <rect x="90" y="152" width="540" height="30" rx="8" fill="#0D1420" stroke="#5C78FF" stroke-width="1.5"/>
+  <rect x="90" y="152" width="540" height="30" rx="8" fill="#1B2A46" stroke="#5C78FF" stroke-width="1.5"/>
   <text x="360" y="171" font-size="11" font-weight="700" fill="#8AA0FF" text-anchor="middle">SHUFFLE — regroup partial sums by city</text>
 
   <!-- shuffle -> merge -->
   <line x1="360" y1="182" x2="360" y2="204" stroke="#5C78FF" stroke-width="1.5" marker-end="url(#mpp)"/>
 
   <!-- merge -->
-  <rect x="234" y="206" width="252" height="40" rx="9" fill="#16202E" stroke="#A56BFF" stroke-width="1.6"/>
+  <rect x="234" y="206" width="252" height="40" rx="9" fill="#223650" stroke="#A56BFF" stroke-width="1.6"/>
   <text x="360" y="224" font-size="11" font-weight="700" fill="#C69BFF" text-anchor="middle">merge → final AVG(total) per city</text>
   <text x="360" y="239" font-size="9" fill="#8A90A6" text-anchor="middle">the small result</text>
 </svg>
@@ -665,12 +665,12 @@
 
 <h3 class="reveal">So which do you use?</h3>
 
-<figure class="reveal" style="margin:1.4em 0;background:#101017;border:1px solid #2C2C38;border-radius:10px;padding:1.2em 1em 1em;overflow:hidden">
+<figure class="reveal" style="margin:1.4em 0;background:#1C1C2A;border:1px solid #3C4356;border-radius:10px;padding:1.2em 1em 1em;overflow:hidden">
 <figcaption style="font-size:12px;color:#8a90a6;text-align:center;margin-bottom:.8em;letter-spacing:.06em;text-transform:uppercase">A decision shortcut — what is the query really doing?</figcaption>
 <svg viewBox="0 0 720 340" width="100%" style="display:block;max-width:720px;margin:0 auto" font-family="'JetBrains Mono',monospace" aria-label="Decision: few rows by key leads to OLTP row store; scans and aggregates lead to OLAP column store; in practice both are used together">
   <defs><marker id="fl-ar" markerWidth="9" markerHeight="9" refX="6" refY="3" orient="auto"><path d="M0 0 L6 3 L0 6 z" fill="#5C78FF"/></marker></defs>
   <!-- question -->
-  <rect x="250" y="16" width="220" height="42" rx="10" fill="#16202E" stroke="#5C78FF" stroke-width="1.6"/>
+  <rect x="250" y="16" width="220" height="42" rx="10" fill="#223650" stroke="#5C78FF" stroke-width="1.6"/>
   <text x="360" y="42" font-size="12" font-weight="700" fill="#8AA0FF" text-anchor="middle">What does the query do?</text>
   <!-- edges to two branches -->
   <path d="M300 58 C220 78 180 84 180 104" fill="none" stroke="#5C78FF" stroke-width="1.5" marker-end="url(#fl-ar)"/>
@@ -678,25 +678,25 @@
   <text x="150" y="88" font-size="9.5" fill="#9AA0B4" text-anchor="middle">few rows by key,</text><text x="150" y="100" font-size="9.5" fill="#9AA0B4" text-anchor="middle">live in the app</text>
   <text x="576" y="88" font-size="9.5" fill="#9AA0B4" text-anchor="middle">scan &amp; aggregate</text><text x="576" y="100" font-size="9.5" fill="#9AA0B4" text-anchor="middle">lots of history</text>
   <!-- OLTP -->
-  <rect x="70" y="106" width="220" height="44" rx="10" fill="#0D1420" stroke="#28B9FF" stroke-width="1.5"/>
+  <rect x="70" y="106" width="220" height="44" rx="10" fill="#1B2A46" stroke="#28B9FF" stroke-width="1.5"/>
   <text x="180" y="124" font-size="12" font-weight="700" fill="#5AC8FF" text-anchor="middle">OLTP · row store</text>
   <text x="180" y="140" font-size="9.5" fill="#8A90A6" text-anchor="middle">point reads/writes, live</text>
   <line x1="180" y1="150" x2="180" y2="186" stroke="#5C78FF" stroke-width="1.5" marker-end="url(#fl-ar)"/>
-  <rect x="52" y="188" width="256" height="46" rx="10" fill="#191921" stroke="#2C2C38" stroke-width="1.3"/>
+  <rect x="52" y="188" width="256" height="46" rx="10" fill="#242739" stroke="#3C4356" stroke-width="1.3"/>
   <text x="180" y="207" font-size="11" fill="#CDD0DD" text-anchor="middle">PostgreSQL · MySQL</text>
   <text x="180" y="223" font-size="11" fill="#CDD0DD" text-anchor="middle">SQL Server · Oracle</text>
   <!-- OLAP -->
-  <rect x="430" y="106" width="220" height="44" rx="10" fill="#0D1420" stroke="#28B9FF" stroke-width="1.5"/>
+  <rect x="430" y="106" width="220" height="44" rx="10" fill="#1B2A46" stroke="#28B9FF" stroke-width="1.5"/>
   <text x="540" y="124" font-size="12" font-weight="700" fill="#5AC8FF" text-anchor="middle">OLAP · column store</text>
   <text x="540" y="140" font-size="9.5" fill="#8A90A6" text-anchor="middle">big scans &amp; aggregates</text>
   <line x1="540" y1="150" x2="540" y2="186" stroke="#5C78FF" stroke-width="1.5" marker-end="url(#fl-ar)"/>
-  <rect x="412" y="188" width="256" height="46" rx="10" fill="#191921" stroke="#2C2C38" stroke-width="1.3"/>
+  <rect x="412" y="188" width="256" height="46" rx="10" fill="#242739" stroke="#3C4356" stroke-width="1.3"/>
   <text x="540" y="207" font-size="11" fill="#CDD0DD" text-anchor="middle">BigQuery · Snowflake</text>
   <text x="540" y="223" font-size="11" fill="#CDD0DD" text-anchor="middle">Redshift · Spark · ClickHouse</text>
   <!-- converge -->
   <path d="M180 234 C180 276 300 280 340 284" fill="none" stroke="#5C78FF" stroke-width="1.4" marker-end="url(#fl-ar)"/>
   <path d="M540 234 C540 276 420 280 380 284" fill="none" stroke="#5C78FF" stroke-width="1.4" marker-end="url(#fl-ar)"/>
-  <rect x="150" y="286" width="420" height="42" rx="10" fill="#16202E" stroke="#28B9FF" stroke-width="1.5"/>
+  <rect x="150" y="286" width="420" height="42" rx="10" fill="#223650" stroke="#28B9FF" stroke-width="1.5"/>
   <text x="360" y="304" font-size="11.5" font-weight="700" fill="#5AC8FF" text-anchor="middle">In practice: both</text>
   <text x="360" y="320" font-size="10" fill="#9AA0B4" text-anchor="middle">app on OLTP  →  pipeline  →  OLAP for analytics</text>
 </svg>
