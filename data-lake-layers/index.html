@@ -82,7 +82,7 @@
   .diagram .hl{color:#5AC8FF}
   .diagram .dim{color:#6B6B78}
   .diagram .ok{color:#5AC8FF}
-  .diagram .warn{color:#BA5AFF}
+  .diagram .warn{color:#A56BFF}
   .diagram .bad{color:#5C78FF}
   .pain{border:1px solid #4a3a1a;border-left:4px solid #FFB454;background:linear-gradient(160deg,#221b0e,#141019);border-radius:0 14px 14px 0;padding:16px 20px;margin:14px 0;box-shadow:0 0 20px -8px #FFB45444}
   .pain h4{margin:0 0 4px;color:#FFC978}
@@ -650,9 +650,9 @@ GROUP BY category;</pre></div>
   <text x="80" y="187" font-size="11" fill="#cdd0dd">④ partition list → keep only order_date=2026-06-01/</text>
 
   <!-- STORAGE (purple) -->
-  <rect x="60" y="212" width="540" height="92" rx="9" fill="#0d1420" stroke="#BA5AFF" stroke-width="1.6"/>
-  <rect x="60" y="212" width="5" height="92" rx="2.5" fill="#BA5AFF"/>
-  <text x="80" y="234" font-size="12" font-weight="700" fill="#C77DFF">1 · STORAGE  (object storage)</text>
+  <rect x="60" y="212" width="540" height="92" rx="9" fill="#0d1420" stroke="#A56BFF" stroke-width="1.6"/>
+  <rect x="60" y="212" width="5" height="92" rx="2.5" fill="#A56BFF"/>
+  <text x="80" y="234" font-size="12" font-weight="700" fill="#C69BFF">1 · STORAGE  (object storage)</text>
   <text x="80" y="254" font-size="11" fill="#cdd0dd">⑤ LIST the prefix → 2 files, then ranged-GET them</text>
   <text x="80" y="271" font-size="11" fill="#cdd0dd">read each footer → skip row groups where amount.max ≤ 500</text>
   <text x="80" y="288" font-size="11" fill="#cdd0dd">read only the category + amount column chunks that survive</text>
