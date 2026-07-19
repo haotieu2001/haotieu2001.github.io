@@ -1,0 +1,1110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Spark Essentials — Why It Exists, How It Works, How to Tune It</title>
+<meta name="description" content="A plain-English, max-detail guide to Apache Spark: why it replaced MapReduce, the architecture layer by layer, Spark SQL & DataFrames, how a query flows through the engine, executor memory, and how to monitor & optimize a real cluster."/>
+<meta property="og:type" content="article"/>
+<meta property="og:title" content="Spark Essentials — Why It Exists, How It Works, How to Tune It"/>
+<meta property="og:description" content="Why Spark replaced MapReduce, the architecture layer by layer, Spark SQL & DataFrames, the query path, executor memory, and tuning a real cluster."/>
+<meta property="og:url" content="https://haotieu2001.github.io/spark-essentials/"/>
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:title" content="Spark Essentials — Why It Exists, How It Works, How to Tune It"/>
+<meta name="twitter:description" content="A max-detail, plain-English guide to Apache Spark."/>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,500;0,700;0,800;1,400&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#1A1A1A; --bg2:#121212; --panel:#1c1c22; --panel2:#1b1410;
+    --ink:#F1F1F1; --muted:#9aa0b4; --dim:#666666;
+    --spark:#E25A1C; --spark2:#FF7E33; --amber:#FFB23F; --ember:#FFC24B;
+    --teal:#2BB3A3; --blue2:#5C78FF; --magenta2:#BA5AFF; --green:#5BC97A; --red:#FF6B6B;
+    --grad:linear-gradient(90deg,#E25A1C,#FF7E33,#FFB23F);
+    --font:"JetBrainsMono Nerd Font","JetBrains Mono","Symbols Nerd Font",ui-monospace,"Cascadia Code",Menlo,Consolas,monospace;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font);font-size:16px;line-height:1.85;-webkit-font-smoothing:antialiased}
+  #bar{position:fixed;top:0;left:0;height:3px;width:0;z-index:50;background:var(--grad);box-shadow:0 0 12px #E25A1C99;transition:width .1s linear}
+  .wrap{max-width:860px;margin:0 auto;padding:0 22px 120px}
+  .wrap > *{max-width:none !important;margin-left:0 !important;margin-right:0 !important}
+  .prose{max-width:780px;margin-left:auto;margin-right:auto}
+  p,li{color:#dcdce4}
+  a{color:var(--amber);text-decoration:none;border-bottom:1px dotted #FFB23F66}
+  a:hover{color:#fff;border-bottom-color:#fff}
+  code{font-family:var(--font);background:#231a14;color:var(--amber);padding:1px 7px;border-radius:5px;font-size:.9em;border:1px solid #3a2a1e}
+  pre{font-family:var(--font);background:#15151b;border:1px solid #2c2c36;border-radius:12px;padding:16px 18px;overflow-x:auto;font-size:13.5px;line-height:1.7;color:#dcdce4;margin:18px auto;max-width:820px}
+  pre .k{color:var(--spark2)} pre .s{color:var(--green)} pre .c{color:var(--dim);font-style:italic} pre .n{color:var(--amber)} pre .f{color:var(--blue2)}
+  header.hero{padding:64px 22px 30px;text-align:center;position:relative;overflow:hidden}
+  .kicker{font-size:12.5px;letter-spacing:.32em;text-transform:uppercase;color:var(--muted)}
+  h1{font-size:clamp(30px,5.4vw,54px);line-height:1.12;margin:14px auto 12px;max-width:20ch;font-weight:800;
+     background:var(--grad);background-size:220% auto;-webkit-background-clip:text;background-clip:text;color:transparent;animation:sheen 9s linear infinite}
+  @keyframes sheen{to{background-position:220% center}}
+  .dek{max-width:64ch;margin:0 auto;color:var(--muted);font-size:17px}
+  .byline{margin-top:18px;font-size:13px;color:var(--dim)}
+  .sparklogo{width:96px;height:96px;display:block;margin:0 auto 8px;filter:drop-shadow(0 0 18px #E25A1C66)}
+  h2{font-size:clamp(23px,3.4vw,31px);margin:64px 0 6px;font-weight:800;line-height:1.2}
+  h2 .pfx{color:var(--spark)}
+  h3{font-size:20px;margin:34px 0 6px;font-weight:700;color:#fff}
+  h4{font-size:15px;margin:20px 0 4px;color:var(--amber);font-weight:700}
+  .lead{font-size:18px;color:#e7e7ee}
+  .sectionsub{color:var(--muted);margin-top:0}
+  figure.fig{margin:30px auto;text-align:center;max-width:980px}
+  figure.fig svg{width:100%;height:auto;border:1px solid #2c2c36;border-radius:16px;background:#121212;box-shadow:0 18px 50px rgba(0,0,0,.45);display:block}
+  figure.fig figcaption{font-size:12.5px;color:var(--muted);margin-top:10px;font-style:italic}
+  .tldr{border:1px solid #3a2a1e;background:linear-gradient(180deg,#1b1410,#121212);border-radius:16px;padding:22px 26px;margin:30px auto;max-width:820px}
+  .tldr h4{margin:0 0 8px;font-size:13px;letter-spacing:.2em;text-transform:uppercase;color:var(--amber)}
+  .callout{border-left:4px solid var(--spark);background:#1b1410;border-radius:0 12px 12px 0;padding:14px 20px;margin:24px auto;max-width:800px}
+  .callout.cy{border-color:var(--teal)} .callout.mg{border-color:var(--magenta2)} .callout.gd{border-color:var(--amber)} .callout.gn{border-color:var(--green)} .callout.rd{border-color:var(--red)}
+  .pull{font-size:23px;line-height:1.45;font-weight:700;color:#fff;margin:34px auto;max-width:760px;padding-left:18px;border-left:4px solid transparent;border-image:var(--grad) 1;}
+  .def{border:1px solid #2c2c36;background:#15151b;border-radius:12px;padding:14px 18px;margin:16px auto;max-width:800px}
+  .def .t{font-weight:700;color:#fff}
+  .def .ex{color:var(--muted);font-size:14px;margin-top:6px}
+  .def .ex b{color:var(--amber)}
+  .tag{display:inline-flex;align-items:center;gap:9px;padding:4px 12px;border-radius:999px;font-size:14px;font-weight:700;border:1px solid}
+  .tag.s{color:var(--spark);border-color:#E25A1C55;background:#E25A1C14}
+  .tag.t{color:var(--teal);border-color:#2BB3A355;background:#2BB3A314}
+  .tag.b{color:var(--blue2);border-color:#5C78FF55;background:#5C78FF14}
+  .tag.m{color:var(--magenta2);border-color:#BA5AFF55;background:#BA5AFF14}
+  .layer{border:1px solid #2c2c36;border-radius:14px;padding:18px 22px;margin:18px auto;max-width:820px;background:#15151b}
+  .layer h3{margin-top:0}
+  .layer .role{font-size:13px;color:var(--muted);margin:-2px 0 10px}
+  .kv{font-size:14.5px;color:#cdd0dd;margin:5px 0}
+  .kv b{color:#fff}
+  .tablewrap{overflow-x:auto;margin:22px auto;max-width:900px}
+  table{border-collapse:collapse;width:100%;font-size:13.5px;min-width:640px}
+  th,td{border:1px solid #2c2c36;padding:10px 12px;text-align:left;vertical-align:top}
+  th{background:#1d1d27;color:#fff;font-weight:700}
+  tr:nth-child(even) td{background:#161620}
+  .cell-s{color:var(--spark);font-weight:700}.cell-t{color:var(--teal);font-weight:700}.cell-b{color:var(--blue2);font-weight:700}.cell-m{color:var(--magenta2);font-weight:700}
+  .promptline{color:var(--dim);font-size:13px;margin:54px 0 -6px}
+  .promptline b{color:var(--amber)}
+  .js .reveal{opacity:0;transform:translateY(22px);transition:opacity .7s ease,transform .7s ease}
+  .js .reveal.in{opacity:1;transform:none}
+  @media (prefers-reduced-motion: reduce){.js .reveal{opacity:1;transform:none;transition:none}}
+  details{border:1px solid #2c2c36;border-radius:12px;padding:6px 16px;margin:16px auto;max-width:800px;background:#141419}
+  summary{cursor:pointer;font-weight:700;color:var(--amber);padding:8px 0}
+  hr{border:0;border-top:1px solid #2c2c36;margin:48px auto;max-width:780px}
+  .end{color:var(--muted);font-size:13px;max-width:780px;margin:28px auto}
+  .footnav a{margin-right:18px}
+  .toc{border:1px solid #2c2c36;border-radius:14px;padding:18px 22px;margin:26px auto;max-width:820px;background:#15151b;font-size:14px}
+  .toc h4{margin:0 0 10px;color:var(--amber)}
+  .toc ol{margin:0;padding-left:20px}
+  .toc li{margin:3px 0}
+  .num30{display:grid;grid-template-columns:1fr 1fr;gap:10px 22px;max-width:820px;margin:18px auto;font-size:13.5px}
+  @media (max-width:620px){.num30{grid-template-columns:1fr}}
+  .num30 div{border-left:3px solid var(--spark);padding:4px 10px;background:#15151b;border-radius:0 8px 8px 0}
+  .num30 b{color:var(--amber)}
+</style>
+<script>document.documentElement.classList.add('js');</script>
+</head>
+<body id="top">
+<div id="bar"></div>
+
+<header class="hero">
+  <div class="kicker">Data Engineering · Deep Dive</div>
+  <svg class="sparklogo" viewBox="0 0 120 120" role="img" aria-label="Apache Spark (stylized)">
+    <defs>
+      <linearGradient id="spk" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0" stop-color="#E25A1C"/><stop offset="1" stop-color="#FFB23F"/>
+      </linearGradient>
+    </defs>
+    <g>
+      <animateTransform attributeName="transform" type="translate" values="0 0;0 -3;0 0" dur="3.5s" repeatCount="indefinite"/>
+      <polygon points="70,14 56,52 74,52 64,106 96,50 76,50 86,14" fill="url(#spk)"/>
+      <polygon points="34,40 26,62 38,62 32,84" fill="url(#spk)" opacity="0.55">
+        <animate attributeName="opacity" values="0.3;0.7;0.3" dur="2.4s" repeatCount="indefinite"/>
+      </polygon>
+    </g>
+  </svg>
+  <h1>Spark Essentials</h1>
+  <p class="dek">Spark feels like black magic until the mental model clicks. This guide explains why Spark exists, how it replaced MapReduce, what happens inside the engine when you run a SQL query or a PySpark command, how executor memory is laid out, and how to monitor and tune a real cluster. No jargon left unexplained.</p>
+  <div class="byline">~30 min read · updated July 2026 · written in plain English</div>
+</header>
+
+<div class="wrap">
+
+<!-- TOC -->
+<div class="toc reveal">
+  <h4>❯ What's inside</h4>
+  <ol>
+    <li><a href="#s1">Why Spark exists — the MapReduce pain</a></li>
+    <li><a href="#s2">How Spark fixed it — in-memory + the DAG</a></li>
+    <li><a href="#s3">The mental model — transformations, actions, jobs, stages, tasks</a></li>
+    <li><a href="#s4">Narrow vs wide transformations &amp; the shuffle</a></li>
+    <li><a href="#s5">Spark architecture — every layer in detail</a></li>
+    <li><a href="#s6">Deployment modes — cluster vs client</a></li>
+    <li><a href="#s7">How Spark runs your code — the plan path</a></li>
+    <li><a href="#s8">Using Spark SQL &amp; DataFrames (with PySpark)</a></li>
+    <li><a href="#s9">Executor memory deep dive</a></li>
+    <li><a href="#s10">Monitoring &amp; optimizing a real cluster</a></li>
+    <li><a href="#s11">The 30 concepts — recap &amp; cheat sheet</a></li>
+  </ol>
+</div>
+
+<!-- HOOK -->
+<div class="prose reveal">
+<p class="lead">A job that should take a minute takes an hour. The same query is fast on a small file and painfully slow on a big one. You add more machines and it gets <em>slower</em>. That is the experience that makes Spark feel like black magic — and it is almost always one of a handful of root causes: a shuffle you didn't expect, a partition that swallowed all the data, a join that exploded, or memory configured wrong.</p>
+<p>This guide builds the mental model that dissolves the magic. We start from why Spark was invented (what was so bad about MapReduce), walk through the engine layer by layer, trace exactly what happens when you submit a SQL query or a PySpark command, then end with the practical tuning playbook you reach for in real projects. Read the short version first; everything after it fills in the detail.</p>
+</div>
+
+<!-- TL;DR -->
+<div class="tldr reveal">
+  <h4>❯ Short version (read this first)</h4>
+  <p style="margin:.2em 0">Spark is a <strong>distributed data engine</strong>. It splits your data into <em>partitions</em>, sends each piece to a <em>worker (executor)</em>, and a <em>driver</em> coordinates them. The two ideas that make it fast:</p>
+  <p class="kv">• <b>In-memory</b> — it keeps intermediate results in RAM instead of writing every step to disk like MapReduce did.</p>
+  <p class="kv">• <b>DAG (directed acyclic graph)</b> — it builds a full plan of your whole pipeline <em>before</em> running, so it can fuse steps, skip work, and retry only what failed.</p>
+  <p class="kv">• <b>Lazy</b> — transformations (<code>filter</code>, <code>join</code>…) only <em>build the plan</em>; nothing runs until an <b>action</b> (<code>count</code>, <code>write</code>, <code>show</code>) triggers execution.</p>
+  <p class="kv">• <b>Stages are split by shuffles</b> — a stage is a stretch of work that needs no data movement; a shuffle (re-partitioning data across the network) is the expensive wall between stages.</p>
+  <p style="margin:.5em 0 0"><b>One-line tuning instinct:</b> most slow Spark jobs are slow because of <em>shuffles</em>, <em>data skew</em>, or <em>too-few/too-many partitions</em>. The Spark UI tells you which. <a href="#s10">Skip to tuning ↓</a></p>
+</div>
+
+<!-- 01 -->
+<p class="promptline">~/spark <b>❯</b> the problem spark was born to solve</p>
+<h2 id="s1" class="reveal"><span class="pfx">01.</span> Why Spark exists — the MapReduce pain</h2>
+<p class="sectionsub reveal">Why a 2014 engine replaced a 2004 idea</p>
+<div class="prose reveal">
+<p>In the early 2000s, Google published <strong>MapReduce</strong>, and Hadoop made it open-source. It solved a real problem: process data too big for one machine by splitting it across many. Each machine runs a <em>Map</em> on its slice, the system <em>shuffles and sorts</em> the output by key, then each machine runs a <em>Reduce</em>. It was a revolution — and it was painfully slow for anything iterative.</p>
+<p>The killer was the <strong>disk</strong>. Between <em>every</em> step, MapReduce wrote the full intermediate result to disk, then read it back for the next step. A two-stage job was two rounds of disk writes. A multi-step pipeline (read → filter → join → group → write) was a chain of separate MapReduce jobs, each reading and writing the full dataset from HDFS in between. No step could see the next, so there was no way to fuse them.</p>
+</div>
+<figure class="fig reveal">
+<svg viewBox="0 0 1000 420" font-family="'JetBrains Mono','Courier New',monospace" role="img" aria-label="MapReduce word count: map, shuffle/sort, reduce, all hitting disk">
+  <rect width="1000" height="420" rx="16" fill="#121212"/>
+  <text x="500" y="40" text-anchor="middle" font-size="22" font-weight="700" fill="#F1F1F1">MapReduce word count — everything hits disk</text>
+  <text x="500" y="64" text-anchor="middle" font-size="13" fill="#9aa0b4">read → MAP → <tspan fill="#FF6B6B">write disk</tspan> → shuffle/sort → <tspan fill="#FF6B6B">write disk</tspan> → REDUCE → write</text>
+
+  <!-- input -->
+  <rect x="30" y="120" width="120" height="180" rx="10" fill="#1c1c22" stroke="#666"/>
+  <text x="90" y="150" text-anchor="middle" font-size="13" fill="#9aa0b4">HDFS input</text>
+  <text x="90" y="178" text-anchor="middle" font-size="11" fill="#dcdce4">the cat sat</text>
+  <text x="90" y="198" text-anchor="middle" font-size="11" fill="#dcdce4">the cat ran</text>
+  <text x="90" y="218" text-anchor="middle" font-size="11" fill="#dcdce4">sat sat ran</text>
+
+  <!-- map -->
+  <rect x="210" y="120" width="150" height="180" rx="10" fill="#1b1410" stroke="#E25A1C"/>
+  <text x="285" y="150" text-anchor="middle" font-size="14" font-weight="700" fill="#FF7E33">MAP</text>
+  <text x="285" y="178" text-anchor="middle" font-size="11" fill="#dcdce4">(the,1)(cat,1)</text>
+  <text x="285" y="198" text-anchor="middle" font-size="11" fill="#dcdce4">(sat,1)(the,1)</text>
+  <text x="285" y="218" text-anchor="middle" font-size="11" fill="#dcdce4">(cat,1)(ran,1)</text>
+  <text x="285" y="258" text-anchor="middle" font-size="11" fill="#9aa0b4">emit (word,1)</text>
+
+  <!-- disk write 1 -->
+  <g>
+    <rect x="400" y="150" width="120" height="120" rx="8" fill="#2a1414" stroke="#FF6B6B"/>
+    <text x="460" y="178" text-anchor="middle" font-size="12" fill="#FF6B6B">DISK</text>
+    <text x="460" y="200" text-anchor="middle" font-size="11" fill="#dcdce4">write all</text>
+    <text x="460" y="218" text-anchor="middle" font-size="11" fill="#dcdce4">pairs out</text>
+    <circle cx="460" cy="240" r="4" fill="#FF6B6B"><animate attributeName="opacity" values="1;.2;1" dur="1.3s" repeatCount="indefinite"/></circle>
+  </g>
+
+  <!-- shuffle/sort -->
+  <rect x="570" y="120" width="160" height="180" rx="10" fill="#1b1410" stroke="#E25A1C"/>
+  <text x="650" y="150" text-anchor="middle" font-size="14" font-weight="700" fill="#FF7E33">SHUFFLE</text>
+  <text x="650" y="168" text-anchor="middle" font-size="11" fill="#9aa0b4">&amp; sort by key</text>
+  <text x="650" y="196" text-anchor="middle" font-size="11" fill="#dcdce4">cat:[1,1]</text>
+  <text x="650" y="216" text-anchor="middle" font-size="11" fill="#dcdce4">ran:[1,1]</text>
+  <text x="650" y="236" text-anchor="middle" font-size="11" fill="#dcdce4">sat:[1,1,1]</text>
+  <text x="650" y="256" text-anchor="middle" font-size="11" fill="#dcdce4">the:[1,1]</text>
+  <circle cx="650" cy="276" r="4" fill="#FF7E33"><animate attributeName="cx" values="560;740;560" dur="2.2s" repeatCount="indefinite"/></circle>
+
+  <!-- disk write 2 -->
+  <g>
+    <rect x="780" y="150" width="120" height="120" rx="8" fill="#2a1414" stroke="#FF6B6B"/>
+    <text x="840" y="178" text-anchor="middle" font-size="12" fill="#FF6B6B">DISK</text>
+    <text x="840" y="200" text-anchor="middle" font-size="11" fill="#dcdce4">write sorted</text>
+    <text x="840" y="218" text-anchor="middle" font-size="11" fill="#dcdce4">groups out</text>
+    <circle cx="840" cy="240" r="4" fill="#FF6B6B"><animate attributeName="opacity" values="1;.2;1" dur="1.3s" begin="0.4s" repeatCount="indefinite"/></circle>
+  </g>
+
+  <!-- reduce -->
+  <rect x="780" y="300" width="120" height="70" rx="10" fill="#1b1410" stroke="#E25A1C"/>
+  <text x="840" y="326" text-anchor="middle" font-size="14" font-weight="700" fill="#FF7E33">REDUCE</text>
+  <text x="840" y="348" text-anchor="middle" font-size="11" fill="#dcdce4">sum → (cat,2)</text>
+
+  <!-- arrows -->
+  <g fill="#E25A1C">
+    <path d="M150 210 L205 210 l0 -5 l10 5 l-10 5 l0 -5 Z"/>
+    <path d="M360 210 L395 210 l0 -5 l10 5 l-10 5 l0 -5 Z" fill="#FF6B6B"/>
+    <path d="M520 210 L565 210 l0 -5 l10 5 l-10 5 l0 -5 Z" fill="#FF6B6B"/>
+    <path d="M730 210 L775 210 l0 -5 l10 5 l-10 5 l0 -5 Z"/>
+    <path d="M840 270 L840 295 l-5 0 l5 8 l5 -8 l-5 0 Z"/>
+  </g>
+
+  <text x="500" y="392" text-anchor="middle" font-size="12.5" fill="#FF6B6B">Every stage reads from disk and writes back to disk. Multi-step pipelines repeat this between <tspan font-weight="700">every</tspan> job.</text>
+</svg>
+<figcaption>MapReduce word count. The two red DISK writes per stage are the bottleneck — and a real pipeline chains many such jobs.</figcaption>
+</figure>
+
+<div class="prose reveal">
+<h3>MapReduce's two structural limits</h3>
+<ul>
+<li><strong>Rigid two-step model.</strong> Every job is exactly Map → Shuffle/Sort → Reduce. Want filter → join → group → filter? That is four separate MapReduce jobs, each a full read-from-disk and write-to-disk of the entire dataset. You cannot express a complex pipeline as one optimized plan.</li>
+<li><strong>Disk-bound.</strong> Intermediate data always landed on disk. For <em>iterative</em> work — machine learning algorithms that re-read the same data dozens of times, or interactive analysis where you re-query the same data — this was brutal. Each iteration re-read everything from HDFS.</li>
+</ul>
+<p>So the stage was set. The world needed an engine that (a) could hold data in memory between steps, and (b) could plan a whole multi-step pipeline as one graph and optimize it end-to-end. That engine was Spark.</p>
+</div>
+
+<!-- 02 -->
+<p class="promptline">~/spark <b>❯</b> the fix</p>
+<h2 id="s2" class="reveal"><span class="pfx">02.</span> How Spark fixed it — in-memory + the DAG</h2>
+<p class="sectionsub reveal">Two ideas, and why they change everything</p>
+<div class="prose reveal">
+<p>Spark's 2010 paper (Matei Zaharia, UC Berkeley) had a deceptively simple claim: keep intermediate data in memory, and represent the whole computation as a <strong> DAG</strong> — a directed acyclic graph of operations. The result was order-of-magnitude faster on iterative and multi-step workloads, with one engine instead of a chain of jobs.</p>
+</div>
+<figure class="fig reveal">
+<svg viewBox="0 0 1000 460" font-family="'JetBrains Mono','Courier New',monospace" role="img" aria-label="MapReduce chain of jobs vs Spark single in-memory DAG">
+  <rect width="1000" height="460" rx="16" fill="#121212"/>
+  <text x="500" y="38" text-anchor="middle" font-size="22" font-weight="700" fill="#F1F1F1">Chain of jobs (MapReduce) vs one DAG (Spark)</text>
+
+  <!-- MapReduce chain -->
+  <text x="40" y="92" font-size="13" font-weight="700" fill="#FF6B6B">MapReduce: 4 separate jobs, disk between each</text>
+  <g font-size="11">
+    <rect x="40" y="110" width="120" height="50" rx="8" fill="#1b1410" stroke="#E25A1C"/><text x="100" y="140" text-anchor="middle" fill="#FF7E33">read HDFS</text>
+    <rect x="200" y="110" width="120" height="50" rx="8" fill="#1b1410" stroke="#E25A1C"/><text x="260" y="140" text-anchor="middle" fill="#FF7E33">Job1: filter</text>
+    <rect x="360" y="110" width="120" height="50" rx="8" fill="#1b1410" stroke="#E25A1C"/><text x="420" y="140" text-anchor="middle" fill="#FF7E33">Job2: join</text>
+    <rect x="520" y="110" width="120" height="50" rx="8" fill="#1b1410" stroke="#E25A1C"/><text x="580" y="140" text-anchor="middle" fill="#FF7E33">Job3: group</text>
+    <rect x="680" y="110" width="120" height="50" rx="8" fill="#1b1410" stroke="#E25A1C"/><text x="740" y="140" text-anchor="middle" fill="#FF7E33">Job4: write</text>
+    <rect x="840" y="110" width="120" height="50" rx="8" fill="#1b1410" stroke="#E25A1C"/><text x="900" y="140" text-anchor="middle" fill="#FF7E33">HDFS out</text>
+  </g>
+  <g fill="#FF6B6B" font-size="10">
+    <text x="180" y="180" text-anchor="middle">DISK</text><text x="340" y="180" text-anchor="middle">DISK</text><text x="500" y="180" text-anchor="middle">DISK</text><text x="660" y="180" text-anchor="middle">DISK</text><text x="820" y="180" text-anchor="middle">DISK</text>
+  </g>
+  <g fill="#FF6B6B">
+    <path d="M160 135 L196 135 l0 -4 l9 4 l-9 4 l0 -4 Z"/><path d="M320 135 L356 135 l0 -4 l9 4 l-9 4 l0 -4 Z"/><path d="M480 135 L516 135 l0 -4 l9 4 l-9 4 l0 -4 Z"/><path d="M640 135 L676 135 l0 -4 l9 4 l-9 4 l0 -4 Z"/><path d="M800 135 L836 135 l0 -4 l9 4 l-9 4 l0 -4 Z"/>
+  </g>
+  <text x="500" y="212" text-anchor="middle" font-size="12" fill="#FF6B6B">full dataset written to &amp; read from disk between every job</text>
+
+  <!-- Spark DAG -->
+  <text x="40" y="270" font-size="13" font-weight="700" fill="#5BC97A">Spark: one DAG, in-memory, optimized as a whole</text>
+  <g font-size="11">
+    <rect x="40" y="290" width="120" height="50" rx="8" fill="#0f2420" stroke="#2BB3A3"/><text x="100" y="320" text-anchor="middle" fill="#2BB3A3">read (lazy)</text>
+    <rect x="210" y="290" width="120" height="50" rx="8" fill="#0f2420" stroke="#2BB3A3"/><text x="270" y="320" text-anchor="middle" fill="#2BB3A3">filter</text>
+    <rect x="380" y="290" width="120" height="50" rx="8" fill="#0f2420" stroke="#2BB3A3"/><text x="440" y="320" text-anchor="middle" fill="#2BB3A3">join</text>
+    <rect x="380" y="360" width="120" height="50" rx="8" fill="#0f2420" stroke="#2BB3A3"/><text x="440" y="390" text-anchor="middle" fill="#2BB3A3">groupBy</text>
+    <rect x="560" y="325" width="130" height="50" rx="8" fill="#1b1410" stroke="#FFB23F"/><text x="625" y="355" text-anchor="middle" fill="#FFB23F">ACTION → run</text>
+    <rect x="740" y="325" width="120" height="50" rx="8" fill="#0f2420" stroke="#2BB3A3"/><text x="800" y="355" text-anchor="middle" fill="#2BB3A3">write out</text>
+  </g>
+  <g fill="#2BB3A3">
+    <path d="M160 315 L206 315 l0 -4 l9 4 l-9 4 l0 -4 Z"/><path d="M330 315 L376 315 l0 -4 l9 4 l-9 4 l0 -4 Z"/><path d="M440 340 L440 356 l-4 0 l4 8 l4 -8 l-4 0 Z" transform="translate(0,0)"/>
+  </g>
+  <g fill="#FFB23F">
+    <path d="M500 315 L556 350 l-3 -3 l8 1 l-4 7 l-1 -8 l-3 3 Z"/>
+    <path d="M500 385 L556 358 l-3 3 l8 -1 l-4 -7 l-1 8 l-3 -3 Z"/>
+    <path d="M690 350 L736 350 l0 -4 l9 4 l-9 4 l0 -4 Z" fill="#2BB3A3"/>
+  </g>
+  <text x="625" y="392" text-anchor="middle" font-size="10.5" fill="#9aa0b4">partitions stay in RAM between nodes</text>
+  <text x="500" y="440" text-anchor="middle" font-size="12.5" fill="#5BC97A">One plan. Steps fuse (pipeline), data stays in memory, failures re-run only the missing piece.</text>
+</svg>
+<figcaption>MapReduce chains whole jobs through disk. Spark builds one DAG, keeps partitions in memory, and pipelines narrow steps into a single pass.</figcaption>
+</figure>
+
+<div class="prose reveal">
+<h3>The two ideas, precisely</h3>
+<div class="def"><span class="t">In-memory computing</span>
+<div class="ex">Intermediate results live in RAM (as cached partitions) instead of being forced to disk after each step. For iterative algorithms (ML, graph), the same dataset is re-read from memory across iterations — 10–100× faster than re-reading from HDFS each time. <b>Caveat:</b> "in-memory" does not mean "never touches disk." Spark still spills to disk when data exceeds memory; it just isn't <em>forced</em> to between every step.</div></div>
+<div class="def"><span class="t">DAG execution (lineage)</span>
+<div class="ex">Your whole pipeline is one <em>directed acyclic graph</em> of transformations. Spark knows the lineage (how each partition was derived). Two payoffs: (1) <b>optimization</b> — it sees the full plan, so it can pipeline narrow steps, reorder, push predicates down, and prune; (2) <b>fault tolerance</b> — if a node dies, Spark rebuilds the lost partitions from lineage instead of replicating everything.</div></div>
+<p>That second point is subtle and important. MapReduce got fault tolerance by replicating data on HDFS (3×). Spark gets it by <strong>remembering how data was made</strong> (lineage). Lose a partition? Re-run the transformations that produced it. This is why Spark can afford to keep less on disk — the recipe to rebuild anything is in the DAG.</p>
+</div>
+
+<div class="callout cy reveal">
+<p style="margin:.2em 0"><strong>Myth check:</strong> "Spark is always faster than MapReduce."</p>
+<p class="kv">✗ Not for a single, simple, one-pass job. A plain Map → Reduce with no iteration can be similar, because Spark has overhead (planning, JVM, serialization). Spark wins decisively on <em>multi-step</em> and <em>iterative</em> workloads — which is almost everything real pipelines do.</p>
+</div>
+
+<!-- 03 -->
+<p class="promptline">~/spark <b>❯</b> the mental model</p>
+<h2 id="s3" class="reveal"><span class="pfx">03.</span> The mental model — transformations, actions, jobs, stages, tasks</h2>
+<p class="sectionsub reveal">Five words that make every Spark job make sense</p>
+<div class="prose reveal">
+<p>If you only remember one section, remember this one. Five nested concepts explain what happens when you run anything in Spark:</p>
+</div>
+<figure class="fig reveal">
+<svg viewBox="0 0 1000 300" font-family="'JetBrains Mono','Courier New',monospace" role="img" aria-label="Nested concepts: job contains stages contains tasks; transformations build a plan, an action triggers a job">
+  <rect width="1000" height="300" rx="16" fill="#121212"/>
+  <text x="500" y="40" text-anchor="middle" font-size="22" font-weight="700" fill="#F1F1F1">The five nested concepts</text>
+
+  <!-- left: lazy plan -->
+  <rect x="40" y="70" width="430" height="200" rx="12" fill="#0f2420" stroke="#2BB3A3"/>
+  <text x="255" y="98" text-anchor="middle" font-size="14" font-weight="700" fill="#2BB3A3">Building the plan (lazy)</text>
+  <rect x="60" y="120" width="180" height="40" rx="8" fill="#1c1c22" stroke="#2BB3A3"/><text x="150" y="145" text-anchor="middle" font-size="12" fill="#dcdce4">Transformation: filter</text>
+  <rect x="60" y="170" width="180" height="40" rx="8" fill="#1c1c22" stroke="#2BB3A3"/><text x="150" y="195" text-anchor="middle" font-size="12" fill="#dcdce4">Transformation: join</text>
+  <rect x="60" y="220" width="180" height="40" rx="8" fill="#1c1c22" stroke="#2BB3A3"/><text x="150" y="245" text-anchor="middle" font-size="12" fill="#dcdce4">Transformation: groupBy</text>
+  <text x="300" y="150" font-size="12" fill="#9aa0b4">→ only adds a</text>
+  <text x="300" y="168" font-size="12" fill="#9aa0b4">  node to the DAG</text>
+  <text x="300" y="190" font-size="12" fill="#9aa0b4">→ no data moves</text>
+  <text x="300" y="240" font-size="12" fill="#FFB23F" font-weight="700">nothing runs yet</text>
+
+  <!-- right: execution -->
+  <rect x="530" y="70" width="430" height="200" rx="12" fill="#1b1410" stroke="#FFB23F"/>
+  <text x="745" y="98" text-anchor="middle" font-size="14" font-weight="700" fill="#FFB23F">Triggering execution (eager)</text>
+  <rect x="550" y="112" width="390" height="34" rx="8" fill="#1c1c22" stroke="#FFB23F"/><text x="745" y="134" text-anchor="middle" font-size="12" fill="#FFB23F">ACTION (count / write / show) → 1 JOB</text>
+  <rect x="570" y="152" width="350" height="30" rx="6" fill="#1c1c22" stroke="#E25A1C"/><text x="745" y="172" text-anchor="middle" font-size="11.5" fill="#FF7E33">Stage 0 (read+filter+map)  ┊shuffle┊  Stage 1 (join) ┊shuffle┊ Stage 2 (group)</text>
+  <rect x="600" y="190" width="290" height="26" rx="6" fill="#1c1c22" stroke="#9aa0b4"/><text x="745" y="208" text-anchor="middle" font-size="11" fill="#dcdce4">each stage = many TASKS (1 per partition)</text>
+  <text x="745" y="244" text-anchor="middle" font-size="11.5" fill="#5BC97A">1 job = N stages = Σ tasks across partitions</text>
+</svg>
+<figcaption>Transformations quietly build the DAG; one action launches one job, split into stages by shuffles, each stage into one task per partition.</figcaption>
+</figure>
+
+<div class="prose reveal">
+<div class="def"><span class="t">1. Transformation — builds the plan, runs nothing</span>
+<div class="ex">Operations like <code>select</code>, <code>filter</code>, <code>join</code>, <code>groupBy</code>, <code>withColumn</code>. They take a DataFrame and return a new DataFrame that is just <em>"the old one plus one more node in the plan."</em> No data is read, no compute happens. <b>Example:</b> <code>df.filter("age > 18")</code> returns instantly even on a petabyte — it only recorded the intent.</div></div>
+<div class="def"><span class="t">2. Action — the trigger that starts a job</span>
+<div class="ex">Operations like <code>count()</code>, <code>collect()</code>, <code>show()</code>, <code>write.save()</code>, <code>take(n)</code>. The moment you call one, Spark takes the plan built by all prior transformations, optimizes it, and <em>actually runs it</em>. <b>One action = one job.</b> <b>Example:</b> <code>df.count()</code> is the moment the filter, the scan, everything finally executes.</div></div>
+<div class="def"><span class="t">3. Job — the whole computation for one action</span>
+<div class="ex">When an action fires, Spark submits a <em>job</em> to run the optimized plan for that action. If your code calls three actions, you get three jobs (and unless you cache, the source data is re-read for each).</div></div>
+<div class="def"><span class="t">4. Stage — a stretch of work with no shuffle in the middle</span>
+<div class="ex">Spark cuts a job into <em>stages</em> at every <strong>shuffle boundary</strong> (any operation that must move data between partitions — a <code>groupBy</code>, a <code>join</code> on non-co-partitioned data, a <code>repartition</code>). Within a stage, tasks run as a single in-memory pipeline (a "map stage" / narrow work). Stages run in sequence, because stage N+1 needs stage N's shuffled output.</div></div>
+<div class="def"><span class="t">5. Task — the smallest unit of work, one per partition per stage</span>
+<div class="ex">A stage is parallelized into <em>tasks</em>: one task per partition of that stage's input. Each task runs on one core of one executor. If a stage has 200 partitions, it launches 200 tasks; with 50 cores in the cluster they run in ~4 waves. <b>This is why partition count matters:</b> too few = poor parallelism; too many = scheduling overhead.</div></div>
+</div>
+
+<div class="callout reveal">
+<p style="margin:.2em 0"><strong>The lazy rule, stated plainly:</strong></p>
+<p class="kv">Transformations are <em>lazy</em> (free — they only describe work). Actions are <em>eager</em> (they pay for everything). A common bug: a notebook cell with only transformations "does nothing" and looks instant — the work all happens in the <em>next</em> cell that calls an action, which then looks mysteriously slow. The slowness was always there; the action just billed it.</p>
+</div>
+
+<!-- 04 -->
+<p class="promptline">~/spark <b>❯</b> where the time goes</p>
+<h2 id="s4" class="reveal"><span class="pfx">04.</span> Narrow vs wide transformations &amp; the shuffle</h2>
+<p class="sectionsub reveal">The single most important performance distinction in Spark</p>
+<div class="prose reveal">
+<p>Every transformation is either <strong>narrow</strong> or <strong>wide</strong>. This one distinction predicts most Spark performance:</p>
+</div>
+<figure class="fig reveal">
+<svg viewBox="0 0 1000 360" font-family="'JetBrains Mono','Courier New',monospace" role="img" aria-label="Narrow transformation: each partition stays independent. Wide transformation: data is reshuffled across the network.">
+  <rect width="1000" height="360" rx="16" fill="#121212"/>
+  <text x="500" y="38" text-anchor="middle" font-size="22" font-weight="700" fill="#F1F1F1">Narrow vs wide transformations</text>
+
+  <!-- NARROW -->
+  <text x="250" y="78" text-anchor="middle" font-size="15" font-weight="700" fill="#2BB3A3">Narrow — no shuffle, pipelines in one stage</text>
+  <g font-size="11">
+    <rect x="60" y="100" width="80" height="46" rx="7" fill="#0f2420" stroke="#2BB3A3"/><text x="100" y="128" text-anchor="middle" fill="#dcdce4">P0</text>
+    <rect x="60" y="156" width="80" height="46" rx="7" fill="#0f2420" stroke="#2BB3A3"/><text x="100" y="184" text-anchor="middle" fill="#dcdce4">P1</text>
+    <rect x="60" y="212" width="80" height="46" rx="7" fill="#0f2420" stroke="#2BB3A3"/><text x="100" y="240" text-anchor="middle" fill="#dcdce4">P2</text>
+    <rect x="360" y="100" width="80" height="46" rx="7" fill="#0f2420" stroke="#2BB3A3"/><text x="400" y="128" text-anchor="middle" fill="#dcdce4">P0'</text>
+    <rect x="360" y="156" width="80" height="46" rx="7" fill="#0f2420" stroke="#2BB3A3"/><text x="400" y="184" text-anchor="middle" fill="#dcdce4">P1'</text>
+    <rect x="360" y="212" width="80" height="46" rx="7" fill="#0f2420" stroke="#2BB3A3"/><text x="400" y="240" text-anchor="middle" fill="#dcdce4">P2'</text>
+  </g>
+  <g stroke="#2BB3A3" stroke-width="2">
+    <line x1="140" y1="123" x2="356" y2="123"/><line x1="140" y1="179" x2="356" y2="179"/><line x1="140" y1="235" x2="356" y2="235"/>
+  </g>
+  <text x="250" y="300" text-anchor="middle" font-size="12" fill="#9aa0b4">each output partition depends on ONE input</text>
+  <text x="250" y="320" text-anchor="middle" font-size="12" fill="#9aa0b4">filter · select · map · withColumn · union</text>
+
+  <!-- WIDE -->
+  <text x="740" y="78" text-anchor="middle" font-size="15" font-weight="700" fill="#E25A1C">Wide — shuffle, starts a new stage</text>
+  <g font-size="11">
+    <rect x="560" y="100" width="80" height="46" rx="7" fill="#1b1410" stroke="#E25A1C"/><text x="600" y="128" text-anchor="middle" fill="#dcdce4">P0</text>
+    <rect x="560" y="156" width="80" height="46" rx="7" fill="#1b1410" stroke="#E25A1C"/><text x="600" y="184" text-anchor="middle" fill="#dcdce4">P1</text>
+    <rect x="560" y="212" width="80" height="46" rx="7" fill="#1b1410" stroke="#E25A1C"/><text x="600" y="240" text-anchor="middle" fill="#dcdce4">P2</text>
+    <rect x="860" y="100" width="80" height="46" rx="7" fill="#1b1410" stroke="#E25A1C"/><text x="900" y="128" text-anchor="middle" fill="#dcdce4">Q0</text>
+    <rect x="860" y="156" width="80" height="46" rx="7" fill="#1b1410" stroke="#E25A1C"/><text x="900" y="184" text-anchor="middle" fill="#dcdce4">Q1</text>
+    <rect x="860" y="212" width="80" height="46" rx="7" fill="#1b1410" stroke="#E25A1C"/><text x="900" y="240" text-anchor="middle" fill="#dcdce4">Q2</text>
+  </g>
+  <g stroke="#FF7E33" stroke-width="1.6" opacity="0.85">
+    <line x1="640" y1="123" x2="856" y2="123"/><line x1="640" y1="123" x2="856" y2="179"/><line x1="640" y1="123" x2="856" y2="235"/>
+    <line x1="640" y1="179" x2="856" y2="123"/><line x1="640" y1="179" x2="856" y2="179"/><line x1="640" y1="179" x2="856" y2="235"/>
+    <line x1="640" y1="235" x2="856" y2="123"/><line x1="640" y1="235" x2="856" y2="179"/><line x1="640" y1="235" x2="856" y2="235"/>
+  </g>
+  <circle cx="748" cy="179" r="5" fill="#FFB23F"><animate attributeName="cx" values="640;856;640" dur="2.4s" repeatCount="indefinite"/></circle>
+  <text x="740" y="300" text-anchor="middle" font-size="12" fill="#9aa0b4">each output partition depends on MANY inputs</text>
+  <text x="740" y="320" text-anchor="middle" font-size="12" fill="#9aa0b4">groupBy · join · distinct · repartition · orderBy</text>
+  <text x="500" y="346" text-anchor="middle" font-size="12" fill="#FF7E33">A shuffle = write to local disk + send across the network + read on the other side. That is the expensive wall between stages.</text>
+</svg>
+<figcaption>Narrow steps chain into one in-memory stage. Wide steps force a shuffle — disk + network — and start a new stage.</figcaption>
+</figure>
+
+<div class="prose reveal">
+<div class="def"><span class="t">Narrow transformation</span>
+<div class="ex">Each output partition depends on exactly <em>one</em> input partition. <code>filter</code>, <code>select</code>, <code>map</code>, <code>withColumn</code>, <code>union</code>. No data leaves its partition, so these <b>pipeline</b> together inside one stage — a single pass over the data, no network, no disk.</div></div>
+<div class="def"><span class="t">Wide transformation (a shuffle dependency)</span>
+<div class="ex">Each output partition depends on <em>many</em> input partitions — data with the same key must end up on the same partition. <code>groupBy</code>, <code>join</code> (when not co-partitioned), <code>distinct</code>, <code>repartition</code>, <code>orderBy</code> (global sort). This forces a <b>shuffle</b>: each executor writes its output to local shuffle files <em>sorted by key</em>, then reducers pull the pieces they need over the network.</div></div>
+
+<h3>What a shuffle actually costs</h3>
+<p>A shuffle is not "free data movement." Concretely it is: <b>(1)</b> serialize + write every record to local disk on the map side (a shuffle write), <b>(2)</b> transfer those bytes across the network to other executors, <b>(3)</b> deserialize + read them on the reduce side (a shuffle read). It touches disk <em>and</em> network, the two slowest things in a cluster. A job with 3 shuffles does this 3 times. This is why "reduce the number of shuffles" is the first lever of Spark tuning.</p>
+</div>
+
+<div class="callout gd reveal">
+<p style="margin:.2em 0"><strong>Read this if you read nothing else about performance:</strong></p>
+<p class="kv">• A "stage" in the UI is literally the gap between two shuffles. Count the stages; each boundary is a shuffle you pay for.</p>
+<p class="kv">• <code>join</code> is wide <em>unless</em> the two sides are already <b>co-partitioned</b> (same partitioner on the join key) or one side is <b>broadcast</b> (small enough to send to every executor). Both turn a shuffle-join into a narrow one.</p>
+<p class="kv">• <code>groupBy().agg()</code> always shuffles. But <b>map-side (partial) aggregation</b> can dramatically shrink what gets shuffled by pre-combining per partition before the network step — in DataFrames, <code>groupBy().agg()</code> already does this for you via Catalyst.</p>
+</div>
+
+<!-- 05 ARCHITECTURE -->
+<p class="promptline">~/spark <b>❯</b> under the hood</p>
+<h2 id="s5" class="reveal"><span class="pfx">05.</span> Spark architecture — every layer in detail</h2>
+<p class="sectionsub reveal">Driver, cluster manager, executors, tasks, blocks — and what each one actually does</p>
+<div class="prose reveal">
+<p>A Spark application is one <strong>driver</strong> plus a set of <strong>executors</strong>, placed on a cluster by a <strong>cluster manager</strong>. Everything else — jobs, stages, tasks, blocks, shuffle services — is a consequence of those three. Here is the whole picture, then each layer in turn.</p>
+</div>
+<figure class="fig reveal">
+<svg viewBox="0 0 1000 560" font-family="'JetBrains Mono','Courier New',monospace" role="img" aria-label="Spark architecture: driver, cluster manager, executors with tasks and block managers, shuffle">
+  <rect width="1000" height="560" rx="16" fill="#121212"/>
+  <text x="500" y="40" text-anchor="middle" font-size="22" font-weight="700" fill="#F1F1F1">Spark application architecture</text>
+  <text x="500" y="64" text-anchor="middle" font-size="13" fill="#9aa0b4">1 driver · N executors · 1 cluster manager · each executor runs tasks &amp; owns a block manager</text>
+
+  <!-- DRIVER -->
+  <rect x="40" y="90" width="380" height="380" rx="14" fill="#1b1410" stroke="#E25A1C" stroke-width="2"/>
+  <text x="230" y="120" text-anchor="middle" font-size="16" font-weight="700" fill="#FF7E33">DRIVER (1 process)</text>
+  <text x="230" y="140" text-anchor="middle" font-size="11.5" fill="#9aa0b4">your program · the brain</text>
+
+  <rect x="60" y="160" width="340" height="56" rx="8" fill="#1c1c22" stroke="#FFB23F"/>
+  <text x="230" y="182" text-anchor="middle" font-size="12.5" font-weight="700" fill="#FFB23F">SparkSession / SparkContext</text>
+  <text x="230" y="202" text-anchor="middle" font-size="11" fill="#9aa0b4">entry point · holds config · talks to cluster manager</text>
+
+  <rect x="60" y="226" width="340" height="56" rx="8" fill="#1c1c22" stroke="#FFB23F"/>
+  <text x="230" y="248" text-anchor="middle" font-size="12.5" font-weight="700" fill="#FFB23F">DAGScheduler</text>
+  <text x="230" y="268" text-anchor="middle" font-size="11" fill="#9aa0b4">turns the plan into stages (split at shuffles)</text>
+
+  <rect x="60" y="292" width="340" height="56" rx="8" fill="#1c1c22" stroke="#FFB23F"/>
+  <text x="230" y="314" text-anchor="middle" font-size="12.5" font-weight="700" fill="#FFB23F">TaskScheduler</text>
+  <text x="230" y="334" text-anchor="middle" font-size="11" fill="#9aa0b4">sends tasks to executors · retries · handles locality</text>
+
+  <rect x="60" y="358" width="164" height="52" rx="8" fill="#1c1c22" stroke="#5C78FF"/>
+  <text x="142" y="380" text-anchor="middle" font-size="12" font-weight="700" fill="#5C78FF">Tracker</text>
+  <text x="142" y="398" text-anchor="middle" font-size="10.5" fill="#9aa0b4">BlockManagerMaster</text>
+  <rect x="236" y="358" width="164" height="52" rx="8" fill="#1c1c22" stroke="#5C78FF"/>
+  <text x="318" y="380" text-anchor="middle" font-size="12" font-weight="700" fill="#5C78FF">SchedulerBackend</text>
+  <text x="318" y="398" text-anchor="middle" font-size="10.5" fill="#9aa0b4">RPC to executors</text>
+
+  <text x="230" y="434" text-anchor="middle" font-size="11" fill="#9aa0b4">receives results · tracks accumulators · the UI lives here</text>
+  <circle cx="230" cy="455" r="5" fill="#FF7E33"><animate attributeName="opacity" values="1;.2;1" dur="1.6s" repeatCount="indefinite"/></circle>
+
+  <!-- CLUSTER MANAGER -->
+  <rect x="470" y="90" width="200" height="170" rx="14" fill="#0f2420" stroke="#2BB3A3" stroke-width="2"/>
+  <text x="570" y="120" text-anchor="middle" font-size="15" font-weight="700" fill="#2BB3A3">CLUSTER</text>
+  <text x="570" y="138" text-anchor="middle" font-size="15" font-weight="700" fill="#2BB3A3">MANAGER</text>
+  <text x="570" y="162" text-anchor="middle" font-size="11.5" fill="#9aa0b4">allocates containers</text>
+  <rect x="490" y="178" width="160" height="30" rx="6" fill="#1c1c22" stroke="#2BB3A3"/><text x="570" y="198" text-anchor="middle" font-size="11" fill="#dcdce4">YARN / K8s / Standalone</text>
+  <text x="570" y="226" text-anchor="middle" font-size="10.5" fill="#9aa0b4">"give me 1 driver +</text>
+  <text x="570" y="240" text-anchor="middle" font-size="10.5" fill="#9aa0b4">N executor containers"</text>
+
+  <!-- EXECUTORS -->
+  <rect x="700" y="90" width="270" height="380" rx="14" fill="#1b1410" stroke="#E25A1C" stroke-width="2"/>
+  <text x="835" y="120" text-anchor="middle" font-size="16" font-weight="700" fill="#FF7E33">EXECUTORS (N)</text>
+  <text x="835" y="140" text-anchor="middle" font-size="11.5" fill="#9aa0b4">one JVM per executor · the muscle</text>
+
+  <!-- executor 1 -->
+  <rect x="716" y="158" width="238" height="150" rx="10" fill="#1c1c22" stroke="#666"/>
+  <text x="835" y="180" text-anchor="middle" font-size="12.5" font-weight="700" fill="#dcdce4">Executor 1</text>
+  <rect x="728" y="190" width="100" height="30" rx="6" fill="#0f2420" stroke="#2BB3A3"/><text x="778" y="210" text-anchor="middle" font-size="10.5" fill="#2BB3A3">Task slots (cores)</text>
+  <rect x="836" y="190" width="106" height="30" rx="6" fill="#0f2420" stroke="#2BB3A3"/><text x="889" y="210" text-anchor="middle" font-size="10.5" fill="#2BB3A3">BlockManager</text>
+  <rect x="728" y="228" width="48" height="30" rx="6" fill="#1b1410" stroke="#FF7E33"/><text x="752" y="248" text-anchor="middle" font-size="10" fill="#FF7E33">task</text>
+  <rect x="782" y="228" width="48" height="30" rx="6" fill="#1b1410" stroke="#FF7E33"/><text x="806" y="248" text-anchor="middle" font-size="10" fill="#FF7E33">task</text>
+  <rect x="836" y="228" width="48" height="30" rx="6" fill="#1b1410" stroke="#FF7E33"/><text x="860" y="248" text-anchor="middle" font-size="10" fill="#FF7E33">task</text>
+  <rect x="890" y="228" width="52" height="30" rx="6" fill="#1b1410" stroke="#FF7E33"/><text x="916" y="248" text-anchor="middle" font-size="10" fill="#FF7E33">task</text>
+  <text x="835" y="280" text-anchor="middle" font-size="10.5" fill="#9aa0b4">cache · shuffle files · memory</text>
+  <circle cx="835" cy="296" r="4" fill="#FFB23F"><animate attributeName="opacity" values="1;.15;1" dur="1.2s" repeatCount="indefinite"/></circle>
+
+  <!-- executor 2 -->
+  <rect x="716" y="318" width="238" height="140" rx="10" fill="#1c1c22" stroke="#666"/>
+  <text x="835" y="340" text-anchor="middle" font-size="12.5" font-weight="700" fill="#dcdce4">Executor 2 … N</text>
+  <rect x="728" y="350" width="100" height="30" rx="6" fill="#0f2420" stroke="#2BB3A3"/><text x="778" y="370" text-anchor="middle" font-size="10.5" fill="#2BB3A3">Task slots</text>
+  <rect x="836" y="350" width="106" height="30" rx="6" fill="#0f2420" stroke="#2BB3A3"/><text x="889" y="370" text-anchor="middle" font-size="10.5" fill="#2BB3A3">BlockManager</text>
+  <rect x="728" y="388" width="48" height="30" rx="6" fill="#1b1410" stroke="#FF7E33"/><text x="752" y="408" text-anchor="middle" font-size="10" fill="#FF7E33">task</text>
+  <rect x="782" y="388" width="48" height="30" rx="6" fill="#1b1410" stroke="#FF7E33"/><text x="806" y="408" text-anchor="middle" font-size="10" fill="#FF7E33">task</text>
+  <rect x="836" y="388" width="48" height="30" rx="6" fill="#1b1410" stroke="#FF7E33"/><text x="860" y="408" text-anchor="middle" font-size="10" fill="#FF7E33">task</text>
+  <rect x="890" y="388" width="52" height="30" rx="6" fill="#1b1410" stroke="#FF7E33"/><text x="916" y="408" text-anchor="middle" font-size="10" fill="#FF7E33">task</text>
+
+  <!-- storage / shuffle -->
+  <rect x="470" y="300" width="200" height="170" rx="14" fill="#1c1c22" stroke="#BA5AFF" stroke-width="2"/>
+  <text x="570" y="328" text-anchor="middle" font-size="14" font-weight="700" fill="#BA5AFF">STORAGE / SOURCE</text>
+  <text x="570" y="350" text-anchor="middle" font-size="11" fill="#9aa0b4">HDFS · S3 · ADLS</text>
+  <text x="570" y="368" text-anchor="middle" font-size="11" fill="#9aa0b4">Parquet · Delta · ORC</text>
+  <text x="570" y="392" text-anchor="middle" font-size="11" fill="#9aa0b4">+ external shuffle</text>
+  <text x="570" y="410" text-anchor="middle" font-size="11" fill="#9aa0b4">service (optional)</text>
+  <circle cx="570" cy="434" r="4" fill="#BA5AFF"><animate attributeName="opacity" values="1;.2;1" dur="2s" begin="0.5s" repeatCount="indefinite"/></circle>
+
+  <!-- arrows driver -> cluster manager -> executors -->
+  <g fill="none" stroke="#2BB3A3" stroke-width="2.5">
+    <path d="M420 175 L466 175" marker-end="url(#arr)"/>
+    <path d="M670 175 L696 175" marker-end="url(#arr)" stroke="#E25A1C"/>
+  </g>
+  <defs>
+    <marker id="arr" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto"><path d="M0 0 L7 3 L0 6 Z" fill="#FF7E33"/></marker>
+  </defs>
+  <text x="443" y="167" text-anchor="middle" font-size="10" fill="#2BB3A3">request</text>
+  <text x="683" y="167" text-anchor="middle" font-size="10" fill="#FF7E33">launch</text>
+
+  <!-- executor reads storage -->
+  <g fill="none" stroke="#BA5AFF" stroke-width="2" stroke-dasharray="6 5"><path d="M700 385 L672 385" marker-end="url(#arrp)"/></g>
+  <defs><marker id="arrp" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto"><path d="M0 0 L7 3 L0 6 Z" fill="#BA5AFF"/></marker></defs>
+  <text x="686" y="378" text-anchor="middle" font-size="10" fill="#BA5AFF">read/write</text>
+
+  <!-- task results back -->
+  <g fill="none" stroke="#FFB23F" stroke-width="2" stroke-dasharray="4 4"><path d="M835 300 Q 600 300 420 410" marker-end="url(#arry)"/></g>
+  <defs><marker id="arry" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto"><path d="M0 0 L7 3 L0 6 Z" fill="#FFB23F"/></marker></defs>
+  <text x="620" y="470" text-anchor="middle" font-size="10.5" fill="#FFB23F">task results &amp; status → driver</text>
+
+  <text x="500" y="520" text-anchor="middle" font-size="12.5" fill="#9aa0b4">The driver plans &amp; coordinates; the cluster manager hands out machines; executors do the work and hold the data.</text>
+</svg>
+<figcaption>One driver (planner + schedulers) · a cluster manager (resource broker) · many executors (JVMs with task slots, a block manager, cache, and shuffle files) · and the storage layer they read from and write to.</figcaption>
+</figure>
+
+<div class="prose reveal">
+<h3>Layer by layer</h3>
+</div>
+
+<div class="layer reveal">
+  <h3><span class="tag s">Driver</span> the brain — one process</h3>
+  <p class="role">Runs your program and coordinates the whole application. There is exactly one driver per Spark application.</p>
+  <p class="kv"><b>SparkSession / SparkContext</b> — the entry point. Holds your configuration, the connection to the cluster manager, and the master copy of the block-manager registry. (In modern Spark you use <code>SparkSession</code>; <code>SparkContext</code> is the older lower-level object inside it.)</p>
+  <p class="kv"><b>Spark UI</b> — served from the driver (port 4040 by default). This is where jobs/stages/tasks, shuffle bytes, memory, and the query plan live. <em>If the driver dies, the application dies.</em></p>
+  <p class="kv"><b>Two schedulers inside the driver:</b></p>
+  <p class="kv">• <b>DAGScheduler</b> — takes the optimized logical/physical plan and cuts it into <em>stages</em> at shuffle boundaries, building a DAG of stages. It also figures out <em>data locality</em> (prefer to run a task where its data already is).</p>
+  <p class="kv">• <b>TaskScheduler</b> — takes each stage's tasks and actually sends them to executors via the <em>SchedulerBackend</em> (the RPC layer). It handles task assignment, retries (a few attempts per task, with blacklist tracking of bad nodes), and locality waits.</p>
+  <p class="kv"><b>BlockManagerMaster</b> — tracks which executor holds which block (cached RDD/DataFrame partition or broadcast piece), so other tasks can fetch cached data instead of recomputing it (blocks are unpacked in the Task &amp; block layer below).</p>
+</div>
+
+<div class="layer reveal">
+  <h3><span class="tag t">Cluster manager</span> the resource broker</h3>
+  <p class="role">A <em>separate</em> system that owns the machines. Spark does not manage nodes itself; it asks the cluster manager for containers.</p>
+  <p class="kv"><b>YARN</b> (Hadoop) — the classic enterprise choice. Spark runs as YARN applications; YARN negotiates containers for the AM (driver) and executors.</p>
+  <p class="kv"><b>Kubernetes</b> — Spark submits a driver pod and executor pods; the dominant choice for cloud-native stacks.</p>
+  <p class="kv"><b>Standalone</b> — Spark's own built-in master/worker manager. Simplest; fine for small clusters or testing.</p>
+  <p class="kv"><b>Local[n]</b> — not really a cluster: one JVM with n threads. What you use in a notebook or unit test.</p>
+  <p class="kv">The key point: the cluster manager only <em>allocates and tracks processes</em>. It has no idea what a task or a DataFrame is. Spark does all the data work; the cluster manager just hands out boxes.</p>
+</div>
+
+<div class="layer reveal">
+  <h3><span class="tag s">Executors</span> the muscle — one JVM each</h3>
+  <p class="role">Each executor is a long-lived JVM process running on a cluster node, allocated for the lifetime of the application.</p>
+  <p class="kv"><b>Task slots</b> — an executor runs as many tasks in parallel as it has <em>cores</em> (<code>spark.executor.cores</code>). 5 cores = 5 concurrent tasks in that JVM.</p>
+  <p class="kv"><b>BlockManager</b> — each executor's local store: in-memory cache for DataFrame/RDD partitions and broadcast variables, plus on-disk shuffle spill files. It reports its blocks up to the driver's BlockManagerMaster.</p>
+  <p class="kv"><b>Shuffle files</b> — when a task in a "map stage" (a stage that produces shuffle output for the next stage) writes its shuffle data, it writes sorted buckets to the executor's local disk; the next stage's tasks fetch from these via the shuffle service.</p>
+  <p class="kv"><b>Executor memory</b> — one heap (<code>spark.executor.memory</code>) divided internally into reserved, user, execution, and storage regions (see <a href="#s9">§09</a>). This is the single most-misconfigured knob in Spark.</p>
+  <p class="kv">Executors are allocated once and reused across all jobs in the application — that reuse is a big part of why Spark beats MapReduce (no per-job JVM startup).</p>
+</div>
+
+<div class="layer reveal">
+  <h3><span class="tag m">Task &amp; block</span> the unit of work &amp; the unit of data</h3>
+  <p class="role">The two atomic things Spark moves around.</p>
+  <p class="kv"><b>Task</b> — one unit of computation applied to one partition, on one core of one executor. A stage with 200 partitions launches 200 tasks. If a task is slow, you see it as a <em>straggler</em> in the UI (often = data skew).</p>
+  <p class="kv"><b>Block</b> — a chunk of data identified by an RDD/DataFrame ID + partition index, or a broadcast variable. Blocks live in an executor's BlockManager (memory → disk spill). Cache = "keep these blocks"; broadcast = "copy this block to every executor."</p>
+</div>
+
+<div class="layer reveal">
+  <h3><span class="tag b">Shuffle service</span> the data mover</h3>
+  <p class="role">How reduce-side tasks fetch map-side output.</p>
+  <p class="kv">By default, reduce tasks <em>pull</em> shuffle files directly from the producing executor's BlockManager. An <b>external shuffle service</b> (a daemon running on each node, e.g. YARN's <code>aux-service</code>) serves shuffle files <em>outside</em> the executor JVM, so reduce tasks can fetch even after the map executor has exited — this decouples map and reduce lifecycles and reduces load on executor JVMs. It also helps when executors get killed dynamically.</p>
+</div>
+
+<div class="callout reveal">
+<p style="margin:.2em 0"><strong>Mental shortcut — who does what:</strong></p>
+<p class="kv">• <b>Driver</b> = <em>thinks</em> (plan, split into stages, assign tasks, collect results, host the UI).</p>
+<p class="kv">• <b>Cluster manager</b> = <em>provides boxes</em> (allocates JVMs on nodes; knows nothing about your data).</p>
+<p class="kv">• <b>Executors</b> = <em>do the lifting</em> (run tasks, cache blocks, serve &amp; fetch shuffle data).</p>
+</div>
+
+<!-- 06 DEPLOYMENT MODES -->
+<p class="promptline">~/spark <b>❯</b> where does the driver live?</p>
+<h2 id="s6" class="reveal"><span class="pfx">06.</span> Deployment modes — cluster vs client</h2>
+<p class="sectionsub reveal">Same engine; the only question is which machine runs the driver</p>
+<div class="prose reveal">
+<p>"Deployment mode" answers one question: <strong>where does the driver JVM run?</strong> Everything else is identical. The choice matters because the driver is the single point of coordination and the host of the Spark UI.</p>
+</div>
+<figure class="fig reveal">
+<svg viewBox="0 0 1000 360" font-family="'JetBrains Mono','Courier New',monospace" role="img" aria-label="Cluster mode vs client mode: where the driver JVM runs">
+  <rect width="1000" height="360" rx="16" fill="#121212"/>
+  <text x="500" y="38" text-anchor="middle" font-size="22" font-weight="700" fill="#F1F1F1">Cluster mode vs client mode</text>
+
+  <!-- cluster mode -->
+  <rect x="30" y="70" width="460" height="270" rx="12" fill="#0f2420" stroke="#2BB3A3"/>
+  <text x="260" y="98" text-anchor="middle" font-size="15" font-weight="700" fill="#2BB3A3">Cluster mode — driver inside the cluster</text>
+  <rect x="60" y="120" width="170" height="60" rx="8" fill="#1c1c22" stroke="#2BB3A3"/><text x="145" y="145" text-anchor="middle" font-size="12" fill="#dcdce4">your laptop /</text><text x="145" y="162" text-anchor="middle" font-size="12" fill="#dcdce4">gateway (submit)</text>
+  <rect x="290" y="120" width="170" height="60" rx="8" fill="#1b1410" stroke="#E25A1C"/><text x="375" y="145" text-anchor="middle" font-size="12" font-weight="700" fill="#FF7E33">DRIVER</text><text x="375" y="162" text-anchor="middle" font-size="11" fill="#9aa0b4">on a cluster node</text>
+  <rect x="290" y="200" width="170" height="50" rx="8" fill="#1c1c22" stroke="#666"/><text x="375" y="222" text-anchor="middle" font-size="12" fill="#dcdce4">executor</text>
+  <rect x="290" y="260" width="170" height="50" rx="8" fill="#1c1c22" stroke="#666"/><text x="375" y="282" text-anchor="middle" font-size="12" fill="#dcdce4">executor …</text>
+  <g fill="#2BB3A3"><path d="M230 150 L286 150 l0 -4 l9 4 l-9 4 l0 -4 Z"/></g>
+  <text x="260" y="318" text-anchor="middle" font-size="11.5" fill="#9aa0b4">laptop can disconnect; job keeps running</text>
+
+  <!-- client mode -->
+  <rect x="510" y="70" width="460" height="270" rx="12" fill="#1b1410" stroke="#E25A1C"/>
+  <text x="740" y="98" text-anchor="middle" font-size="15" font-weight="700" fill="#FF7E33">Client mode — driver on the submitter</text>
+  <rect x="540" y="120" width="170" height="60" rx="8" fill="#1b1410" stroke="#E25A1C"/><text x="625" y="145" text-anchor="middle" font-size="12" font-weight="700" fill="#FF7E33">DRIVER</text><text x="625" y="162" text-anchor="middle" font-size="11" fill="#9aa0b4">on your machine</text>
+  <rect x="770" y="120" width="170" height="60" rx="8" fill="#1c1c22" stroke="#666"/><text x="855" y="150" text-anchor="middle" font-size="12" fill="#dcdce4">cluster manager</text>
+  <rect x="770" y="200" width="170" height="50" rx="8" fill="#1c1c22" stroke="#666"/><text x="855" y="222" text-anchor="middle" font-size="12" fill="#dcdce4">executor</text>
+  <rect x="770" y="260" width="170" height="50" rx="8" fill="#1c1c22" stroke="#666"/><text x="855" y="282" text-anchor="middle" font-size="12" fill="#dcdce4">executor …</text>
+  <g fill="#E25A1C"><path d="M710 150 L766 150 l0 -4 l9 4 l-9 4 l0 -4 Z"/></g>
+  <text x="740" y="318" text-anchor="middle" font-size="11.5" fill="#9aa0b4">laptop must stay online; UI is local</text>
+</svg>
+<figcaption>Cluster mode runs the driver on a cluster node ( survives gateway disconnect ). Client mode runs the driver on the submitting machine ( convenient for interactive notebooks ).</figcaption>
+</figure>
+
+<div class="prose reveal">
+<div class="def"><span class="t">Cluster mode</span>
+<div class="ex">The driver runs <em>inside</em> the cluster, as a container allocated by the cluster manager. You submit, then can close your laptop — the job keeps running. <b>Use for:</b> production batch jobs, scheduled pipelines, anything long-running. <b>Trade-off:</b> the Spark UI is on a cluster node (reach it via the resource manager's proxy / tracking URL), and <code>collect()</code> brings data to the driver <em>in the cluster</em>, not to your laptop.</div></div>
+<div class="def"><span class="t">Client mode</span>
+<div class="ex">The driver runs <em>on the machine you launched from</em> (your laptop, a gateway, a notebook server). Executors still run in the cluster. <b>Use for:</b> interactive analysis, notebooks (Databricks, Jupyter), ad-hoc REPL work where you want the UI on localhost and direct <code>collect()</code> to your process. <b>Trade-off:</b> if your machine dies or disconnects, the whole application dies.</div></div>
+<p>Note a third, rarer option: <strong>local mode</strong> (<code>--master local[*]</code>) runs driver and executors in one JVM — great for tests and small data, not for real clusters.</p>
+</div>
+
+<!-- 07 PLAN PATH -->
+<p class="promptline">~/spark <b>❯</b> what happens when you hit run</p>
+<h2 id="s7" class="reveal"><span class="pfx">07.</span> How Spark runs your code — the plan path</h2>
+<p class="sectionsub reveal">From a SQL string or PySpark call all the way to tasks on executors</p>
+<div class="prose reveal">
+<p>This is the "black magic" question, made concrete. When you run a SQL query or a PySpark command, Spark walks a fixed pipeline of <em>plans</em>. Each plan is a tree of operators; each phase refines it. Understanding this pipeline is how you read the <code>explain()</code> output and find why a job is slow.</p>
+</div>
+<figure class="fig reveal">
+<svg viewBox="0 0 1000 480" font-family="'JetBrains Mono','Courier New',monospace" role="img" aria-label="Spark query plan pipeline: unresolved -> analyzed(resolved) -> optimized -> physical -> RDDs -> jobs/stages/tasks">
+  <rect width="1000" height="480" rx="16" fill="#121212"/>
+  <text x="500" y="40" text-anchor="middle" font-size="22" font-weight="700" fill="#F1F1F1">The plan pipeline (Catalyst + Tungsten)</text>
+  <text x="500" y="64" text-anchor="middle" font-size="13" fill="#9aa0b4">your code → 4 logical plans → physical plan → RDDs → execution</text>
+
+  <!-- stages as stacked boxes -->
+  <g font-size="12">
+    <rect x="60" y="90" width="880" height="48" rx="8" fill="#1c1c22" stroke="#666"/>
+    <text x="80" y="119" fill="#9aa0b4">0 · Your code</text>
+    <text x="500" y="119" text-anchor="middle" fill="#dcdce4">spark.sql("...")   /   df.filter().join().groupBy()   →  unresolved logical plan</text>
+
+    <rect x="60" y="150" width="880" height="48" rx="8" fill="#1b1410" stroke="#E25A1C"/>
+    <text x="80" y="179" fill="#FF7E33">1 · Unresolved logical plan</text>
+    <text x="500" y="179" text-anchor="middle" fill="#dcdce4">"what you wrote, literally" — column names not yet checked, types unknown</text>
+
+    <rect x="60" y="210" width="880" height="48" rx="8" fill="#0f2420" stroke="#2BB3A3"/>
+    <text x="80" y="239" fill="#2BB3A3">2 · Analyzed (resolved) logical plan</text>
+    <text x="500" y="239" text-anchor="middle" fill="#dcdce4">catalog lookup → bind names to real columns &amp; types → resolve [unresolved]</text>
+
+    <rect x="60" y="270" width="880" height="48" rx="8" fill="#0f2420" stroke="#2BB3A3"/>
+    <text x="80" y="299" fill="#2BB3A3">3 · Optimized logical plan</text>
+    <text x="500" y="299" text-anchor="middle" fill="#dcdce4">Catalyst rules: push filters down, fold constants, prune columns, collapse projects</text>
+
+    <rect x="60" y="330" width="880" height="48" rx="8" fill="#1b1410" stroke="#FFB23F"/>
+    <text x="80" y="359" fill="#FFB23F">4 · Physical plan</text>
+    <text x="500" y="359" text-anchor="middle" fill="#dcdce4">pick join strategies (BroadcastHashJoin vs SortMergeJoin) · partitioning · codegen</text>
+
+    <rect x="60" y="390" width="880" height="48" rx="8" fill="#1c1c22" stroke="#5C78FF"/>
+    <text x="80" y="419" fill="#5C78FF">5 · RDDs → execution</text>
+    <text x="500" y="419" text-anchor="middle" fill="#dcdce4">DAGScheduler → stages (shuffle boundaries) → TaskScheduler → tasks on executors</text>
+  </g>
+
+  <!-- downward arrows -->
+  <g fill="#FF7E33">
+    <path d="M500 138 L500 146 l-4 0 l4 8 l4 -8 l-4 0 Z"/>
+    <path d="M500 198 L500 206 l-4 0 l4 8 l4 -8 l-4 0 Z"/>
+    <path d="M500 258 L500 266 l-4 0 l4 8 l4 -8 l-4 0 Z" fill="#2BB3A3"/>
+    <path d="M500 318 L500 326 l-4 0 l4 8 l4 -8 l-4 0 Z" fill="#2BB3A3"/>
+    <path d="M500 378 L500 386 l-4 0 l4 8 l4 -8 l-4 0 Z" fill="#FFB23F"/>
+  </g>
+  <text x="500" y="462" text-anchor="middle" font-size="12" fill="#9aa0b4">Lazy until an action; then this whole pipeline runs once per job.</text>
+</svg>
+<figcaption>The five plan phases. Catalyst (logical) + Tungsten (physical/codegen) are the optimizer engine names you'll see in docs.</figcaption>
+</figure>
+
+<div class="prose reveal">
+<h3>Each phase, with a running example</h3>
+<p>Suppose you run this PySpark:</p>
+<pre><span class="k">from</span> pyspark.sql <span class="k">import</span> SparkSession
+<span class="k">import</span> pyspark.sql.functions <span class="k">as</span> F
+
+spark = SparkSession.builder.getOrCreate()
+orders = spark.read.parquet(<span class="s">"s3://bucket/orders"</span>)        <span class="c"># transformation (lazy)</span>
+cust   = spark.read.parquet(<span class="s">"s3://bucket/customers"</span>)    <span class="c"># transformation (lazy)</span>
+
+joined = (orders
+    .filter(F.col(<span class="s">"amount"</span>) > <span class="n">100</span>)            <span class="c"># filter BEFORE join (good)</span>
+    .join(cust, <span class="s">"customer_id"</span>)
+    .groupBy(<span class="s">"country"</span>)
+    .agg(F.sum(<span class="s">"amount"</span>).alias(<span class="s">"total"</span>)))
+
+joined.<span class="f">write</span>.mode(<span class="s">"overwrite"</span>).parquet(<span class="s">"s3://bucket/out"</span>)  <span class="c"># ACTION → triggers the pipeline</span></pre>
+<p>The four <code>read/filter/join/groupBy</code> lines do <em>nothing</em>. The <code>.write(...)</code> on the last line is the action that fires the whole pipeline below.</p>
+
+<div class="def"><span class="t">1 · Unresolved logical plan — "what you wrote, literally"</span>
+<div class="ex">A tree of relational operators (<code>Filter → Join → Aggregate → Project → Relation</code>) with column names as raw <em>unresolved attributes</em>. Spark does not yet know whether <code>amount</code> exists or what type it is. <code>explain()</code> shows this as <code>UnresolvedRelation</code> / <code>'amount</code>.</div></div>
+<div class="def"><span class="t">2 · Analyzed (resolved) logical plan — bind to the catalog</span>
+<div class="ex">The <em>Analyzer</em> uses the session catalog (table &amp; column metadata) to resolve names to real columns and types. Now <code>amount</code> is known as <code>double</code>, <code>customer_id</code> as <code>long</code>. If you typed a column that doesn't exist, you fail <em>here</em> — before any data is read. This is why a bad column errors fast.</div></div>
+<div class="def"><span class="t">3 · Optimized logical plan — Catalyst rewrites it</span>
+<div class="ex">A set of <em>rules</em> rewrites the tree for efficiency. The big ones you'll recognize: <b>predicate pushdown</b> (move <code>filter</code> below the join so it runs first, on less data), <b>column pruning</b> (drop columns nobody selects), <b>constant folding</b>, <b>projection collapsing</b>. This is why writing <code>filter</code> "after" a join in code can still run "before" it — the optimizer moves it.</div></div>
+<div class="def"><span class="t">4 · Physical plan — pick the actual algorithms</span>
+<div class="ex">Spark generates several <em>candidate</em> physical plans and picks the cheapest by cost. The most visible decision is the <b>join strategy</b>: <code>BroadcastHashJoin</code> if one side is small (≤ <code>spark.sql.autoBroadcastJoinThreshold</code>, default 10 MB) — no shuffle; otherwise <code>SortMergeJoin</code> — both sides sorted &amp; shuffled on the key. Also decides partitioning, and applies <b>Tungsten whole-stage codegen</b> (fuses a whole stage into one generated Java function to avoid per-row virtual calls).</div></div>
+<div class="def"><span class="t">5 · RDDs → DAGScheduler → tasks</span>
+<div class="ex">The physical plan maps to RDDs. The <strong>DAGScheduler</strong> cuts it into stages at shuffle boundaries (here: the <code>join</code> may shuffle, the <code>groupBy</code> shuffles). The <strong>TaskScheduler</strong> launches one task per partition per stage onto executor cores. Results flow back to the driver; for an action like <code>write</code>, the "result" is just success + metrics.</div></div>
+</div>
+
+<div class="callout cy reveal">
+<p style="margin:.2em 0"><strong>How to actually see this:</strong></p>
+<p class="kv">• <code>df.explain(True)</code> prints all four plans (parsed, analyzed, optimized, physical) — the single best debugging tool in Spark SQL.</p>
+<p class="kv">• Look for <code>PushedFilters: [amount &gt; 100]</code> near a <code>FileScan</code> — that means the filter was pushed into the Parquet reader (skips whole row groups). If your filter is <em>not</em> pushed down, you're reading more than necessary.</p>
+<p class="kv">• Look for <code>BroadcastHashJoin</code> vs <code>SortMergeJoin</code>. A SortMergeJoin on a tiny dimension table is a missed broadcast — fix it with a broadcast hint.</p>
+</div>
+
+<figure class="fig reveal">
+<svg viewBox="0 0 1000 300" font-family="'JetBrains Mono','Courier New',monospace" role="img" aria-label="Example: how the optimizer reorders filter before join">
+  <rect width="1000" height="300" rx="16" fill="#121212"/>
+  <text x="500" y="38" text-anchor="middle" font-size="20" font-weight="700" fill="#F1F1F1">Example: the optimizer moves your filter down ( = earlier )</text>
+
+  <text x="250" y="84" text-anchor="middle" font-size="14" font-weight="700" fill="#9aa0b4">What you wrote (unresolved)</text>
+  <g font-size="12">
+    <rect x="150" y="100" width="200" height="38" rx="7" fill="#1c1c22" stroke="#666"/><text x="250" y="124" text-anchor="middle" fill="#dcdce4">Aggregate sum(amount)</text>
+    <rect x="150" y="146" width="200" height="38" rx="7" fill="#1c1c22" stroke="#666"/><text x="250" y="170" text-anchor="middle" fill="#dcdce4">Join on customer_id</text>
+    <rect x="150" y="192" width="200" height="38" rx="7" fill="#1c1c22" stroke="#666"/><text x="250" y="216" text-anchor="middle" fill="#dcdce4">Filter amount &gt; 100</text>
+    <rect x="150" y="238" width="200" height="34" rx="7" fill="#1c1c22" stroke="#666"/><text x="250" y="260" text-anchor="middle" fill="#dcdce4">Scan orders + customers</text>
+  </g>
+  <g fill="#666"><path d="M250 138 L250 144 l-3 0 l3 6 l3 -6 l-3 0 Z"/><path d="M250 184 L250 190 l-3 0 l3 6 l3 -6 l-3 0 Z"/><path d="M250 230 L250 236 l-3 0 l3 6 l3 -6 l-3 0 Z"/></g>
+
+  <text x="650" y="84" text-anchor="middle" font-size="14" font-weight="700" fill="#5BC97A">After optimization (physical)</text>
+  <g font-size="12">
+    <rect x="550" y="100" width="200" height="38" rx="7" fill="#0f2420" stroke="#2BB3A3"/><text x="650" y="124" text-anchor="middle" fill="#dcdce4">Aggregate sum(amount)</text>
+    <rect x="550" y="146" width="200" height="38" rx="7" fill="#0f2420" stroke="#2BB3A3"/><text x="650" y="170" text-anchor="middle" fill="#dcdce4">Join (broadcast customers)</text>
+    <rect x="550" y="192" width="200" height="38" rx="7" fill="#1b1410" stroke="#FF7E33"/><text x="650" y="216" text-anchor="middle" fill="#FF7E33">Filter amount&gt;100 (pushed)</text>
+    <rect x="550" y="238" width="200" height="34" rx="7" fill="#0f2420" stroke="#2BB3A3"/><text x="650" y="260" text-anchor="middle" fill="#dcdce4">Scan orders (col-pruned)</text>
+  </g>
+  <g fill="#2BB3A3"><path d="M650 138 L650 144 l-3 0 l3 6 l3 -6 l-3 0 Z"/><path d="M650 184 L650 190 l-3 0 l3 6 l3 -6 l-3 0 Z"/><path d="M650 230 L650 236 l-3 0 l3 6 l3 -6 l-3 0 Z"/></g>
+  <text x="500" y="288" text-anchor="middle" font-size="11.5" fill="#9aa0b4">filter runs at the scan (less data into the join); small table is broadcast (no shuffle)</text>
+</svg>
+<figcaption>Catalyst rewrites your tree so the filter happens at the read and the small table is broadcast — even if you wrote them in a different order.</figcaption>
+</figure>
+
+<!-- 08 SPARK SQL + DATAFRAME -->
+<p class="promptline">~/spark <b>❯</b> using it day to day</p>
+<h2 id="s8" class="reveal"><span class="pfx">08.</span> Using Spark SQL &amp; DataFrames (with PySpark)</h2>
+<p class="sectionsub reveal">The high-level APIs you should actually use — and how they map to each other</p>
+<div class="prose reveal">
+<p>Modern Spark has three high-level APIs. You should use <strong>DataFrame / Spark SQL</strong> for almost everything; they share the same Catalyst optimizer. The low-level RDD API is for cases where you truly need raw control (and even then, Datasets usually cover it).</p>
+</div>
+<div class="tablewrap reveal">
+<table>
+<tr><th>API</th><th>What it is</th><th>Use when</th></tr>
+<tr><td><span class="cell-s">Spark SQL</span></td><td>Write SQL strings; Spark parses them through the same Catalyst optimizer as DataFrames</td><td>You like SQL, or handing queries to analysts / BI tools</td></tr>
+<tr><td><span class="cell-t">DataFrame</span></td><td>Tables with named columns; programmatic chainable methods (the <em>de facto</em> default in PySpark/Scala)</td><td>Most ETL, pipelines, anything programmatic</td></tr>
+<tr><td><span class="cell-m">Dataset[T]</span></td><td>Typed DataFrame (compile-time type safety); Scala/Java only — no real equivalent in PySpark</td><td>Scala apps wanting types + encoder perf</td></tr>
+<tr><td><span class="cell-b">RDD</span></td><td>Low-level distributed collection of arbitrary objects; no Catalyst, you control everything</td><td>Legacy code, custom partitioners, fine-grained control — rarely needed now</td></tr>
+</table>
+</div>
+
+<div class="prose reveal">
+<h3>Spark SQL and DataFrame are the same engine</h3>
+<p>The crucial fact: a SQL string and the equivalent DataFrame code compile to the <em>same</em> optimized plan. Pick whichever reads better. You can even mix them — register a DataFrame as a temp view and query it in SQL.</p>
+<pre><span class="c"># --- DataFrame API ---</span>
+df = (spark.read.parquet(<span class="s">"s3://b/orders"</span>)
+        .filter(F.col(<span class="s">"amount"</span>) > <span class="n">100</span>)
+        .groupBy(<span class="s">"country"</span>)
+        .agg(F.sum(<span class="s">"amount"</span>).alias(<span class="s">"total"</span>)))
+
+<span class="c"># --- identical plan, written as SQL ---</span>
+df = spark.sql(<span class="s">"""
+    SELECT country, SUM(amount) AS total
+    FROM parquet.`s3://b/orders`
+    WHERE amount > 100
+    GROUP BY country
+"""</span>)
+
+<span class="c"># --- mix them: register a DF, query in SQL ---</span>
+orders.createOrReplaceTempView(<span class="s">"orders"</span>)
+top = spark.sql(<span class="s">"SELECT country, total FROM orders WHERE total > 1000 ORDER BY total DESC"</span>)</pre>
+
+<h3>The day-to-day vocabulary</h3>
+<pre><span class="c"># read / write</span>
+df = spark.read.parquet(path)              <span class="c"># also: csv, json, orc, jdbc, delta</span>
+df.write.mode(<span class="s">"overwrite"</span>).parquet(out)   <span class="c"># append | overwrite | ignore | error</span>
+
+<span class="c"># shape &amp; schema</span>
+df.printSchema(); df.columns; df.count(); df.show(<span class="n">20</span>, truncate=<span class="n">False</span>)
+
+<span class="c"># select / transform</span>
+df.select(<span class="s">"country"</span>, <span class="s">"amount"</span>)
+df.withColumn(<span class="s">"eur"</span>, F.col(<span class="s">"amount"</span>) * <span class="n">0.93</span>)
+df.filter((F.col(<span class="s">"amount"</span>) > <span class="n">100</span>) &amp; (F.col(<span class="s">"country"</span>) == <span class="s">"VN"</span>))
+
+<span class="c"># joins (prefer broadcast for small dims)</span>
+from pyspark.sql.functions <span class="k">import</span> broadcast
+joined = big.join(broadcast(small), <span class="s">"id"</span>, <span class="s">"left"</span>)
+
+<span class="c"># aggregations &amp; windows</span>
+df.groupBy(<span class="s">"country"</span>).agg(F.sum(<span class="s">"amount"</span>), F.countDistinct(<span class="s">"cust"</span>))
+w = Window.partitionBy(<span class="s">"country"</span>).orderBy(F.col(<span class="s">"dt"</span>).desc())
+df.withColumn(<span class="s">"rnk"</span>, F.row_number().over(w)).filter(<span class="s">"rnk = 1"</span>)</pre>
+
+<h3>How Spark reads a SQL query vs a PySpark command — the detail</h3>
+<p>Both end in the same pipeline (§07), but the <em>entry</em> differs:</p>
+<ul>
+<li><strong><code>spark.sql("...")</code></strong> — the string is <em>parsed</em> by Spark's SQL parser (ANTLR grammar) into an unresolved logical plan. Column refs are unresolved attributes. Then Analyzer → Optimizer → Physical, identical to below.</li>
+<li><strong>DataFrame methods (<code>.filter().join()...)</code></strong> — each method call directly appends a node to the unresolved logical plan (no SQL parsing step). <code>F.col("amount") > 100</code> builds an expression tree in the plan.</li>
+<li>From the <em>resolved</em> plan onward, the two paths are indistinguishable. That is why <code>df.explain()</code> on a SQL-derived DataFrame and a code-derived one can produce byte-identical physical plans.</li>
+</ul>
+<p>The practical upshot: write whichever is clearer. SQL is better for declarative set logic and handing to analysts; DataFrame methods are better when logic is conditional/programmatic (loops, config-driven columns). They interoperate freely.</p>
+</div>
+
+<div class="callout gd reveal">
+<p style="margin:.2em 0"><strong>Patterns that pay off in real code:</strong></p>
+<p class="kv">• <b>Filter early, select only needed columns.</b> Catalyst pushes filters, but column pruning is most effective when you don't drag unused columns through a join.</p>
+<p class="kv">• <b>Broadcast small dimensions.</b> A 50 MB country lookup joined to a billion-row fact table should be <code>broadcast()</code> — turns a shuffle-join into a map-side join.</p>
+<p class="kv">• In the DataFrame API, <code>groupBy().agg()</code> already does <b>map-side partial aggregation</b> (Catalyst's <code>HashAggregateExec</code>) to shrink what gets shuffled. Avoid dropping to <code>.rdd.reduceByKey()</code> just to pre-combine — you'd lose the optimizer. Tune shuffle output size with <code>spark.sql.adaptive.advisoryPartitionSizeInBytes</code>.</p>
+<p class="kv">• <b>Cache only what you reuse ≥ 2×.</b> Caching is expensive and eats memory; uncached reused data recomputes from source every action.</p>
+<p class="kv">• <b>Use Delta/Parquet with partitioning + predicate pushdown</b> so filters skip whole files/partitions.</p>
+</div>
+
+<!-- 09 MEMORY -->
+<p class="promptline">~/spark <b>❯</b> where the RAM goes</p>
+<h2 id="s9" class="reveal"><span class="pfx">09.</span> Executor memory deep dive</h2>
+<p class="sectionsub reveal">On-heap, off-heap, unified memory — and the sizing math that fixes 80% of OOMs</p>
+<div class="prose reveal">
+<p>Most Spark memory pain is a config mistake, not a data problem. Here is exactly how one executor's memory is carved up, then the sizing example from the video.</p>
+</div>
+<figure class="fig reveal">
+<svg viewBox="0 0 1000 380" font-family="'JetBrains Mono','Courier New',monospace" role="img" aria-label="Spark executor memory regions: reserved, user, unified(execution+storage) and optional off-heap">
+  <rect width="1000" height="380" rx="16" fill="#121212"/>
+  <text x="500" y="40" text-anchor="middle" font-size="22" font-weight="700" fill="#F1F1F1">Inside one executor's memory</text>
+  <text x="500" y="64" text-anchor="middle" font-size="13" fill="#9aa0b4">spark.executor.memory = M  →  carved into Reserved · User · Unified (Execution ⇄ Storage) · optional Off-heap</text>
+
+  <!-- heap bar -->
+  <text x="60" y="110" font-size="13" font-weight="700" fill="#FF7E33">On-heap (M)</text>
+  <rect x="60" y="120" width="120" height="120" rx="6" fill="#2a1414" stroke="#FF6B6B"/>
+  <text x="120" y="170" text-anchor="middle" font-size="12" fill="#FF6B6B">Reserved</text>
+  <text x="120" y="190" text-anchor="middle" font-size="11" fill="#dcdce4">~299MB</text>
+  <text x="120" y="208" text-anchor="middle" font-size="10" fill="#9aa0b4">JVM + Spark internals</text>
+
+  <rect x="180" y="120" width="140" height="120" rx="6" fill="#1c1c22" stroke="#666"/>
+  <text x="250" y="170" text-anchor="middle" font-size="12" fill="#dcdce4">User</text>
+  <text x="250" y="190" text-anchor="middle" font-size="11" fill="#9aa0b4">0.4 · (M−R)</text>
+  <text x="250" y="208" text-anchor="middle" font-size="10" fill="#9aa0b4">your code's objects</text>
+
+  <!-- unified region split into execution + storage -->
+  <rect x="320" y="120" width="500" height="120" rx="6" fill="#0f2420" stroke="#2BB3A3"/>
+  <text x="570" y="140" text-anchor="middle" font-size="13" font-weight="700" fill="#2BB3A3">Unified (0.6 · (M−R))  —  soft boundary, borrowed back &amp; forth</text>
+  <rect x="335" y="156" width="230" height="74" rx="5" fill="#1b1410" stroke="#FF7E33"/>
+  <text x="450" y="184" text-anchor="middle" font-size="12.5" font-weight="700" fill="#FF7E33">Execution</text>
+  <text x="450" y="204" text-anchor="middle" font-size="10.5" fill="#9aa0b4">shuffles · joins · sorts</text>
+  <text x="450" y="220" text-anchor="middle" font-size="10.5" fill="#9aa0b4">spills to disk if full</text>
+  <rect x="575" y="156" width="230" height="74" rx="5" fill="#1b1410" stroke="#FFB23F"/>
+  <text x="690" y="184" text-anchor="middle" font-size="12.5" font-weight="700" fill="#FFB23F">Storage</text>
+  <text x="690" y="204" text-anchor="middle" font-size="10.5" fill="#9aa0b4">cached blocks · broadcasts</text>
+  <text x="690" y="220" text-anchor="middle" font-size="10.5" fill="#9aa0b4">evicts (drops) if full</text>
+  <!-- borrow arrows -->
+  <path d="M565 193 L585 193 l0 -4 l8 4 l-8 4 l0 -4 Z" fill="#5BC97A"/>
+  <path d="M585 197 L565 197 l0 4 l-8 -4 l8 -4 l0 4 Z" fill="#5BC97A" opacity="0.6"/>
+
+  <!-- off-heap -->
+  <text x="870" y="110" font-size="13" font-weight="700" fill="#BA5AFF">Off-heap</text>
+  <rect x="850" y="120" width="110" height="120" rx="6" fill="#221430" stroke="#BA5AFF"/>
+  <text x="905" y="170" text-anchor="middle" font-size="11.5" fill="#BA5AFF">offHeap.size</text>
+  <text x="905" y="190" text-anchor="middle" font-size="11" fill="#dcdce4">off-heap pool</text>
+  <text x="905" y="212" text-anchor="middle" font-size="10" fill="#9aa0b4">Tungsten</text>
+  <text x="905" y="226" text-anchor="middle" font-size="10" fill="#9aa0b4">binary rows</text>
+
+  <text x="500" y="280" text-anchor="middle" font-size="12.5" fill="#dcdce4"><tspan fill="#2BB3A3" font-weight="700">Unified memory</tspan>: execution &amp; storage share one pool — if one needs room it can borrow from the other.</text>
+  <text x="500" y="306" text-anchor="middle" font-size="12" fill="#9aa0b4">execution outgrows → spills to disk ·  storage outgrows → evicts cached blocks (not spill).<tspan x="500" dy="18">Tune with spark.memory.fraction &amp; spark.memory.storageFraction.</tspan></text>
+  <text x="500" y="358" text-anchor="middle" font-size="12" fill="#FF7E33">R ≈ 300 MB reserved. Usable ≈ M − 0.3 GB. Default: 60% unified (0.5 storage of that), 40% user.</text>
+</svg>
+<figcaption>One executor heap split into Reserved (~300MB), User (your objects), and Unified (Execution ⇄ Storage). Off-heap is a separate, optional pool for Tungsten.</figcaption>
+</figure>
+
+<div class="prose reveal">
+<h3>The regions, defined</h3>
+<div class="def"><span class="t">Reserved memory</span>
+<div class="ex">A fixed ~300 MB that Spark holds back for its own internals and the JVM. Rule of thumb: <b>usable heap ≈ M − 0.3 GB</b>. On a tiny executor (e.g. 1 GB) this eats a lot proportionally — one reason not to use very small executors.</div></div>
+<div class="def"><span class="t">User memory</span>
+<div class="ex">~40% of (M − Reserved). Space for <em>your</em> objects that Spark doesn't track: UDF internals, accumulators, large Python-side data (in PySpark the Python worker is a separate process with its own memory). OOMs here usually mean a UDF or <code>collect()</code> holding too much on the driver/executor.</div></div>
+<div class="def"><span class="t">Unified (Execution + Storage) memory</span>
+<div class="ex">~60% of (M − Reserved), introduced in Spark 1.6. <b>Execution</b> = transient memory for shuffles, joins, sorts, aggregations (spills to disk when full). <b>Storage</b> = cached blocks &amp; broadcast variables (evicted/dropped when full, not spilled). The two <em>share</em> the pool: execution can borrow from storage and vice-versa, with a soft boundary controlled by <code>spark.memory.storageFraction</code> (default 0.5).</div></div>
+<div class="def"><span class="t">Off-heap memory</span>
+<div class="ex">A separate, non-JVM-heap allocation (<code>spark.memory.offHeap.enabled=true</code>, <code>spark.memory.offHeap.size</code>) used by Tungsten for its own binary rows. Bypasses GC pressure — useful for heavy shuffle/sort workloads. Off by default; enable when you see GC stalls.</div></div>
+
+<h3>The sizing example (from the video)</h3>
+<p>You have a node with ~64 GB RAM and 16 cores. A naive config might ask for one 64 GB / 16-core executor. That is usually <em>wrong</em> — one giant JVM has terrible GC pauses and no parallelism gain beyond ~5 cores per executor. The standard reasoning:</p>
+<pre><span class="c"># Per-node: 64 GB, 16 cores. Reserve ~1 core + ~1 GB for OS / YARN NM / shuffle service.</span>
+<span class="c"># Pick ~5 cores per executor (good GC + HDFS throughput sweet spot).</span>
+<span class="c"># → 3 executors × 5 cores = 15 cores used; leaves headroom.</span>
+
+spark.executor.cores   = <span class="n">5</span>
+spark.executor.memory  = <span class="n">19</span>g        <span class="c"># (64 − overhead) / 3 executors ≈ 19–20 GB each</span>
+spark.executor.instances = <span class="n">3</span>
+spark.memory.fraction        = <span class="n">0.6</span>   <span class="c"># 60% of usable heap → unified</span>
+spark.memory.storageFraction = <span class="n">0.5</span>   <span class="c"># half of unified reserved for storage</span>
+spark.sql.shuffle.partitions  = <span class="n">200</span> <span class="c"># raise for big shuffles (≈ 2× cores across cluster)</span></pre>
+<p>The fractions in action on a 19 GB executor:</p>
+<ul>
+<li>Reserved ≈ 0.3 GB → usable ≈ 18.7 GB.</li>
+<li>Unified ≈ 60% × 18.7 ≈ <b>11.2 GB</b> (Execution ⇄ Storage).</li>
+<li>User ≈ 40% × 18.7 ≈ <b>7.5 GB</b>.</li>
+<li>Within unified, Storage is protected up to 50% (≈ 5.6 GB) before it must give way to Execution.</li>
+</ul>
+</div>
+
+<div class="callout rd reveal">
+<p style="margin:.2em 0"><strong>Common memory mistakes:</strong></p>
+<p class="kv">✗ <b>One fat executor per node</b> (e.g. 64 GB / 16 core). GC pauses dominate. Prefer ~5 cores × several executors per node.</p>
+<p class="kv">✗ <b><code>collect()</code> on a big DataFrame</b> — pulls everything to the <em>driver</em>; OOMs the driver, not the executors. Use <code>take()</code>, <code>toPandas()</code> on a sample, or write to storage.</p>
+<p class="kv">✗ <b>Too few shuffle partitions</b> → each task gets a huge partition → execution memory spills constantly. Raise <code>spark.sql.shuffle.partitions</code> or enable AQE.</p>
+<p class="kv">✗ <b>Caching everything</b> → Storage fills, evictions thrash. Cache only reused DataFrames, and <code>unpersist()</code> when done.</p>
+</div>
+
+<!-- 10 MONITORING + OPT -->
+<p class="promptline">~/spark <b>❯</b> making it fast &amp; keeping it fast</p>
+<h2 id="s10" class="reveal"><span class="pfx">10.</span> Monitoring &amp; optimizing a real cluster</h2>
+<p class="sectionsub reveal">A repeatable method: read the UI → find the bottleneck → apply the right lever</p>
+<div class="prose reveal">
+<p>Tuning is not a checklist of flags; it's a diagnostic loop. The Spark UI tells you <em>what</em> is slow; this section maps each symptom to its lever. Learn the UI first — it's the instrument panel.</p>
+</div>
+
+<h3 class="reveal">The Spark UI — what each tab tells you</h3>
+<div class="tablewrap reveal">
+<table>
+<tr><th>UI tab</th><th>Answers</th><th>What to look for</th></tr>
+<tr><td><b>Jobs</b></td><td>Is the whole job on track? Which action fired it?</td><td>Many jobs = many actions (maybe re-reading source). One job = one action.</td></tr>
+<tr><td><b>Stages</b></td><td>Where is time spent? Is there a shuffle wall?</td><td>Stage duration, shuffle read/write bytes, <em>task skew</em> (one task taking 100× the median).</td></tr>
+<tr><td><b>Tasks</b> (inside a stage)</td><td>Skew, spill, stragglers, locality</td><td>Min/median/max task time; <code>Shuffle spill (memory/disk)</code>; <code>GC time</code>; locality level.</td></tr>
+<tr><td><b>Storage</b></td><td>What's cached, how big, hit rate</td><td>Fraction cached in memory vs disk; evictions; is the cache even being used?</td></tr>
+<tr><td><b>Executors</b></td><td>Resource use, dead executors, GC</td><td>Per-executor task count, GC time, shuffle bytes, max/used heap, failed tasks.</td></tr>
+<tr><td><b>SQL</b></td><td>The query plan &amp; per-operator metrics</td><td><code>explain</code> tree with real row counts &amp; time per node — the fastest way to find a bad join.</td></tr>
+</table>
+</div>
+
+<figure class="fig reveal">
+<svg viewBox="0 0 1000 320" font-family="'JetBrains Mono','Courier New',monospace" role="img" aria-label="Data skew: one task handles most of the data while others finish fast">
+  <rect width="1000" height="320" rx="16" fill="#121212"/>
+  <text x="500" y="40" text-anchor="middle" font-size="22" font-weight="700" fill="#F1F1F1">Spotting data skew in the Stages tab</text>
+  <text x="500" y="64" text-anchor="middle" font-size="13" fill="#9aa0b4">task duration bar — one straggler dominates while the rest finished long ago</text>
+
+  <g font-size="11">
+    <text x="60" y="110" fill="#9aa0b4">task 1</text><rect x="160" y="98" width="120" height="20" rx="4" fill="#0f2420" stroke="#2BB3A3"/><text x="290" y="113" fill="#2BB3A3">0.4s</text>
+    <text x="60" y="138" fill="#9aa0b4">task 2</text><rect x="160" y="126" width="110" height="20" rx="4" fill="#0f2420" stroke="#2BB3A3"/><text x="280" y="141" fill="#2BB3A3">0.3s</text>
+    <text x="60" y="166" fill="#9aa0b4">task 3</text><rect x="160" y="154" width="125" height="20" rx="4" fill="#0f2420" stroke="#2BB3A3"/><text x="295" y="169" fill="#2BB3A3">0.4s</text>
+    <text x="60" y="194" fill="#9aa0b4">task 4</text><rect x="160" y="182" width="115" height="20" rx="4" fill="#0f2420" stroke="#2BB3A3"/><text x="285" y="197" fill="#2BB3A3">0.3s</text>
+    <text x="60" y="222" fill="#FF6B6B" font-weight="700">task 5</text><rect x="160" y="210" width="700" height="20" rx="4" fill="#2a1414" stroke="#FF6B6B"/><text x="865" y="225" fill="#FF6B6B" font-weight="700">2.5 min  ← straggler</text>
+    <text x="60" y="250" fill="#9aa0b4">task 6</text><rect x="160" y="238" width="118" height="20" rx="4" fill="#0f2420" stroke="#2BB3A3"/><text x="288" y="253" fill="#2BB3A3">0.4s</text>
+  </g>
+  <text x="500" y="290" text-anchor="middle" font-size="12" fill="#FF7E33">One task = 2.5 min, the rest = 0.4s. The stage wall-clock = the straggler. That is data skew — fix the key, not the cluster.</text>
+  <text x="500" y="308" text-anchor="middle" font-size="11" fill="#9aa0b4">Check the stage's "Shuffle Read Size" per task: if one task read 1000× the others, that's the smoking gun.</text>
+</svg>
+<figcaption>Skew signature: one task dwarfing all others. Adding more executors will not help — the data, not the cluster, is unbalanced.</figcaption>
+</figure>
+
+<h3 class="reveal">The levers — symptom → fix</h3>
+<div class="prose reveal">
+<div class="def"><span class="t">Symptom: one straggler task (skew)</span>
+<div class="ex"><b>Cause:</b> a hot key — e.g. one <code>customer_id</code> has millions of rows, so its partition is huge. <b>Fix:</b> <em>salt the key</em> (add a random 0–N suffix to break the hot key into N partitions, join, then strip the salt); enable <b>AQE skew join handling</b> (<code>spark.sql.adaptive.skewJoin.enabled=true</code>); or pre-aggregate the hot key.</div></div>
+<div class="def"><span class="t">Symptom: huge shuffle read/write, stages slow at boundaries</span>
+<div class="ex"><b>Cause:</b> shuffling more data than necessary. <b>Fix:</b> filter &amp; project before the shuffle; broadcast small sides; use map-side (partial) aggregation; raise <code>spark.sql.shuffle.partitions</code> so each task's partition is smaller (less spill); enable AQE partition coalescing.</div></div>
+<div class="def"><span class="t">Symptom: lots of small tasks, scheduling overhead, slow start</span>
+<div class="ex"><b>Cause:</b> too many tiny partitions. <b>Fix:</b> <code>coalesce(N)</code> to merge (no shuffle) or re-tune <code>spark.sql.shuffle.partitions</code> downward; enable AQE to auto-coalesce small partitions post-shuffle.</div></div>
+<div class="def"><span class="t">Symptom: high GC time, executor pauses</span>
+<div class="ex"><b>Cause:</b> oversized executor heaps or many objects. <b>Fix:</b> smaller executors (~5 cores); enable off-heap; avoid Python UDFs that materialize big objects (use native SQL functions); consider <code>spark.sql.execution.arrow.pyspark.enabled=true</code> for Pandas conversion.</div></div>
+<div class="def"><span class="t">Symptom: re-reading source data across actions</span>
+<div class="ex"><b>Cause:</b> a DataFrame used by multiple actions with no cache. <b>Fix:</b> <code>df.cache()</code> (or <code>persist(MEMORY_AND_DISK)</code>) before the first action; <code>unpersist()</code> after the last. Cache <em>only</em> if reused ≥ 2×.</div></div>
+<div class="def"><span class="t">Symptom: SortMergeJoin on a tiny table</span>
+<div class="ex"><b>Cause:</b> table just above the 10 MB broadcast threshold, or stats missing. <b>Fix:</b> <code>broadcast(small)</code> hint; raise <code>spark.sql.autoBroadcastJoinThreshold</code>; run <code>ANALYZE TABLE</code> so the planner knows the real size.</div></div>
+</div>
+
+<h3 class="reveal">Adaptive Query Execution (AQE) — the modern auto-tuner</h3>
+<div class="prose reveal">
+<p>AQE (Spark 3.0+, on by default since 3.2) re-optimizes the plan <em>at runtime</em>, after shuffle stages produce real statistics. It fixes three things you used to tune by hand:</p>
+<ul>
+<li><strong>Coalescing partitions</strong> — merges tiny post-shuffle partitions into right-sized ones (kills the "200 partitions but 5 have data" problem).</li>
+<li><strong>Switching join strategies</strong> — discovers at runtime that one side is small enough to broadcast, and converts a SortMergeJoin to BroadcastHashJoin.</li>
+<li><strong>Skew join splitting</strong> — detects a skewed partition and splits it into multiple tasks so no single task is a straggler.</li>
+</ul>
+<pre>spark.sql.adaptive.enabled            = <span class="n">true</span>   <span class="c"># master switch (on by default in 3.2+)</span>
+spark.sql.adaptive.coalescePartitions.enabled              = <span class="n">true</span>
+spark.sql.adaptive.skewJoin.enabled                         = <span class="n">true</span>
+spark.sql.adaptive.autoBroadcastJoinThreshold              = <span class="n">100</span>MB
+spark.sql.adaptive.advisoryPartitionSizeInBytes            = <span class="n">64</span>MB</pre>
+</div>
+
+<h3 class="reveal">Caching &amp; persistence — when and how</h3>
+<div class="prose reveal">
+<p><code>cache()</code> = <code>persist(MEMORY_AND_DISK)</code> with the default storage level. Caching stores block copies in the Storage region. Rules:</p>
+<ul>
+<li>Cache a DataFrame <em>only if</em> it's used by ≥ 2 actions. One action + cache = pure overhead (you materialize once for the cache, then once to use it).</li>
+<li>In PySpark, prefer <code>df.persist(StorageLevel.MEMORY_AND_DISK)</code> for large data; use <code>MEMORY_ONLY</code> only for small, hot data (it drops to recompute, not spill, if full).</li>
+<li>Always <code>unpersist()</code> when done — the cluster has finite Storage memory, and stale caches cause confusing OOMs.</li>
+</ul>
+</div>
+
+<h3 class="reveal">A real-cluster checklist (in priority order)</h3>
+<div class="prose reveal">
+<ol>
+<li><strong>Read the SQL/Stages tab first.</strong> Don't tune blind. Find the slow operator / stage / straggler before touching config.</li>
+<li><strong>Right-size executors.</strong> ~5 cores each, several per node, leave OS/YARN headroom. Avoid one fat JVM.</li>
+<li><strong>Turn on AQE.</strong> It removes a lot of manual partition tuning for free.</li>
+<li><strong>Filter &amp; project early; broadcast small tables.</strong> Cheap, high-impact, often the whole fix.</li>
+<li><strong>Handle skew.</strong> Salt hot keys or rely on AQE skew splitting — the difference between a 2.5-min straggler and a 5-second stage.</li>
+<li><strong>Tune shuffle partitions</strong> to the data size (≈ 2–4× total cores, or let AQE coalesce).</li>
+<li><strong>Cache reused DataFrames; unpersist after.</strong></li>
+<li><strong>Watch GC &amp; spill</strong> in the Executors tab; enable off-heap / smaller executors if GC dominates.</li>
+<li><strong>Collect table stats</strong> (<code>ANALYZE TABLE</code>) so the optimizer picks good join strategies and skips files.</li>
+<li><strong>Use the right file format</strong> — Parquet/Delta with partitioning + predicate pushdown, avoid many tiny files (compact).</li>
+</ol>
+</div>
+
+<div class="callout gn reveal">
+<p style="margin:.2em 0"><strong>The 80/20 of Spark performance:</strong></p>
+<p class="kv">1. Filter + project before shuffles and joins.</p>
+<p class="kv">2. Broadcast small tables; salt or split skewed keys.</p>
+<p class="kv">3. Right-size executors (~5 cores) and turn on AQE.</p>
+<p class="kv">4. Read the UI before you change a single config flag.</p>
+</div>
+
+<!-- 11 RECAP -->
+<p class="promptline">~/spark <b>❯</b> the whole thing in one screen</p>
+<h2 id="s11" class="reveal"><span class="pfx">11.</span> The 30 concepts — recap &amp; cheat sheet</h2>
+<p class="sectionsub reveal">Everything above, condensed into the 30 ideas the video builds</p>
+<div class="num30 reveal">
+  <div><b>1 MapReduce bottleneck</b> — disk I/O between every step.</div>
+  <div><b>2 Map step</b> — emit (key,value) per record.</div>
+  <div><b>3 Shuffle/sort</b> — group by key across nodes.</div>
+  <div><b>4 Reduce step</b> — aggregate per key.</div>
+  <div><b>5 MR limit</b> — disk writes + rigid 2-step model.</div>
+  <div><b>6 In-memory</b> — Spark keeps intermediates in RAM.</div>
+  <div><b>7 DAG</b> — whole pipeline as one graph.</div>
+  <div><b>8 Lineage</b> — how each partition was derived; rebuilds on failure.</div>
+  <div><b>9 Transformation</b> — lazy, builds the plan.</div>
+  <div><b>10 Action</b> — eager, triggers a job.</div>
+  <div><b>11 Lazy eval</b> — nothing runs until an action.</div>
+  <div><b>12 Job</b> — one action → one job.</div>
+  <div><b>13 Stage</b> — stretch of work between shuffles.</div>
+  <div><b>14 Task</b> — one partition, one core, one executor.</div>
+  <div><b>15 Partition</b> — the unit of data parallelism.</div>
+  <div><b>16 Narrow transform</b> — 1 input → 1 output partition.</div>
+  <div><b>17 Wide transform</b> — many inputs → 1 output; shuffle.</div>
+  <div><b>18 Shuffle</b> — disk write + network + disk read.</div>
+  <div><b>19 Driver</b> — plans, schedules, hosts the UI.</div>
+  <div><b>20 Executors</b> — JVMs that run tasks &amp; hold blocks.</div>
+  <div><b>21 Cluster manager</b> — YARN/K8s/Standalone; allocates boxes.</div>
+  <div><b>22 BlockManager</b> — per-executor cache + shuffle store.</div>
+  <div><b>23 DAGScheduler</b> — cuts plan into stages.</div>
+  <div><b>24 TaskScheduler</b> — sends tasks to executors.</div>
+  <div><b>25 Deployment modes</b> — cluster vs client (where driver runs).</div>
+  <div><b>26 Plans</b> — unresolved→analyzed→optimized→physical.</div>
+  <div><b>27 Catalyst</b> — logical optimizer (rules).</div>
+  <div><b>28 Tungsten</b> — physical: codegen + off-heap memory.</div>
+  <div><b>29 Unified memory</b> — Execution ⇄ Storage pool.</div>
+  <div><b>30 AQE</b> — runtime re-optimization (coalesce, broadcast, skew).</div>
+</div>
+
+<hr/>
+<div class="prose reveal">
+<h2 style="margin-top:10px"><span class="pfx">∎</span> The takeaway</h2>
+<p>Spark exists because MapReduce forced every step through disk and could only see one job at a time. Spark keeps data in memory and plans the whole pipeline as a DAG. The mental model is five nested words: <strong>transformations build a lazy plan, an action fires a job, the job splits into stages at shuffles, each stage runs one task per partition on an executor</strong>, and a driver coordinates it all. Once you can read the plan (<code>explain</code>) and the UI (jobs/stages/tasks), tuning stops being guesswork: every slowness is a shuffle, a skew, a bad join, or memory — and each has a known lever.</p>
+<p>Run <code>explain(True)</code> on your slowest job today. The plan will tell you exactly which of the 30 concepts is in your way.</p>
+</div>
+
+<hr/>
+<div class="end">
+<p><strong>Read more:</strong> the official docs — <a href="https://spark.apache.org/docs/latest/">spark.apache.org/docs</a>, the <a href="https://spark.apache.org/docs/latest/sql-ref.html">Spark SQL reference</a>, and the <a href="https://spark.apache.org/docs/latest/configuration.html">configuration guide</a> for every knob above. Video that framed this guide: "30 Apache Spark Concepts" (YouTube).</p>
+<p class="footnav" style="margin-top:14px"><a href="#s10">↑ Tuning playbook</a><a href="#s11">↑ Cheat sheet</a><a href="#top" onclick="scrollTo(0,0);return false">↑ Back to top</a></p>
+<p style="color:#555;margin-top:18px">The Spark mark here is a simple original drawing, not the official project logo. Diagrams are hand-built inline SVG and animate in the browser.</p>
+</div>
+
+</div><!-- /wrap -->
+
+<script>
+  var bar=document.getElementById('bar');
+  function prog(){var h=document.documentElement;var s=h.scrollTop||document.body.scrollTop;var max=(h.scrollHeight-h.clientHeight)||1;bar.style.width=(s/max*100)+'%';}
+  document.addEventListener('scroll',prog,{passive:true});prog();
+  function revealAll(){document.querySelectorAll('.reveal').forEach(function(el){el.classList.add('in');});}
+  try{
+    var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}});},{threshold:.08});
+    document.querySelectorAll('.reveal').forEach(function(el){io.observe(el);});
+    window.addEventListener('load',function(){setTimeout(revealAll,2000);});
+    setTimeout(revealAll,2500);
+  }catch(e){revealAll();}
+</script>
+</body>
+</html>

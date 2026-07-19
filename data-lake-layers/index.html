@@ -1,0 +1,740 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>The Three Layers of a Data Lake, In Depth</title>
+<meta name="description" content="A deep dive into the three layers every Data Lake is built from — Storage, Metadata, and Compute. How each layer works inside, why they are separated, and how one query travels through all three."/>
+<meta property="og:type" content="article"/>
+<meta property="og:title" content="The Three Layers of a Data Lake, In Depth"/>
+<meta property="og:description" content="Storage, Metadata, Compute — the three layers of a Data Lake explained from the inside out, with diagrams and a full query trace."/>
+<meta property="og:url" content="https://haotieu2001.github.io/data-lake-layers/"/>
+<meta property="og:image" content="https://haotieu2001.github.io/data-lake-layers/og-cover.png"/>
+<meta property="og:image:width" content="1200"/>
+<meta property="og:image:height" content="630"/>
+<meta property="og:image:alt" content="The Three Layers of a Data Lake, In Depth"/>
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:title" content="The Three Layers of a Data Lake, In Depth"/>
+<meta name="twitter:description" content="Storage, Metadata, Compute — the three layers of a Data Lake explained from the inside out."/>
+<meta name="twitter:image" content="https://haotieu2001.github.io/data-lake-layers/og-cover.png"/>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,500;0,700;0,800;1,400&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#1A1A1A; --bg2:#121212; --ink:#F1F1F1; --muted:#9aa0b4; --dim:#666666;
+    --blue2:#5C78FF; --cyan:#28B9FF; --cyan2:#5AC8FF; --purple:#905AFF; --magenta2:#BA5AFF;
+    --grad:linear-gradient(90deg,#5C78FF,#28B9FF,#A52AFF);
+    --font:"JetBrainsMono Nerd Font","JetBrains Mono","Symbols Nerd Font",ui-monospace,"Cascadia Code",Menlo,Consolas,monospace;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font);font-size:16px;line-height:1.85;-webkit-font-smoothing:antialiased}
+  #bar{position:fixed;top:0;left:0;height:3px;width:0;z-index:50;background:var(--grad);box-shadow:0 0 12px #5C78FF99;transition:width .1s linear}
+  .page{max-width:880px;margin:0 auto;padding:0 24px}
+  header{padding:30px 0 6px}
+  .kicker{font-size:13px;color:var(--dim)}
+  .back{color:var(--cyan2);text-decoration:none;font-size:13px;border-bottom:1px dotted #5AC8FF66}
+  h1{font-size:clamp(28px,4.6vw,46px);line-height:1.12;margin:12px 0 12px;font-weight:800;
+     background:var(--grad);background-size:220% auto;-webkit-background-clip:text;background-clip:text;color:transparent;animation:sheen 9s linear infinite}
+  @keyframes sheen{to{background-position:220% center}}
+  .dek{color:var(--muted);font-size:17px}
+  .byline{margin-top:14px;font-size:13px;color:var(--dim)}
+  h2{font-size:clamp(21px,3.2vw,28px);margin:52px 0 6px;font-weight:800;line-height:1.22;padding-top:14px;border-top:1px solid #23232e}
+  h2 .n{color:var(--blue2)}
+  h3{font-size:18px;margin:28px 0 4px;color:#fff;font-weight:700}
+  h4{font-size:15px;margin:20px 0 4px;color:var(--cyan2);font-weight:700}
+  p,li{color:#dcdce4}
+  .lead{font-size:18px;color:#e7e7ee}
+  a{color:var(--cyan2)}
+  hr{border:0;border-top:1px solid #2c2c36;margin:36px 0}
+  code{font-family:var(--font);background:#23232b;color:#5AC8FF;padding:1px 6px;border-radius:5px;font-size:.88em;border:1px solid #2f2f3a}
+  .cb{margin:16px 0}
+  .cb .lang{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:#9aa0b4;background:#1b1b24;border:1px solid #2c2c36;border-bottom:none;border-radius:9px 9px 0 0;padding:4px 12px}
+  pre{margin:0;background:#0d0d13;border:1px solid #23232e;border-radius:0 10px 10px 10px;padding:14px 16px;overflow-x:auto;
+      font-family:var(--font);font-size:13px;line-height:1.6;color:#d8dcea;white-space:pre}
+  pre .c{color:#6b7280}
+  .callout{border-left:4px solid var(--blue2);background:#16182a;border-radius:0 12px 12px 0;padding:14px 18px;margin:22px 0}
+  .callout.cy{border-color:var(--cyan);background:#0f1f2b}
+  .callout.mg{border-color:var(--magenta2);background:#1d1526}
+  .callout.gd{border-color:#f0b429;background:#241d0f}
+  .callout.gr{border-color:#34d399;background:#0d1f18}
+  .callout .t{color:var(--cyan2);font-weight:800}
+  .callout.gd .t{color:#f0b429}
+  .callout.gr .t{color:#34d399}
+  .callout.mg .t{color:var(--magenta2)}
+  .tldr{border:1px solid #2f3a66;background:linear-gradient(180deg,#15182a,#121212);border-radius:16px;padding:20px 24px;margin:26px 0}
+  .tldr h4{margin:0 0 8px;font-size:13px;letter-spacing:.2em;text-transform:uppercase;color:var(--cyan2)}
+  .gloss{border:1px solid #2c2c36;background:#141419;border-radius:14px;padding:18px 22px;margin:24px 0}
+  .gloss h4{margin:0 0 6px;color:#fff;font-size:15px}
+  .gloss dl{margin:0;font-size:13.5px}
+  .gloss dt{color:var(--cyan2);font-weight:700;margin-top:9px}
+  .gloss dd{margin:1px 0 0;color:#cdd0dd}
+  .toc{background:#15151b;border:1px solid #2c2c36;border-radius:14px;padding:16px 22px;margin:24px 0;column-count:2;column-gap:28px}
+  .toc a{display:block;color:var(--cyan2);text-decoration:none;font-size:13.5px;line-height:1.9;break-inside:avoid}
+  .toc a:hover{color:#fff}
+  .toc>strong{column-span:all;display:block;margin-bottom:6px;color:#fff}
+  table{border-collapse:collapse;width:100%;font-size:13.5px;margin:16px 0}
+  th,td{border:1px solid #2c2c36;padding:8px 11px;text-align:left;vertical-align:top}
+  th{background:#1d1d27;color:#fff}
+  tr:nth-child(even) td{background:#161620}
+  .diagram{background:#0d0d13;border:1px solid #23232e;border-radius:14px;padding:18px;margin:20px 0;overflow-x:auto;font-size:12.5px;line-height:1.7;color:#d8dcea;white-space:pre;font-family:var(--font)}
+  .diagram .hl{color:#5AC8FF}
+  .diagram .dim{color:#6b7280}
+  .diagram .ok{color:#34d399}
+  .diagram .warn{color:#f0b429}
+  .diagram .bad{color:#f87171}
+  .pain{border:1px solid #3a2020;background:#1c1212;border-radius:14px;padding:16px 20px;margin:14px 0}
+  .pain h4{margin:0 0 4px;color:#f87171}
+  .fix{border:1px solid #1a3020;background:#0d1f14;border-radius:14px;padding:16px 20px;margin:14px 0}
+  .fix h4{margin:0 0 4px;color:#34d399}
+  .step{display:flex;gap:12px;align-items:flex-start;margin:14px 0}
+  .step .num-bubble{flex:0 0 28px;height:28px;border-radius:50%;background:var(--grad);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:#fff;margin-top:2px}
+  .step .body{flex:1}
+  footer{border-top:1px solid #23232e;margin-top:50px;padding:24px 0 90px;color:var(--dim);font-size:13px}
+  footer a{color:var(--cyan2)}
+  .js .reveal{opacity:0;transform:translateY(16px);transition:opacity .6s ease,transform .6s ease}
+  .js .reveal.in{opacity:1;transform:none}
+  @media (prefers-reduced-motion:reduce){.js .reveal{opacity:1;transform:none}}
+</style>
+<script>document.documentElement.classList.add('js');</script>
+</head>
+<body>
+<div id="bar"></div>
+<div class="page">
+
+<header>
+  <div class="kicker"><a class="back" href="../">❮ Data &amp; AI Engineering, Simply Explained</a></div>
+  <h1>The Three Layers of a Data Lake, In Depth</h1>
+  <p class="dek">Every Data Lake is built from three layers stacked on top of each other: <strong>Storage</strong> (the files), <strong>Metadata</strong> (the catalogue that turns files into tables), and <strong>Compute</strong> (the engines that read and process them). This guide opens each layer up — how it works inside, why it is kept separate from the others, the problems each one runs into, and how a single query travels down through all three to give you an answer.</p>
+  <div class="byline">~26 min read · Data Engineering · Jun 2026</div>
+</header>
+
+<figure class="reveal" style="margin:18px 0 6px;background:radial-gradient(130% 150% at 50% 0%,#16182a 0%,#0d0d13 72%);border:1px solid #23232e;border-radius:16px;padding:10px 10px;overflow:hidden">
+<svg viewBox="0 0 880 230" width="100%" style="display:block" aria-label="The three layers of a Data Lake: Compute on top, Metadata in the middle, Storage at the bottom">
+  <defs>
+    <linearGradient id="hero-grad" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#5C78FF"/><stop offset=".5" stop-color="#28B9FF"/><stop offset="1" stop-color="#A52AFF"/>
+    </linearGradient>
+    <style>
+      .h-title{font-family:'JetBrains Mono',monospace;font-weight:800;}
+      .h-sub{font-family:'JetBrains Mono',monospace;font-size:11px;fill:#8a90a6;}
+      .h-tag{font-family:'JetBrains Mono',monospace;font-size:10px;text-anchor:middle;}
+    </style>
+    <!-- ===== tool / cloud icons ===== -->
+    <symbol id="h-spark" viewBox="0 0 24 24"><polygon points="13,2 4,14 11,14 10,22 20,10 13,10" fill="#E25A1C"/></symbol>
+    <symbol id="h-databricks" viewBox="0 0 24 24"><polygon points="12,2 20,7 12,12 4,7" fill="#FF3621" opacity=".9"/><polygon points="12,8 20,13 12,18 4,13" fill="#FF3621" opacity=".7"/><polygon points="12,14 20,19 12,24 4,19" fill="#FF3621" opacity=".5"/></symbol>
+    <symbol id="h-trino" viewBox="0 0 24 24"><circle cx="12" cy="12" r="11" fill="none" stroke="#c060e0" stroke-width="2"/><text x="12" y="17" text-anchor="middle" font-size="13" font-weight="700" fill="#c060e0" font-family="sans-serif">T</text></symbol>
+    <symbol id="h-hive" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#FDEE21" opacity=".85"/><text x="12" y="17" text-anchor="middle" font-size="10" font-weight="700" fill="#333" font-family="sans-serif">H</text></symbol>
+    <symbol id="h-glue" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4" fill="#FF9900"/><path d="M12 2v4M12 18v4M2 12h4M18 12h4M5.6 5.6l2.8 2.8M15.6 15.6l2.8 2.8M5.6 18.4l2.8-2.8M15.6 8.4l2.8-2.8" stroke="#FF9900" stroke-width="2" stroke-linecap="round"/></symbol>
+    <symbol id="h-unity" viewBox="0 0 24 24"><rect x="3" y="2" width="14" height="20" rx="2" fill="none" stroke="#5AC8FF" stroke-width="2"/><path d="M7 2v20" stroke="#5AC8FF" stroke-width="1.5"/><line x1="10" y1="7" x2="15" y2="7" stroke="#5AC8FF" stroke-width="1.5"/><line x1="10" y1="11" x2="15" y2="11" stroke="#5AC8FF" stroke-width="1.5"/><line x1="10" y1="15" x2="15" y2="15" stroke="#5AC8FF" stroke-width="1.5"/></symbol>
+    <symbol id="h-s3" viewBox="0 0 24 24"><ellipse cx="12" cy="6" rx="9" ry="3.5" fill="#FF9900" opacity=".9"/><path d="M3 6v12c0 1.9 4 3.5 9 3.5s9-1.6 9-3.5V6" fill="none" stroke="#FF9900" stroke-width="2"/><line x1="12" y1="2.5" x2="12" y2="21.5" stroke="#b36b00" stroke-width="1"/></symbol>
+    <symbol id="h-adls" viewBox="0 0 24 24"><polygon points="12,2 22,20 2,20" fill="none" stroke="#0078D4" stroke-width="2"/><polygon points="12,8 18,20 6,20" fill="#0078D4" opacity=".5"/></symbol>
+    <symbol id="h-gcs" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="none" stroke="#4285F4" stroke-width="2"/><circle cx="12" cy="12" r="4" fill="#4285F4" opacity=".7"/></symbol>
+  </defs>
+
+  <!-- LAYER 3: COMPUTE -->
+  <rect x="40" y="18" width="800" height="56" rx="10" fill="#0f1f17" stroke="#34d399" stroke-width="1.8">
+    <animate attributeName="stroke-opacity" values=".5;1;.5" dur="3s" repeatCount="indefinite"/>
+  </rect>
+  <text x="60" y="42" class="h-title" font-size="15" fill="#34d399">LAYER 3 · COMPUTE</text>
+  <text x="60" y="62" class="h-sub">engines that read &amp; process</text>
+  <use href="#h-spark" x="648" y="32" width="28" height="28"><animateTransform attributeName="transform" type="translate" values="0 0;0 -3;0 0" dur="2.6s" repeatCount="indefinite"/></use>
+  <use href="#h-databricks" x="700" y="32" width="28" height="28"><animateTransform attributeName="transform" type="translate" values="0 0;0 -3;0 0" dur="2.6s" begin=".4s" repeatCount="indefinite"/></use>
+  <use href="#h-trino" x="752" y="32" width="28" height="28"><animateTransform attributeName="transform" type="translate" values="0 0;0 -3;0 0" dur="2.6s" begin=".8s" repeatCount="indefinite"/></use>
+
+  <!-- LAYER 2: METADATA -->
+  <rect x="40" y="86" width="800" height="56" rx="10" fill="#1a180d" stroke="#f0b429" stroke-width="1.8">
+    <animate attributeName="stroke-opacity" values=".5;1;.5" dur="3.4s" repeatCount="indefinite" begin=".5s"/>
+  </rect>
+  <text x="60" y="110" class="h-title" font-size="15" fill="#f0b429">LAYER 2 · METADATA</text>
+  <text x="60" y="130" class="h-sub">the catalogue: "table = path + columns"</text>
+  <use href="#h-hive" x="648" y="100" width="28" height="28"><animateTransform attributeName="transform" type="translate" values="0 0;0 -3;0 0" dur="2.8s" begin=".2s" repeatCount="indefinite"/></use>
+  <use href="#h-glue" x="700" y="100" width="28" height="28"><animateTransform attributeName="transform" type="translate" values="0 0;0 -3;0 0" dur="2.8s" begin=".6s" repeatCount="indefinite"/></use>
+  <use href="#h-unity" x="752" y="100" width="28" height="28"><animateTransform attributeName="transform" type="translate" values="0 0;0 -3;0 0" dur="2.8s" begin="1s" repeatCount="indefinite"/></use>
+
+  <!-- LAYER 1: STORAGE -->
+  <rect x="40" y="154" width="800" height="56" rx="10" fill="#0d1820" stroke="#5AC8FF" stroke-width="1.8">
+    <animate attributeName="stroke-opacity" values=".5;1;.5" dur="2.8s" repeatCount="indefinite" begin="1s"/>
+  </rect>
+  <text x="60" y="178" class="h-title" font-size="15" fill="#5AC8FF">LAYER 1 · STORAGE</text>
+  <text x="60" y="198" class="h-sub">raw files in object storage</text>
+  <use href="#h-s3" x="648" y="168" width="28" height="28"><animateTransform attributeName="transform" type="translate" values="0 0;0 -3;0 0" dur="3s" begin=".3s" repeatCount="indefinite"/></use>
+  <use href="#h-adls" x="700" y="168" width="28" height="28"><animateTransform attributeName="transform" type="translate" values="0 0;0 -3;0 0" dur="3s" begin=".7s" repeatCount="indefinite"/></use>
+  <use href="#h-gcs" x="752" y="168" width="28" height="28"><animateTransform attributeName="transform" type="translate" values="0 0;0 -3;0 0" dur="3s" begin="1.1s" repeatCount="indefinite"/></use>
+
+  <!-- a query travelling down then rows back up -->
+  <g>
+    <text x="820" y="14" class="h-tag" fill="#905AFF">SELECT</text>
+    <circle r="4.5" fill="#905AFF">
+      <animate attributeName="cx" values="820;820" dur="3s" repeatCount="indefinite"/>
+      <animate attributeName="cy" values="22;200" dur="3s" repeatCount="indefinite"/>
+      <animate attributeName="opacity" values="0;1;1;0" dur="3s" repeatCount="indefinite"/>
+    </circle>
+    <circle r="4.5" fill="#34d399">
+      <animate attributeName="cx" values="838;838" dur="3s" repeatCount="indefinite" begin="1.5s"/>
+      <animate attributeName="cy" values="200;22" dur="3s" repeatCount="indefinite" begin="1.5s"/>
+      <animate attributeName="opacity" values="0;1;1;0" dur="3s" repeatCount="indefinite" begin="1.5s"/>
+    </circle>
+    <text x="836" y="226" class="h-tag" fill="#34d399">rows ↑</text>
+  </g>
+</svg>
+</figure>
+
+<div class="tldr reveal">
+  <h4>❯ The one idea (read this first)</h4>
+  <p style="margin:.2em 0">A Data Lake is not one thing — it's <strong>three independent layers</strong> that snap together. <strong>Storage</strong> holds the raw files cheaply but knows nothing about tables. <strong>Metadata</strong> is a small catalogue that says "the table called <code>orders</code> lives at <em>this</em> path and has <em>these</em> columns" — it turns a pile of files into something you can query by name. <strong>Compute</strong> is the rented engine that actually reads the files and computes your answer. Because the three are separate, you can swap or scale any one of them without touching the others — and that flexibility is the whole point of a Data Lake.</p>
+</div>
+
+<div class="callout cy reveal">
+  <p style="margin:.2em 0"><span class="t">📖 This is a follow-up</span></p>
+  <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">The companion post <a href="../data-lake/">Data Lake &amp; Data Lakehouse, Simply Explained</a> introduces these three layers at a high level. <strong>You don't need to read it first</strong> — this article re-explains everything it relies on — but if a term ever feels rushed here, that post covers the basics more slowly.</p>
+</div>
+
+<div class="toc reveal">
+  <strong>Contents</strong>
+  <a href="#overview">01 · The three layers at a glance</a>
+  <a href="#storage">02 · Layer 1 — Storage, in depth</a>
+  <a href="#metadata">03 · Layer 2 — Metadata, in depth</a>
+  <a href="#compute">04 · Layer 3 — Compute, in depth</a>
+  <a href="#trace">05 · One query through all three layers</a>
+  <a href="#summary">06 · Summary &amp; what to read next</a>
+  <a href="#glossary">＊ · Glossary</a>
+</div>
+
+<!-- 01 -->
+<h2 id="overview" class="reveal"><span class="n">01.</span> The three layers at a glance</h2>
+<p class="reveal lead">Picture a Data Lake as three shelves stacked on top of each other. The bottom shelf holds the actual data. The middle shelf holds a small index that explains what's on the bottom shelf. The top shelf is the worker who reads the index, then reaches down for exactly the data it needs.</p>
+
+<table class="reveal">
+  <tr><th>Layer</th><th>What it is</th><th>What it knows</th><th>Examples</th></tr>
+  <tr><td><strong style="color:#34d399">3 · Compute</strong></td><td>The engines that read files and compute results</td><td>How to run a query in parallel across many machines</td><td>Spark, Trino/Presto, Databricks, Athena</td></tr>
+  <tr><td><strong style="color:#f0b429">2 · Metadata</strong></td><td>A catalogue mapping table names → locations + columns</td><td>What tables exist, where their files are, their schema</td><td>Hive Metastore, AWS Glue, Unity Catalog</td></tr>
+  <tr><td><strong style="color:#5AC8FF">1 · Storage</strong></td><td>Raw files sitting in cheap object storage</td><td>Nothing about "tables" — just bytes in keys</td><td>Amazon S3, Azure ADLS, Google GCS</td></tr>
+</table>
+
+<p class="reveal">The single most important idea is that <strong>these three layers are decoupled</strong> — each one can be replaced or scaled on its own:</p>
+<ul class="reveal">
+  <li>You can point <strong>two different compute engines</strong> (say Spark for heavy jobs and Trino for fast dashboards) at the <em>same</em> files, at the same time.</li>
+  <li>You can <strong>turn all compute off overnight</strong> and pay only for storage — the data just sits there.</li>
+  <li>You can <strong>swap the catalogue</strong> (e.g. migrate from Hive Metastore to Unity Catalog) without moving a single data file.</li>
+</ul>
+<p class="reveal">In a traditional database, all three layers are fused into one product you can't pull apart. That fusion makes it fast — compute sits right next to the data with no network round-trip out to a separate storage service — but also expensive (you pay for that tightly-coupled box even when idle) and rigid (you can't scale or swap one part alone). The Data Lake's whole design philosophy is the opposite: <em>separate</em> the layers so each can be chosen, scaled, and paid for independently, accepting a little extra read latency in exchange. Keeping the three layers independent like this is the through-line of the whole article — it's what lets you scale, swap, and pay for each one on its own. We'll go shelf by shelf, bottom to top.</p>
+
+<!-- 02 -->
+<h2 id="storage" class="reveal"><span class="n">02.</span> Layer 1 — Storage, in depth</h2>
+<p class="reveal lead">The storage layer is the foundation: it's where the actual bytes live. Almost always, that means <strong>cloud object storage</strong> — Amazon S3, Azure Data Lake Storage (ADLS), or Google Cloud Storage (GCS). To understand everything built on top, you have to understand how object storage really behaves, because it is <em>not</em> a normal hard drive.</p>
+
+<h3 class="reveal">Object storage is a key → bytes dictionary, not a folder tree</h3>
+<p class="reveal">On your laptop, files live in a tree of real folders. Object storage is different: it's essentially one giant <strong>dictionary</strong> (a key-value lookup). The <strong>key</strong> is the full path string, and the <strong>value</strong> is the file's bytes.</p>
+
+<div class="cb reveal"><span class="lang">How object storage actually stores things</span><pre>KEY (just a string)                                VALUE (bytes)
+"orders/order_date=2026-06-01/part-001.parquet"  →  [ 128 MB of data ]
+"orders/order_date=2026-06-01/part-002.parquet"  →  [ 128 MB of data ]
+"customers/2026-06-01.csv"                       →  [  4 MB of data  ]</pre></div>
+
+<p class="reveal">The slashes in the key <em>look</em> like folders, but there are no real folders underneath. <code>orders/order_date=2026-06-01/</code> is not a directory — it's just a common <strong>prefix</strong> (a shared start) shared by many keys. This sounds like a technicality, but it explains several things that surprise newcomers:</p>
+<ul class="reveal">
+  <li><strong>There is no "rename folder" operation.</strong> To "rename" a prefix, the system must copy every object to new keys and delete the originals. Renaming a path with a million files is a million copy-and-delete operations — slow and not atomic (it can be caught half-done: a reader might see some files renamed and others not).</li>
+  <li><strong>Listing is a search, not a folder open.</strong> "List everything under <code>orders/</code>" scans the dictionary for keys starting with that prefix. With millions of keys this is slow and is billed per request.</li>
+</ul>
+
+<h3 class="reveal">The three rules of object storage that shape everything above</h3>
+<div class="step reveal"><div class="num-bubble">1</div><div class="body"><strong>Objects are immutable.</strong> Once written, you cannot change one byte of an object. To "edit" data you write a brand-new object and delete the old one. (This single rule is why plain Data Lakes struggle with updates and deletes — and why table formats like Delta Lake exist.)</div></div>
+<div class="step reveal"><div class="num-bubble">2</div><div class="body"><strong>Operations are whole-object.</strong> The basic verbs are <code>PUT</code> (write a whole object), <code>GET</code> (read an object, or a byte-range of it), <code>DELETE</code>, and <code>LIST</code> (find keys by prefix). There is no "update row 7." There <em>is</em>, however, a <strong>ranged GET</strong> — you can ask for "bytes 1000–2000 of this object" — and that one capability is what makes Parquet's skip-to-the-footer trick possible (Parquet and its footer are defined in the callout just below).</div></div>
+<div class="step reveal"><div class="num-bubble">3</div><div class="body"><strong>It's cheap and effectively infinite, but has latency.</strong> Storage is a few cents per GB per month and you never run out of space. But each request has real latency (tens of milliseconds) and a cost per request. So the game is: read <em>fewer, bigger</em> objects rather than many tiny ones.</div></div>
+
+<div class="callout cy reveal">
+  <p style="margin:.2em 0"><span class="t">🧪 Ranged GET, concretely</span></p>
+  <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">First, three terms we'll lean on (all defined in the <a href="#glossary">Glossary</a> too): <strong>Parquet</strong> is the columnar file format almost every lake uses; inside one Parquet file the rows are stored in blocks called <strong>row groups</strong>; and a small index at the very end of the file, the <strong>footer</strong>, lists every row group, where it sits, and the min/max value of each column in it.</p>
+  <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">Now the trick: when an engine reads a 512 MB Parquet file, it does <em>not</em> download all 512 MB. It first issues a tiny ranged GET for just the footer. From that index it learns exactly which byte ranges hold the rows it wants, then issues more ranged GETs for only those ranges. A single object gets read in a few small, targeted pieces. Keep this in mind — it's the bridge between the Storage layer and the Compute layer.</p>
+</div>
+
+<h3 class="reveal">Physical layout: why folder structure is a performance decision</h3>
+<p class="reveal">Recall one limitation from the rules above: object storage can't search <em>inside</em> files. Its only fast lookup is by <strong>prefix</strong> — the leading part of a path, like a folder name: <em>"give me every file whose path starts with X."</em></p>
+<p class="reveal">That's why <em>where you put a file</em> decides query speed. Put the rows a query wants under one prefix and the engine reads just that prefix; scatter them and it must open everything, then throw most of it away. Compare two ways to store the same <code>orders</code> data:</p>
+
+<figure class="reveal" style="margin:1.4em 0;background:#0d0d13;border:1px solid #23232e;border-radius:10px;padding:1.2em 1em 1em;overflow:hidden">
+<figcaption style="font-size:12px;color:#555;text-align:center;margin-bottom:.8em;letter-spacing:.06em;text-transform:uppercase">Same data, two key layouts</figcaption>
+<svg viewBox="0 0 700 250" width="100%" style="display:block;max-width:700px;margin:0 auto" aria-label="Flat layout versus partitioned layout">
+  <defs>
+    <style>.lay{font-family:'JetBrains Mono',monospace;font-size:12px;}</style>
+    <symbol id="l-s3" viewBox="0 0 24 24"><ellipse cx="12" cy="6" rx="9" ry="3.5" fill="#FF9900" opacity=".9"/><path d="M3 6v12c0 1.9 4 3.5 9 3.5s9-1.6 9-3.5V6" fill="none" stroke="#FF9900" stroke-width="2"/></symbol>
+    <symbol id="l-file" viewBox="0 0 24 24"><path d="M5 2h9l5 5v15H5z" fill="currentColor" fill-opacity=".15" stroke="currentColor" stroke-width="1.6"/><path d="M14 2v5h5" fill="none" stroke="currentColor" stroke-width="1.6"/></symbol>
+  </defs>
+
+  <!-- ===== flat ===== -->
+  <rect x="14" y="14" width="320" height="222" rx="8" fill="#1c1212" stroke="#3a2020" stroke-width="1.4"/>
+  <use href="#l-s3" x="276" y="22" width="22" height="22"/>
+  <text x="30" y="38" class="lay" fill="#f87171" font-weight="700">❌ FLAT — one big prefix</text>
+  <text x="30" y="62" class="lay" fill="#7a8099">orders/</text>
+  <!-- a grid of file glyphs being scanned -->
+  <g color="#f87171">
+    <use href="#l-file" x="44"  y="74" width="15" height="18"/><use href="#l-file" x="66" y="74" width="15" height="18"/><use href="#l-file" x="88" y="74" width="15" height="18"/><use href="#l-file" x="110" y="74" width="15" height="18"/><use href="#l-file" x="132" y="74" width="15" height="18"/>
+    <use href="#l-file" x="44"  y="98" width="15" height="18"/><use href="#l-file" x="66" y="98" width="15" height="18"/><use href="#l-file" x="88" y="98" width="15" height="18"/><use href="#l-file" x="110" y="98" width="15" height="18"/><use href="#l-file" x="132" y="98" width="15" height="18"/>
+    <use href="#l-file" x="44"  y="122" width="15" height="18"/><use href="#l-file" x="66" y="122" width="15" height="18"/><use href="#l-file" x="88" y="122" width="15" height="18"/><use href="#l-file" x="110" y="122" width="15" height="18"/><use href="#l-file" x="132" y="122" width="15" height="18"/>
+  </g>
+  <text x="162" y="106" class="lay" fill="#f87171">…10,000</text>
+  <!-- wasteful red scan sweep over ALL files -->
+  <rect x="40" y="72" width="120" height="22" rx="3" fill="#f87171" opacity="0">
+    <animate attributeName="y" values="72;96;120;72" dur="2.4s" repeatCount="indefinite"/>
+    <animate attributeName="opacity" values=".0;.45;.45;.0" dur="2.4s" repeatCount="indefinite"/>
+  </rect>
+  <text x="30" y="170" class="lay" fill="#f87171">Query "June 1 orders":</text>
+  <text x="30" y="190" class="lay" fill="#f87171">must LIST + open</text>
+  <text x="30" y="210" class="lay" fill="#f87171" font-weight="700">ALL 10,000 files ✗</text>
+
+  <!-- ===== partitioned ===== -->
+  <rect x="366" y="14" width="320" height="222" rx="8" fill="#0d1f14" stroke="#1a3020" stroke-width="1.4"/>
+  <use href="#l-s3" x="628" y="22" width="22" height="22"/>
+  <text x="382" y="38" class="lay" fill="#34d399" font-weight="700">✅ PARTITIONED by date</text>
+  <text x="382" y="62" class="lay" fill="#7a8099">orders/</text>
+  <!-- 06-01 row (read) -->
+  <rect x="392" y="72" width="282" height="24" rx="4" fill="#34d399" opacity=".10" stroke="#34d399" stroke-width="1">
+    <animate attributeName="opacity" values=".10;.30;.10" dur="1.8s" repeatCount="indefinite"/>
+  </rect>
+  <text x="400" y="86" class="lay" font-size="9.5"><tspan fill="#b7c0cc">order_date=2026-06-01/</tspan><tspan dx="14" fill="#34d399" font-weight="700">← read 2 ✓</tspan></text>
+  <!-- 06-02 row (skipped) -->
+  <text x="400" y="120" class="lay" font-size="9.5" fill="#555"><tspan>order_date=2026-06-02/</tspan><tspan dx="14">skip ⊘</tspan></text>
+  <text x="400" y="146" class="lay" font-size="9.5" fill="#555"><tspan>order_date=2026-06-03/</tspan><tspan dx="14">… skip ⊘</tspan></text>
+  <text x="382" y="178" class="lay" fill="#34d399">Query "June 1 orders":</text>
+  <text x="382" y="200" class="lay" fill="#34d399">reads 1 folder →</text>
+  <text x="382" y="222" class="lay" fill="#34d399" font-weight="700">just 2 files ✓</text>
+  <!-- a single happy particle hopping toward the read row, in the left gutter -->
+  <circle r="3.5" fill="#34d399">
+    <animate attributeName="cx" values="372;390" dur="1.8s" repeatCount="indefinite"/>
+    <animate attributeName="cy" values="84;84" dur="1.8s" repeatCount="indefinite"/>
+    <animate attributeName="opacity" values="0;1;1;0" dur="1.8s" repeatCount="indefinite"/>
+  </circle>
+</svg>
+</figure>
+
+<p class="reveal">The difference is night and day:</p>
+<ul class="reveal">
+  <li><strong>Flat</strong> — all 10,000 files share the one prefix <code>orders/</code>. "June 1 orders" has no narrower prefix to ask for, so the engine opens all 10,000 files and discards the 9,998 that don't match.</li>
+  <li><strong>Partitioned</strong> — each day gets its own sub-folder. "June 1 orders" reads just the <code>order_date=2026-06-01</code> folder: 2 files.</li>
+</ul>
+<p class="reveal">Same data, same query — but layout alone turned 10,000 file-opens into 2. Splitting files into sub-folders by a column's value (here, the date) is called <strong>partitioning</strong>; skipping the folders a query doesn't need is <strong>partition pruning</strong>. It's the biggest speed-up you get from storage layout alone. (Strictly, storage only makes pruning <em>possible</em> through how files are arranged; the engine — using the catalogue from <a href="#metadata">Layer 2</a> — is what actually decides which folders to skip.)</p>
+
+<div class="callout cy reveal">
+  <p style="margin:.2em 0"><span class="t">🐝 What "Hive-style partitioning" means</span></p>
+  <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">You'll constantly see partition folders named <code>column=value</code> — like <code>order_date=2026-06-01/</code> instead of plain <code>2026-06-01/</code>. That <code>name=value</code> style is called <strong>Hive-style partitioning</strong> (after <strong>Apache Hive</strong>, the engine that made it standard).</p>
+  <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">The point of writing the column name into the folder: an engine can read <code>order_date=2026-06-01</code> and instantly know "every file in here has <code>order_date = 2026-06-01</code>" — without opening a single file. With plain <code>2026-06-01/</code> it would just see anonymous folders and couldn't tell which column the value belongs to. So this naming is what lets engines <em>recognise</em> partitions automatically and prune them.</p>
+</div>
+
+<div class="callout gd reveal">
+  <p style="margin:.2em 0"><span class="t">⚠️ One caution: don't over-partition</span></p>
+  <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">Partitioning on a column with millions of values (like <code>user_id</code>) makes millions of tiny folders, each holding a few rows — and now every query has to wade through millions of tiny files, slower than not partitioning at all. Pick columns that are <em>low-cardinality and commonly filtered</em>, like date or region, so each partition is big enough to hold at least a few sizable files.</p>
+</div>
+
+<p class="reveal">Partitioning is the storage layer's main layout lever, but not the only way to make queries read less. More advanced layout techniques — such as Z-Order and clustering — are a deeper, table-format-specific topic beyond this post's scope.</p>
+
+<h3 class="reveal">The small-file problem</h3>
+<p class="reveal">Because each object read costs a request and some latency, <strong>many tiny files are far slower to read than a few big ones</strong>, even for the exact same total data.</p>
+
+<div class="pain reveal">
+  <h4>The pain</h4>
+  <p style="margin:.2em 0;color:#dcdce4">A streaming job writes a small file every second or two. After a month you have ~2 million files of ~20 KB each (≈40 GB total). A query that should take seconds now spends minutes just <em>opening</em> 2 million objects — the per-request overhead dominates, and the engine's task scheduler drowns in tiny tasks.</p>
+</div>
+<div class="fix reveal">
+  <h4>The fix</h4>
+  <p style="margin:.2em 0;color:#dcdce4">Periodically <strong>compact</strong> small files into larger ones (a target of 128 MB–1 GB per file is typical). Plain lakes do this with a manual rewrite job; Lakehouse table formats automate it (e.g. Delta's <code>OPTIMIZE</code>). The goal: fewer, fatter files so reads are dominated by streaming bytes, not by opening objects.</p>
+</div>
+
+<h3 class="reveal">Storage classes &amp; lifecycle (a quick cost lever)</h3>
+<p class="reveal">Object storage offers tiers at different price/speed trade-offs: a <strong>hot/standard</strong> tier for frequently read data, and cheaper <strong>cold/archive</strong> tiers (e.g. S3 Glacier) for data you rarely touch but must keep. You set <strong>lifecycle rules</strong> like "move anything older than 90 days to archive, delete after 7 years." Archive tiers cost a fraction of standard storage but take minutes to hours to retrieve — fine for compliance backups, not for live queries.</p>
+
+<div class="callout gr reveal">
+  <p style="margin:.2em 0"><span class="t">✅ Layer 1 in one line</span></p>
+  <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">Storage is a cheap, infinite, immutable key→bytes dictionary. It knows nothing about tables — it just hands back bytes for a key, or a byte-range of one. Everything clever (tables, skipping, updates) is added by the layers above.</p>
+</div>
+
+<!-- 03 -->
+<h2 id="metadata" class="reveal"><span class="n">03.</span> Layer 2 — Metadata, in depth</h2>
+<p class="reveal lead">The storage layer is just files. If you handed Spark a bucket and typed <code>SELECT * FROM orders</code>, it would have no idea what "orders" is, where its files live, or what columns they have. The <strong>metadata layer</strong> is what fills that gap — it's the bridge that turns a pile of files into a <em>table you can name</em>.</p>
+
+<h3 class="reveal">What a metastore actually stores</h3>
+<p class="reveal">The classic metadata service is the <strong>Hive Metastore</strong>. Despite the scary name, it is just a small ordinary database (usually MySQL or PostgreSQL running behind the scenes) holding a catalogue. For each table it records, in plain rows:</p>
+
+<div class="cb reveal"><span class="lang">What the metastore holds for one table</span><pre>Table name : orders
+Location   : s3://my-company-lake/orders/
+Format     : parquet
+Schema     : order_id    INT
+             customer_id INT
+             category    STRING
+             amount      DOUBLE
+             order_date  DATE
+Partitions : order_date
+Partition values known:
+   order_date=2026-06-01  →  s3://…/orders/order_date=2026-06-01/
+   order_date=2026-06-02  →  s3://…/orders/order_date=2026-06-02/
+   …</pre></div>
+
+<p class="reveal">That's it — a phonebook. Instead of "person → phone number," it stores "table name → location + columns + known partitions." When you run a query, the engine asks the metastore three questions and gets instant answers without touching storage:</p>
+<ol class="reveal">
+  <li><strong>Where does <code>orders</code> live?</strong> → an S3 prefix.</li>
+  <li><strong>What columns and types does it have?</strong> → the schema, so the engine can plan the query and check that <code>amount</code> exists.</li>
+  <li><strong>What partitions exist?</strong> → so for <code>WHERE order_date = '2026-06-01'</code> the engine knows to read only the <code>order_date=2026-06-01</code> prefix. This is <strong>partition pruning</strong>: the engine does the skipping, using the partition list the catalogue hands back — and it happens before a single file is opened.</li>
+</ol>
+
+<figure class="reveal" style="margin:1.4em 0;background:#0d0d13;border:1px solid #23232e;border-radius:10px;padding:1.2em 1em 1em;overflow:hidden">
+<figcaption style="font-size:12px;color:#555;text-align:center;margin-bottom:.8em;letter-spacing:.06em;text-transform:uppercase">The metastore is the translator between names and locations</figcaption>
+<svg viewBox="0 0 700 220" width="100%" style="display:block;max-width:700px;margin:0 auto" aria-label="Engine asks metastore for a table location and gets back a path and schema">
+  <defs>
+    <style>.m{font-family:'JetBrains Mono',monospace;font-size:12px;}</style>
+    <symbol id="m-spark" viewBox="0 0 24 24"><polygon points="13,2 4,14 11,14 10,22 20,10 13,10" fill="#E25A1C"/></symbol>
+    <symbol id="m-unity" viewBox="0 0 24 24"><rect x="3" y="2" width="14" height="20" rx="2" fill="none" stroke="#f0b429" stroke-width="2"/><path d="M7 2v20" stroke="#f0b429" stroke-width="1.5"/><line x1="10" y1="7" x2="15" y2="7" stroke="#f0b429" stroke-width="1.5"/><line x1="10" y1="11" x2="15" y2="11" stroke="#f0b429" stroke-width="1.5"/><line x1="10" y1="15" x2="15" y2="15" stroke="#f0b429" stroke-width="1.5"/></symbol>
+    <symbol id="m-s3" viewBox="0 0 24 24"><ellipse cx="12" cy="6" rx="9" ry="3.5" fill="#FF9900" opacity=".9"/><path d="M3 6v12c0 1.9 4 3.5 9 3.5s9-1.6 9-3.5V6" fill="none" stroke="#FF9900" stroke-width="2"/></symbol>
+  </defs>
+
+  <!-- engine -->
+  <rect x="18" y="76" width="150" height="68" rx="8" fill="#0f1f17" stroke="#34d399" stroke-width="1.6"><animate attributeName="stroke-opacity" values=".55;1;.55" dur="3s" repeatCount="indefinite"/></rect>
+  <use href="#m-spark" x="30" y="86" width="22" height="22"/>
+  <text x="100" y="102" class="m" fill="#34d399" text-anchor="middle" font-weight="700">COMPUTE</text>
+  <text x="93" y="130" class="m" fill="#7a8099" text-anchor="middle">"SELECT … orders"</text>
+
+  <!-- metastore -->
+  <rect x="270" y="58" width="170" height="104" rx="8" fill="#1a180d" stroke="#f0b429" stroke-width="1.6"><animate attributeName="stroke-opacity" values=".55;1;.55" dur="3.2s" begin=".4s" repeatCount="indefinite"/></rect>
+  <use href="#m-unity" x="282" y="70" width="20" height="20"/>
+  <text x="360" y="84" class="m" fill="#f0b429" text-anchor="middle" font-weight="700">METASTORE</text>
+  <text x="355" y="110" class="m" fill="#7a8099" text-anchor="middle">orders →</text>
+  <text x="355" y="128" class="m" fill="#7a8099" text-anchor="middle">path + schema</text>
+  <text x="355" y="146" class="m" fill="#7a8099" text-anchor="middle">+ partitions</text>
+
+  <!-- storage -->
+  <rect x="540" y="76" width="150" height="68" rx="8" fill="#0d1820" stroke="#5AC8FF" stroke-width="1.6"><animate attributeName="stroke-opacity" values=".55;1;.55" dur="2.8s" begin=".8s" repeatCount="indefinite"/></rect>
+  <use href="#m-s3" x="552" y="86" width="22" height="22"/>
+  <text x="622" y="102" class="m" fill="#5AC8FF" text-anchor="middle" font-weight="700">STORAGE</text>
+  <text x="615" y="130" class="m" fill="#7a8099" text-anchor="middle">s3://…/orders/</text>
+
+  <!-- arrow 1: request -->
+  <line x1="168" y1="96" x2="266" y2="96" stroke="#f0b429" stroke-width="1.6" stroke-dasharray="4,3"/>
+  <polygon points="266,91 276,96 266,101" fill="#f0b429"/>
+  <text x="217" y="88" class="m" fill="#f0b429" text-anchor="middle" font-size="10">1. where?</text>
+  <circle r="3.5" fill="#f0b429"><animate attributeName="cx" values="168;266" dur="1.6s" repeatCount="indefinite"/><animate attributeName="cy" values="96;96" dur="1.6s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;1;1;0" dur="1.6s" repeatCount="indefinite"/></circle>
+
+  <!-- arrow 2: response -->
+  <line x1="276" y1="124" x2="170" y2="124" stroke="#f0b429" stroke-width="1.6" stroke-dasharray="4,3"/>
+  <polygon points="170,119 160,124 170,129" fill="#f0b429"/>
+  <text x="217" y="142" class="m" fill="#f0b429" text-anchor="middle" font-size="10">2. here + schema</text>
+  <circle r="3.5" fill="#f0b429"><animate attributeName="cx" values="276;170" dur="1.6s" begin=".8s" repeatCount="indefinite"/><animate attributeName="cy" values="124;124" dur="1.6s" begin=".8s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;1;1;0" dur="1.6s" begin=".8s" repeatCount="indefinite"/></circle>
+
+  <!-- arrow 3: targeted read -->
+  <line x1="168" y1="110" x2="538" y2="110" stroke="#5AC8FF" stroke-width="1.4" stroke-dasharray="2,4" opacity=".5"/>
+  <text x="430" y="184" class="m" fill="#5AC8FF" text-anchor="middle" font-size="10">3. now read only the needed prefix →</text>
+  <circle r="3.5" fill="#5AC8FF"><animate attributeName="cx" values="180;538" dur="2.2s" begin="1.4s" repeatCount="indefinite"/><animate attributeName="cy" values="110;110" dur="2.2s" begin="1.4s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;1;1;0" dur="2.2s" begin="1.4s" repeatCount="indefinite"/></circle>
+</svg>
+</figure>
+
+<div class="callout reveal">
+  <p style="margin:.2em 0"><span class="t">💡 Why a separate layer at all?</span></p>
+  <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">Because storage is "dumb" by design (just keys and bytes), <em>something</em> has to remember what those bytes mean. Putting that knowledge in one shared catalogue means every engine — Spark, Trino, Athena — agrees on what <code>orders</code> is. Without it, each tool would need its own private notion of your tables, and they'd disagree.</p>
+</div>
+
+<h3 class="reveal">The flavours: Hive Metastore vs Glue vs Unity Catalog</h3>
+<table class="reveal">
+  <tr><th>Catalogue</th><th>What it is</th><th>You manage?</th><th>Extra powers</th></tr>
+  <tr><td><strong>Hive Metastore</strong></td><td>The original open-source catalogue (a service backed by MySQL/Postgres)</td><td>Yes — you run the server &amp; its database</td><td>Just the core name→location mapping</td></tr>
+  <tr><td><strong>AWS Glue Data Catalog</strong></td><td>Amazon's fully-managed, serverless metastore</td><td>No servers to run</td><td>Auto-discovery "crawlers," tight AWS integration</td></tr>
+  <tr><td><strong>Unity Catalog</strong></td><td>Databricks' next-gen catalogue</td><td>Managed for you</td><td>Column-level access control, data lineage, works across clouds</td></tr>
+</table>
+<p class="reveal">All three do the same core job — map a table name to its files and schema — but they differ a lot in who runs them and what they add on top. Here's each in more detail:</p>
+
+<h4 class="reveal">Hive Metastore — the original</h4>
+<p class="reveal">Born with Apache Hive in the Hadoop era, it's the catalogue everything else is compatible with. Under the hood it's just a small relational database (usually MySQL or PostgreSQL) holding the table records, fronted by a service that engines talk to over a standard API. Its big strength is being <strong>open and engine-neutral</strong>: Spark, Trino, Presto, and Flink can all read the same metastore, which is why it became the de-facto standard. The downsides: <strong>you operate it yourself</strong> (run and scale that database and service), it has <strong>no built-in security or governance</strong> (access control has to be bolted on by the surrounding system), and it slows down once a table has hundreds of thousands of partitions.</p>
+
+<h4 class="reveal">AWS Glue Data Catalog — the managed, serverless version</h4>
+<p class="reveal">Amazon's <strong>drop-in replacement</strong> for the Hive Metastore: same concepts and API, but <strong>nothing to run</strong> — AWS hosts it and you pay per object stored and per request. It's the default catalogue across AWS analytics (Athena, EMR, Redshift Spectrum, Glue ETL), and it adds <strong>crawlers</strong> to fill itself in automatically. A crawler is a job you point at an S3 location (or a database, JDBC source, etc.): it samples the files it finds, works out the file format (Parquet, CSV, JSON…), infers each column's name and type, detects <a href="#storage">Hive-style partition folders</a>, and then creates or updates the matching table definition in the catalogue — so nobody has to hand-write the schema. Put it on a schedule and it keeps the catalogue current as data lands: new partitions and new columns get registered on the next run. (The catch: its type-guessing is heuristic and can occasionally mislabel a column — e.g. read a ZIP code as an integer — so inferred schemas are worth a sanity check.) The trade-off overall is lock-in: it lives inside AWS, and governance comes from AWS IAM / Lake Formation rather than from the catalogue itself.</p>
+
+<h4 class="reveal">Unity Catalog — the governance-first catalogue</h4>
+<p class="reveal">Databricks' newer catalogue, built for the things the Hive Metastore never handled. On top of the basic name→location mapping it adds <strong>fine-grained access control</strong> (grant permissions down to a single column or row), <strong>data lineage</strong> (what produced a table and what reads it), <strong>auditing</strong>, and a <strong>three-level namespace</strong> (<code>catalog.schema.table</code>) that works across workspaces and clouds. It also governs more than tables — files, ML models, even dashboards — from one place, and it's now open-sourced. If you're on Databricks it's the default; the cost is that it's centred on the Databricks ecosystem.</p>
+
+<p class="reveal">In short: <strong>Hive Metastore</strong> if you want open and self-managed, <strong>Glue</strong> if you're on AWS and want zero servers, <strong>Unity Catalog</strong> if you need real governance (security, lineage, auditing) across an organisation.</p>
+
+<div class="callout cy reveal">
+  <p style="margin:.2em 0"><span class="t">🗂 The three-level name</span></p>
+  <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">Modern catalogues organise tables as <code>catalog.schema.table</code> (e.g. <code>prod.sales.orders</code>) — three levels, like country → city → street. The first level (catalog) is the newer addition that lets one organisation cleanly separate, say, <code>prod</code> from <code>dev</code> data under a single governed system.</p>
+  <p style="margin:.5em 0 0;font-size:13.5px;color:var(--muted)"><strong>Heads-up on a name clash:</strong> "schema" here means a <em>grouping of tables</em> (the "city" level) — a totally different use from the other "schema" in this article (a table's column list). Same word, two meanings; the data world overloads it and you'll see both.</p>
+</div>
+
+<h3 class="reveal">Where the classic metastore strains — and what was added on top</h3>
+<p class="reveal">The Hive Metastore has one structural gap: <strong>it tracks tables and partitions, but not individual files.</strong> It knows "the <code>order_date=2026-06-01</code> partition lives at this prefix," but to find out which files are actually in that prefix <em>right now</em>, the engine falls back to a live <code>LIST</code> on storage. And because that answer comes straight from storage (which, as we saw in Section 02, has no atomic "official file set"), real problems follow:</p>
+
+<div class="pain reveal">
+  <h4>The pain</h4>
+  <ul style="margin:.2em 0;color:#dcdce4">
+    <li><strong>Slow listing.</strong> A table with hundreds of thousands of partitions means huge, slow LIST calls just to plan a query.</li>
+    <li><strong>No atomic changes.</strong> Because the file set comes from a storage LIST (not the catalogue), a reader running while a write job is half-finished sees a mix of old and new files — there's no clean "this is the official set of files" marker.</li>
+    <li><strong>No file-level skipping.</strong> The catalogue has no per-file min/max stats, so it can't help skip individual files (only whole partitions).</li>
+  </ul>
+</div>
+<div class="fix reveal">
+  <h4>The fix: table formats (Delta Lake, Iceberg, Hudi)</h4>
+  <p style="margin:.2em 0;color:#dcdce4">A <strong>table format</strong> writes an extra <em>metadata file alongside your data</em> that lists the <strong>exact set of files</strong> making up the table right now, plus per-file statistics. Instead of LISTing storage and guessing, the engine reads this manifest and knows precisely which files to read — atomically and with file-level skipping. This is the leap from a plain Data Lake to a <strong>Lakehouse</strong>.</p>
+</div>
+
+<div class="callout mg reveal">
+  <p style="margin:.2em 0"><span class="t">🧭 Two metadata "sub-layers," don't mix them up</span></p>
+  <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">It helps to see metadata as two cooperating things:</p>
+  <ul style="font-size:14px;color:#cdd0dd;margin:.4em 0 0">
+    <li><strong>The catalogue</strong> (Hive/Glue/Unity) answers "<em>what is the table named <code>orders</code> and where does it start?</em>"</li>
+    <li><strong>The table format's manifest</strong> (Delta/Iceberg/Hudi, stored next to the data) answers "<em>which exact files are in it right now, and what are their stats?</em>"</li>
+  </ul>
+  <p style="margin:.5em 0 0;font-size:14px;color:#cdd0dd">A modern Lakehouse uses both: the catalogue points to the table, the table's manifest points to the files. The deep dive on the manifest lives in the <a href="../delta-lake/">Delta Lake, Under the Hood</a> post.</p>
+</div>
+
+<div class="callout gr reveal">
+  <p style="margin:.2em 0"><span class="t">✅ Layer 2 in one line</span></p>
+  <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">Metadata is the catalogue that turns files into named tables — it answers <em>where</em>, <em>what columns</em>, and <em>which partitions</em>, so the engine can plan a query and prune before reading. Table formats extend it down to the individual file.</p>
+</div>
+
+<!-- 04 -->
+<h2 id="compute" class="reveal"><span class="n">04.</span> Layer 3 — Compute, in depth</h2>
+<p class="reveal lead">The compute layer is the worker on the top shelf: it takes your query, figures out a plan, then reads the right files from storage and computes the answer. The defining feature of this layer in a Data Lake is that it is <strong>completely separate from storage</strong> — you rent it only while a query runs, then give it back.</p>
+
+<h3 class="reveal">Separation of compute and storage — the payoff of decoupling</h3>
+<p class="reveal">As Section 01 noted, a traditional database fuses storage and compute into one always-on box; a Data Lake splits them, and the top layer is where that split actually pays off. The two halves behave completely differently:</p>
+<ul class="reveal">
+  <li><strong>Storage stays on always</strong> (it's cheap — a few cents/GB/month) and holds your data permanently.</li>
+  <li><strong>Compute is rented on demand.</strong> Spin up 10 machines for a 20-minute job, then shut them off and stop paying. Need a huge one-off job? Spin up 200 machines for an hour. Nothing about your stored data changes.</li>
+</ul>
+<p class="reveal">This is why two teams can run two different engines on the same data, and why your nightly bill can drop to near-zero compute while the data sits safely in storage.</p>
+
+<h3 class="reveal">What a cluster is made of: driver + executors</h3>
+<p class="reveal">A compute engine like Spark runs as a <strong>cluster</strong> — a group of rented virtual machines with two roles:</p>
+<ul class="reveal">
+  <li><strong>The driver</strong> (1 machine) — the foreman. It talks to the metastore, builds the query plan, splits the work into tasks, and hands tasks out. It does not read the bulk data itself.</li>
+  <li><strong>The executors</strong> (many machines) — the workers. Each executor reads <em>some</em> of the files from storage and processes them in parallel with the others.</li>
+</ul>
+
+<figure class="reveal" style="margin:1.4em 0;background:#0d0d13;border:1px solid #23232e;border-radius:10px;padding:1.2em 1em 1em;overflow:hidden">
+<figcaption style="font-size:12px;color:#555;text-align:center;margin-bottom:.8em;letter-spacing:.06em;text-transform:uppercase">Driver splits the files; executors read them in parallel</figcaption>
+<svg viewBox="0 0 700 280" width="100%" style="display:block;max-width:700px;margin:0 auto" aria-label="A driver assigning file-reading tasks to three executors that read from object storage">
+  <defs>
+    <style>.cm{font-family:'JetBrains Mono',monospace;font-size:11.5px;}</style>
+    <symbol id="c-databricks" viewBox="0 0 24 24"><polygon points="12,2 20,7 12,12 4,7" fill="#FF3621" opacity=".9"/><polygon points="12,8 20,13 12,18 4,13" fill="#FF3621" opacity=".7"/><polygon points="12,14 20,19 12,24 4,19" fill="#FF3621" opacity=".5"/></symbol>
+    <symbol id="c-spark" viewBox="0 0 24 24"><polygon points="13,2 4,14 11,14 10,22 20,10 13,10" fill="#E25A1C"/></symbol>
+    <symbol id="c-s3" viewBox="0 0 24 24"><ellipse cx="12" cy="6" rx="9" ry="3.5" fill="#FF9900" opacity=".9"/><path d="M3 6v12c0 1.9 4 3.5 9 3.5s9-1.6 9-3.5V6" fill="none" stroke="#FF9900" stroke-width="2"/><line x1="12" y1="2.5" x2="12" y2="21.5" stroke="#b36b00" stroke-width="1"/></symbol>
+  </defs>
+
+  <!-- driver -->
+  <rect x="262" y="12" width="176" height="54" rx="8" fill="#16182a" stroke="#5C78FF" stroke-width="1.6"><animate attributeName="stroke-opacity" values=".55;1;.55" dur="3s" repeatCount="indefinite"/></rect>
+  <use href="#c-databricks" x="274" y="24" width="24" height="24"/>
+  <text x="360" y="34" class="cm" fill="#8aa0ff" text-anchor="middle" font-weight="700">DRIVER (foreman)</text>
+  <text x="360" y="54" class="cm" fill="#7a8099" text-anchor="middle">plans &amp; splits work</text>
+
+  <!-- executors -->
+  <g>
+    <rect x="40" y="118" width="180" height="58" rx="8" fill="#0f1f17" stroke="#34d399" stroke-width="1.4"><animate attributeName="stroke-opacity" values=".5;1;.5" dur="2.6s" repeatCount="indefinite"/></rect>
+    <use href="#c-spark" x="52" y="128" width="22" height="22"/>
+    <text x="138" y="140" class="cm" fill="#34d399" text-anchor="middle" font-weight="700">EXECUTOR 1</text>
+    <text x="130" y="164" class="cm" fill="#7a8099" text-anchor="middle">reads files A, B</text>
+
+    <rect x="260" y="118" width="180" height="58" rx="8" fill="#0f1f17" stroke="#34d399" stroke-width="1.4"><animate attributeName="stroke-opacity" values=".5;1;.5" dur="2.6s" begin=".4s" repeatCount="indefinite"/></rect>
+    <use href="#c-spark" x="272" y="128" width="22" height="22"/>
+    <text x="358" y="140" class="cm" fill="#34d399" text-anchor="middle" font-weight="700">EXECUTOR 2</text>
+    <text x="350" y="164" class="cm" fill="#7a8099" text-anchor="middle">reads files C, D</text>
+
+    <rect x="480" y="118" width="180" height="58" rx="8" fill="#0f1f17" stroke="#34d399" stroke-width="1.4"><animate attributeName="stroke-opacity" values=".5;1;.5" dur="2.6s" begin=".8s" repeatCount="indefinite"/></rect>
+    <use href="#c-spark" x="492" y="128" width="22" height="22"/>
+    <text x="578" y="140" class="cm" fill="#34d399" text-anchor="middle" font-weight="700">EXECUTOR 3</text>
+    <text x="570" y="164" class="cm" fill="#7a8099" text-anchor="middle">reads files E, F</text>
+  </g>
+
+  <!-- storage -->
+  <rect x="160" y="222" width="380" height="46" rx="8" fill="#0d1820" stroke="#5AC8FF" stroke-width="1.6"><animate attributeName="stroke-opacity" values=".55;1;.55" dur="2.8s" repeatCount="indefinite"/></rect>
+  <use href="#c-s3" x="176" y="234" width="22" height="22"/>
+  <text x="360" y="250" class="cm" fill="#5AC8FF" text-anchor="middle" font-weight="700">OBJECT STORAGE — Parquet files A…F</text>
+
+  <!-- driver to executors (task assignment) -->
+  <line x1="300" y1="66" x2="130" y2="116" stroke="#5C78FF" stroke-width="1.3" stroke-dasharray="4,3"/>
+  <line x1="350" y1="66" x2="350" y2="116" stroke="#5C78FF" stroke-width="1.3" stroke-dasharray="4,3"/>
+  <line x1="400" y1="66" x2="570" y2="116" stroke="#5C78FF" stroke-width="1.3" stroke-dasharray="4,3"/>
+  <circle r="3.2" fill="#5C78FF"><animate attributeName="cx" values="300;130" dur="1.3s" repeatCount="indefinite"/><animate attributeName="cy" values="66;116" dur="1.3s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;1;1;0" dur="1.3s" repeatCount="indefinite"/></circle>
+  <circle r="3.2" fill="#5C78FF"><animate attributeName="cx" values="350;350" dur="1.3s" begin=".15s" repeatCount="indefinite"/><animate attributeName="cy" values="66;116" dur="1.3s" begin=".15s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;1;1;0" dur="1.3s" begin=".15s" repeatCount="indefinite"/></circle>
+  <circle r="3.2" fill="#5C78FF"><animate attributeName="cx" values="400;570" dur="1.3s" begin=".3s" repeatCount="indefinite"/><animate attributeName="cy" values="66;116" dur="1.3s" begin=".3s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;1;1;0" dur="1.3s" begin=".3s" repeatCount="indefinite"/></circle>
+
+  <!-- executors to storage (parallel ranged GETs) -->
+  <line x1="130" y1="176" x2="250" y2="220" stroke="#5AC8FF" stroke-width="1.3" stroke-dasharray="2,3"/>
+  <line x1="350" y1="176" x2="350" y2="220" stroke="#5AC8FF" stroke-width="1.3" stroke-dasharray="2,3"/>
+  <line x1="570" y1="176" x2="450" y2="220" stroke="#5AC8FF" stroke-width="1.3" stroke-dasharray="2,3"/>
+  <text x="350" y="200" class="cm" fill="#5AC8FF" text-anchor="middle" font-size="10">parallel ranged GETs ↓↑</text>
+  <!-- data flowing UP from storage to all three at once -->
+  <circle r="3.5" fill="#5AC8FF"><animate attributeName="cx" values="250;130" dur="1.5s" begin=".7s" repeatCount="indefinite"/><animate attributeName="cy" values="220;176" dur="1.5s" begin=".7s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;1;1;0" dur="1.5s" begin=".7s" repeatCount="indefinite"/></circle>
+  <circle r="3.5" fill="#5AC8FF"><animate attributeName="cx" values="350;350" dur="1.5s" begin=".7s" repeatCount="indefinite"/><animate attributeName="cy" values="220;176" dur="1.5s" begin=".7s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;1;1;0" dur="1.5s" begin=".7s" repeatCount="indefinite"/></circle>
+  <circle r="3.5" fill="#5AC8FF"><animate attributeName="cx" values="450;570" dur="1.5s" begin=".7s" repeatCount="indefinite"/><animate attributeName="cy" values="220;176" dur="1.5s" begin=".7s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;1;1;0" dur="1.5s" begin=".7s" repeatCount="indefinite"/></circle>
+</svg>
+</figure>
+
+<p class="reveal">Because the files are independent objects in storage, the driver can hand each executor a different set of files and they all read at once. Ten executors reading ten files finish the <em>reading</em> in roughly the time it takes one executor to read one — that's the parallelism a Data Lake is built to exploit. (This is near-linear speedup for the read phase only; the final combine step — e.g. merging partial <code>GROUP BY</code> sums — plus scheduling overhead and the occasional slow machine mean real end-to-end speedup is a bit below perfect.)</p>
+
+<h3 class="reveal">How the engine plans a query (the four steps inside the driver)</h3>
+<div class="step reveal"><div class="num-bubble">1</div><div class="body"><strong>Parse.</strong> Read your SQL and check it's valid — turn the text into a tree the engine can reason about.</div></div>
+<div class="step reveal"><div class="num-bubble">2</div><div class="body"><strong>Resolve against the catalogue.</strong> Ask the metastore (Layer 2) where <code>orders</code> lives and what its columns are. Confirm <code>category</code>, <code>amount</code>, and <code>order_date</code> really exist.</div></div>
+<div class="step reveal"><div class="num-bubble">3</div><div class="body"><strong>Optimise.</strong> Rewrite the plan to do the least work — drop unused columns, reorder joins, and bake in three distinct read-reducing tricks: <strong>partition pruning</strong> (skip whole prefixes the filter rules out, using the catalogue's partition list), <strong>predicate pushdown</strong> (push the row filter <code>amount &gt; 500</code> down <em>into</em> the file scan so it runs during the read, not after), and <strong>data skipping</strong> (use Parquet's per-file min/max stats to skip row groups that can't match).</div></div>
+<div class="step reveal"><div class="num-bubble">4</div><div class="body"><strong>Schedule &amp; execute.</strong> Split the surviving files into tasks, send them to executors, and combine their partial results into the final answer.</div></div>
+
+<div class="callout cy reveal">
+  <p style="margin:.2em 0"><span class="t">🎯 The engine skips data twice — coarse, then fine</span></p>
+  <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">The engine reads as little as possible by skipping in two stages: <strong>(a)</strong> using the <em>metadata</em> layer's partition list, it prunes whole partitions (keeps only the <code>order_date=2026-06-01</code> prefix), then <strong>(b)</strong> inside each surviving file, the <em>storage</em> layer's Parquet footers let each executor skip row groups that can't match ("amount max is 200, skip this group"). Coarse filtering up top, fine filtering down below — and in both cases it's the engine doing the skipping, the layers below just hand it the information to do it with.</p>
+</div>
+
+<h3 class="reveal">Different engines for different jobs</h3>
+<table class="reveal">
+  <tr><th>Engine</th><th>Best at</th><th>Style</th></tr>
+  <tr><td><strong>Apache Spark</strong></td><td>Heavy batch jobs &amp; transformations (ETL — extract/transform/load), ML pipelines</td><td>Big clusters, throughput-focused</td></tr>
+  <tr><td><strong>Trino / Presto</strong></td><td>Fast interactive SQL across sources, dashboards</td><td>Always-on, low-latency queries</td></tr>
+  <tr><td><strong>Amazon Athena</strong></td><td>Occasional SQL with zero servers to manage</td><td>Serverless, pay-per-query (Trino under the hood)</td></tr>
+  <tr><td><strong>Databricks SQL</strong></td><td>Lakehouse BI (business-intelligence dashboards) &amp; SQL on Delta tables</td><td>Managed, optimised for Delta</td></tr>
+</table>
+<p class="reveal">All of them read the <em>same</em> files through the <em>same</em> catalogue. That's the decoupling paying off: the right tool for each job, no data copies.</p>
+
+<h3 class="reveal">Autoscaling &amp; the compute cost model</h3>
+<p class="reveal">Because compute is rented, scale becomes a dial. <strong>Autoscaling</strong> adds executors when a job is big and removes them when it's idle. <strong>Serverless</strong> options (Athena, serverless Spark/SQL) take this further: you don't manage machines at all and pay per query or per second. The mental model that keeps bills sane:</p>
+<ul class="reveal">
+  <li><strong>Storage cost</strong> = how much data you keep (always on, but cheap).</li>
+  <li><strong>Compute cost</strong> = machines × time they're running (expensive, so keep it short and shut it off).</li>
+  <li>Reading less data (good partitioning + Parquet skipping) makes compute <em>finish faster</em>, which directly lowers the compute bill. The layers are linked: smart Storage and Metadata make Compute cheap.</li>
+</ul>
+
+<div class="callout gr reveal">
+  <p style="margin:.2em 0"><span class="t">✅ Layer 3 in one line</span></p>
+  <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">Compute is the rented, parallel engine that plans a query (driver), reads files in parallel (executors), and is billed only while running — so the cheaper you make its reads, the cheaper the whole lake.</p>
+</div>
+
+<!-- 05 -->
+<h2 id="trace" class="reveal"><span class="n">05.</span> One query through all three layers</h2>
+<p class="reveal lead">Let's tie everything together by following one real query from the moment you press run to the rows coming back. This is the payoff — watch how each layer does exactly its job and nothing more.</p>
+
+<div class="cb reveal"><span class="lang">SQL · the query we'll trace</span><pre>SELECT category, SUM(amount) AS revenue
+FROM orders
+WHERE order_date = '2026-06-01'
+  AND amount > 500
+GROUP BY category;</pre></div>
+
+<p class="reveal">We'll assume the common <strong>plain-lake</strong> setup: Parquet files plus a Hive-style metastore (no table format yet). That means one extra <code>LIST</code> on storage to discover the files in a partition — exactly the step Section 03 flagged. With a Lakehouse table format, that LIST disappears (the manifest already names the files); everything else is identical.</p>
+
+<figure class="reveal" style="margin:1.4em 0;background:#0d0d13;border:1px solid #23232e;border-radius:10px;padding:1.2em 1em 1em;overflow:hidden">
+<figcaption style="font-size:12px;color:#555;text-align:center;margin-bottom:.8em;letter-spacing:.06em;text-transform:uppercase">The query's journey — down through the layers, then rows back up</figcaption>
+<svg viewBox="0 0 700 320" width="100%" style="display:block;max-width:700px;margin:0 auto" aria-label="A query passing from compute to metadata to storage and results returning">
+  <defs>
+    <style>.tr{font-family:'JetBrains Mono',monospace;font-size:11px;}</style>
+    <symbol id="t-spark" viewBox="0 0 24 24"><polygon points="13,2 4,14 11,14 10,22 20,10 13,10" fill="#E25A1C"/></symbol>
+    <symbol id="t-unity" viewBox="0 0 24 24"><rect x="3" y="2" width="14" height="20" rx="2" fill="none" stroke="#f0b429" stroke-width="2"/><path d="M7 2v20" stroke="#f0b429" stroke-width="1.5"/><line x1="10" y1="7" x2="15" y2="7" stroke="#f0b429" stroke-width="1.5"/><line x1="10" y1="11" x2="15" y2="11" stroke="#f0b429" stroke-width="1.5"/><line x1="10" y1="15" x2="15" y2="15" stroke="#f0b429" stroke-width="1.5"/></symbol>
+    <symbol id="t-s3" viewBox="0 0 24 24"><ellipse cx="12" cy="6" rx="9" ry="3.5" fill="#FF9900" opacity=".9"/><path d="M3 6v12c0 1.9 4 3.5 9 3.5s9-1.6 9-3.5V6" fill="none" stroke="#FF9900" stroke-width="2"/><line x1="12" y1="2.5" x2="12" y2="21.5" stroke="#b36b00" stroke-width="1"/></symbol>
+  </defs>
+
+  <!-- compute -->
+  <rect x="20" y="20" width="660" height="74" rx="8" fill="#0f1f17" stroke="#34d399" stroke-width="1.6"><animate attributeName="stroke-opacity" values="1;.45;.45;.45;1" keyTimes="0;.15;.5;.85;1" dur="4s" repeatCount="indefinite"/></rect>
+  <use href="#t-spark" x="640" y="26" width="26" height="26"/>
+  <text x="36" y="42" class="tr" fill="#34d399" font-weight="700">3 · COMPUTE (driver)</text>
+  <text x="36" y="62" class="tr" fill="#cdd0dd">① parse SQL  ② ask catalogue where 'orders' is</text>
+  <text x="36" y="80" class="tr" fill="#cdd0dd">⑥ executors aggregate → SUM(amount) per category → return rows</text>
+
+  <!-- metadata -->
+  <rect x="20" y="112" width="660" height="64" rx="8" fill="#1a180d" stroke="#f0b429" stroke-width="1.6"><animate attributeName="stroke-opacity" values=".45;1;.45;.45;.45" keyTimes="0;.3;.5;.85;1" dur="4s" repeatCount="indefinite"/></rect>
+  <use href="#t-unity" x="642" y="118" width="24" height="24"/>
+  <text x="36" y="134" class="tr" fill="#f0b429" font-weight="700">2 · METADATA (catalogue)</text>
+  <text x="36" y="154" class="tr" fill="#cdd0dd">③ orders → s3://…/orders/ , schema ok</text>
+  <text x="36" y="170" class="tr" fill="#cdd0dd">④ partition list → engine keeps only order_date=2026-06-01/</text>
+
+  <!-- storage -->
+  <rect x="20" y="194" width="660" height="86" rx="8" fill="#0d1820" stroke="#5AC8FF" stroke-width="1.6"><animate attributeName="stroke-opacity" values=".45;.45;1;.45;.45" keyTimes="0;.4;.55;.7;1" dur="4s" repeatCount="indefinite"/></rect>
+  <use href="#t-s3" x="640" y="200" width="26" height="26"/>
+  <text x="36" y="216" class="tr" fill="#5AC8FF" font-weight="700">1 · STORAGE (object storage)</text>
+  <text x="36" y="236" class="tr" fill="#cdd0dd">⑤ LIST the prefix → 2 files, then executors ranged-GET them</text>
+  <text x="36" y="254" class="tr" fill="#cdd0dd">   read each footer → skip row groups where amount.max ≤ 500</text>
+  <text x="36" y="272" class="tr" fill="#cdd0dd">   read only the category + amount column chunks that survive</text>
+
+  <!-- down rail: query descending -->
+  <line x1="693" y1="30" x2="693" y2="250" stroke="#905AFF" stroke-width="2" opacity=".4"/>
+  <polygon points="688,248 698,248 693,262" fill="#905AFF"/>
+  <text x="693" y="300" class="tr" fill="#905AFF" text-anchor="middle" font-size="10">query ↓</text>
+  <circle r="4.5" fill="#905AFF" cx="693"><animate attributeName="cy" values="30;250" dur="4s" keyTimes="0;.55" repeatCount="indefinite"/><animate attributeName="opacity" values="1;1;0;0" keyTimes="0;.5;.55;1" dur="4s" repeatCount="indefinite"/></circle>
+
+  <!-- up rail: rows ascending -->
+  <line x1="8" y1="250" x2="8" y2="30" stroke="#34d399" stroke-width="2" opacity=".4"/>
+  <polygon points="3,42 13,42 8,28" fill="#34d399"/>
+  <text x="8" y="300" class="tr" fill="#34d399" text-anchor="middle" font-size="10">rows ↑</text>
+  <circle r="4.5" fill="#34d399" cx="8"><animate attributeName="cy" values="250;30" dur="4s" keyTimes="0;.45" begin="2.2s" repeatCount="indefinite"/><animate attributeName="opacity" values="1;1;0;0" keyTimes="0;.4;.45;1" dur="4s" begin="2.2s" repeatCount="indefinite"/></circle>
+</svg>
+</figure>
+
+<div class="step reveal"><div class="num-bubble">1</div><div class="body"><strong>Compute parses</strong> your SQL into a plan and sees it needs the <code>orders</code> table, columns <code>category</code>, <code>amount</code>, <code>order_date</code>.</div></div>
+<div class="step reveal"><div class="num-bubble">2</div><div class="body"><strong>Compute asks Metadata</strong>: "where is <code>orders</code>, and what are its columns?"</div></div>
+<div class="step reveal"><div class="num-bubble">3</div><div class="body"><strong>Metadata answers</strong> with the S3 prefix and the schema. It confirms <code>category</code>, <code>amount</code>, and <code>order_date</code> exist and that the table is partitioned by <code>order_date</code>.</div></div>
+<div class="step reveal"><div class="num-bubble">4</div><div class="body"><strong>Compute prunes partitions</strong> using that list: because of <code>WHERE order_date = '2026-06-01'</code>, only the <code>order_date=2026-06-01/</code> prefix is relevant, so the engine drops every other day <em>before any file is opened</em>. (Metadata supplied the partition list; the engine did the skipping.)</div></div>
+<div class="step reveal"><div class="num-bubble">5</div><div class="body"><strong>Storage serves bytes</strong>: the engine first <code>LIST</code>s that one <code>order_date=2026-06-01</code> prefix to discover which files are in it — here, 2 files. (This LIST is the plain-lake step from Section 03; with a table format the manifest would already name the files and no LIST is needed.) Executors then issue ranged GETs for those files. They read each Parquet footer, use the <code>amount</code> min/max stats to skip row groups that can't contain <code>amount &gt; 500</code>, and read only the <code>category</code> and <code>amount</code> column chunks — ignoring every other column.</div></div>
+<div class="step reveal"><div class="num-bubble">6</div><div class="body"><strong>Compute finishes</strong>: each executor sums its slice, the driver combines the partial sums per <code>category</code>, and the final rows travel back up to you.</div></div>
+
+<div class="callout gr reveal">
+  <p style="margin:.2em 0"><span class="t">✅ The big picture</span></p>
+  <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">A query on a 10,000-file table physically read just <strong>two files</strong> (the only two in the matching day), and inside them just <strong>two columns</strong> of a <strong>few row groups</strong>. Metadata did the coarse cut (which files), Storage's Parquet footers did the fine cut (which parts of those files), and Compute ran the whole thing in parallel and only while needed. Three layers, each doing one job — that's a Data Lake working as designed.</p>
+</div>
+
+<!-- 06 -->
+<h2 id="summary" class="reveal"><span class="n">06.</span> Summary &amp; what to read next</h2>
+<table class="reveal">
+  <tr><th>Layer</th><th>Job</th><th>Key idea to remember</th><th>Main pitfall</th></tr>
+  <tr><td><strong style="color:#5AC8FF">Storage</strong></td><td>Hold raw bytes cheaply</td><td>Immutable key→bytes store; layout = performance</td><td>Small files &amp; over-partitioning</td></tr>
+  <tr><td><strong style="color:#f0b429">Metadata</strong></td><td>Turn files into named tables</td><td>Catalogue maps name → location + schema + partitions</td><td>Can't track files atomically (→ table formats)</td></tr>
+  <tr><td><strong style="color:#34d399">Compute</strong></td><td>Read &amp; process in parallel</td><td>Rented driver + executors; pay only while running</td><td>Reading too much data = slow &amp; costly</td></tr>
+</table>
+
+<p class="reveal">The three layers are deliberately <strong>decoupled</strong>: cheap storage you keep forever, a small catalogue that gives it meaning, and elastic compute you rent by the minute. Keep them separate and you get the Data Lake's superpower — scale and pay for each piece independently, and point any engine at any data.</p>
+
+<div class="callout reveal">
+  <p style="margin:.2em 0"><span class="t">📚 Where to go next</span></p>
+  <ul style="font-size:14.5px;color:#cdd0dd;margin:.4em 0 0">
+    <li><a href="../data-lake/">Data Lake &amp; Data Lakehouse, Simply Explained</a> — the foundations, plus the six ways a plain lake breaks and how the Lakehouse pattern fixes them.</li>
+    <li><a href="../delta-lake/">Delta Lake, Under the Hood</a> — a deep dive into the table-format manifest mentioned in Layer 2: the transaction log, ACID, time travel, and file-level skipping.</li>
+    <li><a href="../lakehouse-guide/">Delta Lake vs Iceberg vs Hudi</a> — how the three table formats compare once you decide to upgrade your metadata layer.</li>
+  </ul>
+</div>
+
+<!-- Glossary -->
+<h2 id="glossary" class="reveal">Glossary</h2>
+<p class="reveal">Every term used in this post, defined in one place. Skim it first if you're new, or jump back here whenever a word feels rushed.</p>
+<div class="gloss reveal">
+  <dl>
+    <dt>Object storage</dt><dd>Cloud file storage built for storing huge numbers of files cheaply (Amazon S3, Azure ADLS, Google GCS). You write whole files and delete whole files; you cannot edit one in place. Pricing is single-digit cents per GB per month (e.g. S3 Standard is ~$0.023/GB/month as of 2026, and varies by tier and region) — we round it to "a few cents" throughout.</dd>
+    <dt>Object / key</dt><dd>In object storage, one file is called an <strong>object</strong>, and its full path (e.g. <code>s3://lake/orders/part-001.parquet</code>) is its <strong>key</strong>. The "folders" in that path are not real folders — just text in the key (see Section 02).</dd>
+    <dt>Parquet</dt><dd>A columnar file format for analytics: stores data column-by-column and compresses well. Internally a Parquet file is split into <strong>row groups</strong> (horizontal blocks of rows — say a few hundred thousand each); within each row group there is one <strong>column chunk</strong> per column. Every column chunk carries min/max statistics, and a small <strong>footer</strong> at the end of the file indexes all of this — so an engine can skip whole row groups it doesn't need.</dd>
+    <dt>Footer</dt><dd>A few-KB index at the very end of a Parquet file. It lists every row group, where each one sits (its byte offset), and each column's min/max stats — so a query reads the footer first, then jumps straight to only the bytes it needs.</dd>
+    <dt>Atomic</dt><dd>All-or-nothing. An atomic change is never observed half-done — a reader either sees the state before it or fully after it, never a partial mix.</dd>
+    <dt>Lakehouse</dt><dd>A Data Lake plus a table format, which adds warehouse-like guarantees (atomic changes, file-level skipping, schema rules) on top of cheap object storage.</dd>
+    <dt>ETL / ELT</dt><dd>Pipelines that <strong>E</strong>xtract data, <strong>T</strong>ransform it, and <strong>L</strong>oad it (ELT just reorders: load first, transform in place). The "transformations" a compute engine runs.</dd>
+    <dt>BI</dt><dd>Business Intelligence — the reports and dashboards that business users read (think charts of "revenue by region").</dd>
+    <dt>Metastore / Catalogue</dt><dd>A small database that maps a <strong>table name</strong> to its <strong>storage location and columns</strong>. Examples: Hive Metastore, AWS Glue Data Catalog, Databricks Unity Catalog.</dd>
+    <dt>Partition</dt><dd>Splitting a table's files into sub-paths by a column value (e.g. one folder per day). Queries that filter on that column read only the matching sub-paths.</dd>
+    <dt>Cluster</dt><dd>A group of rented virtual machines that work together. Compute engines split a job across the machines so they run in parallel, then release them when done.</dd>
+    <dt>Driver &amp; executors</dt><dd>In Spark, the <strong>driver</strong> is the one machine that plans the work; <strong>executors</strong> are the worker machines that read files and crunch the data in parallel.</dd>
+    <dt>Partition pruning</dt><dd>Skipping whole partition folders that a query's filter rules out — e.g. <code>WHERE order_date = '2026-06-01'</code> reads only that one prefix. The engine decides what to skip using the <em>partition list from the catalogue</em> (Metadata layer); it's the coarsest cut and happens before any file is opened.</dd>
+    <dt>Predicate pushdown</dt><dd>Pushing a row-level filter (like <code>amount &gt; 500</code>) down <em>into</em> the file scan, so rows are filtered while the data is being read rather than loaded first and filtered after. Less data flows up into the engine.</dd>
+    <dt>Data skipping</dt><dd>Skipping blocks <em>inside</em> a file — Parquet row groups — by checking the footer's per-block min/max stats against the filter (e.g. "this row group's max amount is 200, so it can't contain <code>amount &gt; 500</code> — skip it"). The fine-grained cut, done at the Storage layer once a file is already in play.</dd>
+    <dt>Schema</dt><dd>The list of a table's column names and their data types — e.g. <code>order_id INT, amount DOUBLE</code>.</dd>
+    <dt>Table format</dt><dd>A spec (Delta Lake, Apache Iceberg, Apache Hudi) that adds an extra metadata file <em>next to your data files</em> to track exactly which files make up a table right now. It works <em>with</em> the catalogue (it doesn't replace it) and extends the metadata layer down to the individual file — covered in Section 03.</dd>
+  </dl>
+</div>
+
+<footer class="reveal">
+  <p>Written by Hao Tieu · <a href="../">More posts</a> · <a href="https://linkedin.com/in/haotieu2001" target="_blank" rel="noopener">LinkedIn</a></p>
+  <p>© 2026 · Built with GitHub Pages</p>
+</footer>
+
+</div><!-- /page -->
+
+<script>
+  var bar=document.getElementById('bar');
+  function prog(){var h=document.documentElement;var s=h.scrollTop||document.body.scrollTop;var max=(h.scrollHeight-h.clientHeight)||1;bar.style.width=(s/max*100)+'%';}
+  document.addEventListener('scroll',prog,{passive:true});prog();
+  function revealAll(){document.querySelectorAll('.reveal').forEach(function(el){el.classList.add('in');});}
+  try{
+    var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}});},{threshold:.06});
+    document.querySelectorAll('.reveal').forEach(function(el){io.observe(el);});
+    window.addEventListener('load',function(){setTimeout(revealAll,1500);});
+    setTimeout(revealAll,2200);
+  }catch(e){revealAll();}
+</script>
+</body>
+</html>

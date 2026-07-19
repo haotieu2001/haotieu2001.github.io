@@ -1,0 +1,1691 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Docker Essentials for Data Engineers</title>
+<meta name="description" content="A complete, beginner-friendly reference to Docker — what containers really are, image vs container, how the layer cache works, the Dockerfile instruction by instruction, multi-stage builds, volumes, networking, Docker Compose, a fully worked example, and the data-engineering specifics: dbt, Airflow, Spark, reproducible environments and CI."/>
+<meta property="og:type" content="article"/>
+<meta property="og:title" content="Docker Essentials for Data Engineers"/>
+<meta property="og:description" content="From zero to confident: image vs container, the layer cache, the Dockerfile end to end, multi-stage builds, volumes, networking, Compose — and how data engineers really use it."/>
+<meta property="og:url" content="https://haotieu2001.github.io/docker-essentials/"/>
+<meta property="og:image" content="https://haotieu2001.github.io/og-cover.png"/>
+<meta property="og:image:width" content="1200"/>
+<meta property="og:image:height" content="630"/>
+<meta property="og:image:alt" content="Docker Essentials for Data Engineers"/>
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:title" content="Docker Essentials for Data Engineers"/>
+<meta name="twitter:description" content="A complete, beginner-friendly Docker reference, with a data-engineering lens and runnable Dockerfiles."/>
+<meta name="twitter:image" content="https://haotieu2001.github.io/og-cover.png"/>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,500;0,700;0,800;1,400&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#1A1A1A; --bg2:#121212; --ink:#F1F1F1; --muted:#9aa0b4; --dim:#666666;
+    --blue2:#1D63ED; --cyan:#2496ED; --cyan2:#7CC6F7; --purple:#2496ED; --magenta2:#8AA4FF;
+    --grad:linear-gradient(90deg,#0B4FD6,#2496ED,#62CFF4);
+    --font:"JetBrainsMono Nerd Font","JetBrains Mono","Symbols Nerd Font",ui-monospace,"Cascadia Code",Menlo,Consolas,monospace;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font);font-size:16px;line-height:1.85;-webkit-font-smoothing:antialiased}
+  #bar{position:fixed;top:0;left:0;height:3px;width:0;z-index:50;background:var(--grad);box-shadow:0 0 12px #2496ED99;transition:width .1s linear}
+  .page{max-width:880px;margin:0 auto;padding:0 24px}
+  header{padding:30px 0 6px}
+  .kicker{font-size:13px;color:var(--dim)}
+  .back{color:var(--cyan2);text-decoration:none;font-size:13px;border-bottom:1px dotted #7CC6F766}
+  h1{font-size:clamp(28px,4.6vw,46px);line-height:1.12;margin:12px 0 12px;font-weight:800;
+     background:var(--grad);background-size:220% auto;-webkit-background-clip:text;background-clip:text;color:transparent;animation:sheen 9s linear infinite}
+  @keyframes sheen{to{background-position:220% center}}
+  .dek{color:var(--muted);font-size:17px}
+  .byline{margin-top:14px;font-size:13px;color:var(--dim)}
+  h2{font-size:clamp(21px,3.2vw,28px);margin:52px 0 6px;font-weight:800;line-height:1.22;padding-top:14px;border-top:1px solid #23232e;display:flex;align-items:center;gap:10px}
+  h2 .n{color:var(--blue2)}
+  h3{font-size:18px;margin:28px 0 4px;color:#fff;font-weight:700}
+  h4{font-size:15px;margin:20px 0 4px;color:var(--cyan2);font-weight:700}
+  p,li{color:#dcdce4}
+  .lead{font-size:18px;color:#e7e7ee}
+  a{color:var(--cyan2)}
+  hr{border:0;border-top:1px solid #2c2c36;margin:36px 0}
+  code{font-family:var(--font);background:#23232b;color:#7CC6F7;padding:1px 6px;border-radius:5px;font-size:.88em;border:1px solid #2f2f3a}
+  .cb{margin:16px 0}
+  .cb .lang{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:#9aa0b4;background:#1b1b24;border:1px solid #2c2c36;border-bottom:none;border-radius:9px 9px 0 0;padding:4px 12px}
+  pre{margin:0;background:#0d0d13;border:1px solid #23232e;border-radius:0 10px 10px 10px;padding:14px 16px;overflow-x:auto;
+      font-family:var(--font);font-size:13px;line-height:1.65;color:#d8dcea;white-space:pre}
+  pre .c{color:#6b7280}
+  pre .o{color:#9aa0b4}
+  pre .k{color:#7CC6F7}
+  pre .g{color:#34d399}
+  pre .y{color:#f0b429}
+  pre .r{color:#f87171}
+  pre .p{color:#8AA4FF}
+  .callout{border-left:4px solid var(--blue2);background:#111a2e;border-radius:0 12px 12px 0;padding:14px 18px;margin:22px 0}
+  .callout.cy{border-color:var(--cyan);background:#0e2740}
+  .callout.mg{border-color:var(--magenta2);background:#161a33}
+  .callout.gd{border-color:#f0b429;background:#241d0f}
+  .callout.gr{border-color:#22D3EE;background:#0A2028}
+  .callout .t{color:var(--cyan2);font-weight:800}
+  .callout.gd .t{color:#f0b429}
+  .callout.gr .t{color:#22D3EE}
+  .callout.mg .t{color:var(--magenta2)}
+  .tldr{border:1px solid #2b4a80;background:linear-gradient(180deg,#111a2e,#121212);border-radius:16px;padding:20px 24px;margin:26px 0}
+  .tldr h4{margin:0 0 8px;font-size:13px;letter-spacing:.2em;text-transform:uppercase;color:var(--cyan2)}
+  .gloss{border:1px solid #2c2c36;background:#141419;border-radius:14px;padding:18px 22px;margin:24px 0}
+  .gloss h4{margin:0 0 6px;color:#fff;font-size:15px}
+  .gloss dl{margin:0;font-size:13.5px}
+  .gloss dt{color:var(--cyan2);font-weight:700;margin-top:9px}
+  .gloss dd{margin:1px 0 0;color:#cdd0dd}
+  .toc{background:#15151b;border:1px solid #2c2c36;border-radius:14px;padding:16px 22px;margin:24px 0;column-count:2;column-gap:28px}
+  .toc a{display:block;color:var(--cyan2);text-decoration:none;font-size:13.5px;line-height:1.9;break-inside:avoid}
+  .toc a:hover{color:#fff}
+  .toc>strong{column-span:all;display:block;margin-bottom:6px;color:#fff}
+  table{border-collapse:collapse;width:100%;font-size:13.5px;margin:16px 0}
+  th,td{border:1px solid #2c2c36;padding:8px 11px;text-align:left;vertical-align:top}
+  th{background:#1d1d27;color:#fff}
+  tr:nth-child(even) td{background:#161620}
+  .ico{width:1em;height:1em;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+  .ico.f{fill:currentColor;stroke:none}
+  .hico{display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;border-radius:11px;flex:0 0 36px;
+        background:#0e2740;border:1px solid #2b4a80;color:var(--cyan2)}
+  .hico .ico{width:19px;height:19px}
+  .toc a .ico{width:14px;height:14px;margin-right:9px;vertical-align:-2px;opacity:.85}
+  .callout .t .ico{width:16px;height:16px;vertical-align:-3px;margin-right:5px}
+  .tldr h4 .ico,.gloss h4 .ico{width:15px;height:15px;vertical-align:-2px;margin-right:6px}
+  .stack{margin-top:14px;display:flex;align-items:center;gap:10px;font-size:12px;color:var(--dim);flex-wrap:wrap}
+  .chip{display:inline-flex;align-items:center;gap:7px;padding:5px 12px;border-radius:999px;
+        border:1px solid #2b4a80;background:#0e2740;color:#7CC6F7;font-weight:700;font-size:11.5px}
+  .chip .ico{width:14px;height:14px}
+  figure.fig{margin:26px 0;text-align:center}
+  figure.fig svg{display:block;width:100%;max-width:100%;height:auto;border:1px solid #23232e;border-radius:14px;background:#0d0d13}
+  figure.fig figcaption{font-size:12.5px;color:var(--muted);margin-top:9px;font-style:italic;line-height:1.6}
+  .step{display:flex;gap:12px;align-items:flex-start;margin:14px 0}
+  .step .num-bubble{flex:0 0 28px;height:28px;border-radius:50%;background:var(--grad);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:#fff;margin-top:2px}
+  .step .body{flex:1}
+  footer{border-top:1px solid #23232e;margin-top:50px;padding:24px 0 90px;color:var(--dim);font-size:13px}
+  footer a{color:var(--cyan2)}
+  .js .reveal{opacity:0;transform:translateY(16px);transition:opacity .6s ease,transform .6s ease}
+  .js .reveal.in{opacity:1;transform:none}
+  @media (prefers-reduced-motion:reduce){.js .reveal{opacity:1;transform:none}}
+</style>
+<script>document.documentElement.classList.add('js');</script>
+</head>
+<body>
+<div id="bar"></div>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs>
+<symbol id="i-question" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.6 9.4a2.5 2.5 0 1 1 3.3 2.4c-.6.2-.9.8-.9 1.5v.6M12 17h.01"/></symbol>
+<symbol id="i-layers" viewBox="0 0 24 24"><path d="m12 3 9 4.8-9 4.8-9-4.8 9-4.8Z"/><path d="m3 12.6 9 4.8 9-4.8M3 17.2l9 4.8 9-4.8"/></symbol>
+<symbol id="i-workflow" viewBox="0 0 24 24"><rect x="3" y="3.5" width="7" height="6" rx="1.5"/><rect x="14" y="14.5" width="7" height="6" rx="1.5"/><path d="M6.5 9.5v5a3 3 0 0 0 3 3H14"/></symbol>
+<symbol id="i-check" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="m8 12.2 2.7 2.7L16.2 9"/></symbol>
+<symbol id="i-rocket" viewBox="0 0 24 24"><path d="M12 2.5c3 2.6 4.8 6.4 4.8 10.6L12 16.4l-4.8-3.3C7.2 8.9 9 5.1 12 2.5Z"/><path d="M7.2 13.1 4.4 15v4.2l3-1.9M16.8 13.1l2.8 1.9v4.2l-3-1.9M12 19.5v2.3"/><circle cx="12" cy="10" r="1.7"/></symbol>
+<symbol id="i-terminal" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2.5"/><path d="m7.5 9.5 3 2.5-3 2.5M13.5 15h3.5"/></symbol>
+<symbol id="i-package" viewBox="0 0 24 24"><path d="m12 2.8 8.2 4.6v9.2L12 21.2l-8.2-4.6V7.4L12 2.8Z"/><path d="m3.8 7.4 8.2 4.6 8.2-4.6M12 12v9.2"/></symbol>
+<symbol id="i-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18"/><path d="M12 3c2.4 2.7 3.6 5.7 3.6 9s-1.2 6.3-3.6 9c-2.4-2.7-3.6-5.7-3.6-9S9.6 5.7 12 3Z"/></symbol>
+<symbol id="i-repeat" viewBox="0 0 24 24"><path d="M16.5 3 20 6.5 16.5 10"/><path d="M4 11.5V9a2.5 2.5 0 0 1 2.5-2.5H20"/><path d="M7.5 21 4 17.5 7.5 14"/><path d="M20 12.5V15a2.5 2.5 0 0 1-2.5 2.5H4"/></symbol>
+<symbol id="i-database" viewBox="0 0 24 24"><ellipse cx="12" cy="6" rx="8" ry="3.2"/><path d="M4 6v12c0 1.8 3.6 3.2 8 3.2s8-1.4 8-3.2V6"/><path d="M20 12c0 1.8-3.6 3.2-8 3.2S4 13.8 4 12"/></symbol>
+<symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 2.8 4.8 5.6v5.2c0 4.4 3 8.4 7.2 9.8 4.2-1.4 7.2-5.4 7.2-9.8V5.6L12 2.8Z"/><path d="m9 12 2.2 2.2L15.4 10"/></symbol>
+<symbol id="i-list" viewBox="0 0 24 24"><path d="M8.5 6h12M8.5 12h12M8.5 18h12M3.7 6h.01M3.7 12h.01M3.7 18h.01"/></symbol>
+<symbol id="i-book" viewBox="0 0 24 24"><path d="M4 5a3 3 0 0 1 3-3h13v18H7a3 3 0 0 0-3 3V5Z"/><path d="M8 2v18"/></symbol>
+<symbol id="i-key" viewBox="0 0 24 24"><circle cx="7.2" cy="16.3" r="3.4"/><path d="m9.7 13.9 9.6-9.6M16.6 6.9l2.3 2.3M14 9.5l2.3 2.3"/></symbol>
+<symbol id="i-bulb" viewBox="0 0 24 24"><path d="M9.2 18h5.6M10.4 21h3.2"/><path d="M12 3a6 6 0 0 0-3.4 10.9c.5.4.8 1 .8 1.7v.4h5.2v-.4c0-.7.3-1.3.8-1.7A6 6 0 0 0 12 3Z"/></symbol>
+<symbol id="i-warn" viewBox="0 0 24 24"><path d="M12 3.2 2.8 19.6h18.4L12 3.2Z"/><path d="M12 9.5v4.2M12 16.8h.01"/></symbol>
+<symbol id="i-alert" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7.2v5.4M12 16.4h.01"/></symbol>
+<symbol id="i-compass" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="m15.6 8.4-2.1 5.1-5.1 2.1 2.1-5.1 5.1-2.1Z"/></symbol>
+<symbol id="i-blocks" viewBox="0 0 24 24"><rect x="3.5" y="3.5" width="7" height="7" rx="1.6"/><rect x="13.5" y="3.5" width="7" height="7" rx="1.6"/><rect x="3.5" y="13.5" width="7" height="7" rx="1.6"/><rect x="13.5" y="13.5" width="7" height="7" rx="1.6"/></symbol>
+<symbol id="i-search" viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m15.2 15.2 4.3 4.3"/></symbol>
+<symbol id="i-code" viewBox="0 0 24 24"><path d="m8 8.5-4 3.5 4 3.5M16 8.5l4 3.5-4 3.5M13.6 5l-3.2 14"/></symbol>
+<symbol id="i-plug" viewBox="0 0 24 24"><path d="M9 3v5.5M15 3v5.5"/><path d="M6.5 8.5h11V12a5.5 5.5 0 0 1-11 0V8.5Z"/><path d="M12 17.5V21"/></symbol>
+<symbol id="i-file" viewBox="0 0 24 24"><path d="M14 3H7.5A2.5 2.5 0 0 0 5 5.5v13A2.5 2.5 0 0 0 7.5 21h9a2.5 2.5 0 0 0 2.5-2.5V8l-5-5Z"/><path d="M14 3v5h5"/></symbol>
+<symbol id="i-network" viewBox="0 0 24 24"><circle cx="5.5" cy="6" r="2.5"/><circle cx="5.5" cy="18" r="2.5"/><circle cx="18.5" cy="12" r="2.5"/><path d="m7.9 7.2 8.2 3.7M7.9 16.8l8.2-3.7"/></symbol>
+<symbol id="i-disk" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2.5"/><path d="M3 12h18"/><path d="M7 16.5h.01M11 16.5h3"/><path d="M7 7.5h6"/></symbol>
+<symbol id="i-lock" viewBox="0 0 24 24"><rect x="4.5" y="10" width="15" height="10.5" rx="2.4"/><path d="M8 10V7.2a4 4 0 0 1 8 0V10"/></symbol>
+<symbol id="i-cloud" viewBox="0 0 24 24"><path d="M6.8 19.2h10.6a3.9 3.9 0 0 0 .4-7.8 6.1 6.1 0 0 0-11.7-1.7 3.8 3.8 0 0 0 .7 9.5Z"/></symbol>
+<symbol id="i-eye" viewBox="0 0 24 24"><path d="M2.6 12S6.2 5.8 12 5.8 21.4 12 21.4 12 17.8 18.2 12 18.2 2.6 12 2.6 12Z"/><circle cx="12" cy="12" r="3.1"/></symbol>
+<symbol id="i-zap" viewBox="0 0 24 24"><path d="M13.2 2.5 4.5 14h6.6l-1.3 7.5L19 10h-6.6l.8-7.5Z"/></symbol>
+<symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="3.6"/><path d="M4.8 20.2a7.2 7.2 0 0 1 14.4 0"/></symbol>
+<symbol id="i-whale" viewBox="0 0 24 24"><path d="M1.5 14h21c0 3.6-2.9 6.5-6.5 6.5H8.5C4.9 20.5 1.5 17.6 1.5 14Z"/><rect x="5.6" y="9.6" width="3.4" height="3.6" rx=".6"/><rect x="10.3" y="9.6" width="3.4" height="3.6" rx=".6"/><rect x="15" y="9.6" width="3.4" height="3.6" rx=".6"/><rect x="10.3" y="5.4" width="3.4" height="3.6" rx=".6"/><path d="M20.5 11.5c1.2-1.2 2.4-.6 2.4-.6"/></symbol>
+</defs></svg>
+<div class="page">
+
+<header>
+  <div class="kicker"><a class="back" href="../">❮ Data &amp; AI Engineering, Simply Explained</a></div>
+  <h1>Docker Essentials for Data Engineers</h1>
+  <p class="dek"><strong>Docker</strong> packages your code <em>and everything it needs to run</em> — the Python version, the system libraries, the environment variables — into a single portable box that behaves identically on your laptop, in CI, and in production. It is the definitive cure for "but it works on my machine." This guide builds the mental model one piece at a time (<strong>image vs container</strong>, and why that distinction explains almost everything), then makes it concrete with <strong>Dockerfiles</strong> you can copy — before covering the parts that actually bite: the <strong>layer cache</strong>, <strong>multi-stage builds</strong>, <strong>volumes</strong>, <strong>networking</strong>, <strong>Compose</strong>, a fully worked example, and the data-engineering specifics: dbt, Airflow, Spark and reproducible environments.</p>
+  <div class="byline">~45 min read · Essentials · Reference</div>
+  <div class="stack reveal">
+    <span class="chip"><svg class="ico"><use href="#i-whale"/></svg> Docker</span>
+    <span class="chip" style="color:#8AA4FF;border-color:#33396b;background:#161a33"><svg class="ico"><use href="#i-package"/></svg> Podman · OCI</span>
+    <span>same images · same commands</span>
+  </div>
+</header>
+
+<figure class="reveal" style="margin:18px 0 6px;background:radial-gradient(130% 150% at 50% 0%,#111a2e 0%,#0d0d13 72%);border:1px solid #23232e;border-radius:16px;padding:10px 10px;overflow:hidden">
+<svg viewBox="0 0 880 232" width="100%" style="display:block" font-family="var(--font)" aria-label="A Dockerfile is built into an image made of stacked layers, which is run as three identical containers">
+  <defs>
+    <marker id="h-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#5b6478"/></marker>
+    <marker id="h-b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#2496ED"/></marker>
+  </defs>
+
+  <!-- Dockerfile -->
+  <rect x="34" y="70" width="146" height="94" rx="11" fill="#0B2029" stroke="#22D3EE" stroke-width="1.6"/>
+  <use href="#i-file" x="48" y="84" width="14" height="14" fill="none" stroke="#22D3EE" stroke-width="2.2"/>
+  <text x="70" y="96" font-size="11.5" fill="#22D3EE">Dockerfile</text>
+  <text x="48" y="120" font-size="9.5" fill="#6b7280">FROM python…</text>
+  <text x="48" y="136" font-size="9.5" fill="#6b7280">RUN pip install…</text>
+  <text x="48" y="152" font-size="9.5" fill="#6b7280">COPY src/</text>
+
+  <line x1="186" y1="117" x2="242" y2="117" stroke="#5b6478" stroke-width="1.6" marker-end="url(#h-a)"/>
+  <text x="214" y="106" font-size="10" fill="#9aa0b4" text-anchor="middle">build</text>
+
+  <!-- image: an actual stack of layers -->
+  <text x="350" y="58" font-size="11.5" fill="#f0b429" font-weight="700" text-anchor="middle">THE IMAGE</text>
+  <g font-size="9.5">
+    <rect x="250" y="68" width="200" height="24" rx="5" fill="#241d0f" stroke="#f0b429"/><text x="350" y="84" fill="#e3b25c" text-anchor="middle">CMD ["python","-m","etl"]</text>
+    <rect x="250" y="96" width="200" height="24" rx="5" fill="#241d0f" stroke="#f0b429"/><text x="350" y="112" fill="#e3b25c" text-anchor="middle">COPY src/</text>
+    <rect x="250" y="124" width="200" height="24" rx="5" fill="#241d0f" stroke="#f0b429"/><text x="350" y="140" fill="#e3b25c" text-anchor="middle">RUN pip install</text>
+    <rect x="250" y="152" width="200" height="24" rx="5" fill="#241d0f" stroke="#f0b429"/><text x="350" y="168" fill="#e3b25c" text-anchor="middle">FROM python:3.12-slim</text>
+  </g>
+  <text x="350" y="192" font-size="9.5" fill="#6b7280" text-anchor="middle">read-only layers · built once</text>
+
+  <line x1="456" y1="117" x2="520" y2="117" stroke="#5b6478" stroke-width="1.6"/>
+  <text x="484" y="106" font-size="10" fill="#9aa0b4" text-anchor="middle">run</text>
+
+  <!-- fan-out to containers -->
+  <g stroke="#2496ED" stroke-width="1.4" fill="none">
+    <path d="M520 117 C 545 117, 545 72, 570 72" marker-end="url(#h-b)"/>
+    <path d="M520 117 H 570" marker-end="url(#h-b)"/>
+    <path d="M520 117 C 545 117, 545 162, 570 162" marker-end="url(#h-b)"/>
+  </g>
+  <g font-size="10.5">
+    <rect x="576" y="50" width="250" height="44" rx="9" fill="#0e2740" stroke="#2496ED" stroke-width="1.6"/>
+    <use href="#i-whale" x="592" y="64" width="15" height="15" fill="none" stroke="#7CC6F7" stroke-width="1.8"/>
+    <text x="618" y="77" fill="#9fd8fb">container</text>
+    <rect x="576" y="140" width="250" height="44" rx="9" fill="#0e2740" stroke="#2496ED" stroke-width="1.6"/>
+    <use href="#i-whale" x="592" y="154" width="15" height="15" fill="none" stroke="#7CC6F7" stroke-width="1.8"/>
+    <text x="618" y="167" fill="#9fd8fb">container</text>
+    <rect x="576" y="95" width="250" height="44" rx="9" fill="#0e2740" stroke="#2496ED" stroke-width="1.6"/>
+    <use href="#i-whale" x="592" y="109" width="15" height="15" fill="none" stroke="#7CC6F7" stroke-width="1.8"/>
+    <text x="618" y="122" fill="#9fd8fb">container</text>
+  </g>
+  <text x="701" y="204" font-size="9.5" fill="#6b7280" text-anchor="middle">identical · isolated · disposable</text>
+
+  <circle r="4" cy="117" fill="#7CC6F7">
+    <animate attributeName="cx" values="186;242;242" dur="3.4s" repeatCount="indefinite"/>
+    <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;.15;.75;1" dur="3.4s" repeatCount="indefinite"/>
+  </circle>
+
+  <text x="440" y="222" font-size="12" fill="#6b7280" text-anchor="middle">one recipe → one image → any number of identical containers</text>
+</svg>
+</figure>
+
+<div class="tldr reveal">
+  <h4><svg class="ico"><use href="#i-zap"/></svg> The one idea (read this first)</h4>
+  <p style="margin:.2em 0">Docker solves one problem: <strong>your code needs a specific environment, and every machine has a different one</strong>. So you write a <strong>Dockerfile</strong> — a recipe listing the exact base OS, the exact Python, the exact packages — and Docker <em>builds</em> it into an <strong>image</strong>: a frozen, read-only snapshot of a complete filesystem. You can then <em>run</em> that image to get a <strong>container</strong>: an isolated process that believes it has the machine to itself. The image is the <em>class</em>; the container is the <em>instance</em> — one image can spawn a thousand identical containers, and throwing one away costs nothing. Because the image contains everything, the thing you tested on your laptop is <em>byte-for-byte</em> the thing that runs in production. That's the whole promise.</p>
+</div>
+
+<div class="toc reveal">
+  <strong>Contents</strong>
+  <a href="#why"><svg class="ico"><use href="#i-question"/></svg>01 · What Docker is &amp; why it exists</a>
+  <a href="#model"><svg class="ico"><use href="#i-package"/></svg>02 · Image vs container</a>
+  <a href="#vm"><svg class="ico"><use href="#i-layers"/></svg>03 · How it works (vs a VM)</a>
+  <a href="#arch"><svg class="ico"><use href="#i-blocks"/></svg>04 · Architecture: CLI, daemon, containerd, runc</a>
+  <a href="#isolation"><svg class="ico"><use href="#i-lock"/></svg>05 · Namespaces &amp; cgroups</a>
+  <a href="#loop"><svg class="ico"><use href="#i-repeat"/></svg>06 · The core loop: build → run → ship</a>
+  <a href="#dockerfile"><svg class="ico"><use href="#i-file"/></svg>07 · The Dockerfile, instruction by instruction</a>
+  <a href="#cache"><svg class="ico"><use href="#i-zap"/></svg>08 · The layer cache — why order matters</a>
+  <a href="#buildkit"><svg class="ico"><use href="#i-zap"/></svg>09 · BuildKit, cache mounts &amp; secrets</a>
+  <a href="#images"><svg class="ico"><use href="#i-cloud"/></svg>10 · Images, tags, registries &amp; multi-stage</a>
+  <a href="#imginternals"><svg class="ico"><use href="#i-package"/></svg>11 · Inside an image: digests &amp; manifests</a>
+  <a href="#storage"><svg class="ico"><use href="#i-disk"/></svg>12 · OverlayFS &amp; copy-on-write</a>
+  <a href="#run"><svg class="ico"><use href="#i-terminal"/></svg>13 · Running containers day to day</a>
+  <a href="#data"><svg class="ico"><use href="#i-disk"/></svg>14 · Data: volumes &amp; bind mounts</a>
+  <a href="#network"><svg class="ico"><use href="#i-network"/></svg>15 · Networking</a>
+  <a href="#netdeep"><svg class="ico"><use href="#i-plug"/></svg>16 · Networking, deeper: bridges, veth pairs &amp; NAT</a>
+  <a href="#compose"><svg class="ico"><use href="#i-workflow"/></svg>17 · Docker Compose</a>
+  <a href="#de"><svg class="ico"><use href="#i-database"/></svg>18 · Docker for data engineers</a>
+  <a href="#security"><svg class="ico"><use href="#i-shield"/></svg>19 · Security &amp; best practices</a>
+  <a href="#example"><svg class="ico"><use href="#i-blocks"/></svg>20 · A worked example: a real repo</a>
+  <a href="#trouble"><svg class="ico"><use href="#i-search"/></svg>21 · Troubleshooting</a>
+  <a href="#cheatsheet"><svg class="ico"><use href="#i-list"/></svg>22 · Quick-reference cheat sheet</a>
+  <a href="#glossary"><svg class="ico"><use href="#i-book"/></svg>＊ · Glossary</a>
+</div>
+
+<!-- 01 -->
+<h2 id="why" class="reveal"><span class="hico"><svg class="ico"><use href="#i-question"/></svg></span><span class="n">01.</span> What Docker is &amp; why it exists</h2>
+<p class="reveal lead">You write a pipeline. It runs beautifully on your laptop. You hand it to a colleague and it explodes: they have Python 3.10, you have 3.12. You get it working, ship it to the server — and it explodes again, because the server is missing a system library that <code>pandas</code> quietly depends on. Every hour spent on that is an hour not spent on data. <strong>Docker's answer: stop shipping code, and start shipping the whole environment.</strong></p>
+
+<p class="reveal">The unit you ship is an <strong>image</strong> — a complete, frozen filesystem containing your code, your Python, your packages, your system libraries, right down to the OS userland. When that image runs anywhere — a laptop, a CI runner, a Kubernetes node — it brings its world with it. What that buys you:</p>
+<ul class="reveal">
+  <li><strong>Reproducibility</strong> — the environment is <em>declared in a file</em> and rebuilt identically, instead of being assembled by hand and half-remembered. The image you tested is the image that runs.</li>
+  <li><strong>Isolation</strong> — project A needs Spark 3.3 and project B needs Spark 3.5, and neither has to know the other exists. No more virtualenv archaeology, no more "which Java is on the PATH?"</li>
+  <li><strong>Portability</strong> — the same image runs on your Mac, on a Linux CI runner, and on a production cluster. This is what makes containers the substrate for Airflow, Kubernetes, and nearly every modern data platform.</li>
+  <li><strong>Disposability</strong> — containers start in milliseconds and cost nothing to destroy. Spin up a real Postgres for a test, run it, delete it, leave no trace on your machine.</li>
+</ul>
+
+<div class="callout cy reveal">
+  <p style="margin:.2em 0"><span class="t"><svg class="ico"><use href="#i-key"/></svg> A container is <em>not</em> a tiny virtual machine</span></p>
+  <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">This is the misconception that makes everything else confusing. A container does <strong>not</strong> boot an operating system. It is <em>one ordinary process</em> running directly on your host's kernel, which the kernel has been told to <em>lie to</em>: it sees its own filesystem, its own network, its own process list, and nothing else. That's why containers start in milliseconds and weigh megabytes while VMs take a minute and weigh gigabytes. <a href="#vm">§03</a> shows exactly how the trick works.</p>
+</div>
+
+<div class="callout reveal">
+  <p style="margin:.2em 0"><span class="t"><svg class="ico"><use href="#i-bulb"/></svg> Docker, containers, and the OCI</span></p>
+  <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">"Docker" is a <em>company</em> and a <em>tool</em>; "container" is the underlying idea. The formats are standardised by the <strong>OCI</strong> (Open Container Initiative), so images are portable across tools: <strong>Podman</strong> (a daemonless, rootless alternative with a near-identical CLI), <strong>containerd</strong> (what Kubernetes actually runs), <strong>BuildKit</strong> (the modern builder Docker uses under the hood). Everything in this guide — the Dockerfile, the image, the commands — works the same on all of them. Learn Docker; you've learned containers.</p>
+</div>
+
+<!-- 02 -->
+<h2 id="model" class="reveal"><span class="hico"><svg class="ico"><use href="#i-package"/></svg></span><span class="n">02.</span> The mental model: image vs container</h2>
+<p class="reveal lead">If you take one thing from this guide, take this. Nearly every Docker question a beginner asks — "where did my data go?", "why is my change not showing up?", "why is it so big?" — dissolves the moment this distinction is solid.</p>
+
+<figure class="fig reveal">
+<svg viewBox="0 0 760 392" font-family="var(--font)" aria-label="Three containers sit on top of one shared read-only image; each adds only a thin writable layer, and deleting a container loses only that layer">
+  <defs>
+    <marker id="c-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#5b6478"/></marker>
+  </defs>
+
+  <!-- containers -->
+  <g>
+    <rect x="60" y="64" width="200" height="112" rx="10" fill="#0e2740" stroke="#2496ED" stroke-width="1.6"/>
+    <text x="76" y="90" font-size="11.5" fill="#7CC6F7" font-weight="700">container A</text>
+    <text x="76" y="110" font-size="9.5" fill="#9aa0b4">PID 1 · own /tmp</text>
+    <text x="76" y="126" font-size="9.5" fill="#9aa0b4">own network + env</text>
+    <rect x="72" y="140" width="176" height="24" rx="5" fill="#241d0f" stroke="#f0b429"/>
+    <text x="160" y="156" font-size="9.5" fill="#f0b429" text-anchor="middle">thin writable layer</text>
+
+    <rect x="280" y="64" width="200" height="112" rx="10" fill="#0e2740" stroke="#2496ED" stroke-width="1.6"/>
+    <text x="296" y="90" font-size="11.5" fill="#7CC6F7" font-weight="700">container B</text>
+    <text x="296" y="110" font-size="9.5" fill="#9aa0b4">same image</text>
+    <text x="296" y="126" font-size="9.5" fill="#9aa0b4">different args + data</text>
+    <rect x="292" y="140" width="176" height="24" rx="5" fill="#241d0f" stroke="#f0b429"/>
+    <text x="380" y="156" font-size="9.5" fill="#f0b429" text-anchor="middle">thin writable layer</text>
+
+    <rect x="500" y="64" width="200" height="112" rx="10" fill="#22121A" stroke="#FF6B8B" stroke-width="1.6" stroke-dasharray="5 4"/>
+    <text x="516" y="90" font-size="11.5" fill="#FF6B8B" font-weight="700">container C</text>
+    <text x="516" y="110" font-size="9.5" fill="#FF6B8B">deleted</text>
+    <text x="516" y="126" font-size="9.5" fill="#9aa0b4">whatever it wrote…</text>
+    <rect x="512" y="140" width="176" height="24" rx="5" fill="#22121A" stroke="#FF6B8B" stroke-dasharray="3 3"/>
+    <text x="600" y="156" font-size="9.5" fill="#FF6B8B" text-anchor="middle">…is gone with it</text>
+  </g>
+
+  <!-- legs down onto the image -->
+  <g stroke="#5b6478" stroke-width="1.3" stroke-dasharray="4 4" fill="none">
+    <line x1="160" y1="176" x2="160" y2="218" marker-end="url(#c-a)"/>
+    <line x1="380" y1="176" x2="380" y2="218" marker-end="url(#c-a)"/>
+    <line x1="600" y1="176" x2="600" y2="218" marker-end="url(#c-a)"/>
+  </g>
+  <rect x="186" y="190" width="388" height="14" fill="#0d0d13"/>
+  <text x="380" y="200" font-size="9" fill="#6b7280" text-anchor="middle">all three read the very same layers below — stored on disk exactly once</text>
+
+  <!-- the image: one shared read-only stack -->
+  <use href="#i-package" x="60" y="228" width="14" height="14" fill="none" stroke="#f0b429" stroke-width="2.2"/>
+  <text x="82" y="240" font-size="11.5" fill="#f0b429" font-weight="700">THE IMAGE</text>
+  <text x="176" y="240" font-size="9.5" fill="#6b7280">read-only · immutable · shared</text>
+
+  <g font-size="10">
+    <rect x="60" y="250" width="640" height="26" rx="5" fill="#241d0f" stroke="#f0b429"/><text x="78" y="267" fill="#e3b25c">CMD ["python","-m","etl"]</text>
+    <rect x="60" y="280" width="640" height="26" rx="5" fill="#241d0f" stroke="#f0b429"/><text x="78" y="297" fill="#e3b25c">COPY src/</text>
+    <rect x="60" y="310" width="640" height="26" rx="5" fill="#241d0f" stroke="#f0b429"/><text x="78" y="327" fill="#e3b25c">RUN pip install -r requirements.txt</text>
+    <rect x="60" y="340" width="640" height="26" rx="5" fill="#241d0f" stroke="#f0b429"/><text x="78" y="357" fill="#e3b25c">FROM python:3.12-slim</text>
+  </g>
+  <text x="686" y="267" font-size="9" fill="#6b7280" text-anchor="end">layer 4</text>
+  <text x="686" y="297" font-size="9" fill="#6b7280" text-anchor="end">layer 3</text>
+  <text x="686" y="327" font-size="9" fill="#6b7280" text-anchor="end">layer 2</text>
+  <text x="686" y="357" font-size="9" fill="#6b7280" text-anchor="end">layer 1</text>
+
+  <text x="380" y="384" font-size="10.5" fill="#6b7280" text-anchor="middle">the image is the class · the container is the instance · deleting one touches nothing below</text>
+</svg>
+<figcaption>Containers sit <em>on top of</em> the image. They share every read-only layer — so ten containers don't cost ten times the disk — and differ only in a thin writable layer that dies with them.</figcaption>
+</figure>
+
+<div class="step reveal"><div class="num-bubble">1</div><div class="body"><strong>An image</strong> is a <em>read-only</em> stack of filesystem layers, built from a Dockerfile. It's inert — a file on disk, like a <code>.zip</code> that happens to contain an entire OS userland. Images are shared: run ten containers from one image and the layers exist on disk exactly once.</div></div>
+<div class="step reveal"><div class="num-bubble">2</div><div class="body"><strong>A container</strong> is an image plus a <em>thin writable layer</em>, plus a running process. Anything the process writes — a temp file, a log, a downloaded CSV — lands in that writable layer.</div></div>
+<div class="step reveal"><div class="num-bubble">3</div><div class="body"><strong>Deleting a container deletes its writable layer.</strong> This is not a bug; it's the entire design. Containers are meant to be <em>cattle, not pets</em>. If you need something to survive, it must live <em>outside</em> the container — in a volume (<a href="#data">§14</a>) or a database. <strong>Every "Docker ate my data" story is this sentence, learned the hard way.</strong></div></div>
+
+<div class="callout gd reveal">
+  <p style="margin:.2em 0"><span class="t"><svg class="ico"><use href="#i-warn"/></svg> The two commands beginners confuse</span></p>
+  <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd"><code>docker build</code> makes an <em>image</em> from a Dockerfile. <code>docker run</code> makes a <em>container</em> from an image. So if you edit your code and re-run <code>docker run</code> without rebuilding, <strong>you get the old code</strong> — because the image hasn't changed. "Why isn't my change showing up?" is almost always a forgotten <code>build</code>. (In development, bind-mounting your source solves this permanently — see <a href="#data">§14</a>.)</p>
+</div>
+
+<!-- 03 -->
+<h2 id="vm" class="reveal"><span class="hico"><svg class="ico"><use href="#i-layers"/></svg></span><span class="n">03.</span> How it actually works (and how it differs from a VM)</h2>
+<p class="reveal lead">You don't strictly need this section to use Docker — but ten minutes here will save you from a dozen confusing errors later, because it explains <em>why</em> containers behave the way they do.</p>
+
+<figure class="fig reveal">
+<svg viewBox="0 0 760 344" font-family="var(--font)" aria-label="A virtual machine stack ships a full guest OS per VM; containers drop that entire layer and share one host kernel">
+  <text x="192" y="34" font-size="12.5" fill="#f0b429" font-weight="700" text-anchor="middle">VIRTUAL MACHINES</text>
+  <text x="192" y="52" font-size="9.5" fill="#6b7280" text-anchor="middle">each VM boots its own OS — gigabytes, ~a minute</text>
+
+  <text x="568" y="34" font-size="12.5" fill="#7CC6F7" font-weight="700" text-anchor="middle">CONTAINERS</text>
+  <text x="568" y="52" font-size="9.5" fill="#6b7280" text-anchor="middle">share the host kernel — megabytes, milliseconds</text>
+
+  <!-- VM columns -->
+  <g font-size="9.5">
+    <rect x="24" y="70" width="104" height="34" rx="6" fill="#0e2740" stroke="#2496ED"/><text x="76" y="91" fill="#7CC6F7" text-anchor="middle">App A</text>
+    <rect x="24" y="108" width="104" height="30" rx="6" fill="#1c1c22" stroke="#4a5163"/><text x="76" y="127" fill="#9aa0b4" text-anchor="middle">bins / libs</text>
+    <rect x="24" y="142" width="104" height="52" rx="6" fill="#3a2f16" stroke="#f0b429" stroke-width="1.6"/>
+    <text x="76" y="164" fill="#f0b429" text-anchor="middle">Guest OS</text><text x="76" y="180" fill="#c9922a" text-anchor="middle">~1 GB</text>
+
+    <rect x="140" y="70" width="104" height="34" rx="6" fill="#0e2740" stroke="#2496ED"/><text x="192" y="91" fill="#7CC6F7" text-anchor="middle">App B</text>
+    <rect x="140" y="108" width="104" height="30" rx="6" fill="#1c1c22" stroke="#4a5163"/><text x="192" y="127" fill="#9aa0b4" text-anchor="middle">bins / libs</text>
+    <rect x="140" y="142" width="104" height="52" rx="6" fill="#3a2f16" stroke="#f0b429" stroke-width="1.6"/>
+    <text x="192" y="164" fill="#f0b429" text-anchor="middle">Guest OS</text><text x="192" y="180" fill="#c9922a" text-anchor="middle">again</text>
+
+    <rect x="256" y="70" width="104" height="34" rx="6" fill="#0e2740" stroke="#2496ED"/><text x="308" y="91" fill="#7CC6F7" text-anchor="middle">App C</text>
+    <rect x="256" y="108" width="104" height="30" rx="6" fill="#1c1c22" stroke="#4a5163"/><text x="308" y="127" fill="#9aa0b4" text-anchor="middle">bins / libs</text>
+    <rect x="256" y="142" width="104" height="52" rx="6" fill="#3a2f16" stroke="#f0b429" stroke-width="1.6"/>
+    <text x="308" y="164" fill="#f0b429" text-anchor="middle">Guest OS</text><text x="308" y="180" fill="#c9922a" text-anchor="middle">and again</text>
+  </g>
+  <rect x="24" y="202" width="336" height="30" rx="6" fill="#1c1c22" stroke="#4a5163"/>
+  <text x="192" y="222" font-size="10" fill="#cdd0dd" text-anchor="middle">Hypervisor</text>
+  <rect x="24" y="238" width="336" height="30" rx="6" fill="#1c1c22" stroke="#4a5163"/>
+  <text x="192" y="258" font-size="10" fill="#cdd0dd" text-anchor="middle">Host OS</text>
+  <rect x="24" y="274" width="336" height="30" rx="6" fill="#15151b" stroke="#33333f"/>
+  <text x="192" y="294" font-size="10" fill="#9aa0b4" text-anchor="middle">Hardware</text>
+
+  <line x1="380" y1="26" x2="380" y2="312" stroke="#23232e" stroke-width="1" stroke-dasharray="5 5"/>
+
+  <!-- the missing layer -->
+  <rect x="400" y="142" width="336" height="52" rx="6" fill="none" stroke="#22D3EE" stroke-width="1.4" stroke-dasharray="6 4"/>
+  <text x="568" y="166" font-size="10" fill="#22D3EE" text-anchor="middle">no Guest OS at all —</text>
+  <text x="568" y="182" font-size="10" fill="#22D3EE" text-anchor="middle">this entire layer disappears</text>
+
+  <!-- container columns -->
+  <g font-size="9.5">
+    <rect x="400" y="70" width="104" height="34" rx="6" fill="#0e2740" stroke="#2496ED"/><text x="452" y="91" fill="#7CC6F7" text-anchor="middle">App A</text>
+    <rect x="400" y="108" width="104" height="30" rx="6" fill="#1c1c22" stroke="#4a5163"/><text x="452" y="127" fill="#9aa0b4" text-anchor="middle">bins / libs</text>
+
+    <rect x="516" y="70" width="104" height="34" rx="6" fill="#0e2740" stroke="#2496ED"/><text x="568" y="91" fill="#7CC6F7" text-anchor="middle">App B</text>
+    <rect x="516" y="108" width="104" height="30" rx="6" fill="#1c1c22" stroke="#4a5163"/><text x="568" y="127" fill="#9aa0b4" text-anchor="middle">bins / libs</text>
+
+    <rect x="632" y="70" width="104" height="34" rx="6" fill="#0e2740" stroke="#2496ED"/><text x="684" y="91" fill="#7CC6F7" text-anchor="middle">App C</text>
+    <rect x="632" y="108" width="104" height="30" rx="6" fill="#1c1c22" stroke="#4a5163"/><text x="684" y="127" fill="#9aa0b4" text-anchor="middle">bins / libs</text>
+  </g>
+  <rect x="400" y="202" width="336" height="30" rx="6" fill="#13314f" stroke="#2496ED" stroke-width="1.6"/>
+  <text x="568" y="222" font-size="10" fill="#7CC6F7" text-anchor="middle">Container runtime (Docker Engine)</text>
+  <rect x="400" y="238" width="336" height="30" rx="6" fill="#1c1c22" stroke="#4a5163"/>
+  <text x="568" y="258" font-size="10" fill="#cdd0dd" text-anchor="middle">Host OS — ONE shared kernel</text>
+  <rect x="400" y="274" width="336" height="30" rx="6" fill="#15151b" stroke="#33333f"/>
+  <text x="568" y="294" font-size="10" fill="#9aa0b4" text-anchor="middle">Hardware</text>
+
+  <text x="380" y="332" font-size="10.5" fill="#6b7280" text-anchor="middle">a container is just a process on the host, fenced off by the kernel — namespaces + cgroups</text>
+</svg>
+<figcaption>A VM virtualises the <em>hardware</em>, so it must boot its own kernel. A container virtualises the <em>operating system</em> and borrows the host's — which is the whole reason it costs megabytes instead of gigabytes.</figcaption>
+</figure>
+
+<p class="reveal">The isolation is done by two Linux kernel features you should be able to name:</p>
+<ul class="reveal">
+  <li><strong>Namespaces</strong> — what the process can <em>see</em>. Separate namespaces for the filesystem, process list, network stack, hostname and users. Inside its namespace your process is PID 1 and thinks it owns the machine; it simply cannot perceive anything else on the host. This is the "fence."</li>
+  <li><strong>cgroups</strong> (control groups) — what the process can <em>use</em>. CPU, memory, and I/O limits. This is what makes <code>--memory=4g</code> real, and it's why a container that exceeds its memory limit is killed by the kernel with exit code <strong>137</strong> — a number you <em>will</em> meet when a Spark job or a pandas <code>read_csv</code> gets greedy.</li>
+</ul>
+
+<div class="callout gd reveal">
+  <p style="margin:.2em 0"><span class="t"><svg class="ico"><use href="#i-warn"/></svg> "Shares the kernel" has two consequences that will bite you</span></p>
+  <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd"><strong>(1) Containers are Linux.</strong> On a Mac or Windows machine, Docker quietly runs a small Linux VM and puts your containers inside it. That's why file access to a bind-mounted folder can feel slow on a Mac — it's crossing a VM boundary. <strong>(2) Containers are CPU-architecture-specific.</strong> An image built on an Apple Silicon Mac is <code>arm64</code>; your cloud runners are almost certainly <code>amd64</code>. Push the first to the second and you get <code>exec format error</code>. The fix is <code>docker build --platform linux/amd64</code> (or a multi-arch build with <code>buildx</code>). This single gotcha accounts for a truly disproportionate share of data engineers' lost afternoons.</p>
+</div>
+
+<!-- 04 -->
+<h2 id="arch" class="reveal"><span class="hico"><svg class="ico"><use href="#i-blocks"/></svg></span><span class="n">04.</span> The architecture: what actually runs when you type docker run</h2>
+<p class="reveal lead">The word "Docker" hides four separate programs. Knowing which one does what turns most confusing errors into obvious ones — and explains why access to one innocuous-looking socket is the same thing as being root.</p>
+
+<figure class="fig reveal">
+<svg viewBox="0 0 880 336" width="100%" aria-label="The Docker CLI talks over a socket to the daemon, which delegates to containerd and runc">
+  <defs>
+    <marker id="da" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#2496ED"/></marker>
+    <marker id="dc" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#22D3EE"/></marker>
+    <marker id="dm" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#6b7280"/></marker>
+    <marker id="dr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#FF6B8B"/></marker>
+    <marker id="dy" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#f0b429"/></marker>
+  </defs>
+  <rect x="24" y="60" width="150" height="72" rx="10" fill="#0e2740" stroke="#2496ED" stroke-width="1.8"/>
+  <text x="99" y="88" font-size="12" fill="#7CC6F7" font-weight="700" text-anchor="middle">docker CLI</text>
+  <text x="99" y="108" font-size="9" fill="#9aa0b4" text-anchor="middle">just an HTTP client.</text>
+  <text x="99" y="120" font-size="9" fill="#9aa0b4" text-anchor="middle">It runs nothing itself.</text>
+
+  <line x1="178" y1="96" x2="238" y2="96" stroke="#2496ED" stroke-width="1.8" marker-end="url(#da)"/>
+  <rect x="172" y="40" width="74" height="15" rx="4" fill="#0d0d13"/>
+  <text x="209" y="51" font-size="8.5" fill="#2496ED" text-anchor="middle">REST / HTTP</text>
+
+  <rect x="242" y="26" width="26" height="140" rx="4" fill="#241d0f" stroke="#f0b429" stroke-width="1.6"/>
+  <text x="255" y="102" font-size="9" fill="#f0b429" text-anchor="middle" transform="rotate(-90 255 102)">docker.sock</text>
+
+  <rect x="292" y="26" width="560" height="140" rx="12" fill="#0d1420" stroke="#2496ED" stroke-width="1.6" stroke-dasharray="6 4"/>
+  <text x="306" y="46" font-size="9.5" fill="#7CC6F7" font-weight="700">the Docker Engine — runs as ROOT on the host</text>
+
+  <rect x="312" y="56" width="140" height="88" rx="10" fill="#0e2740" stroke="#2496ED" stroke-width="1.8"/>
+  <text x="382" y="82" font-size="12" fill="#7CC6F7" font-weight="700" text-anchor="middle">dockerd</text>
+  <text x="382" y="102" font-size="9" fill="#9aa0b4" text-anchor="middle">images · networks</text>
+  <text x="382" y="114" font-size="9" fill="#9aa0b4" text-anchor="middle">volumes · builds</text>
+  <text x="382" y="132" font-size="8.5" fill="#6b7280" text-anchor="middle">the Docker-specific bit</text>
+
+  <line x1="456" y1="100" x2="502" y2="100" stroke="#2496ED" stroke-width="1.6" marker-end="url(#da)"/>
+
+  <rect x="506" y="56" width="140" height="88" rx="10" fill="#0e2740" stroke="#2496ED" stroke-width="1.8"/>
+  <text x="576" y="82" font-size="12" fill="#7CC6F7" font-weight="700" text-anchor="middle">containerd</text>
+  <text x="576" y="102" font-size="9" fill="#9aa0b4" text-anchor="middle">container lifecycle</text>
+  <text x="576" y="114" font-size="9" fill="#9aa0b4" text-anchor="middle">pulls · snapshots</text>
+  <text x="576" y="132" font-size="8.5" fill="#6b7280" text-anchor="middle">an OCI standard</text>
+
+  <line x1="650" y1="100" x2="696" y2="100" stroke="#2496ED" stroke-width="1.6" marker-end="url(#da)"/>
+
+  <rect x="700" y="56" width="136" height="88" rx="10" fill="#0e2740" stroke="#2496ED" stroke-width="1.8"/>
+  <text x="768" y="80" font-size="12" fill="#7CC6F7" font-weight="700" text-anchor="middle">shim + runc</text>
+  <text x="768" y="100" font-size="9" fill="#9aa0b4" text-anchor="middle">sets the namespaces,</text>
+  <text x="768" y="112" font-size="9" fill="#9aa0b4" text-anchor="middle">sets the cgroups,</text>
+  <text x="768" y="124" font-size="9" fill="#9aa0b4" text-anchor="middle">then calls exec()</text>
+
+  <line x1="768" y1="170" x2="768" y2="212" stroke="#22D3EE" stroke-width="1.8" marker-end="url(#dc)"/>
+
+  <rect x="640" y="216" width="212" height="66" rx="10" fill="#0b2029" stroke="#22D3EE" stroke-width="2"/>
+  <text x="746" y="242" font-size="12" fill="#22D3EE" font-weight="700" text-anchor="middle">your process</text>
+  <text x="746" y="262" font-size="9" fill="#9aa0b4" text-anchor="middle">PID 1 · python -m etl</text>
+
+  <rect x="24" y="216" width="150" height="66" rx="10" fill="#241d0f" stroke="#f0b429" stroke-width="1.6"/>
+  <text x="99" y="242" font-size="11" fill="#f0b429" font-weight="700" text-anchor="middle">registry</text>
+  <text x="99" y="262" font-size="9" fill="#9aa0b4" text-anchor="middle">pull / push layers</text>
+  <path d="M174 250 C 260 250 240 130 306 108" fill="none" stroke="#f0b429" stroke-width="1.4" stroke-dasharray="5,3" marker-end="url(#dy)"/>
+
+  <text x="440" y="242" font-size="10" fill="#cdd0dd" text-anchor="middle">runc does its job and exits.</text>
+  <text x="440" y="260" font-size="10" fill="#cdd0dd" text-anchor="middle">The shim stays as the parent — which is why</text>
+  <text x="440" y="278" font-size="10" fill="#cdd0dd" text-anchor="middle">restarting dockerd doesn't kill your containers.</text>
+
+  <text x="440" y="316" font-size="10.5" fill="#6b7280" text-anchor="middle">a container is not "run by Docker" — it is run by the kernel, and Docker just does the paperwork</text>
+</svg>
+<figcaption>Four programs, one command. The CLI sends JSON to a socket; the daemon does Docker-specific work; containerd and runc are shared OCI standards — Kubernetes and Podman use the same runc underneath.</figcaption>
+</figure>
+
+<div class="callout gd reveal">
+  <p style="margin:.2em 0"><span class="t"><svg class="ico"><use href="#i-warn"/></svg> Access to <code>/var/run/docker.sock</code> IS root access</span></p>
+  <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">The daemon runs as root, and it will happily run any container you ask it to — including one that bind-mounts the host's <code>/</code> and gives you a shell in it. So adding a user to the <code>docker</code> group is <em>exactly</em> the same as giving them passwordless sudo, and mounting the socket into a container ("so it can build images") hands that container the whole machine. This is the single most common way a container escape happens, and it isn't a bug — it's the design. If you need rootless builds, use <strong>rootless mode</strong> or <strong>Podman</strong>, which runs containers as your own user with no daemon at all.</p>
+</div>
+
+<h4 class="reveal">What each piece is for</h4>
+<table class="reveal">
+  <tr><th>Piece</th><th>What it does</th><th>Why you care</th></tr>
+  <tr><td><code>docker</code> (CLI)</td><td>Turns your command into an HTTP request on a Unix socket.</td><td>It can talk to a <em>remote</em> daemon (<code>DOCKER_HOST</code>) — "docker" needn't be local.</td></tr>
+  <tr><td><code>dockerd</code></td><td>Images, builds, volumes, networks, the API.</td><td>The root-owned part. Restarting it does not kill running containers.</td></tr>
+  <tr><td><code>containerd</code></td><td>Container lifecycle: pull, unpack, start, stop.</td><td>Kubernetes talks to this <em>directly</em> and skips dockerd entirely.</td></tr>
+  <tr><td><code>runc</code></td><td>Makes the namespaces + cgroups, then <code>exec</code>s your process.</td><td>The actual "containerising" step — and it lasts milliseconds.</td></tr>
+</table>
+
+
+<h2 id="isolation" class="reveal"><span class="hico"><svg class="ico"><use href="#i-lock"/></svg></span><span class="n">05.</span> Namespaces &amp; cgroups — the two kernel features that <em>are</em> containers</h2>
+<p class="reveal lead">There is no such thing as a "container" in the Linux kernel. There are two unrelated features, and a container is just a process that has been started with both of them applied. Namespaces control <strong>what a process can see</strong>. Cgroups control <strong>how much it can use</strong>.</p>
+
+<figure class="fig reveal">
+<svg viewBox="0 0 760 356" width="100%" aria-label="Namespaces limit what a process can see; cgroups limit what it can use">
+  <defs>
+    <marker id="da" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#2496ED"/></marker>
+    <marker id="dc" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#22D3EE"/></marker>
+    <marker id="dm" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#6b7280"/></marker>
+    <marker id="dr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#FF6B8B"/></marker>
+    <marker id="dy" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#f0b429"/></marker>
+  </defs>
+  <rect x="20" y="44" width="350" height="228" rx="12" fill="#0e2740" stroke="#2496ED" stroke-width="1.6"/>
+  <text x="195" y="70" font-size="12" fill="#7CC6F7" font-weight="700" text-anchor="middle">NAMESPACES — what it can SEE</text>
+  <text x="195" y="88" font-size="9" fill="#6b7280" text-anchor="middle">the kernel lies to the process</text>
+  <rect x="44" y="102" width="302" height="22" rx="5" fill="#0d1420" stroke="#2b4a80"/><text x="56" y="117" font-size="9.5" fill="#7CC6F7">pid</text><text x="336" y="117" font-size="9" fill="#9aa0b4" text-anchor="end">its own PID 1 — sees no host process</text><rect x="44" y="129" width="302" height="22" rx="5" fill="#0d1420" stroke="#2b4a80"/><text x="56" y="144" font-size="9.5" fill="#7CC6F7">net</text><text x="336" y="144" font-size="9" fill="#9aa0b4" text-anchor="end">its own eth0, ports, routing table</text><rect x="44" y="156" width="302" height="22" rx="5" fill="#0d1420" stroke="#2b4a80"/><text x="56" y="171" font-size="9.5" fill="#7CC6F7">mnt</text><text x="336" y="171" font-size="9" fill="#9aa0b4" text-anchor="end">its own filesystem tree</text><rect x="44" y="183" width="302" height="22" rx="5" fill="#0d1420" stroke="#2b4a80"/><text x="56" y="198" font-size="9.5" fill="#7CC6F7">uts</text><text x="336" y="198" font-size="9" fill="#9aa0b4" text-anchor="end">its own hostname</text><rect x="44" y="210" width="302" height="22" rx="5" fill="#0d1420" stroke="#2b4a80"/><text x="56" y="225" font-size="9.5" fill="#7CC6F7">ipc</text><text x="336" y="225" font-size="9" fill="#9aa0b4" text-anchor="end">its own shared memory</text><rect x="44" y="237" width="302" height="22" rx="5" fill="#0d1420" stroke="#2b4a80"/><text x="56" y="252" font-size="9.5" fill="#7CC6F7">user</text><text x="336" y="252" font-size="9" fill="#9aa0b4" text-anchor="end">root inside ≠ root outside</text>
+
+  <rect x="390" y="44" width="350" height="228" rx="12" fill="#241d0f" stroke="#f0b429" stroke-width="1.6"/>
+  <text x="565" y="70" font-size="12" fill="#f0b429" font-weight="700" text-anchor="middle">CGROUPS — how much it can USE</text>
+  <text x="565" y="88" font-size="9" fill="#6b7280" text-anchor="middle">the kernel meters the process</text>
+
+  <text x="414" y="118" font-size="9.5" fill="#f0b429">memory</text>
+  <rect x="486" y="108" width="230" height="13" rx="6" fill="#0d0d13" stroke="#3a2f16"/>
+  <rect x="486" y="108" width="150" height="13" rx="6" fill="#f0b429" opacity=".7"/>
+  <text x="640" y="118" font-size="8.5" fill="#9aa0b4">--memory=2g</text>
+
+  <text x="414" y="152" font-size="9.5" fill="#f0b429">cpu</text>
+  <rect x="486" y="142" width="230" height="13" rx="6" fill="#0d0d13" stroke="#3a2f16"/>
+  <rect x="486" y="142" width="104" height="13" rx="6" fill="#f0b429" opacity=".7"/>
+  <text x="600" y="152" font-size="8.5" fill="#9aa0b4">--cpus=1.5</text>
+
+  <text x="414" y="186" font-size="9.5" fill="#f0b429">pids</text>
+  <rect x="486" y="176" width="230" height="13" rx="6" fill="#0d0d13" stroke="#3a2f16"/>
+  <rect x="486" y="176" width="64" height="13" rx="6" fill="#f0b429" opacity=".7"/>
+  <text x="560" y="186" font-size="8.5" fill="#9aa0b4">--pids-limit</text>
+
+  <text x="414" y="220" font-size="9.5" fill="#f0b429">io</text>
+  <rect x="486" y="210" width="230" height="13" rx="6" fill="#0d0d13" stroke="#3a2f16"/>
+  <rect x="486" y="210" width="128" height="13" rx="6" fill="#f0b429" opacity=".7"/>
+  <text x="624" y="220" font-size="8.5" fill="#9aa0b4">--device-...</text>
+
+  <rect x="414" y="238" width="302" height="22" rx="5" fill="#331722" stroke="#FF6B8B" stroke-width="1.3"/>
+  <text x="565" y="253" font-size="8" fill="#FF6B8B" text-anchor="middle">over the memory cap → the kernel OOM-kills it → exit 137</text>
+
+  <rect x="20" y="292" width="720" height="46" rx="10" fill="#15151b" stroke="#2c2c36"/>
+  <text x="380" y="312" font-size="10.5" fill="#cdd0dd" text-anchor="middle">ONE shared kernel underneath — the "walls" are just bookkeeping inside it.</text>
+  <text x="380" y="330" font-size="9.5" fill="#6b7280" text-anchor="middle">This is why a container starts in milliseconds, and why a kernel exploit escapes every container on the box.</text>
+</svg>
+<figcaption>Namespaces are the walls; cgroups are the meter. Add capabilities and seccomp — which limit what a process may <em>do</em> — and you have the whole of container isolation.</figcaption>
+</figure>
+
+<div class="cb reveal"><span class="lang">bash — see it for yourself</span><pre><span class="c"># A container really is just a process on your host. Prove it:</span>
+docker run -d --name proof python:3.12-slim sleep 300
+ps -ef | grep sleep          <span class="c"># ← there it is, in YOUR process list, as a normal PID</span>
+
+<span class="c"># Inside, the pid namespace makes it think it is PID 1:</span>
+docker exec proof ps -ef     <span class="c"># PID 1 = sleep 300. It cannot see your host at all.</span>
+
+<span class="c"># The cgroup is a directory. The limit is a number in a file:</span>
+docker run --memory=512m --cpus=0.5 alpine \
+  cat /sys/fs/cgroup/memory.max     <span class="c"># → 536870912</span>
+</pre></div>
+
+<h4 class="reveal">Limits are not optional in production</h4>
+<p class="reveal">A container with no <code>--memory</code> can consume every byte on the host and take its neighbours down with it. A pandas job that reads a bigger file than usual is the classic trigger. Always set limits — and remember that the process inside sees the <em>host's</em> total RAM unless the library is cgroup-aware, so a JVM or a thread pool sized from "available CPUs" will happily over-allocate.</p>
+
+<div class="callout mg reveal">
+  <p style="margin:.2em 0"><span class="t"><svg class="ico"><use href="#i-alert"/></svg> "root" inside a container is real root — unless you say otherwise</span></p>
+  <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">By default the <code>user</code> namespace is <em>not</em> enabled, so UID 0 inside the container is UID 0 on the host. It is only the missing capabilities and the seccomp filter that stop it from doing damage — and <code>--privileged</code> removes both, which is why it is effectively "become root on the host." Run as a non-root <code>USER</code> in your Dockerfile and the question stops mattering.</p>
+</div>
+
+<h2 id="loop" class="reveal"><span class="hico"><svg class="ico"><use href="#i-repeat"/></svg></span><span class="n">06.</span> The core loop: build → run → ship</h2>
+<p class="reveal lead">Four commands carry you through almost every day with Docker. Here they are, in the order you'll use them.</p>
+
+<div class="cb reveal"><span class="lang">the loop</span><pre><span class="c"># 1. BUILD an image from the Dockerfile in this directory</span>
+docker build -t acme/etl:1.4.0 .
+<span class="c">#            └─ tag: name:version      └─ the "build context" (see below)</span>
+
+<span class="c"># 2. RUN a container from that image</span>
+docker run --rm -e ENV=dev acme/etl:1.4.0
+<span class="c">#          │      └─ set an env var        └─ which image</span>
+<span class="c">#          └─ delete the container when it exits (use this constantly)</span>
+
+<span class="c"># 3. SHIP it to a registry so other machines can pull it</span>
+docker push acme/etl:1.4.0
+
+<span class="c"># 4. …and anywhere else</span>
+docker pull acme/etl:1.4.0   <span class="c"># byte-for-byte the same image</span></pre></div>
+
+<div class="callout cy reveal">
+  <p style="margin:.2em 0"><span class="t"><svg class="ico"><use href="#i-key"/></svg> That lonely <code>.</code> is the <em>build context</em>, and it matters</span></p>
+  <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">The final argument to <code>docker build</code> is not "where the Dockerfile is" — it's the <strong>build context</strong>: the directory that gets <em>uploaded to the Docker engine</em> before the build starts. Everything <code>COPY</code> can see must be inside it. Run <code>docker build .</code> in a folder containing a 4 GB <code>data/</code> directory and Docker will dutifully package up all 4 GB before it builds anything. That's why <strong><code>.dockerignore</code> is not optional</strong> (<a href="#dockerfile">§07</a>) — it's how you keep your data, your <code>.git</code>, and your virtualenv out of the build.</p>
+</div>
+
+<!-- 05 -->
+<h2 id="dockerfile" class="reveal"><span class="hico"><svg class="ico"><use href="#i-file"/></svg></span><span class="n">07.</span> The Dockerfile, instruction by instruction</h2>
+<p class="reveal lead">A Dockerfile is a recipe read top to bottom. Each instruction runs in order, and each one that changes the filesystem produces a new <strong>layer</strong>. That's the whole language — about ten instructions, and you'll use six of them constantly.</p>
+
+<div class="cb reveal"><span class="lang">Dockerfile — annotated</span><pre><span class="k">FROM</span> python:3.12-slim          <span class="c"># the base image you build ON TOP of. Always first.</span>
+
+<span class="k">WORKDIR</span> /app                    <span class="c"># cd into /app (creates it). Every later command runs here.</span>
+
+<span class="k">ENV</span> PYTHONUNBUFFERED=1          <span class="c"># env var, baked into the image AND every container</span>
+    <span class="c"># ↑ without this, Python buffers stdout and your logs appear late — or never.</span>
+    <span class="c">#   Put it in every Python image you ever write.</span>
+
+<span class="k">RUN</span> apt-get update &amp;&amp; apt-get install -y --no-install-recommends \
+      libpq-dev gcc \
+    &amp;&amp; rm -rf /var/lib/apt/lists/*      <span class="c"># ← clean up IN THE SAME RUN (see below)</span>
+
+<span class="k">COPY</span> requirements.txt .         <span class="c"># copy ONE file first — this is deliberate (§08)</span>
+<span class="k">RUN</span> pip install --no-cache-dir -r requirements.txt
+
+<span class="k">COPY</span> src/ ./src/                <span class="c"># now the code, which changes far more often</span>
+
+<span class="k">USER</span> 1001                       <span class="c"># drop root. Do this in every image (§19).</span>
+
+<span class="k">EXPOSE</span> 8000                     <span class="c"># pure DOCUMENTATION — it publishes nothing (§15)</span>
+
+<span class="k">ENTRYPOINT</span> [<span class="g">"python"</span>, <span class="g">"-m"</span>]      <span class="c"># the fixed part of the command</span>
+<span class="k">CMD</span> [<span class="g">"src.pipeline"</span>]           <span class="c"># the DEFAULT argument — overridable at run time</span></pre></div>
+
+<div class="gloss reveal">
+  <h4><svg class="ico"><use href="#i-list"/></svg> The instructions worth knowing</h4>
+  <dl>
+    <dt>FROM</dt><dd>The base image to build on. <code>python:3.12-slim</code>, <code>ubuntu:24.04</code>, or <code>scratch</code> (literally nothing). Every Dockerfile starts here, and this one line decides most of your final size and most of your security exposure.</dd>
+    <dt>RUN</dt><dd>Executes a command <em>at build time</em> and saves the result as a layer. This is where you install packages. Each <code>RUN</code> is a separate layer, so chain related commands with <code>&amp;&amp;</code>.</dd>
+    <dt>COPY</dt><dd>Copies files from the build context into the image. Prefer it over <code>ADD</code>, which also auto-extracts tarballs and fetches URLs — surprising behaviour you rarely want.</dd>
+    <dt>WORKDIR</dt><dd>Sets the working directory for everything after it. Use it instead of <code>RUN cd /app</code>, which doesn't persist between instructions.</dd>
+    <dt>ENV / ARG</dt><dd><code>ENV</code> is available at build time <em>and</em> at run time, and is baked into the image. <code>ARG</code> exists only during the build. Neither is a secret store — both are visible in <code>docker history</code>.</dd>
+    <dt>CMD</dt><dd>The <em>default</em> command, run when the container starts. Easily overridden: <code>docker run myimage python -c "print(1)"</code> replaces it entirely.</dd>
+    <dt>ENTRYPOINT</dt><dd>The command that <em>always</em> runs; anything you pass to <code>docker run</code> becomes its arguments. Use <code>ENTRYPOINT</code> for the executable and <code>CMD</code> for the default arguments — that combination gives you a container that behaves like a CLI tool.</dd>
+    <dt>USER</dt><dd>Switches to a non-root user for everything after it. See <a href="#security">§19</a> — the default really is root, and that really is a problem.</dd>
+    <dt>EXPOSE</dt><dd>Documents which port the app listens on. It does <strong>not</strong> publish anything — only <code>docker run -p</code> does that. A genuinely misleading name.</dd>
+    <dt>HEALTHCHECK</dt><dd>A command Docker runs periodically to decide whether the container is actually <em>healthy</em>, not merely running. Compose can wait on it (<a href="#compose">§17</a>).</dd>
+  </dl>
+</div>
+
+<h3 class="reveal">Two rules that separate good Dockerfiles from bad ones</h3>
+<div class="cb reveal"><span class="lang">chain your RUNs — and know why</span><pre><span class="r">✗ BAD — three layers, and the "cleanup" achieves nothing</span>
+<span class="k">RUN</span> apt-get update
+<span class="k">RUN</span> apt-get install -y gcc
+<span class="k">RUN</span> rm -rf /var/lib/apt/lists/*     <span class="c"># the files are STILL in the layer below!</span>
+
+<span class="g">✓ GOOD — one layer; the deleted files never exist in any layer</span>
+<span class="k">RUN</span> apt-get update \
+    &amp;&amp; apt-get install -y --no-install-recommends gcc \
+    &amp;&amp; rm -rf /var/lib/apt/lists/*</pre></div>
+<p class="reveal">Why this matters more than it looks: <strong>layers are immutable and additive</strong>. Deleting a file in layer 3 doesn't remove it from layer 2 — it just adds a "this file is hidden" marker on top. The bytes are still in the image, still downloaded on every pull, and still readable by anyone with the image. That's a size problem <em>and</em> a security one: <strong>a secret you <code>COPY</code> in and then <code>RUN rm</code> is still in the image, forever.</strong></p>
+
+<h4 class="reveal">The <code>.dockerignore</code> file — write it first, not last</h4>
+<div class="cb reveal"><span class="lang">.dockerignore</span><pre>.git
+.venv
+venv/
+__pycache__/
+*.pyc
+data/                <span class="c"># ← your 4 GB of CSVs do NOT belong in the build context</span>
+notebooks/
+.env                 <span class="c"># ← especially this. never bake secrets into an image.</span>
+*.md
+.pytest_cache/</pre></div>
+<p class="reveal">Same syntax as <code>.gitignore</code>. It makes builds faster (less to upload), images smaller, and cache hits far more likely — because if <code>.git/</code> is in the context, <em>every commit</em> changes the context and busts your cache.</p>
+
+<!-- 06 -->
+<h2 id="cache" class="reveal"><span class="hico"><svg class="ico"><use href="#i-zap"/></svg></span><span class="n">08.</span> The layer cache — why instruction order matters</h2>
+<p class="reveal lead">This is the section that turns a two-minute rebuild into a two-second one. Docker caches every layer; understanding <em>when it throws that cache away</em> is the difference between a Dockerfile that's a joy to iterate on and one you dread.</p>
+
+<p class="reveal">The rule is simple and unforgiving: <strong>Docker walks your instructions top to bottom, reusing the cached layer for each one — until it hits an instruction whose inputs changed. From that point on, every single layer below is rebuilt.</strong> The cache is invalidated <em>downward</em>, never partially.</p>
+
+<figure class="fig reveal">
+<svg viewBox="0 0 760 430" font-family="var(--font)" aria-label="With COPY dot dot first, changing one source file invalidates the pip install layer and everything below; copying requirements first keeps the expensive layer cached">
+  <defs>
+    <marker id="k-r" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#FF6B8B"/></marker>
+  </defs>
+
+  <text x="380" y="30" font-size="11" fill="#9aa0b4" text-anchor="middle">you edit one line of Python. What does Docker rebuild?</text>
+
+  <!-- PANEL A -->
+  <rect x="24" y="44" width="340" height="330" rx="12" fill="#22121A" stroke="#3D2130"/>
+  <text x="44" y="72" font-size="11.5" fill="#FF6B8B" font-weight="700">COPY . .  before  pip install</text>
+
+  <g font-size="9.5">
+    <rect x="44" y="88" width="220" height="32" rx="6" fill="#0B2029" stroke="#22D3EE"/><text x="58" y="108" fill="#cdd0dd">FROM python:3.12-slim</text>
+    <text x="344" y="108" fill="#22D3EE" text-anchor="end">✓ cached</text>
+
+    <rect x="44" y="128" width="220" height="32" rx="6" fill="#22121A" stroke="#FF6B8B" stroke-width="1.6"/><text x="58" y="148" fill="#FF6B8B">COPY . .</text>
+    <text x="344" y="148" fill="#FF6B8B" text-anchor="end">✗ changed</text>
+
+    <rect x="44" y="168" width="220" height="32" rx="6" fill="#22121A" stroke="#FF6B8B" stroke-width="1.6"/><text x="58" y="188" fill="#FF6B8B">RUN pip install</text>
+    <text x="344" y="188" fill="#FF6B8B" text-anchor="end">✗ re-runs</text>
+
+    <rect x="44" y="208" width="220" height="32" rx="6" fill="#22121A" stroke="#FF6B8B" stroke-width="1.6"/><text x="58" y="228" fill="#FF6B8B">COPY src/</text>
+    <text x="344" y="228" fill="#FF6B8B" text-anchor="end">✗ rebuilt</text>
+
+    <rect x="44" y="248" width="220" height="32" rx="6" fill="#22121A" stroke="#FF6B8B" stroke-width="1.6"/><text x="58" y="268" fill="#FF6B8B">CMD</text>
+    <text x="344" y="268" fill="#FF6B8B" text-anchor="end">✗ rebuilt</text>
+  </g>
+  <line x1="34" y1="132" x2="34" y2="276" stroke="#FF6B8B" stroke-width="1.4" stroke-dasharray="4 3" marker-end="url(#k-r)"/>
+  <text x="194" y="300" font-size="9" fill="#FF6B8B" text-anchor="middle">the cache breaks at the top — everything below falls with it</text>
+  <rect x="94" y="316" width="200" height="36" rx="8" fill="#331722" stroke="#FF6B8B" stroke-width="1.6"/>
+  <text x="194" y="339" font-size="11" fill="#FF6B8B" text-anchor="middle">rebuild: ~2 minutes</text>
+
+  <!-- PANEL B -->
+  <rect x="396" y="44" width="340" height="330" rx="12" fill="#0A2028" stroke="#14384A"/>
+  <text x="416" y="72" font-size="11.5" fill="#22D3EE" font-weight="700">requirements.txt  first</text>
+
+  <g font-size="9.5">
+    <rect x="416" y="88" width="220" height="32" rx="6" fill="#0B2029" stroke="#22D3EE"/><text x="430" y="108" fill="#cdd0dd">FROM python:3.12-slim</text>
+    <text x="716" y="108" fill="#22D3EE" text-anchor="end">✓ cached</text>
+
+    <rect x="416" y="128" width="220" height="32" rx="6" fill="#0B2029" stroke="#22D3EE"/><text x="430" y="148" fill="#cdd0dd">COPY requirements.txt</text>
+    <text x="716" y="148" fill="#22D3EE" text-anchor="end">✓ unchanged</text>
+
+    <rect x="416" y="168" width="220" height="32" rx="6" fill="#0D3040" stroke="#22D3EE" stroke-width="2"/><text x="430" y="188" fill="#8DE8F5">RUN pip install</text>
+    <text x="716" y="188" fill="#22D3EE" text-anchor="end">✓ CACHED · 0 s</text>
+
+    <rect x="416" y="208" width="220" height="32" rx="6" fill="#241d0f" stroke="#f0b429" stroke-width="1.6"/><text x="430" y="228" fill="#f0b429">COPY src/</text>
+    <text x="716" y="228" fill="#f0b429" text-anchor="end">✗ rebuilt</text>
+
+    <rect x="416" y="248" width="220" height="32" rx="6" fill="#241d0f" stroke="#f0b429" stroke-width="1.6"/><text x="430" y="268" fill="#f0b429">CMD</text>
+    <text x="716" y="268" fill="#f0b429" text-anchor="end">✗ rebuilt</text>
+  </g>
+  <line x1="406" y1="212" x2="406" y2="276" stroke="#f0b429" stroke-width="1.4" stroke-dasharray="4 3"/>
+  <text x="566" y="300" font-size="9" fill="#22D3EE" text-anchor="middle">the break happens LOW — only the two cheap layers rebuild</text>
+  <rect x="466" y="316" width="200" height="36" rx="8" fill="#0D3040" stroke="#22D3EE" stroke-width="1.6"/>
+  <text x="566" y="339" font-size="11" fill="#22D3EE" text-anchor="middle">rebuild: ~2 seconds</text>
+
+  <text x="380" y="404" font-size="11" fill="#9aa0b4" text-anchor="middle">The rule: order instructions from LEAST likely to change (base, deps) → MOST likely (your code).</text>
+</svg>
+<figcaption>The cache is invalidated <em>downward</em> from the first changed instruction. Put the slow <code>pip install</code> above your fast-changing source and it stays cached for weeks.</figcaption>
+</figure>
+
+<div class="cb reveal"><span class="lang">the difference, in code</span><pre><span class="r">✗ SLOW — every code edit reinstalls every package</span>
+<span class="k">COPY</span> . .                                    <span class="c"># any file changes → cache busted here</span>
+<span class="k">RUN</span> pip install -r requirements.txt         <span class="c"># …so this re-runs. 2 minutes. Every build.</span>
+
+<span class="g">✓ FAST — the install layer is reused until your dependencies actually change</span>
+<span class="k">COPY</span> requirements.txt .                     <span class="c"># only busts when THIS file changes</span>
+<span class="k">RUN</span> pip install -r requirements.txt         <span class="c"># cached for weeks at a time</span>
+<span class="k">COPY</span> src/ ./src/                            <span class="c"># the fast-changing stuff goes LAST</span></pre></div>
+
+<div class="callout gr reveal">
+  <p style="margin:.2em 0"><span class="t"><svg class="ico"><use href="#i-check"/></svg> How to read the cache in build output</span></p>
+  <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">During a build, <code>CACHED</code> next to a step means it was reused. The first step <em>without</em> it is where your cache broke — and everything after it is being rebuilt. When a build is mysteriously slow, find that line and ask "what did I change that this step depends on?" Nine times out of ten the answer is a <code>COPY</code> that's too broad, or a missing <code>.dockerignore</code>.</p>
+</div>
+
+<!-- 07 -->
+<h2 id="buildkit" class="reveal"><span class="hico"><svg class="ico"><use href="#i-zap"/></svg></span><span class="n">09.</span> BuildKit — how builds actually run now</h2>
+<p class="reveal lead">The old builder walked your Dockerfile one line at a time, top to bottom, and cached whole layers. <strong>BuildKit</strong> (the default since Docker 23) reads the whole file first, builds a dependency graph, and runs everything it can in parallel. It also unlocks two features you should be using: cache mounts and build secrets.</p>
+
+<figure class="fig reveal">
+<svg viewBox="0 0 760 330" width="100%" aria-label="The legacy builder runs sequentially; BuildKit builds a graph and runs independent stages in parallel">
+  <defs>
+    <marker id="da" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#2496ED"/></marker>
+    <marker id="dc" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#22D3EE"/></marker>
+    <marker id="dm" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#6b7280"/></marker>
+    <marker id="dr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#FF6B8B"/></marker>
+    <marker id="dy" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#f0b429"/></marker>
+  </defs>
+  <rect x="20" y="40" width="330" height="184" rx="12" fill="#22121A" stroke="#3D2130"/>
+  <text x="185" y="64" font-size="11.5" fill="#FF6B8B" font-weight="700" text-anchor="middle">LEGACY — one line at a time</text>
+  <rect x="52" y="80" width="266" height="24" rx="6" fill="#1f1513" stroke="#FF6B8B" stroke-width="1.3"/><text x="66" y="96" font-size="9.5" fill="#cdd0dd">FROM python  · base</text><rect x="52" y="112" width="266" height="24" rx="6" fill="#1f1513" stroke="#FF6B8B" stroke-width="1.3"/><text x="66" y="128" font-size="9.5" fill="#cdd0dd">RUN apt-get  · 40 s</text><rect x="52" y="144" width="266" height="24" rx="6" fill="#1f1513" stroke="#FF6B8B" stroke-width="1.3"/><text x="66" y="160" font-size="9.5" fill="#cdd0dd">RUN pip install · 90 s</text><rect x="52" y="176" width="266" height="24" rx="6" fill="#1f1513" stroke="#FF6B8B" stroke-width="1.3"/><text x="66" y="192" font-size="9.5" fill="#cdd0dd">COPY src/ · 1 s</text>
+  <text x="185" y="214" font-size="10" fill="#FF6B8B" text-anchor="middle">strictly sequential — 131 s</text>
+
+  <rect x="410" y="40" width="330" height="184" rx="12" fill="#0b2029" stroke="#12414d"/>
+  <text x="575" y="64" font-size="11.5" fill="#22D3EE" font-weight="700" text-anchor="middle">BUILDKIT — a graph</text>
+  <rect x="440" y="80" width="120" height="24" rx="6" fill="#0d1420" stroke="#22D3EE" stroke-width="1.3"/>
+  <text x="500" y="96" font-size="9.5" fill="#cdd0dd" text-anchor="middle">base image</text>
+  <line x1="500" y1="106" x2="500" y2="118" stroke="#22D3EE" stroke-width="1.3"/>
+  <line x1="470" y1="118" x2="640" y2="118" stroke="#22D3EE" stroke-width="1.3"/>
+  <line x1="470" y1="118" x2="470" y2="130" stroke="#22D3EE" stroke-width="1.3" marker-end="url(#dc)"/>
+  <line x1="640" y1="118" x2="640" y2="130" stroke="#22D3EE" stroke-width="1.3" marker-end="url(#dc)"/>
+  <rect x="424" y="136" width="98" height="24" rx="6" fill="#0d1420" stroke="#22D3EE" stroke-width="1.3"/>
+  <text x="473" y="152" font-size="9" fill="#cdd0dd" text-anchor="middle">apt · 40 s</text>
+  <rect x="588" y="136" width="106" height="24" rx="6" fill="#0d1420" stroke="#22D3EE" stroke-width="1.3"/>
+  <text x="641" y="152" font-size="9" fill="#cdd0dd" text-anchor="middle">pip · 90 s</text>
+  <text x="555" y="150" font-size="8" fill="#22D3EE" text-anchor="middle">in parallel</text>
+  <line x1="473" y1="162" x2="473" y2="176" stroke="#22D3EE" stroke-width="1.3"/>
+  <line x1="641" y1="162" x2="641" y2="176" stroke="#22D3EE" stroke-width="1.3"/>
+  <line x1="473" y1="176" x2="641" y2="176" stroke="#22D3EE" stroke-width="1.3"/>
+  <line x1="557" y1="176" x2="557" y2="186" stroke="#22D3EE" stroke-width="1.3" marker-end="url(#dc)"/>
+  <rect x="497" y="190" width="120" height="24" rx="6" fill="#0d1420" stroke="#22D3EE" stroke-width="1.3"/>
+  <text x="557" y="206" font-size="9.5" fill="#cdd0dd" text-anchor="middle">COPY src/</text>
+  <text x="575" y="214" font-size="10" fill="#22D3EE" text-anchor="end" opacity="0"> </text>
+
+  <rect x="20" y="240" width="720" height="70" rx="10" fill="#15151b" stroke="#2c2c36"/>
+  <text x="380" y="262" font-size="10.5" fill="#cdd0dd" text-anchor="middle">independent steps run at the same time — the slow ones overlap instead of queueing</text>
+  <rect x="196" y="274" width="170" height="24" rx="6" fill="#0b2029" stroke="#22D3EE" stroke-width="1.3"/>
+  <text x="281" y="290" font-size="9.5" fill="#22D3EE" text-anchor="middle">unused stages: skipped</text>
+  <rect x="394" y="274" width="170" height="24" rx="6" fill="#0b2029" stroke="#22D3EE" stroke-width="1.3"/>
+  <text x="479" y="290" font-size="9.5" fill="#22D3EE" text-anchor="middle">cache mounts: persisted</text>
+</svg>
+<figcaption>BuildKit resolves the Dockerfile into a DAG. Stages nothing depends on are never built at all, and independent stages run concurrently.</figcaption>
+</figure>
+
+<h4 class="reveal">Cache mounts — keep the pip cache <em>between</em> builds</h4>
+<p class="reveal">A normal <code>RUN pip install</code> downloads every wheel again on every cache miss. A <strong>cache mount</strong> is a directory BuildKit keeps outside the image and re-attaches on each build. It is not a layer, so it never ships — but it makes a cold rebuild feel warm.</p>
+
+<div class="cb reveal"><span class="lang">Dockerfile — BuildKit features</span><pre><span class="c"># syntax=docker/dockerfile:1.7</span>
+<span class="k">FROM</span> python:3.12-slim
+
+<span class="c"># The pip download cache survives across builds — it is NOT baked into a layer.</span>
+<span class="k">RUN</span> --mount=type=cache,target=/root/.cache/pip \
+    pip install -r requirements.txt
+
+<span class="c"># A secret is mounted for ONE command and never touches a layer.</span>
+<span class="c"># Compare with ENV/ARG, which are permanently visible in `docker history`.</span>
+<span class="k">RUN</span> --mount=type=secret,id=pypi_token \
+    pip install --extra-index-url \
+      "https://$(cat /run/secrets/pypi_token)@pypi.acme.internal/simple" acme-lib
+</pre></div>
+
+<div class="cb reveal"><span class="lang">bash</span><pre>docker build --secret id=pypi_token,env=PYPI_TOKEN -t acme/etl:1.4.0 .
+
+<span class="c"># Multi-arch — build for the Mac laptops AND the amd64 cluster, in one push:</span>
+docker buildx build --platform linux/amd64,linux/arm64 \
+  -t acme/etl:1.4.0 --push .
+</pre></div>
+
+<div class="callout gr reveal">
+  <p style="margin:.2em 0"><span class="t"><svg class="ico"><use href="#i-check"/></svg> Never pass a secret with <code>ARG</code> or <code>ENV</code></span></p>
+  <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">Both are baked into the image metadata for anyone who runs <code>docker history</code>. Even <code>RUN export TOKEN=… &amp;&amp; … &amp;&amp; unset TOKEN</code> does not help: the layer's filesystem diff has already been written. <code>--mount=type=secret</code> is the only way to use a credential at build time without shipping it.</p>
+</div>
+
+<h2 id="images" class="reveal"><span class="hico"><svg class="ico"><use href="#i-cloud"/></svg></span><span class="n">10.</span> Images, tags, registries &amp; multi-stage builds</h2>
+<p class="reveal lead">Images have names, versions, and homes. And they have a size problem that multi-stage builds solve elegantly.</p>
+
+<h3 class="reveal">Naming and tags</h3>
+<div class="cb reveal"><span class="lang">anatomy of an image name</span><pre>ghcr.io/acme/etl:1.4.0
+└──┬───┘ └─┬─┘ └┬┘ └─┬─┘
+   │       │    │    └─ TAG — a version. Mutable! Someone can move it.
+   │       │    └────── the image name
+   │       └─────────── the org / namespace
+   └─────────────────── the REGISTRY (default: docker.io — Docker Hub)
+
+<span class="c"># Registries you'll meet: Docker Hub · GitHub (ghcr.io) · AWS ECR · Azure ACR · GCP Artifact Registry</span></pre></div>
+
+<div class="callout gd reveal">
+  <p style="margin:.2em 0"><span class="t"><svg class="ico"><use href="#i-warn"/></svg> <code>:latest</code> is a lie</span></p>
+  <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd"><code>latest</code> is not "the newest version" — it is simply the default tag, and it means <em>whatever someone last pushed under that name</em>. It can change under you between your test and your deploy. Never use it in anything that matters: pin <code>python:3.12-slim</code>, not <code>python:latest</code>, and tag your own images with a real version or the Git SHA (<code>acme/etl:1.4.0</code>, <code>acme/etl:a3f9c1</code>). For genuine immutability, pin the <strong>digest</strong> — <code>python:3.12-slim@sha256:abc123…</code> — which is a content hash and <em>cannot</em> be moved.</p>
+</div>
+
+<h3 class="reveal">Multi-stage builds — leave the toolchain behind</h3>
+<p class="reveal">Building Python packages often needs a compiler (<code>gcc</code>), header files, maybe Rust. Running them needs none of that. A <strong>multi-stage build</strong> lets you use a fat image to <em>build</em> and a slim one to <em>ship</em>, copying only the finished artefacts across.</p>
+
+<figure class="fig reveal">
+<svg viewBox="0 0 760 312" font-family="var(--font)" aria-label="A fat builder stage compiles the wheels; only the built packages are copied into a slim runtime image, which is seven times smaller">
+  <defs>
+    <marker id="s-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#2496ED"/></marker>
+  </defs>
+
+  <rect x="30" y="52" width="280" height="152" rx="12" fill="#241d0f" stroke="#f0b429" stroke-width="1.8"/>
+  <text x="170" y="80" font-size="12" fill="#f0b429" font-weight="700" text-anchor="middle">STAGE 1 · builder</text>
+  <text x="170" y="106" font-size="10" fill="#9aa0b4" text-anchor="middle">FROM python:3.12  (the full image)</text>
+  <text x="170" y="128" font-size="10" fill="#9aa0b4" text-anchor="middle">+ gcc, headers, build tools</text>
+  <text x="170" y="150" font-size="10" fill="#9aa0b4" text-anchor="middle">+ pip install → compiled wheels</text>
+  <text x="170" y="182" font-size="11.5" fill="#FF6B8B" text-anchor="middle">1.2 GB — never shipped</text>
+
+  <line x1="318" y1="128" x2="442" y2="128" stroke="#2496ED" stroke-width="1.8" marker-end="url(#s-a)"/>
+  <text x="380" y="116" font-size="10" fill="#7CC6F7" text-anchor="middle">COPY --from=builder</text>
+  <text x="380" y="148" font-size="9.5" fill="#6b7280" text-anchor="middle">only the built packages</text>
+
+  <rect x="450" y="66" width="280" height="124" rx="12" fill="#0e2740" stroke="#2496ED" stroke-width="1.8"/>
+  <text x="590" y="94" font-size="12" fill="#7CC6F7" font-weight="700" text-anchor="middle">STAGE 2 · runtime</text>
+  <text x="590" y="120" font-size="10" fill="#9aa0b4" text-anchor="middle">FROM python:3.12-slim</text>
+  <text x="590" y="142" font-size="10" fill="#9aa0b4" text-anchor="middle">+ the packages + your code</text>
+  <text x="590" y="172" font-size="11.5" fill="#22D3EE" text-anchor="middle">180 MB — this is what ships</text>
+
+  <!-- size bars -->
+  <text x="30" y="248" font-size="10" fill="#6b7280">builder</text>
+  <rect x="96" y="236" width="480" height="16" rx="4" fill="#3a2f16" stroke="#c9922a"/>
+  <text x="588" y="248" font-size="10" fill="#FF6B8B">1.2 GB</text>
+
+  <text x="30" y="280" font-size="10" fill="#6b7280">shipped</text>
+  <rect x="96" y="268" width="72" height="16" rx="4" fill="#13314f" stroke="#2496ED"/>
+  <text x="180" y="280" font-size="10" fill="#22D3EE">180 MB — 7× smaller, and no compiler in production</text>
+</svg>
+<figcaption>The compiler never reaches production: smaller pulls, faster cold starts, and a much smaller attack surface — there's no <code>gcc</code> in the image for anyone to use.</figcaption>
+</figure>
+
+<div class="cb reveal"><span class="lang">Dockerfile — multi-stage</span><pre><span class="c"># ── stage 1: build the dependencies (needs a compiler) ──</span>
+<span class="k">FROM</span> python:3.12 <span class="k">AS</span> builder
+
+<span class="k">WORKDIR</span> /app
+<span class="k">COPY</span> requirements.txt .
+<span class="c"># install into a self-contained folder we can lift out wholesale</span>
+<span class="k">RUN</span> pip install --no-cache-dir --prefix=/install -r requirements.txt
+
+<span class="c"># ── stage 2: the image we actually ship ──</span>
+<span class="k">FROM</span> python:3.12-slim
+
+<span class="k">COPY</span> --from=builder /install /usr/local    <span class="c"># ← only the built packages come across</span>
+<span class="k">WORKDIR</span> /app
+<span class="k">COPY</span> src/ ./src/
+<span class="k">USER</span> 1001
+<span class="k">ENTRYPOINT</span> [<span class="g">"python"</span>, <span class="g">"-m"</span>, <span class="g">"src.pipeline"</span>]</pre></div>
+
+<div class="callout mg reveal">
+  <p style="margin:.2em 0"><span class="t"><svg class="ico"><use href="#i-alert"/></svg> Choosing a base image: <code>slim</code>, yes. <code>alpine</code>, probably not.</span></p>
+  <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">Alpine Linux images are famously tiny, and for a Go binary they're perfect. <strong>For Python data work they are usually a trap.</strong> Alpine uses <code>musl</code> instead of <code>glibc</code>, and the pre-compiled wheels on PyPI for <code>numpy</code>, <code>pandas</code>, <code>pyarrow</code> and friends are built for <code>glibc</code>. So on Alpine, pip can't use them — it falls back to <em>compiling from source</em>. Your "smaller, faster" image now takes twenty minutes to build, needs a full toolchain, and can end up <em>bigger</em>. Use <strong><code>python:3.12-slim</code></strong> (Debian-based, glibc, ~120 MB) as your default and only reach for Alpine when you've measured a reason.</p>
+</div>
+
+<!-- 08 -->
+<h2 id="imginternals" class="reveal"><span class="hico"><svg class="ico"><use href="#i-package"/></svg></span><span class="n">11.</span> Inside an image: digests, manifests &amp; multi-arch</h2>
+<p class="reveal lead">An image is not a file. It is a small JSON document that <em>points</em> at other things by cryptographic hash: a config blob, and a list of layer blobs. Everything is content-addressed, which is why layers dedupe across images for free — and why a tag is a much weaker promise than you think.</p>
+
+<figure class="fig reveal">
+<svg viewBox="0 0 760 372" width="100%" aria-label="A manifest list points at per-architecture manifests, which point at a config and layer blobs">
+  <defs>
+    <marker id="da" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#2496ED"/></marker>
+    <marker id="dc" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#22D3EE"/></marker>
+    <marker id="dm" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#6b7280"/></marker>
+    <marker id="dr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#FF6B8B"/></marker>
+    <marker id="dy" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#f0b429"/></marker>
+  </defs>
+  <rect x="248" y="26" width="264" height="52" rx="10" fill="#241d0f" stroke="#f0b429" stroke-width="1.8"/>
+  <text x="380" y="47" font-size="11.5" fill="#f0b429" font-weight="700" text-anchor="middle">manifest list ("fat manifest")</text>
+  <text x="380" y="66" font-size="9" fill="#9aa0b4" text-anchor="middle">acme/etl:1.4.0 → one tag, many CPUs</text>
+
+  <line x1="330" y1="82" x2="230" y2="112" stroke="#f0b429" stroke-width="1.5" marker-end="url(#dy)"/>
+  <line x1="430" y1="82" x2="530" y2="112" stroke="#f0b429" stroke-width="1.5" marker-end="url(#dy)"/>
+
+  <rect x="96" y="116" width="240" height="46" rx="9" fill="#0e2740" stroke="#2496ED" stroke-width="1.6"/>
+  <text x="216" y="136" font-size="10.5" fill="#7CC6F7" font-weight="700" text-anchor="middle">manifest · linux/amd64</text>
+  <text x="216" y="152" font-size="8.5" fill="#6b7280" text-anchor="middle">sha256:9f2c1ab…</text>
+
+  <rect x="424" y="116" width="240" height="46" rx="9" fill="#0e2740" stroke="#2496ED" stroke-width="1.6" stroke-dasharray="5,3"/>
+  <text x="544" y="136" font-size="10.5" fill="#7CC6F7" font-weight="700" text-anchor="middle">manifest · linux/arm64</text>
+  <text x="544" y="152" font-size="8.5" fill="#6b7280" text-anchor="middle">sha256:3ba91cd…</text>
+
+  <line x1="216" y1="166" x2="216" y2="182" stroke="#2496ED" stroke-width="1.5"/>
+  <line x1="115" y1="182" x2="338" y2="182" stroke="#2496ED" stroke-width="1.5"/>
+  <line x1="115" y1="182" x2="115" y2="196" stroke="#2496ED" stroke-width="1.5" marker-end="url(#da)"/>
+  <line x1="338" y1="182" x2="338" y2="196" stroke="#2496ED" stroke-width="1.5" marker-end="url(#da)"/>
+
+  <rect x="40" y="200" width="150" height="52" rx="9" fill="#0b2029" stroke="#22D3EE" stroke-width="1.6"/>
+  <text x="115" y="221" font-size="10" fill="#22D3EE" font-weight="700" text-anchor="middle">config JSON</text>
+  <text x="115" y="238" font-size="8.5" fill="#9aa0b4" text-anchor="middle">CMD · ENV · USER</text>
+
+  <rect x="212" y="200" width="252" height="140" rx="9" fill="#0d0d13" stroke="#f0b429" stroke-width="1.4"/>
+  <text x="338" y="220" font-size="10" fill="#f0b429" font-weight="700" text-anchor="middle">layer blobs (tar.gz)</text>
+  <rect x="228" y="230" width="220" height="20" rx="4" fill="#241d0f" stroke="#f0b429" stroke-width="1.1"/><text x="240" y="244" font-size="8.5" fill="#cdd0dd">sha256:a1b2… · debian base</text><text x="440" y="244" font-size="8" fill="#6b7280" text-anchor="end">74 MB</text><rect x="228" y="256" width="220" height="20" rx="4" fill="#241d0f" stroke="#f0b429" stroke-width="1.1"/><text x="240" y="270" font-size="8.5" fill="#cdd0dd">sha256:c3d4… · apt packages</text><text x="440" y="270" font-size="8" fill="#6b7280" text-anchor="end">28 MB</text><rect x="228" y="282" width="220" height="20" rx="4" fill="#241d0f" stroke="#f0b429" stroke-width="1.1"/><text x="240" y="296" font-size="8.5" fill="#cdd0dd">sha256:e5f6… · pip wheels</text><text x="440" y="296" font-size="8" fill="#6b7280" text-anchor="end">61 MB</text><rect x="228" y="308" width="220" height="20" rx="4" fill="#241d0f" stroke="#f0b429" stroke-width="1.1"/><text x="240" y="322" font-size="8.5" fill="#cdd0dd">sha256:0789… · your src/</text><text x="440" y="322" font-size="8" fill="#6b7280" text-anchor="end">2 MB</text>
+
+  <rect x="486" y="200" width="234" height="90" rx="9" fill="#0b2029" stroke="#22D3EE" stroke-width="1.6"/>
+  <text x="603" y="222" font-size="10" fill="#22D3EE" font-weight="700" text-anchor="middle">content-addressed</text>
+  <text x="603" y="242" font-size="9" fill="#9aa0b4" text-anchor="middle">the hash IS the name</text>
+  <text x="603" y="260" font-size="9" fill="#9aa0b4" text-anchor="middle">same layer in 10 images</text>
+  <text x="603" y="276" font-size="9" fill="#9aa0b4" text-anchor="middle">= stored + pulled ONCE</text>
+
+  <rect x="486" y="302" width="234" height="38" rx="8" fill="#331722" stroke="#FF6B8B" stroke-width="1.4"/>
+  <text x="603" y="318" font-size="9" fill="#FF6B8B" text-anchor="middle">a TAG can be moved to new bytes</text>
+  <text x="603" y="332" font-size="9" fill="#FF6B8B" text-anchor="middle">a DIGEST cannot — pin it in prod</text>
+
+  <text x="338" y="362" font-size="10" fill="#6b7280" text-anchor="middle">docker pull = fetch manifest → fetch config → fetch only the layer blobs you don't already have</text>
+</svg>
+<figcaption>One tag can resolve to several images — one per architecture. Docker picks the manifest matching your CPU, then downloads only the layer blobs it is missing.</figcaption>
+</figure>
+
+<div class="cb reveal"><span class="lang">bash — look inside a real image</span><pre>docker manifest inspect python:3.12-slim | head -30   <span class="c"># the multi-arch list</span>
+docker image inspect acme/etl:1.4.0 --format '{{.RootFS.Layers}}'   <span class="c"># its layer digests</span>
+docker history acme/etl:1.4.0                        <span class="c"># which instruction made which layer</span>
+
+<span class="c"># A tag is a moving pointer. A digest is forever:</span>
+docker pull python:3.12-slim@sha256:1f5b1a2c…        <span class="c"># ← what prod should do</span>
+</pre></div>
+
+<div class="callout gd reveal">
+  <p style="margin:.2em 0"><span class="t"><svg class="ico"><use href="#i-warn"/></svg> <code>:latest</code> is a lie, and so is any other tag</span></p>
+  <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">A tag is a mutable label the publisher can re-point at any time. <code>python:3.12-slim</code> today and <code>python:3.12-slim</code> next month are different bytes — the base gets security patches, and rightly so. That is fine for development and a genuine hazard for reproducibility: the pipeline that passed CI in March can fail in April with nothing in <em>your</em> repo having changed. Pin by <strong>digest</strong> for production images, and let a bot (Dependabot, Renovate) raise the bump as a reviewable PR.</p>
+</div>
+
+
+<h2 id="storage" class="reveal"><span class="hico"><svg class="ico"><use href="#i-disk"/></svg></span><span class="n">12.</span> How the filesystem works: OverlayFS &amp; copy-on-write</h2>
+<p class="reveal lead">Ten containers from one image do not cost ten times the disk. They share the image's layers read-only and stack one thin writable layer on top. The kernel merges the stack with <strong>OverlayFS</strong>, and the trick it uses — copy-on-write — explains two things that surprise people: why writing a big file inside a container is slow, and why deleting a secret from an image does not delete it.</p>
+
+<figure class="fig reveal">
+<svg viewBox="0 0 760 380" width="100%" aria-label="OverlayFS merges read-only image layers with a writable upper layer">
+  <defs>
+    <marker id="da" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#2496ED"/></marker>
+    <marker id="dc" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#22D3EE"/></marker>
+    <marker id="dm" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#6b7280"/></marker>
+    <marker id="dr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#FF6B8B"/></marker>
+    <marker id="dy" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#f0b429"/></marker>
+  </defs>
+  <rect x="470" y="34" width="270" height="92" rx="10" fill="#0b2029" stroke="#22D3EE" stroke-width="1.8"/>
+  <text x="605" y="56" font-size="11" fill="#22D3EE" font-weight="700" text-anchor="middle">merged — what the container sees</text>
+  <text x="605" y="76" font-size="9" fill="#9aa0b4" text-anchor="middle">one ordinary-looking filesystem:</text>
+  <text x="605" y="94" font-size="9.5" fill="#cdd0dd" text-anchor="middle">/app · /usr · /etc · /tmp</text>
+  <text x="605" y="112" font-size="8.5" fill="#6b7280" text-anchor="middle">it has no idea it is a stack</text>
+
+  <rect x="30" y="34" width="380" height="46" rx="8" fill="#241d0f" stroke="#f0b429" stroke-width="2"/>
+  <text x="48" y="54" font-size="10" fill="#f0b429" font-weight="700">upperdir</text>
+  <text x="48" y="70" font-size="9" fill="#9aa0b4">the container's thin WRITABLE layer</text>
+  <text x="392" y="62" font-size="9" fill="#f0b429" text-anchor="end">read-write</text>
+
+  <text x="220" y="98" font-size="9" fill="#6b7280" text-anchor="middle">▲ everything above is per-container · dies with it</text>
+  <line x1="30" y1="106" x2="410" y2="106" stroke="#2c2c36" stroke-width="1" stroke-dasharray="4,3"/>
+  <text x="220" y="122" font-size="9" fill="#6b7280" text-anchor="middle">▼ everything below is the IMAGE · shared by every container</text>
+
+  <rect x="30" y="132" width="380" height="28" rx="6" fill="#0d0d13" stroke="#f0b429" stroke-width="1.2"/><text x="48" y="151" font-size="9.5" fill="#cdd0dd">COPY src/</text><text x="392" y="151" font-size="8.5" fill="#6b7280" text-anchor="end">lowerdir · read-only</text><rect x="30" y="166" width="380" height="28" rx="6" fill="#0d0d13" stroke="#f0b429" stroke-width="1.2"/><text x="48" y="185" font-size="9.5" fill="#cdd0dd">RUN pip install</text><text x="392" y="185" font-size="8.5" fill="#6b7280" text-anchor="end">lowerdir · read-only</text><rect x="30" y="200" width="380" height="28" rx="6" fill="#0d0d13" stroke="#f0b429" stroke-width="1.2"/><text x="48" y="219" font-size="9.5" fill="#cdd0dd">RUN apt-get install</text><text x="392" y="219" font-size="8.5" fill="#6b7280" text-anchor="end">lowerdir · read-only</text><rect x="30" y="234" width="380" height="28" rx="6" fill="#0d0d13" stroke="#f0b429" stroke-width="1.2"/><text x="48" y="253" font-size="9.5" fill="#cdd0dd">FROM python:3.12-slim</text><text x="392" y="253" font-size="8.5" fill="#6b7280" text-anchor="end">lowerdir · read-only</text>
+
+  <line x1="416" y1="80" x2="462" y2="80" stroke="#22D3EE" stroke-width="1.6" marker-end="url(#dc)"/>
+  <text x="440" y="72" font-size="8" fill="#22D3EE" text-anchor="middle">merge</text>
+
+  <rect x="470" y="140" width="270" height="106" rx="10" fill="#241d0f" stroke="#f0b429" stroke-width="1.6"/>
+  <text x="605" y="162" font-size="10.5" fill="#f0b429" font-weight="700" text-anchor="middle">COPY-ON-WRITE</text>
+  <text x="605" y="182" font-size="9" fill="#cdd0dd" text-anchor="middle">read → served straight from the layer</text>
+  <text x="605" y="200" font-size="9" fill="#cdd0dd" text-anchor="middle">write → the WHOLE file is copied up</text>
+  <text x="605" y="218" font-size="9" fill="#cdd0dd" text-anchor="middle">first, then modified</text>
+  <text x="605" y="238" font-size="8.5" fill="#FF6B8B" text-anchor="middle">edit 1 byte of a 2 GB file → copy 2 GB</text>
+
+  <rect x="470" y="258" width="270" height="106" rx="10" fill="#331722" stroke="#FF6B8B" stroke-width="1.6"/>
+  <text x="605" y="280" font-size="10.5" fill="#FF6B8B" font-weight="700" text-anchor="middle">WHITEOUT — deletion is a lie</text>
+  <text x="605" y="300" font-size="9" fill="#cdd0dd" text-anchor="middle">RUN rm secrets.env just writes a</text>
+  <text x="605" y="316" font-size="9" fill="#cdd0dd" text-anchor="middle">"this is hidden" marker in the layer above</text>
+  <text x="605" y="336" font-size="9" fill="#cdd0dd" text-anchor="middle">The bytes are STILL in the lower layer —</text>
+  <text x="605" y="352" font-size="9" fill="#FF6B8B" text-anchor="middle">and anyone can docker save and read them.</text>
+
+  <text x="220" y="298" font-size="10.5" fill="#cdd0dd" text-anchor="middle">This is why heavy write workloads</text>
+  <text x="220" y="316" font-size="10.5" fill="#cdd0dd" text-anchor="middle">(a database, a Spark shuffle dir)</text>
+  <text x="220" y="334" font-size="10.5" fill="#22D3EE" text-anchor="middle">must go on a volume, not the writable layer.</text>
+  <text x="220" y="358" font-size="9.5" fill="#6b7280" text-anchor="middle">a volume bypasses OverlayFS entirely</text>
+</svg>
+<figcaption>OverlayFS presents a stack of read-only layers plus one writable layer as a single filesystem. Reads fall through the stack; writes copy the file up into the top layer first.</figcaption>
+</figure>
+
+<div class="callout mg reveal">
+  <p style="margin:.2em 0"><span class="t"><svg class="ico"><use href="#i-alert"/></svg> A secret added in one layer and deleted in the next is still in the image</span></p>
+  <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">This is the single most common way credentials leak from a container image:</p>
+  <div class="cb" style="margin-top:10px"><span class="lang">Dockerfile — the bug</span><pre><span class="k">COPY</span> .env /app/.env        <span class="c"># layer 4 — the secret is now in the image, forever</span>
+<span class="k">RUN</span> python setup.py &amp;&amp; rm /app/.env   <span class="c"># layer 5 — only HIDES it with a whiteout</span>
+</pre></div>
+  <p style="margin:.8em 0 0;font-size:14.5px;color:#cdd0dd">Anyone who pulls the image can run <code>docker save</code>, untar layer 4, and read the file. The fixes: never <code>COPY</code> the secret in the first place (use <code>--mount=type=secret</code>, §09), keep secrets out of the build context with <code>.dockerignore</code>, and use a multi-stage build so the final stage copies only the artefacts you name.</p>
+</div>
+
+<h2 id="run" class="reveal"><span class="hico"><svg class="ico"><use href="#i-terminal"/></svg></span><span class="n">13.</span> Running containers day to day</h2>
+<p class="reveal lead">Building is half the job. Here's the handful of commands and flags you'll actually type, and the one lifecycle fact that explains most confusion.</p>
+
+<div class="cb reveal"><span class="lang">the flags that matter</span><pre>docker run \
+  --name etl \                <span class="c"># give it a name (else you get "vibrant_hopper")</span>
+  --rm \                      <span class="c"># auto-delete when it exits — use this by default</span>
+  -d \                        <span class="c"># detached: run in the background</span>
+  -it \                       <span class="c"># interactive + TTY: for a shell you can type into</span>
+  -p 8080:80 \                <span class="c"># publish HOST port 8080 → CONTAINER port 80</span>
+  -e DB_HOST=postgres \       <span class="c"># set an environment variable</span>
+  --env-file .env \           <span class="c"># …or a whole file of them</span>
+  -v mydata:/var/lib/data \   <span class="c"># mount a volume (§14)</span>
+  --memory=4g --cpus=2 \      <span class="c"># cgroup limits — real, enforced</span>
+  acme/etl:1.4.0 \
+  --date 2026-07-12           <span class="c"># args appended to the ENTRYPOINT</span></pre></div>
+
+<div class="cb reveal"><span class="lang">inspecting what's running</span><pre>docker ps                     <span class="c"># running containers</span>
+docker ps -a                  <span class="c"># …including stopped ones (this is where "exited" ones hide)</span>
+docker logs -f etl            <span class="c"># stream its stdout/stderr. Your #1 debugging tool.</span>
+docker exec -it etl bash      <span class="c"># get a shell INSIDE a running container. Your #2.</span>
+docker inspect etl            <span class="c"># everything: mounts, network, env, exit code</span>
+docker stats                  <span class="c"># live CPU/memory — is it about to be OOM-killed?</span>
+
+docker stop etl               <span class="c"># polite SIGTERM, then SIGKILL after 10s</span>
+docker rm etl                 <span class="c"># delete the stopped container (and its writable layer!)</span>
+docker image ls               <span class="c"># what images do I have?</span>
+docker system df              <span class="c"># what is eating my disk? (spoiler: build cache)</span>
+docker system prune -a        <span class="c"># reclaim it. Careful: -a removes unused IMAGES too.</span></pre></div>
+
+<div class="callout cy reveal">
+  <p style="margin:.2em 0"><span class="t"><svg class="ico"><use href="#i-key"/></svg> A container lives exactly as long as its main process</span></p>
+  <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">This one fact explains the most common beginner bug: <em>"my container exits immediately."</em> A container is not a machine that "stays up" — it is a wrapper around <strong>PID 1</strong>. When that process finishes, the container stops. Full stop. So a container whose command is <code>bash</code> (with nothing to read) exits instantly; a container running a web server stays up because the server never returns. If yours dies on startup, run <code>docker logs &lt;name&gt;</code> — the process almost certainly crashed, and the exit code tells you why (<code>0</code> = finished normally, <code>1</code> = error, <code>137</code> = killed, usually out of memory, <code>139</code> = segfault).</p>
+</div>
+
+<!-- 09 -->
+<h2 id="data" class="reveal"><span class="hico"><svg class="ico"><use href="#i-disk"/></svg></span><span class="n">14.</span> Data: volumes &amp; bind mounts</h2>
+<p class="reveal lead">Containers are ephemeral by design. So the moment you have data you care about — a Postgres database, a model artefact, your source code during development — you need it to live <em>outside</em> the container. There are two ways, and they're for two different jobs.</p>
+
+<figure class="fig reveal">
+<svg viewBox="0 0 760 366" font-family="var(--font)" aria-label="Inside a container, scratch files go to the writable layer and vanish, while a volume and a bind mount store data on the host and survive">
+  <defs>
+    <marker id="v-r" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#FF6B8B"/></marker>
+    <marker id="v-g" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#22D3EE"/></marker>
+    <marker id="v-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#f0b429"/></marker>
+  </defs>
+
+  <!-- the container -->
+  <rect x="120" y="34" width="520" height="130" rx="12" fill="#0e2740" stroke="#2496ED" stroke-width="1.8"/>
+  <use href="#i-whale" x="138" y="48" width="15" height="15" fill="none" stroke="#7CC6F7" stroke-width="1.8"/>
+  <text x="164" y="61" font-size="11.5" fill="#7CC6F7" font-weight="700">inside the container</text>
+  <text x="330" y="61" font-size="9.5" fill="#6b7280">— three paths, three very different fates</text>
+
+  <rect x="140" y="78" width="150" height="64" rx="8" fill="#22121A" stroke="#FF6B8B" stroke-dasharray="5 4"/>
+  <text x="215" y="102" font-size="10" fill="#FF6B8B" text-anchor="middle">/tmp/scratch</text>
+  <text x="215" y="122" font-size="9" fill="#9aa0b4" text-anchor="middle">the writable layer</text>
+
+  <rect x="305" y="78" width="150" height="64" rx="8" fill="#13314f" stroke="#3b7fc4"/>
+  <text x="380" y="102" font-size="10" fill="#9fd8fb" text-anchor="middle">/var/lib/postgres</text>
+  <text x="380" y="122" font-size="9" fill="#9aa0b4" text-anchor="middle">the database files</text>
+
+  <rect x="470" y="78" width="150" height="64" rx="8" fill="#13314f" stroke="#3b7fc4"/>
+  <text x="545" y="102" font-size="10" fill="#9fd8fb" text-anchor="middle">/app/src</text>
+  <text x="545" y="122" font-size="9" fill="#9aa0b4" text-anchor="middle">your source code</text>
+
+  <!-- fates -->
+  <line x1="215" y1="146" x2="215" y2="196" stroke="#FF6B8B" stroke-width="1.5" stroke-dasharray="4 3" marker-end="url(#v-r)"/>
+  <text x="215" y="216" font-size="10" fill="#FF6B8B" text-anchor="middle">nowhere.</text>
+  <text x="215" y="232" font-size="9.5" fill="#FF6B8B" text-anchor="middle">deleted with the container</text>
+
+  <line x1="380" y1="146" x2="380" y2="266" stroke="#22D3EE" stroke-width="1.6" marker-end="url(#v-g)"/>
+  <line x1="545" y1="146" x2="545" y2="266" stroke="#f0b429" stroke-width="1.6" marker-end="url(#v-a)"/>
+
+  <!-- the host -->
+  <rect x="30" y="272" width="700" height="70" rx="12" fill="#15151b" stroke="#33333f"/>
+  <text x="48" y="296" font-size="10.5" fill="#9aa0b4" font-weight="700">YOUR HOST MACHINE</text>
+  <text x="48" y="316" font-size="9.5" fill="#6b7280">storage that</text>
+  <text x="48" y="330" font-size="9.5" fill="#6b7280">outlives containers →</text>
+
+  <rect x="290" y="288" width="180" height="42" rx="8" fill="#0B2029" stroke="#22D3EE" stroke-width="1.6"/>
+  <text x="380" y="306" font-size="10" fill="#22D3EE" text-anchor="middle">named VOLUME</text>
+  <text x="380" y="322" font-size="9" fill="#6b7280" text-anchor="middle">Docker manages it · survives</text>
+
+  <rect x="490" y="288" width="200" height="42" rx="8" fill="#241d0f" stroke="#f0b429" stroke-width="1.6"/>
+  <text x="590" y="306" font-size="10" fill="#f0b429" text-anchor="middle">BIND MOUNT · ./src</text>
+  <text x="590" y="322" font-size="9" fill="#6b7280" text-anchor="middle">your folder · edits appear live</text>
+
+  <text x="380" y="358" font-size="10.5" fill="#6b7280" text-anchor="middle">anything not on a volume or a bind mount is temporary — that is the deal you accepted</text>
+</svg>
+<figcaption>Volumes are for <em>data</em> you must keep (Docker owns the storage). Bind mounts are for <em>code in development</em> (you own the folder, and your edits appear instantly inside the container).</figcaption>
+</figure>
+
+<table class="reveal">
+  <tr><th>&nbsp;</th><th>Named volume</th><th>Bind mount</th></tr>
+  <tr><td>Syntax</td><td><code>-v pgdata:/var/lib/postgresql/data</code></td><td><code>-v ./src:/app/src</code> (a path)</td></tr>
+  <tr><td>Where it lives</td><td>A location Docker manages for you</td><td>An exact folder on your machine</td></tr>
+  <tr><td>Best for</td><td><strong>Persistent data</strong>: databases, warehouse files, model artefacts</td><td><strong>Development</strong>: your source code, so edits take effect without rebuilding</td></tr>
+  <tr><td>Portable?</td><td>Yes — no assumptions about host paths</td><td>No — depends on your directory layout</td></tr>
+  <tr><td>Watch out for</td><td>Invisible until you run <code>docker volume ls</code>; easy to accumulate</td><td>File permissions (host UID ≠ container UID) and slow I/O on macOS</td></tr>
+</table>
+
+<div class="callout gr reveal">
+  <p style="margin:.2em 0"><span class="t"><svg class="ico"><use href="#i-check"/></svg> The development trick that makes Docker pleasant</span></p>
+  <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">Bind-mount your source code in development: <code>-v ./src:/app/src</code>. Now the container sees your live files, so <strong>you edit in your editor and re-run without rebuilding the image at all</strong>. The build-edit-rebuild cycle that makes people hate Docker just disappears. In production you do the opposite — no bind mount, the code is baked into the image, so what you tested is exactly what runs. Compose makes it easy to have both (<a href="#compose">§17</a>).</p>
+</div>
+
+<!-- 10 -->
+<h2 id="network" class="reveal"><span class="hico"><svg class="ico"><use href="#i-network"/></svg></span><span class="n">15.</span> Networking</h2>
+<p class="reveal lead">Two questions cover almost everything: <em>how do I reach a container from my laptop?</em> and <em>how do containers reach each other?</em></p>
+
+<div class="step reveal"><div class="num-bubble">1</div><div class="body"><strong>From the host → publish a port.</strong> <code>-p 8080:5432</code> means "traffic to <em>my</em> port 8080 goes to the container's port 5432." Left is host, right is container — get them backwards and you'll stare at a refused connection for ten minutes. Note that <code>EXPOSE</code> in the Dockerfile publishes <em>nothing</em>; only <code>-p</code> does.</div></div>
+<div class="step reveal"><div class="num-bubble">2</div><div class="body"><strong>Container → container: use a user-defined network, and address each other by <em>name</em>.</strong> Put containers on the same network and Docker gives you DNS for free: a container named <code>postgres</code> is reachable at the hostname <code>postgres</code>. No IPs, ever. Compose does this for you automatically.</div></div>
+
+<figure class="fig reveal">
+<svg viewBox="0 0 760 336" font-family="var(--font)" aria-label="Three services on one Docker network reach each other by service name; only Airflow publishes a port to the host">
+  <defs>
+    <marker id="n-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#2496ED"/></marker>
+    <marker id="n-g" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#22D3EE"/></marker>
+  </defs>
+
+  <!-- host / browser -->
+  <rect x="12" y="132" width="146" height="76" rx="10" fill="#15151b" stroke="#4a5163"/>
+  <use href="#i-user" x="28" y="148" width="14" height="14" fill="none" stroke="#9aa0b4" stroke-width="2.2"/>
+  <text x="52" y="160" font-size="10.5" fill="#cdd0dd">your browser</text>
+  <text x="28" y="184" font-size="9.5" fill="#6b7280">localhost:8080</text>
+
+  <!-- the network -->
+  <rect x="230" y="46" width="506" height="238" rx="12" fill="#0d1a2b" stroke="#2496ED" stroke-width="1.6" stroke-dasharray="6 4"/>
+  <rect x="244" y="38" width="230" height="18" rx="4" fill="#0d0d13"/>
+  <use href="#i-network" x="246" y="40" width="13" height="13" fill="none" stroke="#7CC6F7" stroke-width="2.2"/>
+  <text x="266" y="51" font-size="10" fill="#7CC6F7" font-weight="700">docker network: acme_default</text>
+
+  <!-- the one published port: the arrow stops AT the airflow box, not inside it -->
+  <line x1="164" y1="170" x2="248" y2="170" stroke="#22D3EE" stroke-width="1.6" marker-end="url(#n-g)"/>
+  <text x="194" y="161" font-size="8" fill="#22D3EE" text-anchor="middle">-p 8080:8080</text>
+
+  <!-- airflow -->
+  <rect x="252" y="118" width="184" height="104" rx="10" fill="#0e2740" stroke="#2496ED" stroke-width="1.6"/>
+  <text x="344" y="144" font-size="11.5" fill="#7CC6F7" font-weight="700" text-anchor="middle">airflow</text>
+  <rect x="266" y="156" width="156" height="24" rx="5" fill="#13314f" stroke="#3b7fc4"/>
+  <text x="344" y="172" font-size="9" fill="#9fd8fb" text-anchor="middle">DB_HOST=postgres</text>
+  <rect x="266" y="186" width="156" height="24" rx="5" fill="#13314f" stroke="#3b7fc4"/>
+  <text x="344" y="202" font-size="9" fill="#9fd8fb" text-anchor="middle">S3_ENDPOINT=minio:9000</text>
+
+  <!-- postgres / minio -->
+  <rect x="516" y="86" width="180" height="64" rx="10" fill="#0B2029" stroke="#22D3EE" stroke-width="1.6"/>
+  <text x="606" y="112" font-size="11.5" fill="#22D3EE" text-anchor="middle">postgres</text>
+  <text x="606" y="132" font-size="9.5" fill="#6b7280" text-anchor="middle">:5432</text>
+
+  <rect x="516" y="196" width="180" height="64" rx="10" fill="#241d0f" stroke="#f0b429" stroke-width="1.6"/>
+  <text x="606" y="222" font-size="11.5" fill="#f0b429" text-anchor="middle">minio</text>
+  <text x="606" y="242" font-size="9.5" fill="#6b7280" text-anchor="middle">:9000</text>
+
+  <path d="M442 152 C 480 152, 480 118, 510 118" fill="none" stroke="#2496ED" stroke-width="1.5" marker-end="url(#n-a)"/>
+  <path d="M442 198 C 480 198, 480 228, 510 228" fill="none" stroke="#2496ED" stroke-width="1.5" marker-end="url(#n-a)"/>
+
+  <text x="606" y="170" font-size="9" fill="#6b7280" text-anchor="middle">no published port —</text>
+  <text x="606" y="184" font-size="9" fill="#6b7280" text-anchor="middle">unreachable from your laptop</text>
+
+  <text x="483" y="274" font-size="9.5" fill="#9aa0b4" text-anchor="middle">containers reach each other by SERVICE NAME — never by IP</text>
+
+  <text x="380" y="318" font-size="10.5" fill="#6b7280" text-anchor="middle">inside a container, &quot;localhost&quot; means THAT container — not your laptop, and not the database</text>
+</svg>
+<figcaption>Service-name DNS is the payoff of a user-defined network. Note that only <code>airflow</code> publishes a port — Postgres and MinIO stay private, which is exactly what you want.</figcaption>
+</figure>
+
+<div class="callout gd reveal">
+  <p style="margin:.2em 0"><span class="t"><svg class="ico"><use href="#i-warn"/></svg> <code>localhost</code> inside a container is not your laptop</span></p>
+  <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">The single most common networking bug. Your app's config says <code>DB_HOST=localhost</code>, it works outside Docker, and inside a container it fails with "connection refused" — because <code>localhost</code> now means <em>this container</em>, which has no database in it. Use the <strong>service name</strong> (<code>DB_HOST=postgres</code>). And if a container genuinely needs to reach a service running on your <em>host</em> machine, the special hostname is <code>host.docker.internal</code>.</p>
+</div>
+
+<!-- 11 -->
+<h2 id="netdeep" class="reveal"><span class="hico"><svg class="ico"><use href="#i-plug"/></svg></span><span class="n">16.</span> Networking, deeper: bridges, veth pairs &amp; NAT</h2>
+<p class="reveal lead">The previous section covered the rules you need day to day. This one covers the machinery underneath — because "connection refused" and "port already in use" stop being mysterious once you can picture the virtual cable and the NAT rule.</p>
+
+<figure class="fig reveal">
+<svg viewBox="0 0 760 396" width="100%" aria-label="Containers get a veth pair into a bridge; published ports are a DNAT rule">
+  <defs>
+    <marker id="da" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#2496ED"/></marker>
+    <marker id="dc" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#22D3EE"/></marker>
+    <marker id="dm" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#6b7280"/></marker>
+    <marker id="dr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#FF6B8B"/></marker>
+    <marker id="dy" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#f0b429"/></marker>
+  </defs>
+  <rect x="20" y="30" width="720" height="212" rx="12" fill="#0d1420" stroke="#2c2c36"/>
+  <text x="40" y="52" font-size="10" fill="#9aa0b4" font-weight="700">THE HOST</text>
+
+  <rect x="52" y="70" width="150" height="54" rx="9" fill="#15151b" stroke="#4a5163"/>
+  <text x="127" y="92" font-size="10" fill="#cdd0dd" text-anchor="middle">eth0 (real NIC)</text>
+  <text x="127" y="110" font-size="8.5" fill="#6b7280" text-anchor="middle">192.168.1.20</text>
+
+  <rect x="270" y="70" width="200" height="54" rx="9" fill="#0e2740" stroke="#2496ED" stroke-width="1.8"/>
+  <text x="370" y="92" font-size="11" fill="#7CC6F7" font-weight="700" text-anchor="middle">docker0 / br-xxxx</text>
+  <text x="370" y="110" font-size="8.5" fill="#9aa0b4" text-anchor="middle">a virtual switch · 172.17.0.1</text>
+
+  <line x1="206" y1="97" x2="264" y2="97" stroke="#6b7280" stroke-width="1.5"/>
+
+  <rect x="524" y="80" width="206" height="34" rx="7" fill="#241d0f" stroke="#f0b429" stroke-width="1.4"/>
+  <text x="627" y="94" font-size="9" fill="#f0b429" text-anchor="middle">iptables · nat table</text>
+  <text x="627" y="107" font-size="8" fill="#9aa0b4" text-anchor="middle">MASQUERADE out · DNAT in</text>
+  <line x1="476" y1="97" x2="518" y2="97" stroke="#f0b429" stroke-width="1.5" marker-end="url(#dy)"/>
+
+  <line x1="300" y1="128" x2="300" y2="164" stroke="#22D3EE" stroke-width="1.6"/>
+  <line x1="460" y1="128" x2="460" y2="164" stroke="#22D3EE" stroke-width="1.6"/>
+  <text x="278" y="150" font-size="8.5" fill="#22D3EE" text-anchor="end">veth</text>
+  <text x="482" y="150" font-size="8.5" fill="#22D3EE">veth</text>
+
+  <rect x="225" y="168" width="150" height="60" rx="9" fill="#0b2029" stroke="#22D3EE" stroke-width="1.6"/>
+  <text x="300" y="190" font-size="10" fill="#22D3EE" font-weight="700" text-anchor="middle">airflow</text>
+  <text x="300" y="207" font-size="8.5" fill="#9aa0b4" text-anchor="middle">eth0 · 172.17.0.2</text>
+  <text x="300" y="221" font-size="8" fill="#6b7280" text-anchor="middle">own net namespace</text>
+
+  <rect x="385" y="168" width="150" height="60" rx="9" fill="#0b2029" stroke="#22D3EE" stroke-width="1.6"/>
+  <text x="460" y="190" font-size="10" fill="#22D3EE" font-weight="700" text-anchor="middle">postgres</text>
+  <text x="460" y="207" font-size="8.5" fill="#9aa0b4" text-anchor="middle">eth0 · 172.17.0.3</text>
+  <text x="460" y="221" font-size="8" fill="#6b7280" text-anchor="middle">own net namespace</text>
+
+  <text x="620" y="180" font-size="9" fill="#cdd0dd">a veth pair is a</text>
+  <text x="620" y="194" font-size="9" fill="#cdd0dd">virtual cable: one end</text>
+  <text x="620" y="208" font-size="9" fill="#cdd0dd">in the container, one</text>
+  <text x="620" y="222" font-size="9" fill="#cdd0dd">end in the bridge.</text>
+
+  <rect x="20" y="258" width="720" height="76" rx="10" fill="#241d0f" stroke="#f0b429" stroke-width="1.4"/>
+  <text x="40" y="280" font-size="10" fill="#f0b429" font-weight="700">WHAT -p 8080:80 ACTUALLY DOES</text>
+  <text x="40" y="302" font-size="9.5" fill="#cdd0dd">it is not a tunnel — it is one NAT rule:</text>
+  <rect x="290" y="288" width="430" height="26" rx="6" fill="#0d0d13" stroke="#f0b429" stroke-width="1.2"/>
+  <text x="505" y="305" font-size="9.5" fill="#f0b429" text-anchor="middle">DNAT: host:8080 → 172.17.0.2:80</text>
+  <text x="40" y="324" font-size="9" fill="#6b7280">…which is why "port already in use" is a HOST problem, and why two containers can both listen on 80.</text>
+
+  <text x="380" y="360" font-size="10.5" fill="#cdd0dd" text-anchor="middle">Inside the container, <tspan fill="#FF6B8B">localhost</tspan> is its own loopback — not the host, and not the database.</text>
+  <text x="380" y="380" font-size="10.5" fill="#22D3EE" text-anchor="middle">On a user-defined network, reach the others by SERVICE NAME. Docker runs a DNS server at 127.0.0.11.</text>
+</svg>
+<figcaption>Each container gets its own network namespace and a veth pair into a virtual switch. Publishing a port writes a DNAT rule; egress is masqueraded behind the host's IP.</figcaption>
+</figure>
+
+<h4 class="reveal">The network drivers, and when each one is right</h4>
+<table class="reveal">
+  <tr><th>Driver</th><th>What it does</th><th>Use it when</th></tr>
+  <tr><td><code>bridge</code> (user-defined)</td><td>Private virtual switch. Containers reach each other <strong>by name</strong> via Docker's embedded DNS.</td><td><strong>The default choice.</strong> Everything Compose creates for you.</td></tr>
+  <tr><td><code>bridge</code> (the default <code>docker0</code>)</td><td>The legacy network you get with no <code>--network</code>. <strong>No DNS</strong> — containers can only find each other by IP.</td><td>Never, deliberately. This is the #1 reason "it can't resolve postgres".</td></tr>
+  <tr><td><code>host</code></td><td>No network namespace at all — the container shares the host's stack. <code>-p</code> is meaningless.</td><td>Squeezing out the last of the NAT overhead; tools that need to see the real network.</td></tr>
+  <tr><td><code>none</code></td><td>A loopback interface and nothing else.</td><td>Batch jobs that must not touch the network.</td></tr>
+  <tr><td><code>overlay</code></td><td>One virtual network spanning <em>many hosts</em>, via VXLAN tunnels.</td><td>Swarm / multi-host clusters. (Kubernetes has its own CNI equivalents.)</td></tr>
+  <tr><td><code>macvlan</code></td><td>Gives the container its own MAC and a real IP on your physical LAN.</td><td>Legacy systems that must see the container as a first-class box on the network.</td></tr>
+</table>
+
+<div class="cb reveal"><span class="lang">bash — inspect the plumbing</span><pre>docker network ls
+docker network inspect acme_default          <span class="c"># subnet, gateway, who is attached</span>
+
+<span class="c"># The container's view — its own interfaces, its own routes:</span>
+docker exec airflow ip addr                  <span class="c"># eth0 = 172.18.0.2</span>
+docker exec airflow cat /etc/resolv.conf     <span class="c"># nameserver 127.0.0.11 ← Docker's DNS</span>
+docker exec airflow getent hosts postgres    <span class="c"># resolves by service name</span>
+
+<span class="c"># The host's view — the NAT rule -p created:</span>
+sudo iptables -t nat -L DOCKER -n
+</pre></div>
+
+<div class="callout gr reveal">
+  <p style="margin:.2em 0"><span class="t"><svg class="ico"><use href="#i-check"/></svg> Two rules that resolve almost every networking bug</span></p>
+  <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd"><strong>1. Bind to <code>0.0.0.0</code>, not <code>127.0.0.1</code>.</strong> A server listening on <code>127.0.0.1</code> inside a container is reachable only from <em>inside that container</em> — the published port will connect and immediately refuse. This is the classic "works locally, refuses in Docker" bug, and it is a one-word fix in your app's config.</p>
+  <p style="margin:.6em 0 0;font-size:14.5px;color:#cdd0dd"><strong>2. Container-to-container traffic ignores <code>-p</code> entirely.</strong> Publishing is only for traffic arriving from <em>outside</em>. Two containers on the same user-defined network talk on the container port directly — so <code>DB_HOST=postgres</code>, <code>DB_PORT=5432</code>, whether or not you published 5432. If you find yourself publishing a database port just so your app can reach it, you have the wrong mental model — and you have also exposed your database to the whole machine.</p>
+</div>
+
+<h2 id="compose" class="reveal"><span class="hico"><svg class="ico"><use href="#i-workflow"/></svg></span><span class="n">17.</span> Docker Compose — the whole stack in one file</h2>
+<p class="reveal lead">Real data work is never one container. It's a pipeline <em>and</em> a database <em>and</em> an object store <em>and</em> maybe an Airflow scheduler. <strong>Compose</strong> declares all of them in one YAML file and starts them with one command — and it's how most data engineers use Docker every single day.</p>
+
+<div class="cb reveal"><span class="lang">docker-compose.yml — a local data stack</span><pre><span class="k">services</span>:
+
+  <span class="k">postgres</span>:                                <span class="c"># ← this name IS the hostname (§15)</span>
+    <span class="k">image</span>: postgres:16                      <span class="c"># pinned, not :latest</span>
+    <span class="k">environment</span>:
+      <span class="k">POSTGRES_USER</span>: dev
+      <span class="k">POSTGRES_PASSWORD</span>: dev              <span class="c"># fine for LOCAL only</span>
+      <span class="k">POSTGRES_DB</span>: warehouse
+    <span class="k">volumes</span>:
+      - pgdata:/var/lib/postgresql/data     <span class="c"># ← named volume: the data survives (§14)</span>
+    <span class="k">healthcheck</span>:                            <span class="c"># "is it actually ready?"</span>
+      <span class="k">test</span>: [<span class="g">"CMD-SHELL"</span>, <span class="g">"pg_isready -U dev"</span>]
+      <span class="k">interval</span>: 5s
+      <span class="k">retries</span>: 5
+
+  <span class="k">minio</span>:                                   <span class="c"># an S3-compatible object store, locally</span>
+    <span class="k">image</span>: minio/minio:latest
+    <span class="k">command</span>: server /data --console-address <span class="g">":9001"</span>
+    <span class="k">ports</span>: [<span class="g">"9000:9000"</span>, <span class="g">"9001:9001"</span>]
+    <span class="k">volumes</span>: [minio_data:/data]
+
+  <span class="k">pipeline</span>:
+    <span class="k">build</span>: .                                <span class="c"># build from the Dockerfile here…</span>
+    <span class="k">depends_on</span>:
+      <span class="k">postgres</span>:
+        <span class="k">condition</span>: service_healthy         <span class="c"># ← wait for the HEALTHCHECK, not just start</span>
+    <span class="k">environment</span>:
+      <span class="k">DB_HOST</span>: postgres                    <span class="c"># ← the service name. NOT localhost.</span>
+      <span class="k">S3_ENDPOINT</span>: http://minio:9000
+    <span class="k">volumes</span>:
+      - ./src:/app/src                      <span class="c"># ← bind mount: live code editing in dev</span>
+
+<span class="k">volumes</span>:                                   <span class="c"># declare the named volumes</span>
+  <span class="k">pgdata</span>:
+  <span class="k">minio_data</span>:</pre></div>
+
+<div class="cb reveal"><span class="lang">the Compose commands</span><pre>docker compose up -d              <span class="c"># start everything in the background</span>
+docker compose up --build         <span class="c"># rebuild images first (after a Dockerfile change)</span>
+docker compose ps                 <span class="c"># what's running, and is it healthy?</span>
+docker compose logs -f pipeline   <span class="c"># follow one service's logs</span>
+docker compose exec postgres psql -U dev warehouse   <span class="c"># a psql shell, instantly</span>
+docker compose down               <span class="c"># stop &amp; remove containers + network</span>
+docker compose down -v            <span class="c"># ⚠️ …AND delete the volumes. Your database is gone.</span></pre></div>
+
+<div class="callout cy reveal">
+  <p style="margin:.2em 0"><span class="t"><svg class="ico"><use href="#i-key"/></svg> <code>depends_on</code> alone does not wait for readiness</span></p>
+  <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">A classic and maddening race. Plain <code>depends_on: [postgres]</code> waits only until the Postgres <em>container has started</em> — not until Postgres is <em>accepting connections</em>, which takes a few seconds longer. So your pipeline starts, connects, and dies with "connection refused" roughly one run in three. The fix is exactly what's in the file above: give the dependency a <code>healthcheck</code>, and depend on <code>condition: service_healthy</code>. Now Compose genuinely waits.</p>
+</div>
+
+<!-- 12 -->
+<h2 id="de" class="reveal"><span class="hico"><svg class="ico"><use href="#i-database"/></svg></span><span class="n">18.</span> Docker for data engineers</h2>
+<p class="reveal lead">Generic Docker knowledge is most of the battle. Here's what's specific to our world — where containers show up, and the traps that are ours alone.</p>
+
+<h3 class="reveal">Where you'll actually meet containers</h3>
+<ul class="reveal">
+  <li><strong>A reproducible dev environment.</strong> The everyday win: your whole stack — Python, dbt, a Postgres, a MinIO standing in for S3 — comes up with <code>docker compose up</code> and behaves identically for every teammate. New joiner productive in an hour, not a week.</li>
+  <li><strong>Airflow.</strong> Airflow itself runs in containers, and its <code>DockerOperator</code> / <code>KubernetesPodOperator</code> run <em>your</em> tasks as containers — which is how you let one DAG run a Python 3.10 task and a Python 3.12 task without them fighting. You'll also build a custom Airflow image (base image + your <code>requirements.txt</code>) rather than pip-installing into a running scheduler.</li>
+  <li><strong>dbt.</strong> Containerising dbt pins the exact dbt-core and adapter versions, so CI and every laptop resolve identically — a real problem given how quickly adapter versions drift.</li>
+  <li><strong>CI.</strong> Build the image once, run the tests <em>inside it</em>, push it if they pass. The artifact you tested is the artifact you deploy — the same "build once, deploy many" principle as <a href="../cicd-essentials/#cd">CI/CD Essentials §05</a>.</li>
+  <li><strong>Spark &amp; Kubernetes.</strong> Spark on K8s ships your job as an image. Understanding containers <em>is</em> understanding how your Spark job gets to the cluster.</li>
+</ul>
+
+<div class="callout mg reveal">
+  <p style="margin:.2em 0"><span class="t"><svg class="ico"><use href="#i-alert"/></svg> The four traps that are specifically ours</span></p>
+  <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd"><strong>(1) The arm64/amd64 mismatch.</strong> You build on an Apple Silicon Mac, push, and production says <code>exec format error</code>. Build with <code>--platform linux/amd64</code>, or use <code>buildx</code> for multi-arch. <strong>(2) Memory limits are real.</strong> Pandas happily allocates until the cgroup kills it — exit code 137, no traceback, no clue. Set <code>--memory</code> deliberately and watch <code>docker stats</code>. <strong>(3) Don't bake data into images.</strong> An image is code, not a data store; a 6 GB image with a CSV inside is slow to pull and impossible to version sensibly. Mount data, or read it from object storage. <strong>(4) Alpine + pandas = pain.</strong> As in <a href="#images">§10</a>: use <code>slim</code>.</p>
+</div>
+
+<div class="cb reveal"><span class="lang">a custom Airflow image — the standard pattern</span><pre><span class="k">FROM</span> apache/airflow:2.9.2-python3.11   <span class="c"># pin BOTH airflow and python</span>
+
+<span class="c"># switch to root only to install SYSTEM packages…</span>
+<span class="k">USER</span> root
+<span class="k">RUN</span> apt-get update \
+    &amp;&amp; apt-get install -y --no-install-recommends libpq-dev gcc \
+    &amp;&amp; rm -rf /var/lib/apt/lists/*
+
+<span class="c"># …then switch straight back. Airflow refuses to run as root anyway.</span>
+<span class="k">USER</span> airflow
+
+<span class="k">COPY</span> requirements.txt .
+<span class="k">RUN</span> pip install --no-cache-dir -r requirements.txt
+
+<span class="k">COPY</span> --chown=airflow:root dags/ /opt/airflow/dags/</pre></div>
+
+<!-- 13 -->
+<h2 id="security" class="reveal"><span class="hico"><svg class="ico"><use href="#i-shield"/></svg></span><span class="n">19.</span> Security &amp; best practices</h2>
+<p class="reveal lead">Containers isolate, but they are not a security boundary you should lean on carelessly — and a careless image leaks secrets in a way that's genuinely hard to take back.</p>
+
+<ul class="reveal">
+  <li><strong>Don't run as root.</strong> Containers run as root <em>by default</em>, and root in the container is root on the host kernel if anything escapes. Add <code>USER 1001</code> (or a created user) to every image. This is the single highest-value line in this section.</li>
+  <li><strong>Never bake secrets into an image.</strong> Not with <code>ENV</code>, not with <code>ARG</code>, not with a <code>COPY .env</code> that you delete later — <em>the layer keeps it</em> (<a href="#dockerfile">§07</a>), and <code>docker history</code> will show it to anyone who pulls the image. Pass secrets at <em>run</em> time (<code>-e</code>, <code>--env-file</code>, a mounted file, or your orchestrator's secret store), or use BuildKit's <code>--mount=type=secret</code> if you need one <em>during</em> the build.</li>
+  <li><strong>Pin your base images.</strong> <code>python:3.12-slim</code>, never <code>python:latest</code>. For real reproducibility, pin the digest (<code>@sha256:…</code>).</li>
+  <li><strong>Keep images small.</strong> Multi-stage builds and a good <code>.dockerignore</code>. Fewer packages = smaller attack surface, faster pulls, cheaper storage.</li>
+  <li><strong>Scan them.</strong> <code>docker scout cves acme/etl:1.4.0</code>, or Trivy/Grype in CI. Base images accumulate CVEs just sitting there; rebuilding on a fresh base is often the whole fix.</li>
+  <li><strong>Prefer read-only where you can.</strong> <code>--read-only</code> plus a <code>tmpfs</code> for scratch space stops a compromised process from rewriting your app.</li>
+  <li><strong>Mind the Docker socket.</strong> Mounting <code>/var/run/docker.sock</code> into a container hands it effective root on the host. Sometimes necessary (CI runners), never casual.</li>
+</ul>
+
+<div class="callout gd reveal">
+  <p style="margin:.2em 0"><span class="t"><svg class="ico"><use href="#i-lock"/></svg> Try this once and you'll never bake a secret again</span></p>
+  <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">Build an image that does <code>COPY .env .</code> followed by <code>RUN rm .env</code>. The file is gone from the final filesystem — <code>ls</code> proves it. Now run <code>docker history --no-trunc</code> on the image, or simply extract the layer beneath. <strong>The secret is right there.</strong> Layers are immutable and additive; deletion only hides. This is why an accidentally-committed AWS key in a pushed image must be treated as <em>leaked and rotated</em>, not "deleted in the next build."</p>
+</div>
+
+<!-- 14 -->
+<h2 id="example" class="reveal"><span class="hico"><svg class="ico"><use href="#i-blocks"/></svg></span><span class="n">20.</span> A worked example: containerising a real pipeline</h2>
+<p class="reveal lead">Now let's put it together: a small ETL project, containerised properly — every file, why it exists, and what happens when you change one line. This is the shape you can copy into a real repo tomorrow.</p>
+
+<div class="cb reveal"><span class="lang">the repo</span><pre>etl-pipeline/
+├── <span class="k">Dockerfile</span>              <span class="c"># multi-stage, non-root, cache-friendly</span>
+├── <span class="k">.dockerignore</span>           <span class="c"># write this FIRST</span>
+├── <span class="k">docker-compose.yml</span>      <span class="c"># the local stack: pipeline + postgres + minio</span>
+├── requirements.txt        <span class="c"># pinned dependencies</span>
+├── src/
+│   ├── __init__.py
+│   └── pipeline.py         <span class="c"># the actual ETL</span>
+└── tests/
+    └── test_pipeline.py</pre></div>
+
+<figure class="fig reveal">
+<svg viewBox="0 0 760 322" font-family="var(--font)" aria-label="One image is built once and then used unchanged in three places: local development, CI, and production">
+  <defs>
+    <marker id="w-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#2496ED"/></marker>
+  </defs>
+
+  <rect x="24" y="118" width="160" height="90" rx="10" fill="#0B2029" stroke="#22D3EE" stroke-width="1.6"/>
+  <use href="#i-file" x="40" y="134" width="14" height="14" fill="none" stroke="#22D3EE" stroke-width="2.2"/>
+  <text x="62" y="146" font-size="11" fill="#22D3EE">the repo</text>
+  <text x="40" y="170" font-size="9.5" fill="#6b7280">Dockerfile</text>
+  <text x="40" y="186" font-size="9.5" fill="#6b7280">requirements.txt</text>
+  <text x="40" y="202" font-size="9.5" fill="#6b7280">src/</text>
+
+  <line x1="190" y1="163" x2="234" y2="163" stroke="#2496ED" stroke-width="1.6" marker-end="url(#w-a)"/>
+  <text x="212" y="152" font-size="9.5" fill="#7CC6F7" text-anchor="middle">build</text>
+
+  <rect x="240" y="106" width="188" height="114" rx="11" fill="#241d0f" stroke="#f0b429" stroke-width="2"/>
+  <use href="#i-package" x="256" y="122" width="15" height="15" fill="none" stroke="#f0b429" stroke-width="2.2"/>
+  <text x="280" y="135" font-size="11.5" fill="#f0b429" font-weight="700">THE IMAGE</text>
+  <text x="256" y="162" font-size="10" fill="#e3b25c">acme/etl:1.4.0</text>
+  <text x="256" y="182" font-size="9" fill="#6b7280">built ONCE · immutable</text>
+  <text x="256" y="198" font-size="9" fill="#6b7280">pushed to the registry</text>
+
+  <!-- fan out: each curve flattens to horizontal well before its arrowhead, so head and line align -->
+  <g stroke="#2496ED" stroke-width="1.5" fill="none">
+    <path d="M430 163 C 462 163, 468 74, 500 74" marker-end="url(#w-a)"/>
+    <path d="M430 163 H 500" marker-end="url(#w-a)"/>
+    <path d="M430 163 C 462 163, 468 252, 500 252" marker-end="url(#w-a)"/>
+  </g>
+
+  <rect x="506" y="44" width="230" height="60" rx="10" fill="#0e2740" stroke="#2496ED" stroke-width="1.6"/>
+  <text x="520" y="68" font-size="10.5" fill="#7CC6F7">LOCAL · compose up</text>
+  <text x="520" y="88" font-size="9" fill="#6b7280">+ postgres + minio · src bind-mounted</text>
+
+  <rect x="506" y="133" width="230" height="60" rx="10" fill="#0B2029" stroke="#22D3EE" stroke-width="1.6"/>
+  <text x="520" y="157" font-size="10.5" fill="#22D3EE">CI · pytest INSIDE the image</text>
+  <text x="520" y="177" font-size="9" fill="#6b7280">tests the exact artefact you will deploy</text>
+
+  <rect x="506" y="222" width="230" height="60" rx="10" fill="#0d2a4a" stroke="#62CFF4" stroke-width="1.8"/>
+  <text x="520" y="246" font-size="10.5" fill="#9fd8fb">PROD · Airflow / K8s</text>
+  <text x="520" y="266" font-size="9" fill="#6b7280">runs the same bytes CI tested</text>
+
+  <text x="380" y="308" font-size="10.5" fill="#6b7280" text-anchor="middle">one image, three places — the thing you tested is literally the thing that runs</text>
+</svg>
+<figcaption>The payoff of containerising: local, CI and production stop being three subtly different environments and become three <em>uses of one artefact</em>.</figcaption>
+</figure>
+
+<h4 class="reveal">Dockerfile — every line earns its place</h4>
+<div class="cb reveal"><span class="lang">Dockerfile</span><pre><span class="c"># ─────────── stage 1: builder ───────────</span>
+<span class="k">FROM</span> python:3.12-slim <span class="k">AS</span> builder
+
+<span class="c"># build-only system deps: gcc is needed to compile some wheels,</span>
+<span class="c"># and it will NOT exist in the final image.</span>
+<span class="k">RUN</span> apt-get update \
+    &amp;&amp; apt-get install -y --no-install-recommends gcc libpq-dev \
+    &amp;&amp; rm -rf /var/lib/apt/lists/*
+
+<span class="k">WORKDIR</span> /app
+
+<span class="c"># ↓ the cache trick from §08: dependencies BEFORE source code</span>
+<span class="k">COPY</span> requirements.txt .
+<span class="k">RUN</span> pip install --no-cache-dir --prefix=/install -r requirements.txt
+
+<span class="c"># ─────────── stage 2: runtime ───────────</span>
+<span class="k">FROM</span> python:3.12-slim
+
+<span class="c"># only the RUNTIME system libs — libpq, but no compiler</span>
+<span class="k">RUN</span> apt-get update \
+    &amp;&amp; apt-get install -y --no-install-recommends libpq5 \
+    &amp;&amp; rm -rf /var/lib/apt/lists/* \
+    &amp;&amp; useradd --uid 1001 --create-home appuser      <span class="c"># a real non-root user</span>
+
+<span class="k">ENV</span> PYTHONUNBUFFERED=1 \
+    PYTHONDONTWRITEBYTECODE=1                       <span class="c"># no stray .pyc files</span>
+
+<span class="k">WORKDIR</span> /app
+
+<span class="k">COPY</span> --from=builder /install /usr/local            <span class="c"># ← the packages, without the toolchain</span>
+<span class="k">COPY</span> --chown=appuser:appuser src/ ./src/
+
+<span class="k">USER</span> appuser                                        <span class="c"># drop root (§19)</span>
+
+<span class="k">ENTRYPOINT</span> [<span class="g">"python"</span>, <span class="g">"-m"</span>, <span class="g">"src.pipeline"</span>]
+<span class="k">CMD</span> [<span class="g">"--date"</span>, <span class="g">"today"</span>]                            <span class="c"># default arg; override at run time</span></pre></div>
+
+<p class="reveal">Read it against the rules from earlier sections and every choice has a reason. <strong><code>slim</code>, not <code>alpine</code></strong>, because pandas wheels need glibc (<a href="#images">§10</a>). <strong>Two stages</strong>, so <code>gcc</code> — needed to build, useless to run — never ships. <strong><code>requirements.txt</code> copied before <code>src/</code></strong>, so editing a Python file doesn't reinstall pandas (<a href="#cache">§08</a>). <strong><code>apt-get</code> install and cleanup chained in one <code>RUN</code></strong>, so the package lists never exist in a layer (<a href="#dockerfile">§07</a>). <strong><code>USER appuser</code></strong>, so a compromise doesn't start as root (<a href="#security">§19</a>). <strong><code>ENTRYPOINT</code> + <code>CMD</code> split</strong>, so the container behaves like a CLI: <code>docker run acme/etl --date 2026-07-12</code> just works.</p>
+
+<h4 class="reveal">docker-compose.yml — the dev stack</h4>
+<div class="cb reveal"><span class="lang">docker-compose.yml</span><pre><span class="k">services</span>:
+  <span class="k">pipeline</span>:
+    <span class="k">build</span>: .
+    <span class="k">depends_on</span>:
+      <span class="k">postgres</span>: { <span class="k">condition</span>: service_healthy }   <span class="c"># wait for READY, not just started</span>
+    <span class="k">environment</span>:
+      <span class="k">DB_HOST</span>: postgres                            <span class="c"># service name (§15)</span>
+      <span class="k">DB_USER</span>: dev
+      <span class="k">DB_PASSWORD</span>: dev
+    <span class="k">volumes</span>:
+      - ./src:/app/src                              <span class="c"># live-edit in dev; NOT in prod (§14)</span>
+
+  <span class="k">postgres</span>:
+    <span class="k">image</span>: postgres:16
+    <span class="k">environment</span>:
+      <span class="k">POSTGRES_USER</span>: dev
+      <span class="k">POSTGRES_PASSWORD</span>: dev
+      <span class="k">POSTGRES_DB</span>: warehouse
+    <span class="k">volumes</span>: [pgdata:/var/lib/postgresql/data]     <span class="c"># the data outlives `compose down`</span>
+    <span class="k">healthcheck</span>:
+      <span class="k">test</span>: [<span class="g">"CMD-SHELL"</span>, <span class="g">"pg_isready -U dev"</span>]
+      <span class="k">interval</span>: 5s
+      <span class="k">retries</span>: 5
+
+<span class="k">volumes</span>:
+  <span class="k">pgdata</span>:</pre></div>
+
+<h4 class="reveal">The CI job — test <em>inside</em> the image</h4>
+<div class="cb reveal"><span class="lang">.github/workflows/docker.yml</span><pre><span class="k">jobs</span>:
+  <span class="k">build-test-push</span>:
+    <span class="k">runs-on</span>: ubuntu-latest
+    <span class="k">steps</span>:
+      - <span class="k">uses</span>: actions/checkout@v4
+
+      - <span class="k">name</span>: Build the image
+        <span class="k">run</span>: docker build --platform linux/amd64 -t acme/etl:${{ github.sha }} .
+        <span class="c">#                    ↑ explicit platform — never trust the runner's default</span>
+
+      - <span class="k">name</span>: Run the tests INSIDE the image we just built
+        <span class="k">run</span>: |
+          docker run --rm --entrypoint pytest acme/etl:${{ github.sha }} -q
+        <span class="c"># ↑ overriding the entrypoint runs pytest in the exact prod environment.</span>
+        <span class="c">#   If the tests pass here, they pass in production — same bytes.</span>
+
+      - <span class="k">name</span>: Push (only from main, only if the tests passed)
+        <span class="k">if</span>: github.ref == <span class="g">'refs/heads/main'</span>
+        <span class="k">run</span>: docker push acme/etl:${{ github.sha }}</pre></div>
+<p class="reveal">This is the detail that makes containerised CI worth doing. Most pipelines install dependencies on the runner and run <code>pytest</code> there — which tests <em>the runner's</em> environment, not your image's. Running the suite with <code>--entrypoint pytest</code> against the freshly built image tests <strong>the artefact you're about to deploy</strong>. And tagging with the Git SHA means every image is traceable to exactly one commit.</p>
+
+<h3 class="reveal">The life of a change</h3>
+<div class="step reveal"><div class="num-bubble">1</div><div class="body"><strong>You edit <code>src/pipeline.py</code>.</strong> In local dev, that's it — the file is bind-mounted, so <code>docker compose restart pipeline</code> picks it up instantly. <em>No rebuild at all.</em></div></div>
+<div class="step reveal"><div class="num-bubble">2</div><div class="body"><strong>You rebuild anyway (for CI).</strong> Docker replays the cache: <code>FROM</code> ✓, <code>apt-get</code> ✓, <code>COPY requirements.txt</code> ✓, <code>pip install</code> <strong>✓ CACHED</strong> — the ninety-second layer is untouched, because <code>requirements.txt</code> didn't change. Only <code>COPY src/</code> and below rebuild. <strong>Total: about two seconds.</strong></div></div>
+<div class="step reveal"><div class="num-bubble">3</div><div class="body"><strong>Now you add <code>polars</code> to <code>requirements.txt</code>.</strong> That file changed, so its <code>COPY</code> layer busts, and <em>everything below it</em> rebuilds — including <code>pip install</code>. This build takes the full ninety seconds. That's correct and unavoidable: the dependencies genuinely changed. The point of the ordering is that this happens <em>only</em> when dependencies change, not on every code edit.</div></div>
+<div class="step reveal"><div class="num-bubble">4</div><div class="body"><strong>CI builds, tests inside the image, pushes it, and production pulls it.</strong> No environment was assembled twice. Nothing was installed on a server by hand. The image that passed the tests is the image that runs.</div></div>
+
+<div class="callout gr reveal">
+  <p style="margin:.2em 0"><span class="t"><svg class="ico"><use href="#i-check"/></svg> Why this shape holds up</span></p>
+  <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">Notice what you get almost for free: a new teammate runs <code>docker compose up</code> and has a working Postgres and a working pipeline in two minutes; CI tests the real artefact instead of an approximation of it; production runs bytes that were tested, not a rebuild that <em>should</em> be equivalent. Every one of those is a class of bug that simply stops happening.</p>
+</div>
+
+<!-- 15 -->
+<h2 id="trouble" class="reveal"><span class="hico"><svg class="ico"><use href="#i-search"/></svg></span><span class="n">21.</span> Troubleshooting: the errors you <em>will</em> hit</h2>
+<p class="reveal lead">Almost every Docker problem a data engineer meets is one of these eight. Learn to recognise them and you'll debug in seconds rather than hours.</p>
+
+<table class="reveal">
+  <tr><th>Symptom</th><th>What's really happening</th><th>Fix</th></tr>
+  <tr><td>Container <strong>exits immediately</strong>, no error</td><td>Its PID 1 finished. A container lives exactly as long as its main process (<a href="#run">§13</a>)</td><td><code>docker logs &lt;name&gt;</code>. If the command was meant to be long-running, it crashed — the logs say why</td></tr>
+  <tr><td><strong>Exit code 137</strong></td><td>The kernel OOM-killed it: it exceeded its memory cgroup. Very common with pandas</td><td>Raise <code>--memory</code>, or process in chunks. Watch <code>docker stats</code></td></tr>
+  <tr><td><strong><code>exec format error</code></strong> in the cloud</td><td>You built <code>arm64</code> on an Apple Silicon Mac; the runner is <code>amd64</code></td><td><code>docker build --platform linux/amd64</code></td></tr>
+  <tr><td><strong>connection refused</strong> to the database</td><td><code>localhost</code> inside a container means <em>that container</em> (<a href="#network">§15</a>)</td><td>Use the service name: <code>DB_HOST=postgres</code></td></tr>
+  <tr><td>DB connection fails <strong>only sometimes</strong> on startup</td><td><code>depends_on</code> waited for <em>started</em>, not <em>ready</em> (<a href="#compose">§17</a>)</td><td>Add a <code>healthcheck</code> + <code>condition: service_healthy</code></td></tr>
+  <tr><td><strong>My code change isn't showing up</strong></td><td>You ran the old image — <code>docker run</code> doesn't rebuild (<a href="#model">§02</a>)</td><td><code>docker build</code> again, or bind-mount the source in dev</td></tr>
+  <tr><td><strong>Permission denied</strong> on a bind-mounted file</td><td>The container's UID doesn't own the host folder</td><td>Match the UIDs (<code>--user $(id -u):$(id -g)</code>), or <code>chown</code> in the image</td></tr>
+  <tr><td><strong>My disk is full</strong></td><td>Dangling images, stopped containers, and an enormous build cache</td><td><code>docker system df</code> to see it, <code>docker system prune -a</code> to reclaim it</td></tr>
+</table>
+
+<div class="callout cy reveal">
+  <p style="margin:.2em 0"><span class="t"><svg class="ico"><use href="#i-eye"/></svg> The universal first move: get inside and look</span></p>
+  <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">When a container misbehaves, stop guessing and <strong>open a shell in it</strong>: <code>docker exec -it &lt;name&gt; bash</code> (or <code>sh</code> on slim images). Now you're standing <em>inside</em> the environment — check the files are where you think, that the env vars are set, that you can reach the database (<code>ping postgres</code>). If the container won't stay up long enough to exec into, override the entrypoint and get a shell instead of the app: <code>docker run -it --entrypoint bash acme/etl:1.4.0</code>. Nine bugs in ten become obvious within thirty seconds of doing this.</p>
+</div>
+
+<!-- 16 -->
+<h2 id="cheatsheet" class="reveal"><span class="hico"><svg class="ico"><use href="#i-list"/></svg></span><span class="n">22.</span> Quick-reference cheat sheet</h2>
+<div class="cb reveal"><span class="lang">docker — keep this handy</span><pre><span class="c">── build &amp; run ───────────────────────────────────────</span>
+docker build -t name:tag .                 <span class="c"># build (the "." is the CONTEXT)</span>
+docker build --platform linux/amd64 -t n .  <span class="c"># …for the cloud, from an M-series Mac</span>
+docker run --rm -it name:tag               <span class="c"># run, interactive, auto-delete</span>
+docker run -d -p 8080:80 --name web name   <span class="c"># detached, port published, named</span>
+docker run --rm --entrypoint bash name     <span class="c"># get a shell instead of the app</span>
+
+<span class="c">── inspect &amp; debug ───────────────────────────────────</span>
+docker ps  /  docker ps -a                 <span class="c"># running / all (incl. exited)</span>
+docker logs -f &lt;name&gt;                      <span class="c"># follow the logs   ← START HERE</span>
+docker exec -it &lt;name&gt; bash                <span class="c"># shell inside it   ← THEN HERE</span>
+docker inspect &lt;name&gt;                      <span class="c"># mounts, env, network, exit code</span>
+docker stats                               <span class="c"># live CPU / memory</span>
+
+<span class="c">── clean up (do this before you run out of disk) ─────</span>
+docker system df                           <span class="c"># what's using space?</span>
+docker system prune -a                     <span class="c"># reclaim it (removes unused images too)</span>
+docker volume ls  /  docker volume rm X    <span class="c"># volumes are NOT removed by prune</span>
+
+<span class="c">── compose ───────────────────────────────────────────</span>
+docker compose up -d --build               <span class="c"># build + start the whole stack</span>
+docker compose logs -f &lt;svc&gt;               <span class="c"># one service's logs</span>
+docker compose exec &lt;svc&gt; bash             <span class="c"># shell into a service</span>
+docker compose down                        <span class="c"># stop &amp; remove (volumes SURVIVE)</span>
+docker compose down -v                     <span class="c"># ⚠️ …and DELETE the volumes</span>
+
+<span class="c">── Dockerfile, in the right order ────────────────────</span>
+FROM python:3.12-slim          <span class="c"># slim, pinned. not alpine, not :latest</span>
+WORKDIR /app
+ENV PYTHONUNBUFFERED=1         <span class="c"># or your logs vanish</span>
+RUN apt-get update &amp;&amp; apt-get install -y X &amp;&amp; rm -rf /var/lib/apt/lists/*
+COPY requirements.txt .        <span class="c"># ← deps FIRST (cache!)</span>
+RUN pip install --no-cache-dir -r requirements.txt
+COPY src/ ./src/               <span class="c"># ← code LAST (changes most)</span>
+USER 1001                      <span class="c"># ← never ship as root</span>
+ENTRYPOINT ["python","-m","src.pipeline"]
+CMD ["--date","today"]         <span class="c"># the overridable default arg</span>
+
+<span class="c">── the mental model, in four lines ───────────────────</span>
+image      = read-only stack of layers        (the class)
+container  = image + thin writable layer      (the instance)
+volume     = storage that OUTLIVES containers (your data)
+registry   = where images live between machines</pre></div>
+
+<!-- glossary -->
+<h2 id="glossary" class="reveal"><span class="hico"><svg class="ico"><use href="#i-book"/></svg></span><span class="n">＊</span> Glossary</h2>
+<div class="gloss reveal">
+  <dl>
+    <dt>Image</dt><dd>A read-only, layered snapshot of a filesystem — your code plus everything it needs to run. Inert until you run it.</dd>
+    <dt>Container</dt><dd>A running instance of an image: an isolated process, plus a thin writable layer that is destroyed with it.</dd>
+    <dt>Layer</dt><dd>The filesystem change produced by one Dockerfile instruction. Immutable, cached, and shared between images. Deleting a file in a later layer only <em>hides</em> it.</dd>
+    <dt>Dockerfile</dt><dd>The recipe: an ordered list of instructions Docker executes to build an image.</dd>
+    <dt>Build context</dt><dd>The directory sent to the Docker engine at build time (the <code>.</code> in <code>docker build .</code>). <code>COPY</code> can only see inside it. Trim it with <code>.dockerignore</code>.</dd>
+    <dt>Layer cache</dt><dd>Docker's reuse of unchanged layers. Invalidated downward from the first changed instruction — which is why instruction order matters so much.</dd>
+    <dt>Multi-stage build</dt><dd>Using a fat image to compile and a slim one to ship, copying only artefacts across with <code>COPY --from</code>.</dd>
+    <dt>Registry</dt><dd>Where images are stored and shared: Docker Hub, GHCR, ECR, ACR, Artifact Registry.</dd>
+    <dt>Tag</dt><dd>A human-readable version label on an image (<code>:1.4.0</code>). Mutable — it can be moved. A <strong>digest</strong> (<code>@sha256:…</code>) cannot.</dd>
+    <dt>Volume</dt><dd>Docker-managed storage that outlives containers. Where your persistent data belongs.</dd>
+    <dt>Bind mount</dt><dd>A host directory mapped into a container. Ideal for live-editing source in development.</dd>
+    <dt>Namespaces</dt><dd>The kernel feature that decides what a container can <em>see</em> (its own filesystem, processes, network).</dd>
+    <dt>cgroups</dt><dd>The kernel feature that decides what a container can <em>use</em> (CPU, memory). Exceeding a memory cgroup gets you exit code 137.</dd>
+    <dt>ENTRYPOINT vs CMD</dt><dd><code>ENTRYPOINT</code> is the executable that always runs; <code>CMD</code> is the default arguments, overridable at <code>docker run</code>.</dd>
+    <dt>EXPOSE</dt><dd>Documentation only. It publishes nothing — <code>docker run -p</code> does that.</dd>
+    <dt>Compose</dt><dd>A YAML file defining a multi-container stack, plus the network and volumes to wire it together. One command to start it all.</dd>
+    <dt>Healthcheck</dt><dd>A command Docker runs to decide if a container is genuinely <em>ready</em>, not merely started. What <code>depends_on: service_healthy</code> waits for.</dd>
+    <dt>OCI</dt><dd>The Open Container Initiative — the standard that makes images portable across Docker, Podman, containerd and Kubernetes.</dd>
+    <dt>PID 1</dt><dd>The container's main process. When it exits, the container stops. This explains most "why did my container die?" questions.</dd>
+  </dl>
+</div>
+
+<hr/>
+<p class="reveal" style="color:#9aa0b4;font-size:14.5px">That's the full toolkit: image vs container, how the isolation actually works, the Dockerfile, the layer cache, multi-stage builds, volumes, networking, Compose, a <a href="#example">worked repo</a> you can copy, and the traps that are specifically ours. Bookmark <a href="#cheatsheet">§22</a> as your day-to-day reference — and remember the through-line: <em>build once, keep the image small, never run as root, and assume anything not on a volume is already gone.</em></p>
+
+<footer class="reveal">
+  <p>Part of <a href="../">Data &amp; AI Engineering, Simply Explained</a> · an <a href="../#essentials">Essentials</a> reference. Pairs with <a href="../cicd-essentials/">CI/CD Essentials</a>, <a href="../terraform-essentials/">Terraform Essentials</a> and <a href="../git-essentials/">Git Essentials</a>.</p>
+  <p>© 2026 · Hao Tieu · Built with GitHub Pages · <a href="https://linkedin.com/in/haotieu2001" target="_blank" rel="noopener">LinkedIn</a></p>
+</footer>
+</div><!-- /page -->
+
+<script>
+  var bar=document.getElementById('bar');
+  function prog(){var h=document.documentElement;var s=h.scrollTop||document.body.scrollTop;var max=(h.scrollHeight-h.clientHeight)||1;bar.style.width=(s/max*100)+'%';}
+  document.addEventListener('scroll',prog,{passive:true});prog();
+  function revealAll(){document.querySelectorAll('.reveal').forEach(function(el){el.classList.add('in');});}
+  try{
+    var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}});},{threshold:.06});
+    document.querySelectorAll('.reveal').forEach(function(el){io.observe(el);});
+    window.addEventListener('load',function(){setTimeout(revealAll,1500);});
+    setTimeout(revealAll,2200);
+  }catch(e){revealAll();}
+</script>
+</body>
+</html>

@@ -1,0 +1,1604 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>How Postgres Stores Your Data</title>
+<meta name="description" content="A data engineer's guide to PostgreSQL internals: pages and tuples, the heap, MVCC and dead tuples, VACUUM and bloat, TOAST, B-tree and BRIN and GIN indexes, index-only scans and the visibility map, partial and covering indexes, declarative partitioning and pruning, reading EXPLAIN, and the monitoring queries to actually run — every claim verified against PostgreSQL 18."/>
+<meta property="og:type" content="article"/>
+<meta property="og:title" content="How Postgres Stores Your Data"/>
+<meta property="og:description" content="Pages, heap, MVCC, VACUUM, TOAST, B-tree, BRIN, index-only scans, partitioning, EXPLAIN and monitoring — Postgres internals for data engineers."/>
+<meta property="og:url" content="https://haotieu2001.github.io/postgres-internals/"/>
+<meta property="og:image" content="https://haotieu2001.github.io/og-cover.png"/>
+<meta property="og:image:width" content="1200"/>
+<meta property="og:image:height" content="630"/>
+<meta property="og:image:alt" content="How Postgres Stores Your Data"/>
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:title" content="How Postgres Stores Your Data"/>
+<meta name="twitter:description" content="Pages, heap, MVCC, VACUUM, TOAST, indexes, partitioning, EXPLAIN and monitoring — verified against PostgreSQL 18."/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+<style>
+  :root{
+    --bg:#1A1A1A; --bg2:#121212; --ink:#F1F1F1; --muted:#9aa0b4; --dim:#666666;
+    --blue2:#E8873A; --cyan:#F5BD1F; --cyan2:#FFD97A; --purple:#E8873A; --magenta2:#FFC857;
+    --grad:linear-gradient(90deg,#C98A00,#F5BD1F,#FFD97A);
+    --font:"JetBrainsMono Nerd Font","JetBrains Mono","Symbols Nerd Font",ui-monospace,"Cascadia Code",Menlo,Consolas,monospace;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font);font-size:16px;line-height:1.85;-webkit-font-smoothing:antialiased}
+  #bar{position:fixed;top:0;left:0;height:3px;width:0;z-index:50;background:var(--grad);box-shadow:0 0 12px #F5BD1F99;transition:width .1s linear}
+  .page{max-width:880px;margin:0 auto;padding:0 24px}
+  header{padding:30px 0 6px}
+  .kicker{font-size:13px;color:var(--dim)}
+  .back{color:var(--cyan2);text-decoration:none;font-size:13px;border-bottom:1px dotted #FFD97A66}
+  h1{font-size:clamp(28px,4.6vw,46px);line-height:1.12;margin:12px 0 12px;font-weight:800;
+     background:var(--grad);background-size:220% auto;-webkit-background-clip:text;background-clip:text;color:transparent;animation:sheen 9s linear infinite}
+  @keyframes sheen{to{background-position:220% center}}
+  .dek{color:var(--muted);font-size:17px}
+  .byline{margin-top:14px;font-size:13px;color:var(--dim)}
+  h2{font-size:clamp(21px,3.2vw,28px);margin:52px 0 6px;font-weight:800;line-height:1.22;padding-top:14px;border-top:1px solid #23232e;display:flex;align-items:center;gap:10px}
+  h2 .n{color:var(--blue2)}
+  h3{font-size:18px;margin:28px 0 4px;color:#fff;font-weight:700}
+  h4{font-size:15px;margin:20px 0 4px;color:var(--cyan2);font-weight:700}
+  p,li{color:#dcdce4}
+  .lead{font-size:18px;color:#e7e7ee}
+  a{color:var(--cyan2)}
+  hr{border:0;border-top:1px solid #2c2c36;margin:36px 0}
+  code{font-family:var(--font);background:#23232b;color:#FFD97A;padding:1px 6px;border-radius:5px;font-size:.88em;border:1px solid #2f2f3a}
+  .cb{margin:16px 0}
+  .cb .lang{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:#9aa0b4;background:#1b1b24;border:1px solid #2c2c36;border-bottom:none;border-radius:9px 9px 0 0;padding:4px 12px}
+  pre{margin:0;background:#0d0d13;border:1px solid #23232e;border-radius:0 10px 10px 10px;padding:14px 16px;overflow-x:auto;
+      font-family:var(--font);font-size:13px;line-height:1.65;color:#d8dcea;white-space:pre}
+  pre .c{color:#6b7280}
+  pre .o{color:#9aa0b4}
+  pre .k{color:#FFD97A}
+  pre .g{color:#8CD98C}
+  pre .y{color:#f0b429}
+  pre .r{color:#FF6B8B}
+  pre .p{color:#E8873A}
+  .callout{border-left:4px solid var(--blue2);background:#1c1710;border-radius:0 12px 12px 0;padding:14px 18px;margin:22px 0}
+  .callout.cy{border-color:var(--cyan);background:#241d0b}
+  .callout.mg{border-color:var(--magenta2);background:#241d0b}
+  .callout.gd{border-color:#f0b429;background:#241d0f}
+  .callout.gr{border-color:#22D3EE;background:#0A2028}
+  .callout.rd{border-color:#FF6B8B;background:#241014}
+  .callout .t{color:var(--cyan2);font-weight:800}
+  .callout.gd .t{color:#f0b429}
+  .callout.gr .t{color:#22D3EE}
+  .callout.mg .t{color:var(--magenta2)}
+  .callout.rd .t{color:#FF6B8B}
+  .tldr{border:1px solid #5a4416;background:linear-gradient(180deg,#1c1710,#121212);border-radius:16px;padding:20px 24px;margin:26px 0}
+  .tldr h4{margin:0 0 8px;font-size:13px;letter-spacing:.2em;text-transform:uppercase;color:var(--cyan2)}
+  .gloss{border:1px solid #2c2c36;background:#141419;border-radius:14px;padding:18px 22px;margin:24px 0}
+  .gloss h4{margin:0 0 6px;color:#fff;font-size:15px}
+  .gloss dl{margin:0;font-size:13.5px}
+  .gloss dt{color:var(--cyan2);font-weight:700;margin-top:9px}
+  .gloss dd{margin:1px 0 0;color:#cdd0dd}
+  .toc{background:#15151b;border:1px solid #2c2c36;border-radius:14px;padding:16px 22px;margin:24px 0;column-count:2;column-gap:28px}
+  .toc a{display:block;color:var(--cyan2);text-decoration:none;font-size:13.5px;line-height:1.9;break-inside:avoid}
+  .toc a:hover{color:#fff}
+  .toc>strong{column-span:all;display:block;margin-bottom:6px;color:#fff}
+  .tw{overflow-x:auto;margin:16px 0}
+  table{border-collapse:collapse;width:100%;font-size:13.5px;margin:0}
+  th,td{border:1px solid #2c2c36;padding:8px 11px;text-align:left;vertical-align:top}
+  th{background:#1d1d27;color:#fff}
+  tr:nth-child(even) td{background:#161620}
+  td.ok{color:#8CD98C}
+  td.no{color:#FF6B8B}
+  .ico{width:1em;height:1em;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+  .ico.f{fill:currentColor;stroke:none}
+  .hico{display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;border-radius:11px;flex:0 0 36px;
+        background:#241d0b;border:1px solid #5a4416;color:var(--cyan2)}
+  .hico .ico{width:19px;height:19px}
+  .toc a .ico{width:14px;height:14px;margin-right:9px;vertical-align:-2px;opacity:.85}
+  .callout .t .ico{width:16px;height:16px;vertical-align:-3px;margin-right:5px}
+  .tldr h4 .ico,.gloss h4 .ico{width:15px;height:15px;vertical-align:-2px;margin-right:6px}
+  .stack{margin-top:14px;display:flex;align-items:center;gap:10px;font-size:12px;color:var(--dim);flex-wrap:wrap}
+  .chip{display:inline-flex;align-items:center;gap:7px;padding:5px 12px;border-radius:999px;
+        border:1px solid #5a4416;background:#241d0b;color:#FFD97A;font-weight:700;font-size:11.5px}
+  .chip .ico{width:14px;height:14px}
+  figure.fig{margin:26px 0;text-align:center}
+  figure.fig svg{display:block;width:100%;max-width:100%;height:auto;border:1px solid #23232e;border-radius:14px;background:#0d0d13}
+  figure.fig figcaption{font-size:12.5px;color:var(--muted);margin-top:9px;font-style:italic;line-height:1.6}
+  .step{display:flex;gap:12px;align-items:flex-start;margin:14px 0}
+  .step .num-bubble{flex:0 0 28px;height:28px;border-radius:50%;background:var(--grad);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:#fff;margin-top:2px}
+  .step .body{flex:1}
+  footer{border-top:1px solid #23232e;margin-top:50px;padding:24px 0 90px;color:var(--dim);font-size:13px}
+  footer a{color:var(--cyan2)}
+  .js .reveal{opacity:0;transform:translateY(16px);transition:opacity .6s ease,transform .6s ease}
+  .js .reveal.in{opacity:1;transform:none}
+  @media (prefers-reduced-motion:reduce){.js .reveal{opacity:1;transform:none}}
+</style>
+<script>document.documentElement.classList.add('js');</script>
+</head>
+<body>
+<div id="bar"></div>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs>
+<symbol id="i-question" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.6 9.4a2.5 2.5 0 1 1 3.3 2.4c-.6.2-.9.8-.9 1.5v.6M12 17h.01"/></symbol>
+<symbol id="i-layers" viewBox="0 0 24 24"><path d="m12 3 9 4.8-9 4.8-9-4.8 9-4.8Z"/><path d="m3 12.6 9 4.8 9-4.8M3 17.2l9 4.8 9-4.8"/></symbol>
+<symbol id="i-workflow" viewBox="0 0 24 24"><rect x="3" y="3.5" width="7" height="6" rx="1.5"/><rect x="14" y="14.5" width="7" height="6" rx="1.5"/><path d="M6.5 9.5v5a3 3 0 0 0 3 3H14"/></symbol>
+<symbol id="i-check" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="m8 12.2 2.7 2.7L16.2 9"/></symbol>
+<symbol id="i-rocket" viewBox="0 0 24 24"><path d="M12 2.5c3 2.6 4.8 6.4 4.8 10.6L12 16.4l-4.8-3.3C7.2 8.9 9 5.1 12 2.5Z"/><path d="M7.2 13.1 4.4 15v4.2l3-1.9M16.8 13.1l2.8 1.9v4.2l-3-1.9M12 19.5v2.3"/><circle cx="12" cy="10" r="1.7"/></symbol>
+<symbol id="i-terminal" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2.5"/><path d="m7.5 9.5 3 2.5-3 2.5M13.5 15h3.5"/></symbol>
+<symbol id="i-package" viewBox="0 0 24 24"><path d="m12 2.8 8.2 4.6v9.2L12 21.2l-8.2-4.6V7.4L12 2.8Z"/><path d="m3.8 7.4 8.2 4.6 8.2-4.6M12 12v9.2"/></symbol>
+<symbol id="i-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18"/><path d="M12 3c2.4 2.7 3.6 5.7 3.6 9s-1.2 6.3-3.6 9c-2.4-2.7-3.6-5.7-3.6-9S9.6 5.7 12 3Z"/></symbol>
+<symbol id="i-repeat" viewBox="0 0 24 24"><path d="M16.5 3 20 6.5 16.5 10"/><path d="M4 11.5V9a2.5 2.5 0 0 1 2.5-2.5H20"/><path d="M7.5 21 4 17.5 7.5 14"/><path d="M20 12.5V15a2.5 2.5 0 0 1-2.5 2.5H4"/></symbol>
+<symbol id="i-database" viewBox="0 0 24 24"><ellipse cx="12" cy="6" rx="8" ry="3.2"/><path d="M4 6v12c0 1.8 3.6 3.2 8 3.2s8-1.4 8-3.2V6"/><path d="M20 12c0 1.8-3.6 3.2-8 3.2S4 13.8 4 12"/></symbol>
+<symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 2.8 4.8 5.6v5.2c0 4.4 3 8.4 7.2 9.8 4.2-1.4 7.2-5.4 7.2-9.8V5.6L12 2.8Z"/><path d="m9 12 2.2 2.2L15.4 10"/></symbol>
+<symbol id="i-list" viewBox="0 0 24 24"><path d="M8.5 6h12M8.5 12h12M8.5 18h12M3.7 6h.01M3.7 12h.01M3.7 18h.01"/></symbol>
+<symbol id="i-book" viewBox="0 0 24 24"><path d="M4 5a3 3 0 0 1 3-3h13v18H7a3 3 0 0 0-3 3V5Z"/><path d="M8 2v18"/></symbol>
+<symbol id="i-key" viewBox="0 0 24 24"><circle cx="7.2" cy="16.3" r="3.4"/><path d="m9.7 13.9 9.6-9.6M16.6 6.9l2.3 2.3M14 9.5l2.3 2.3"/></symbol>
+<symbol id="i-bulb" viewBox="0 0 24 24"><path d="M9.2 18h5.6M10.4 21h3.2"/><path d="M12 3a6 6 0 0 0-3.4 10.9c.5.4.8 1 .8 1.7v.4h5.2v-.4c0-.7.3-1.3.8-1.7A6 6 0 0 0 12 3Z"/></symbol>
+<symbol id="i-warn" viewBox="0 0 24 24"><path d="M12 3.2 2.8 19.6h18.4L12 3.2Z"/><path d="M12 9.5v4.2M12 16.8h.01"/></symbol>
+<symbol id="i-alert" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7.2v5.4M12 16.4h.01"/></symbol>
+<symbol id="i-compass" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="m15.6 8.4-2.1 5.1-5.1 2.1 2.1-5.1 5.1-2.1Z"/></symbol>
+<symbol id="i-blocks" viewBox="0 0 24 24"><rect x="3.5" y="3.5" width="7" height="7" rx="1.6"/><rect x="13.5" y="3.5" width="7" height="7" rx="1.6"/><rect x="3.5" y="13.5" width="7" height="7" rx="1.6"/><rect x="13.5" y="13.5" width="7" height="7" rx="1.6"/></symbol>
+<symbol id="i-search" viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m15.2 15.2 4.3 4.3"/></symbol>
+<symbol id="i-code" viewBox="0 0 24 24"><path d="m8 8.5-4 3.5 4 3.5M16 8.5l4 3.5-4 3.5M13.6 5l-3.2 14"/></symbol>
+<symbol id="i-plug" viewBox="0 0 24 24"><path d="M9 3v5.5M15 3v5.5"/><path d="M6.5 8.5h11V12a5.5 5.5 0 0 1-11 0V8.5Z"/><path d="M12 17.5V21"/></symbol>
+<symbol id="i-file" viewBox="0 0 24 24"><path d="M14 3H7.5A2.5 2.5 0 0 0 5 5.5v13A2.5 2.5 0 0 0 7.5 21h9a2.5 2.5 0 0 0 2.5-2.5V8l-5-5Z"/><path d="M14 3v5h5"/></symbol>
+<symbol id="i-network" viewBox="0 0 24 24"><circle cx="5.5" cy="6" r="2.5"/><circle cx="5.5" cy="18" r="2.5"/><circle cx="18.5" cy="12" r="2.5"/><path d="m7.9 7.2 8.2 3.7M7.9 16.8l8.2-3.7"/></symbol>
+<symbol id="i-disk" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2.5"/><path d="M3 12h18"/><path d="M7 16.5h.01M11 16.5h3"/><path d="M7 7.5h6"/></symbol>
+<symbol id="i-lock" viewBox="0 0 24 24"><rect x="4.5" y="10" width="15" height="10.5" rx="2.4"/><path d="M8 10V7.2a4 4 0 0 1 8 0V10"/></symbol>
+<symbol id="i-cloud" viewBox="0 0 24 24"><path d="M6.8 19.2h10.6a3.9 3.9 0 0 0 .4-7.8 6.1 6.1 0 0 0-11.7-1.7 3.8 3.8 0 0 0 .7 9.5Z"/></symbol>
+<symbol id="i-eye" viewBox="0 0 24 24"><path d="M2.6 12S6.2 5.8 12 5.8 21.4 12 21.4 12 17.8 18.2 12 18.2 2.6 12 2.6 12Z"/><circle cx="12" cy="12" r="3.1"/></symbol>
+<symbol id="i-zap" viewBox="0 0 24 24"><path d="M13.2 2.5 4.5 14h6.6l-1.3 7.5L19 10h-6.6l.8-7.5Z"/></symbol>
+<symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="3.6"/><path d="M4.8 20.2a7.2 7.2 0 0 1 14.4 0"/></symbol>
+<symbol id="i-filter" viewBox="0 0 24 24"><path d="M3.5 4.5h17l-6.6 7.8v6.4l-3.8 2.3v-8.7L3.5 4.5Z"/></symbol>
+<symbol id="i-merge" viewBox="0 0 24 24"><path d="M7 3.5v4.2a4 4 0 0 0 4 4h2a4 4 0 0 1 4 4v4.8"/><path d="M4.2 6.3 7 3.5l2.8 2.8"/><path d="M14.2 17.7 17 20.5l2.8-2.8"/></symbol>
+<symbol id="i-window" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2.5"/><path d="M3 9h18M9 9v11"/></symbol>
+<symbol id="i-split" viewBox="0 0 24 24"><path d="M12 20V9"/><path d="M12 9 6.5 3.8M12 9l5.5-5.2"/><circle cx="5.4" cy="3.4" r="1.8"/><circle cx="18.6" cy="3.4" r="1.8"/><circle cx="12" cy="21" r="1.8"/></symbol>
+<symbol id="i-sigma" viewBox="0 0 24 24"><path d="M18 4.5H6l6 7.5-6 7.5h12"/></symbol>
+<symbol id="i-target" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><circle cx="12" cy="12" r="4.6"/><circle cx="12" cy="12" r="1.1" fill="currentColor"/></symbol>
+</defs></svg>
+<div class="page">
+<header>
+  <div class="kicker"><a class="back" href="../">❮ Data &amp; AI Engineering, Simply Explained</a></div>
+  <h1>How Postgres Stores Your Data</h1>
+  <p class="dek">Every query you write eventually becomes the same physical act: <strong>read some 8 KB pages off a disk</strong>. An index is a device for reading fewer of them. A partition is a device for skipping them entirely. <code>VACUUM</code> exists because Postgres never overwrites a row in place. This page opens up the engine — <strong>the process model (why you need a connection pooler), the WAL, pages, tuples, the heap, MVCC, TOAST, B-trees, BRIN, partitioning</strong> — and then shows you how to read <code>EXPLAIN</code> and which monitoring queries actually tell you something.</p>
+  <div class="stack">
+    <span class="chip"><svg class="ico"><use href="#i-database"/></svg> PostgreSQL 18</span>
+    <span class="chip"><svg class="ico"><use href="#i-disk"/></svg> storage &#183; indexes &#183; partitions</span>
+    <span class="chip" style="color:#8CD98C;border-color:#2c4c34;background:#0f2015"><svg class="ico"><use href="#i-check"/></svg> every claim verified on a live server</span>
+  </div>
+  <div class="byline">~50 min read · Reference · Internals</div>
+</header>
+
+<div class="tldr reveal">
+  <h4><svg class="ico"><use href="#i-key"/></svg> The one idea (read this first)</h4>
+  <p style="margin:0;color:#dcdce4">A Postgres table is <strong>a pile of 8 KB pages, in no particular order</strong>. That pile is called the <strong>heap</strong>, and the database can only ever read whole pages — never a single row. So every performance question in this document reduces to one question: <em>how many pages did we have to touch?</em> A sequential scan touches all of them. An index touches a handful and then jumps to the exact pages holding the rows it wants. A partition lets the planner discard whole files without looking. And because Postgres uses <strong>MVCC</strong> — an <code>UPDATE</code> never overwrites a row, it writes a new version and leaves the old one behind as garbage — that pile of pages keeps accumulating dead rows, which is why <code>VACUUM</code> exists and why bloat is the most common self-inflicted wound in a Postgres database.</p>
+  <p style="margin:.8em 0 0;color:#dcdce4">Two facts about the <em>running</em> system sit underneath all of that. Postgres forks <strong>a whole OS process for every connection</strong>, so connections are expensive and a pooler is not optional. And it never writes your change to the data file when you ask — it writes it to a sequential log, the <strong>WAL</strong>, and returns. Durability comes from the log; the data pages catch up later.</p>
+</div>
+
+<div class="callout gr reveal">
+  <p style="margin:.2em 0"><span class="t"><svg class="ico"><use href="#i-check"/></svg> How this page was checked</span></p>
+  <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">Every number, plan and behaviour below was produced by running it on a live <strong>PostgreSQL 18.4</strong> server against a one-million-row table. The <code>EXPLAIN</code> output is real output, not a sketch. Where a claim is version-specific — and <a href="#variants">skip scan</a> is brand new in PG 18 — that's called out.</p>
+</div>
+
+<div class="toc reveal">
+  <strong>Contents</strong>
+  <a href="#names"><svg class="ico"><use href="#i-alert"/></svg>01 · First: half these words mean something else here</a>
+  <a href="#arch"><svg class="ico"><use href="#i-workflow"/></svg>02 · Architecture: processes, memory, WAL</a>
+  <a href="#hierarchy"><svg class="ico"><use href="#i-layers"/></svg>03 · The storage hierarchy: cluster to tuple</a>
+  <a href="#page"><svg class="ico"><use href="#i-disk"/></svg>04 · Inside an 8 KB page</a>
+  <a href="#heap"><svg class="ico"><use href="#i-database"/></svg>05 · The heap — and the clustered index that isn't</a>
+  <a href="#mvcc"><svg class="ico"><use href="#i-repeat"/></svg>06 · MVCC: an UPDATE is a DELETE plus an INSERT</a>
+  <a href="#vacuum"><svg class="ico"><use href="#i-shield"/></svg>07 · VACUUM, autovacuum, and bloat</a>
+  <a href="#toast"><svg class="ico"><use href="#i-package"/></svg>08 · TOAST: oversized values</a>
+  <a href="#btree"><svg class="ico"><use href="#i-network"/></svg>09 · B-tree: how an index finds a row</a>
+  <a href="#scans"><svg class="ico"><use href="#i-search"/></svg>10 · The scan types, and reading EXPLAIN</a>
+  <a href="#joins"><svg class="ico"><use href="#i-merge"/></svg>11 · How Postgres joins tables</a>
+  <a href="#ios"><svg class="ico"><use href="#i-eye"/></svg>12 · Index-only scans and the visibility map</a>
+  <a href="#types"><svg class="ico"><use href="#i-blocks"/></svg>13 · The other index types: GIN, GiST, BRIN, Hash</a>
+  <a href="#variants"><svg class="ico"><use href="#i-list"/></svg>14 · Unique, partial, covering, expression, multicolumn</a>
+  <a href="#columnstore"><svg class="ico"><use href="#i-cloud"/></svg>15 · Columnstore: the thing Postgres doesn't have</a>
+  <a href="#partition"><svg class="ico"><use href="#i-split"/></svg>16 · Partitioning: RANGE, LIST, HASH</a>
+  <a href="#partidx"><svg class="ico"><use href="#i-merge"/></svg>17 · Partitioning and indexing together</a>
+  <a href="#optimize"><svg class="ico"><use href="#i-zap"/></svg>18 · The optimization playbook</a>
+  <a href="#monitor"><svg class="ico"><use href="#i-eye"/></svg>19 · Monitoring: the queries to actually run</a>
+  <a href="#traps"><svg class="ico"><use href="#i-warn"/></svg>20 · The traps checklist</a>
+  <a href="#cheatsheet"><svg class="ico"><use href="#i-list"/></svg>21 · Cheat sheet</a>
+  <a href="#glossary"><svg class="ico"><use href="#i-book"/></svg>＊ · Glossary</a>
+</div>
+
+<h2 id="names" class="reveal"><span class="hico"><svg class="ico"><use href="#i-alert"/></svg></span><span class="n">01.</span> First: half these words mean something else here</h2>
+<p class="reveal lead">Most SQL-internals material online is written about <strong>SQL Server</strong>. Bring its vocabulary to Postgres and you will ask for things that <em>do not exist</em>.</p>
+
+<p class="reveal">This is not a pedantic point. I ran every one of these against a live PostgreSQL 18 server, and <code>CREATE CLUSTERED INDEX</code>, <code>CREATE NONCLUSTERED INDEX</code>, <code>CREATE COLUMNSTORE INDEX</code>, <code>CREATE FILTERED INDEX</code> and <code>CREATE FILEGROUP</code> each came back with a flat <strong>syntax error</strong>. Some of these concepts have a Postgres equivalent under a different name; one of them has <em>no equivalent at all</em>. Start here, and the rest of the page will make sense.</p>
+
+<div class="tw reveal"><table>
+<tr><th>SQL Server term</th><th>In PostgreSQL</th><th>What's really going on</th></tr>
+<tr><td><strong>Data page</strong> (8 KB)</td><td class="ok">Same — <code>block_size</code> = 8192</td><td>Identical idea, identical size. The unit of I/O</td></tr>
+<tr><td><strong>Heap</strong></td><td class="ok">Same — but <em>everything</em> is one</td><td><strong>Every Postgres table is a heap.</strong> There is no other option</td></tr>
+<tr><td><strong>Clustered index</strong></td><td class="no">Does not exist</td><td>Postgres never stores the table <em>in</em> an index. <code>CLUSTER</code> is a one-off physical sort that is <strong>not maintained</strong> (§05)</td></tr>
+<tr><td><strong>Non-clustered index</strong></td><td>Just "an index"</td><td>All Postgres indexes are secondary structures pointing back at the heap. The word is unnecessary</td></tr>
+<tr><td><strong>Filtered index</strong></td><td class="ok"><strong>Partial index</strong></td><td>Same concept, different name: <code>CREATE INDEX … WHERE …</code> (§14)</td></tr>
+<tr><td><strong>File group</strong></td><td class="ok"><strong>Tablespace</strong></td><td>A named location on disk you can place tables and partitions into (§03)</td></tr>
+<tr><td><strong>Rowstore index</strong></td><td>Just "an index"</td><td>Postgres is row-oriented throughout. The word only exists to contrast with columnstore</td></tr>
+<tr><td><strong>Columnstore index</strong></td><td class="no">Does not exist in core</td><td>The one genuine gap. What to use instead — and why it points at your lakehouse — is §15</td></tr>
+</table></div>
+
+<div class="callout cy reveal">
+  <p style="margin:.2em 0"><span class="t"><svg class="ico"><use href="#i-key"/></svg> The single most important line in that table</span></p>
+  <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd"><strong>PostgreSQL has no clustered index.</strong> In SQL Server, a clustered index <em>is</em> the table — the rows live in the index's leaf pages, physically sorted by the key. In Postgres that is simply not a thing that can happen. The table is always an unordered heap, and every index is always a separate structure holding pointers back into it. If you have been reasoning about Postgres performance using a mental model where "the primary key sorts the table on disk" — <strong>it doesn't</strong>, and §05 explains what that changes.</p>
+</div>
+
+<h2 id="arch" class="reveal"><span class="hico"><svg class="ico"><use href="#i-workflow"/></svg></span><span class="n">02.</span> The architecture: processes, memory, and the WAL</h2>
+<p class="reveal lead">Before the storage layout, the shape of the running system. Postgres is <strong>a family of cooperating OS processes sharing one block of memory</strong> — and it forks <em>a whole new process for every connection</em>.</p>
+
+<p class="reveal">That last fact is not a detail. Postgres is <strong>process-based, not thread-based</strong>. Connect, and the postmaster <code>fork()</code>s a dedicated backend process that lives until you disconnect. It has its own memory, its own file descriptors, and costs several megabytes. This is the single most consequential architectural fact for anyone running Postgres at scale, and we come back to what it means in a moment.</p>
+
+<p class="reveal">Here is what was actually running on the live server:</p>
+
+<div class="cb reveal"><span class="lang">text</span><pre>postgres: checkpointer                     <span class="c">← writes dirty pages at a checkpoint</span>
+postgres: background writer                <span class="c">← trickles dirty pages out continuously</span>
+postgres: walwriter                        <span class="c">← flushes the WAL buffer to disk</span>
+postgres: autovacuum launcher              <span class="c">← starts vacuum workers (§07)</span>
+postgres: logical replication launcher     <span class="c">← replication</span>
+postgres: io worker 0                      <span class="c">← NEW in PG 18: asynchronous I/O</span>
+postgres: io worker 1
+postgres: io worker 2
+postgres: <span class="g">client backend</span>                  <span class="c">← ONE OF THESE PER CONNECTION</span>
+</pre></div>
+
+<h3 class="reveal">The write path: why COMMIT is both fast and durable</h3>
+
+<p class="reveal">This is the central mechanism of the whole engine. When you write a row, Postgres does <strong>not</strong> go and update the data file. It writes the change to the <strong>WAL</strong> (Write-Ahead Log) — a sequential, append-only journal — and modifies the page in RAM. Your <code>COMMIT</code> returns as soon as the <em>WAL</em> is safely on disk. The actual data page may not be written for minutes.</p>
+
+<figure class="fig reveal">
+<svg viewBox="0 0 760 320" width="100%" aria-label="The Postgres write path in two tracks: the synchronous commit path through the WAL, and the lazy background path through shared buffers and the checkpointer to the data file">
+  <defs>
+    <marker id="w-g" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#8CD98C"/></marker>
+    <marker id="w-d" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#9aa0b4"/></marker>
+  </defs>
+  <text x="380" y="20" font-size="10.5" fill="#9aa0b4" text-anchor="middle" letter-spacing="1.5">WAL FIRST &#183; DATA PAGES LATER</text>
+
+  <text x="475" y="40" font-size="8.5" fill="#8CD98C" text-anchor="middle" font-weight="700">&#9312; COMMIT PATH &#183; synchronous</text>
+
+  <rect x="30" y="115" width="120" height="56" rx="7" fill="#171310" stroke="#E8873A"/>
+  <text x="90" y="139" font-size="10" fill="#E8873A" text-anchor="middle" font-weight="700">BACKEND</text>
+  <text x="90" y="157" font-size="8" fill="#9aa0b4" text-anchor="middle">your connection</text>
+
+  <rect x="220" y="50" width="180" height="60" rx="7" fill="#0f2015" stroke="#8CD98C"/>
+  <text x="310" y="74" font-size="10" fill="#8CD98C" text-anchor="middle" font-weight="700">WAL BUFFER</text>
+  <text x="310" y="92" font-size="8.5" fill="#cdd0dd" text-anchor="middle">the change record</text>
+
+  <rect x="540" y="50" width="190" height="60" rx="7" fill="#0f2015" stroke="#8CD98C" stroke-width="2"/>
+  <text x="635" y="74" font-size="10" fill="#8CD98C" text-anchor="middle" font-weight="700">WAL FILE &#183; on disk</text>
+  <text x="635" y="92" font-size="8.5" fill="#8CD98C" text-anchor="middle">fsync at COMMIT</text>
+
+  <path d="M154 132 L 214 86" stroke="#8CD98C" stroke-width="1.6" fill="none" marker-end="url(#w-g)"/>
+  <path d="M404 80 H 534" stroke="#8CD98C" stroke-width="2.4" fill="none" marker-end="url(#w-g)"/>
+
+  <rect x="190" y="190" width="155" height="60" rx="7" fill="#1a1608" stroke="#F5BD1F"/>
+  <text x="267" y="214" font-size="9" fill="#FFD97A" text-anchor="middle" font-weight="700">SHARED_BUFFERS</text>
+  <text x="267" y="232" font-size="7.5" fill="#cdd0dd" text-anchor="middle">dirty page in RAM</text>
+
+  <rect x="375" y="190" width="155" height="60" rx="7" fill="#14141c" stroke="#4a4a55"/>
+  <text x="452" y="214" font-size="9" fill="#cdd0dd" text-anchor="middle" font-weight="700">CHECKPOINTER</text>
+  <text x="452" y="232" font-size="7.5" fill="#9aa0b4" text-anchor="middle">flushes dirty pages</text>
+
+  <rect x="560" y="190" width="170" height="60" rx="7" fill="#14141c" stroke="#4a4a55"/>
+  <text x="645" y="214" font-size="9" fill="#cdd0dd" text-anchor="middle" font-weight="700">DATA FILE &#183; on disk</text>
+  <text x="645" y="232" font-size="7.5" fill="#9aa0b4" text-anchor="middle">written LATER</text>
+
+  <path d="M154 154 L 184 206" stroke="#F5BD1F" stroke-width="1.6" fill="none" marker-end="url(#w-d)"/>
+  <path d="M349 220 H 369" stroke="#9aa0b4" stroke-width="1.4" fill="none" stroke-dasharray="5,3" marker-end="url(#w-d)"/>
+  <path d="M534 220 H 554" stroke="#9aa0b4" stroke-width="1.4" fill="none" stroke-dasharray="5,3" marker-end="url(#w-d)"/>
+
+  <text x="460" y="272" font-size="8.5" fill="#6b7280" text-anchor="middle">&#9313; DATA PATH &#183; lazy, in the background, minutes later</text>
+
+  <text x="380" y="304" font-size="10" fill="#8CD98C" text-anchor="middle">COMMIT returns as soon as the WAL is on disk. The data page follows later — and that is safe.</text>
+</svg>
+<figcaption>Durability comes from the WAL, not from the data file. If the server dies after the commit but before the checkpoint, the WAL is replayed on restart and the change is recovered.</figcaption>
+</figure>
+
+<p class="reveal">Why do it this way? Because <strong>the WAL is sequential and the data pages are scattered.</strong> Writing one 200-byte record to the end of a log file is enormously cheaper than fsyncing a dozen random 8 KB pages across the disk. So Postgres buys durability at sequential-write prices and defers the expensive random writes to a background process that can batch them. If the server is killed, the WAL is replayed on restart and every committed change comes back. That is <strong>crash recovery</strong>, and it is the same log that gets shipped to replicas.</p>
+
+<h3 class="reveal">Memory: the one setting that will OOM your server</h3>
+
+<div class="tw reveal"><table>
+<tr><th>Setting</th><th>Default (measured)</th><th>What it is</th><th>Scope</th></tr>
+<tr><td><code>shared_buffers</code></td><td>128 MB</td><td>The 8 KB page cache. <strong>Set to ~25% of RAM</strong></td><td class="ok">Shared — one, global</td></tr>
+<tr><td><code>work_mem</code></td><td>4 MB</td><td>Memory for <strong>one</strong> sort or hash operation</td><td class="no"><strong>Per operation, per connection</strong></td></tr>
+<tr><td><code>maintenance_work_mem</code></td><td>64 MB</td><td>For <code>VACUUM</code>, <code>CREATE INDEX</code>. Raise it — index builds get much faster</td><td>Per maintenance op</td></tr>
+<tr><td><code>effective_cache_size</code></td><td>4 GB</td><td>A <em>hint</em> to the planner about total OS + PG cache. Allocates nothing</td><td>Planner only</td></tr>
+<tr><td><code>max_connections</code></td><td>100</td><td>Each one is a full OS process</td><td>—</td></tr>
+</table></div>
+
+<div class="callout rd reveal">
+  <p style="margin:.2em 0"><span class="t"><svg class="ico"><use href="#i-warn"/></svg> <code>work_mem</code> is not a total. It multiplies.</span></p>
+  <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">This is the classic way to take a Postgres server down. <code>work_mem</code> is the limit for <strong>a single sort or hash node</strong> — and one query can easily have five of them, and you can have a hundred connections. So <code>work_mem = 256MB</code> does not mean "256 MB". It means <strong>256 MB × 5 nodes × 100 connections = 128 GB</strong>, and your server dies. Keep <code>work_mem</code> modest globally (4–32 MB), and raise it <em>per session</em> for the one big reporting query that genuinely needs it: <code>SET work_mem = '512MB';</code> before it, and only for it.</p>
+</div>
+
+<h3 class="reveal">Why you need a connection pooler</h3>
+
+<p class="reveal">Come back to the process model. Every connection is a forked OS process consuming several megabytes and a scheduler slot. A web application with 500 connections is asking Postgres to run 500 processes — and Postgres will do it, badly. Throughput <em>collapses</em> past a few hundred, because the machine spends its time context-switching rather than working.</p>
+
+<p class="reveal">The fix is a <strong>connection pooler</strong> — <code>PgBouncer</code> is the standard one. It keeps a small pool of real backend connections (say 20) and multiplexes thousands of client connections across them. Rule of thumb: <strong>the useful number of active backends is roughly <code>cores × 2–4</code></strong>, not "however many the app opens". If you are running Postgres behind an application server and you do not have a pooler, that is usually the first thing to fix — before any index.</p>
+
+<div class="callout gr reveal">
+  <p style="margin:.2em 0"><span class="t"><svg class="ico"><use href="#i-zap"/></svg> New in PostgreSQL 18: asynchronous I/O</span></p>
+  <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">Those <code>io worker</code> processes in the list above did not exist before PG 18. Historically a backend that needed a page from disk <em>blocked</em> while the kernel fetched it — one page at a time, idling. PG 18 adds a real <strong>async I/O subsystem</strong> (<code>io_method</code>, defaulting to <code>worker</code> with three helper processes; on modern Linux kernels you can set <code>io_uring</code> instead). Backends now <em>queue</em> read requests and keep working while the I/O happens in parallel underneath.</p>
+  <p style="margin:.7em 0 0;font-size:14.5px;color:#cdd0dd">It benefits exactly the operations a data engineer cares about — <strong>sequential scans, bitmap heap scans and vacuum</strong> — and reported gains on <code>io_uring</code> reach 2–3× on read-heavy scans. It also explains why <code>effective_io_concurrency</code> now defaults to 16 instead of 1. If you are on PG 17 or older, none of this exists and every disk read is a stall.</p>
+</div>
+
+<h3 class="reveal">And the read path, in one paragraph</h3>
+
+<p class="reveal">A query asks for page 14,285. Postgres looks in <code>shared_buffers</code>: if it's there, that's a <strong>buffer hit</strong> — the <code>shared hit=</code> number in every <code>EXPLAIN (BUFFERS)</code> output you'll see later. If not, it reads from the OS page cache or the disk (<code>read=</code>), and evicts something else to make room. That is the entire reason the <strong>cache hit ratio</strong> (§19) matters: at 99% your working set is in RAM and Postgres is fast; at 80% you are going to disk constantly, and no index will save you — you have a memory problem, not a query problem.</p>
+
+<h2 id="hierarchy" class="reveal"><span class="hico"><svg class="ico"><use href="#i-layers"/></svg></span><span class="n">03.</span> The storage hierarchy: cluster to tuple</h2>
+<p class="reveal lead">Six nested layers sit between "a Postgres server" and "one row on a disk". Only the bottom two do any real work.</p>
+
+<figure class="fig reveal">
+<svg viewBox="0 0 760 396" width="100%" aria-label="Six nested layers of Postgres storage: cluster, database, tablespace, table, segment file, page, and tuple">
+  <text x="380" y="20" font-size="10.5" fill="#9aa0b4" text-anchor="middle" letter-spacing="1.5">FROM THE SERVER DOWN TO ONE ROW</text>
+
+  <rect x="30" y="40" width="700" height="38" rx="6" fill="#14141c" stroke="#4a4a55"/>
+  <text x="44" y="57" font-size="11" fill="#cdd0dd" font-weight="700">CLUSTER</text>
+  <text x="44" y="71" font-size="8.5" fill="#6b7280">one server &#183; one data directory ($PGDATA)</text>
+
+  <rect x="52" y="86" width="656" height="38" rx="6" fill="#14141c" stroke="#4a4a55"/>
+  <text x="66" y="103" font-size="11" fill="#cdd0dd" font-weight="700">DATABASE</text>
+  <text x="66" y="117" font-size="8.5" fill="#6b7280">one subdirectory per database &#183; base/5/</text>
+
+  <rect x="74" y="132" width="612" height="38" rx="6" fill="#171310" stroke="#E8873A"/>
+  <text x="88" y="149" font-size="11" fill="#E8873A" font-weight="700">TABLESPACE</text>
+  <text x="88" y="163" font-size="8.5" fill="#9aa0b4">a location on disk &#183; SQL Server calls this a FILEGROUP</text>
+
+  <rect x="96" y="178" width="568" height="38" rx="6" fill="#171310" stroke="#E8873A"/>
+  <text x="110" y="195" font-size="11" fill="#E8873A" font-weight="700">TABLE &#183; the heap</text>
+  <text x="110" y="209" font-size="8.5" fill="#9aa0b4">an unordered pile of pages &#183; base/5/16385</text>
+
+  <rect x="118" y="224" width="524" height="38" rx="6" fill="#241d0b" stroke="#F5BD1F"/>
+  <text x="132" y="241" font-size="11" fill="#FFD97A" font-weight="700">SEGMENT FILE</text>
+  <text x="132" y="255" font-size="8.5" fill="#cdd0dd">split every 1 GB: 16385, 16385.1, 16385.2 …</text>
+
+  <rect x="140" y="270" width="480" height="38" rx="6" fill="#1a1608" stroke="#F5BD1F"/>
+  <text x="154" y="287" font-size="11" fill="#FFD97A" font-weight="700">PAGE &#183; BLOCK</text>
+  <text x="154" y="301" font-size="8.5" fill="#cdd0dd">8 KB &#183; the unit of I/O &#183; nothing smaller is read</text>
+
+  <rect x="162" y="316" width="436" height="38" rx="6" fill="#0f2015" stroke="#8CD98C"/>
+  <text x="176" y="333" font-size="11" fill="#8CD98C" font-weight="700">TUPLE</text>
+  <text x="176" y="347" font-size="8.5" fill="#cdd0dd">one row version &#183; addressed by ctid = (page, slot)</text>
+
+  <text x="380" y="380" font-size="10" fill="#9aa0b4" text-anchor="middle">Everything above the page is bookkeeping. The 8 KB page is where the database actually lives.</text>
+</svg>
+<figcaption>Read bottom-up: a row version (tuple) lives in a page, pages are grouped into 1 GB segment files, files belong to a table, tables sit in a tablespace.</figcaption>
+</figure>
+
+<p class="reveal">Two of these deserve a moment. A <strong>tablespace</strong> is Postgres's answer to SQL Server's file group: a named directory you can put relations into, which is how you put hot partitions on NVMe and cold ones on cheap disk. And the <strong>1 GB segmentation</strong> is worth knowing because it surprises people: a 50 GB table is not one enormous file, it is fifty files called <code>16385</code>, <code>16385.1</code>, <code>16385.2</code> and so on.</p>
+
+<div class="cb reveal"><span class="lang">sql</span><pre><span class="c">-- Where does a table physically live? Ask Postgres.</span>
+<span class="k">SELECT</span> pg_relation_filepath(<span class="g">'events'</span>);      <span class="c">--  base/5/16385</span>
+<span class="k">SHOW</span> data_directory;                        <span class="c">--  /var/lib/postgresql/18/main</span>
+<span class="k">SHOW</span> block_size;                             <span class="c">--  8192   ← always. Set at compile time.</span>
+
+<span class="c">-- Tablespaces: put a relation on a specific disk.</span>
+<span class="k">CREATE TABLESPACE</span> fast <span class="k">LOCATION</span> <span class="g">'/mnt/nvme/pg'</span>;
+<span class="k">CREATE TABLE</span> hot_events (…) <span class="k">TABLESPACE</span> fast;
+</pre></div>
+
+<h2 id="page" class="reveal"><span class="hico"><svg class="ico"><use href="#i-disk"/></svg></span><span class="n">04.</span> Inside an 8 KB page</h2>
+<p class="reveal lead">The page is the atom. Postgres cannot read half a page, and it cannot read one row — it reads <strong>8192 bytes or nothing</strong>.</p>
+
+<figure class="fig reveal">
+<svg viewBox="0 0 760 290" width="100%" aria-label="The layout of one 8KB Postgres page: header, line pointers growing right, free space, tuples growing left, and a special area">
+  <defs>
+    <marker id="p-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#F5BD1F"/></marker>
+  </defs>
+  <text x="380" y="20" font-size="10.5" fill="#9aa0b4" text-anchor="middle" letter-spacing="1.5">ONE PAGE &#183; THE UNIT OF EVERYTHING</text>
+
+  <path d="M60 62 V 56 H 700 V 62" stroke="#5a4416" stroke-width="1.2" fill="none"/>
+  <text x="380" y="50" font-size="9" fill="#FFD97A" text-anchor="middle">8 KB &#183; 8192 bytes</text>
+
+  <rect x="60" y="70" width="70" height="90" fill="#171310" stroke="#E8873A"/>
+  <text x="95" y="108" font-size="9" fill="#E8873A" text-anchor="middle">header</text>
+  <text x="95" y="122" font-size="7.5" fill="#6b7280" text-anchor="middle">24 B</text>
+
+  <rect x="130" y="70" width="130" height="90" fill="#0e2028" stroke="#5AC8FF"/>
+  <text x="195" y="108" font-size="9" fill="#5AC8FF" text-anchor="middle">line pointers</text>
+  <text x="195" y="122" font-size="7.5" fill="#6b7280" text-anchor="middle">4 B each</text>
+
+  <rect x="260" y="70" width="180" height="90" fill="#101015" stroke="#2c2c36"/>
+  <text x="350" y="108" font-size="9" fill="#4a4a55" text-anchor="middle">free space</text>
+  <text x="350" y="122" font-size="7.5" fill="#4a4a55" text-anchor="middle">shrinks</text>
+
+  <rect x="440" y="70" width="200" height="90" fill="#1a1608" stroke="#F5BD1F"/>
+  <text x="540" y="108" font-size="9" fill="#FFD97A" text-anchor="middle">tuples &#183; the rows</text>
+  <text x="540" y="122" font-size="7.5" fill="#6b7280" text-anchor="middle">variable size</text>
+
+  <rect x="640" y="70" width="60" height="90" fill="#171310" stroke="#4a4a55"/>
+  <text x="670" y="108" font-size="8" fill="#9aa0b4" text-anchor="middle">special</text>
+  <text x="670" y="122" font-size="7.5" fill="#4a4a55" text-anchor="middle">idx only</text>
+
+  <path d="M132 186 H 248" stroke="#5AC8FF" stroke-width="1.4" fill="none" marker-end="url(#p-a)"/>
+  <text x="190" y="178" font-size="8.5" fill="#5AC8FF" text-anchor="middle">pointers grow →</text>
+
+  <path d="M698 186 H 452" stroke="#F5BD1F" stroke-width="1.4" fill="none" marker-end="url(#p-a)"/>
+  <text x="575" y="178" font-size="8.5" fill="#FFD97A" text-anchor="middle">← tuples grow</text>
+
+  <text x="380" y="216" font-size="9.5" fill="#FF6B8B" text-anchor="middle">when they meet, the page is FULL</text>
+
+  <text x="380" y="248" font-size="10" fill="#cdd0dd" text-anchor="middle">ctid (14285, 51) = page 14285, line pointer 51 — a row's physical address</text>
+  <text x="380" y="270" font-size="9.5" fill="#9aa0b4" text-anchor="middle">An index leaf stores exactly this ctid. That is all an index pointer is.</text>
+</svg>
+<figcaption>Line pointers grow from the left, tuples from the right, and the free space between them is what an <code>INSERT</code> consumes. The <code>ctid</code> — <em>(page, slot)</em> — is the address every index points at.</figcaption>
+</figure>
+
+<p class="reveal">You can see all of this from SQL. The <code>ctid</code> is a real, queryable column on every table:</p>
+
+<div class="cb reveal"><span class="lang">sql</span><pre><span class="k">SELECT</span> ctid, id, user_id <span class="k">FROM</span> events <span class="k">ORDER BY</span> id <span class="k">LIMIT</span> 3;
+<span class="c">--  ctid  | id | user_id</span>
+<span class="c"># -------+----+---------</span>
+<span class="c">--  (0,1) |  1 |    7415     ← page 0, slot 1</span>
+<span class="c">--  (0,2) |  2 |    6721</span>
+<span class="c">--  (0,3) |  3 |    2694</span>
+
+<span class="c">-- How big is the table, really? (1,000,000 rows, measured)</span>
+<span class="k">SELECT</span> pg_size_pretty(pg_relation_size(<span class="g">'events'</span>)) <span class="k">AS</span> heap,       <span class="c">-- 112 MB</span>
+       pg_relation_size(<span class="g">'events'</span>) / 8192           <span class="k">AS</span> pages,      <span class="c">-- 14,286</span>
+       1000000.0 / (pg_relation_size(<span class="g">'events'</span>)/8192) <span class="k">AS</span> per_page;   <span class="c">-- 70.0 rows/page</span>
+</pre></div>
+
+<div class="callout gd reveal">
+  <p style="margin:.2em 0"><span class="t"><svg class="ico"><use href="#i-bulb"/></svg> Why "70 rows per page" is the number that explains everything</span></p>
+  <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">A million rows at ~70 per page is <strong>14,286 pages</strong>. A sequential scan must read all 14,286 — that is the cost of the table. An index lookup that finds 109 matching rows must read a handful of index pages plus, in the worst case, <em>107 heap pages</em>, because those 109 rows are scattered across the heap in insertion order, roughly one per page. That ratio — <em>how many pages do I touch to get the rows I want</em> — is the only thing the planner is really thinking about, and it's why an index that matches 30% of the table is worse than no index at all.</p>
+</div>
+
+<h2 id="heap" class="reveal"><span class="hico"><svg class="ico"><use href="#i-database"/></svg></span><span class="n">05.</span> The heap — and the clustered index that isn't</h2>
+<p class="reveal lead">In Postgres, <strong>every table is a heap</strong>: an unordered pile of pages. Rows go wherever there is room. There is no second option.</p>
+
+<p class="reveal">This is the deepest structural difference from SQL Server, and it changes how you reason. In SQL Server, a clustered index <em>is</em> the table — the rows are stored inside the index's leaf pages, physically sorted by the key, and a lookup by that key lands you directly on the data. In Postgres the table is always a heap, and every index — including the one behind your <code>PRIMARY KEY</code> — is a <strong>separate structure off to the side</strong> whose leaves hold <code>ctid</code> pointers back into it. Finding a row by primary key means walking the B-tree <em>and then</em> jumping into the heap.</p>
+
+<figure class="fig reveal">
+<svg viewBox="0 0 760 320" width="100%" aria-label="SQL Server's clustered index stores rows inside the index leaves; Postgres always keeps a separate heap that indexes point into">
+  <defs>
+    <marker id="h-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#F5BD1F"/></marker>
+  </defs>
+  <text x="380" y="20" font-size="10.5" fill="#9aa0b4" text-anchor="middle" letter-spacing="1.5">THE INDEX IS THE TABLE &#183; vs &#183; THE INDEX POINTS AT THE TABLE</text>
+
+  <text x="188" y="46" font-size="10.5" fill="#5AC8FF" text-anchor="middle" font-weight="700">SQL SERVER · clustered index</text>
+  <rect x="88" y="58" width="200" height="30" rx="5" fill="#0e2028" stroke="#5AC8FF"/>
+  <text x="188" y="77" font-size="9" fill="#5AC8FF" text-anchor="middle">B-tree root</text>
+  <rect x="60" y="106" width="118" height="30" rx="5" fill="#0e2028" stroke="#5AC8FF"/>
+  <text x="119" y="125" font-size="8.5" fill="#5AC8FF" text-anchor="middle">internal</text>
+  <rect x="198" y="106" width="118" height="30" rx="5" fill="#0e2028" stroke="#5AC8FF"/>
+  <text x="257" y="125" font-size="8.5" fill="#5AC8FF" text-anchor="middle">internal</text>
+  <rect x="60" y="154" width="256" height="52" rx="5" fill="#1a2a33" stroke="#5AC8FF" stroke-width="1.6"/>
+  <text x="188" y="174" font-size="9" fill="#fff" text-anchor="middle" font-weight="700">LEAF = THE ACTUAL ROWS</text>
+  <text x="188" y="192" font-size="8.5" fill="#cdd0dd" text-anchor="middle">sorted by the key, on disk</text>
+  <text x="188" y="228" font-size="8.5" fill="#8CD98C" text-anchor="middle">one traversal → you have the data</text>
+  <text x="188" y="246" font-size="8.5" fill="#6b7280" text-anchor="middle">there is no separate table</text>
+
+  <path d="M380 56 V 296" stroke="#2c2c36" stroke-width="1" stroke-dasharray="4,4"/>
+
+  <text x="572" y="46" font-size="10.5" fill="#F5BD1F" text-anchor="middle" font-weight="700">POSTGRES · always a heap</text>
+  <rect x="446" y="58" width="150" height="28" rx="5" fill="#1a1608" stroke="#F5BD1F"/>
+  <text x="521" y="76" font-size="8.5" fill="#FFD97A" text-anchor="middle">B-tree root</text>
+  <rect x="446" y="96" width="150" height="28" rx="5" fill="#1a1608" stroke="#F5BD1F"/>
+  <text x="521" y="114" font-size="8.5" fill="#FFD97A" text-anchor="middle">leaf: key → ctid</text>
+
+  <rect x="620" y="58" width="110" height="148" rx="5" fill="#171310" stroke="#E8873A"/>
+  <text x="675" y="76" font-size="8.5" fill="#E8873A" text-anchor="middle" font-weight="700">HEAP</text>
+  <rect x="630" y="86" width="90" height="22" rx="3" fill="#0d0d13" stroke="#3a3320"/>
+  <text x="675" y="101" font-size="7.5" fill="#cdd0dd" text-anchor="middle">page 0</text>
+  <rect x="630" y="112" width="90" height="22" rx="3" fill="#0d0d13" stroke="#3a3320"/>
+  <text x="675" y="127" font-size="7.5" fill="#cdd0dd" text-anchor="middle">page 1</text>
+  <rect x="630" y="138" width="90" height="22" rx="3" fill="#0d0d13" stroke="#3a3320"/>
+  <text x="675" y="153" font-size="7.5" fill="#cdd0dd" text-anchor="middle">page 2</text>
+  <rect x="630" y="164" width="90" height="22" rx="3" fill="#0d0d13" stroke="#3a3320"/>
+  <text x="675" y="179" font-size="7.5" fill="#cdd0dd" text-anchor="middle">…unordered</text>
+
+  <path d="M600 110 H 616" stroke="#F5BD1F" stroke-width="1.4" fill="none" marker-end="url(#h-a)"/>
+  <text x="521" y="146" font-size="8.5" fill="#FF6B8B" text-anchor="middle">then JUMP to the heap</text>
+  <text x="572" y="228" font-size="8.5" fill="#FF6B8B" text-anchor="middle">two steps, always</text>
+  <text x="572" y="246" font-size="8.5" fill="#6b7280" text-anchor="middle">even for the PRIMARY KEY</text>
+
+  <text x="380" y="286" font-size="10" fill="#9aa0b4" text-anchor="middle">Postgres cannot store the table inside an index. The heap is always there, always unordered.</text>
+</svg>
+<figcaption>The consequence: in Postgres an index lookup is <em>always</em> "walk the tree, then fetch from the heap" — which is exactly why index-only scans (§12) matter so much.</figcaption>
+</figure>
+
+<h3 class="reveal">What about CLUSTER?</h3>
+
+<p class="reveal">Postgres does have a <code>CLUSTER</code> command, and it is a trap for anyone arriving from SQL Server. It physically <strong>rewrites the table once</strong>, sorted in an index's order. It does not create a clustered index, and — this is the crucial part — <strong>Postgres does not maintain that order.</strong> The very next <code>INSERT</code> goes wherever there is free space, and the table drifts back out of order. It also takes an <code>ACCESS EXCLUSIVE</code> lock, so the table is unreadable while it runs.</p>
+
+<div class="cb reveal"><span class="lang">sql</span><pre><span class="k">CLUSTER</span> events <span class="k">USING</span> idx_created_at;   <span class="c">-- one-off physical sort. NOT maintained.</span>
+                                       <span class="c">-- locks the table completely while it runs.</span>
+
+<span class="c">-- What it's actually good for: raising "correlation" so BRIN and range scans work well.</span>
+<span class="c">-- Check correlation (1.0 = perfectly ordered on disk, 0 = random):</span>
+<span class="k">SELECT</span> attname, correlation <span class="k">FROM</span> pg_stats
+<span class="k">WHERE</span> tablename = <span class="g">'events'</span> <span class="k">AND</span> attname <span class="k">IN</span> (<span class="g">'created_at'</span>, <span class="g">'user_id'</span>);
+<span class="c">--  created_at |  1.00   ← inserted in time order, already sorted. BRIN will fly.</span>
+<span class="c">--  user_id    |  0.01   ← random. Only a B-tree can help here.</span>
+</pre></div>
+
+<p class="reveal">That <code>correlation</code> statistic is one of the most useful and least-known numbers in Postgres. It tells you how closely a column's logical order matches its physical order on disk — and it is the single input that decides whether <a href="#types">BRIN</a> (§13) will be brilliant or useless.</p>
+
+<h2 id="mvcc" class="reveal"><span class="hico"><svg class="ico"><use href="#i-repeat"/></svg></span><span class="n">06.</span> MVCC: an UPDATE is a DELETE plus an INSERT</h2>
+<p class="reveal lead">Postgres <strong>never overwrites a row.</strong> An <code>UPDATE</code> writes a brand-new row version somewhere else and leaves the old one lying there, dead. This one design decision explains bloat, <code>VACUUM</code>, and half your performance problems.</p>
+
+<p class="reveal">The mechanism is <strong>MVCC</strong> — Multi-Version Concurrency Control. Every tuple carries two hidden system columns: <code>xmin</code>, the transaction that created it, and <code>xmax</code>, the transaction that deleted it. A reader looking at the table only sees tuples whose <code>xmin</code> has committed and whose <code>xmax</code> hasn't. That is how Postgres gives you a consistent snapshot without readers ever blocking writers, and it is genuinely excellent. The price is that the dead versions physically remain in the pages until something cleans them up.</p>
+
+<p class="reveal">Here is the proof, run on a live server. Watch the <code>ctid</code>:</p>
+
+<div class="cb reveal"><span class="lang">sql</span><pre><span class="k">SELECT</span> ctid, xmin, id <span class="k">FROM</span> events <span class="k">WHERE</span> id = 1;
+<span class="c">--   ctid  | xmin | id</span>
+<span class="c">--  (0,1)  | 752  |  1        ← page 0, slot 1</span>
+
+<span class="k">UPDATE</span> events <span class="k">SET</span> status = <span class="g">'x'</span> <span class="k">WHERE</span> id = 1;
+
+<span class="k">SELECT</span> ctid, xmin, id <span class="k">FROM</span> events <span class="k">WHERE</span> id = 1;
+<span class="c">--     ctid    | xmin | id</span>
+<span class="c">--  (14285,51) | 757  |  1     ← the row MOVED. New page, new transaction id.</span>
+
+<span class="k">SELECT</span> n_live_tup, n_dead_tup <span class="k">FROM</span> pg_stat_user_tables <span class="k">WHERE</span> relname = <span class="g">'events'</span>;
+<span class="c">--  n_live_tup | n_dead_tup</span>
+<span class="c">--    1000000  |     1        ← and left a corpse behind at (0,1)</span>
+</pre></div>
+
+<figure class="fig reveal">
+<svg viewBox="0 0 760 258" width="100%" aria-label="An UPDATE writes a new tuple on a different page and marks the old one dead, so both versions exist until VACUUM removes the old one">
+  <defs>
+    <marker id="m-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#FF6B8B"/></marker>
+  </defs>
+  <text x="380" y="20" font-size="10.5" fill="#9aa0b4" text-anchor="middle" letter-spacing="1.5">UPDATE events SET status = 'x' WHERE id = 1</text>
+
+  <text x="150" y="48" font-size="9.5" fill="#9aa0b4" text-anchor="middle">BEFORE</text>
+  <rect x="40" y="58" width="220" height="76" rx="7" fill="#171310" stroke="#4a4a55"/>
+  <text x="150" y="76" font-size="9" fill="#9aa0b4" text-anchor="middle">page 0</text>
+  <rect x="54" y="86" width="192" height="36" rx="4" fill="#0f2015" stroke="#8CD98C"/>
+  <text x="150" y="102" font-size="8.5" fill="#8CD98C" text-anchor="middle">(0,1) id=1 status='shipped'</text>
+  <text x="150" y="115" font-size="7.5" fill="#6b7280" text-anchor="middle">xmin 752 · LIVE</text>
+
+  <text x="610" y="48" font-size="9.5" fill="#9aa0b4" text-anchor="middle">AFTER</text>
+  <rect x="500" y="58" width="220" height="76" rx="7" fill="#171310" stroke="#4a4a55"/>
+  <text x="610" y="76" font-size="9" fill="#9aa0b4" text-anchor="middle">page 0</text>
+  <rect x="514" y="86" width="192" height="36" rx="4" fill="#241014" stroke="#FF6B8B"/>
+  <text x="610" y="102" font-size="8.5" fill="#FF6B8B" text-anchor="middle">(0,1) id=1 status='shipped'</text>
+  <text x="610" y="115" font-size="7.5" fill="#FF6B8B" text-anchor="middle">xmax set · DEAD TUPLE</text>
+
+  <rect x="500" y="146" width="220" height="76" rx="7" fill="#171310" stroke="#4a4a55"/>
+  <text x="610" y="164" font-size="9" fill="#9aa0b4" text-anchor="middle">page 14285</text>
+  <rect x="514" y="174" width="192" height="36" rx="4" fill="#0f2015" stroke="#8CD98C"/>
+  <text x="610" y="190" font-size="8.5" fill="#8CD98C" text-anchor="middle">(14285,51) id=1 status='x'</text>
+  <text x="610" y="203" font-size="7.5" fill="#6b7280" text-anchor="middle">xmin 757 · LIVE</text>
+
+  <path d="M266 100 L 494 100" stroke="#FF6B8B" stroke-width="1.5" fill="none" marker-end="url(#m-a)"/>
+  <text x="380" y="92" font-size="8.5" fill="#FF6B8B" text-anchor="middle">old version marked dead</text>
+
+  <path d="M266 108 L 494 186" stroke="#8CD98C" stroke-width="1.5" fill="none" marker-end="url(#m-a)"/>
+  <text x="380" y="150" font-size="8.5" fill="#8CD98C" text-anchor="middle">new version written elsewhere</text>
+
+  <text x="380" y="244" font-size="10" fill="#9aa0b4" text-anchor="middle">The table grew. Nothing was overwritten. The dead tuple stays until VACUUM reclaims it.</text>
+</svg>
+<figcaption>Every <code>UPDATE</code> and <code>DELETE</code> leaves garbage behind. On a heavily-updated table this is <em>the</em> dominant source of wasted space.</figcaption>
+</figure>
+
+<h3 class="reveal">HOT updates: the optimisation that saves you</h3>
+
+<p class="reveal">If Postgres had to update every index on every <code>UPDATE</code>, write amplification would be brutal. So there's an escape hatch: a <strong>HOT update</strong> (Heap-Only Tuple). If the new version fits <em>on the same page</em> <strong>and</strong> you did not modify any indexed column, Postgres writes the new tuple on that page and chains the old line pointer to it — and <strong>touches no index at all</strong>. The indexes still point at the original slot, which now redirects.</p>
+
+<p class="reveal">Two things follow, and both are actionable. <strong>Don't index columns you update constantly</strong> — a single index on a hot column disables HOT for every update to that table's row. And <strong>leave room on the page</strong>: <code>fillfactor</code> tells Postgres to leave a percentage of each page empty on insert, precisely so that later updates have somewhere local to land.</p>
+
+<div class="cb reveal"><span class="lang">sql</span><pre><span class="c">-- Leave 15% of every page free so UPDATEs can stay on-page (HOT) instead of</span>
+<span class="c">-- migrating to a new page and dirtying every index.</span>
+<span class="k">ALTER TABLE</span> events <span class="k">SET</span> (fillfactor = 85);
+<span class="k">VACUUM FULL</span> events;   <span class="c">-- needed to actually apply it to existing pages</span>
+
+<span class="c">-- Are your updates HOT? n_tup_hot_upd should be close to n_tup_upd.</span>
+<span class="k">SELECT</span> relname, n_tup_upd, n_tup_hot_upd,
+       <span class="p">round</span>(100.0 * n_tup_hot_upd / <span class="p">nullif</span>(n_tup_upd, 0), 1) <span class="k">AS</span> hot_pct
+<span class="k">FROM</span> pg_stat_user_tables <span class="k">WHERE</span> relname = <span class="g">'events'</span>;
+</pre></div>
+
+<h2 id="vacuum" class="reveal"><span class="hico"><svg class="ico"><use href="#i-shield"/></svg></span><span class="n">07.</span> VACUUM, autovacuum, and bloat</h2>
+<p class="reveal lead"><code>VACUUM</code> is the garbage collector for dead tuples. If it falls behind, your table grows without bound and every scan gets slower — <strong>this is the most common self-inflicted wound in Postgres.</strong></p>
+
+<p class="reveal">Plain <code>VACUUM</code> walks the table, finds tuples no transaction can still see, and marks their space <strong>reusable</strong>. Note the word: <em>reusable</em>, not <em>returned</em>. The file on disk does not shrink. I measured it — a 117 MB table with 50,000 dead tuples was still exactly 117 MB after <code>VACUUM</code>. The space is now free for future inserts, which is usually what you want, but the disk usage does not drop.</p>
+
+<div class="tw reveal"><table>
+<tr><th></th><th>What it does</th><th>Lock</th><th>Returns disk to the OS?</th></tr>
+<tr><td><code>VACUUM</code></td><td>Marks dead tuple space reusable; updates the <a href="#ios">visibility map</a> (§12)</td><td class="ok">None — runs alongside traffic</td><td class="no">No</td></tr>
+<tr><td><code>VACUUM ANALYZE</code></td><td>The above, plus refreshes planner statistics</td><td class="ok">None</td><td class="no">No</td></tr>
+<tr><td><code>VACUUM FULL</code></td><td>Rewrites the whole table compactly</td><td class="no"><code>ACCESS EXCLUSIVE</code> — <strong>table unusable</strong></td><td class="ok">Yes</td></tr>
+<tr><td><code>autovacuum</code></td><td>A daemon that runs <code>VACUUM</code> for you, automatically</td><td class="ok">None</td><td class="no">No</td></tr>
+</table></div>
+
+<div class="callout rd reveal">
+  <p style="margin:.2em 0"><span class="t"><svg class="ico"><use href="#i-warn"/></svg> Never run VACUUM FULL on a live production table</span></p>
+  <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">It takes an <code>ACCESS EXCLUSIVE</code> lock for its entire duration — <strong>nothing can read or write the table</strong>, not even a <code>SELECT</code> — and it needs enough free disk to hold a second full copy while it rewrites. On a big table that is a multi-hour outage. If you genuinely need to reclaim space with the table online, use <code>pg_repack</code>, which does the same job without the long lock. Better still: <strong>fix the autovacuum settings so the bloat never accumulates.</strong></p>
+</div>
+
+<h3 class="reveal">Why autovacuum falls behind (and the one setting to change)</h3>
+
+<p class="reveal">Autovacuum triggers when dead tuples exceed <code>autovacuum_vacuum_threshold + autovacuum_vacuum_scale_factor × live_rows</code>. The defaults are <strong>50</strong> and <strong>0.2</strong> — so a table is vacuumed once it has more dead rows than 20% of its live rows. On a thousand-row table that's fine. <strong>On a 100-million-row table, that means waiting for 20 million dead tuples</strong> before autovacuum even starts, by which point the damage is done and the vacuum itself is enormous.</p>
+
+<div class="cb reveal"><span class="lang">sql</span><pre><span class="c">-- The fix for a big, hot table: a much smaller scale factor, so it vacuums often</span>
+<span class="c">-- and cheaply instead of rarely and catastrophically.</span>
+<span class="k">ALTER TABLE</span> events <span class="k">SET</span> (
+    autovacuum_vacuum_scale_factor = 0.01,   <span class="c">-- 1% instead of 20%</span>
+    autovacuum_vacuum_threshold    = 1000
+);
+
+<span class="c">-- Is it keeping up? dead_pct creeping up over time = autovacuum is losing.</span>
+<span class="k">SELECT</span> relname, n_live_tup, n_dead_tup,
+       <span class="p">round</span>(100.0 * n_dead_tup / <span class="p">nullif</span>(n_live_tup + n_dead_tup, 0), 1) <span class="k">AS</span> dead_pct,
+       last_autovacuum
+<span class="k">FROM</span> pg_stat_user_tables
+<span class="k">WHERE</span> n_dead_tup &gt; 1000
+<span class="k">ORDER BY</span> dead_pct <span class="k">DESC</span>;
+<span class="c">--  events | 1000000 | 49859 |  4.7 | 2026-07-14 16:30:45</span>
+</pre></div>
+
+<p class="reveal">Rule of thumb: <strong>above ~20% dead tuples, vacuum is overdue.</strong> And a <code>last_autovacuum</code> that is <code>NULL</code> or ancient on a busy table is an alarm, not a curiosity.</p>
+
+<h3 class="reveal">The other job VACUUM does — and the one that can take you down</h3>
+
+<p class="reveal">Vacuum also freezes old transaction IDs. Postgres transaction IDs are 32-bit and wrap around, so tuples older than ~2 billion transactions must be marked "frozen" (visible to everyone) before the counter laps them. If autovacuum is so far behind that this can't happen, Postgres will <strong>refuse to accept new writes</strong> to protect your data — the infamous <em>transaction ID wraparound</em> shutdown. It is rare, it is entirely preventable, and it is always caused by ignoring autovacuum for months.</p>
+
+<h2 id="toast" class="reveal"><span class="hico"><svg class="ico"><use href="#i-package"/></svg></span><span class="n">08.</span> TOAST: oversized values</h2>
+<p class="reveal lead">A tuple cannot span pages. So what happens when you store a 100 KB JSON blob in an 8 KB page? <strong>TOAST</strong> — The Oversized-Attribute Storage Technique.</p>
+
+<p class="reveal">When a row exceeds roughly 2 KB (a quarter of a page), Postgres starts moving its biggest variable-length columns out. But it does two things, in order, and most people only know about the second one: <strong>it compresses first, and only if that isn't enough does it move the value out-of-line</strong> into a hidden side table.</p>
+
+<p class="reveal">Here is that in action, measured — two rows, both about 100 KB of text, but one compresses and one doesn't:</p>
+
+<div class="cb reveal"><span class="lang">sql</span><pre><span class="k">CREATE TABLE</span> wide(id <span class="y">int</span>, big <span class="y">text</span>);
+<span class="k">INSERT INTO</span> wide <span class="k">VALUES</span> (1, <span class="p">repeat</span>(<span class="g">'a'</span>, 100000));                    <span class="c">-- compressible</span>
+<span class="k">INSERT INTO</span> wide <span class="k">VALUES</span> (2, (<span class="k">SELECT</span> <span class="p">string_agg</span>(<span class="p">md5</span>(<span class="p">random</span>()::<span class="y">text</span>),<span class="g">''</span>)
+                              <span class="k">FROM</span> <span class="p">generate_series</span>(1,3200)));       <span class="c">-- random = incompressible</span>
+
+<span class="k">SELECT</span> id, <span class="p">pg_column_size</span>(big) <span class="k">AS</span> stored, <span class="p">length</span>(big) <span class="k">AS</span> chars <span class="k">FROM</span> wide;
+<span class="c">--  id | stored  | chars</span>
+<span class="c">--   1 |   1,156 | 100,000    ← compressed 86× and stayed INLINE</span>
+<span class="c">--   2 | 102,400 | 102,400    ← would not compress, so it was pushed OUT</span>
+
+<span class="k">SELECT</span> pg_size_pretty(pg_relation_size(<span class="g">'wide'</span>))          <span class="k">AS</span> main_heap,   <span class="c">-- 8192 bytes</span>
+       pg_size_pretty(pg_relation_size(reltoastrelid))     <span class="k">AS</span> toast_table  <span class="c">-- 104 kB</span>
+<span class="k">FROM</span> pg_class <span class="k">WHERE</span> relname = <span class="g">'wide'</span>;
+</pre></div>
+
+<p class="reveal">Row 1 shrank from 100,000 bytes to 1,156 and never left the page. Row 2 couldn't compress, so it was chopped into chunks and stored in a separate <strong>TOAST table</strong> — and the main heap stayed tiny at one page, holding only a pointer.</p>
+
+<div class="callout gd reveal">
+  <p style="margin:.2em 0"><span class="t"><svg class="ico"><use href="#i-bulb"/></svg> Why a data engineer should care about TOAST</span></p>
+  <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">TOAST is usually invisible and usually helpful. It becomes a problem in exactly one situation: <strong>you <code>SELECT *</code> on a table with a big <code>jsonb</code> or <code>text</code> column, and you didn't need that column.</strong> Every row now costs an extra trip to the TOAST table plus a decompression. Selecting only the columns you need is not a style preference here — it is the difference between reading one page and reading hundreds. Note also that <code>pg_relation_size()</code> <em>excludes</em> the TOAST table, so a table that looks small can be hiding gigabytes; use <code>pg_total_relation_size()</code> to see the truth.</p>
+</div>
+
+<h2 id="btree" class="reveal"><span class="hico"><svg class="ico"><use href="#i-network"/></svg></span><span class="n">09.</span> B-tree: how an index finds a row</h2>
+<p class="reveal lead">A B-tree is a <strong>sorted, balanced</strong> tree of 8 KB pages. Balanced means every leaf is the same distance from the root — so <em>every</em> lookup costs the same handful of page reads, no matter where the row is.</p>
+
+<p class="reveal">Three or four levels is typical even for enormous tables, because each internal page holds hundreds of keys. A billion-row table might have a B-tree of depth 4: read the root, read an internal page, read another, read a leaf. Four page reads to locate any row out of a billion — that is the whole magic, and it is why an index turns a 14,286-page scan into a 4-page lookup.</p>
+
+<figure class="fig reveal">
+<svg viewBox="0 0 760 400" width="100%" aria-label="A B-tree with a root, internal nodes and leaves whose entries hold ctid pointers into the unordered heap">
+  <defs>
+    <marker id="b-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0 0L10 5L0 10z" fill="#F5BD1F"/></marker>
+    <marker id="b-r" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0 0L10 5L0 10z" fill="#FF6B8B"/></marker>
+  </defs>
+  <text x="380" y="20" font-size="10.5" fill="#9aa0b4" text-anchor="middle" letter-spacing="1.5">SORTED TREE &#8594; ctid &#8594; UNSORTED HEAP</text>
+
+  <rect x="170" y="38" width="150" height="30" rx="5" fill="#1a1608" stroke="#F5BD1F"/>
+  <text x="245" y="57" font-size="9" fill="#FFD97A" text-anchor="middle">ROOT &#183; one page</text>
+
+  <rect x="86" y="92" width="120" height="30" rx="5" fill="#1a1608" stroke="#F5BD1F"/>
+  <text x="146" y="111" font-size="8.5" fill="#FFD97A" text-anchor="middle">internal</text>
+  <rect x="284" y="92" width="120" height="30" rx="5" fill="#1a1608" stroke="#F5BD1F"/>
+  <text x="344" y="111" font-size="8.5" fill="#FFD97A" text-anchor="middle">internal</text>
+
+  <rect x="40" y="146" width="106" height="44" rx="5" fill="#241d0b" stroke="#F5BD1F"/>
+  <text x="93" y="164" font-size="8" fill="#FFD97A" text-anchor="middle">leaf</text>
+  <text x="93" y="179" font-size="7.5" fill="#cdd0dd" text-anchor="middle">42 &#8594; (107,3)</text>
+  <rect x="156" y="146" width="106" height="44" rx="5" fill="#241d0b" stroke="#F5BD1F"/>
+  <text x="209" y="164" font-size="8" fill="#FFD97A" text-anchor="middle">leaf</text>
+  <text x="209" y="179" font-size="7.5" fill="#cdd0dd" text-anchor="middle">57 &#8594; (2,11)</text>
+  <rect x="272" y="146" width="106" height="44" rx="5" fill="#241d0b" stroke="#F5BD1F"/>
+  <text x="325" y="164" font-size="8" fill="#FFD97A" text-anchor="middle">leaf</text>
+  <text x="325" y="179" font-size="7.5" fill="#cdd0dd" text-anchor="middle">63 &#8594; (901,7)</text>
+
+  <g stroke="#F5BD1F" stroke-width="1.2" fill="none">
+    <path d="M215 70 L 156 86" marker-end="url(#b-a)"/>
+    <path d="M275 70 L 334 86" marker-end="url(#b-a)"/>
+    <path d="M120 124 L 100 140" marker-end="url(#b-a)"/>
+    <path d="M170 124 L 200 140" marker-end="url(#b-a)"/>
+    <path d="M330 124 L 328 140" marker-end="url(#b-a)"/>
+  </g>
+
+  <text x="570" y="160" font-size="8" fill="#8CD98C" text-anchor="middle">leaves are SORTED and linked &#8596;</text>
+  <text x="570" y="174" font-size="8" fill="#6b7280" text-anchor="middle">(that is how range scans work)</text>
+
+  <rect x="470" y="196" width="240" height="130" rx="7" fill="#171310" stroke="#E8873A"/>
+  <text x="590" y="216" font-size="9.5" fill="#E8873A" text-anchor="middle" font-weight="700">THE HEAP &#183; unordered</text>
+  <rect x="484" y="224" width="212" height="24" rx="3" fill="#0d0d13" stroke="#3a3320"/>
+  <text x="590" y="240" font-size="7.5" fill="#cdd0dd" text-anchor="middle">page 2 &#8230; slot 11</text>
+  <rect x="484" y="252" width="212" height="24" rx="3" fill="#0d0d13" stroke="#3a3320"/>
+  <text x="590" y="268" font-size="7.5" fill="#cdd0dd" text-anchor="middle">page 107 &#8230; slot 3</text>
+  <rect x="484" y="280" width="212" height="24" rx="3" fill="#0d0d13" stroke="#3a3320"/>
+  <text x="590" y="296" font-size="7.5" fill="#cdd0dd" text-anchor="middle">page 901 &#8230; slot 7</text>
+  <text x="590" y="318" font-size="7.5" fill="#6b7280" text-anchor="middle">rows sit wherever there was room</text>
+
+  <g stroke="#FF6B8B" stroke-width="1.2" fill="none" stroke-dasharray="4,3">
+    <path d="M93 192 V 212 L 464 236" marker-end="url(#b-r)"/>
+    <path d="M209 192 V 212 L 464 264" marker-end="url(#b-r)"/>
+    <path d="M325 192 V 212 L 464 292" marker-end="url(#b-r)"/>
+  </g>
+
+  <text x="380" y="350" font-size="10" fill="#FF6B8B" text-anchor="middle">The tree is sorted. The heap is not. Every red arrow is a random page read.</text>
+  <text x="380" y="371" font-size="9.5" fill="#9aa0b4" text-anchor="middle">Depth ~4 even for a billion rows: root &#8594; internal &#8594; internal &#8594; leaf. Then one jump.</text>
+  <text x="380" y="391" font-size="9.5" fill="#8CD98C" text-anchor="middle">Kill the red arrows and you have an INDEX-ONLY SCAN (&#167;10).</text>
+</svg>
+<figcaption>The B-tree gives you the <code>ctid</code> cheaply. The expensive part is the red arrows — chasing those pointers into a heap where the rows are scattered.</figcaption>
+</figure>
+
+<h2 id="scans" class="reveal"><span class="hico"><svg class="ico"><use href="#i-search"/></svg></span><span class="n">10.</span> The scan types, and reading EXPLAIN</h2>
+<p class="reveal lead">There are four ways Postgres can get rows out of a table. Knowing which one you got — and <em>why</em> — is most of query tuning.</p>
+
+<p class="reveal">All four outputs below are real, from <code>EXPLAIN (ANALYZE, BUFFERS)</code> on the same one-million-row table. Watch the <code>Buffers</code> line: <strong>that is the page count, and the page count is the cost.</strong></p>
+
+<h3 class="reveal">1 · Seq Scan — read every page</h3>
+
+<div class="cb reveal"><span class="lang">text</span><pre><span class="c">-- No index on user_id. 109 rows out of a million.</span>
+<span class="k">EXPLAIN</span> (<span class="k">ANALYZE</span>, <span class="k">BUFFERS</span>) <span class="k">SELECT</span> * <span class="k">FROM</span> events <span class="k">WHERE</span> user_id = 42;
+
+Gather (actual rows=109 loops=1)
+  Workers Launched: 2
+  <span class="r">Buffers: shared hit=13762 read=524</span>              <span class="c">← 14,286 pages. The whole table.</span>
+  -&gt; Parallel Seq Scan on events (actual rows=36 loops=3)
+       Filter: (user_id = 42)
+       <span class="r">Rows Removed by Filter: 333297</span>            <span class="c">← threw away 99.99% of what it read</span>
+</pre></div>
+
+<p class="reveal"><strong>Rows Removed by Filter</strong> is the tell. Reading 333,297 rows to keep 36 is the definition of a missing index. (Note it wasn't <em>slow</em> — Postgres parallelised it across 3 workers. Seq scans are fine when you actually want most of the table.)</p>
+
+<h3 class="reveal">2 · Index Scan / Bitmap Heap Scan — walk the tree, then fetch</h3>
+
+<div class="cb reveal"><span class="lang">text</span><pre><span class="c">-- Now: CREATE INDEX idx_user ON events(user_id);</span>
+Bitmap Heap Scan on events (actual rows=109 loops=1)
+  Recheck Cond: (user_id = 42)
+  <span class="y">Heap Blocks: exact=107</span>                          <span class="c">← 107 heap pages for 109 rows!</span>
+  <span class="g">Buffers: shared hit=107 read=3</span>                  <span class="c">← 110 pages, down from 14,286</span>
+  -&gt; Bitmap Index Scan on idx_user (actual rows=109 loops=1)
+       Index Cond: (user_id = 42)
+       Buffers: shared read=3                       <span class="c">← the index itself cost 3 pages</span>
+</pre></div>
+
+<p class="reveal">From 14,286 pages to 110. But look at <code>Heap Blocks: exact=107</code> — <strong>107 pages to fetch 109 rows</strong>, nearly one page per row. That's the red arrows from the B-tree diagram: those users are scattered randomly across the heap, so almost every row lives on its own page. This is exactly the cost that an index-only scan eliminates.</p>
+
+<p class="reveal">The difference between an <strong>Index Scan</strong> and a <strong>Bitmap Heap Scan</strong> is worth a sentence, because both appear constantly. An Index Scan walks the tree and fetches heap rows <em>one at a time, in index order</em> — great when you want a handful of rows. A Bitmap Heap Scan first collects <em>all</em> the matching ctids into an in-memory bitmap, sorts them by page number, and then reads each heap page <strong>once, in physical order</strong> — which turns random I/O into sequential I/O. Postgres chooses it when there are too many matches for one-at-a-time fetching to be worth it.</p>
+
+<h3 class="reveal">3 · Bitmap Heap Scan on a range — the middle ground</h3>
+
+<div class="cb reveal"><span class="lang">text</span><pre><span class="k">SELECT</span> * <span class="k">FROM</span> events <span class="k">WHERE</span> user_id <span class="k">BETWEEN</span> 42 <span class="k">AND</span> 300;   <span class="c">-- 25,921 rows (2.6%)</span>
+
+Bitmap Heap Scan on events (actual rows=25921 loops=1)
+  <span class="r">Heap Blocks: exact=11988</span>                        <span class="c">← 11,988 of 14,286 pages!</span>
+  Buffers: shared hit=11780 read=234
+</pre></div>
+
+<p class="reveal">This is the lesson that surprises people. Matching only <strong>2.6% of the rows</strong> still required reading <strong>84% of the pages</strong> — because 26,000 randomly-scattered rows land on almost every page in the table. At this point the index has bought you almost nothing, and a little further along the planner will correctly abandon it and seq-scan instead. <em>An index is only useful when the rows it finds are few, or physically clustered together.</em></p>
+
+<h3 class="reveal">4 · Index-Only Scan — never touch the heap at all</h3>
+
+<div class="cb reveal"><span class="lang">text</span><pre><span class="k">SELECT</span> user_id <span class="k">FROM</span> events <span class="k">WHERE</span> user_id = 42;   <span class="c">-- only needs the indexed column</span>
+
+Index Only Scan using idx_user on events (actual rows=109 loops=1)
+  Index Cond: (user_id = 42)
+  <span class="g">Heap Fetches: 0</span>                                 <span class="c">← it never opened the heap</span>
+  <span class="g">Buffers: shared hit=4</span>                           <span class="c">← FOUR pages. Down from 14,286.</span>
+</pre></div>
+
+<p class="reveal">Four pages. The index contained every column the query asked for, so Postgres answered entirely from the tree. This is the best outcome available, and §12 explains the one condition it depends on — a condition that quietly fails more often than you'd think.</p>
+
+<div class="tw reveal"><table>
+<tr><th>Plan node</th><th>Pages read (measured)</th><th>Postgres picks it when…</th></tr>
+<tr><td><code>Seq Scan</code></td><td class="no">14,286 — everything</td><td>No usable index, or you want a large fraction of the table</td></tr>
+<tr><td><code>Index Scan</code></td><td>index + 1 heap page per row</td><td>Very few rows, and you need columns not in the index</td></tr>
+<tr><td><code>Bitmap Heap Scan</code></td><td>110 … up to 11,988</td><td>A medium number of matches — sorts ctids to read pages once</td></tr>
+<tr><td><code>Index Only Scan</code></td><td class="ok">4 — the index alone</td><td>The index holds <em>every</em> column the query needs <strong>and</strong> the pages are marked all-visible</td></tr>
+</table></div>
+
+<h3 class="reveal">How to actually read an EXPLAIN</h3>
+
+<div class="cb reveal"><span class="lang">sql</span><pre><span class="k">EXPLAIN</span>                          <span class="c">-- the plan and the planner's GUESSES. Doesn't run.</span>
+<span class="k">EXPLAIN</span> (<span class="k">ANALYZE</span>)                <span class="c">-- RUNS it. Now you get actual rows and actual time.</span>
+<span class="k">EXPLAIN</span> (<span class="k">ANALYZE</span>, <span class="k">BUFFERS</span>)       <span class="c">-- ← always use this. Buffers = pages = the real cost.</span>
+</pre></div>
+
+<div class="callout cy reveal">
+  <p style="margin:.2em 0"><span class="t"><svg class="ico"><use href="#i-key"/></svg> The three numbers that matter, in order</span></p>
+  <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd"><strong>1. <code>Buffers</code>.</strong> Pages read. This is the actual work. Ignore <code>cost=…</code> — it's an arbitrary unit for comparing plans, not a time.<br/>
+  <strong>2. Estimated rows vs actual rows.</strong> If the planner guessed 10 and got 500,000, it chose the wrong plan for a reason: <strong>its statistics are stale.</strong> Run <code>ANALYZE</code>. This is the single most common cause of a "suddenly slow" query.<br/>
+  <strong>3. <code>Rows Removed by Filter</code>.</strong> Rows read and then thrown away. A big number here is an index that doesn't exist or isn't being used.</p>
+</div>
+
+<p class="reveal">And read the plan <strong>inside-out, bottom-up</strong>: the most indented node runs first and feeds its parent. <code>loops=3</code> means that node ran three times, and the <code>actual rows</code> shown is the average <em>per loop</em> — so multiply before you panic.</p>
+
+<h2 id="joins" class="reveal"><span class="hico"><svg class="ico"><use href="#i-merge"/></svg></span><span class="n">11.</span> How Postgres joins tables</h2>
+<p class="reveal lead">The last section covered how rows come <em>out of one table</em>. Real plans are mostly about <strong>combining two</strong> — and there are exactly three algorithms for it.</p>
+
+<p class="reveal">Every join node in every <code>EXPLAIN</code> you will ever read is a <strong>Nested Loop</strong>, a <strong>Hash Join</strong>, or a <strong>Merge Join</strong>. They all produce identical rows. They differ enormously in what they cost, and the planner chooses between them from its statistics — which is why a bad row estimate so often shows up as "it picked the wrong join".</p>
+
+<figure class="fig reveal">
+<svg viewBox="0 0 760 290" width="100%" aria-label="The three Postgres join algorithms compared: nested loop, hash join and merge join, with what each is best at and what to watch for">
+  <text x="380" y="20" font-size="10.5" fill="#9aa0b4" text-anchor="middle" letter-spacing="1.5">THREE ALGORITHMS &#183; SAME ROWS &#183; VERY DIFFERENT COSTS</text>
+
+  <rect x="20" y="44" width="230" height="204" rx="8" fill="#1a1608" stroke="#F5BD1F"/>
+  <text x="135" y="68" font-size="11" fill="#FFD97A" text-anchor="middle" font-weight="700">NESTED LOOP</text>
+  <text x="135" y="94" font-size="8.5" fill="#cdd0dd" text-anchor="middle">for each outer row,</text>
+  <text x="135" y="108" font-size="8.5" fill="#cdd0dd" text-anchor="middle">look up the inner side</text>
+  <path d="M36 124 H 234" stroke="#5a4416" stroke-width="1"/>
+  <text x="135" y="144" font-size="7.5" fill="#6b7280" text-anchor="middle" letter-spacing="1">BEST WHEN</text>
+  <text x="135" y="159" font-size="8.5" fill="#8CD98C" text-anchor="middle">few outer rows, and</text>
+  <text x="135" y="172" font-size="8.5" fill="#8CD98C" text-anchor="middle">an INDEX on the inner</text>
+  <text x="135" y="196" font-size="7.5" fill="#6b7280" text-anchor="middle" letter-spacing="1">WATCH FOR</text>
+  <text x="135" y="211" font-size="8.5" fill="#FF6B8B" text-anchor="middle">loops=N — the rows</text>
+  <text x="135" y="224" font-size="8.5" fill="#FF6B8B" text-anchor="middle">shown are PER LOOP</text>
+  <text x="135" y="240" font-size="8" fill="#FF6B8B" text-anchor="middle">no index → N × M. Death.</text>
+
+  <rect x="265" y="44" width="230" height="204" rx="8" fill="#0e2028" stroke="#5AC8FF"/>
+  <text x="380" y="68" font-size="11" fill="#5AC8FF" text-anchor="middle" font-weight="700">HASH JOIN</text>
+  <text x="380" y="94" font-size="8.5" fill="#cdd0dd" text-anchor="middle">hash the smaller side,</text>
+  <text x="380" y="108" font-size="8.5" fill="#cdd0dd" text-anchor="middle">then probe it with the big</text>
+  <path d="M281 124 H 479" stroke="#2b4a80" stroke-width="1"/>
+  <text x="380" y="144" font-size="7.5" fill="#6b7280" text-anchor="middle" letter-spacing="1">BEST WHEN</text>
+  <text x="380" y="159" font-size="8.5" fill="#8CD98C" text-anchor="middle">big joins, no index —</text>
+  <text x="380" y="172" font-size="8.5" fill="#8CD98C" text-anchor="middle">the workhorse for DE</text>
+  <text x="380" y="196" font-size="7.5" fill="#6b7280" text-anchor="middle" letter-spacing="1">WATCH FOR</text>
+  <text x="380" y="211" font-size="8.5" fill="#FF6B8B" text-anchor="middle">Batches &gt; 1 = spilled</text>
+  <text x="380" y="224" font-size="8.5" fill="#FF6B8B" text-anchor="middle">to disk. Raise work_mem.</text>
+  <text x="380" y="240" font-size="8" fill="#9aa0b4" text-anchor="middle">equality joins only (=)</text>
+
+  <rect x="510" y="44" width="230" height="204" rx="8" fill="#0f2015" stroke="#8CD98C"/>
+  <text x="625" y="68" font-size="11" fill="#8CD98C" text-anchor="middle" font-weight="700">MERGE JOIN</text>
+  <text x="625" y="94" font-size="8.5" fill="#cdd0dd" text-anchor="middle">sort BOTH sides, then</text>
+  <text x="625" y="108" font-size="8.5" fill="#cdd0dd" text-anchor="middle">walk them in lockstep</text>
+  <path d="M526 124 H 724" stroke="#2c4c34" stroke-width="1"/>
+  <text x="625" y="144" font-size="7.5" fill="#6b7280" text-anchor="middle" letter-spacing="1">BEST WHEN</text>
+  <text x="625" y="159" font-size="8.5" fill="#8CD98C" text-anchor="middle">both sides are ALREADY</text>
+  <text x="625" y="172" font-size="8.5" fill="#8CD98C" text-anchor="middle">sorted (e.g. by an index)</text>
+  <text x="625" y="196" font-size="7.5" fill="#6b7280" text-anchor="middle" letter-spacing="1">WATCH FOR</text>
+  <text x="625" y="211" font-size="8.5" fill="#FF6B8B" text-anchor="middle">the Sort IS the cost.</text>
+  <text x="625" y="224" font-size="8.5" fill="#FF6B8B" text-anchor="middle">temp read/written = disk</text>
+  <text x="625" y="240" font-size="8" fill="#9aa0b4" text-anchor="middle">handles ranges, not just =</text>
+
+  <text x="380" y="272" font-size="10" fill="#9aa0b4" text-anchor="middle">All three return identical rows. The planner picks on cost — so bad statistics pick the wrong one.</text>
+</svg>
+<figcaption>The choice is not a preference. Given accurate row estimates the planner is usually right; given stale ones it will happily choose a nested loop over a million rows.</figcaption>
+</figure>
+
+<h3 class="reveal">1 · Nested Loop — and the <code>loops=</code> number everyone misreads</h3>
+
+<p class="reveal">For each row on the outer side, go and find the matching rows on the inner side. If the inner side has an index, that inner lookup is cheap and this is the <strong>best possible join</strong> for a small number of outer rows. Real output:</p>
+
+<div class="cb reveal"><span class="lang">text</span><pre><span class="k">SELECT</span> u.name, e.amount <span class="k">FROM</span> users u <span class="k">JOIN</span> events e <span class="k">ON</span> e.user_id = u.id <span class="k">WHERE</span> u.id = 42;
+
+Nested Loop (actual rows=109 loops=1)
+  <span class="g">Buffers: shared hit=4 read=4</span>                    <span class="c">← 8 pages. Nothing.</span>
+  -&gt; Index Scan using users_pkey on users u (actual rows=1 <span class="y">loops=1</span>)
+       Index Cond: (id = 42)                       <span class="c">← ONE outer row</span>
+  -&gt; Index Only Scan on events e (actual rows=109 <span class="y">loops=1</span>)
+       Index Cond: (user_id = 42)                  <span class="c">← the inner side is indexed ✓</span>
+</pre></div>
+
+<div class="callout rd reveal">
+  <p style="margin:.2em 0"><span class="t"><svg class="ico"><use href="#i-warn"/></svg> <code>loops=N</code> means the numbers next to it are <strong>per loop</strong></span></p>
+  <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">This is the single most misread thing in <code>EXPLAIN</code>. In a real plan I captured, the inner node said <code>actual rows=100 loops=2435</code>. That does <strong>not</strong> mean 100 rows — it means the node ran <strong>2,435 times</strong> and returned ~100 rows each time. The real total is <strong>243,554 rows</strong>. Always multiply <code>rows × loops</code> before you decide a node is cheap. A nested loop with a huge outer side and <em>no index</em> on the inner is <code>N × M</code> — and it will run until the heat death of the universe while the plan looks innocent.</p>
+</div>
+
+<h3 class="reveal">2 · Hash Join — the data engineer's workhorse</h3>
+
+<p class="reveal">Build an in-memory hash table from the <em>smaller</em> side, then scan the bigger side once and probe the hash for each row. Both tables are read exactly once, so it scales beautifully to large joins with no useful index — which describes most analytical queries. It only works for <strong>equality</strong> conditions.</p>
+
+<div class="cb reveal"><span class="lang">text</span><pre><span class="c">-- Same join, but with no index on events.user_id:</span>
+<span class="k">SELECT</span> count(*) <span class="k">FROM</span> users u <span class="k">JOIN</span> events e <span class="k">ON</span> e.user_id = u.id <span class="k">WHERE</span> u.country = <span class="g">'US'</span>;
+
+Hash Join (actual rows=81184 loops=3)
+  <span class="y">Hash Cond: (e.user_id = u.id)</span>
+  -&gt; Parallel Seq Scan on events e (actual rows=333333 loops=3)
+  -&gt; Hash                                          <span class="c">← builds the table from `users` (the small side)</span>
+       <span class="g">Buckets: 4096  Batches: 1  Memory Usage: 152kB</span>   <span class="c">← Batches: 1 = fits in RAM ✓</span>
+</pre></div>
+
+<p class="reveal">The line to look at is <strong><code>Batches</code></strong>. <code>Batches: 1</code> means the hash table fit in <code>work_mem</code> and everything happened in memory. <strong><code>Batches: 8</code> means it did not</strong> — Postgres partitioned the join and spilled to disk, and it is now many times slower. That is not a join problem; it is a <a href="#arch"><code>work_mem</code></a> problem (§02), and the fix is to raise <code>work_mem</code> for that one query.</p>
+
+<h3 class="reveal">3 · Merge Join — cheap only if the sorting is already done</h3>
+
+<p class="reveal">Sort both inputs by the join key, then walk the two sorted streams in lockstep like a zip. Very efficient <em>if the inputs are already sorted</em> — say, because both are being read in index order. If they are not, Postgres must sort them first, and the sort is the whole cost. Here is a forced merge join, and look what it did:</p>
+
+<div class="cb reveal"><span class="lang">text</span><pre>Merge Join (actual rows=333316 loops=3)
+  Merge Cond: (e.user_id = u.id)
+  Buffers: shared hit=1349 read=13828, <span class="r">temp read=1471 written=1475</span>
+  -&gt; Sort (actual rows=333333 loops=3)             <span class="c">← it had to sort a million rows</span>
+</pre></div>
+
+<p class="reveal"><code>temp read=1471 written=1475</code> is the tell: those are <strong>temporary files on disk</strong>. The sort did not fit in <code>work_mem</code>, so it spilled — writing ~1,400 blocks out and reading them back. Whenever you see <code>temp</code> in a plan, something overflowed memory and went to disk, and that is almost always the slowest thing in the query.</p>
+
+<div class="tw reveal"><table>
+<tr><th>Algorithm</th><th>How it works</th><th>Planner picks it when</th><th>The failure mode</th></tr>
+<tr><td><strong>Nested Loop</strong></td><td>For each outer row, look up the inner</td><td>Few outer rows <strong>and</strong> the inner side is indexed</td><td class="no">No index on the inner side → <code>N × M</code></td></tr>
+<tr><td><strong>Hash Join</strong></td><td>Hash the small side, probe with the big one</td><td>Large joins, no useful index. <strong>Equality only</strong></td><td class="no"><code>Batches &gt; 1</code> → hash spilled to disk</td></tr>
+<tr><td><strong>Merge Join</strong></td><td>Sort both sides, walk them together</td><td>Both inputs already sorted; also handles ranges</td><td class="no">The <code>Sort</code> spills → <code>temp read/written</code></td></tr>
+</table></div>
+
+<div class="callout cy reveal">
+  <p style="margin:.2em 0"><span class="t"><svg class="ico"><use href="#i-key"/></svg> How to debug a bad join, in order</span></p>
+  <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd"><strong>1.</strong> Compare <em>estimated</em> vs <em>actual</em> rows on the join node. Off by 100× or more? The planner chose this algorithm on bad information — run <code>ANALYZE</code> and re-check <em>before</em> touching anything else. This is the fix far more often than people expect.<br/>
+  <strong>2.</strong> Nested loop with a big <code>loops=</code>? The inner side needs an index.<br/>
+  <strong>3.</strong> <code>Batches &gt; 1</code> or <code>temp read/written</code>? It spilled. <code>SET work_mem</code> higher <em>for that query only</em> (§02 — it multiplies).<br/>
+  <strong>4.</strong> Only as a last resort, and only to <em>diagnose</em>, disable an algorithm to see what the planner would do otherwise: <code>SET enable_nestloop = off;</code>. Never leave that in production code — you are lying to the planner, not fixing it.</p>
+</div>
+
+<h2 id="ios" class="reveal"><span class="hico"><svg class="ico"><use href="#i-eye"/></svg></span><span class="n">12.</span> Index-only scans and the visibility map</h2>
+<p class="reveal lead">An index-only scan is the fastest thing Postgres can do. It also silently doesn't happen, for a reason that has nothing to do with your index.</p>
+
+<p class="reveal">Here's the problem. The index holds the key and the <code>ctid</code> — but <strong>it does not hold visibility information</strong>. It cannot tell you whether a given row version is dead, or belongs to an uncommitted transaction. Normally Postgres resolves that by fetching the heap tuple and checking <code>xmin</code>/<code>xmax</code>. But that fetch is exactly what an index-only scan is trying to avoid.</p>
+
+<p class="reveal">The escape is the <strong>visibility map</strong>: one bit per heap page, meaning "every tuple on this page is visible to everyone". <code>VACUUM</code> sets those bits. If the bit is set, Postgres can trust the index and skip the heap entirely. <strong>If it isn't set, it must go to the heap anyway</strong> — and your index-only scan quietly degrades into an ordinary one.</p>
+
+<figure class="fig reveal">
+<svg viewBox="0 0 760 268" width="100%" aria-label="An index-only scan checks the visibility map; if the page bit is set it skips the heap, otherwise it must fetch the heap tuple anyway">
+  <defs>
+    <marker id="v-g" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#8CD98C"/></marker>
+    <marker id="v-r" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#FF6B8B"/></marker>
+  </defs>
+  <text x="380" y="20" font-size="10.5" fill="#9aa0b4" text-anchor="middle" letter-spacing="1.5">THE INDEX HAS THE VALUE — BUT IS THE ROW VISIBLE?</text>
+
+  <rect x="30" y="52" width="150" height="60" rx="7" fill="#1a1608" stroke="#F5BD1F"/>
+  <text x="105" y="76" font-size="9.5" fill="#FFD97A" text-anchor="middle" font-weight="700">INDEX LEAF</text>
+  <text x="105" y="94" font-size="8" fill="#cdd0dd" text-anchor="middle">42 → (107,3)</text>
+
+  <rect x="256" y="46" width="180" height="72" rx="7" fill="#0e2028" stroke="#5AC8FF"/>
+  <text x="346" y="70" font-size="9.5" fill="#5AC8FF" text-anchor="middle" font-weight="700">VISIBILITY MAP</text>
+  <text x="346" y="88" font-size="8" fill="#cdd0dd" text-anchor="middle">1 bit per heap page</text>
+  <text x="346" y="104" font-size="8" fill="#9aa0b4" text-anchor="middle">"is page 107 all-visible?"</text>
+
+  <path d="M184 82 H 250" stroke="#F5BD1F" stroke-width="1.5" fill="none" marker-end="url(#v-g)"/>
+
+  <rect x="530" y="40" width="200" height="52" rx="7" fill="#0f2015" stroke="#8CD98C"/>
+  <text x="630" y="60" font-size="9" fill="#8CD98C" text-anchor="middle" font-weight="700">BIT SET → skip the heap</text>
+  <text x="630" y="78" font-size="8" fill="#cdd0dd" text-anchor="middle">Heap Fetches: 0 · 4 pages</text>
+
+  <rect x="530" y="106" width="200" height="52" rx="7" fill="#241014" stroke="#FF6B8B"/>
+  <text x="630" y="126" font-size="9" fill="#FF6B8B" text-anchor="middle" font-weight="700">BIT NOT SET → fetch anyway</text>
+  <text x="630" y="144" font-size="8" fill="#cdd0dd" text-anchor="middle">Heap Fetches: 109 · 110 pages</text>
+
+  <path d="M440 72 L 524 62" stroke="#8CD98C" stroke-width="1.5" fill="none" marker-end="url(#v-g)"/>
+  <path d="M440 96 L 524 128" stroke="#FF6B8B" stroke-width="1.5" fill="none" marker-end="url(#v-r)"/>
+
+  <rect x="80" y="176" width="600" height="52" rx="7" fill="#241d0b" stroke="#F5BD1F"/>
+  <text x="380" y="198" font-size="9.5" fill="#FFD97A" text-anchor="middle" font-weight="700">Only VACUUM sets those bits.</text>
+  <text x="380" y="216" font-size="8.5" fill="#cdd0dd" text-anchor="middle">A heavily-written table that autovacuum can't keep up with gets NO index-only scans.</text>
+
+  <text x="380" y="254" font-size="10" fill="#9aa0b4" text-anchor="middle">Same index, same query — 4 pages or 110, decided entirely by whether VACUUM has run.</text>
+</svg>
+<figcaption>Measured on the live server: <code>Heap Fetches: 0</code> and 4 buffers after a vacuum; the same query fell back to 110 buffers when the visibility map wasn't current.</figcaption>
+</figure>
+
+<div class="cb reveal"><span class="lang">sql</span><pre><span class="c">-- Is the visibility map current? relallvisible should be close to relpages.</span>
+<span class="k">SELECT</span> relname, relpages, relallvisible,
+       <span class="p">round</span>(100.0 * relallvisible / <span class="p">nullif</span>(relpages,0), 1) <span class="k">AS</span> pct_all_visible
+<span class="k">FROM</span> pg_class <span class="k">WHERE</span> relname = <span class="g">'events'</span>;
+<span class="c">--  events | 14286 | 14286 | 100.0    ← perfect. Index-only scans available.</span>
+
+<span class="c">-- Is a supposed index-only scan secretly hitting the heap? Look for Heap Fetches.</span>
+<span class="k">EXPLAIN</span> (<span class="k">ANALYZE</span>, <span class="k">BUFFERS</span>) <span class="k">SELECT</span> user_id <span class="k">FROM</span> events <span class="k">WHERE</span> user_id = 42;
+<span class="c">--   Heap Fetches: 0        ✓ genuinely index-only</span>
+<span class="c">--   Heap Fetches: 109      ✗ it's lying to you — VACUUM the table</span>
+</pre></div>
+
+<div class="callout rd reveal">
+  <p style="margin:.2em 0"><span class="t"><svg class="ico"><use href="#i-warn"/></svg> "Index Only Scan" in the plan does not mean it skipped the heap</span></p>
+  <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">The node is named for what it <em>attempted</em>, not what it achieved. <strong>Always read the <code>Heap Fetches</code> line.</strong> A high number means the visibility map is stale and you are paying full price with extra steps. The fix is not a better index — it's <code>VACUUM</code>, or an autovacuum that keeps up.</p>
+</div>
+
+<h2 id="types" class="reveal"><span class="hico"><svg class="ico"><use href="#i-blocks"/></svg></span><span class="n">13.</span> The other index types: GIN, GiST, BRIN, Hash</h2>
+<p class="reveal lead">Postgres ships <strong>six</strong> index methods. B-tree is the default and covers ~90% of cases. But one of the others is a superpower for data engineers, and it is almost always overlooked.</p>
+
+<p class="reveal">I asked the live server what it has:</p>
+
+<div class="cb reveal"><span class="lang">sql</span><pre><span class="k">SELECT</span> amname <span class="k">FROM</span> pg_am <span class="k">WHERE</span> amtype = <span class="g">'i'</span>;
+<span class="c">--  brin · btree · gin · gist · hash · spgist</span>
+</pre></div>
+
+<div class="tw reveal"><table>
+<tr><th>Method</th><th>Use it for</th><th>Notes</th></tr>
+<tr><td><strong><code>btree</code></td><td>Equality and ranges on anything sortable. <code>=</code>, <code>&lt;</code>, <code>&gt;</code>, <code>BETWEEN</code>, <code>ORDER BY</code></td><td class="ok">The default. If unsure, this</td></tr>
+<tr><td><strong><code>brin</code></td><td><strong>Huge tables where the column tracks physical order</strong> — timestamps in an append-only log</td><td class="ok">Astonishingly small. See below</td></tr>
+<tr><td><strong><code>gin</code></td><td><code>jsonb</code>, arrays, full-text search — "does this contain that?"</td><td>Slower to write, superb to read</td></tr>
+<tr><td><code>gist</code></td><td>Geometry, ranges, nearest-neighbour (PostGIS)</td><td>Extensible, lossy-but-fast</td></tr>
+<tr><td><code>spgist</code></td><td>Non-balanced structures: quadtrees, tries, IP prefixes</td><td>Niche</td></tr>
+<tr><td><code>hash</code></td><td>Equality only, nothing else</td><td>B-tree does this too and does more. <strong>Rarely worth it</strong></td></tr>
+</table></div>
+
+<h3 class="reveal">BRIN: the index that costs almost nothing</h3>
+
+<p class="reveal">A <strong>BRIN</strong> (Block Range INdex) doesn't store a row-level entry at all. It stores, for each <em>block range</em> (128 pages by default), just the <strong>minimum and maximum</strong> value in that range. To answer <code>WHERE created_at &gt; X</code> it checks each summary and skips the ranges that can't possibly match.</p>
+
+<p class="reveal">That makes it microscopic. Measured on the same one-million-row table, both indexing <code>created_at</code>:</p>
+
+<figure class="fig reveal">
+<svg viewBox="0 0 760 262" width="100%" aria-label="On a time-correlated column a B-tree index is 21 MB while a BRIN index over the same column is 24 kB">
+  <text x="380" y="20" font-size="10.5" fill="#9aa0b4" text-anchor="middle" letter-spacing="1.5">SAME COLUMN &#183; SAME TABLE &#183; 1,000,000 ROWS</text>
+
+  <rect x="60" y="44" width="290" height="132" rx="8" fill="#241014" stroke="#FF6B8B"/>
+  <text x="205" y="68" font-size="11" fill="#FF6B8B" text-anchor="middle" font-weight="700">B-TREE on created_at</text>
+  <rect x="80" y="82" width="250" height="36" rx="4" fill="#FF6B8B" fill-opacity="0.25" stroke="#FF6B8B"/>
+  <text x="205" y="142" font-size="16" fill="#FF6B8B" text-anchor="middle" font-weight="800">21 MB</text>
+  <text x="205" y="163" font-size="8" fill="#9aa0b4" text-anchor="middle">one entry per row &#183; 1,000,000 entries</text>
+
+  <rect x="410" y="44" width="290" height="132" rx="8" fill="#0f2015" stroke="#8CD98C"/>
+  <text x="555" y="68" font-size="11" fill="#8CD98C" text-anchor="middle" font-weight="700">BRIN on created_at</text>
+  <rect x="543" y="82" width="24" height="36" rx="3" fill="#8CD98C" fill-opacity="0.35" stroke="#8CD98C"/>
+  <text x="555" y="142" font-size="16" fill="#8CD98C" text-anchor="middle" font-weight="800">24 kB</text>
+  <text x="555" y="163" font-size="8" fill="#9aa0b4" text-anchor="middle">min/max per 128-page range &#183; ~112 entries</text>
+
+  <text x="380" y="204" font-size="12" fill="#FFD97A" text-anchor="middle" font-weight="700">&#8776; 900&#215; smaller</text>
+  <text x="380" y="228" font-size="9.5" fill="#9aa0b4" text-anchor="middle">&#8230;but ONLY because created_at correlates with physical order (correlation = 1.00).</text>
+  <text x="380" y="248" font-size="9.5" fill="#FF6B8B" text-anchor="middle">On a random column like user_id, BRIN is useless — every range contains every value.</text>
+</svg>
+<figcaption>BRIN trades precision for size. It doesn't tell you <em>which row</em>, only <em>which block ranges could possibly contain it</em> — which on an append-only time-series table is exactly enough.</figcaption>
+</figure>
+
+<div class="callout gd reveal">
+  <p style="margin:.2em 0"><span class="t"><svg class="ico"><use href="#i-bulb"/></svg> BRIN is the data engineer's index</span></p>
+  <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">Think about what a typical DE fact table looks like: <strong>append-only, ordered by time, enormous, and queried by time range.</strong> That is precisely BRIN's ideal case — the physical order already matches the logical order, so the block summaries are tight. You get range-scan pruning for a rounding error of disk space and almost no write overhead. If your events table is 500 GB and you're indexing <code>created_at</code> with a B-tree, you are spending gigabytes to buy what BRIN would give you for megabytes.</p>
+  <p style="margin:.7em 0 0;font-size:14.5px;color:#cdd0dd"><strong>The one condition:</strong> correlation. Check it with <code>SELECT correlation FROM pg_stats WHERE attname='created_at'</code>. Near 1.0 (or −1.0) → BRIN will fly. Near 0 → BRIN is worthless, because every block range will contain the full spread of values and nothing can be skipped.</p>
+</div>
+
+<div class="cb reveal"><span class="lang">sql</span><pre><span class="k">CREATE INDEX</span> idx_brin <span class="k">ON</span> events <span class="k">USING</span> brin(created_at);        <span class="c">-- 24 kB</span>
+<span class="k">CREATE INDEX</span> idx_gin  <span class="k">ON</span> events <span class="k">USING</span> gin(payload jsonb_path_ops);  <span class="c">-- for jsonb @&gt; queries</span>
+<span class="k">CREATE INDEX</span> idx_fts  <span class="k">ON</span> docs   <span class="k">USING</span> gin(to_tsvector(<span class="g">'english'</span>, body));
+</pre></div>
+
+<h2 id="variants" class="reveal"><span class="hico"><svg class="ico"><use href="#i-list"/></svg></span><span class="n">14.</span> Unique, partial, covering, expression, multicolumn</h2>
+<p class="reveal lead">Same B-tree, five different ways of aiming it. These are where most of the practical wins live.</p>
+
+<h3 class="reveal">Unique — a constraint that happens to be an index</h3>
+
+<div class="cb reveal"><span class="lang">sql</span><pre><span class="k">CREATE UNIQUE INDEX</span> idx_email <span class="k">ON</span> users(email);
+<span class="k">ALTER TABLE</span> users <span class="k">ADD CONSTRAINT</span> uq_email <span class="k">UNIQUE</span> (email);  <span class="c">-- same thing, built on an index</span>
+<span class="c">-- A PRIMARY KEY is exactly this + NOT NULL. The uniqueness IS enforced by the B-tree.</span>
+</pre></div>
+
+<h3 class="reveal">Partial — SQL Server calls this a "filtered index"</h3>
+
+<p class="reveal">Index only the rows you actually query. If 90% of your orders are <code>completed</code> and every query hunts for the <code>pending</code> ones, indexing all of them is waste. Measured on our table, a partial index was <strong>half the size</strong> of the full one:</p>
+
+<div class="cb reveal"><span class="lang">sql</span><pre><span class="k">CREATE INDEX</span> idx_pending <span class="k">ON</span> events(user_id) <span class="k">WHERE</span> status = <span class="g">'pending'</span>;
+<span class="c">--  full B-tree on user_id  : 6,960 kB</span>
+<span class="c">--  partial (status=pending): 3,496 kB   ← half the size, and faster to maintain</span>
+
+<span class="c">-- ⚠ The planner only uses it if your WHERE clause PROVABLY implies the index's WHERE.</span>
+<span class="k">SELECT</span> … <span class="k">WHERE</span> user_id = 42 <span class="k">AND</span> status = <span class="g">'pending'</span>;   <span class="c">-- ✓ uses it</span>
+<span class="k">SELECT</span> … <span class="k">WHERE</span> user_id = 42;                          <span class="c">-- ✗ cannot use it</span>
+
+<span class="c">-- The killer use: index only the NOT NULL rows of a mostly-NULL column.</span>
+<span class="k">CREATE INDEX</span> idx_churn <span class="k">ON</span> users(churned_at) <span class="k">WHERE</span> churned_at <span class="k">IS NOT NULL</span>;
+</pre></div>
+
+<h3 class="reveal">Covering — <code>INCLUDE</code> extra columns to buy an index-only scan</h3>
+
+<p class="reveal">The whole point of <code>INCLUDE</code> is to make an index-only scan possible for a query that needs a column it doesn't search on. The included columns ride along in the <em>leaf</em> pages only — they don't bloat the internal navigation pages, and they don't have to be sortable.</p>
+
+<div class="cb reveal"><span class="lang">sql</span><pre><span class="k">CREATE INDEX</span> idx_cov <span class="k">ON</span> events(user_id) <span class="k">INCLUDE</span> (amount);
+
+<span class="k">SELECT</span> user_id, amount <span class="k">FROM</span> events <span class="k">WHERE</span> user_id = 42;
+<span class="c">--  Index Only Scan using idx_cov     ← measured</span>
+<span class="c">--    Heap Fetches: 0                   the heap was never opened</span>
+</pre></div>
+
+<h3 class="reveal">Expression — index the computed thing, not the column</h3>
+
+<p class="reveal">This is the fix for the sargability problem: if you must filter on <code>LOWER(email)</code>, then <em>index</em> <code>LOWER(email)</code>. The index and the query now match exactly.</p>
+
+<div class="cb reveal"><span class="lang">sql</span><pre><span class="k">CREATE INDEX</span> idx_lower_email <span class="k">ON</span> users(<span class="p">LOWER</span>(email));
+<span class="k">SELECT</span> * <span class="k">FROM</span> users <span class="k">WHERE</span> <span class="p">LOWER</span>(email) = <span class="g">'a@b.com'</span>;    <span class="c">-- ✓ now uses the index</span>
+
+<span class="k">CREATE INDEX</span> idx_day <span class="k">ON</span> events(<span class="p">date_trunc</span>(<span class="g">'day'</span>, created_at));
+</pre></div>
+
+<h3 class="reveal">Multicolumn — and the PG 18 change that rewrites the old advice</h3>
+
+<p class="reveal">In a multicolumn index, <strong>column order matters</strong>. The classic rule — the <em>leftmost prefix rule</em> — says an index on <code>(a, b)</code> can serve <code>WHERE a = …</code> and <code>WHERE a = … AND b = …</code>, but is useless for <code>WHERE b = …</code> alone, because the tree is sorted by <code>a</code> first and <code>b</code>'s values are scattered across the whole index.</p>
+
+<p class="reveal"><strong>PostgreSQL 18 (September 2025) softened that with <em>skip scan</em>.</strong> If the leading column has few distinct values, the planner can now hop through each distinct prefix in turn and search within it — using the index even though your query never mentions the leading column. I tested it, and it works:</p>
+
+<div class="cb reveal"><span class="lang">text</span><pre><span class="c">-- Only index present: idx_multi (status, user_id).  status has just 3 distinct values.</span>
+<span class="c">-- The query filters ONLY on user_id — the SECOND column.</span>
+<span class="k">SELECT</span> count(*) <span class="k">FROM</span> events <span class="k">WHERE</span> user_id = 42;
+
+Index Only Scan using idx_multi on events (actual rows=109 loops=1)
+  <span class="g">Index Cond: (user_id = 42)</span>          <span class="c">← used the 2nd column WITHOUT the 1st</span>
+  Heap Fetches: 0
+  <span class="y">Index Searches: 7</span>                   <span class="c">← the tell: 7 tree descents, one per prefix</span>
+</pre></div>
+
+<div class="callout gd reveal">
+  <p style="margin:.2em 0"><span class="t"><svg class="ico"><use href="#i-bulb"/></svg> Does skip scan mean column order stopped mattering? No.</span></p>
+  <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">Skip scan only pays when the leading column has <strong>few distinct values</strong> — here <code>status</code> had 3, so 7 tree descents covered it. If the leading column were <code>user_id</code> with 10,000 distinct values, skipping would mean 10,000 descents and the planner would rightly seq-scan instead. <strong>The rule still stands: put the column you filter on most selectively, and most often, first.</strong> Skip scan is a safety net that rescues a badly-ordered index on a low-cardinality prefix — not a licence to stop thinking. (And on PG 17 or older, none of this exists: that query is a plain Seq Scan.)</p>
+</div>
+
+<h2 id="columnstore" class="reveal"><span class="hico"><svg class="ico"><use href="#i-cloud"/></svg></span><span class="n">15.</span> Columnstore: the thing Postgres doesn't have</h2>
+<p class="reveal lead">This is the one item on the list with <strong>no Postgres answer</strong> — and understanding why leads straight to why your lakehouse exists.</p>
+
+<p class="reveal">Postgres is <strong>row-oriented</strong>, all the way down. A page holds whole tuples, with every column of a row sitting together. That's ideal for OLTP: fetch one customer, get all their fields in one page read. It is close to the worst possible layout for analytics. Run <code>SELECT AVG(amount) FROM events</code> and Postgres must read all 14,286 pages — <em>every column of every row</em> — in order to use one number from each. You paid to read the payload, the status, the timestamps, and threw them all away.</p>
+
+<p class="reveal">A <strong>columnstore</strong> stores each column separately. The same query reads only the <code>amount</code> column's storage — a fraction of the bytes — and because a column holds one data type with lots of repetition, it compresses 10× or better. That is why analytical engines are all columnar.</p>
+
+<div class="tw reveal"><table>
+<tr><th></th><th>Rowstore (Postgres heap)</th><th>Columnstore (Parquet, Delta)</th></tr>
+<tr><td>Layout</td><td>All columns of a row, together</td><td>All values of a column, together</td></tr>
+<tr><td><code>SELECT * WHERE id = 5</code></td><td class="ok">One page read</td><td class="no">Must reassemble from every column</td></tr>
+<tr><td><code>SELECT AVG(x)</code> over 1B rows</td><td class="no">Reads every column of every row</td><td class="ok">Reads one column, compressed</td></tr>
+<tr><td>Compression</td><td>Poor — mixed types on a page</td><td class="ok">Excellent — one type, repetitive</td></tr>
+<tr><td>Good for</td><td>OLTP: point reads, updates</td><td>OLAP: scans, aggregates</td></tr>
+</table></div>
+
+<div class="callout gr reveal">
+  <p style="margin:.2em 0"><span class="t"><svg class="ico"><use href="#i-key"/></svg> This is the whole reason the lakehouse exists</span></p>
+  <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">Core Postgres has no columnstore, and the extensions that add one (Citus <code>columnar</code>, Hydra) are real but niche. The industry's actual answer was to <em>stop trying</em> — and to put the analytical copy of the data somewhere columnar instead: <strong>Parquet files, and Delta Lake or Iceberg on top of them.</strong> When you write a Delta table in Databricks, or a Spark job reads Parquet and skips 95% of the file via column pruning and min/max statistics, that is a columnstore doing exactly what Postgres cannot.</p>
+  <p style="margin:.7em 0 0;font-size:14.5px;color:#cdd0dd">And notice that Delta's file-level min/max skipping is <strong>the same idea as BRIN</strong> (§13), just applied to files instead of block ranges. Same trick, different scale. Postgres is the right tool for the transactional source; the lakehouse is the right tool for the analytical copy. Knowing <em>why</em> is what the OLTP-vs-OLAP distinction actually means.</p>
+</div>
+
+<h2 id="partition" class="reveal"><span class="hico"><svg class="ico"><use href="#i-split"/></svg></span><span class="n">16.</span> Partitioning: RANGE, LIST, HASH</h2>
+<p class="reveal lead">Partitioning splits one logical table into many physical ones. The payoff is not "smaller tables" — it's that the planner can <strong>throw entire partitions away without opening them</strong>.</p>
+
+<p class="reveal">Postgres has had proper <strong>declarative partitioning</strong> since version 10. You declare a partition key and a strategy, then attach child tables. Inserts route automatically; queries see one table.</p>
+
+<div class="cb reveal"><span class="lang">sql</span><pre><span class="k">CREATE TABLE</span> ev_part (
+    id <span class="y">bigint</span>, created_at <span class="y">timestamptz</span> <span class="k">NOT NULL</span>, user_id <span class="y">int</span>, amount <span class="y">numeric</span>
+) <span class="k">PARTITION BY RANGE</span> (created_at);
+
+<span class="k">CREATE TABLE</span> ev_2024_01 <span class="k">PARTITION OF</span> ev_part
+    <span class="k">FOR VALUES FROM</span> (<span class="g">'2024-01-01'</span>) <span class="k">TO</span> (<span class="g">'2024-02-01'</span>);   <span class="c">-- lower INCLUSIVE,</span>
+<span class="k">CREATE TABLE</span> ev_2024_02 <span class="k">PARTITION OF</span> ev_part                <span class="c">-- upper EXCLUSIVE</span>
+    <span class="k">FOR VALUES FROM</span> (<span class="g">'2024-02-01'</span>) <span class="k">TO</span> (<span class="g">'2024-03-01'</span>);
+</pre></div>
+
+<div class="tw reveal"><table>
+<tr><th>Strategy</th><th>Split by</th><th>Use for</th><th>Pruning works on</th></tr>
+<tr><td><code>RANGE</code></td><td>A range of values</td><td><strong>Time-series.</strong> One partition per month/day</td><td class="ok">Ranges <em>and</em> equality</td></tr>
+<tr><td><code>LIST</code></td><td>An explicit set of values</td><td>Region, tenant, country</td><td class="ok">Equality and <code>IN</code></td></tr>
+<tr><td><code>HASH</code></td><td>hash(key) % modulus</td><td>Spreading write load evenly</td><td class="no">Equality <strong>only</strong> — never ranges</td></tr>
+</table></div>
+
+<h3 class="reveal">Partition pruning — the actual point</h3>
+
+<p class="reveal">Here is a query filtered on the partition key, measured. Note what is <em>absent</em> from the plan:</p>
+
+<div class="cb reveal"><span class="lang">text</span><pre><span class="k">SELECT</span> count(*) <span class="k">FROM</span> ev_part
+<span class="k">WHERE</span> created_at &gt;= <span class="g">'2024-02-01'</span> <span class="k">AND</span> created_at &lt; <span class="g">'2024-03-01'</span>;
+
+Aggregate
+  <span class="g">-&gt; Seq Scan on ev_2024_02</span>            <span class="c">← ONLY February. Jan and Mar never opened.</span>
+       Buffers: shared hit=345
+
+<span class="c">-- Now the SAME table, but filtering on a NON-partition-key column:</span>
+<span class="k">SELECT</span> count(*) <span class="k">FROM</span> ev_part <span class="k">WHERE</span> user_id = 5;
+
+Aggregate
+  -&gt; Append
+       <span class="r">-&gt; Bitmap Heap Scan on ev_2024_01</span>   <span class="c">← every</span>
+       <span class="r">-&gt; Bitmap Heap Scan on ev_2024_02</span>   <span class="c">← single</span>
+       <span class="r">-&gt; Bitmap Heap Scan on ev_2024_03</span>   <span class="c">← partition</span>
+</pre></div>
+
+<div class="callout rd reveal">
+  <p style="margin:.2em 0"><span class="t"><svg class="ico"><use href="#i-warn"/></svg> No partition key in the WHERE clause = no pruning = you made things worse</span></p>
+  <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">This is the mistake that turns partitioning from a win into a regression. If your query doesn't filter on the partition key, Postgres must scan <strong>every partition</strong> — and you've now added per-partition planning overhead on top of the same work. <strong>Choose the partition key to match how you actually query</strong>, which for a fact table is almost always the time column. And beware the subtle version: wrapping the key in a function (<code>WHERE date_trunc('day', created_at) = …</code>) can defeat pruning, exactly as it defeats an index.</p>
+</div>
+
+<h3 class="reveal">When partitioning is worth it — and when it isn't</h3>
+
+<p class="reveal">Partitioning is not a general speed-up, and reaching for it too early is common. The genuine wins are: <strong>dropping old data instantly</strong> (<code>DROP TABLE ev_2023_01</code> is a metadata operation — versus a <code>DELETE</code> of 100 million rows, which generates 100 million dead tuples and a vacuum storm); <strong>vacuum that can keep up</strong>, because each partition is small enough to process; and <strong>pruning</strong>. Below roughly 50–100 GB, with no data-retention requirement, plain indexes are usually simpler and just as fast.</p>
+
+<h2 id="partidx" class="reveal"><span class="hico"><svg class="ico"><use href="#i-merge"/></svg></span><span class="n">17.</span> Partitioning and indexing together</h2>
+<p class="reveal lead">They compose. Partitioning cuts the table down to the right slice; the index finds the rows inside that slice.</p>
+
+<p class="reveal">Create an index on the <strong>parent</strong> and Postgres automatically creates and maintains a matching index on <em>every</em> partition, including ones you add later. I verified the cascade — three partitions, one <code>CREATE INDEX</code>, three indexes:</p>
+
+<div class="cb reveal"><span class="lang">sql</span><pre><span class="k">CREATE INDEX</span> <span class="k">ON</span> ev_part(user_id);     <span class="c">-- on the PARENT</span>
+
+<span class="k">SELECT</span> c.relname <span class="k">AS</span> partition,
+       (<span class="k">SELECT</span> count(*) <span class="k">FROM</span> pg_index i <span class="k">WHERE</span> i.indrelid = c.oid) <span class="k">AS</span> indexes
+<span class="k">FROM</span> pg_class c <span class="k">JOIN</span> pg_inherits inh <span class="k">ON</span> inh.inhrelid = c.oid
+<span class="k">WHERE</span> inh.inhparent = <span class="g">'ev_part'</span>::<span class="y">regclass</span>;
+<span class="c">--  ev_2024_01 | 1</span>
+<span class="c">--  ev_2024_02 | 1     ← each partition got its own local index, automatically</span>
+<span class="c">--  ev_2024_03 | 1</span>
+</pre></div>
+
+<p class="reveal">These are <strong>local</strong> indexes: each one covers only its own partition. Postgres has no global index across partitions — which is precisely what makes <code>DROP TABLE ev_2023_01</code> instant, since there is no giant shared index to surgically remove entries from.</p>
+
+<div class="callout cy reveal">
+  <p style="margin:.2em 0"><span class="t"><svg class="ico"><use href="#i-key"/></svg> The design that actually works for a fact table</span></p>
+  <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd"><strong>Partition by time</strong> (RANGE on <code>created_at</code>, monthly or daily) so old data drops instantly and vacuum stays sane. <strong>Index by access pattern</strong> — a B-tree on the columns you filter by <em>within</em> a time window (<code>user_id</code>, <code>status</code>). Then <strong>BRIN the time column</strong> inside each partition if the partitions are still large, since the data is append-ordered and BRIN costs nothing. And put the current month's partition on a fast tablespace and the archive on cheap disk — <code>ALTER TABLE … SET TABLESPACE</code> per partition. That's the whole recipe, and it's the same shape as partitioning a Delta table by date.</p>
+</div>
+
+<div class="cb reveal"><span class="lang">sql</span><pre><span class="c">-- A unique constraint on a partitioned table MUST include the partition key.</span>
+<span class="c">-- Postgres cannot enforce global uniqueness without a global index — and it has none.</span>
+<span class="k">CREATE TABLE</span> ev_part (id <span class="y">bigint</span>, created_at <span class="y">timestamptz</span>,
+    <span class="k">PRIMARY KEY</span> (id, created_at))          <span class="c">-- ← created_at is forced into the PK</span>
+<span class="k">PARTITION BY RANGE</span> (created_at);
+</pre></div>
+
+<p class="reveal">That last constraint catches people out and is worth internalising: <strong>you cannot have a globally-unique <code>id</code> on a partitioned table</strong> unless the partition key is part of the key. It is a direct consequence of there being no global index — and it is the same trade-off, for the same reason, that you meet when partitioning tables in a lakehouse.</p>
+
+<h2 id="optimize" class="reveal"><span class="hico"><svg class="ico"><use href="#i-zap"/></svg></span><span class="n">18.</span> The optimization playbook</h2>
+<p class="reveal lead">A loop, not a checklist. <strong>Measure, find the worst node, change one thing, measure again.</strong> Guessing at indexes is how you end up with forty of them and a slow database.</p>
+
+<figure class="fig reveal">
+<svg viewBox="0 0 760 232" width="100%" aria-label="The optimization loop: find the slow query, explain it, identify the problem, make one change, then measure again">
+  <defs>
+    <marker id="o-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#F5BD1F"/></marker>
+  </defs>
+  <text x="380" y="20" font-size="10.5" fill="#9aa0b4" text-anchor="middle" letter-spacing="1.5">MEASURE · DIAGNOSE · CHANGE ONE THING · MEASURE AGAIN</text>
+
+  <rect x="24" y="52" width="150" height="72" rx="8" fill="#1a1608" stroke="#F5BD1F"/>
+  <text x="99" y="76" font-size="10" fill="#FFD97A" text-anchor="middle" font-weight="700">1 · FIND IT</text>
+  <text x="99" y="94" font-size="8" fill="#cdd0dd" text-anchor="middle">pg_stat_statements</text>
+  <text x="99" y="108" font-size="8" fill="#6b7280" text-anchor="middle">slowest total time</text>
+
+  <rect x="198" y="52" width="150" height="72" rx="8" fill="#171310" stroke="#E8873A"/>
+  <text x="273" y="76" font-size="10" fill="#E8873A" text-anchor="middle" font-weight="700">2 · EXPLAIN IT</text>
+  <text x="273" y="94" font-size="8" fill="#cdd0dd" text-anchor="middle">ANALYZE, BUFFERS</text>
+  <text x="273" y="108" font-size="8" fill="#6b7280" text-anchor="middle">read it bottom-up</text>
+
+  <rect x="372" y="52" width="150" height="72" rx="8" fill="#0e2028" stroke="#5AC8FF"/>
+  <text x="447" y="76" font-size="10" fill="#5AC8FF" text-anchor="middle" font-weight="700">3 · DIAGNOSE</text>
+  <text x="447" y="94" font-size="8" fill="#cdd0dd" text-anchor="middle">est vs actual rows</text>
+  <text x="447" y="108" font-size="8" fill="#6b7280" text-anchor="middle">rows removed · buffers</text>
+
+  <rect x="546" y="52" width="150" height="72" rx="8" fill="#0f2015" stroke="#8CD98C"/>
+  <text x="621" y="76" font-size="10" fill="#8CD98C" text-anchor="middle" font-weight="700">4 · ONE CHANGE</text>
+  <text x="621" y="94" font-size="8" fill="#cdd0dd" text-anchor="middle">index · ANALYZE · rewrite</text>
+  <text x="621" y="108" font-size="8" fill="#6b7280" text-anchor="middle">then measure again</text>
+
+  <g stroke="#F5BD1F" stroke-width="1.5" fill="none">
+    <path d="M178 88 H 192" marker-end="url(#o-a)"/>
+    <path d="M352 88 H 366" marker-end="url(#o-a)"/>
+    <path d="M526 88 H 540" marker-end="url(#o-a)"/>
+  </g>
+  <path d="M621 128 V 152 H 99 V 130" stroke="#F5BD1F" stroke-width="1.4" fill="none" stroke-dasharray="5,3" marker-end="url(#o-a)"/>
+  <text x="360" y="168" font-size="8.5" fill="#6b7280" text-anchor="middle">repeat — the next bottleneck is never where you expect</text>
+
+  <text x="380" y="204" font-size="10" fill="#FF6B8B" text-anchor="middle">Never add an index without an EXPLAIN that shows you needed it.</text>
+  <text x="380" y="222" font-size="9.5" fill="#9aa0b4" text-anchor="middle">Every index makes every INSERT, UPDATE and DELETE slower, forever.</text>
+</svg>
+<figcaption>The loop matters more than any individual trick. One change at a time, or you won't know what worked.</figcaption>
+</figure>
+
+<h3 class="reveal">Rules for index design</h3>
+
+<div class="step reveal"><div class="num-bubble">1</div><div class="body">
+<h4 style="margin-top:0">Index what you filter and join on, not what you select</h4>
+<p style="margin:.2em 0">Columns in <code>WHERE</code>, <code>JOIN … ON</code> and <code>ORDER BY</code> are index candidates. A column that only ever appears in the <code>SELECT</code> list is not — unless you're adding it via <code>INCLUDE</code> to buy an index-only scan.</p>
+</div></div>
+
+<div class="step reveal"><div class="num-bubble">2</div><div class="body">
+<h4 style="margin-top:0">Keep the column bare — or index the expression</h4>
+<p style="margin:.2em 0"><code>WHERE date_trunc('day', created_at) = '2024-03-01'</code> cannot use an index on <code>created_at</code>. Either rewrite it as a half-open range (<code>&gt;= '2024-03-01' AND &lt; '2024-03-02'</code>), or build an <em>expression index</em> on <code>date_trunc('day', created_at)</code>. Both work; the range is usually better because one index then serves every granularity.</p>
+</div></div>
+
+<div class="step reveal"><div class="num-bubble">3</div><div class="body">
+<h4 style="margin-top:0">Selectivity first in a multicolumn index</h4>
+<p style="margin:.2em 0">Put the column that eliminates the most rows — and that you filter on most often — first. PG 18's skip scan can rescue a bad ordering when the leading column has few distinct values, but don't design around the safety net.</p>
+</div></div>
+
+<div class="step reveal"><div class="num-bubble">4</div><div class="body">
+<h4 style="margin-top:0">Build indexes CONCURRENTLY in production</h4>
+<p style="margin:.2em 0">A plain <code>CREATE INDEX</code> takes a lock that blocks <strong>all writes</strong> for the duration. On a big table that is an outage. <code>CREATE INDEX CONCURRENTLY</code> does not — it's slower and can't run in a transaction, and it can leave an <code>INVALID</code> index if it fails (just drop and retry), but it doesn't take your application down.</p>
+</div></div>
+
+<div class="step reveal"><div class="num-bubble">5</div><div class="body">
+<h4 style="margin-top:0">Delete the indexes nobody uses</h4>
+<p style="margin:.2em 0">Every index is a tax on every write, and a <em>redundant</em> index is pure loss: an index on <code>(a, b)</code> already serves queries on <code>a</code> alone, so a separate index on <code>(a)</code> is dead weight. §19 has the query that finds them.</p>
+</div></div>
+
+<div class="cb reveal"><span class="lang">sql</span><pre><span class="c">-- The single highest-value thing to check when a query "suddenly got slow".</span>
+<span class="c">-- Stale statistics → the planner guesses wrong → it picks a terrible plan.</span>
+<span class="k">ANALYZE</span> events;
+
+<span class="c">-- Building an index without taking the table down:</span>
+<span class="k">CREATE INDEX CONCURRENTLY</span> idx_user <span class="k">ON</span> events(user_id);
+
+<span class="c">-- For a skewed column, tell Postgres to keep more detailed statistics.</span>
+<span class="c">-- (default 100 buckets; up to 10,000 for a really lumpy distribution)</span>
+<span class="k">ALTER TABLE</span> events <span class="k">ALTER COLUMN</span> status <span class="k">SET STATISTICS</span> 1000;
+<span class="k">ANALYZE</span> events;
+</pre></div>
+
+<h2 id="monitor" class="reveal"><span class="hico"><svg class="ico"><use href="#i-eye"/></svg></span><span class="n">19.</span> Monitoring: the queries to actually run</h2>
+<p class="reveal lead">Six queries. Every one of these produced real output on the live server, and each answers a question you will genuinely be asked.</p>
+
+<h3 class="reveal">1 · What is slow? (the only place to start)</h3>
+
+<div class="cb reveal"><span class="lang">sql</span><pre><span class="c">-- pg_stat_statements is an extension. Enable it — it is the single most useful</span>
+<span class="c">-- diagnostic in Postgres. Requires a restart:</span>
+<span class="c">--   shared_preload_libraries = 'pg_stat_statements'   (in postgresql.conf)</span>
+<span class="k">CREATE EXTENSION IF NOT EXISTS</span> pg_stat_statements;
+
+<span class="k">SELECT</span> <span class="p">substr</span>(query, 1, 60) <span class="k">AS</span> query,
+       calls,
+       <span class="p">round</span>(total_exec_time::<span class="y">numeric</span>, 1) <span class="k">AS</span> total_ms,
+       <span class="p">round</span>(mean_exec_time::<span class="y">numeric</span>, 2)  <span class="k">AS</span> avg_ms,
+       shared_blks_read                    <span class="k">AS</span> pages_from_disk
+<span class="k">FROM</span> pg_stat_statements
+<span class="k">ORDER BY</span> total_exec_time <span class="k">DESC</span>
+<span class="k">LIMIT</span> 10;
+</pre></div>
+
+<p class="reveal">Sort by <strong><code>total_exec_time</code>, not <code>mean</code></strong>. A 20 ms query run two million times is a far bigger problem than a 4-second report that runs nightly, and only the total will show you that.</p>
+
+<h3 class="reveal">2 · Which tables are missing an index?</h3>
+
+<div class="cb reveal"><span class="lang">sql</span><pre><span class="k">SELECT</span> relname, seq_scan, idx_scan, n_live_tup
+<span class="k">FROM</span> pg_stat_user_tables
+<span class="k">WHERE</span> n_live_tup &gt; 10000
+<span class="k">ORDER BY</span> seq_scan <span class="k">DESC</span>;
+<span class="c">--  relname | seq_scan | idx_scan | n_live_tup</span>
+<span class="c">--  events  |       16 |       11 |    1000000</span>
+</pre></div>
+
+<p class="reveal">A big table with a high <code>seq_scan</code> count and a low <code>idx_scan</code> count is the classic missing-index signature. (Small tables legitimately seq-scan forever — the planner knows a 200-row table fits in one page and an index would be slower.)</p>
+
+<h3 class="reveal">3 · Which indexes are dead weight?</h3>
+
+<div class="cb reveal"><span class="lang">sql</span><pre><span class="k">SELECT</span> relname <span class="k">AS</span> table, indexrelname <span class="k">AS</span> index,
+       idx_scan <span class="k">AS</span> times_used,
+       pg_size_pretty(pg_relation_size(indexrelid)) <span class="k">AS</span> size
+<span class="k">FROM</span> pg_stat_user_indexes
+<span class="k">WHERE</span> idx_scan = 0
+  <span class="k">AND</span> indexrelid <span class="k">NOT IN</span> (<span class="k">SELECT</span> conindid <span class="k">FROM</span> pg_constraint <span class="k">WHERE</span> conindid &gt; 0)
+<span class="k">ORDER BY</span> pg_relation_size(indexrelid) <span class="k">DESC</span>;
+<span class="c">--  events | idx_never_used | 0 | 21 MB     ← never used once. Costing every write.</span>
+</pre></div>
+
+<p class="reveal">Two cautions before you drop anything. The counters are cumulative <strong>since the last stats reset</strong>, so a fresh server will show everything as unused — let it run for a full business cycle first. And the query deliberately excludes constraint-backing indexes, because dropping the index behind a <code>UNIQUE</code> or <code>PRIMARY KEY</code> would drop the constraint.</p>
+
+<h3 class="reveal">4 · Is it bloated?</h3>
+
+<div class="cb reveal"><span class="lang">sql</span><pre><span class="k">SELECT</span> relname, n_live_tup, n_dead_tup,
+       <span class="p">round</span>(100.0 * n_dead_tup / <span class="p">nullif</span>(n_live_tup + n_dead_tup, 0), 1) <span class="k">AS</span> dead_pct,
+       last_autovacuum, last_autoanalyze
+<span class="k">FROM</span> pg_stat_user_tables
+<span class="k">WHERE</span> n_dead_tup &gt; 1000
+<span class="k">ORDER BY</span> dead_pct <span class="k">DESC</span>;
+<span class="c">--  events | 1000000 | 49859 | 4.7 | 2026-07-14 16:30:45 | …</span>
+</pre></div>
+
+<p class="reveal">Above ~20% dead, autovacuum is losing. Above 50%, half your I/O is spent reading garbage.</p>
+
+<h3 class="reveal">5 · Is it in RAM?</h3>
+
+<div class="cb reveal"><span class="lang">sql</span><pre><span class="k">SELECT</span> <span class="p">round</span>(100.0 * <span class="p">sum</span>(heap_blks_hit)
+             / <span class="p">nullif</span>(<span class="p">sum</span>(heap_blks_hit) + <span class="p">sum</span>(heap_blks_read), 0), 2) <span class="k">AS</span> cache_hit_pct
+<span class="k">FROM</span> pg_statio_user_tables;
+<span class="c">--  99.86     ← measured. You want &gt; 99%.</span>
+</pre></div>
+
+<p class="reveal">Below 95% on an OLTP workload means your working set doesn't fit in <code>shared_buffers</code> and you're going to disk constantly. That is a memory problem, not a query problem, and no index will fix it.</p>
+
+<h3 class="reveal">6 · What is blocking what?</h3>
+
+<div class="cb reveal"><span class="lang">sql</span><pre><span class="c">-- When everything hangs: find who is blocking whom.</span>
+<span class="k">SELECT</span> pid, <span class="p">pg_blocking_pids</span>(pid) <span class="k">AS</span> blocked_by,
+       <span class="p">left</span>(query, 60) <span class="k">AS</span> query, state,
+       <span class="p">now</span>() - query_start <span class="k">AS</span> duration
+<span class="k">FROM</span> pg_stat_activity
+<span class="k">WHERE</span> <span class="p">cardinality</span>(<span class="p">pg_blocking_pids</span>(pid)) &gt; 0;
+
+<span class="c">-- Long-running transactions are the silent killer: an idle-in-transaction session</span>
+<span class="c">-- holds back the vacuum horizon, so dead tuples CANNOT be cleaned anywhere.</span>
+<span class="k">SELECT</span> pid, state, <span class="p">now</span>() - xact_start <span class="k">AS</span> open_for, <span class="p">left</span>(query, 50)
+<span class="k">FROM</span> pg_stat_activity
+<span class="k">WHERE</span> state = <span class="g">'idle in transaction'</span>
+<span class="k">ORDER BY</span> xact_start;
+</pre></div>
+
+<div class="callout rd reveal">
+  <p style="margin:.2em 0"><span class="t"><svg class="ico"><use href="#i-warn"/></svg> The bug that looks like a vacuum problem but isn't</span></p>
+  <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">If one connection sits <strong>idle in transaction</strong> for hours, <code>VACUUM</code> cannot remove <em>any</em> tuple newer than that transaction's snapshot — <strong>anywhere in the database</strong>, not just in the tables it touched. Autovacuum runs, reports success, and reclaims nothing, while your tables bloat relentlessly. It's usually an application that opened a transaction and forgot to commit. Check <code>pg_stat_activity</code> before you spend a day tuning autovacuum that was never the problem.</p>
+</div>
+
+<h2 id="traps" class="reveal"><span class="hico"><svg class="ico"><use href="#i-warn"/></svg></span><span class="n">20.</span> The traps checklist</h2>
+
+<div class="tw reveal"><table>
+<tr><th>The trap</th><th>What actually happens</th><th>The fix</th></tr>
+<tr><td>Expecting a clustered index</td><td class="no">Doesn't exist. The heap is never sorted, and <code>CLUSTER</code> isn't maintained</td><td>Design for index → heap jumps; use <code>INCLUDE</code> to avoid them</td></tr>
+<tr><td>"Index Only Scan" in the plan</td><td class="no">May still be hitting the heap on every row</td><td>Read <code>Heap Fetches</code>. If &gt; 0, <code>VACUUM</code></td></tr>
+<tr><td>Adding an index to a column you update constantly</td><td class="no">Disables HOT updates → every update rewrites every index</td><td>Index only what you filter on; raise <code>fillfactor</code></td></tr>
+<tr><td>An index that matches 30% of rows</td><td class="no">Measured: 2.6% of rows still touched 84% of pages</td><td>Accept the seq scan, or make it a partial index</td></tr>
+<tr><td><code>VACUUM FULL</code> on a live table</td><td class="no"><code>ACCESS EXCLUSIVE</code> lock — total outage, needs 2× disk</td><td><code>pg_repack</code>, or fix autovacuum so it never bloats</td></tr>
+<tr><td>Default autovacuum on a huge table</td><td class="no">Waits for 20% dead — 20M rows on a 100M table</td><td><code>autovacuum_vacuum_scale_factor = 0.01</code></td></tr>
+<tr><td>An idle-in-transaction connection</td><td class="no">Blocks the vacuum horizon <strong>database-wide</strong>. Nothing can be cleaned</td><td>Find it in <code>pg_stat_activity</code>; set <code>idle_in_transaction_session_timeout</code></td></tr>
+<tr><td>Partitioning without the key in <code>WHERE</code></td><td class="no">No pruning — every partition scanned, plus overhead</td><td>Partition on the column you actually filter by</td></tr>
+<tr><td>HASH partitioning + a range query</td><td class="no">Pruning only works on equality. Ranges scan everything</td><td>Use <code>RANGE</code> partitioning for time</td></tr>
+<tr><td>Wanting a globally unique id on a partitioned table</td><td class="no">Impossible — the PK must contain the partition key</td><td>Accept a composite key, or don't partition</td></tr>
+<tr><td>Plain <code>CREATE INDEX</code> in production</td><td class="no">Blocks all writes for the whole build</td><td><code>CREATE INDEX CONCURRENTLY</code></td></tr>
+<tr><td><code>SELECT *</code> on a table with a big <code>jsonb</code></td><td class="no">Extra TOAST fetch + decompression per row</td><td>Select only the columns you need</td></tr>
+<tr><td>Trusting <code>pg_relation_size()</code></td><td class="no">Excludes TOAST — can hide gigabytes</td><td><code>pg_total_relation_size()</code></td></tr>
+<tr><td>BRIN on a random column</td><td class="no">Useless — every block range contains every value</td><td>Check <code>correlation</code> in <code>pg_stats</code> first</td></tr>
+<tr><td>Reading <code>cost=</code> as a time</td><td>It's an arbitrary unit for comparing plans</td><td>Use <code>BUFFERS</code>. Pages are the real cost</td></tr>
+<tr><td>A query that "suddenly got slow"</td><td>Planner statistics went stale; it now picks a bad plan</td><td><code>ANALYZE</code> the table — check estimated vs actual rows</td></tr>
+<tr><td>Storing a <code>ctid</code> as if it were a key</td><td class="no">It is a <em>physical address</em> and it <strong>changes on every UPDATE</strong> (§06)</td><td>Use a real primary key. <code>ctid</code> is never stable</td></tr>
+<tr><td>Reading <code>actual rows</code> without checking <code>loops=</code></td><td class="no">The number is <strong>per loop</strong>. <code>rows=100 loops=2435</code> is 243,554 rows, not 100</td><td>Always multiply <code>rows × loops</code></td></tr>
+<tr><td>A Nested Loop with no index on the inner side</td><td class="no"><code>N × M</code>. The plan looks innocent and runs forever</td><td>Index the inner join column</td></tr>
+<tr><td><code>Batches &gt; 1</code> or <code>temp read/written</code> in a plan</td><td class="no">A hash or sort overflowed memory and spilled to disk</td><td><code>SET work_mem</code> higher for that query only</td></tr>
+<tr><td>Leaving <code>SET enable_nestloop = off</code> in code</td><td class="no">You lied to the planner instead of fixing the cause</td><td>Diagnose with it; fix with <code>ANALYZE</code> or an index</td></tr>
+<tr><td>Raising <code>work_mem</code> globally to "make sorts fast"</td><td class="no">It's <strong>per sort node, per connection</strong>. 256 MB × 5 nodes × 100 conns = 128 GB. OOM</td><td>Keep it 4–32 MB globally; <code>SET work_mem</code> per session for the one big query</td></tr>
+<tr><td>Letting the app open hundreds of connections</td><td class="no">Each is a full OS <em>process</em>. Throughput collapses into context-switching</td><td>PgBouncer. Useful backends ≈ <code>cores × 2–4</code></td></tr>
+<tr><td>Assuming <code>COMMIT</code> wrote the data file</td><td>It wrote the <strong>WAL</strong>. The data page follows minutes later — and that's fine</td><td>Understand the WAL is what makes you durable (§02)</td></tr>
+</table></div>
+
+<h2 id="cheatsheet" class="reveal"><span class="hico"><svg class="ico"><use href="#i-list"/></svg></span><span class="n">21.</span> Cheat sheet</h2>
+
+<div class="cb reveal"><span class="lang">sql</span><pre><span class="c"># ── THE MENTAL MODEL ───────────────────────────────────────────────────</span>
+table = HEAP = unordered pile of 8 KB pages     ctid = (page, slot)
+index = separate B-tree of key → ctid           NO clustered index. Ever.
+UPDATE = new tuple + dead tuple                 → bloat → VACUUM exists
+cost of everything = HOW MANY PAGES DID I READ
+
+<span class="c"># ── ARCHITECTURE ───────────────────────────────────────────────────────</span>
+ONE OS PROCESS PER CONNECTION (not threads) → connections are EXPENSIVE
+   use PgBouncer · useful backends ≈ cores × 2-4, not "whatever the app opens"
+
+WRITE PATH   change → WAL buffer → <span class="g">fsync at COMMIT ✓ you are now durable</span>
+                    → shared_buffers (dirty page) → checkpointer → data file
+             <span class="g">COMMIT returns at the WAL.</span> The data page follows minutes later.
+
+MEMORY       shared_buffers        ~25% RAM   shared, global (the page cache)
+             <span class="r">work_mem              4-32 MB    PER SORT NODE, PER CONNECTION</span>
+                                              <span class="r">→ it MULTIPLIES. This is how you OOM.</span>
+             maintenance_work_mem  raise it   faster CREATE INDEX / VACUUM
+             effective_cache_size  ~75% RAM   planner HINT — allocates nothing
+
+BACKGROUND   checkpointer · background writer · walwriter · autovacuum launcher
+PG 18        async I/O (io_method = worker | io_uring) → faster seq scans,
+             bitmap heap scans and vacuum. Did not exist before PG 18.
+
+<span class="c"># ── SQL SERVER → POSTGRES ──────────────────────────────────────────────</span>
+clustered index    → <span class="r">does not exist</span>       filtered index → PARTIAL index
+non-clustered idx  → just "an index"        file group     → TABLESPACE
+columnstore index  → <span class="r">does not exist</span>       (use Parquet / Delta instead)
+
+<span class="c"># ── THE FOUR SCANS (measured on 1M rows / 14,286 pages) ────────────────</span>
+Seq Scan          14,286 pages   no index, or you want most of the table
+Index Scan        few pages      few rows, needs columns not in the index
+Bitmap Heap Scan  110 … 11,988   medium match count; sorts ctids first
+<span class="g">Index Only Scan   4 pages</span>        index has every column AND pages all-visible
+
+<span class="c"># ── EXPLAIN ────────────────────────────────────────────────────────────</span>
+<span class="k">EXPLAIN</span> (<span class="k">ANALYZE</span>, <span class="k">BUFFERS</span>) …          ← always. Read bottom-up.
+  Buffers:                  pages read = the real cost
+  estimated vs actual rows: wildly off → run ANALYZE
+  Rows Removed by Filter:   big → missing index
+  Heap Fetches:             &gt; 0 on an Index Only Scan → VACUUM
+  cost=…                    NOT a time. Ignore it.
+
+<span class="c"># ── THE THREE JOINS ────────────────────────────────────────────────────</span>
+Nested Loop  for each outer row, look up the inner
+             ✓ few outer rows + INDEX on inner    ✗ no index → N × M = death
+             <span class="r">⚠ loops=N → the rows shown are PER LOOP. MULTIPLY.</span>
+Hash Join    hash the small side, probe with the big one · EQUALITY ONLY
+             ✓ big joins, no index — the DE workhorse
+             <span class="r">⚠ Batches &gt; 1 = spilled to disk → raise work_mem</span>
+Merge Join   sort both sides, walk in lockstep · handles ranges
+             ✓ both sides ALREADY sorted          <span class="r">⚠ temp read/written = spilled</span>
+
+debug order: 1) est vs actual rows off? → ANALYZE
+             2) big loops= ? → index the inner side
+             3) Batches/temp ? → work_mem (per query!)
+
+<span class="c"># ── INDEX TYPES ────────────────────────────────────────────────────────</span>
+btree   the default · equality + ranges + ORDER BY
+<span class="g">brin</span>    HUGE append-only tables, time column · 21 MB → 24 kB · needs correlation≈1
+gin     jsonb, arrays, full-text
+gist    geometry, ranges (PostGIS)      hash  equality only — rarely worth it
+
+<span class="c"># ── INDEX VARIANTS ─────────────────────────────────────────────────────</span>
+<span class="k">CREATE UNIQUE INDEX</span> …                            constraint + index in one
+<span class="k">CREATE INDEX</span> … <span class="k">WHERE</span> status=<span class="g">'pending'</span>          PARTIAL — half the size
+<span class="k">CREATE INDEX</span> … (user_id) <span class="k">INCLUDE</span> (amount)       COVERING → index-only scan
+<span class="k">CREATE INDEX</span> … (<span class="p">LOWER</span>(email))                  EXPRESSION → makes it sargable
+<span class="k">CREATE INDEX</span> … (a, b)                            leftmost prefix rule
+                                                  (PG18 skip scan relaxes it
+                                                   IF `a` is low-cardinality)
+<span class="k">CREATE INDEX CONCURRENTLY</span> …                      no write lock. Use in prod.
+
+<span class="c"># ── VACUUM ─────────────────────────────────────────────────────────────</span>
+<span class="k">VACUUM</span>        marks space reusable · <span class="r">does NOT shrink the file</span> · no lock
+<span class="k">VACUUM FULL</span>   rewrites compactly · returns disk · <span class="r">ACCESS EXCLUSIVE = OUTAGE</span>
+autovacuum    default fires at 20% dead — <span class="r">far too late on a big table</span>
+              <span class="k">ALTER TABLE</span> t <span class="k">SET</span> (autovacuum_vacuum_scale_factor = 0.01);
+idle-in-transaction → blocks vacuum DATABASE-WIDE. Check pg_stat_activity.
+
+<span class="c"># ── PARTITIONING ───────────────────────────────────────────────────────</span>
+<span class="k">PARTITION BY RANGE</span> (created_at)   time-series · prunes ranges AND equality
+<span class="k">PARTITION BY LIST</span>  (region)       prunes equality / IN
+<span class="k">PARTITION BY HASH</span>  (user_id)      spreads writes · <span class="r">prunes EQUALITY ONLY</span>
+no partition key in WHERE  →  <span class="r">NO PRUNING · every partition scanned</span>
+index on the parent        →  cascades to every partition (local indexes)
+DROP TABLE old_partition   →  instant. This is the real reason to partition.
+unique key                 →  MUST include the partition key
+
+<span class="c"># ── MONITORING · the six ───────────────────────────────────────────────</span>
+what's slow      pg_stat_statements     <span class="k">ORDER BY</span> total_exec_time <span class="k">DESC</span>
+missing index    pg_stat_user_tables    high seq_scan on a big table
+unused index     pg_stat_user_indexes   idx_scan = 0
+bloat            pg_stat_user_tables    n_dead_tup / n_live_tup &gt; 20%
+cache hit        pg_statio_user_tables  want &gt; 99%
+blocking         pg_stat_activity       <span class="p">pg_blocking_pids</span>(pid)
+</pre></div>
+
+<div class="gloss reveal">
+  <h4><svg class="ico"><use href="#i-book"/></svg> Glossary</h4>
+  <dl>
+    <dt id="glossary">Backend process</dt><dd>The OS process the postmaster forks for <em>your connection</em>. Postgres is process-based, not thread-based, so every connection costs several megabytes and a scheduler slot — which is why a <em>connection pooler</em> exists.</dd>
+    <dt>Connection pooler</dt><dd>PgBouncer and friends: keeps a small pool of real backends and multiplexes many client connections across it. Necessary because throughput <em>collapses</em> past a few hundred backends. Useful active backends ≈ <code>cores × 2–4</code>.</dd>
+    <dt>WAL</dt><dd>Write-Ahead Log. A sequential, append-only journal of every change. <strong>Postgres writes here first and returns</strong> — the data pages are written later. Durability, crash recovery and replication all come from this one file stream.</dd>
+    <dt>Checkpoint</dt><dd>The moment the <em>checkpointer</em> process flushes accumulated dirty pages from <code>shared_buffers</code> out to the data files, so the WAL before that point is no longer needed for recovery.</dd>
+    <dt>shared_buffers</dt><dd>Postgres's own cache of 8 KB pages, shared by every backend. Set to roughly 25% of RAM. A <em>buffer hit</em> here is the <code>shared hit=</code> figure in <code>EXPLAIN (BUFFERS)</code>.</dd>
+    <dt>work_mem</dt><dd>Memory allowed for <strong>one</strong> sort or hash operation, <strong>per connection</strong>. It is <em>not</em> a total — one query may have several such nodes and you may have hundreds of connections, so it multiplies. The classic way to OOM a server.</dd>
+    <dt>Asynchronous I/O</dt><dd><strong>New in PostgreSQL 18.</strong> Backends queue read requests and keep working instead of blocking on each page fetch (<code>io_method = worker</code> by default, or <code>io_uring</code> on modern Linux). Speeds up sequential scans, bitmap heap scans and vacuum.</dd>
+    <dt>Page (block)</dt><dd>8192 bytes. The unit of I/O — Postgres never reads less. A table's size is just its page count. Set at compile time via <code>block_size</code>.</dd>
+    <dt>Heap</dt><dd>The unordered pile of pages that <em>is</em> a Postgres table. Rows go wherever there is free space. Every Postgres table is a heap; there is no alternative.</dd>
+    <dt>Tuple</dt><dd>One <em>version</em> of a row. Because of MVCC, a single logical row may have several tuples at once, only one of which is visible to you.</dd>
+    <dt>ctid</dt><dd>A tuple's physical address: <code>(page, slot)</code>. It is what index leaves store, and it <strong>changes when the row is updated</strong> — so never store it as a key.</dd>
+    <dt>Line pointer</dt><dd>A 4-byte slot at the start of a page pointing at a tuple further down it. The indirection is what lets Postgres move a tuple within a page without touching any index.</dd>
+    <dt>MVCC</dt><dd>Multi-Version Concurrency Control. An <code>UPDATE</code> writes a new tuple and marks the old one dead rather than overwriting. Readers never block writers; the cost is garbage.</dd>
+    <dt>xmin / xmax</dt><dd>Hidden columns on every tuple: the transaction that created it and the transaction that deleted it. Together they decide whether <em>you</em> can see this version.</dd>
+    <dt>Dead tuple</dt><dd>A row version no transaction can see any more, still physically occupying space. Cleaned up by <code>VACUUM</code>.</dd>
+    <dt>Bloat</dt><dd>Space consumed by dead tuples. Above ~20% it means autovacuum is not keeping up, and every scan is reading garbage.</dd>
+    <dt>VACUUM</dt><dd>Marks dead-tuple space <em>reusable</em> and updates the visibility map. Does <strong>not</strong> return disk to the OS — only <code>VACUUM FULL</code> does that, and it locks the table completely.</dd>
+    <dt>Visibility map</dt><dd>One bit per heap page: "every tuple here is visible to everyone." Set by <code>VACUUM</code>. <strong>Index-only scans are impossible without it</strong> — this is why a bloated table gets no index-only scans.</dd>
+    <dt>HOT update</dt><dd>Heap-Only Tuple: an update that fits on the same page and touches no indexed column, so <em>no index is modified at all</em>. The reason to leave <code>fillfactor</code> headroom and to not over-index hot columns.</dd>
+    <dt>fillfactor</dt><dd>The percentage of each page filled on insert. Below 100 leaves room for future HOT updates to land locally.</dd>
+    <dt>TOAST</dt><dd>The Oversized-Attribute Storage Technique. For values that make a row exceed ~2 KB: <strong>compress first, then move out-of-line</strong> into a hidden side table. Excluded from <code>pg_relation_size()</code>.</dd>
+    <dt>B-tree</dt><dd>The default index: a sorted, balanced tree of pages. Every leaf is the same depth, so every lookup costs the same few page reads. Leaves hold key → ctid.</dd>
+    <dt>BRIN</dt><dd>Block Range INdex. Stores only min/max per 128-page range, so it is tiny (24 kB where a B-tree was 21 MB). Brilliant on append-only time-ordered data; <strong>worthless</strong> if the column doesn't correlate with physical order.</dd>
+    <dt>Correlation</dt><dd>A <code>pg_stats</code> figure from −1 to 1: how closely a column's logical order matches its physical order on disk. Near 1 → BRIN and range scans excel. Near 0 → only a B-tree helps.</dd>
+    <dt>Partial index</dt><dd><code>CREATE INDEX … WHERE …</code> — indexes only a subset of rows. SQL Server calls this a <em>filtered index</em>. Only usable when the query's <code>WHERE</code> provably implies the index's.</dd>
+    <dt>Covering index</dt><dd>An index carrying extra columns via <code>INCLUDE</code>, so a query can be answered from the index alone. The columns ride in the leaf pages only.</dd>
+    <dt>Index-only scan</dt><dd>Answering a query from the index without touching the heap. Requires the index to hold every needed column <em>and</em> the visibility map to be current. Check <code>Heap Fetches: 0</code>.</dd>
+    <dt>Nested Loop</dt><dd>For each outer row, look up matches on the inner side. The best join when there are few outer rows <em>and</em> the inner side is indexed; a catastrophe (<code>N × M</code>) when it isn't.</dd>
+    <dt>Hash Join</dt><dd>Build a hash table from the smaller input, then scan the larger one and probe it. Reads both tables once, so it scales well to big joins with no index — the workhorse of analytical queries. Equality conditions only. <code>Batches &gt; 1</code> means it spilled to disk.</dd>
+    <dt>Merge Join</dt><dd>Sort both inputs by the join key and walk them in lockstep. Cheap only if the inputs are <em>already</em> sorted; otherwise the sort dominates and may spill (<code>temp read/written</code>).</dd>
+    <dt>loops=</dt><dd>How many times a plan node ran. <strong>The <code>actual rows</code> beside it is the average per loop</strong>, so the true total is <code>rows × loops</code>. The most misread number in <code>EXPLAIN</code>.</dd>
+    <dt>Bitmap heap scan</dt><dd>Collects all matching ctids, sorts them by page, then reads each heap page once — turning random I/O into sequential. Chosen when there are too many matches for a plain index scan.</dd>
+    <dt>Skip scan</dt><dd><strong>New in PostgreSQL 18.</strong> Lets a multicolumn index be used even when the query omits the leading column, by hopping through each distinct prefix. Only viable when that leading column has few distinct values.</dd>
+    <dt>Tablespace</dt><dd>A named location on disk you can place tables, indexes and partitions into. Postgres's equivalent of SQL Server's <em>file group</em>. How you put hot data on NVMe and cold data on cheap disk.</dd>
+    <dt>Declarative partitioning</dt><dd>Splitting a table into child tables by RANGE, LIST or HASH. The win is <em>pruning</em> (skipping partitions entirely) and instant <code>DROP</code> of old data — not smaller tables per se.</dd>
+    <dt>Partition pruning</dt><dd>The planner discarding whole partitions it can prove cannot match. <strong>Requires the partition key in the <code>WHERE</code> clause.</strong> Without it, partitioning makes things slower, not faster.</dd>
+    <dt>Sargable</dt><dd>A predicate an index can be used for — which requires the column to stand bare on one side. <code>WHERE date_trunc('day', d) = …</code> is not sargable; a half-open range is.</dd>
+    <dt>pg_stat_statements</dt><dd>The extension that records execution statistics per query. The first place to look when something is slow. Sort by <code>total_exec_time</code>, not mean.</dd>
+  </dl>
+</div>
+
+<footer class="reveal">
+  <p>Part of <a href="../">Data &amp; AI Engineering, Simply Explained</a> · a <a href="../#essentials">Reference</a>. Pairs with <a href="../sql-essentials/">SQL for Data Engineers</a>, <a href="../oltp-vs-olap/">OLTP vs OLAP</a> and <a href="../delta-lake/">Delta Lake</a>.</p>
+  <p>© 2026 · Hao Tieu · Built with GitHub Pages · <a href="https://linkedin.com/in/haotieu2001" target="_blank" rel="noopener">LinkedIn</a></p>
+</footer>
+</div><!-- /page -->
+
+<script>
+  var bar=document.getElementById('bar');
+  function prog(){var h=document.documentElement;var s=h.scrollTop||document.body.scrollTop;var max=(h.scrollHeight-h.clientHeight)||1;bar.style.width=(s/max*100)+'%';}
+  document.addEventListener('scroll',prog,{passive:true});prog();
+  function revealAll(){document.querySelectorAll('.reveal').forEach(function(el){el.classList.add('in');});}
+  try{
+    var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}});},{threshold:.06});
+    document.querySelectorAll('.reveal').forEach(function(el){io.observe(el);});
+    window.addEventListener('load',function(){setTimeout(revealAll,1500);});
+    setTimeout(revealAll,2200);
+  }catch(e){revealAll();}
+</script>
+
+</body>
+</html>

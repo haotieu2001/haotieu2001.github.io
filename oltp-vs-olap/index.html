@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>OLTP vs OLAP, In Depth</title>
+<meta name="description" content="Why transactional and analytical databases are built so differently — how a row-store keeps data on disk and runs a query, how to make it fast, why it falls apart under analytics, then how a columnar OLAP engine stores data and runs a SELECT, with every optimization technique explained."/>
+<meta property="og:type" content="article"/>
+<meta property="og:title" content="OLTP vs OLAP, In Depth"/>
+<meta property="og:description" content="Row-store vs column-store, page layout, B-trees, query execution, predicate pushdown, partition pruning, data skipping, vectorization, MPP — the full mechanics of both worlds, explained from scratch."/>
+<meta property="og:url" content="https://haotieu2001.github.io/oltp-vs-olap/"/>
+<meta property="og:image" content="https://haotieu2001.github.io/og-cover.png"/>
+<meta property="og:image:width" content="1200"/>
+<meta property="og:image:height" content="630"/>
+<meta property="og:image:alt" content="OLTP vs OLAP, In Depth"/>
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:title" content="OLTP vs OLAP, In Depth"/>
+<meta name="twitter:description" content="The full mechanics of transactional vs analytical databases — storage, query execution, and every optimization."/>
+<meta name="twitter:image" content="https://haotieu2001.github.io/og-cover.png"/>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,500;0,700;0,800;1,400&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#1A1A1A; --bg2:#121212; --ink:#F1F1F1; --muted:#9aa0b4; --dim:#666666;
+    --blue2:#5C78FF; --cyan:#28B9FF; --cyan2:#5AC8FF; --purple:#905AFF; --magenta2:#BA5AFF;
+    --grad:linear-gradient(90deg,#5C78FF,#28B9FF,#A52AFF);
+    --font:"JetBrainsMono Nerd Font","JetBrains Mono","Symbols Nerd Font",ui-monospace,"Cascadia Code",Menlo,Consolas,monospace;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font);font-size:16px;line-height:1.85;-webkit-font-smoothing:antialiased}
+  #bar{position:fixed;top:0;left:0;height:3px;width:0;z-index:50;background:var(--grad);box-shadow:0 0 12px #5C78FF99;transition:width .1s linear}
+  .page{max-width:880px;margin:0 auto;padding:0 24px}
+  header{padding:30px 0 6px}
+  .kicker{font-size:13px;color:var(--dim)}
+  .back{color:var(--cyan2);text-decoration:none;font-size:13px;border-bottom:1px dotted #5AC8FF66}
+  h1{font-size:clamp(28px,4.6vw,46px);line-height:1.12;margin:12px 0 12px;font-weight:800;
+     background:var(--grad);background-size:220% auto;-webkit-background-clip:text;background-clip:text;color:transparent;animation:sheen 9s linear infinite}
+  @keyframes sheen{to{background-position:220% center}}
+  .dek{color:var(--muted);font-size:17px}
+  .byline{margin-top:14px;font-size:13px;color:var(--dim)}
+  h2{font-size:clamp(21px,3.2vw,28px);margin:52px 0 6px;font-weight:800;line-height:1.22;padding-top:14px;border-top:1px solid #23232e}
+  h2 .n{color:var(--blue2)}
+  h3{font-size:18px;margin:28px 0 4px;color:#fff;font-weight:700}
+  h4{font-size:15px;margin:20px 0 4px;color:var(--cyan2);font-weight:700}
+  p,li{color:#dcdce4}
+  .lead{font-size:18px;color:#e7e7ee}
+  a{color:var(--cyan2)}
+  hr{border:0;border-top:1px solid #2c2c36;margin:36px 0}
+  code{font-family:var(--font);background:#23232b;color:#5AC8FF;padding:1px 6px;border-radius:5px;font-size:.88em;border:1px solid #2f2f3a}
+  .cb{margin:16px 0}
+  .cb .lang{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:#9aa0b4;background:#1b1b24;border:1px solid #2c2c36;border-bottom:none;border-radius:9px 9px 0 0;padding:4px 12px}
+  pre{margin:0;background:#0d0d13;border:1px solid #23232e;border-radius:0 10px 10px 10px;padding:14px 16px;overflow-x:auto;
+      font-family:var(--font);font-size:13px;line-height:1.65;color:#d8dcea;white-space:pre}
+  pre .c{color:#6b7280}
+  pre .o{color:#9aa0b4}
+  pre .k{color:#5AC8FF}
+  pre .g{color:#34d399}
+  pre .y{color:#f0b429}
+  pre .r{color:#f87171}
+  .callout{border-left:4px solid var(--blue2);background:#16182a;border-radius:0 12px 12px 0;padding:14px 18px;margin:22px 0}
+  .callout.cy{border-color:var(--cyan);background:#0f1f2b}
+  .callout.mg{border-color:var(--magenta2);background:#1d1526}
+  .callout.gd{border-color:#f0b429;background:#241d0f}
+  .callout.gr{border-color:#34d399;background:#0d1f18}
+  .callout .t{color:var(--cyan2);font-weight:800}
+  .callout.gd .t{color:#f0b429}
+  .callout.gr .t{color:#34d399}
+  .callout.mg .t{color:var(--magenta2)}
+  .tldr{border:1px solid #2f3a66;background:linear-gradient(180deg,#15182a,#121212);border-radius:16px;padding:20px 24px;margin:26px 0}
+  .tldr h4{margin:0 0 8px;font-size:13px;letter-spacing:.2em;text-transform:uppercase;color:var(--cyan2)}
+  .gloss{border:1px solid #2c2c36;background:#141419;border-radius:14px;padding:18px 22px;margin:24px 0}
+  .gloss h4{margin:0 0 6px;color:#fff;font-size:15px}
+  .gloss dl{margin:0;font-size:13.5px}
+  .gloss dt{color:var(--cyan2);font-weight:700;margin-top:9px}
+  .gloss dd{margin:1px 0 0;color:#cdd0dd}
+  .toc{background:#15151b;border:1px solid #2c2c36;border-radius:14px;padding:16px 22px;margin:24px 0;column-count:2;column-gap:28px}
+  .toc a{display:block;color:var(--cyan2);text-decoration:none;font-size:13.5px;line-height:1.9;break-inside:avoid}
+  .toc a:hover{color:#fff}
+  .toc>strong{column-span:all;display:block;margin-bottom:6px;color:#fff}
+  table{border-collapse:collapse;width:100%;font-size:13.5px;margin:16px 0}
+  th,td{border:1px solid #2c2c36;padding:8px 11px;text-align:left;vertical-align:top}
+  th{background:#1d1d27;color:#fff}
+  tr:nth-child(even) td{background:#161620}
+  .diagram{background:#0d0d13;border:1px solid #23232e;border-radius:14px;padding:18px;margin:20px 0;overflow-x:auto;font-size:12.5px;line-height:1.7;color:#d8dcea;white-space:pre;font-family:var(--font)}
+  .diagram .hl{color:#5AC8FF}
+  .diagram .dim{color:#6b7280}
+  .diagram .ok{color:#34d399}
+  .diagram .warn{color:#f0b429}
+  .diagram .bad{color:#f87171}
+  .diagram .pu{color:#b98cff}
+  .pain{border:1px solid #3a2020;background:#1c1212;border-radius:14px;padding:16px 20px;margin:14px 0}
+  .pain h4{margin:0 0 4px;color:#f87171}
+  .fix{border:1px solid #1a3020;background:#0d1f14;border-radius:14px;padding:16px 20px;margin:14px 0}
+  .fix h4{margin:0 0 4px;color:#34d399}
+  .step{display:flex;gap:12px;align-items:flex-start;margin:14px 0}
+  .step .num-bubble{flex:0 0 28px;height:28px;border-radius:50%;background:var(--grad);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:#fff;margin-top:2px}
+  .step .body{flex:1}
+  figure.mm{background:radial-gradient(130% 150% at 50% 0%,#16182a 0%,#0d0d13 72%);border:1px solid #23232e;border-radius:14px;padding:14px 10px 6px;margin:20px 0;overflow-x:auto}
+  figure.mm figcaption{font-size:12px;color:#555;text-align:center;margin-bottom:.4em;letter-spacing:.06em;text-transform:uppercase}
+  .mermaid{display:flex;justify-content:center;font-family:var(--font)!important}
+  footer{border-top:1px solid #23232e;margin-top:50px;padding:24px 0 90px;color:var(--dim);font-size:13px}
+  footer a{color:var(--cyan2)}
+  .js .reveal{opacity:0;transform:translateY(16px);transition:opacity .6s ease,transform .6s ease}
+  .js .reveal.in{opacity:1;transform:none}
+  @media (prefers-reduced-motion:reduce){.js .reveal{opacity:1;transform:none}}
+</style>
+<script>document.documentElement.classList.add('js');</script>
+</head>
+<body>
+<div id="bar"></div>
+<div class="page">
+
+<header>
+  <div class="kicker"><a class="back" href="../">❮ Data &amp; AI Engineering, Simply Explained</a></div>
+  <h1>OLTP vs OLAP, In Depth</h1>
+  <p class="dek">Two database worlds, built for opposite jobs. <strong>OLTP</strong> systems answer thousands of tiny questions per second — "place this order," "fetch user 42." <strong>OLAP</strong> systems answer one enormous question at a time — "what was revenue by region, by month, across three years?" This piece opens both up to the metal: how each one <em>stores</em> data on disk, how a query actually <em>runs</em> through it, every trick used to make it <em>fast</em>, and why a design that's perfect for one is a disaster for the other.</p>
+  <div class="byline">~30 min read · Deep dive · Fundamentals</div>
+</header>
+
+<figure class="reveal" style="margin:18px 0 6px;background:radial-gradient(130% 150% at 50% 0%,#16182a 0%,#0d0d13 72%);border:1px solid #23232e;border-radius:16px;padding:14px 10px;overflow:hidden">
+<figcaption style="font-size:12px;color:#555;text-align:center;margin-bottom:.6em;letter-spacing:.06em;text-transform:uppercase">The one picture: the same table, stored two ways</figcaption>
+<svg viewBox="0 0 860 250" width="100%" style="display:block;max-width:860px;margin:0 auto" aria-label="Row storage keeps each row's fields together; column storage keeps each column's values together">
+  <defs>
+    <linearGradient id="hero-grad" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#5C78FF"/><stop offset=".5" stop-color="#28B9FF"/><stop offset="1" stop-color="#A52AFF"/></linearGradient>
+    <style>.hm{font-family:'JetBrains Mono',monospace;}</style>
+  </defs>
+  <!-- ROW side -->
+  <text x="200" y="28" class="hm" font-size="13" fill="#f0b429" text-anchor="middle" font-weight="700">ROW STORE  (OLTP)</text>
+  <text x="200" y="46" class="hm" font-size="10.5" fill="#8a90a6" text-anchor="middle">one row = one contiguous block</text>
+  <g class="hm" font-size="11">
+    <rect x="40" y="62" width="320" height="26" rx="4" fill="#1a180d" stroke="#f0b429"/><text x="50" y="79" fill="#f0b429">id1</text><text x="100" y="79" fill="#d8dcea">name1</text><text x="200" y="79" fill="#34d399">city1</text><text x="290" y="79" fill="#5AC8FF">price1</text>
+    <rect x="40" y="92" width="320" height="26" rx="4" fill="#1a180d" stroke="#f0b429"/><text x="50" y="109" fill="#f0b429">id2</text><text x="100" y="109" fill="#d8dcea">name2</text><text x="200" y="109" fill="#34d399">city2</text><text x="290" y="109" fill="#5AC8FF">price2</text>
+    <rect x="40" y="122" width="320" height="26" rx="4" fill="#1a180d" stroke="#f0b429"/><text x="50" y="139" fill="#f0b429">id3</text><text x="100" y="139" fill="#d8dcea">name3</text><text x="200" y="139" fill="#34d399">city3</text><text x="290" y="139" fill="#5AC8FF">price3</text>
+  </g>
+  <text x="200" y="172" class="hm" font-size="10.5" fill="#34d399" text-anchor="middle">✓ grab a whole row in one read</text>
+  <text x="200" y="190" class="hm" font-size="10.5" fill="#f87171" text-anchor="middle">✗ to sum prices, you touch every row</text>
+  <!-- divider -->
+  <line x1="430" y1="58" x2="430" y2="200" stroke="#2c2c36" stroke-width="1.5" stroke-dasharray="4,4"/>
+  <!-- COLUMN side -->
+  <text x="650" y="28" class="hm" font-size="13" fill="#5AC8FF" text-anchor="middle" font-weight="700">COLUMN STORE  (OLAP)</text>
+  <text x="650" y="46" class="hm" font-size="10.5" fill="#8a90a6" text-anchor="middle">one column = one contiguous block</text>
+  <g class="hm" font-size="11">
+    <rect x="500" y="62" width="300" height="26" rx="4" fill="#0d1820" stroke="#f0b429"/><text x="510" y="79" fill="#f0b429">id1 · id2 · id3 · id4 · id5 …</text>
+    <rect x="500" y="92" width="300" height="26" rx="4" fill="#0d1820" stroke="#d8dcea"/><text x="510" y="109" fill="#d8dcea">name1 · name2 · name3 …</text>
+    <rect x="500" y="122" width="300" height="26" rx="4" fill="#0d1820" stroke="#34d399"/><text x="510" y="139" fill="#34d399">city1 · city2 · city3 …</text>
+    <rect x="500" y="152" width="300" height="26" rx="4" fill="#0d1820" stroke="#5AC8FF"/><text x="510" y="169" fill="#5AC8FF">price1 · price2 · price3 …</text>
+  </g>
+  <text x="650" y="196" class="hm" font-size="10.5" fill="#34d399" text-anchor="middle">✓ sum prices = read just the price block</text>
+  <circle r="4" fill="#5AC8FF"><animate attributeName="cx" values="500;800" dur="3s" repeatCount="indefinite"/><animate attributeName="cy" values="165;165" dur="3s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;1;1;0" dur="3s" repeatCount="indefinite"/></circle>
+</svg>
+</figure>
+
+<div class="tldr reveal">
+  <h4>❯ The one idea (read this first)</h4>
+  <p style="margin:.2em 0">A database can lay out a table on disk in one of two ways, and the choice decides everything. <strong>Row stores</strong> (OLTP — Online <em>Transaction</em> Processing) keep every field of a row glued together, so reading or changing <em>one whole record</em> is a single cheap operation — perfect for apps that constantly touch individual rows. <strong>Column stores</strong> (OLAP — Online <em>Analytical</em> Processing) keep every value of one <em>column</em> together, so scanning one column across millions of rows is cheap — perfect for reports and aggregations. Each layout makes its own job fast and the other job slow. <em>That single physical decision — group by row, or group by column — is the root of every other difference in this article.</em></p>
+</div>
+
+<div class="toc reveal">
+  <strong>Contents</strong>
+  <a href="#split">01 · The split: transactions vs analytics</a>
+  <a href="#oltp">02 · OLTP — the world of single-row work</a>
+  <a href="#oltp-store">03 · How OLTP stores data on disk</a>
+  <a href="#index">04 · Indexes — the B-tree behind instant lookups</a>
+  <a href="#oltp-query">05 · How an OLTP query runs, step by step</a>
+  <a href="#oltp-opt">06 · Making OLTP queries fast</a>
+  <a href="#wall">07 · Why OLTP collapses under analytics</a>
+  <a href="#olap">08 · OLAP — the world of big scans</a>
+  <a href="#olap-store">09 · How OLAP stores data (columnar &amp; Parquet)</a>
+  <a href="#olap-query">10 · How an OLAP query runs, step by step</a>
+  <a href="#olap-opt">11 · Making OLAP queries fast</a>
+  <a href="#compare">12 · Side-by-side &amp; when to use which</a>
+  <a href="#glossary">＊ · Glossary</a>
+</div>
+
+<!-- 01 -->
+<h2 id="split" class="reveal"><span class="n">01.</span> The split: transactions vs analytics</h2>
+<p class="reveal lead">Every database is a trade-off. You cannot make one storage layout that is simultaneously the fastest at "change one row" <em>and</em> the fastest at "scan a billion rows." So the industry split into two families, each ruthlessly optimised for one kind of question.</p>
+
+<p class="reveal">The names are old and a little clunky, but they tell you the purpose:</p>
+<ul class="reveal">
+  <li><strong>OLTP — Online Transaction Processing.</strong> A <em>transaction</em> here means a small unit of business work: place an order, transfer money, update a profile, add an item to a cart. These touch a handful of rows, must finish in <em>milliseconds</em>, and happen <em>constantly</em> — thousands or millions per second. This is the database <em>behind your app</em>. Think PostgreSQL, MySQL, SQL Server, Oracle.</li>
+  <li><strong>OLAP — Online Analytical Processing.</strong> An <em>analytical</em> query reads huge swaths of history to compute a summary: total revenue by region, average session length by month, the funnel conversion rate. Each query scans <em>millions to billions</em> of rows, runs for <em>seconds to minutes</em>, and there are relatively <em>few</em> of them. This is the database <em>behind your dashboards and reports</em>. Think BigQuery, Snowflake, Redshift, Spark, ClickHouse, Databricks.</li>
+</ul>
+
+<figure class="reveal" style="margin:1.4em 0;background:#0d0d13;border:1px solid #23232e;border-radius:10px;padding:1.2em 1em 1em;overflow:hidden">
+<figcaption style="font-size:12px;color:#555;text-align:center;margin-bottom:.8em;letter-spacing:.06em;text-transform:uppercase">Same company, two databases, two jobs</figcaption>
+<svg viewBox="0 0 760 220" width="100%" style="display:block;max-width:760px;margin:0 auto" aria-label="The app writes to OLTP; data is copied into OLAP where analysts run reports">
+  <defs><style>.s1{font-family:'JetBrains Mono',monospace;}</style></defs>
+  <!-- app users -->
+  <rect x="20" y="80" width="150" height="60" rx="9" fill="#16182a" stroke="#5C78FF" stroke-width="1.6"/>
+  <text x="95" y="106" class="s1" font-size="11.5" fill="#8aa0ff" text-anchor="middle" font-weight="700">the app</text>
+  <text x="95" y="124" class="s1" font-size="10" fill="#8a90a6" text-anchor="middle">millions of users</text>
+  <!-- oltp -->
+  <rect x="240" y="70" width="170" height="80" rx="9" fill="#1a180d" stroke="#f0b429" stroke-width="1.8"/>
+  <text x="325" y="98" class="s1" font-size="12" fill="#f0b429" text-anchor="middle" font-weight="700">OLTP (row store)</text>
+  <text x="325" y="118" class="s1" font-size="10" fill="#b7c0cc" text-anchor="middle">Postgres / MySQL</text>
+  <text x="325" y="134" class="s1" font-size="10" fill="#8a90a6" text-anchor="middle">tiny, fast writes</text>
+  <!-- oltp -> olap -->
+  <line x1="410" y1="110" x2="488" y2="110" stroke="#34d399" stroke-width="1.8" stroke-dasharray="5,3"/>
+  <polygon points="488,105 498,110 488,115" fill="#34d399"/>
+  <text x="449" y="100" class="s1" font-size="9.5" fill="#34d399" text-anchor="middle">ETL / ELT</text>
+  <text x="449" y="128" class="s1" font-size="9.5" fill="#8a90a6" text-anchor="middle">nightly / streaming</text>
+  <!-- olap -->
+  <rect x="500" y="70" width="170" height="80" rx="9" fill="#0d1820" stroke="#5AC8FF" stroke-width="1.8"/>
+  <text x="585" y="98" class="s1" font-size="12" fill="#5AC8FF" text-anchor="middle" font-weight="700">OLAP (column store)</text>
+  <text x="585" y="118" class="s1" font-size="10" fill="#b7c0cc" text-anchor="middle">BigQuery / Snowflake</text>
+  <text x="585" y="134" class="s1" font-size="10" fill="#8a90a6" text-anchor="middle">huge, fast scans</text>
+  <!-- app arrows -->
+  <line x1="170" y1="110" x2="238" y2="110" stroke="#5C78FF" stroke-width="1.8"/>
+  <polygon points="238,105 248,110 238,115" fill="#5C78FF"/>
+  <!-- analysts -->
+  <rect x="500" y="178" width="170" height="34" rx="8" fill="#1d1526" stroke="#BA5AFF" stroke-width="1.4"/>
+  <text x="585" y="200" class="s1" font-size="10.5" fill="#d8b3ff" text-anchor="middle">analysts · dashboards · BI</text>
+  <line x1="585" y1="150" x2="585" y2="176" stroke="#BA5AFF" stroke-width="1.6"/>
+  <polygon points="580,176 585,186 590,176" fill="#BA5AFF"/>
+</svg>
+</figure>
+
+<div class="callout cy reveal">
+  <p style="margin:.2em 0"><span class="t">🔑 They usually live side by side</span></p>
+  <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">This isn't "pick one." A real company runs <em>both</em>: the app writes to an OLTP database all day, and a pipeline (<strong>ETL/ELT</strong> — Extract, Transform, Load: software that copies and reshapes data) moves that data into an OLAP system where analysts run heavy reports — <strong>without</strong> slowing down the live app. The rest of this article explains <em>why</em> you can't just point your dashboards at the production database and call it a day.</p>
+</div>
+
+<!-- 02 -->
+<h2 id="oltp" class="reveal"><span class="n">02.</span> OLTP — the world of single-row work</h2>
+<p class="reveal lead">Picture the database behind an online store. Its whole day is a blizzard of tiny, precise operations, each touching one or a few specific rows:</p>
+
+<div class="cb reveal"><span class="lang">sql — typical OLTP queries</span><pre><span class="c">-- fetch exactly one customer by their id</span>
+<span class="k">SELECT</span> * <span class="k">FROM</span> customers <span class="k">WHERE</span> id <span class="o">=</span> <span class="y">8842</span>;
+
+<span class="c">-- add one new order</span>
+<span class="k">INSERT INTO</span> orders (customer_id, total) <span class="k">VALUES</span> (<span class="y">8842</span>, <span class="y">59.90</span>);
+
+<span class="c">-- update one row's stock count</span>
+<span class="k">UPDATE</span> products <span class="k">SET</span> stock <span class="o">=</span> stock <span class="o">-</span> <span class="y">1</span> <span class="k">WHERE</span> id <span class="o">=</span> <span class="y">177</span>;</pre></div>
+
+<p class="reveal">Notice the shape of these: each one names a <strong>specific row</strong> (usually by <code>id</code>), reads or writes <strong>all of its columns</strong>, and must return in a few milliseconds because a human is waiting. The defining traits of an OLTP workload:</p>
+<ul class="reveal">
+  <li><strong>Point access</strong> — find one row (or a small range) by key, not scan everything.</li>
+  <li><strong>Whole-row access</strong> — when you read order #500, you typically want <em>all</em> its fields; when you insert, you write all fields at once.</li>
+  <li><strong>Write-heavy &amp; concurrent</strong> — thousands of users inserting and updating at the same instant, so the system needs strict correctness guarantees (this is where <strong>ACID</strong> transactions come from — the guarantee that each transaction is all-or-nothing and survives crashes).</li>
+  <li><strong>Low latency, high throughput</strong> — each query is cheap, but there is a flood of them.</li>
+</ul>
+<p class="reveal">Every storage and execution decision an OLTP database makes is in service of those four traits. Let's see how.</p>
+
+<!-- 03 -->
+<h2 id="oltp-store" class="reveal"><span class="n">03.</span> How OLTP stores data on disk</h2>
+<p class="reveal lead">To make "read or write one whole row" cheap, an OLTP database stores all of a row's columns <strong>physically next to each other</strong>. This is called <strong>row-oriented storage</strong>, or a <em>row store</em>. But it doesn't drop loose rows onto the disk — it packs them into fixed-size containers called <strong>pages</strong>.</p>
+
+<h3 class="reveal">The page: the unit of everything</h3>
+<p class="reveal">Disks (and the operating system) move data in blocks, not bytes. So databases adopt a fixed <strong>page</strong> size — typically <strong>8&nbsp;KB</strong> (PostgreSQL) or <strong>16&nbsp;KB</strong> (MySQL/InnoDB) — as the smallest unit they ever read from or write to disk. A table is, on disk, just a long sequence of these pages. Each page holds a small header, a slot directory (pointers to where each row lives inside the page), and then the rows themselves packed in.</p>
+
+<figure class="reveal" style="margin:1.4em 0;background:#0d0d13;border:1px solid #23232e;border-radius:10px;padding:1.2em 1em 1em;overflow:hidden">
+<figcaption style="font-size:12px;color:#555;text-align:center;margin-bottom:.8em;letter-spacing:.06em;text-transform:uppercase">One 8&nbsp;KB page — rows of all columns, packed together</figcaption>
+<svg viewBox="0 0 720 230" width="100%" style="display:block;max-width:720px;margin:0 auto" aria-label="A page contains a header, a slot directory, and several whole rows stored contiguously">
+  <defs><style>.p1{font-family:'JetBrains Mono',monospace;}</style></defs>
+  <rect x="40" y="20" width="640" height="190" rx="10" fill="#0f0f17" stroke="#f0b429" stroke-width="1.6"/>
+  <text x="360" y="14" class="p1" font-size="11" fill="#f0b429" text-anchor="middle" font-weight="700">PAGE  (8 KB block — the unit of disk I/O)</text>
+  <!-- header -->
+  <rect x="54" y="34" width="612" height="26" rx="5" fill="#16182a" stroke="#5C78FF" stroke-width="1.2"/>
+  <text x="360" y="51" class="p1" font-size="10.5" fill="#8aa0ff" text-anchor="middle">page header · slot directory → [ptr row1][ptr row2][ptr row3]…</text>
+  <!-- rows -->
+  <g class="p1" font-size="10.5">
+    <rect x="54" y="72" width="612" height="30" rx="5" fill="#1a180d" stroke="#f0b429" stroke-width="1.1"/>
+    <text x="64" y="91" fill="#f0b429">8842</text><text x="130" y="91" fill="#d8dcea">"Hao Tieu"</text><text x="280" y="91" fill="#34d399">"Hanoi"</text><text x="420" y="91" fill="#5AC8FF">"gold"</text><text x="540" y="91" fill="#b98cff">2021-06-01</text>
+    <text x="64" y="116" fill="#6b7280" font-size="9">└─ row 8842: ALL columns of this customer, side by side ─────────────┘</text>
+    <rect x="54" y="128" width="612" height="30" rx="5" fill="#1a180d" stroke="#f0b429" stroke-width="1.1"/>
+    <text x="64" y="147" fill="#f0b429">8843</text><text x="130" y="147" fill="#d8dcea">"Mai Le"</text><text x="280" y="147" fill="#34d399">"Da Nang"</text><text x="420" y="147" fill="#5AC8FF">"silver"</text><text x="540" y="147" fill="#b98cff">2022-03-12</text>
+    <rect x="54" y="166" width="612" height="30" rx="5" fill="#1a180d" stroke="#f0b429" stroke-width="1.1"/>
+    <text x="64" y="185" fill="#f0b429">8844</text><text x="130" y="185" fill="#d8dcea">"Quan Vo"</text><text x="280" y="185" fill="#34d399">"Hue"</text><text x="420" y="185" fill="#5AC8FF">"gold"</text><text x="540" y="185" fill="#b98cff">2020-11-30</text>
+  </g>
+</svg>
+</figure>
+
+<p class="reveal">This is the key consequence: <strong>reading row 8843 means reading the one page it lives on, and that single read brings in <em>all</em> of its columns at once.</strong> For OLTP — where you want the whole record — that's ideal. One page read, whole row in hand.</p>
+
+<h3 class="reveal">Heap vs clustered: how pages are ordered</h3>
+<p class="reveal">There are two common ways the pages of a table are organised:</p>
+<ul class="reveal">
+  <li><strong>Heap</strong> — pages are unordered; new rows go wherever there's free space. Fast to insert, but to find a specific row you'd have to scan every page… unless you have an <em>index</em> (next section). PostgreSQL tables are heaps.</li>
+  <li><strong>Clustered index (index-organised table)</strong> — the rows themselves are stored <em>in primary-key order</em>, inside the leaves of a <strong>B-tree</strong> (the sorted tree structure we unpack in the very next section — for now, just "a structure that keeps rows findable in sorted order"). Looking up by primary key lands you directly on the row. MySQL/InnoDB stores tables this way.</li>
+</ul>
+
+<h3 class="reveal">The buffer pool: RAM is where the work happens</h3>
+<p class="reveal">Disk is slow, RAM is fast. So an OLTP database keeps a big chunk of memory called the <strong>buffer pool</strong> (or buffer cache) that holds recently-used pages. Every read and write goes <em>through</em> it:</p>
+<div class="step reveal"><div class="num-bubble">1</div><div class="body">Need a page? If it's already in the buffer pool (a <strong>cache hit</strong>), use it — no disk touched. This is why a hot row served thousands of times per second never hits the disk.</div></div>
+<div class="step reveal"><div class="num-bubble">2</div><div class="body">If not (a <strong>cache miss</strong>), read the page from disk into the buffer pool, then use it. It now stays cached for next time.</div></div>
+<div class="step reveal"><div class="num-bubble">3</div><div class="body">Writes modify the page <em>in memory</em> and are made durable by first appending to a <strong>write-ahead log</strong> (WAL) — a sequential journal — so a crash can't lose committed data. The actual page is flushed to disk later, in the background.</div></div>
+
+<div class="callout reveal">
+  <p style="margin:.2em 0"><span class="t">💡 Why the write-ahead log matters</span></p>
+  <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">Appending one line to the end of a log file is far faster than hunting down and rewriting a random page in the middle of a huge table. The WAL lets the database confirm a transaction as <em>committed</em> the instant the log entry is safely on disk, while the slower page updates happen lazily afterwards. It's the trick that makes durable writes <em>fast</em> — central to OLTP.</p>
+</div>
+
+<!-- 04 -->
+<h2 id="index" class="reveal"><span class="n">04.</span> Indexes — the B-tree behind instant lookups</h2>
+<p class="reveal lead">Row storage makes reading a known row cheap — but how does the database <em>find</em> the right row among millions without scanning every page? The answer, almost always, is a <strong>B-tree index</strong>. It is the single most important performance structure in OLTP, so it's worth understanding properly.</p>
+
+<h3 class="reveal">The problem an index solves</h3>
+<p class="reveal">Without an index, <code>WHERE id = 8842</code> forces a <strong>full table scan</strong>: read every page, check every row, until you find it. On a 10-million-row table that's hundreds of thousands of page reads for <em>one</em> answer. An index turns that into a handful of reads.</p>
+
+<h3 class="reveal">What a B-tree is</h3>
+<p class="reveal">A <strong>B-tree</strong> is a balanced tree kept sorted by the indexed column. The top <em>root</em> node and middle <em>branch</em> nodes hold only signposts ("keys 1–1000 are this way, 1001–2000 that way"); the bottom <em>leaf</em> nodes hold the actual keys in sorted order, each pointing to the row's location on disk. Because the tree is balanced and very wide (each node fans out to hundreds of children), it stays only 3–4 levels deep even for billions of rows.</p>
+
+<figure class="reveal" style="margin:1.4em 0;background:#0d0d13;border:1px solid #23232e;border-radius:10px;padding:1.2em 1em 1em;overflow:hidden">
+<figcaption style="font-size:12px;color:#555;text-align:center;margin-bottom:.8em;letter-spacing:.06em;text-transform:uppercase">Finding id = 8842 — 3 hops instead of millions of reads</figcaption>
+<div class="diagram" style="background:none;border:none;padding:6px 4px;margin:0">                         <span class="hl">ROOT</span>   [ &lt;5000 | 5000–9999 | ≥10000 ]
+                                   │  <span class="ok">8842 is in 5000–9999</span>
+                  ┌────────────────┴────────────────┐
+                <span class="dim">BRANCH</span> [ 5000–7000 | 7000–9000 | 9000–9999 ]
+                                   │  <span class="ok">8842 is in 7000–9000</span>
+                  ┌────────────────┴────────────────┐
+                <span class="hl">LEAF</span>  … 8840 → 8841 → <span class="ok">8842</span> → 8843 …   <span class="dim">(sorted keys + row pointers)</span>
+                                   │
+                                   ▼
+                      <span class="warn">page 412, slot 3</span>  ── one page read ──▶  <span class="ok">the row</span>
+
+  <span class="dim">3 tiny index reads to locate, then 1 read to fetch  =  ~4 page reads total</span>
+  <span class="dim">vs. a full scan of the entire table. This is O(log n), not O(n).</span></div>
+</figure>
+
+<p class="reveal">So a point lookup is: walk root → branch → leaf (a few reads, and the upper levels are almost always cached in the buffer pool), get the row's page address, read that one page. <strong>Four reads to find one row in ten million.</strong> That's the magic that makes OLTP feel instant.</p>
+
+<div class="callout cy reveal">
+  <p style="margin:.2em 0"><span class="t">🔑 An index also serves sorted ranges</span></p>
+  <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">Because leaves are kept in sorted order and linked to their neighbours, a B-tree is great for <code>WHERE id BETWEEN 8000 AND 8100</code> or <code>ORDER BY created_at LIMIT 10</code> too — find the start, then walk sideways along the leaves. The same structure powers equality, ranges, and sorting.</p>
+</div>
+
+<div class="callout gd reveal">
+  <p style="margin:.2em 0"><span class="t">⚠️ Indexes aren't free</span></p>
+  <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">Each index is a separate B-tree that must be kept in sync. Every <code>INSERT</code>/<code>UPDATE</code>/<code>DELETE</code> now also has to update every index on the table — so more indexes mean <em>slower writes</em> and more disk used. In a write-heavy OLTP system you index the columns you actually search on, and no more. It's a deliberate read-speed-vs-write-cost trade.</p>
+</div>
+
+<!-- 05 -->
+<h2 id="oltp-query" class="reveal"><span class="n">05.</span> How an OLTP query runs, step by step</h2>
+<p class="reveal lead">Let's trace one query — <code>SELECT * FROM customers WHERE id = 8842</code> — from the text you type to the row you get back. Every relational database follows the same five stages.</p>
+
+<figure class="reveal" style="margin:1.4em 0;background:#0d0d13;border:1px solid #23232e;border-radius:10px;padding:1.2em 1em 1em;overflow:hidden">
+<figcaption style="font-size:12px;color:#555;text-align:center;margin-bottom:.8em;letter-spacing:.06em;text-transform:uppercase">The five stages of running a SQL query</figcaption>
+<div class="diagram" style="background:none;border:none;padding:6px 4px;margin:0">  SQL text
+     │
+     ▼
+  <span class="hl">1 PARSE</span> ───▶ check the SQL is valid; turn it into a tree the engine understands
+     │
+     ▼
+  <span class="hl">2 BIND</span> ────▶ resolve names: does table "customers" exist? column "id"? what types?
+     │
+     ▼
+  <span class="hl">3 PLAN</span> ────▶ the OPTIMIZER picks HOW to run it, using table statistics:
+     │            "there's a B-tree on id, and id=8842 matches ~1 row →
+     │             use an Index Seek, not a full scan"
+     ▼
+  <span class="hl">4 EXECUTE</span> ─▶ run the plan: walk the B-tree → get page 412 → read it from
+     │            the buffer pool (or disk) → pull out row 8842
+     ▼
+  <span class="ok">5 RETURN</span> ──▶ hand the row back to the client</div>
+</figure>
+
+<div class="step reveal"><div class="num-bubble">1</div><div class="body"><strong>Parse.</strong> The database checks your SQL is syntactically valid and converts the text into an internal tree of operations. A syntax error stops here.</div></div>
+<div class="step reveal"><div class="num-bubble">2</div><div class="body"><strong>Bind.</strong> It resolves every name against the catalog (the database's internal list of tables and columns) — confirming the <code>customers</code> table and <code>id</code> column exist, checking types and your permissions.</div></div>
+<div class="step reveal"><div class="num-bubble">3</div><div class="body"><strong>Plan (optimize).</strong> The <strong>query optimizer</strong> considers the possible ways to get the answer and picks the cheapest, using <strong>statistics</strong> it keeps about each table (row counts, how many distinct values a column has, data distribution). For <code>id = 8842</code> it sees a B-tree on <code>id</code> and chooses an <em>index seek</em> over a full scan. This chosen plan is the <strong>query plan</strong> — you can see it yourself with <code>EXPLAIN</code>.</div></div>
+<div class="step reveal"><div class="num-bubble">4</div><div class="body"><strong>Execute.</strong> The engine runs the plan: traverse the B-tree to find the row's page address, fetch that page (from the buffer pool if cached, else disk), and extract the row.</div></div>
+<div class="step reveal"><div class="num-bubble">5</div><div class="body"><strong>Return.</strong> The row travels back to the client. For a point lookup the whole round trip is well under a millisecond once the page is cached.</div></div>
+
+<div class="callout reveal">
+  <p style="margin:.2em 0"><span class="t">💡 The optimizer is a cost estimator</span></p>
+  <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">"Plan" sounds abstract but it's concrete: the optimizer assigns an estimated <em>cost</em> (roughly, how many pages it'll have to read) to each candidate strategy and picks the smallest. If its statistics are stale or wrong, it can pick a bad plan — which is why "run <code>ANALYZE</code> to refresh statistics" is a classic fix for a query that suddenly got slow.</p>
+</div>
+
+<!-- 06 -->
+<h2 id="oltp-opt" class="reveal"><span class="n">06.</span> Making OLTP queries fast</h2>
+<p class="reveal lead">Given that storage layout and that execution path, here is the full toolbox an engineer reaches for to keep an OLTP database snappy — and <em>why</em> each one works.</p>
+
+<table class="reveal">
+  <tr><th>Technique</th><th>What it does</th><th>Why it helps</th></tr>
+  <tr><td><strong>Indexing</strong></td><td>Build a B-tree on the columns you filter or join by.</td><td>Turns full scans into O(log n) seeks — the #1 OLTP lever.</td></tr>
+  <tr><td><strong>Composite indexes</strong></td><td>One index over several columns, e.g. <code>(customer_id, created_at)</code>.</td><td>Serves multi-column filters and sorts in one structure, in the right order.</td></tr>
+  <tr><td><strong>Covering index</strong></td><td>Index that <em>includes</em> all columns a query needs.</td><td>The answer is read straight from the index — the table page is never touched ("index-only scan").</td></tr>
+  <tr><td><strong>Clustering (clustered index)</strong></td><td>Physically store the table's rows in key order (§03), instead of a heap.</td><td>Adjacent keys sit on adjacent pages, so range scans (<code>BETWEEN</code>, <code>ORDER BY</code>) read a few contiguous pages instead of jumping all over disk. Only one per table.</td></tr>
+  <tr><td><strong>Bigger buffer pool</strong></td><td>Give the cache more RAM.</td><td>More of the working set (the pages your queries actually touch) stays in memory → fewer disk reads.</td></tr>
+  <tr><td><strong>Fresh statistics</strong></td><td>Keep the optimizer's table stats up to date.</td><td>Good stats → good plans. Stale stats cause bad plan choices.</td></tr>
+  <tr><td><strong>Connection pooling</strong></td><td>Reuse a fixed set of DB connections.</td><td>Opening a connection is expensive; pooling avoids that cost under high concurrency.</td></tr>
+  <tr><td><strong>Partitioning</strong></td><td>Split one giant table into smaller chunks by a key (e.g. by month).</td><td>Queries and maintenance touch only the relevant partition; smaller indexes per chunk.</td></tr>
+  <tr><td><strong>Denormalization</strong></td><td>Store some redundant data together to avoid joins.</td><td>Fewer joins per request = less work on the hot path (a deliberate trade against write simplicity).</td></tr>
+  <tr><td><strong>Read replicas</strong></td><td>Copies of the DB that serve reads only.</td><td>Spread read load across machines; the primary focuses on writes.</td></tr>
+  <tr><td><strong>Sharding</strong></td><td>Split rows across multiple databases by a key (e.g. <code>user_id</code> ranges).</td><td>Scales <em>writes</em> out past one machine — each shard owns a slice. The cost: cross-shard queries and transactions get hard, so it's a last resort.</td></tr>
+  <tr><td><strong>Right-sized data types</strong></td><td>Use <code>INT</code> not <code>BIGINT</code>, avoid bloated rows.</td><td>Smaller rows = more rows per page = fewer page reads for the same data.</td></tr>
+</table>
+
+<div class="callout gr reveal">
+  <p style="margin:.2em 0"><span class="t">✅ The pattern behind all of them</span></p>
+  <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">Every OLTP optimization is doing one of two things: <strong>(a) read fewer pages</strong> to answer a query (indexes, covering indexes, partitioning, smaller rows), or <strong>(b) keep the pages you need in fast memory</strong> (bigger buffer pool, replicas, pooling). Hold that lens and the list stops being a list to memorise.</p>
+</div>
+
+<!-- 07 -->
+<h2 id="wall" class="reveal"><span class="n">07.</span> Why OLTP collapses under analytics</h2>
+<p class="reveal lead">Here's the crux. The OLTP database is beautifully tuned for "touch a few known rows." Now point an analyst's question at it:</p>
+
+<div class="cb reveal"><span class="lang">sql — an analytical query on an OLTP database</span><pre><span class="k">SELECT</span> city, <span class="k">AVG</span>(total)
+<span class="k">FROM</span>   orders                 <span class="c">-- 500 million rows</span>
+<span class="k">WHERE</span>  created_at <span class="o">&gt;=</span> <span class="g">'2023-01-01'</span>
+<span class="k">GROUP BY</span> city;</pre></div>
+
+<p class="reveal">This query needs only <strong>three</strong> columns — <code>city</code>, <code>total</code>, <code>created_at</code> — but it needs them from <em>hundreds of millions of rows</em>. Watch what the row store is forced to do:</p>
+
+<div class="pain reveal">
+  <h4>✗ It reads everything, to use almost nothing</h4>
+  <p style="margin:.3em 0 0;font-size:14.5px;color:#cdd0dd">Columns are glued together inside each row, inside each page. To get the <code>total</code> column from every row, the engine must read <em>every page of the whole table</em> — dragging along <code>customer_name</code>, <code>shipping_address</code>, <code>notes</code> and every other column it doesn't want. If the three columns it needs are 5% of each row, it still reads 100% of the bytes — <strong>20× more disk I/O (the reads and writes between disk and memory) than the query actually needs.</strong></p>
+</div>
+<div class="pain reveal">
+  <h4>✗ The index can't save it</h4>
+  <p style="margin:.3em 0 0;font-size:14.5px;color:#cdd0dd">Indexes shine at finding a <em>few</em> rows. This query wants <em>most</em> rows, so the optimizer correctly falls back to a full table scan — the index is useless here. There is no "few rows" to seek to.</p>
+</div>
+<div class="pain reveal">
+  <h4>✗ Poor compression</h4>
+  <p style="margin:.3em 0 0;font-size:14.5px;color:#cdd0dd">A page holds a jumble of different types — ints, strings, dates, all mixed. Because the page interleaves values from many different columns, there are almost no long runs of similar values for a compressor to latch onto — so a row store compresses far worse than the same data laid out one column at a time. The table stays large on disk, so the scan reads even more bytes.</p>
+</div>
+<div class="pain reveal">
+  <h4>✗ It fights the live app for resources</h4>
+  <p style="margin:.3em 0 0;font-size:14.5px;color:#cdd0dd">A scan of 500M rows floods the buffer pool with cold analytical pages, evicting the hot rows your <em>customers'</em> requests need. One heavy report can make the whole app slow. And a <em>traditional single-node</em> OLTP database scales mainly by scaling <em>up</em> (a bigger machine) plus read replicas — not by spreading one query across many machines — so there's a hard ceiling on CPU and RAM for that giant scan. (Distributed SQL systems like Spanner and CockroachDB do scale transactions out, but they trade away some of the simplicity that makes a single-node row store so fast.)</p>
+</div>
+
+<p class="reveal">None of these are bugs. They're the direct, unavoidable consequence of a layout optimised for the opposite job. <strong>Row storage makes whole-row access cheap by making whole-column access expensive</strong> — and analytics is <em>all</em> whole-column access. That's the wall. The fix isn't to tune the row store harder; it's to flip the layout 90 degrees.</p>
+
+<!-- 08 -->
+<h2 id="olap" class="reveal"><span class="n">08.</span> OLAP — the world of big scans</h2>
+<p class="reveal lead">OLAP systems are built for exactly the query that broke the row store. Their workload is the mirror image of OLTP:</p>
+<ul class="reveal">
+  <li><strong>Few columns, many rows</strong> — read 3 columns out of 50, but across billions of rows.</li>
+  <li><strong>Aggregation, not point lookup</strong> — <code>SUM</code>, <code>AVG</code>, <code>COUNT</code>, <code>GROUP BY</code> over huge ranges; almost never "fetch row #8842."</li>
+  <li><strong>Read-mostly</strong> — data is loaded in big batches (or streamed in), then queried many times; few row-level updates.</li>
+  <li><strong>Throughput over latency</strong> — a query running for 5 seconds over a billion rows is fine; what matters is scanning enormous data efficiently and in parallel.</li>
+</ul>
+<p class="reveal">To serve that, OLAP flips the two foundations we just studied: it stores data <em>by column</em>, and it spreads the work across <em>many machines</em>. Let's open both up.</p>
+
+<!-- 09 -->
+<h2 id="olap-store" class="reveal"><span class="n">09.</span> How OLAP stores data (columnar &amp; Parquet)</h2>
+<p class="reveal lead">The core move is <strong>column-oriented storage</strong>: instead of keeping each row's fields together, keep each <em>column's</em> values together. All the <code>city</code> values in one run, all the <code>total</code> values in another, all the <code>created_at</code> values in another.</p>
+
+<figure class="reveal" style="margin:1.4em 0;background:#0d0d13;border:1px solid #23232e;border-radius:10px;padding:1.2em 1em 1em;overflow:hidden">
+<figcaption style="font-size:12px;color:#555;text-align:center;margin-bottom:.8em;letter-spacing:.06em;text-transform:uppercase">Same rows, stored by column — read only what you need</figcaption>
+<div class="diagram" style="background:none;border:none;padding:6px 4px;margin:0">  the logical table:                          stored on disk as columns:
+
+   id  city    total  notes                    <span class="hl">id    </span>: 1, 2, 3, 4, 5, …      ◀ skip
+   1   Hanoi   59.9   …                         <span class="ok">city  </span>: Hanoi, Hue, Hanoi, … ◀ <span class="ok">READ</span>
+   2   Hue     12.0   …                         <span class="ok">total </span>: 59.9, 12.0, 8.5, …   ◀ <span class="ok">READ</span>
+   3   Hanoi    8.5   …                         <span class="dim">notes </span>: "…", "…", "…", …     ◀ skip
+   4   …                                        <span class="dim">created</span>: 2023-…, 2023-…      ◀ (read if filtered)
+
+  <span class="dim">Query needs city + total? Read just those two blocks. The other columns'</span>
+  <span class="dim">bytes are never touched — the exact opposite of the row store's problem.</span></div>
+</figure>
+
+<p class="reveal">That one change unlocks three compounding wins:</p>
+<div class="step reveal"><div class="num-bubble">1</div><div class="body"><strong>Column pruning (projection pushdown).</strong> A query reads only the columns it names. Need 3 of 50 columns? Read ~6% of the data, not 100%. This directly erases the row store's biggest waste. (<em>Pushdown</em>, a word you'll see a lot below, just means pushing an operation — picking columns, applying a filter — <em>down</em> into the storage/scan layer so it happens as early as possible, on as little data as possible.)</div></div>
+<div class="step reveal"><div class="num-bubble">2</div><div class="body"><strong>Brilliant compression.</strong> A column holds values of <em>one type</em>, often very repetitive (the <code>city</code> column is the same few city names over and over). Same-type, repetitive data compresses enormously — often 5–10×. Less data on disk = less to read = faster scans <em>and</em> cheaper storage.</div></div>
+<div class="step reveal"><div class="num-bubble">3</div><div class="body"><strong>Vectorized execution.</strong> A tight, contiguous run of one column is perfect for the CPU to process in bulk — apply <code>total &gt; 100</code> to a whole batch of values at once (an approach called <strong>SIMD</strong> — Single Instruction, Multiple Data: one CPU instruction operating on many values together), instead of row-by-row. More on this in §10.</div></div>
+
+<h3 class="reveal">Parquet: a columnar file, opened up</h3>
+<p class="reveal">In the modern data world the data usually lives in <strong>files</strong> (in cloud object storage like S3), and the dominant columnar file format is <strong>Apache Parquet</strong>. Understanding its layout makes every OLAP optimization obvious. A Parquet file is organised into a hierarchy:</p>
+
+<figure class="reveal" style="margin:1.4em 0;background:#0d0d13;border:1px solid #23232e;border-radius:10px;padding:1.2em 1em 1em;overflow:hidden">
+<figcaption style="font-size:12px;color:#555;text-align:center;margin-bottom:.8em;letter-spacing:.06em;text-transform:uppercase">Inside one Parquet file</figcaption>
+<div class="diagram" style="background:none;border:none;padding:6px 4px;margin:0"> ┌─────────────────────────── PARQUET FILE ───────────────────────────┐
+ │                                                                    │
+ │  <span class="hl">ROW GROUP 1</span>   (a horizontal slice of ~1M rows)                    │
+ │     ├─ <span class="ok">column chunk: city</span>    [ data pages ]  + <span class="warn">stats: min/max</span>    │
+ │     ├─ <span class="ok">column chunk: total</span>   [ data pages ]  + <span class="warn">stats: min/max</span>    │
+ │     └─ <span class="dim">column chunk: notes    [ data pages ]  + stats: min/max</span>    │
+ │                                                                    │
+ │  <span class="hl">ROW GROUP 2</span>   (next ~1M rows)                                     │
+ │     ├─ column chunk: city …                                        │
+ │     └─ …                                                           │
+ │                                                                    │
+ │  <span class="pu">FOOTER</span>  ◀── schema + location &amp; min/max stats of every chunk     │
+ └────────────────────────────────────────────────────────────────────┘
+   <span class="dim">A reader opens the FOOTER first. From the stats there it decides which</span>
+   <span class="dim">row groups and which columns it even needs to read. Often it skips most.</span></div>
+</figure>
+
+<ul class="reveal">
+  <li><strong>Row group</strong> — a horizontal slice of the table (commonly ~128&nbsp;MB / ~1M rows). Inside a row group, data is stored column-by-column.</li>
+  <li><strong>Column chunk</strong> — all the values of one column, for the rows in that row group, stored contiguously and compressed.</li>
+  <li><strong>Data pages</strong> — a column chunk is split into pages, each <em>encoded</em> — e.g. <em>dictionary encoding</em>, which replaces repeated values with small integer codes — then squeezed further with a general-purpose <em>compressor</em> (Snappy, Zstd). Encoding exploits the column's repetition; compression shrinks whatever's left.</li>
+  <li><strong>Footer (metadata)</strong> — at the end of the file: the schema, and crucially the <strong>min and max value of each column chunk</strong>, plus null counts. This tiny summary is what powers <em>data skipping</em>.</li>
+</ul>
+
+<div class="callout cy reveal">
+  <p style="margin:.2em 0"><span class="t">🔑 The min/max stats are the secret weapon</span></p>
+  <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">Because the footer records, say, "in row group 7 the <code>created_at</code> column ranges from 2021-03 to 2021-04," a query filtering for <code>created_at &gt;= '2023-01-01'</code> can look at that and <strong>skip the entire row group without reading it</strong>. These per-chunk min/max summaries are sometimes called <em>zone maps</em>, and reading-the-stats-to-skip-the-data is the heart of OLAP speed.</p>
+</div>
+
+<h3 class="reveal">Partitioning: skipping at the folder level</h3>
+<p class="reveal">One level up from the file, OLAP datasets are usually <strong>partitioned</strong> — physically split into folders by a column, most often a date:</p>
+<div class="cb reveal"><span class="lang">object storage layout</span><pre>s3://lake/orders/
+  <span class="k">date=2023-01-01/</span>  part-0001.parquet  part-0002.parquet
+  <span class="k">date=2023-01-02/</span>  part-0001.parquet  …
+  <span class="k">date=2023-01-03/</span>  …</pre></div>
+<p class="reveal">Now <code>WHERE date = '2023-01-02'</code> reads <em>only that one folder</em> and ignores the rest entirely — the engine never even lists the other files. This is <strong>partition pruning</strong>, and it's the cheapest, biggest win in analytics: skip terabytes by reading a folder name.</p>
+
+<!-- 10 -->
+<h2 id="olap-query" class="reveal"><span class="n">10.</span> How an OLAP query runs, step by step</h2>
+<p class="reveal lead">Now the payoff. Let's run the same query that broke the row store — <code>SELECT city, AVG(total) FROM orders WHERE created_at &gt;= '2023-01-01' GROUP BY city</code> — but on a columnar, distributed OLAP engine. The same parse → bind → plan front-end from §05 still runs first; what's different — and what makes analytics fast — is the <em>execute</em> stage. It works like a funnel: each stage throws away data so the next stage does less.</p>
+
+<figure class="reveal" style="margin:1.4em 0;background:#0d0d13;border:1px solid #23232e;border-radius:10px;padding:1.2em 1em 1em;overflow:hidden">
+<figcaption style="font-size:12px;color:#555;text-align:center;margin-bottom:.8em;letter-spacing:.06em;text-transform:uppercase">The OLAP funnel — drop data at every stage before reading it</figcaption>
+<div class="diagram" style="background:none;border:none;padding:6px 4px;margin:0">  500,000,000 rows × 50 columns  ── the whole dataset ──────────────────┐
+                                                                        │
+  <span class="hl">1 PARTITION PRUNING</span>   skip every date folder before 2023  ───────────┤  ▼ fewer files
+  <span class="hl">2 DATA SKIPPING</span>       drop row groups whose min/max can't match  ───┤  ▼ fewer row groups
+  <span class="hl">3 COLUMN PRUNING</span>      read only city, total, created_at (3 of 50) ──┤  ▼ fewer columns
+  <span class="hl">4 PREDICATE PUSHDOWN</span>  apply created_at filter while scanning  ──────┤  ▼ fewer rows
+  <span class="hl">5 VECTORIZED SCAN</span>     decode &amp; filter columns in batches (SIMD)  ───┤
+  <span class="hl">6 PARTIAL AGGREGATE</span>   each node sums its slice locally  ────────────┤
+  <span class="hl">7 SHUFFLE + MERGE</span>     combine partials by city → final answer  ─────┘
+                                                                        ▼
+                                                            <span class="ok">a few rows: city, avg</span></div>
+</figure>
+
+<div class="step reveal"><div class="num-bubble">1</div><div class="body"><strong>Plan &amp; partition pruning.</strong> The optimizer reads the query, sees the <code>created_at</code> / date filter, and immediately eliminates every date-partition folder that can't match — those files are never opened.</div></div>
+<div class="step reveal"><div class="num-bubble">2</div><div class="body"><strong>Data skipping.</strong> For the surviving files, it reads each Parquet <em>footer</em> and uses the per-row-group min/max stats to drop any row group whose range can't contain matching rows. More data gone, unread.</div></div>
+<div class="step reveal"><div class="num-bubble">3</div><div class="body"><strong>Column pruning (projection pushdown).</strong> It reads only the <code>city</code>, <code>total</code>, and <code>created_at</code> column chunks from the remaining row groups — the other 47 columns are skipped on disk.</div></div>
+<div class="step reveal"><div class="num-bubble">4</div><div class="body"><strong>Predicate pushdown.</strong> The <code>created_at &gt;= '2023-01-01'</code> filter is applied <em>at the scan</em>, as data is decoded — so rows that fail are discarded before any later operator (the aggregation) ever sees them.</div></div>
+<div class="step reveal"><div class="num-bubble">5</div><div class="body"><strong>Vectorized execution.</strong> Surviving column data is processed in <em>batches</em> (e.g. 1,024 values at a time) rather than row by row. Working a batch at a time avoids the per-row bookkeeping of the old one-row engine and lets the CPU stay cache-friendly and use SIMD — together, several times faster.</div></div>
+<div class="step reveal"><div class="num-bubble">6</div><div class="body"><strong>Distributed partial aggregation.</strong> The data is spread across many worker nodes (this is <strong>MPP</strong> — Massively Parallel Processing). Each node computes a <em>partial</em> result over its slice — its own running sum and count of <code>total</code> per <code>city</code>.</div></div>
+<div class="step reveal"><div class="num-bubble">7</div><div class="body"><strong>Shuffle &amp; final merge.</strong> Partial results are <em>shuffled</em> so all partials for the same <code>city</code> meet on one node, which combines them into the final average. The handful of result rows go back to the client.</div></div>
+
+<figure class="reveal" style="margin:1.4em 0;background:#0d0d13;border:1px solid #23232e;border-radius:10px;padding:1.2em 1em 1em;overflow:hidden">
+<figcaption style="font-size:12px;color:#555;text-align:center;margin-bottom:.8em;letter-spacing:.06em;text-transform:uppercase">MPP — split the scan across nodes, then combine</figcaption>
+<svg viewBox="0 0 720 220" width="100%" style="display:block;max-width:720px;margin:0 auto" aria-label="A coordinator splits work to several worker nodes that each scan a slice, then results are shuffled and merged">
+  <defs><style>.m1{font-family:'JetBrains Mono',monospace;}</style></defs>
+  <rect x="280" y="14" width="160" height="34" rx="8" fill="#16182a" stroke="#5C78FF" stroke-width="1.6"/>
+  <text x="360" y="36" class="m1" font-size="11" fill="#8aa0ff" text-anchor="middle" font-weight="700">coordinator / planner</text>
+  <!-- workers -->
+  <g class="m1" font-size="10">
+    <rect x="40" y="80" width="150" height="46" rx="8" fill="#0d1820" stroke="#5AC8FF" stroke-width="1.4"/><text x="115" y="100" fill="#5AC8FF" text-anchor="middle">worker 1</text><text x="115" y="116" fill="#8a90a6" text-anchor="middle">scans files A–C</text>
+    <rect x="205" y="80" width="150" height="46" rx="8" fill="#0d1820" stroke="#5AC8FF" stroke-width="1.4"/><text x="280" y="100" fill="#5AC8FF" text-anchor="middle">worker 2</text><text x="280" y="116" fill="#8a90a6" text-anchor="middle">scans files D–F</text>
+    <rect x="370" y="80" width="150" height="46" rx="8" fill="#0d1820" stroke="#5AC8FF" stroke-width="1.4"/><text x="445" y="100" fill="#5AC8FF" text-anchor="middle">worker 3</text><text x="445" y="116" fill="#8a90a6" text-anchor="middle">scans files G–I</text>
+    <rect x="535" y="80" width="150" height="46" rx="8" fill="#0d1820" stroke="#5AC8FF" stroke-width="1.4"/><text x="610" y="100" fill="#5AC8FF" text-anchor="middle">worker 4</text><text x="610" y="116" fill="#8a90a6" text-anchor="middle">scans files J–L</text>
+  </g>
+  <!-- coordinator to workers -->
+  <g stroke="#5C78FF" stroke-width="1.3"><line x1="320" y1="48" x2="115" y2="78"/><line x1="340" y1="48" x2="280" y2="78"/><line x1="380" y1="48" x2="445" y2="78"/><line x1="400" y1="48" x2="610" y2="78"/></g>
+  <!-- shuffle -->
+  <text x="360" y="150" class="m1" font-size="10" fill="#f0b429" text-anchor="middle">▼ each worker emits partial sums per city · SHUFFLE by city ▼</text>
+  <rect x="240" y="166" width="240" height="40" rx="8" fill="#1d1526" stroke="#BA5AFF" stroke-width="1.5"/>
+  <text x="360" y="186" class="m1" font-size="10.5" fill="#d8b3ff" text-anchor="middle">merge partials → final AVG(total) per city</text>
+  <text x="360" y="200" class="m1" font-size="9" fill="#8a90a6" text-anchor="middle">the small result</text>
+  <g stroke="#BA5AFF" stroke-width="1.2" stroke-dasharray="4,3"><line x1="115" y1="126" x2="300" y2="164"/><line x1="280" y1="126" x2="340" y2="164"/><line x1="445" y1="126" x2="380" y2="164"/><line x1="610" y1="126" x2="420" y2="164"/></g>
+</svg>
+</figure>
+
+<div class="callout gr reveal">
+  <p style="margin:.2em 0"><span class="t">✅ Compare the two paths</span></p>
+  <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">The row store read 100% of the bytes on one machine. The column store skipped whole folders and row groups, read 3 columns out of 50, filtered at the scan, processed in vectorized batches, and split what remained across many nodes. Same SQL, same answer — but orders of magnitude less I/O and far more parallelism. <em>That</em> is why analytics belongs on OLAP.</p>
+</div>
+
+<!-- 11 -->
+<h2 id="olap-opt" class="reveal"><span class="n">11.</span> Making OLAP queries fast</h2>
+<p class="reveal lead">Here's the full optimization toolbox for analytics. Notice the theme is no longer "find the row fast" — it's <strong>"read as little data as possible, and process what's left in parallel."</strong> The first rows gather the mechanics you just saw in §09–§10 into one reference; the lower rows are extra levers we haven't met yet (compaction, materialized views, caching, bloom filters).</p>
+
+<table class="reveal">
+  <tr><th>Technique</th><th>What it does</th><th>Why it helps</th></tr>
+  <tr><td><strong>Columnar storage</strong></td><td>Store each column contiguously (Parquet/ORC).</td><td>The foundation — enables column pruning, compression, and vectorization.</td></tr>
+  <tr><td><strong>Partition pruning</strong></td><td>Split data into folders by a key; skip folders the filter excludes.</td><td>Eliminates the most data for the least effort — reads a folder name, skips terabytes.</td></tr>
+  <tr><td><strong>Data skipping (zone maps)</strong></td><td>Use per-file/row-group min/max stats to skip chunks that can't match.</td><td>Avoids reading data even within the files you do open.</td></tr>
+  <tr><td><strong>Projection pushdown</strong></td><td>Read only the columns the query references.</td><td>3 of 50 columns = ~6% of the bytes. The core columnar win.</td></tr>
+  <tr><td><strong>Predicate pushdown</strong></td><td>Apply <code>WHERE</code> filters at the scan, not after.</td><td>Discards rows before they reach joins/aggregations — less work downstream.</td></tr>
+  <tr><td><strong>Compression &amp; encoding</strong></td><td>Dictionary &amp; run-length (RLE) encoding + Snappy/Zstd compression on each column.</td><td>Less data on disk and over the network = faster scans, cheaper storage.</td></tr>
+  <tr><td><strong>Cost-based optimization</strong></td><td>The planner uses table statistics to choose the cheapest plan (join order, strategy, scan).</td><td>Fresh stats → good plans; the same optimizer idea as OLTP (§05), but choosing across a distributed plan.</td></tr>
+  <tr><td><strong>Right-sized files / compaction</strong></td><td>Merge many tiny files into fewer ~128MB–1GB files.</td><td>Avoids the "small files problem" — per-file overhead and metadata thrash.</td></tr>
+  <tr><td><strong>Sorting / clustering / Z-order</strong></td><td>Physically sort data so related values land in the same files (Z-order = a curve that keeps rows close on several columns at once).</td><td>Tightens each file's min/max ranges, so data skipping eliminates far more — the single best way to make skipping pay off.</td></tr>
+  <tr><td><strong>Vectorized execution</strong></td><td>Process columns in batches with SIMD, not row by row.</td><td>Uses the CPU and caches efficiently — several times faster per core.</td></tr>
+  <tr><td><strong>MPP parallelism</strong></td><td>Spread the scan across many worker nodes.</td><td>Scales <em>out</em>: throw more machines at a bigger scan. The opposite of OLTP's single-box ceiling.</td></tr>
+  <tr><td><strong>Join strategy</strong></td><td>Pick how to join: <em>broadcast</em> a small table to every node, vs <em>shuffle</em> both tables by the join key.</td><td>Broadcasting a small table avoids a costly shuffle entirely; choosing the wrong one is a top cause of slow analytical queries.</td></tr>
+  <tr><td><strong>Materialized views / pre-aggregation</strong></td><td>Precompute common rollups (e.g. daily totals) ahead of time.</td><td>Turns a billion-row scan into a tiny lookup of already-summarised data.</td></tr>
+  <tr><td><strong>Caching</strong></td><td>Cache results and hot data (result cache, local SSD cache).</td><td>Repeated dashboard queries skip the scan entirely.</td></tr>
+  <tr><td><strong>Bloom filters</strong></td><td>Compact per-file "is this value possibly here?" filters.</td><td>Skip files for equality filters on high-cardinality columns — ones with very many distinct values, like an email or UUID — where the min/max range is too wide to rule anything out.</td></tr>
+</table>
+
+<div class="callout cy reveal">
+  <p style="margin:.2em 0"><span class="t">🔑 The mirror image of OLTP</span></p>
+  <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">OLTP optimization = "read <em>fewer pages</em> to find a few rows" (indexes, caching). OLAP optimization = "read <em>fewer bytes</em> of a giant scan, then parallelize the rest" (pruning, skipping, columnar compression, MPP). Same goal — do less I/O — but pursued from opposite directions because the workloads are opposite.</p>
+</div>
+
+<!-- 12 -->
+<h2 id="compare" class="reveal"><span class="n">12.</span> Side-by-side &amp; when to use which</h2>
+<p class="reveal lead">Everything in this article reduces to one table. Read it top to bottom and notice how the <em>workload</em> (row 1) forces every other choice.</p>
+
+<table class="reveal">
+  <tr><th></th><th>OLTP</th><th>OLAP</th></tr>
+  <tr><td><strong>Typical query</strong></td><td>Touch a few rows by key</td><td>Scan/aggregate millions of rows, few columns</td></tr>
+  <tr><td><strong>Storage layout</strong></td><td>Row-oriented (fields of a row together)</td><td>Column-oriented (values of a column together)</td></tr>
+  <tr><td><strong>On disk</strong></td><td>8–16 KB pages, heap or B-tree</td><td>Parquet/ORC files, row groups, partitions</td></tr>
+  <tr><td><strong>Find data via</strong></td><td>B-tree index seek</td><td>Partition pruning + min/max data skipping</td></tr>
+  <tr><td><strong>Reads…</strong></td><td>Whole rows (all columns)</td><td>Only the columns &amp; row groups needed</td></tr>
+  <tr><td><strong>Workload</strong></td><td>Write-heavy, high concurrency</td><td>Read-mostly, bulk loads</td></tr>
+  <tr><td><strong>Scales by</strong></td><td>Mostly <em>up</em> (bigger box) + read replicas</td><td>Scaling <em>out</em> (MPP, many nodes)</td></tr>
+  <tr><td><strong>Latency</strong></td><td>Sub-millisecond per query</td><td>Seconds–minutes per query</td></tr>
+  <tr><td><strong>Optimised for</strong></td><td>Many tiny operations, fast</td><td>Few huge scans, efficient</td></tr>
+  <tr><td><strong>Examples</strong></td><td>PostgreSQL, MySQL, SQL Server, Oracle</td><td>BigQuery, Snowflake, Redshift, Spark, ClickHouse</td></tr>
+</table>
+
+<h3 class="reveal">So which do you use?</h3>
+
+<figure class="mm reveal">
+  <figcaption>A decision shortcut — what is the query really doing?</figcaption>
+  <pre class="mermaid">
+flowchart TD
+   A["What does the query do?"] -->|"reads / writes a few rows<br/>by key, live in the app"| B["OLTP · row store"]
+   A -->|"scans &amp; aggregates lots of<br/>history into summaries"| C["OLAP · column store"]
+   B --> D["PostgreSQL · MySQL<br/>SQL Server · Oracle"]
+   C --> E["BigQuery · Snowflake<br/>Redshift · Spark · ClickHouse"]
+   D --> F["both, in practice:<br/>app on OLTP → pipeline → OLAP for analytics"]
+   E --> F
+  </pre>
+</figure>
+
+<ul class="reveal">
+  <li>Powering an <strong>application</strong> — user accounts, orders, inventory, anything that reads/writes individual records live? <strong>OLTP.</strong></li>
+  <li>Powering <strong>reports, dashboards, BI</strong> (business-intelligence reporting)<strong>, ML features</strong> — anything that crunches large history into summaries? <strong>OLAP.</strong></li>
+  <li>Both, which is the norm: run OLTP for the app, copy data into OLAP for analytics, and keep heavy reporting off the production database. The pipeline that moves data between them is the daily work of data engineering.</li>
+</ul>
+
+<div class="callout reveal">
+  <p style="margin:.2em 0"><span class="t">💡 The line is blurring (HTAP &amp; the lakehouse)</span></p>
+  <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">Newer systems try to do both at once — <strong>HTAP</strong> (Hybrid Transactional/Analytical Processing) databases keep a row store for writes and a column store for reads in sync; <strong>lakehouse</strong> formats like Delta Lake and Iceberg add transactions and updates on top of columnar files. The two worlds are converging — but the underlying trade-off between row and column layout is physics, and it never fully goes away. Knowing which side of it you're on is the whole game.</p>
+</div>
+
+<hr/>
+<p class="reveal" style="color:#9aa0b4;font-size:14.5px">That's both worlds, end to end: how a row store packs whole rows into pages and finds them with B-trees; how to tune it, and why it hits a wall under analytics; then how a column store splits data into Parquet files it can skip, read column-by-column, and crunch across many nodes. The through-line worth remembering: <em>row layout makes record access cheap, column layout makes scan access cheap — and that one physical choice decides everything else.</em></p>
+
+<!-- glossary -->
+<h2 id="glossary" class="reveal"><span class="n">＊</span> Glossary</h2>
+<div class="gloss reveal">
+  <dl>
+    <dt>OLTP</dt><dd>Online Transaction Processing — databases for many small, live read/write operations on individual rows (the app's database).</dd>
+    <dt>OLAP</dt><dd>Online Analytical Processing — databases for large scans and aggregations over history (the reporting/analytics database).</dd>
+    <dt>ACID</dt><dd>The correctness guarantees of a transaction: Atomic (all-or-nothing), Consistent, Isolated, Durable (survives crashes).</dd>
+    <dt>ETL / ELT</dt><dd>Extract, Transform, Load — the pipeline that copies and reshapes data from OLTP into OLAP (ELT just reorders the last two steps).</dd>
+    <dt>I/O</dt><dd>Input/Output — the reads and writes that move data between disk and memory; the main cost a database tries to minimise.</dd>
+    <dt>Row store</dt><dd>Storage that keeps all of a row's columns physically together. Great for whole-row access.</dd>
+    <dt>Column store</dt><dd>Storage that keeps all of one column's values together. Great for scanning few columns over many rows.</dd>
+    <dt>Page / block</dt><dd>The fixed-size unit (e.g. 8–16 KB) a database reads from and writes to disk. A table is a sequence of pages.</dd>
+    <dt>Heap</dt><dd>A table whose pages are unordered; rows go wherever there's space.</dd>
+    <dt>B-tree</dt><dd>A balanced, sorted tree index that locates a row in O(log n) — a few hops instead of a full scan.</dd>
+    <dt>Clustered index</dt><dd>A table physically stored in primary-key order inside a B-tree's leaves.</dd>
+    <dt>Buffer pool</dt><dd>The in-RAM cache of recently used pages; reads/writes pass through it to avoid disk.</dd>
+    <dt>Write-ahead log (WAL)</dt><dd>A sequential journal written before pages, making commits both fast and crash-safe.</dd>
+    <dt>Query optimizer</dt><dd>The component that chooses the cheapest execution plan using table statistics.</dd>
+    <dt>Query plan</dt><dd>The chosen step-by-step strategy for running a query (seen via <code>EXPLAIN</code>).</dd>
+    <dt>Full table scan</dt><dd>Reading every page of a table — what happens with no useful index.</dd>
+    <dt>Parquet</dt><dd>The dominant open columnar file format: row groups → column chunks → pages, with a stats footer.</dd>
+    <dt>Row group</dt><dd>A horizontal slice of a Parquet file (~1M rows), stored column-by-column inside.</dd>
+    <dt>Column chunk</dt><dd>All values of one column within one row group, contiguous and compressed.</dd>
+    <dt>Footer / metadata</dt><dd>The end of a Parquet file holding the schema and per-chunk min/max stats.</dd>
+    <dt>Partitioning</dt><dd>Splitting a dataset into folders by a key (often date) so queries skip whole folders.</dd>
+    <dt>Partition pruning</dt><dd>Skipping partition folders that a filter rules out — the cheapest big win in OLAP.</dd>
+    <dt>Data skipping / zone maps</dt><dd>Using per-chunk min/max stats to skip data that can't match a filter.</dd>
+    <dt>Projection pushdown</dt><dd>Reading only the columns a query references (column pruning).</dd>
+    <dt>Predicate pushdown</dt><dd>Applying <code>WHERE</code> filters at the scan, before later operators.</dd>
+    <dt>Vectorized execution</dt><dd>Processing columns in batches rather than one row at a time, avoiding per-row overhead.</dd>
+    <dt>SIMD</dt><dd>Single Instruction, Multiple Data — one CPU instruction that operates on many values at once; a big part of why batch (vectorized) processing is fast.</dd>
+    <dt>Parquet / ORC</dt><dd>The two dominant open columnar file formats; ORC is an alternative to Parquet with the same row-group + column-chunk + stats idea.</dd>
+    <dt>Bloom filter</dt><dd>A compact per-file structure answering "is this value possibly here?" — lets a query skip files for equality filters on high-cardinality columns.</dd>
+    <dt>MPP</dt><dd>Massively Parallel Processing — splitting a query across many worker nodes that scan in parallel.</dd>
+    <dt>Shuffle</dt><dd>Redistributing data across nodes (e.g. by <code>GROUP BY</code> key) so related rows meet to be combined.</dd>
+    <dt>Materialized view</dt><dd>A precomputed, stored query result (e.g. a daily rollup) that turns a big scan into a small lookup.</dd>
+    <dt>HTAP</dt><dd>Hybrid Transactional/Analytical Processing — systems that serve both OLTP and OLAP from one place.</dd>
+  </dl>
+</div>
+
+<footer class="reveal">
+  <p>Part of <a href="../">Data &amp; AI Engineering, Simply Explained</a> · a <a href="../">deep dive</a>.</p>
+  <p>© 2026 · Hao Tieu · Built with GitHub Pages · <a href="https://linkedin.com/in/haotieu2001" target="_blank" rel="noopener">LinkedIn</a></p>
+</footer>
+</div><!-- /page -->
+
+<script src="https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.min.js"></script>
+<script>
+  try{
+    mermaid.initialize({
+      startOnLoad:true,
+      theme:'base',
+      themeVariables:{
+        background:'#0d0d13', primaryColor:'#15151b', secondaryColor:'#15151b',
+        primaryBorderColor:'#5AC8FF', primaryTextColor:'#e7e7ee', lineColor:'#5C78FF',
+        fontFamily:"'JetBrains Mono',monospace", fontSize:'13px'
+      }
+    });
+  }catch(e){}
+</script>
+<script>
+  var bar=document.getElementById('bar');
+  function prog(){var h=document.documentElement;var s=h.scrollTop||document.body.scrollTop;var max=(h.scrollHeight-h.clientHeight)||1;bar.style.width=(s/max*100)+'%';}
+  document.addEventListener('scroll',prog,{passive:true});prog();
+  function revealAll(){document.querySelectorAll('.reveal').forEach(function(el){el.classList.add('in');});}
+  try{
+    var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}});},{threshold:.06});
+    document.querySelectorAll('.reveal').forEach(function(el){io.observe(el);});
+    window.addEventListener('load',function(){setTimeout(revealAll,1500);});
+    setTimeout(revealAll,2200);
+  }catch(e){revealAll();}
+</script>
+</body>
+</html>

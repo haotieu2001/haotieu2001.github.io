@@ -1,0 +1,1086 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>CI/CD Essentials for Data Engineers</title>
+<meta name="description" content="A complete, beginner-friendly reference to CI/CD — what continuous integration, delivery and deployment really are, the anatomy of a pipeline, how it all maps onto GitHub Actions (with runnable YAML), environments and promotion, deployment strategies, and how CI/CD is actually used in data engineering: dbt, Airflow, Databricks, data-quality gates and IaC."/>
+<meta property="og:type" content="article"/>
+<meta property="og:title" content="CI/CD Essentials for Data Engineers"/>
+<meta property="og:description" content="From zero to confident: what CI/CD is, the anatomy of a pipeline, GitHub Actions end to end, environments &amp; promotion, deployment strategies, and the data-engineering specifics — dbt, Airflow, Databricks, data-quality gates, IaC."/>
+<meta property="og:url" content="https://haotieu2001.github.io/cicd-essentials/"/>
+<meta property="og:image" content="https://haotieu2001.github.io/og-cover.png"/>
+<meta property="og:image:width" content="1200"/>
+<meta property="og:image:height" content="630"/>
+<meta property="og:image:alt" content="CI/CD Essentials for Data Engineers"/>
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:title" content="CI/CD Essentials for Data Engineers"/>
+<meta name="twitter:description" content="A complete, beginner-friendly CI/CD reference, with a data-engineering lens and GitHub Actions examples."/>
+<meta name="twitter:image" content="https://haotieu2001.github.io/og-cover.png"/>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,500;0,700;0,800;1,400&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#1A1A1A; --bg2:#121212; --ink:#F1F1F1; --muted:#9aa0b4; --dim:#666666;
+    --blue2:#388BFD; --cyan:#2088FF; --cyan2:#58A6FF; --purple:#A371F7; --magenta2:#DB61A2;
+    --grad:linear-gradient(90deg,#58A6FF,#A371F7,#DB61A2);
+    --font:"JetBrainsMono Nerd Font","JetBrains Mono","Symbols Nerd Font",ui-monospace,"Cascadia Code",Menlo,Consolas,monospace;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font);font-size:16px;line-height:1.85;-webkit-font-smoothing:antialiased}
+  #bar{position:fixed;top:0;left:0;height:3px;width:0;z-index:50;background:var(--grad);box-shadow:0 0 12px #58A6FF99;transition:width .1s linear}
+  .page{max-width:880px;margin:0 auto;padding:0 24px}
+  header{padding:30px 0 6px}
+  .kicker{font-size:13px;color:var(--dim)}
+  .back{color:var(--cyan2);text-decoration:none;font-size:13px;border-bottom:1px dotted #58A6FF66}
+  h1{font-size:clamp(28px,4.6vw,46px);line-height:1.12;margin:12px 0 12px;font-weight:800;
+     background:var(--grad);background-size:220% auto;-webkit-background-clip:text;background-clip:text;color:transparent;animation:sheen 9s linear infinite}
+  @keyframes sheen{to{background-position:220% center}}
+  .dek{color:var(--muted);font-size:17px}
+  .byline{margin-top:14px;font-size:13px;color:var(--dim)}
+  h2{font-size:clamp(21px,3.2vw,28px);margin:52px 0 6px;font-weight:800;line-height:1.22;padding-top:14px;border-top:1px solid #23232e}
+  h2 .n{color:var(--blue2)}
+  h3{font-size:18px;margin:28px 0 4px;color:#fff;font-weight:700}
+  h4{font-size:15px;margin:20px 0 4px;color:var(--cyan2);font-weight:700}
+  p,li{color:#dcdce4}
+  .lead{font-size:18px;color:#e7e7ee}
+  a{color:var(--cyan2)}
+  hr{border:0;border-top:1px solid #2c2c36;margin:36px 0}
+  code{font-family:var(--font);background:#23232b;color:#58A6FF;padding:1px 6px;border-radius:5px;font-size:.88em;border:1px solid #2f2f3a}
+  .cb{margin:16px 0}
+  .cb .lang{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:#9aa0b4;background:#1b1b24;border:1px solid #2c2c36;border-bottom:none;border-radius:9px 9px 0 0;padding:4px 12px}
+  pre{margin:0;background:#0d0d13;border:1px solid #23232e;border-radius:0 10px 10px 10px;padding:14px 16px;overflow-x:auto;
+      font-family:var(--font);font-size:13px;line-height:1.65;color:#d8dcea;white-space:pre}
+  pre .c{color:#8B949E}
+  pre .o{color:#9aa0b4}
+  pre .k{color:#79C0FF}
+  pre .g{color:#A5D6FF}
+  pre .y{color:#D29922}
+  pre .r{color:#F78166}
+  pre .p{color:#D2A8FF}
+  .callout{border-left:4px solid var(--blue2);background:#16182a;border-radius:0 12px 12px 0;padding:14px 18px;margin:22px 0}
+  .callout.cy{border-color:var(--cyan);background:#0f1f2b}
+  .callout.mg{border-color:var(--magenta2);background:#1d1526}
+  .callout.gd{border-color:#D29922;background:#241d0f}
+  .callout.gr{border-color:#58A6FF;background:#0d1a2b}
+  .callout .t{color:var(--cyan2);font-weight:800}
+  .callout.gd .t{color:#D29922}
+  .callout.gr .t{color:#58A6FF}
+  .callout.mg .t{color:var(--magenta2)}
+  .tldr{border:1px solid #2f3a66;background:linear-gradient(180deg,#15182a,#121212);border-radius:16px;padding:20px 24px;margin:26px 0}
+  .tldr h4{margin:0 0 8px;font-size:13px;letter-spacing:.2em;text-transform:uppercase;color:var(--cyan2)}
+  .gloss{border:1px solid #2c2c36;background:#141419;border-radius:14px;padding:18px 22px;margin:24px 0}
+  .gloss h4{margin:0 0 6px;color:#fff;font-size:15px}
+  .gloss dl{margin:0;font-size:13.5px}
+  .gloss dt{color:var(--cyan2);font-weight:700;margin-top:9px}
+  .gloss dd{margin:1px 0 0;color:#cdd0dd}
+  .toc{background:#15151b;border:1px solid #2c2c36;border-radius:14px;padding:16px 22px;margin:24px 0;column-count:2;column-gap:28px}
+  .toc a{display:block;color:var(--cyan2);text-decoration:none;font-size:13.5px;line-height:1.9;break-inside:avoid}
+  .toc a:hover{color:#fff}
+  .toc>strong{column-span:all;display:block;margin-bottom:6px;color:#fff}
+  table{border-collapse:collapse;width:100%;font-size:13.5px;margin:16px 0}
+  th,td{border:1px solid #2c2c36;padding:8px 11px;text-align:left;vertical-align:top}
+  th{background:#1d1d27;color:#fff}
+  tr:nth-child(even) td{background:#161620}
+  .ico{width:1em;height:1em;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+  .ico.f{fill:currentColor;stroke:none}
+  h2{display:flex;align-items:center;gap:10px}
+  .hico{display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;border-radius:11px;flex:0 0 36px;
+        background:#15182a;border:1px solid #2f3a66;color:var(--cyan2)}
+  .hico .ico{width:19px;height:19px}
+  .toc a .ico{width:14px;height:14px;margin-right:9px;vertical-align:-2px;opacity:.85}
+  .callout .t .ico{width:16px;height:16px;vertical-align:-3px;margin-right:5px}
+  .tldr h4 .ico,.gloss h4 .ico{width:15px;height:15px;vertical-align:-2px;margin-right:6px}
+  figure.fig{margin:26px 0;text-align:center}
+  figure.fig svg{display:block;width:100%;max-width:100%;height:auto;border:1px solid #23232e;border-radius:14px;background:#0d0d13}
+  figure.fig figcaption{font-size:12.5px;color:var(--muted);margin-top:9px;font-style:italic;line-height:1.6}
+  .pain{border:1px solid #3a2020;background:#1c1212;border-radius:14px;padding:16px 20px;margin:14px 0}
+  .pain h4{margin:0 0 4px;color:#F78166}
+  .fix{border:1px solid #1a3020;background:#0d1f14;border-radius:14px;padding:16px 20px;margin:14px 0}
+  .fix h4{margin:0 0 4px;color:#58A6FF}
+  .step{display:flex;gap:12px;align-items:flex-start;margin:14px 0}
+  .step .num-bubble{flex:0 0 28px;height:28px;border-radius:50%;background:var(--grad);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:#fff;margin-top:2px}
+  .step .body{flex:1}
+  footer{border-top:1px solid #23232e;margin-top:50px;padding:24px 0 90px;color:var(--dim);font-size:13px}
+  footer a{color:var(--cyan2)}
+  .js .reveal{opacity:0;transform:translateY(16px);transition:opacity .6s ease,transform .6s ease}
+  .js .reveal.in{opacity:1;transform:none}
+  @media (prefers-reduced-motion:reduce){.js .reveal{opacity:1;transform:none}}
+</style>
+<script>document.documentElement.classList.add('js');</script>
+</head>
+<body>
+<div id="bar"></div>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs>
+<symbol id="i-question" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.6 9.4a2.5 2.5 0 1 1 3.3 2.4c-.6.2-.9.8-.9 1.5v.6M12 17h.01"/></symbol>
+<symbol id="i-layers" viewBox="0 0 24 24"><path d="m12 3 9 4.8-9 4.8-9-4.8 9-4.8Z"/><path d="m3 12.6 9 4.8 9-4.8M3 17.2l9 4.8 9-4.8"/></symbol>
+<symbol id="i-workflow" viewBox="0 0 24 24"><rect x="3" y="3.5" width="7" height="6" rx="1.5"/><rect x="14" y="14.5" width="7" height="6" rx="1.5"/><path d="M6.5 9.5v5a3 3 0 0 0 3 3H14"/></symbol>
+<symbol id="i-check" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="m8 12.2 2.7 2.7L16.2 9"/></symbol>
+<symbol id="i-rocket" viewBox="0 0 24 24"><path d="M12 2.5c3 2.6 4.8 6.4 4.8 10.6L12 16.4l-4.8-3.3C7.2 8.9 9 5.1 12 2.5Z"/><path d="M7.2 13.1 4.4 15v4.2l3-1.9M16.8 13.1l2.8 1.9v4.2l-3-1.9M12 19.5v2.3"/><circle cx="12" cy="10" r="1.7"/></symbol>
+<symbol id="i-terminal" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2.5"/><path d="m7.5 9.5 3 2.5-3 2.5M13.5 15h3.5"/></symbol>
+<symbol id="i-package" viewBox="0 0 24 24"><path d="m12 2.8 8.2 4.6v9.2L12 21.2l-8.2-4.6V7.4L12 2.8Z"/><path d="m3.8 7.4 8.2 4.6 8.2-4.6M12 12v9.2"/></symbol>
+<symbol id="i-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18"/><path d="M12 3c2.4 2.7 3.6 5.7 3.6 9s-1.2 6.3-3.6 9c-2.4-2.7-3.6-5.7-3.6-9S9.6 5.7 12 3Z"/></symbol>
+<symbol id="i-repeat" viewBox="0 0 24 24"><path d="M16.5 3 20 6.5 16.5 10"/><path d="M4 11.5V9a2.5 2.5 0 0 1 2.5-2.5H20"/><path d="M7.5 21 4 17.5 7.5 14"/><path d="M20 12.5V15a2.5 2.5 0 0 1-2.5 2.5H4"/></symbol>
+<symbol id="i-database" viewBox="0 0 24 24"><ellipse cx="12" cy="6" rx="8" ry="3.2"/><path d="M4 6v12c0 1.8 3.6 3.2 8 3.2s8-1.4 8-3.2V6"/><path d="M20 12c0 1.8-3.6 3.2-8 3.2S4 13.8 4 12"/></symbol>
+<symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 2.8 4.8 5.6v5.2c0 4.4 3 8.4 7.2 9.8 4.2-1.4 7.2-5.4 7.2-9.8V5.6L12 2.8Z"/><path d="m9 12 2.2 2.2L15.4 10"/></symbol>
+<symbol id="i-list" viewBox="0 0 24 24"><path d="M8.5 6h12M8.5 12h12M8.5 18h12M3.7 6h.01M3.7 12h.01M3.7 18h.01"/></symbol>
+<symbol id="i-book" viewBox="0 0 24 24"><path d="M4 5a3 3 0 0 1 3-3h13v18H7a3 3 0 0 0-3 3V5Z"/><path d="M8 2v18"/></symbol>
+<symbol id="i-key" viewBox="0 0 24 24"><circle cx="7.2" cy="16.3" r="3.4"/><path d="m9.7 13.9 9.6-9.6M16.6 6.9l2.3 2.3M14 9.5l2.3 2.3"/></symbol>
+<symbol id="i-bulb" viewBox="0 0 24 24"><path d="M9.2 18h5.6M10.4 21h3.2"/><path d="M12 3a6 6 0 0 0-3.4 10.9c.5.4.8 1 .8 1.7v.4h5.2v-.4c0-.7.3-1.3.8-1.7A6 6 0 0 0 12 3Z"/></symbol>
+<symbol id="i-warn" viewBox="0 0 24 24"><path d="M12 3.2 2.8 19.6h18.4L12 3.2Z"/><path d="M12 9.5v4.2M12 16.8h.01"/></symbol>
+<symbol id="i-alert" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7.2v5.4M12 16.4h.01"/></symbol>
+<symbol id="i-compass" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="m15.6 8.4-2.1 5.1-5.1 2.1 2.1-5.1 5.1-2.1Z"/></symbol>
+<symbol id="i-blocks" viewBox="0 0 24 24"><rect x="3.5" y="3.5" width="7" height="7" rx="1.6"/><rect x="13.5" y="3.5" width="7" height="7" rx="1.6"/><rect x="3.5" y="13.5" width="7" height="7" rx="1.6"/><rect x="13.5" y="13.5" width="7" height="7" rx="1.6"/></symbol>
+<symbol id="i-search" viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m15.2 15.2 4.3 4.3"/></symbol>
+<symbol id="i-code" viewBox="0 0 24 24"><path d="m8 8.5-4 3.5 4 3.5M16 8.5l4 3.5-4 3.5M13.6 5l-3.2 14"/></symbol>
+<symbol id="i-plug" viewBox="0 0 24 24"><path d="M9 3v5.5M15 3v5.5"/><path d="M6.5 8.5h11V12a5.5 5.5 0 0 1-11 0V8.5Z"/><path d="M12 17.5V21"/></symbol>
+<symbol id="i-file" viewBox="0 0 24 24"><path d="M14 3H7.5A2.5 2.5 0 0 0 5 5.5v13A2.5 2.5 0 0 0 7.5 21h9a2.5 2.5 0 0 0 2.5-2.5V8l-5-5Z"/><path d="M14 3v5h5"/></symbol>
+<symbol id="i-network" viewBox="0 0 24 24"><circle cx="5.5" cy="6" r="2.5"/><circle cx="5.5" cy="18" r="2.5"/><circle cx="18.5" cy="12" r="2.5"/><path d="m7.9 7.2 8.2 3.7M7.9 16.8l8.2-3.7"/></symbol>
+<symbol id="i-vars" viewBox="0 0 24 24"><path d="M7.5 4c-2.6 4.4-2.6 11.6 0 16M16.5 4c2.6 4.4 2.6 11.6 0 16"/><path d="m10 9.5 4 5M14 9.5l-4 5"/></symbol>
+<symbol id="i-copy" viewBox="0 0 24 24"><rect x="8.5" y="8.5" width="12" height="12" rx="2.2"/><path d="M15.5 8.5v-2a2.2 2.2 0 0 0-2.2-2.2H5.7a2.2 2.2 0 0 0-2.2 2.2v7.6a2.2 2.2 0 0 0 2.2 2.2h2"/></symbol>
+<symbol id="i-lock" viewBox="0 0 24 24"><rect x="4.5" y="10" width="15" height="10.5" rx="2.4"/><path d="M8 10V7.2a4 4 0 0 1 8 0V10"/></symbol>
+<symbol id="i-cloud" viewBox="0 0 24 24"><path d="M6.8 19.2h10.6a3.9 3.9 0 0 0 .4-7.8 6.1 6.1 0 0 0-11.7-1.7 3.8 3.8 0 0 0 .7 9.5Z"/></symbol>
+<symbol id="i-eye" viewBox="0 0 24 24"><path d="M2.6 12S6.2 5.8 12 5.8 21.4 12 21.4 12 17.8 18.2 12 18.2 2.6 12 2.6 12Z"/><circle cx="12" cy="12" r="3.1"/></symbol>
+<symbol id="i-zap" viewBox="0 0 24 24"><path d="M13.2 2.5 4.5 14h6.6l-1.3 7.5L19 10h-6.6l.8-7.5Z"/></symbol>
+<symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="3.6"/><path d="M4.8 20.2a7.2 7.2 0 0 1 14.4 0"/></symbol>
+<symbol id="i-branch" viewBox="0 0 24 24"><circle cx="6.5" cy="5.5" r="2.5"/><circle cx="6.5" cy="18.5" r="2.5"/><circle cx="17.5" cy="8.5" r="2.5"/><path d="M6.5 8v8"/><path d="M17.5 11c0 4-4.6 3.2-6.6 5.4"/></symbol>
+<symbol id="i-terraform" viewBox="0 0 24 24"><path d="M1.44 0v7.575l6.561 3.79V3.787zM8.674 4.177v7.575l6.562 3.79V7.966zm6.561 0v7.575l6.562-3.787V.39zM8.674 12.4v7.575L15.236 24v-7.578z"/></symbol>
+</defs></svg>
+<div class="page">
+
+<header>
+  <div class="kicker"><a class="back" href="../">❮ Data &amp; AI Engineering, Simply Explained</a></div>
+  <h1>CI/CD Essentials for Data Engineers</h1>
+  <p class="dek"><strong>CI/CD</strong> is the automation that takes the code you just committed and — without anyone clicking through a checklist by hand — tests it, packages it, and ships it safely to production. It builds the mental model one piece at a time (what <strong>continuous integration</strong>, <strong>delivery</strong> and <strong>deployment</strong> each really mean), then makes it concrete with <strong>GitHub Actions</strong> — runnable workflows you can copy — before covering <strong>environments</strong>, <strong>deployment strategies</strong>, and the parts that matter specifically for <strong>data engineering</strong>: dbt, Airflow, Databricks, data-quality gates, and infrastructure-as-code. Every company wires CI/CD up with a different tool; the <em>concepts</em> here transfer to all of them.</p>
+  <div class="byline">~40 min read · Essentials · Reference</div>
+</header>
+
+<figure class="reveal" style="margin:18px 0 6px;background:radial-gradient(130% 150% at 50% 0%,#16182a 0%,#0d0d13 72%);border:1px solid #23232e;border-radius:16px;padding:10px 10px;overflow:hidden">
+<svg viewBox="0 0 880 190" width="100%" style="display:block" font-family="var(--font)" aria-label="A commit flowing through build, test, staging and production stages of a pipeline">
+  <defs>
+    <linearGradient id="hero-grad" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#A371F7"/><stop offset=".5" stop-color="#2088FF"/><stop offset="1" stop-color="#DB61A2"/>
+    </linearGradient>
+    <marker id="pa" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#4a5163"/></marker>
+  </defs>
+  <!-- the pipeline track -->
+  <line x1="84" y1="84" x2="790" y2="84" stroke="#23232e" stroke-width="2"/>
+  <!-- connecting arrows -->
+  <g stroke="#4a5163" stroke-width="1.5" fill="none">
+    <line x1="100" y1="84" x2="144" y2="84" marker-end="url(#pa)"/>
+    <line x1="266" y1="84" x2="304" y2="84" marker-end="url(#pa)"/>
+    <line x1="426" y1="84" x2="464" y2="84" marker-end="url(#pa)"/>
+    <line x1="596" y1="84" x2="634" y2="84" marker-end="url(#pa)"/>
+  </g>
+  <g font-size="12" text-anchor="middle">
+    <!-- commit -->
+    <circle cx="84" cy="84" r="13" fill="#0d1a2b" stroke="#58A6FF" stroke-width="2.4"/>
+    <circle cx="84" cy="84" r="4" fill="#58A6FF"/>
+    <text x="84" y="124" fill="#58A6FF" font-size="11">commit</text>
+    <text x="84" y="140" fill="#6b7280" font-size="9.5">git push</text>
+    <!-- build -->
+    <rect x="146" y="62" width="120" height="44" rx="10" fill="#1c1230" stroke="#A371F7" stroke-width="1.8"/>
+    <text x="206" y="89" fill="#A371F7">build</text>
+    <text x="206" y="124" fill="#6b7280" font-size="9.5">compile · package</text>
+    <!-- test -->
+    <rect x="306" y="62" width="120" height="44" rx="10" fill="#1a180d" stroke="#D29922" stroke-width="1.8"/>
+    <text x="366" y="89" fill="#D29922">test</text>
+    <text x="366" y="124" fill="#6b7280" font-size="9.5">lint · unit · data</text>
+    <!-- staging -->
+    <rect x="466" y="62" width="130" height="44" rx="10" fill="#1d1526" stroke="#DB61A2" stroke-width="1.8"/>
+    <text x="531" y="89" fill="#DB61A2">staging</text>
+    <text x="531" y="124" fill="#6b7280" font-size="9.5">deploy · verify</text>
+    <!-- prod -->
+    <rect x="636" y="60" width="150" height="48" rx="10" fill="#0d1a2b" stroke="url(#hero-grad)" stroke-width="2.4"/>
+    <text x="711" y="89" fill="#F0A3CE">production</text>
+    <text x="700" y="124" fill="#6b7280" font-size="9.5">released to users</text>
+    <use href="#i-rocket" x="757" y="115" width="11" height="11" fill="none" stroke="#F0A3CE" stroke-width="2.2"/>
+  </g>
+  <!-- travelling particle -->
+  <circle r="4.5" cy="84" fill="#A371F7">
+    <animate attributeName="cx" values="84;711;711" dur="4.6s" repeatCount="indefinite"/>
+    <animate attributeName="opacity" values="0;.95;.95;0;0" keyTimes="0;.06;.72;.82;1" dur="4.6s" repeatCount="indefinite"/>
+  </circle>
+  <text x="440" y="170" font-size="12" fill="#6b7280" text-anchor="middle">one push triggers the whole assembly line — build, test, ship — with no human hand-offs</text>
+</svg>
+</figure>
+
+<div class="tldr reveal">
+  <h4><svg class="ico"><use href="#i-zap"/></svg> The one idea (read this first)</h4>
+  <p style="margin:.2em 0">CI/CD is an <strong>automated assembly line for your code</strong>. The moment you push a commit, a <strong>pipeline</strong> springs to life and runs a fixed series of steps for you: it <strong>builds</strong> the code, <strong>tests</strong> it, and — if everything is green — <strong>ships</strong> it onward, first to a safe staging copy and then to production. <strong>CI</strong> (Continuous Integration) is the front half: every change is automatically merged, built and tested so problems surface in minutes, not weeks. <strong>CD</strong> is the back half: <em>Continuous Delivery</em> keeps a release <em>always ready</em> to ship at the push of a button, while <em>Continuous Deployment</em> goes one step further and ships every green change automatically. Replace "click through a manual checklist" with "a script the computer runs the same way every time" — that's the whole game.</p>
+</div>
+
+<div class="toc reveal">
+  <strong>Contents</strong>
+  <a href="#why"><svg class="ico"><use href="#i-question"/></svg>01 · What CI/CD is &amp; why it exists</a>
+  <a href="#model"><svg class="ico"><use href="#i-layers"/></svg>02 · The mental model: CI, CD &amp; CD</a>
+  <a href="#anatomy"><svg class="ico"><use href="#i-workflow"/></svg>03 · Anatomy of a pipeline</a>
+  <a href="#ci"><svg class="ico"><use href="#i-check"/></svg>04 · Continuous Integration in practice</a>
+  <a href="#cd"><svg class="ico"><use href="#i-rocket"/></svg>05 · Delivery vs Deployment</a>
+  <a href="#gha"><svg class="ico"><use href="#i-terminal"/></svg>06 · GitHub Actions, concretely</a>
+  <a href="#blocks"><svg class="ico"><use href="#i-package"/></svg>07 · Core building blocks</a>
+  <a href="#environments"><svg class="ico"><use href="#i-globe"/></svg>08 · Environments, approvals &amp; promotion</a>
+  <a href="#strategies"><svg class="ico"><use href="#i-repeat"/></svg>09 · Deployment strategies &amp; rollback</a>
+  <a href="#de"><svg class="ico"><use href="#i-database"/></svg>10 · CI/CD for data engineers</a>
+  <a href="#security"><svg class="ico"><use href="#i-shield"/></svg>11 · Security &amp; best practices</a>
+  <a href="#cheatsheet"><svg class="ico"><use href="#i-list"/></svg>12 · Quick-reference cheat sheet</a>
+  <a href="#glossary"><svg class="ico"><use href="#i-book"/></svg>＊ · Glossary</a>
+</div>
+
+<!-- 01 -->
+<h2 id="why" class="reveal"><span class="hico"><svg class="ico"><use href="#i-question"/></svg></span><span class="n">01.</span> What CI/CD is &amp; why it exists</h2>
+<p class="reveal lead">Picture shipping software the old way. Everyone works in isolation for weeks, then on release day someone merges all the branches together (the dreaded "integration"), manually runs the tests, copies files to a server, edits a few configs, restarts the service, and prays. It's slow, it's stressful, and it's where most bugs are born — because every step is done by a tired human, slightly differently each time. <strong>CI/CD replaces that ritual with automation that runs the same way, every single time.</strong></p>
+
+<p class="reveal">The name bundles two related practices:</p>
+<ul class="reveal">
+  <li><strong>CI — Continuous Integration:</strong> developers merge their work into the shared branch <em>frequently</em> (many times a day), and every merge automatically triggers a build and a test run. Integration stops being a scary once-a-month event and becomes a quiet, constant background hum.</li>
+  <li><strong>CD — Continuous Delivery / Deployment:</strong> once the code passes CI, automation takes it the rest of the way — packaging it and releasing it to your environments. "Delivery" keeps it one button-press away; "Deployment" presses the button for you.</li>
+</ul>
+
+<p class="reveal">Concretely, CI/CD buys you four things a manual process can't:</p>
+<ul class="reveal">
+  <li><strong>Fast feedback</strong> — you learn a change is broken within minutes of pushing it, while the code is still fresh in your head, not days later in a release window.</li>
+  <li><strong>Repeatability</strong> — the steps live in a file, so the 500th deploy is identical to the first. No "it worked on my machine," no forgotten manual step.</li>
+  <li><strong>Safety</strong> — automated tests and gates stand between a bad change and your users. Nothing reaches production without passing the same checks.</li>
+  <li><strong>Speed</strong> — small changes flow to production continuously instead of piling up into risky big-bang releases.</li>
+</ul>
+
+<div class="callout cy reveal">
+  <p style="margin:.2em 0"><span class="t"><svg class="ico"><use href="#i-key"/></svg> CI/CD is a <em>practice</em>, not a product</span></p>
+  <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">"CI/CD" describes <em>how a team works</em> — integrate often, automate the path to production. Many tools <em>implement</em> that practice: <strong>GitHub Actions</strong>, GitLab CI, Jenkins, CircleCI, Azure Pipelines, Argo CD. They differ in syntax and features but share the same concepts — triggers, pipelines, stages, jobs, artifacts, environments. Learn the concepts once and you can read any of them. This guide uses <strong>GitHub Actions</strong> for every example because it's free for public repos, lives right next to your code, and is the most common starting point.</p>
+</div>
+
+<div class="callout reveal">
+  <p style="margin:.2em 0"><span class="t"><svg class="ico"><use href="#i-bulb"/></svg> CI/CD sits on top of Git</span></p>
+  <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">Every pipeline is triggered by a <em>Git event</em> — a push, a pull request, a tag. CI/CD is the automation layer that reacts to the workflows you read about in <a href="../git-essentials/">Git Essentials</a>: you open a PR, CI runs the checks, and on merge CD deploys. If branches, merges and pull requests feel shaky, skim that guide first — everything here builds on it.</p>
+</div>
+
+<!-- 02 -->
+<h2 id="model" class="reveal"><span class="hico"><svg class="ico"><use href="#i-layers"/></svg></span><span class="n">02.</span> The mental model: CI, CD &amp; CD</h2>
+<p class="reveal lead">The single biggest source of confusion is that "CD" stands for <em>two different things</em> that build on each other. Get this picture straight and the rest of the guide clicks into place. Think of three <strong>nested</strong> stages, each one wrapping the one before it: Continuous Deployment contains Continuous Delivery, which contains Continuous Integration. (In the diagram below there is only <em>one</em> pipeline, running left to right. The three brackets above it show how much of that pipeline each term covers — each bracket <em>includes</em> everything the one below it covers, and adds one more step.)</p>
+
+<figure class="fig reveal">
+<svg viewBox="0 0 760 286" font-family="var(--font)" aria-label="One pipeline with three brackets above it showing what CI, Continuous Delivery and Continuous Deployment each cover">
+  <defs>
+    <marker id="a2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#A371F7"/></marker>
+  </defs>
+
+  <!-- 3. Continuous Deployment : covers everything -->
+  <rect x="128" y="20" width="596" height="30" rx="8" fill="#0d1a2b" stroke="#DB61A2" stroke-width="1.6"/>
+  <text x="142" y="40" font-size="12" fill="#DB61A2" font-weight="700">3 · Continuous Deployment</text>
+  <text x="338" y="40" font-size="11" fill="#9aa0b4">= Delivery, minus the gate — the tests ARE the gate</text>
+
+  <!-- 2. Continuous Delivery : build → staging, ready to release -->
+  <rect x="128" y="58" width="440" height="30" rx="8" fill="#0f1f2b" stroke="#2088FF" stroke-width="1.6"/>
+  <text x="142" y="78" font-size="12" fill="#A371F7" font-weight="700">2 · Continuous Delivery</text>
+  <text x="316" y="78" font-size="11" fill="#9aa0b4">= CI + always release-ready</text>
+
+  <!-- 1. Continuous Integration : build + test only -->
+  <rect x="128" y="96" width="212" height="30" rx="8" fill="#0d1a2b" stroke="#58A6FF" stroke-width="1.6"/>
+  <text x="142" y="116" font-size="12" fill="#58A6FF" font-weight="700">1 · Continuous Integration</text>
+
+  <!-- ticks dropping from each bracket's right edge down to the pipeline -->
+  <g stroke="#2c2c36" stroke-width="1" stroke-dasharray="3 3">
+    <line x1="128" y1="126" x2="128" y2="150"/>
+    <line x1="340" y1="126" x2="340" y2="150"/>
+    <line x1="568" y1="88" x2="568" y2="150"/>
+    <line x1="724" y1="50" x2="724" y2="150"/>
+  </g>
+
+  <!-- the single pipeline -->
+  <g stroke="#A371F7" stroke-width="1.5" fill="none">
+    <line x1="118" y1="176" x2="138" y2="176" marker-end="url(#a2)"/>
+    <line x1="226" y1="176" x2="244" y2="176" marker-end="url(#a2)"/>
+    <line x1="332" y1="176" x2="350" y2="176" marker-end="url(#a2)"/>
+    <line x1="462" y1="176" x2="474" y2="176" marker-end="url(#a2)"/>
+    <line x1="558" y1="176" x2="578" y2="176" marker-end="url(#a2)"/>
+  </g>
+
+  <g text-anchor="middle">
+    <!-- push / PR -->
+    <rect x="22" y="154" width="94" height="44" rx="9" fill="#1c1c22" stroke="#4a5163"/>
+    <text x="69" y="181" font-size="12" fill="#e7e7ee">push / PR</text>
+    <text x="69" y="218" font-size="9.5" fill="#6b7280">a Git event</text>
+
+    <!-- build -->
+    <rect x="140" y="154" width="86" height="44" rx="9" fill="#0d1a2b" stroke="#58A6FF"/>
+    <text x="183" y="181" font-size="12" fill="#58A6FF">build</text>
+
+    <!-- test -->
+    <rect x="246" y="154" width="86" height="44" rx="9" fill="#0d1a2b" stroke="#58A6FF"/>
+    <text x="289" y="181" font-size="12" fill="#58A6FF">test</text>
+    <text x="236" y="218" font-size="9.5" fill="#6b7280">lint · unit · data tests</text>
+
+    <!-- package + staging -->
+    <rect x="352" y="154" width="110" height="44" rx="9" fill="#0f1f2b" stroke="#2088FF"/>
+    <text x="407" y="175" font-size="11.5" fill="#A371F7">package +</text>
+    <text x="407" y="190" font-size="11.5" fill="#A371F7">deploy staging</text>
+
+    <!-- the human gate -->
+    <path d="M516 146 L558 176 L516 206 L474 176 Z" fill="#241d0f" stroke="#D29922" stroke-dasharray="4 3"/>
+    <text x="516" y="173" font-size="10.5" fill="#D29922">human</text>
+    <text x="516" y="187" font-size="10.5" fill="#D29922">approves?</text>
+    <text x="516" y="228" font-size="9.5" fill="#D29922">kept in 2 · removed in 3</text>
+
+    <!-- production -->
+    <rect x="580" y="154" width="120" height="44" rx="9" fill="#0d1a2b" stroke="#DB61A2"/>
+    <text x="640" y="181" font-size="12" fill="#F0A3CE">production</text>
+    <text x="640" y="218" font-size="9.5" fill="#6b7280">real users</text>
+  </g>
+
+  <text x="380" y="262" text-anchor="middle" font-size="11" fill="#6b7280">CI stops at &quot;does it work?&quot; · Delivery parks it at prod's door · Deployment opens the door itself</text>
+</svg>
+<figcaption>One pipeline, three names. Each term covers everything the one before it does — and adds one more step.</figcaption>
+</figure>
+
+<div class="step reveal"><div class="num-bubble">1</div><div class="body"><strong>Continuous Integration (CI)</strong> — the foundation. On every push or pull request, automatically <em>build</em> the code and <em>run the tests</em>. The goal is a fast, honest answer to one question: "does this change break anything?" CI stops here — it doesn't deploy. Its product is <em>confidence</em> (and usually a tested, packaged build called an <em>artifact</em>).</div></div>
+<div class="step reveal"><div class="num-bubble">2</div><div class="body"><strong>Continuous Delivery (CD)</strong> — CI <em>plus</em> automatically getting that tested build <em>ready to release</em>. It's deployed to staging, verified, and parked at the door of production. The very last step — actually releasing to users — stays a <strong>manual button-press</strong> (often gated by an approval). You <em>could</em> ship at any moment; a human decides <em>when</em>.</div></div>
+<div class="step reveal"><div class="num-bubble">3</div><div class="body"><strong>Continuous Deployment (CD)</strong> — the same pipeline with the last manual gate removed. Every change that passes all the automated checks goes <strong>straight to production, automatically</strong>, no human in the loop. This is only safe with excellent automated testing — the tests <em>are</em> the gate now.</div></div>
+
+<div class="callout cy reveal">
+  <p style="margin:.2em 0"><span class="t"><svg class="ico"><use href="#i-compass"/></svg> The one-line difference between the two CDs</span></p>
+  <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd"><strong>Continuous Delivery</strong> = every change is <em>always ready</em> to deploy, but a person clicks the button. <strong>Continuous Deployment</strong> = every change <em>that passes the tests</em> deploys itself, no button. Delivery keeps a human gate; Deployment replaces that human with trust in the test suite. In practice the same labels can describe a <em>single rung</em> of the ladder, not just the whole pipeline: many data teams auto-ship all the way <em>to staging</em> (Continuous Deployment to staging) but keep a human approval on the final <em>production</em> step (Continuous Delivery to prod).</p>
+</div>
+
+<table class="reveal">
+  <tr><th>Term</th><th>What's automated</th><th>The last step to production is…</th><th>Needs</th></tr>
+  <tr><td><strong>Continuous Integration</strong></td><td>Build + test on every change</td><td>n/a — CI doesn't deploy</td><td>A test suite</td></tr>
+  <tr><td><strong>Continuous Delivery</strong></td><td>CI + deploy to staging, release-ready</td><td>A human clicks "deploy"</td><td>CI + automated deploy + an approval</td></tr>
+  <tr><td><strong>Continuous Deployment</strong></td><td>CI + deploy all the way to prod</td><td>Automatic, on green tests</td><td>Strong tests + monitoring + easy rollback</td></tr>
+</table>
+
+<!-- 03 -->
+<h2 id="anatomy" class="reveal"><span class="hico"><svg class="ico"><use href="#i-workflow"/></svg></span><span class="n">03.</span> Anatomy of a pipeline</h2>
+<p class="reveal lead">Every CI/CD tool, whatever its syntax, is built from the same five nouns. Learn this vocabulary once and you can read a GitHub Actions workflow, a GitLab <code>.gitlab-ci.yml</code>, or a Jenkinsfile without re-learning anything.</p>
+
+<figure class="fig reveal">
+<svg viewBox="0 0 760 424" font-family="var(--font)" aria-label="A trigger fires a pipeline containing two jobs, each a list of steps, with an artifact passed from the first job to the second">
+  <defs>
+    <marker id="a3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#D29922"/></marker>
+    <marker id="a3d" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#A371F7"/></marker>
+  </defs>
+
+  <!-- TRIGGER -->
+  <rect x="22" y="20" width="212" height="38" rx="9" fill="#241d0f" stroke="#D29922" stroke-width="1.6"/>
+  <text x="38" y="44" font-size="11.5" fill="#D29922" font-weight="700">TRIGGER</text>
+  <text x="108" y="44" font-size="11.5" fill="#e7e7ee">push to main</text>
+  <text x="250" y="44" font-size="11" fill="#6b7280">an event happens → it fires the pipeline below</text>
+  <line x1="128" y1="58" x2="128" y2="86" stroke="#D29922" stroke-width="1.5" marker-end="url(#a3)"/>
+
+  <!-- PIPELINE container -->
+  <rect x="22" y="88" width="716" height="300" rx="12" fill="#1c1230" stroke="#A371F7" stroke-width="1.6"/>
+  <text x="40" y="112" font-size="11.5" fill="#A371F7" font-weight="700">PIPELINE</text>
+  <text x="112" y="112" font-size="10.5" fill="#6b7280">one whole run — GitHub Actions calls it a &quot;workflow&quot;</text>
+
+  <!-- JOB 1 -->
+  <rect x="42" y="126" width="300" height="244" rx="10" fill="#0d1a2b" stroke="#58A6FF" stroke-width="1.5"/>
+  <text x="58" y="148" font-size="11.5" fill="#58A6FF" font-weight="700">JOB</text>
+  <text x="98" y="148" font-size="11.5" fill="#e7e7ee">build-and-test</text>
+  <text x="58" y="164" font-size="9.5" fill="#6b7280">on its own fresh machine (a &quot;runner&quot;)</text>
+  <g font-size="11" fill="#d8dcea">
+    <rect x="58" y="174" width="268" height="26" rx="6" fill="#2a1424" stroke="#6E40C9"/><text x="72" y="191">STEP · check out the code</text>
+    <rect x="58" y="206" width="268" height="26" rx="6" fill="#2a1424" stroke="#6E40C9"/><text x="72" y="223">STEP · install dependencies</text>
+    <rect x="58" y="238" width="268" height="26" rx="6" fill="#2a1424" stroke="#6E40C9"/><text x="72" y="255">STEP · run the linter</text>
+    <rect x="58" y="270" width="268" height="26" rx="6" fill="#2a1424" stroke="#6E40C9"/><text x="72" y="287">STEP · run the unit tests</text>
+    <rect x="58" y="302" width="268" height="26" rx="6" fill="#2a1424" stroke="#6E40C9"/><text x="72" y="319">STEP · upload the build</text>
+  </g>
+  <text x="58" y="352" font-size="9.5" fill="#6b7280">steps run top-to-bottom, sharing one filesystem</text>
+
+  <!-- ARTIFACT chip -->
+  <rect x="368" y="222" width="84" height="46" rx="8" fill="#241d0f" stroke="#D29922" stroke-width="1.6"/>
+  <text x="410" y="242" font-size="10.5" fill="#D29922" font-weight="700" text-anchor="middle">ARTIFACT</text>
+  <text x="410" y="257" font-size="9" fill="#9aa0b4" text-anchor="middle">dist/*.whl</text>
+
+  <!-- artifact handoff path: out of step 5, up into job 2's first step -->
+  <path d="M326 315 H 410 V 276" fill="none" stroke="#D29922" stroke-width="1.5" marker-end="url(#a3)"/>
+  <path d="M410 214 V 187 H 468" fill="none" stroke="#D29922" stroke-width="1.5" marker-end="url(#a3)"/>
+  <text x="410" y="298" font-size="9" fill="#6b7280" text-anchor="middle">upload</text>
+  <text x="443" y="176" font-size="9" fill="#6b7280" text-anchor="middle">download</text>
+
+  <!-- JOB 2 -->
+  <rect x="472" y="126" width="246" height="244" rx="10" fill="#0d1a2b" stroke="#58A6FF" stroke-width="1.5"/>
+  <text x="488" y="148" font-size="11.5" fill="#58A6FF" font-weight="700">JOB</text>
+  <text x="528" y="148" font-size="11.5" fill="#e7e7ee">deploy</text>
+  <text x="488" y="164" font-size="9.5" fill="#6b7280">needs: build-and-test</text>
+  <g font-size="11" fill="#d8dcea">
+    <rect x="488" y="174" width="214" height="26" rx="6" fill="#2a1424" stroke="#6E40C9"/><text x="502" y="191">STEP · get the artifact</text>
+    <rect x="488" y="206" width="214" height="26" rx="6" fill="#2a1424" stroke="#6E40C9"/><text x="502" y="223">STEP · ship it to the server</text>
+  </g>
+  <text x="488" y="264" font-size="9.5" fill="#F78166">⚠ a different, clean machine —</text>
+  <text x="488" y="280" font-size="9.5" fill="#F78166">nothing from job 1 survives here,</text>
+  <text x="488" y="296" font-size="9.5" fill="#F78166">which is exactly why artifacts exist.</text>
+  <text x="488" y="352" font-size="9.5" fill="#6b7280">waits for job 1 to pass, then runs</text>
+
+  <text x="380" y="410" text-anchor="middle" font-size="11" fill="#6b7280">a TRIGGER fires a PIPELINE · a pipeline holds JOBS · a job holds STEPS · jobs swap files via ARTIFACTS</text>
+</svg>
+<figcaption>How the pieces nest. Jobs run on separate clean machines — so anything job 1 wants to hand to job 2 must travel as an artifact.</figcaption>
+</figure>
+
+<div class="gloss reveal">
+  <h4>The five nouns of every pipeline</h4>
+  <dl>
+    <dt>Trigger (event)</dt><dd>The thing that <em>starts</em> a pipeline — a push, a pull request, a new tag, a schedule (<strong>cron</strong> — the standard "run on a schedule" syntax, whose five fields mean minute / hour / day-of-month / month / day-of-week), or a manual click. "When X happens, run this."</dd>
+    <dt>Pipeline (workflow)</dt><dd>The whole automated process that runs in response to a trigger — the full assembly line from start to finish. GitHub Actions calls one a <strong>workflow</strong>.</dd>
+    <dt>Stage</dt><dd>A logical phase of the pipeline — e.g. <em>build → test → deploy</em>. Stages run in order; everything in one stage must pass before the next begins. Important: a stage is a <em>conceptual</em> phase, not a structural level — that's why it isn't a box in the diagram above. GitHub Actions has no <code>stage</code> keyword between the pipeline and its jobs; you get the same effect by chaining jobs together with <code>needs</code> (some other tools, like GitLab CI, <em>do</em> have an explicit <code>stages</code> keyword).</dd>
+    <dt>Job</dt><dd>A group of steps that runs together on one fresh virtual machine (a <strong>runner</strong>). Jobs in the same pipeline run <em>in parallel</em> by default, unless you declare a dependency between them. Each job starts from a clean slate.</dd>
+    <dt>Step</dt><dd>A single command or pre-packaged action inside a job — "run <code>pytest</code>," "check out the repo." Steps in a job run top-to-bottom on the same machine, sharing its filesystem.</dd>
+  </dl>
+</div>
+
+<p class="reveal">Two supporting concepts complete the picture:</p>
+<ul class="reveal">
+  <li><strong>Runner</strong> — the machine a job executes on. GitHub gives you fresh, throwaway cloud VMs (Linux/Windows/macOS) for free; you can also register your own (<em>self-hosted runners</em>) for special hardware or private-network access. Because each job gets a <em>clean</em> machine, nothing leaks between jobs — which is why you need artifacts.</li>
+  <li><strong>Artifact</strong> — a file (or folder) produced by one job and handed to another, or kept for download. Since each job starts fresh, an artifact is how a <em>built</em> thing in the "build" job survives to the "deploy" job. Think compiled bundles, test reports, or a <code>.whl</code> Python package.</li>
+</ul>
+
+<div class="callout gd reveal">
+  <p style="margin:.2em 0"><span class="t"><svg class="ico"><use href="#i-warn"/></svg> Each job is an island</span></p>
+  <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">A beginner's classic trap: job A installs something or writes a file, and job B can't find it. That's by design — jobs run on <em>separate, clean</em> machines. To pass data between jobs you must <strong>upload it as an artifact</strong> in A and <strong>download it</strong> in B (or use a cache, or job <code>outputs</code> for small values). Within a <em>single</em> job, though, steps share one filesystem, so file X written in step 1 is right there in step 4.</p>
+</div>
+
+<!-- 04 -->
+<h2 id="ci" class="reveal"><span class="hico"><svg class="ico"><use href="#i-check"/></svg></span><span class="n">04.</span> Continuous Integration in practice</h2>
+<p class="reveal lead">CI is the half you'll set up first and rely on daily. Its job is to answer "is this change safe?" automatically, on every push and every pull request. A good CI run is a stack of cheap-to-expensive checks, ordered so the fastest, most common failures trip first.</p>
+
+<h3 class="reveal">The typical CI stages, fastest first</h3>
+<div class="step reveal"><div class="num-bubble">1</div><div class="body"><strong>Lint &amp; format</strong> — static checks that need no execution: code style, obvious mistakes, formatting. Seconds to run, so they go first and fail fast (<code>ruff</code>, <code>black --check</code>, <code>sqlfluff</code> for SQL).</div></div>
+<div class="step reveal"><div class="num-bubble">2</div><div class="body"><strong>Build / compile</strong> — turn source into a runnable artifact: compile the code, build a <em>Python wheel</em> (a packaged, installable bundle of your Python code) or a <em>Docker image</em> (your code plus everything it needs to run, packed into one portable unit), or <code>dbt compile</code> to confirm every model parses.</div></div>
+<div class="step reveal"><div class="num-bubble">3</div><div class="body"><strong>Unit tests</strong> — fast, isolated tests of individual functions with no external systems. The bulk of your safety net (<code>pytest</code>).</div></div>
+<div class="step reveal"><div class="num-bubble">4</div><div class="body"><strong>Integration / data tests</strong> — slower checks against a real (but disposable) database or a sample dataset: does the whole pipeline run end-to-end? Do the data-quality rules hold?</div></div>
+
+<p class="reveal">Here's that exact ladder as a real GitHub Actions workflow. Don't worry about the syntax yet — <a href="#gha">§06</a> breaks it down line by line. Read it for the <em>shape</em>: a trigger up top, then a job, then steps.</p>
+
+<div class="cb reveal"><span class="lang">.github/workflows/ci.yml</span><pre><span class="c"># A minimal but real CI pipeline for a Python data project</span>
+<span class="k">name</span>: CI
+
+<span class="k">on</span>:                              <span class="c"># ── the TRIGGER ──</span>
+  <span class="k">pull_request</span>:                  <span class="c"># run on every PR…</span>
+  <span class="k">push</span>:
+    <span class="k">branches</span>: [<span class="g">main</span>]               <span class="c"># …and on every push to main</span>
+
+<span class="k">jobs</span>:
+  <span class="k">test</span>:                           <span class="c"># ── one JOB ──</span>
+    <span class="k">runs-on</span>: ubuntu-latest         <span class="c"># a fresh Linux RUNNER</span>
+    <span class="k">steps</span>:                         <span class="c"># ── the STEPS, top to bottom ──</span>
+      - <span class="k">uses</span>: actions/checkout@v4   <span class="c"># 1. pull the repo onto the runner</span>
+      - <span class="k">uses</span>: actions/setup-python@v5
+        <span class="k">with</span>:
+          <span class="k">python-version</span>: <span class="g">"3.12"</span>
+      - <span class="k">run</span>: pip install -r requirements.txt -r requirements-dev.txt
+      - <span class="k">run</span>: ruff check .            <span class="c"># 2. lint   (fastest, fails first)</span>
+      - <span class="k">run</span>: sqlfluff lint models/   <span class="c"># 3. lint the SQL too</span>
+      - <span class="k">run</span>: pytest -q               <span class="c"># 4. unit tests</span></pre></div>
+
+<div class="callout reveal">
+  <p style="margin:.2em 0"><span class="t"><svg class="ico"><use href="#i-code"/></svg> Two bits of YAML to know first</span></p>
+  <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">These files are written in <strong>YAML</strong> — a plain-text format for structured config (indentation shows nesting). Two shorthands trip up beginners: a key with <em>nothing after the colon</em>, like <code>pull_request:</code> above, means "use the defaults" (here: run on any pull request). And a block written over several indented lines is identical to its compact one-line form — <code>with:</code> then an indented <code>python-version: "3.12"</code> means exactly the same as <code>with: { python-version: "3.12" }</code> (you'll see both styles in this guide). Same data, two ways to write it.</p>
+</div>
+
+<div class="callout gr reveal">
+  <p style="margin:.2em 0"><span class="t"><svg class="ico"><use href="#i-check"/></svg> The golden rule of CI: keep <code>main</code> green</span></p>
+  <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">The whole point of CI is that the shared branch <em>always works</em>. Wire CI to run on pull requests, then turn on <strong>branch protection</strong> (a GitHub setting) so a PR <em>cannot be merged</em> until its checks pass. Now a broken change physically can't reach <code>main</code> — the red ✗ blocks the merge button. A green <code>main</code> means anyone can branch off it with confidence.</p>
+</div>
+
+<h3 class="reveal">Why "fast" matters more than it sounds</h3>
+<p class="reveal">CI is only useful if people <em>wait</em> for it. A 2-minute pipeline gets watched; a 40-minute one gets ignored and bypassed. So you optimise relentlessly: run the cheap checks first, run independent jobs in <strong>parallel</strong>, and <strong>cache</strong> slow things like dependency downloads (more on both in <a href="#blocks">§07</a>). The target most teams aim for is "PR feedback in under ten minutes."</p>
+
+<!-- 05 -->
+<h2 id="cd" class="reveal"><span class="hico"><svg class="ico"><use href="#i-rocket"/></svg></span><span class="n">05.</span> Delivery vs Deployment — the back half</h2>
+<p class="reveal lead">Once CI says "this change is good," CD takes over and moves it toward users. The mechanics are the same for both flavours of CD; the only difference is whether a human stands at the final gate. The key new idea here is the <strong>environment ladder</strong>.</p>
+
+<h3 class="reveal">The environment ladder: dev → staging → prod</h3>
+<p class="reveal">You never deploy straight from a laptop to production. Instead a change climbs a ladder of progressively more production-like <strong>environments</strong>, proving itself at each rung before promotion to the next.</p>
+
+<figure class="fig reveal">
+<svg viewBox="0 0 760 320" font-family="var(--font)" aria-label="One artifact built in CI is promoted up a staircase of environments: dev, then staging, then production">
+  <defs>
+    <marker id="a5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#A371F7"/></marker>
+  </defs>
+
+  <!-- built once, in CI -->
+  <rect x="26" y="26" width="180" height="52" rx="10" fill="#0f1f2b" stroke="#2088FF" stroke-width="1.6"/>
+  <text x="116" y="48" font-size="11.5" fill="#A371F7" font-weight="700" text-anchor="middle">CI builds it ONCE</text>
+  <use href="#i-package" x="52" y="57" width="12" height="12" fill="none" stroke="#9aa0b4" stroke-width="2.2"/>
+  <text x="124" y="66" font-size="10.5" fill="#9aa0b4" text-anchor="middle">app-1.4.0.whl</text>
+  <text x="222" y="50" font-size="11" fill="#6b7280">…and that exact package —</text>
+  <text x="222" y="68" font-size="11" fill="#6b7280">never a rebuild — climbs the ladder.</text>
+
+  <!-- drop into dev -->
+  <path d="M116 78 V 196" fill="none" stroke="#2088FF" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#a5)"/>
+
+  <!-- DEV -->
+  <rect x="26" y="200" width="184" height="72" rx="10" fill="#0d1a2b" stroke="#58A6FF" stroke-width="1.6"/>
+  <text x="118" y="226" font-size="13" fill="#58A6FF" font-weight="700" text-anchor="middle">DEV</text>
+  <text x="118" y="245" font-size="10" fill="#9aa0b4" text-anchor="middle">your sandbox</text>
+  <text x="118" y="261" font-size="10" fill="#6b7280" text-anchor="middle">break things freely</text>
+
+  <!-- promote 1 -->
+  <path d="M214 214 L 268 168" fill="none" stroke="#A371F7" stroke-width="1.6" marker-end="url(#a5)"/>
+  <text x="241" y="205" font-size="10" fill="#A371F7" text-anchor="middle">promote</text>
+
+  <!-- STAGING -->
+  <rect x="272" y="144" width="196" height="72" rx="10" fill="#241d0f" stroke="#D29922" stroke-width="1.6"/>
+  <text x="370" y="170" font-size="13" fill="#D29922" font-weight="700" text-anchor="middle">STAGING</text>
+  <text x="370" y="189" font-size="10" fill="#9aa0b4" text-anchor="middle">a faithful prod look-alike</text>
+  <text x="370" y="205" font-size="10" fill="#6b7280" text-anchor="middle">the dress rehearsal</text>
+
+  <!-- promote 2 -->
+  <path d="M472 158 L 526 112" fill="none" stroke="#A371F7" stroke-width="1.6" marker-end="url(#a5)"/>
+  <text x="499" y="149" font-size="10" fill="#A371F7" text-anchor="middle">promote</text>
+
+  <!-- PRODUCTION -->
+  <rect x="530" y="88" width="204" height="72" rx="10" fill="#0d1a2b" stroke="#DB61A2" stroke-width="1.8"/>
+  <text x="632" y="114" font-size="13" fill="#F0A3CE" font-weight="700" text-anchor="middle">PRODUCTION</text>
+  <text x="632" y="133" font-size="10" fill="#9aa0b4" text-anchor="middle">real users, real data</text>
+  <text x="632" y="149" font-size="10" fill="#6b7280" text-anchor="middle">approval gate + monitoring</text>
+
+  <!-- what changes between rungs -->
+  <text x="380" y="292" text-anchor="middle" font-size="10.5" fill="#6b7280">the <tspan fill="#A371F7">artifact</tspan> is identical at every rung — only the <tspan fill="#D29922">config</tspan> changes</text>
+  <text x="380" y="308" text-anchor="middle" font-size="10.5" fill="#6b7280">(db URL, secrets, scale), injected at deploy time</text>
+</svg>
+<figcaption>&quot;Build once, deploy many&quot;: rebuilding per environment can quietly pull in a different dependency — so the thing you tested in staging is no longer the thing that lands in prod.</figcaption>
+</figure>
+
+<ul class="reveal">
+  <li><strong>Dev</strong> — where you and your changes live first. Cheap, disposable, expected to break.</li>
+  <li><strong>Staging</strong> (a.k.a. pre-prod, or UAT — <em>User Acceptance Testing</em>) — a faithful copy of production: same infrastructure, same config shape, ideally a realistic slice of data. The dress rehearsal. If it works here, it should work in prod.</li>
+  <li><strong>Production</strong> — the real thing your users (or downstream data consumers) depend on. Changes arrive here only after passing the lower rungs, and usually behind an approval gate.</li>
+</ul>
+
+<div class="callout cy reveal">
+  <p style="margin:.2em 0"><span class="t"><svg class="ico"><use href="#i-key"/></svg> Build once, deploy many</span></p>
+  <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">A cornerstone principle: produce the deployable <strong>artifact a single time</strong> in CI, then promote <em>that exact artifact</em> through dev → staging → prod. Don't rebuild it for each environment — a rebuild can pull in a newer dependency or a different commit, so the thing you tested in staging isn't the thing that lands in prod. What differs between environments should be <em>configuration</em> (database URLs, credentials, scale), injected at deploy time — never the build itself.</p>
+</div>
+
+<h3 class="reveal">A delivery pipeline, in GitHub Actions</h3>
+<p class="reveal">This workflow shows the back half: after tests pass, deploy to staging automatically, then deploy to production <em>only after a human approves</em> (that's the <code>environment:</code> line, which we'll wire to a required reviewer in <a href="#environments">§08</a>). This is <strong>Continuous Delivery</strong> — auto to staging, human-gated to prod.</p>
+
+<div class="cb reveal"><span class="lang">.github/workflows/deploy.yml</span><pre><span class="k">name</span>: Deploy
+<span class="k">on</span>:
+  <span class="k">push</span>:
+    <span class="k">branches</span>: [<span class="g">main</span>]              <span class="c"># a merge to main starts a release</span>
+
+<span class="k">jobs</span>:
+  <span class="k">deploy-staging</span>:
+    <span class="k">runs-on</span>: ubuntu-latest
+    <span class="k">environment</span>: staging         <span class="c"># auto-deploys, no gate</span>
+    <span class="k">steps</span>:
+      - <span class="k">uses</span>: actions/checkout@v4
+      - <span class="k">run</span>: ./scripts/deploy.sh staging
+
+  <span class="k">deploy-prod</span>:
+    <span class="k">needs</span>: deploy-staging        <span class="c"># ← only after staging succeeds</span>
+    <span class="k">runs-on</span>: ubuntu-latest
+    <span class="k">environment</span>: production      <span class="c"># ← this one REQUIRES a human approval</span>
+    <span class="k">steps</span>:
+      - <span class="k">uses</span>: actions/checkout@v4
+      - <span class="k">run</span>: ./scripts/deploy.sh production</pre></div>
+
+<p class="reveal">To turn this into <strong>Continuous Deployment</strong>, you'd simply remove the approval requirement on the <code>production</code> environment — then a green pipeline ships to prod with no human in the loop. Same file, one setting different. That's how close the two practices really are.</p>
+
+<!-- 06 -->
+<h2 id="gha" class="reveal"><span class="hico"><svg class="ico"><use href="#i-terminal"/></svg></span><span class="n">06.</span> GitHub Actions, concretely</h2>
+<p class="reveal lead">Time to make it real. GitHub Actions is GitHub's built-in CI/CD: you drop YAML files in a special folder, and GitHub runs them in response to repo events. Everything in §§02–05 maps onto a handful of keywords. Here's the whole vocabulary in one place.</p>
+
+<h3 class="reveal">Where workflows live, and the key words</h3>
+<p class="reveal">A <strong>workflow</strong> is a <code>.yml</code> file in <code>.github/workflows/</code>. You can have many — one for CI, one for deploys, one for nightly jobs. Each maps onto the pipeline anatomy from §03:</p>
+
+<table class="reveal">
+  <tr><th>Keyword</th><th>Means</th><th>Maps to (§03)</th></tr>
+  <tr><td><code>name</code></td><td>A human label for the workflow</td><td>the pipeline's name</td></tr>
+  <tr><td><code>on</code></td><td>Which events run it (<code>push</code>, <code>pull_request</code>, <code>schedule</code>, <code>workflow_dispatch</code>…)</td><td><strong>trigger</strong></td></tr>
+  <tr><td><code>jobs</code></td><td>The set of jobs in this workflow</td><td>the <strong>pipeline</strong> body</td></tr>
+  <tr><td><code>runs-on</code></td><td>Which runner OS the job uses</td><td>the <strong>runner</strong></td></tr>
+  <tr><td><code>needs</code></td><td>"Run this job only after that one passes"</td><td><strong>stages</strong> / ordering</td></tr>
+  <tr><td><code>steps</code></td><td>The ordered commands inside a job</td><td><strong>steps</strong></td></tr>
+  <tr><td><code>uses</code></td><td>Run a pre-built, shareable <em>action</em></td><td>a step (reused)</td></tr>
+  <tr><td><code>run</code></td><td>Run a shell command</td><td>a step (custom)</td></tr>
+</table>
+
+<div class="callout cy reveal">
+  <p style="margin:.2em 0"><span class="t"><svg class="ico"><use href="#i-blocks"/></svg> <code>uses</code> vs <code>run</code> — the two kinds of step</span></p>
+  <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">A step either runs a shell command (<code>run: pytest</code>) or pulls in a reusable, community-published building block (<code>uses: actions/checkout@v4</code>). An <strong>action</strong> is packaged automation someone already wrote — checking out code, setting up Python, uploading artifacts, logging into a cloud. They live in the <strong>Marketplace</strong>, and you pin a version with <code>@v4</code>. Think of <code>uses</code> as importing a library and <code>run</code> as writing the code yourself.</p>
+</div>
+
+<h3 class="reveal">A fully annotated workflow</h3>
+<p class="reveal">This one example exercises most of what you'll use day to day — triggers, a build job, a dependent deploy job, an artifact handed between them, and a manual-run option. Read the comments; this is the Rosetta Stone for the rest of the guide.</p>
+
+<div class="cb reveal"><span class="lang">.github/workflows/pipeline.yml</span><pre><span class="k">name</span>: Build, Test &amp; Deploy
+
+<span class="k">on</span>:
+  <span class="k">push</span>:
+    <span class="k">branches</span>: [<span class="g">main</span>]            <span class="c"># merge to main → full pipeline</span>
+  <span class="k">pull_request</span>:                <span class="c"># every PR → build + test (deploy job is skipped, see `if`)</span>
+  <span class="k">workflow_dispatch</span>:           <span class="c"># adds a "Run workflow" button for manual runs</span>
+
+<span class="k">jobs</span>:
+  <span class="c"># ───────────── JOB 1: build &amp; test ─────────────</span>
+  <span class="k">build</span>:
+    <span class="k">runs-on</span>: ubuntu-latest
+    <span class="k">steps</span>:
+      - <span class="k">uses</span>: actions/checkout@v4         <span class="c"># clone the repo onto the runner</span>
+      - <span class="k">uses</span>: actions/setup-python@v5
+        <span class="k">with</span>: { <span class="k">python-version</span>: <span class="g">"3.12"</span> }
+      - <span class="k">run</span>: pip install -r requirements.txt
+      - <span class="k">run</span>: pytest -q                      <span class="c"># test</span>
+      - <span class="k">run</span>: python -m build                 <span class="c"># produce dist/*.whl</span>
+      - <span class="k">uses</span>: actions/upload-artifact@v4    <span class="c"># save the build for the next job</span>
+        <span class="k">with</span>:
+          <span class="k">name</span>: package
+          <span class="k">path</span>: dist/
+
+  <span class="c"># ───────────── JOB 2: deploy (only on main) ─────────────</span>
+  <span class="k">deploy</span>:
+    <span class="k">needs</span>: build                          <span class="c"># wait for build to pass</span>
+    <span class="k">if</span>: github.ref == <span class="g">'refs/heads/main'</span>   <span class="c"># skip on PRs; deploy only from main</span>
+    <span class="k">runs-on</span>: ubuntu-latest
+    <span class="k">environment</span>: production              <span class="c"># attaches approval + prod secrets (set up in Settings → §08)</span>
+    <span class="k">steps</span>:
+      - <span class="k">uses</span>: actions/download-artifact@v4  <span class="c"># grab the package built in job 1</span>
+        <span class="k">with</span>: { <span class="k">name</span>: package, <span class="k">path</span>: dist/ }
+      - <span class="k">run</span>: ./scripts/deploy.sh
+        <span class="k">env</span>:
+          <span class="k">API_TOKEN</span>: ${{ secrets.PROD_API_TOKEN }}  <span class="c"># injected, never hard-coded</span></pre></div>
+
+<div class="callout reveal">
+  <p style="margin:.2em 0"><span class="t"><svg class="ico"><use href="#i-bulb"/></svg> Reading <code>${{ ... }}</code></span></p>
+  <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">The <code>${{ }}</code> braces are GitHub Actions <strong>expressions</strong> — values filled in at run time. <code>${{ secrets.PROD_API_TOKEN }}</code> pulls a stored secret; <code>${{ github.ref }}</code> is the branch/tag that triggered the run; <code>${{ matrix.python }}</code> (next section) is the current matrix value. Anywhere you see them, read "look this up when the pipeline runs."</p>
+  <p style="margin:.6em 0 0;font-size:14.5px;color:#cdd0dd">One exception that looks like a typo but isn't: inside an <code>if:</code> you'll see the value written <em>without</em> braces — <code>if: github.ref == 'refs/heads/main'</code> above. That's because <code>if:</code> is <em>always</em> evaluated as an expression, so the <code>${{ }}</code> is optional there. Everywhere else, keep the braces.</p>
+</div>
+
+<!-- 07 -->
+<h2 id="blocks" class="reveal"><span class="hico"><svg class="ico"><use href="#i-package"/></svg></span><span class="n">07.</span> Core building blocks</h2>
+<p class="reveal lead">Beyond the basic shape, a handful of features turn a toy workflow into a real one: secrets, variables, the build matrix, caching, artifacts, and reusable workflows. These same ideas exist in every CI/CD tool under different names — learn them here, recognise them everywhere.</p>
+
+<h3 class="reveal">Secrets &amp; variables — never hard-code credentials</h3>
+<p class="reveal">Pipelines need passwords, API tokens, and cloud keys — but those must <strong>never</strong> appear in your YAML (it's in Git, readable by all). Instead you store them in the repo's encrypted <strong>Secrets</strong> store (Settings → Secrets and variables) and reference them by name. GitHub masks them in logs automatically. Non-secret config (a region, a warehouse name) goes in <strong>Variables</strong> alongside.</p>
+<div class="cb reveal"><span class="lang">using secrets &amp; variables</span><pre><span class="k">steps</span>:
+  - <span class="k">run</span>: dbt run --target prod
+    <span class="k">env</span>:
+      <span class="k">DBT_PASSWORD</span>: ${{ secrets.DBT_PROD_PASSWORD }}   <span class="c"># encrypted secret</span>
+      <span class="k">SNOWFLAKE_ACCOUNT</span>: ${{ vars.SNOWFLAKE_ACCOUNT }}  <span class="c"># non-secret variable</span></pre></div>
+
+<h3 class="reveal">The build matrix — test many versions at once</h3>
+<p class="reveal">A <strong>matrix</strong> runs the same job across a grid of values — Python 3.11 <em>and</em> 3.12, on Linux <em>and</em> macOS — all in parallel, each on its own runner. One block of YAML fans out into many runs.</p>
+<div class="cb reveal"><span class="lang">matrix strategy</span><pre><span class="k">jobs</span>:
+  <span class="k">test</span>:
+    <span class="k">runs-on</span>: ${{ matrix.os }}
+    <span class="k">strategy</span>:
+      <span class="k">matrix</span>:
+        <span class="k">os</span>: [ubuntu-latest, macos-latest]
+        <span class="k">python</span>: [<span class="g">"3.11"</span>, <span class="g">"3.12"</span>]      <span class="c"># 2 × 2 = 4 parallel runs</span>
+    <span class="k">steps</span>:
+      - <span class="k">uses</span>: actions/checkout@v4
+      - <span class="k">uses</span>: actions/setup-python@v5
+        <span class="k">with</span>: { <span class="k">python-version</span>: ${{ matrix.python }} }
+      - <span class="k">run</span>: pytest -q</pre></div>
+
+<h3 class="reveal">Caching — don't re-download the world every run</h3>
+<p class="reveal">Installing dependencies from scratch on every run is slow. A <strong>cache</strong> saves a folder (your package downloads) keyed by a <em>fingerprint</em> (a "hash") of your dependency file, and restores it next time — cutting minutes off each run. The key is the clever bit: when <code>requirements.txt</code> changes, its fingerprint changes, so the cache misses and rebuilds; otherwise it's a fast hit. (Many teams skip this hand-rolled step and use <code>setup-python</code>'s built-in <code>cache: pip</code> instead — same idea, less YAML.)</p>
+<div class="cb reveal"><span class="lang">dependency caching</span><pre>- <span class="k">uses</span>: actions/cache@v4
+  <span class="k">with</span>:
+    <span class="k">path</span>: ~/.cache/pip
+    <span class="k">key</span>: pip-${{ hashFiles('requirements.txt') }}   <span class="c"># changes only when deps change</span></pre></div>
+
+<h3 class="reveal">Reusable workflows — write the pipeline once</h3>
+<p class="reveal">When ten repos need the same deploy steps, you don't copy-paste YAML ten times. A <strong>reusable workflow</strong> is a pipeline that other workflows <em>call</em>, passing in parameters — the same don't-repeat-yourself (<strong>DRY</strong>) instinct as a function. Define it once with <code>workflow_call</code>, then <code>uses:</code> it from anywhere.</p>
+<div class="cb reveal"><span class="lang">calling a reusable workflow</span><pre><span class="k">jobs</span>:
+  <span class="k">deploy</span>:
+    <span class="k">uses</span>: my-org/ci-templates/.github/workflows/deploy.yml@v1
+    <span class="k">with</span>:
+      <span class="k">environment</span>: production
+    <span class="k">secrets</span>: inherit</pre></div>
+<p class="reveal">Notice this <code>deploy</code> job has <em>no</em> <code>runs-on</code> and <em>no</em> <code>steps</code> — that's the one case where a job breaks the usual shape. When a job <code>uses:</code> a whole reusable workflow, that called workflow <em>becomes</em> the job's body (it brings its own jobs and runners). <code>with:</code> passes parameters into it, and <code>secrets: inherit</code> forwards your secrets so the called workflow can use them. So <code>uses:</code> works at two levels: on a <em>step</em> (run one action) and, as here, on a <em>job</em> (run an entire workflow).</p>
+
+<div class="callout gr reveal">
+  <p style="margin:.2em 0"><span class="t"><svg class="ico"><use href="#i-check"/></svg> These map onto any CI/CD tool</span></p>
+  <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">Secrets, matrices, caching and reusable templates aren't GitHub inventions — GitLab CI has <code>variables</code>, <code>parallel:matrix</code>, <code>cache:</code> and <code>include:</code>; Jenkins has Credentials, matrix builds, and shared libraries. The keywords change; the concepts are identical. That's why understanding <em>these blocks</em> matters more than memorising one tool's syntax.</p>
+</div>
+
+<!-- 08 -->
+<h2 id="environments" class="reveal"><span class="hico"><svg class="ico"><use href="#i-globe"/></svg></span><span class="n">08.</span> Environments, approvals &amp; promotion</h2>
+<p class="reveal lead">§05 introduced the dev → staging → prod ladder as a concept. Here's how you actually <em>enforce</em> it — so that production can't be touched without the right checks and the right people signing off.</p>
+
+<h3 class="reveal">GitHub Environments — gates around the dangerous steps</h3>
+<p class="reveal">A GitHub <strong>Environment</strong> (Settings → Environments) is a named target — <code>staging</code>, <code>production</code> — that you attach to a job with <code>environment:</code>. Attaching it unlocks three powerful guardrails:</p>
+<ul class="reveal">
+  <li><strong>Required reviewers</strong> — the job <em>pauses</em> and waits for a named person/team to click "Approve" before it runs. This is the manual gate that makes Continuous <em>Delivery</em> what it is.</li>
+  <li><strong>Environment secrets</strong> — secrets scoped to just that environment. Your <code>production</code> database password is only readable by jobs targeting <code>production</code>, so a staging job can't accidentally (or maliciously) touch prod.</li>
+  <li><strong>Protection rules</strong> — extra conditions like "only the <code>main</code> branch may deploy here" or a wait timer before deploy.</li>
+</ul>
+
+<figure class="fig reveal">
+<svg viewBox="0 0 760 268" font-family="var(--font)" aria-label="A merge to main deploys to staging automatically, runs a smoke test, then waits for a required reviewer before deploying to production">
+  <defs>
+    <marker id="a8" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#A371F7"/></marker>
+    <marker id="a8g" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#58A6FF"/></marker>
+    <marker id="a8r" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#D29922"/></marker>
+  </defs>
+
+  <!-- flow arrows -->
+  <g stroke="#A371F7" stroke-width="1.5" fill="none">
+    <line x1="130" y1="96" x2="152" y2="96" marker-end="url(#a8)"/>
+    <line x1="278" y1="96" x2="300" y2="96" marker-end="url(#a8)"/>
+    <line x1="410" y1="96" x2="436" y2="96" marker-end="url(#a8)"/>
+  </g>
+
+  <!-- merge -->
+  <rect x="18" y="72" width="112" height="48" rx="9" fill="#1c1c22" stroke="#4a5163"/>
+  <text x="74" y="94" font-size="11.5" fill="#e7e7ee" text-anchor="middle">merge to</text>
+  <text x="74" y="110" font-size="11.5" fill="#e7e7ee" text-anchor="middle">main</text>
+
+  <!-- staging -->
+  <rect x="152" y="72" width="126" height="48" rx="9" fill="#241d0f" stroke="#D29922"/>
+  <text x="215" y="94" font-size="11.5" fill="#D29922" text-anchor="middle">deploy → staging</text>
+  <text x="215" y="110" font-size="10" fill="#9aa0b4" text-anchor="middle">automatic, no gate</text>
+
+  <!-- smoke test -->
+  <rect x="300" y="72" width="110" height="48" rx="9" fill="#0d1a2b" stroke="#58A6FF"/>
+  <text x="355" y="94" font-size="11.5" fill="#58A6FF" text-anchor="middle">smoke test</text>
+  <text x="355" y="110" font-size="10" fill="#9aa0b4" text-anchor="middle">is it alive?</text>
+
+  <!-- the gate -->
+  <path d="M496 46 L556 96 L496 146 L436 96 Z" fill="#1d1526" stroke="#DB61A2" stroke-width="1.6"/>
+  <text x="496" y="85" font-size="10.5" fill="#F0A3CE" text-anchor="middle">required</text>
+  <text x="496" y="99" font-size="10.5" fill="#F0A3CE" text-anchor="middle">reviewer</text>
+  <text x="496" y="113" font-size="10.5" fill="#F0A3CE" text-anchor="middle">approves?</text>
+
+  <!-- yes → production -->
+  <line x1="556" y1="96" x2="592" y2="96" stroke="#58A6FF" stroke-width="1.5" marker-end="url(#a8g)"/>
+  <text x="574" y="86" font-size="10" fill="#58A6FF" text-anchor="middle">yes</text>
+  <rect x="596" y="70" width="146" height="52" rx="9" fill="#0d1a2b" stroke="#DB61A2" stroke-width="1.8"/>
+  <text x="669" y="92" font-size="11.5" fill="#F0A3CE" text-anchor="middle">deploy → production</text>
+  <use href="#i-lock" x="608" y="101" width="10" height="10" fill="none" stroke="#6b7280" stroke-width="2.4"/>
+  <text x="622" y="109" font-size="9" fill="#6b7280">prod secrets unlocked</text>
+
+  <!-- no / wait → paused -->
+  <path d="M496 146 V 186" fill="none" stroke="#D29922" stroke-width="1.5" marker-end="url(#a8r)"/>
+  <text x="508" y="170" font-size="10" fill="#D29922" text-anchor="start">no / not yet</text>
+  <rect x="404" y="190" width="184" height="48" rx="9" fill="#241d0f" stroke="#D29922" stroke-dasharray="4 3"/>
+  <text x="496" y="212" font-size="11.5" fill="#D29922" text-anchor="middle">the job just waits</text>
+  <text x="496" y="228" font-size="10" fill="#9aa0b4" text-anchor="middle">paused until a human clicks</text>
+
+  <text x="120" y="216" font-size="10.5" fill="#6b7280" text-anchor="middle">nothing reaches prod</text>
+  <text x="120" y="232" font-size="10.5" fill="#6b7280" text-anchor="middle">without passing every rung</text>
+</svg>
+<figcaption>The approval gate is what makes this Continuous <em>Delivery</em>. Delete the required reviewer and the same pipeline becomes Continuous <em>Deployment</em>.</figcaption>
+</figure>
+<p class="reveal">("Smoke test staging" above means a quick sanity check that the deployment is alive and basically working — a query returns, the job starts — <em>not</em> the full test suite. The name comes from electronics: power it on and see if it smokes.)</p>
+
+<div class="callout cy reveal">
+  <p style="margin:.2em 0"><span class="t"><svg class="ico"><use href="#i-search"/></svg> Promotion = redeploy the <em>same</em> artifact, higher up</span></p>
+  <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">"Promoting" a build means taking the artifact that already passed in staging and deploying that <em>identical</em> artifact to production — only the configuration (which database, which secrets) changes. You're not rebuilding or re-testing the code; you're re-pointing the proven package at a higher environment. This is the practical payoff of "build once, deploy many" from §05.</p>
+</div>
+
+<h3 class="reveal">Mapping branches to environments</h3>
+<p class="reveal">Most teams tie <em>which branch you merge into</em> to <em>which environment gets the deploy</em> — exactly the GitLab-Flow idea from <a href="../git-essentials/#workflows">Git Essentials §08</a>. A common shape:</p>
+<table class="reveal">
+  <tr><th>Branch / event</th><th>Triggers</th><th>Deploys to</th></tr>
+  <tr><td>open / update a PR</td><td>CI: lint + test (no deploy)</td><td>nothing (or a temporary throwaway "preview" environment spun up just for that PR)</td></tr>
+  <tr><td>merge to <code>main</code></td><td>CD: build → staging → (approval) → prod</td><td>staging, then production</td></tr>
+  <tr><td>push a tag <code>v1.4.0</code></td><td>release pipeline</td><td>production, tagged release</td></tr>
+</table>
+
+<!-- 09 -->
+<h2 id="strategies" class="reveal"><span class="hico"><svg class="ico"><use href="#i-repeat"/></svg></span><span class="n">09.</span> Deployment strategies &amp; rollback</h2>
+<p class="reveal lead">"Deploy to production" hides a choice: <em>how</em> do you swap the old version for the new one without breaking things for users mid-request? These strategies trade simplicity against safety. They matter most for always-on services and APIs; data pipelines borrow the same ideas (see §10).</p>
+<div class="callout cy reveal">
+  <p style="margin:.2em 0"><span class="t"><svg class="ico"><use href="#i-book"/></svg> Quick vocab for this section</span></p>
+  <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">This section borrows web-service language. An <strong>instance</strong> is one running copy of your service (you often run several at once to share the load). <strong>Traffic</strong> is the stream of incoming user requests. <strong>Cutting over</strong> means switching users from the old version to the new. Data pipelines don't serve live requests, but §10 shows how each idea still maps onto tables and partitions.</p>
+</div>
+
+<table class="reveal">
+  <tr><th>Strategy</th><th>How it works</th><th>Trade-off</th></tr>
+  <tr><td><strong>Recreate</strong></td><td>Stop the old version entirely, then start the new one</td><td>Simplest, but causes <em>downtime</em> during the swap</td></tr>
+  <tr><td><strong>Rolling</strong></td><td>Replace instances a few at a time until all run the new version</td><td>No downtime; but old &amp; new run side-by-side briefly</td></tr>
+  <tr><td><strong>Blue-green</strong></td><td>Stand up a full <em>second</em> copy (green), switch all traffic at once, keep the old (blue) as instant rollback</td><td>Zero-downtime &amp; instant rollback; costs double infra during the switch</td></tr>
+  <tr><td><strong>Canary</strong></td><td>Send a small % of traffic to the new version, watch metrics, then ramp to 100%</td><td>Safest — limits the "blast radius" (how many users a bad change can hurt); needs good monitoring &amp; traffic routing</td></tr>
+</table>
+
+<figure class="fig reveal">
+<svg viewBox="0 0 760 336" font-family="var(--font)" aria-label="Blue-green flips all traffic at once and keeps the old version warm; canary sends a small percentage of traffic to the new version first, then ramps up">
+  <defs>
+    <marker id="a9" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#58A6FF"/></marker>
+    <marker id="a9c" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5.5" markerHeight="5.5" orient="auto"><path d="M0 0L10 5L0 10z" fill="#4a5163"/></marker>
+  </defs>
+
+  <!-- ─────────── BLUE-GREEN ─────────── -->
+  <rect x="14" y="14" width="732" height="146" rx="12" fill="#0d1a2b" stroke="#23232e"/>
+  <text x="32" y="40" font-size="12.5" fill="#58A6FF" font-weight="700">BLUE-GREEN</text>
+  <text x="132" y="40" font-size="11" fill="#6b7280">flip everyone at once · keep the old copy warm as an instant undo</text>
+
+  <!-- before -->
+  <text x="30" y="102" font-size="10.5" fill="#9aa0b4">users</text>
+  <path d="M72 98 L 106 86" fill="none" stroke="#58A6FF" stroke-width="1.5" marker-end="url(#a9)"/>
+  <rect x="110" y="62" width="120" height="32" rx="7" fill="#0d1a2b" stroke="#58A6FF" stroke-width="1.6"/>
+  <text x="170" y="83" font-size="11.5" fill="#58A6FF" text-anchor="middle">BLUE · v1</text>
+  <text x="238" y="83" font-size="10" fill="#3FB950">◀ live</text>
+  <rect x="110" y="106" width="120" height="32" rx="7" fill="#0d1f14" stroke="#3FB950" stroke-width="1.6" stroke-dasharray="4 3"/>
+  <text x="170" y="127" font-size="11.5" fill="#3FB950" text-anchor="middle">GREEN · v2</text>
+  <text x="238" y="127" font-size="10" fill="#6b7280">◀ warming up</text>
+
+  <!-- flip -->
+  <line x1="316" y1="100" x2="374" y2="100" stroke="#58A6FF" stroke-width="2" marker-end="url(#a9)"/>
+  <text x="345" y="90" font-size="11" fill="#58A6FF" text-anchor="middle">flip</text>
+
+  <!-- after -->
+  <text x="386" y="102" font-size="10.5" fill="#9aa0b4">users</text>
+  <path d="M428 98 L 462 86" fill="none" stroke="#58A6FF" stroke-width="1.5" marker-end="url(#a9)"/>
+  <rect x="466" y="62" width="120" height="32" rx="7" fill="#0d1f14" stroke="#3FB950" stroke-width="1.6"/>
+  <text x="526" y="83" font-size="11.5" fill="#3FB950" text-anchor="middle">GREEN · v2</text>
+  <text x="594" y="83" font-size="10" fill="#3FB950">◀ now live — all traffic</text>
+  <rect x="466" y="106" width="120" height="32" rx="7" fill="#0d1a2b" stroke="#58A6FF" stroke-width="1.6" stroke-dasharray="4 3"/>
+  <text x="526" y="127" font-size="11.5" fill="#58A6FF" text-anchor="middle">BLUE · v1</text>
+  <text x="594" y="127" font-size="9.5" fill="#6b7280">◀ standby = instant undo</text>
+
+  <!-- ─────────── CANARY ─────────── -->
+  <rect x="14" y="174" width="732" height="148" rx="12" fill="#0d1a2b" stroke="#23232e"/>
+  <text x="32" y="200" font-size="12.5" fill="#DB61A2" font-weight="700">CANARY</text>
+  <text x="102" y="200" font-size="11" fill="#6b7280">let a trickle taste v2 first · watch the metrics · then ramp up</text>
+
+  <!-- phase 1 -->
+  <text x="30" y="262" font-size="10.5" fill="#9aa0b4">users</text>
+  <circle cx="76" cy="258" r="3.5" fill="#4a5163"/>
+  <path d="M80 256 L 96 236" fill="none" stroke="#4a5163" stroke-width="1.4" marker-end="url(#a9c)"/>
+  <path d="M80 261 L 96 280" fill="none" stroke="#4a5163" stroke-width="1.4" marker-end="url(#a9c)"/>
+  <rect x="100" y="216" width="104" height="30" rx="7" fill="#0d1a2b" stroke="#58A6FF"/>
+  <text x="152" y="236" font-size="11" fill="#58A6FF" text-anchor="middle">v1 · 95%</text>
+  <rect x="100" y="272" width="104" height="30" rx="7" fill="#1d1526" stroke="#DB61A2"/>
+  <text x="152" y="292" font-size="11" fill="#F0A3CE" text-anchor="middle">v2 · 5%</text>
+
+  <line x1="212" y1="259" x2="242" y2="259" stroke="#4a5163" stroke-width="1.4" marker-end="url(#a9c)"/>
+  <text x="227" y="250" font-size="9" fill="#6b7280" text-anchor="middle">watch</text>
+
+  <!-- phase 2 -->
+  <rect x="248" y="216" width="104" height="30" rx="7" fill="#0d1a2b" stroke="#58A6FF"/>
+  <text x="300" y="236" font-size="11" fill="#58A6FF" text-anchor="middle">v1 · 50%</text>
+  <rect x="248" y="272" width="104" height="30" rx="7" fill="#1d1526" stroke="#DB61A2"/>
+  <text x="300" y="292" font-size="11" fill="#F0A3CE" text-anchor="middle">v2 · 50%</text>
+
+  <line x1="360" y1="259" x2="390" y2="259" stroke="#4a5163" stroke-width="1.4" marker-end="url(#a9c)"/>
+  <text x="375" y="250" font-size="9" fill="#6b7280" text-anchor="middle">watch</text>
+
+  <!-- phase 3 -->
+  <rect x="396" y="244" width="118" height="30" rx="7" fill="#1d1526" stroke="#DB61A2" stroke-width="1.8"/>
+  <text x="455" y="264" font-size="11" fill="#F0A3CE" text-anchor="middle">v2 · 100%</text>
+
+  <!-- rollback note -->
+  <text x="540" y="248" font-size="10.5" fill="#F78166">if the metrics dip at any point:</text>
+  <text x="540" y="266" font-size="10.5" fill="#9aa0b4">send 100% straight back to v1 —</text>
+  <text x="540" y="282" font-size="10.5" fill="#9aa0b4">only a few users ever saw v2.</text>
+</svg>
+<figcaption>Blue-green trades double infrastructure for an instant undo. Canary trades a slower rollout for a smaller blast radius — but only works if you're watching the metrics.</figcaption>
+</figure>
+
+<div class="callout gd reveal">
+  <p style="margin:.2em 0"><span class="t"><svg class="ico"><use href="#i-warn"/></svg> The deploy isn't done until you can undo it</span></p>
+  <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">Every deploy strategy is really about one thing: <strong>making a bad release reversible, fast</strong>. Always know your <strong>rollback</strong> path <em>before</em> you ship — redeploy the previous artifact, flip blue-green back, or drain the canary (stop sending live traffic to the new version). Pair it with <strong>monitoring</strong> (error rates, latency, data-freshness) so you <em>notice</em> a bad release in minutes. A deploy you can't cleanly undo is a gamble, not a process.</p>
+</div>
+
+<!-- 10 -->
+<h2 id="de" class="reveal"><span class="hico"><svg class="ico"><use href="#i-database"/></svg></span><span class="n">10.</span> CI/CD for data engineers</h2>
+<p class="reveal lead">Everything so far applies to any software. But data work has its own shape — SQL and transformation logic instead of an app, <em>data</em> that can be wrong even when the <em>code</em> is right, orchestrators to deploy, and stateful schemas that can't just be "replaced." This section covers what's different, with the tools you'll actually meet.</p>
+
+<h3 class="reveal">What you're really deploying in a data project</h3>
+<p class="reveal">Not a web server — but plenty that benefits from a pipeline: <strong>dbt models</strong> and SQL, <strong>Airflow/Dagster DAGs</strong>, <strong>Spark/Python jobs</strong>, <strong>Databricks notebooks &amp; jobs</strong>, pipeline <strong>config (YAML)</strong>, and the <strong>infrastructure</strong> itself (Terraform). CI tests that this code is correct; CD ships it to your orchestrator or warehouse.</p>
+
+<h3 class="reveal">The extra gate data adds: data-quality checks</h3>
+<p class="reveal">Here's the twist unique to data: <strong>your code can be flawless and your output still wrong</strong> — because the <em>data</em> changed. A schema drifted, a source went stale, nulls crept into a key column. So data CI/CD adds a gate ordinary software doesn't have: <strong>data-quality (DQ) tests</strong> that assert things about the <em>data</em>, not just the code (row counts, uniqueness, freshness, accepted values). Tools: <strong>dbt tests</strong>, <strong>Great Expectations</strong>, <strong>Soda</strong>.</p>
+
+<div class="callout cy reveal">
+  <p style="margin:.2em 0"><span class="t"><svg class="ico"><use href="#i-key"/></svg> Two questions, two kinds of test</span></p>
+  <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd"><strong>Code tests</strong> (unit tests, plus <code>dbt parse</code> to catch broken model references) ask <em>"is the logic correct?"</em> and run in CI on every PR. <strong>Data-quality tests</strong> (dbt tests, Great Expectations) ask <em>"is the data correct?"</em> and run both in CI (against sample/staging data) <em>and</em> in production after each pipeline run, because data can break long after the code stopped changing. A mature data pipeline gates on both.</p>
+</div>
+
+<h3 class="reveal">dbt: the model citizen of data CI/CD</h3>
+<p class="reveal"><strong>dbt</strong> was built for this workflow. On a PR, CI builds your changed models into a <em>temporary schema</em> and runs their tests; on merge, CD deploys to production. The trick that keeps CI fast on a big project is dbt's <strong>state comparison</strong>, usually called <strong>Slim CI</strong>: you hand dbt the <code>manifest.json</code> (a metadata file describing all your models) from the last <em>production</em> run via <code>--state</code>, and <code>state:modified+</code> then selects only the models that changed since then, <em>plus</em> their downstream children. <code>--defer</code> tells dbt to point any <em>unchanged</em> upstream <code>ref()</code>s at the existing production tables, so it doesn't rebuild your whole project. The catch: you must fetch that production manifest <em>before</em> the run — without it, <code>state:</code> has nothing to compare against and dbt errors out.</p>
+<div class="cb reveal"><span class="lang">.github/workflows/dbt-ci.yml</span><pre><span class="k">name</span>: dbt CI
+<span class="k">on</span>: { <span class="k">pull_request</span>: {} }       <span class="c"># `{}` = "with default settings"</span>
+
+<span class="k">jobs</span>:
+  <span class="k">build</span>:
+    <span class="k">runs-on</span>: ubuntu-latest
+    <span class="k">steps</span>:
+      - <span class="k">uses</span>: actions/checkout@v4
+      - <span class="k">run</span>: pip install dbt-snowflake
+      - <span class="k">run</span>: dbt deps
+      - <span class="k">run</span>: dbt parse                  <span class="c"># fast syntax/ref check, builds this branch's manifest</span>
+      <span class="c"># Slim CI: fetch the manifest from the last PRODUCTION run so dbt</span>
+      <span class="c"># knows what changed (from blob storage, or the prod job's artifact):</span>
+      - <span class="k">run</span>: aws s3 cp s3://my-dbt-state/prod/manifest.json prod-state/manifest.json
+      - <span class="k">run</span>: &gt;
+          dbt build --select state:modified+
+          --defer --state prod-state/      <span class="c"># run + TEST only changed models &amp; children</span>
+        <span class="k">env</span>:
+          <span class="k">DBT_PASSWORD</span>: ${{ secrets.DBT_CI_PASSWORD }}</pre></div>
+<p class="reveal"><code>dbt build</code> runs models <em>and</em> their tests together, so a uniqueness or not-null test failing turns the PR red — a data bug caught before merge. (The throwaway per-PR schema is configured in your <code>profiles.yml</code> target, not by a magic environment variable; many teams also drop that schema automatically when the PR closes.)</p>
+
+<h3 class="reveal">Deploying orchestrators &amp; Databricks</h3>
+<p class="reveal">For the deploy half, CD pushes your code to wherever the pipelines run:</p>
+<ul class="reveal">
+  <li><strong>Airflow</strong> — CD syncs your DAG files to where the scheduler reads them: a helper process that continuously pulls them from Git (a "git-sync sidecar"), an S3/GCS bucket, or an API upload. (A <strong>DAG</strong> — Directed Acyclic Graph — is just the dependency graph that defines one scheduled pipeline.)</li>
+  <li><strong>Dagster</strong> — works differently: CD deploys a <em>code location</em> (your pipelines packaged and run as a self-contained service that the Dagster instance connects to) — not loose files dropped in a folder. Either way, merge to <code>main</code> → the new pipelines go live.</li>
+  <li><strong>Databricks</strong> — <strong>Asset Bundles</strong> (the <code>databricks bundle</code> CLI) package notebooks, jobs and config and deploy them per-environment from CI. It's the "build once, deploy many" pattern, Databricks-flavoured.</li>
+</ul>
+<div class="cb reveal"><span class="lang">deploying a Databricks Asset Bundle</span><pre><span class="k">jobs</span>:
+  <span class="k">deploy</span>:
+    <span class="k">runs-on</span>: ubuntu-latest
+    <span class="k">environment</span>: production
+    <span class="k">steps</span>:
+      - <span class="k">uses</span>: actions/checkout@v4
+      - <span class="k">uses</span>: databricks/setup-cli@v0.221.1   <span class="c"># pin to a release tag, never @main (see §11)</span>
+      - <span class="k">run</span>: databricks bundle deploy -t prod    <span class="c"># push jobs &amp; notebooks to the prod workspace</span>
+        <span class="k">env</span>:
+          <span class="k">DATABRICKS_TOKEN</span>: ${{ secrets.DATABRICKS_PROD_TOKEN }}</pre></div>
+
+<h3 class="reveal">Infrastructure-as-code &amp; schema migrations</h3>
+<p class="reveal">Two more data-flavoured deploys worth knowing:</p>
+<ul class="reveal">
+  <li><strong>Infrastructure-as-code (Terraform)</strong> — your warehouses, buckets and clusters defined as code. CI runs <code>terraform plan</code> on a PR (a dry-run preview of the change); CD runs <code>terraform apply</code> on merge. Now infra changes get reviewed like any code. (Fully unpacked in <a href="../terraform-essentials/">Terraform Essentials</a>.)</li>
+  <li><strong>Schema migrations</strong> — unlike app code, a database has <em>state</em> you can't just replace. Migration tools (Alembic, Flyway) apply <em>ordered, incremental</em> changes — "add column X," "backfill Y" — so prod tables evolve safely. CD runs the pending migrations as a deploy step. Always design them <strong>backward-compatible</strong> (add before you remove) so a rollback doesn't strand the data. (Note: dbt <em>snapshots</em> are a different thing — they track historical changes in your <em>data</em>, not changes to the table structure — i.e. <em>DDL</em>, the SQL that adds or alters tables — so they don't belong in this list.)</li>
+</ul>
+
+<div class="callout gd reveal">
+  <p style="margin:.2em 0"><span class="t"><svg class="ico"><use href="#i-warn"/></svg> Rolling back <em>data</em> is not like rolling back <em>code</em></span></p>
+  <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">Redeploying yesterday's code is easy. Un-writing the rows a bad pipeline already wrote is not — the side effects live in tables, not in the artifact. So data CD leans on extra safety nets: write to a <em>staging table</em> and swap only after DQ checks pass, use <strong>Delta Lake time travel</strong> to restore a table to a prior version, make jobs <strong>idempotent</strong> (re-running gives the same result), and keep migrations backward-compatible. Plan the data rollback, not just the code rollback.</p>
+  <p style="margin:.6em 0 0;font-size:14.5px;color:#cdd0dd">This is how the §09 strategies map onto data: that <strong>staging-table-swap <em>is</em> your blue-green deploy</strong> (build the new table beside the old one, flip to it only once DQ passes), running a transform on yesterday's partition first is your <strong>canary</strong>, and an <strong>idempotent re-run of the previous version</strong> is your rollback. Same ideas as services — just expressed in tables and partitions instead of web traffic.</p>
+</div>
+
+<div class="callout cy reveal">
+  <p style="margin:.2em 0"><span class="t"><svg class="ico"><use href="#i-key"/></svg> The data engineer's CI/CD checklist</span></p>
+  <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">On every PR: <strong>lint SQL</strong>, <strong>compile/parse</strong> the pipeline, <strong>run unit tests</strong>, and <strong>build + test changed models</strong> in a throwaway schema. On merge: <strong>deploy</strong> to the target environment and <strong>run DQ checks</strong> after the pipeline finishes. Across all of it: keep <em>code</em> in Git, keep <em>data</em> in data tools (see <a href="../git-essentials/#de">Git Essentials §10</a>), and gate on both code <em>and</em> data correctness.</p>
+</div>
+
+<!-- 11 -->
+<h2 id="security" class="reveal"><span class="hico"><svg class="ico"><use href="#i-shield"/></svg></span><span class="n">11.</span> Security &amp; best practices</h2>
+<p class="reveal lead">A pipeline has the keys to your production systems, so it's a juicy target. A few habits keep it safe — and keep it fast and maintainable.</p>
+
+<h3 class="reveal">Security</h3>
+<ul class="reveal">
+  <li><strong>Never hard-code secrets.</strong> Use the encrypted secrets store and <code>${{ secrets.* }}</code>. A token pasted into YAML is a token leaked to everyone with repo access — and it's in Git history forever.</li>
+  <li><strong>Prefer OIDC over long-lived keys.</strong> Instead of storing a permanent cloud key in your secrets, have the cloud hand the pipeline a <em>temporary</em> credential that's valid only for that one run and expires automatically — so there's nothing permanent sitting around to be stolen. The standard that makes this work is <strong>OIDC</strong> (OpenID Connect), which lets AWS/GCP/Azure verify "yes, this really is a run of <em>your</em> workflow" before issuing that short-lived credential. This is the modern best practice for cloud deploys.</li>
+  <li><strong>Least privilege.</strong> Give each workflow the minimum it needs. Set <code>permissions:</code> explicitly, scope prod secrets to the <code>production</code> environment, and don't let PR pipelines touch prod.</li>
+  <li><strong>Pin your actions.</strong> <code>uses: actions/checkout@v4</code> (or a full commit SHA) — never an unpinned <code>@main</code> you don't control, which could change under you.</li>
+  <li><strong>Be careful with PRs from forks.</strong> A <em>fork</em> is an outside copy of your repo that anyone can make to propose changes. Untrusted contributors opening PRs from their fork shouldn't get your secrets; GitHub withholds them from fork PRs by default — keep it that way.</li>
+</ul>
+
+<h3 class="reveal">General best practices</h3>
+<ul class="reveal">
+  <li><strong>Keep pipelines fast.</strong> Fast feedback gets used; slow feedback gets bypassed. Parallelise jobs, cache dependencies, run only what changed.</li>
+  <li><strong>Fail fast, fail loud.</strong> Cheapest checks first; surface failures clearly; notify the right channel on a broken <code>main</code>.</li>
+  <li><strong>Make every run reproducible.</strong> Pin versions, build once, inject config. The pipeline should behave identically today and in six months.</li>
+  <li><strong>Make jobs idempotent.</strong> Re-running a deploy (or a data job) should be safe and give the same result — vital when you retry a flaky step.</li>
+  <li><strong>Keep workflows in version control &amp; review them.</strong> Pipeline YAML is code: PR it, review it, and treat a change to your deploy process with the same care as a change to production logic.</li>
+  <li><strong>Monitor what you ship.</strong> CD without monitoring is shipping blind. Watch error rates, latency, and (for data) freshness and volume, so you catch a bad release before your users do.</li>
+</ul>
+
+<!-- 12 -->
+<h2 id="cheatsheet" class="reveal"><span class="hico"><svg class="ico"><use href="#i-list"/></svg></span><span class="n">12.</span> Quick-reference cheat sheet</h2>
+<p class="reveal">The GitHub Actions keywords and patterns you'll reach for most, in one place.</p>
+<div class="cb reveal"><span class="lang">github actions — keep this handy</span><pre><span class="c">── triggers (on:) ────────────────────────────────────</span>
+<span class="k">on</span>: { <span class="k">push</span>: { <span class="k">branches</span>: [main] } }   <span class="c"># on push to a branch</span>
+<span class="k">on</span>: { <span class="k">pull_request</span>: {} }              <span class="c"># on every PR</span>
+<span class="k">on</span>: { <span class="k">schedule</span>: [{ <span class="k">cron</span>: <span class="g">"0 6 * * *"</span> }] }  <span class="c"># nightly at 06:00 UTC</span>
+<span class="k">on</span>: { <span class="k">workflow_dispatch</span>: {} }         <span class="c"># a manual "Run workflow" button</span>
+<span class="k">on</span>: { <span class="k">push</span>: { <span class="k">tags</span>: [<span class="g">"v*"</span>] } }       <span class="c"># on a version tag</span>
+
+<span class="c">── job structure ─────────────────────────────────────</span>
+<span class="k">jobs</span>:
+  <span class="k">my-job</span>:
+    <span class="k">runs-on</span>: ubuntu-latest            <span class="c"># the runner</span>
+    <span class="k">needs</span>: [other-job]                 <span class="c"># run after other-job passes</span>
+    <span class="k">if</span>: github.ref == <span class="g">'refs/heads/main'</span>  <span class="c"># conditional run</span>
+    <span class="k">environment</span>: production           <span class="c"># attach approval + scoped secrets</span>
+    <span class="k">steps</span>: [ ... ]
+
+<span class="c">── steps: uses (action) vs run (shell) ───────────────</span>
+- <span class="k">uses</span>: actions/checkout@v4          <span class="c"># a reusable action, version-pinned</span>
+- <span class="k">run</span>: pytest -q                      <span class="c"># a shell command</span>
+
+<span class="c">── common actions ────────────────────────────────────</span>
+actions/checkout@v4                   <span class="c"># clone the repo</span>
+actions/setup-python@v5               <span class="c"># install Python</span>
+actions/cache@v4                      <span class="c"># cache deps between runs</span>
+actions/upload-artifact@v4            <span class="c"># save a file for later jobs</span>
+actions/download-artifact@v4          <span class="c"># retrieve it</span>
+
+<span class="c">── secrets, vars &amp; expressions ───────────────────────</span>
+${{ secrets.MY_TOKEN }}               <span class="c"># encrypted secret</span>
+${{ vars.MY_SETTING }}                <span class="c"># non-secret variable</span>
+${{ github.ref }}                     <span class="c"># the triggering branch/tag</span>
+${{ matrix.python }}                  <span class="c"># current matrix value</span>
+
+<span class="c">── matrix &amp; caching ──────────────────────────────────</span>
+<span class="k">strategy</span>: { <span class="k">matrix</span>: { <span class="k">python</span>: [<span class="g">"3.11"</span>, <span class="g">"3.12"</span>] } }
+<span class="k">uses</span>: actions/cache@v4  <span class="k">with</span>: { <span class="k">key</span>: pip-${{ hashFiles('requirements.txt') }} }
+
+<span class="c">── the data engineer's PR pipeline ───────────────────</span>
+ruff check . &amp;&amp; sqlfluff lint models/   <span class="c"># lint code + SQL</span>
+pytest -q                               <span class="c"># unit tests</span>
+dbt build --select state:modified+ --defer --state prod/  <span class="c"># Slim CI: build+TEST changed models</span>
+<span class="c"># on merge → deploy (bundle/terraform/dag-sync) → run DQ checks</span></pre></div>
+
+<!-- glossary -->
+<h2 id="glossary" class="reveal"><span class="hico"><svg class="ico"><use href="#i-book"/></svg></span><span class="n">＊</span> Glossary</h2>
+<div class="gloss reveal">
+  <dl>
+    <dt>CI — Continuous Integration</dt><dd>Automatically building and testing every change as it's merged, so integration problems surface in minutes.</dd>
+    <dt>CD — Continuous Delivery</dt><dd>CI plus keeping a tested build <em>always ready</em> to release; a human clicks to deploy to production.</dd>
+    <dt>CD — Continuous Deployment</dt><dd>The same, but the final release to production is automatic on green tests — no human gate.</dd>
+    <dt>Pipeline / workflow</dt><dd>The whole automated process triggered by an event; in GitHub Actions, a <code>.yml</code> file in <code>.github/workflows/</code>.</dd>
+    <dt>Trigger / event</dt><dd>What starts a pipeline — a push, pull request, tag, schedule (cron), or manual run.</dd>
+    <dt>Stage</dt><dd>A logical phase (build → test → deploy); each must pass before the next begins.</dd>
+    <dt>Job</dt><dd>A group of steps running together on one fresh runner; jobs run in parallel unless linked by <code>needs</code>.</dd>
+    <dt>Step</dt><dd>A single command (<code>run</code>) or reusable action (<code>uses</code>) inside a job.</dd>
+    <dt>Runner</dt><dd>The machine a job executes on — GitHub-hosted (fresh cloud VM) or self-hosted.</dd>
+    <dt>Action</dt><dd>A pre-built, shareable step from the Marketplace, pinned to a version (e.g. <code>actions/checkout@v4</code>).</dd>
+    <dt>Artifact</dt><dd>A file produced by one job and passed to another or kept for download (a build, a test report).</dd>
+    <dt>Environment</dt><dd>A named deploy target (<code>staging</code>, <code>production</code>) with its own scoped secrets and approval rules.</dd>
+    <dt>Promotion</dt><dd>Deploying the <em>same</em> already-tested artifact to a higher environment, changing only config.</dd>
+    <dt>Secret</dt><dd>An encrypted credential referenced as <code>${{ secrets.NAME }}</code>, masked in logs, never hard-coded.</dd>
+    <dt>Matrix</dt><dd>Running one job across a grid of values (OS, language version) in parallel.</dd>
+    <dt>Cache</dt><dd>A saved folder (e.g. dependency downloads) restored on later runs to save time.</dd>
+    <dt>Branch protection</dt><dd>A rule that blocks merging a PR until its required checks pass — how CI keeps <code>main</code> green.</dd>
+    <dt>Blue-green deploy</dt><dd>Run two full copies; switch all traffic to the new one at once, keep the old for instant rollback.</dd>
+    <dt>Canary deploy</dt><dd>Route a small % of traffic to the new version, watch metrics, then ramp to 100%.</dd>
+    <dt>Rollback</dt><dd>Reverting to the previous known-good version after a bad release.</dd>
+    <dt>OIDC</dt><dd>Short-lived, verifiable identity a pipeline presents to a cloud, replacing long-lived stored keys.</dd>
+    <dt>Idempotent</dt><dd>An operation that gives the same result no matter how many times it's run — safe to retry.</dd>
+    <dt>Data-quality (DQ) test</dt><dd>An assertion about the <em>data</em> (row counts, uniqueness, freshness), not the code — e.g. dbt tests, Great Expectations.</dd>
+    <dt>Infrastructure-as-code (IaC)</dt><dd>Defining infrastructure (warehouses, buckets) as reviewable code, e.g. Terraform; <code>plan</code> previews, <code>apply</code> ships.</dd>
+    <dt>Schema migration</dt><dd>An ordered, incremental change to a stateful database (add column, backfill), applied as a deploy step.</dd>
+    <dt>YAML</dt><dd>A plain-text format for structured config (indentation shows nesting); the language GitHub Actions workflows are written in.</dd>
+    <dt>Cron</dt><dd>The standard syntax for "run on a schedule"; its five fields are minute / hour / day-of-month / month / day-of-week.</dd>
+    <dt>Smoke test</dt><dd>A quick sanity check that a deployment is alive and basically working — not the full test suite.</dd>
+    <dt>Fork</dt><dd>An outside copy of a repo that anyone can make to propose changes; PRs from forks are withheld your secrets by default.</dd>
+    <dt>DAG</dt><dd>Directed Acyclic Graph — the dependency graph that defines a scheduled pipeline (Airflow/Dagster).</dd>
+    <dt>Slim CI (dbt)</dt><dd>Building &amp; testing only the models that changed since production, using <code>state:modified+</code> with <code>--defer --state</code> and the prod <code>manifest.json</code>.</dd>
+    <dt>DRY</dt><dd>"Don't Repeat Yourself" — the instinct to factor shared steps into one place (e.g. a reusable workflow).</dd>
+  </dl>
+</div>
+
+<hr/>
+<p class="reveal" style="color:#9aa0b4;font-size:14.5px">That's the full toolkit: what CI/CD is, the three stages, the anatomy of a pipeline, GitHub Actions end to end, environments and promotion, deployment strategies, and the data-engineering specifics. Bookmark <a href="#cheatsheet">§12</a> as your day-to-day cheat sheet — and remember the through-line: <em>integrate often, build once, gate on both code and data, and never ship what you can't roll back.</em></p>
+
+<footer class="reveal">
+  <p>Part of <a href="../">Data &amp; AI Engineering, Simply Explained</a> · an <a href="../#essentials">Essentials</a> reference.</p>
+  <p>© 2026 · Hao Tieu · Built with GitHub Pages · <a href="https://linkedin.com/in/haotieu2001" target="_blank" rel="noopener">LinkedIn</a></p>
+</footer>
+</div><!-- /page -->
+
+<script>
+  var bar=document.getElementById('bar');
+  function prog(){var h=document.documentElement;var s=h.scrollTop||document.body.scrollTop;var max=(h.scrollHeight-h.clientHeight)||1;bar.style.width=(s/max*100)+'%';}
+  document.addEventListener('scroll',prog,{passive:true});prog();
+  function revealAll(){document.querySelectorAll('.reveal').forEach(function(el){el.classList.add('in');});}
+  try{
+    var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}});},{threshold:.06});
+    document.querySelectorAll('.reveal').forEach(function(el){io.observe(el);});
+    window.addEventListener('load',function(){setTimeout(revealAll,1500);});
+    setTimeout(revealAll,2200);
+  }catch(e){revealAll();}
+</script>
+</body>
+</html>

@@ -1,0 +1,899 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Product Sense for Senior Engineers</title>
+<meta name="description" content="A complete, engineer-first guide to the Product Sense interview: what it is, who asks it, the five-dimension rubric, the 35-minute spine, metrics and guardrails, the metric-drop playbook, the new AI product sense round, and how senior data and AI engineers should prepare."/>
+<meta property="og:type" content="article"/>
+<meta property="og:title" content="Product Sense for Senior Engineers"/>
+<meta property="og:description" content="The interview round that decides senior offers — the rubric, the spine, the metric-drop playbook, and the new AI product sense round."/>
+<meta property="og:url" content="https://haotieu2001.github.io/product-sense/"/>
+<meta property="og:image" content="https://haotieu2001.github.io/og-cover.png"/>
+<meta property="og:image:width" content="1200"/>
+<meta property="og:image:height" content="630"/>
+<meta property="og:image:alt" content="Product Sense for Senior Engineers"/>
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:title" content="Product Sense for Senior Engineers"/>
+<meta name="twitter:description" content="The interview round that decides senior offers — rubric, spine, metrics, and the new AI product sense round."/>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+<style>
+  :root{
+    --bg:#1A1A1A; --bg2:#121212; --ink:#F1F1F1; --muted:#9aa0b4; --dim:#666666;
+    --blue2:#7C5CFF; --cyan:#28B9FF; --cyan2:#7AD1FF; --purple:#7C5CFF; --magenta2:#C08CFF;
+    --grad:linear-gradient(90deg,#28B9FF,#7C5CFF,#C08CFF);
+    --font:"JetBrainsMono Nerd Font","JetBrains Mono","Symbols Nerd Font",ui-monospace,"Cascadia Code",Menlo,Consolas,monospace;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font);font-size:16px;line-height:1.85;-webkit-font-smoothing:antialiased}
+  #bar{position:fixed;top:0;left:0;height:3px;width:0;z-index:50;background:var(--grad);box-shadow:0 0 12px #7C5CFF99;transition:width .1s linear}
+  .page{max-width:880px;margin:0 auto;padding:0 24px}
+  header{padding:30px 0 6px}
+  .kicker{font-size:13px;color:var(--dim)}
+  .back{color:var(--cyan2);text-decoration:none;font-size:13px;border-bottom:1px dotted #7AD1FF66}
+  h1{font-size:clamp(28px,4.6vw,46px);line-height:1.12;margin:12px 0 12px;font-weight:800;
+     background:var(--grad);background-size:220% auto;-webkit-background-clip:text;background-clip:text;color:transparent;animation:sheen 9s linear infinite}
+  @keyframes sheen{to{background-position:220% center}}
+  .dek{color:var(--muted);font-size:17px}
+  .byline{margin-top:14px;font-size:13px;color:var(--dim)}
+  h2{font-size:clamp(21px,3.2vw,28px);margin:52px 0 6px;font-weight:800;line-height:1.22;padding-top:14px;border-top:1px solid #23232e;display:flex;align-items:center;gap:10px}
+  h2 .n{color:var(--blue2)}
+  h3{font-size:18px;margin:28px 0 4px;color:#fff;font-weight:700}
+  h4{font-size:15px;margin:20px 0 4px;color:var(--cyan2);font-weight:700}
+  p,li{color:#dcdce4}
+  .lead{font-size:18px;color:#e7e7ee}
+  a{color:var(--cyan2)}
+  hr{border:0;border-top:1px solid #2c2c36;margin:36px 0}
+  code{font-family:var(--font);background:#23232b;color:#7AD1FF;padding:1px 6px;border-radius:5px;font-size:.88em;border:1px solid #2f2f3a}
+  .cb{margin:16px 0}
+  .cb .lang{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:#9aa0b4;background:#1b1b24;border:1px solid #2c2c36;border-bottom:none;border-radius:9px 9px 0 0;padding:4px 12px}
+  pre{margin:0;background:#0d0d13;border:1px solid #23232e;border-radius:0 10px 10px 10px;padding:14px 16px;overflow-x:auto;
+      font-family:var(--font);font-size:13px;line-height:1.65;color:#d8dcea;white-space:pre}
+  pre .c{color:#6b7280}
+  pre .o{color:#9aa0b4}
+  pre .k{color:#7AD1FF}
+  pre .g{color:#22D3EE}
+  pre .y{color:#f0b429}
+  pre .r{color:#FF6B8B}
+  pre .p{color:#C08CFF}
+  .callout{border-left:4px solid var(--blue2);background:#161233;border-radius:0 12px 12px 0;padding:14px 18px;margin:22px 0}
+  .callout.cy{border-color:var(--cyan);background:#0e2740}
+  .callout.mg{border-color:var(--magenta2);background:#1e1533}
+  .callout.gd{border-color:#f0b429;background:#241d0f}
+  .callout.gr{border-color:#22D3EE;background:#0A2028}
+  .callout .t{color:var(--cyan2);font-weight:800}
+  .callout.gd .t{color:#f0b429}
+  .callout.gr .t{color:#22D3EE}
+  .callout.mg .t{color:var(--magenta2)}
+  .tldr{border:1px solid #3a3170;background:linear-gradient(180deg,#161233,#121212);border-radius:16px;padding:20px 24px;margin:26px 0}
+  .tldr h4{margin:0 0 8px;font-size:13px;letter-spacing:.2em;text-transform:uppercase;color:var(--cyan2)}
+  .gloss{border:1px solid #2c2c36;background:#141419;border-radius:14px;padding:18px 22px;margin:24px 0}
+  .gloss h4{margin:0 0 6px;color:#fff;font-size:15px}
+  .gloss dl{margin:0;font-size:13.5px}
+  .gloss dt{color:var(--cyan2);font-weight:700;margin-top:9px}
+  .gloss dd{margin:1px 0 0;color:#cdd0dd}
+  .toc{background:#15151b;border:1px solid #2c2c36;border-radius:14px;padding:16px 22px;margin:24px 0;column-count:2;column-gap:28px}
+  .toc a{display:block;color:var(--cyan2);text-decoration:none;font-size:13.5px;line-height:1.9;break-inside:avoid}
+  .toc a:hover{color:#fff}
+  .toc>strong{column-span:all;display:block;margin-bottom:6px;color:#fff}
+  table{border-collapse:collapse;width:100%;font-size:13.5px;margin:16px 0}
+  th,td{border:1px solid #2c2c36;padding:8px 11px;text-align:left;vertical-align:top}
+  th{background:#1d1d27;color:#fff}
+  tr:nth-child(even) td{background:#161620}
+  .ico{width:1em;height:1em;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+  .ico.f{fill:currentColor;stroke:none}
+  .hico{display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;border-radius:11px;flex:0 0 36px;
+        background:#161233;border:1px solid #3a3170;color:var(--cyan2)}
+  .hico .ico{width:19px;height:19px}
+  .toc a .ico{width:14px;height:14px;margin-right:9px;vertical-align:-2px;opacity:.85}
+  .callout .t .ico{width:16px;height:16px;vertical-align:-3px;margin-right:5px}
+  .tldr h4 .ico,.gloss h4 .ico{width:15px;height:15px;vertical-align:-2px;margin-right:6px}
+  .stack{margin-top:14px;display:flex;align-items:center;gap:10px;font-size:12px;color:var(--dim);flex-wrap:wrap}
+  .chip{display:inline-flex;align-items:center;gap:7px;padding:5px 12px;border-radius:999px;
+        border:1px solid #3a3170;background:#161233;color:#C08CFF;font-weight:700;font-size:11.5px}
+  .chip .ico{width:14px;height:14px}
+  figure.fig{margin:26px 0;text-align:center}
+  figure.fig svg{display:block;width:100%;max-width:100%;height:auto;border:1px solid #23232e;border-radius:14px;background:#0d0d13}
+  figure.fig figcaption{font-size:12.5px;color:var(--muted);margin-top:9px;font-style:italic;line-height:1.6}
+  .step{display:flex;gap:12px;align-items:flex-start;margin:14px 0}
+  .step .num-bubble{flex:0 0 28px;height:28px;border-radius:50%;background:var(--grad);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:#fff;margin-top:2px}
+  .step .body{flex:1}
+  footer{border-top:1px solid #23232e;margin-top:50px;padding:24px 0 90px;color:var(--dim);font-size:13px}
+  footer a{color:var(--cyan2)}
+  .js .reveal{opacity:0;transform:translateY(16px);transition:opacity .6s ease,transform .6s ease}
+  .js .reveal.in{opacity:1;transform:none}
+  @media (prefers-reduced-motion:reduce){.js .reveal{opacity:1;transform:none}}
+</style>
+<script>document.documentElement.classList.add('js');</script>
+</head>
+<body>
+<div id="bar"></div>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs>
+<symbol id="i-question" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.6 9.4a2.5 2.5 0 1 1 3.3 2.4c-.6.2-.9.8-.9 1.5v.6M12 17h.01"/></symbol>
+<symbol id="i-layers" viewBox="0 0 24 24"><path d="m12 3 9 4.8-9 4.8-9-4.8 9-4.8Z"/><path d="m3 12.6 9 4.8 9-4.8M3 17.2l9 4.8 9-4.8"/></symbol>
+<symbol id="i-workflow" viewBox="0 0 24 24"><rect x="3" y="3.5" width="7" height="6" rx="1.5"/><rect x="14" y="14.5" width="7" height="6" rx="1.5"/><path d="M6.5 9.5v5a3 3 0 0 0 3 3H14"/></symbol>
+<symbol id="i-check" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="m8 12.2 2.7 2.7L16.2 9"/></symbol>
+<symbol id="i-rocket" viewBox="0 0 24 24"><path d="M12 2.5c3 2.6 4.8 6.4 4.8 10.6L12 16.4l-4.8-3.3C7.2 8.9 9 5.1 12 2.5Z"/><path d="M7.2 13.1 4.4 15v4.2l3-1.9M16.8 13.1l2.8 1.9v4.2l-3-1.9M12 19.5v2.3"/><circle cx="12" cy="10" r="1.7"/></symbol>
+<symbol id="i-terminal" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2.5"/><path d="m7.5 9.5 3 2.5-3 2.5M13.5 15h3.5"/></symbol>
+<symbol id="i-package" viewBox="0 0 24 24"><path d="m12 2.8 8.2 4.6v9.2L12 21.2l-8.2-4.6V7.4L12 2.8Z"/><path d="m3.8 7.4 8.2 4.6 8.2-4.6M12 12v9.2"/></symbol>
+<symbol id="i-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18"/><path d="M12 3c2.4 2.7 3.6 5.7 3.6 9s-1.2 6.3-3.6 9c-2.4-2.7-3.6-5.7-3.6-9S9.6 5.7 12 3Z"/></symbol>
+<symbol id="i-repeat" viewBox="0 0 24 24"><path d="M16.5 3 20 6.5 16.5 10"/><path d="M4 11.5V9a2.5 2.5 0 0 1 2.5-2.5H20"/><path d="M7.5 21 4 17.5 7.5 14"/><path d="M20 12.5V15a2.5 2.5 0 0 1-2.5 2.5H4"/></symbol>
+<symbol id="i-database" viewBox="0 0 24 24"><ellipse cx="12" cy="6" rx="8" ry="3.2"/><path d="M4 6v12c0 1.8 3.6 3.2 8 3.2s8-1.4 8-3.2V6"/><path d="M20 12c0 1.8-3.6 3.2-8 3.2S4 13.8 4 12"/></symbol>
+<symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 2.8 4.8 5.6v5.2c0 4.4 3 8.4 7.2 9.8 4.2-1.4 7.2-5.4 7.2-9.8V5.6L12 2.8Z"/><path d="m9 12 2.2 2.2L15.4 10"/></symbol>
+<symbol id="i-list" viewBox="0 0 24 24"><path d="M8.5 6h12M8.5 12h12M8.5 18h12M3.7 6h.01M3.7 12h.01M3.7 18h.01"/></symbol>
+<symbol id="i-book" viewBox="0 0 24 24"><path d="M4 5a3 3 0 0 1 3-3h13v18H7a3 3 0 0 0-3 3V5Z"/><path d="M8 2v18"/></symbol>
+<symbol id="i-key" viewBox="0 0 24 24"><circle cx="7.2" cy="16.3" r="3.4"/><path d="m9.7 13.9 9.6-9.6M16.6 6.9l2.3 2.3M14 9.5l2.3 2.3"/></symbol>
+<symbol id="i-bulb" viewBox="0 0 24 24"><path d="M9.2 18h5.6M10.4 21h3.2"/><path d="M12 3a6 6 0 0 0-3.4 10.9c.5.4.8 1 .8 1.7v.4h5.2v-.4c0-.7.3-1.3.8-1.7A6 6 0 0 0 12 3Z"/></symbol>
+<symbol id="i-warn" viewBox="0 0 24 24"><path d="M12 3.2 2.8 19.6h18.4L12 3.2Z"/><path d="M12 9.5v4.2M12 16.8h.01"/></symbol>
+<symbol id="i-alert" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7.2v5.4M12 16.4h.01"/></symbol>
+<symbol id="i-compass" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="m15.6 8.4-2.1 5.1-5.1 2.1 2.1-5.1 5.1-2.1Z"/></symbol>
+<symbol id="i-blocks" viewBox="0 0 24 24"><rect x="3.5" y="3.5" width="7" height="7" rx="1.6"/><rect x="13.5" y="3.5" width="7" height="7" rx="1.6"/><rect x="3.5" y="13.5" width="7" height="7" rx="1.6"/><rect x="13.5" y="13.5" width="7" height="7" rx="1.6"/></symbol>
+<symbol id="i-search" viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m15.2 15.2 4.3 4.3"/></symbol>
+<symbol id="i-code" viewBox="0 0 24 24"><path d="m8 8.5-4 3.5 4 3.5M16 8.5l4 3.5-4 3.5M13.6 5l-3.2 14"/></symbol>
+<symbol id="i-plug" viewBox="0 0 24 24"><path d="M9 3v5.5M15 3v5.5"/><path d="M6.5 8.5h11V12a5.5 5.5 0 0 1-11 0V8.5Z"/><path d="M12 17.5V21"/></symbol>
+<symbol id="i-file" viewBox="0 0 24 24"><path d="M14 3H7.5A2.5 2.5 0 0 0 5 5.5v13A2.5 2.5 0 0 0 7.5 21h9a2.5 2.5 0 0 0 2.5-2.5V8l-5-5Z"/><path d="M14 3v5h5"/></symbol>
+<symbol id="i-network" viewBox="0 0 24 24"><circle cx="5.5" cy="6" r="2.5"/><circle cx="5.5" cy="18" r="2.5"/><circle cx="18.5" cy="12" r="2.5"/><path d="m7.9 7.2 8.2 3.7M7.9 16.8l8.2-3.7"/></symbol>
+<symbol id="i-disk" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2.5"/><path d="M3 12h18"/><path d="M7 16.5h.01M11 16.5h3"/><path d="M7 7.5h6"/></symbol>
+<symbol id="i-lock" viewBox="0 0 24 24"><rect x="4.5" y="10" width="15" height="10.5" rx="2.4"/><path d="M8 10V7.2a4 4 0 0 1 8 0V10"/></symbol>
+<symbol id="i-cloud" viewBox="0 0 24 24"><path d="M6.8 19.2h10.6a3.9 3.9 0 0 0 .4-7.8 6.1 6.1 0 0 0-11.7-1.7 3.8 3.8 0 0 0 .7 9.5Z"/></symbol>
+<symbol id="i-eye" viewBox="0 0 24 24"><path d="M2.6 12S6.2 5.8 12 5.8 21.4 12 21.4 12 17.8 18.2 12 18.2 2.6 12 2.6 12Z"/><circle cx="12" cy="12" r="3.1"/></symbol>
+<symbol id="i-zap" viewBox="0 0 24 24"><path d="M13.2 2.5 4.5 14h6.6l-1.3 7.5L19 10h-6.6l.8-7.5Z"/></symbol>
+<symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="3.6"/><path d="M4.8 20.2a7.2 7.2 0 0 1 14.4 0"/></symbol>
+</defs></svg>
+<div class="page">
+<header>
+  <div class="kicker"><a class="back" href="../">❮ Data &amp; AI Engineering, Simply Explained</a></div>
+  <h1>Product Sense for Senior Engineers</h1>
+  <p class="dek"><strong>Product sense</strong> is the round that increasingly decides senior offers — and it is no longer only a PM interview. It asks whether you can take a deliberately vague problem and work out <strong>who it is for, what actually hurts them, and what you would ship first</strong>. This is the whole round: the rubric they score you against, the 35-minute structure, the metrics and guardrails, the metric-drop playbook, the new <strong>AI product sense</strong> interview, and what changes if you are a data or AI engineer.</p>
+  <div class="stack">
+    <span class="chip"><svg class="ico"><use href="#i-compass"/></svg> Product Sense</span>
+    <span class="chip" style="color:#7AD1FF;border-color:#2b4a80;background:#0e2740"><svg class="ico"><use href="#i-user"/></svg> Interview prep</span>
+    <span class="chip" style="color:#f0b429;border-color:#3a2f16;background:#241d0f"><svg class="ico"><use href="#i-zap"/></svg> AI rounds</span>
+  </div>
+  <div class="byline">~30 min read · Career · Reference</div>
+</header>
+
+<div class="tldr reveal">
+  <h4><svg class="ico"><use href="#i-key"/></svg> The one idea (read this first)</h4>
+  <p style="margin:0;color:#dcdce4">They are not scoring your idea. They are scoring <strong>how you decide</strong>. So the answer is always the same shape: pick <em>one</em> user, find <em>one</em> real obstacle in their way, ship the <em>smallest</em> thing that removes it, say what you are deliberately <em>not</em> building — and name the number that would prove you wrong. Everything else on this page is detail. If you leave with only one thing, leave with that shape, and the discipline to say it out loud on a clock.</p>
+</div>
+
+<div class="toc reveal">
+  <strong>Contents</strong>
+  <a href="#what"><svg class="ico"><use href="#i-compass"/></svg>01 · What product sense is — &amp; why senior engineers get it</a>
+  <a href="#who"><svg class="ico"><use href="#i-globe"/></svg>02 · Who asks it, and what shape it takes</a>
+  <a href="#rubric"><svg class="ico"><use href="#i-list"/></svg>03 · The five things you are scored on</a>
+  <a href="#types"><svg class="ico"><use href="#i-blocks"/></svg>04 · The five question types</a>
+  <a href="#spine"><svg class="ico"><use href="#i-repeat"/></svg>05 · The spine: how to spend 35 minutes</a>
+  <a href="#frame"><svg class="ico"><use href="#i-question"/></svg>06 · Step 1 · Frame</a>
+  <a href="#mission"><svg class="ico"><use href="#i-rocket"/></svg>07 · Step 2 · Mission</a>
+  <a href="#segment"><svg class="ico"><use href="#i-user"/></svg>08 · Step 3 · Segment</a>
+  <a href="#pain"><svg class="ico"><use href="#i-search"/></svg>09 · Step 4 · Pain</a>
+  <a href="#solution"><svg class="ico"><use href="#i-bulb"/></svg>10 · Step 5 · Solutions &amp; V1</a>
+  <a href="#metrics"><svg class="ico"><use href="#i-database"/></svg>11 · Metrics: north star &amp; guardrails</a>
+  <a href="#drop"><svg class="ico"><use href="#i-eye"/></svg>12 · The metric-drop playbook</a>
+  <a href="#ai"><svg class="ico"><use href="#i-zap"/></svg>13 · AI product sense</a>
+  <a href="#level"><svg class="ico"><use href="#i-layers"/></svg>14 · What "senior" actually sounds like</a>
+  <a href="#de"><svg class="ico"><use href="#i-database"/></svg>15 · If you are a data engineer</a>
+  <a href="#aieng"><svg class="ico"><use href="#i-code"/></svg>16 · If you are an AI engineer</a>
+  <a href="#example"><svg class="ico"><use href="#i-terminal"/></svg>17 · A worked example, end to end</a>
+  <a href="#fail"><svg class="ico"><use href="#i-alert"/></svg>18 · The failure modes</a>
+  <a href="#prep"><svg class="ico"><use href="#i-compass"/></svg>19 · A three-week prep plan</a>
+  <a href="#cheatsheet"><svg class="ico"><use href="#i-list"/></svg>20 · Cheat sheet</a>
+  <a href="#glossary"><svg class="ico"><use href="#i-book"/></svg>＊ · Glossary</a>
+</div>
+
+<h2 id="what" class="reveal"><span class="hico"><svg class="ico"><use href="#i-compass"/></svg></span><span class="n">01.</span> What "product sense" actually is — and why senior engineers now get this round</h2>
+<p class="reveal lead">Product sense is the ability to look at a vague, under-specified problem and work out <strong>who it is for, what actually hurts them, and what the smallest useful thing you could ship is</strong> — out loud, under time pressure, without being handed a spec. It is not design talent. It is not having opinions about fonts. It is judgment about <em>which problem deserves the engineering.</em></p>
+
+<p class="reveal">For a decade this was a product manager's interview. It has moved. The reason is blunt: the cost of <em>building</em> collapsed, so the value of <em>choosing what to build</em> went up. When a senior engineer can scaffold a working feature in an afternoon, the expensive mistake is no longer a slow implementation — it is six weeks spent shipping the wrong thing beautifully. Companies started screening for the failure mode that now costs them the most.</p>
+
+<figure class="fig reveal">
+<svg viewBox="0 0 880 214" width="100%" aria-label="The narrative arc of a product sense answer: prompt, mission, segment, pain, solution, metric">
+  <defs>
+    <marker id="p-c" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#5AC8FF"/></marker>
+    <marker id="p-v" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#B98CFF"/></marker>
+    <marker id="p-m" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#6b7280"/></marker>
+    <marker id="p-t" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#22D3EE"/></marker>
+    <marker id="p-r" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#FF6B8B"/></marker>
+    <marker id="p-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#f0b429"/></marker>
+  </defs>
+  <text x="440" y="30" font-size="10.5" fill="#9aa0b4" text-anchor="middle" letter-spacing="1.5">THE INTERVIEWER IS FOLLOWING YOUR NARRATIVE — NOT YOUR IDEA</text>
+  <rect x="22" y="66" width="116" height="52" rx="10" fill="#1a1a20" stroke="#6b7280" stroke-width="1.6"/>
+  <text x="80" y="88" font-size="10" fill="#6b7280" font-weight="700" text-anchor="middle">the prompt</text>
+  <text x="80" y="105" font-size="8" fill="#6b7280" text-anchor="middle">deliberately vague</text>
+  <line x1="144" y1="92" x2="160" y2="92" stroke="#6b7280" stroke-width="1.4" marker-end="url(#p-m)"/>
+  <rect x="166" y="66" width="116" height="52" rx="10" fill="#1e1533" stroke="#B98CFF" stroke-width="1.6"/>
+  <text x="224" y="88" font-size="10" fill="#B98CFF" font-weight="700" text-anchor="middle">mission</text>
+  <text x="224" y="105" font-size="8" fill="#6b7280" text-anchor="middle">why this exists</text>
+  <line x1="288" y1="92" x2="304" y2="92" stroke="#6b7280" stroke-width="1.4" marker-end="url(#p-m)"/>
+  <rect x="310" y="66" width="116" height="52" rx="10" fill="#0e2740" stroke="#5AC8FF" stroke-width="1.6"/>
+  <text x="368" y="88" font-size="10" fill="#5AC8FF" font-weight="700" text-anchor="middle">segment</text>
+  <text x="368" y="105" font-size="8" fill="#6b7280" text-anchor="middle">one person</text>
+  <line x1="432" y1="92" x2="448" y2="92" stroke="#6b7280" stroke-width="1.4" marker-end="url(#p-m)"/>
+  <rect x="454" y="66" width="116" height="52" rx="10" fill="#241d0f" stroke="#f0b429" stroke-width="1.6"/>
+  <text x="512" y="88" font-size="10" fill="#f0b429" font-weight="700" text-anchor="middle">pain</text>
+  <text x="512" y="105" font-size="8" fill="#6b7280" text-anchor="middle">one obstacle</text>
+  <line x1="576" y1="92" x2="592" y2="92" stroke="#6b7280" stroke-width="1.4" marker-end="url(#p-m)"/>
+  <rect x="598" y="66" width="116" height="52" rx="10" fill="#0b2029" stroke="#22D3EE" stroke-width="1.6"/>
+  <text x="656" y="88" font-size="10" fill="#22D3EE" font-weight="700" text-anchor="middle">solution + V1</text>
+  <text x="656" y="105" font-size="8" fill="#6b7280" text-anchor="middle">smallest real thing</text>
+  <line x1="720" y1="92" x2="736" y2="92" stroke="#6b7280" stroke-width="1.4" marker-end="url(#p-m)"/>
+  <rect x="742" y="66" width="116" height="52" rx="10" fill="#1e1533" stroke="#B98CFF" stroke-width="1.6"/>
+  <text x="800" y="88" font-size="10" fill="#B98CFF" font-weight="700" text-anchor="middle">metric</text>
+  <text x="800" y="105" font-size="8" fill="#6b7280" text-anchor="middle">how you'd know</text>
+  <path d="M80 124 C 80 160, 800 160, 800 124" fill="none" stroke="#B98CFF" stroke-width="1.3" stroke-dasharray="5,3"/>
+  <rect x="298" y="146" width="284" height="17" rx="4" fill="#0d0d13"/>
+  <text x="440" y="159" font-size="9" fill="#B98CFF" text-anchor="middle">every step must constrain the next one</text>
+  <text x="440" y="190" font-size="10.5" fill="#cdd0dd" text-anchor="middle">A great answer is one chain of reasoning. A weak answer is a pile of good ideas.</text>
+  </svg>
+<figcaption>The shape of a strong answer. Each step must <em>constrain</em> the next one — the pain you pick has to belong to the user you picked, and the V1 has to solve <em>that</em> pain. A pile of good ideas with no chain between them reads as noise.</figcaption>
+</figure>
+
+<div class="callout cy reveal">
+  <p style="margin:.2em 0"><span class="t"><svg class="ico"><use href="#i-key"/></svg> The one sentence that explains the whole round</span></p>
+  <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">They are not trying to find out whether your idea is good. They are trying to find out <strong>how you decide</strong> — because on the job, nobody will hand you a well-formed ticket, and they need to know what you do with the ambiguity. That is why a "boring" answer with a crisp, defended chain of reasoning beats a dazzling idea you cannot justify. Say the reasoning out loud. The reasoning <em>is</em> the deliverable.</p>
+</div>
+
+<h2 id="who" class="reveal"><span class="hico"><svg class="ico"><use href="#i-globe"/></svg></span><span class="n">02.</span> Who asks it, and what shape it takes</h2>
+<p class="reveal lead">The round has different names and different intensities depending on where you apply. Knowing the house style before you walk in is worth more than another framework.</p>
+
+<table class="reveal">
+  <tr><th>Company</th><th>What it looks like</th><th>What they push on</th></tr>
+  <tr><td><strong>Meta</strong></td><td>An explicit, named <em>Product Sense</em> round. Highly formulaic — the rubric is broadly the same across levels. Added a <strong>"Product Sense with AI"</strong> 4th round for IC6+/M1/M2 in Central Products.</td><td>Structure. They will let you ramble and score you down for it.</td></tr>
+  <tr><td><strong>Google</strong></td><td>Called <em>product design</em>. Open-ended, with relentless follow-up probing.</td><td>Depth. Every answer earns a "why?" — three levels deep.</td></tr>
+  <tr><td><strong>OpenAI / Anthropic</strong></td><td>Not a separate round — <strong>woven into every round</strong>. Often a single-sentence prompt about a capability that barely exists yet.</td><td>Whether you actually <em>use</em> the tools, and whether you understand what models can and cannot do.</td></tr>
+  <tr><td><strong>Google DeepMind</strong></td><td>Multiple product cases, heavy on walking through the real user experience step by step.</td><td>Concreteness. Hand-waving dies here.</td></tr>
+  <tr><td><strong>Stripe · Uber · LinkedIn</strong></td><td>No dedicated round; product judgment is tested <em>inside</em> the system design and behavioural rounds.</td><td>Whether you ask who the user is before you draw boxes.</td></tr>
+  <tr><td><strong>Data / DS roles anywhere</strong></td><td>Almost always the <strong>metrics variant</strong>: pick a success metric, or diagnose why one moved.</td><td>Guardrails, confounders, and whether you would actually run an experiment.</td></tr>
+</table>
+
+<p class="reveal">Notice the pattern: at the AI labs it is not a round you can revise for the night before, because it is <em>everywhere</em>. It leaks into the coding round ("why would a user want this?") and the design round ("what happens when the model is wrong?"). That is the single biggest change in senior engineering interviews in the last two years.</p>
+
+<h2 id="rubric" class="reveal"><span class="hico"><svg class="ico"><use href="#i-list"/></svg></span><span class="n">03.</span> The five things you are actually scored on</h2>
+<p class="reveal lead">Published rubrics differ in wording but converge hard on five dimensions. The important structural fact: <strong>they do not average.</strong> You need to clear the bar on each one — a superb solution does not rescue a mushy segment.</p>
+
+<figure class="fig reveal">
+<svg viewBox="0 0 760 330" width="100%" aria-label="The five dimensions a product sense interviewer scores">
+  <defs>
+    <marker id="p-c" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#5AC8FF"/></marker>
+    <marker id="p-v" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#B98CFF"/></marker>
+    <marker id="p-m" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#6b7280"/></marker>
+    <marker id="p-t" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#22D3EE"/></marker>
+    <marker id="p-r" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#FF6B8B"/></marker>
+    <marker id="p-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#f0b429"/></marker>
+  </defs>
+  <text x="380" y="28" font-size="10.5" fill="#9aa0b4" text-anchor="middle" letter-spacing="1.5">FIVE DIALS — AND YOU MUST CLEAR THE BAR ON ALL FIVE</text>
+  <rect x="30" y="50" width="700" height="40" rx="8" fill="#12131a" stroke="#5AC8FF" stroke-width="1.4"/>
+  <circle cx="52" cy="70" r="4.5" fill="#5AC8FF"/>
+  <text x="70" y="75" font-size="11" fill="#5AC8FF" font-weight="700">Communication</text>
+  <text x="716" y="75" font-size="9.5" fill="#9aa0b4" text-anchor="end">can I follow you without doing work?</text>
+  <rect x="30" y="98" width="700" height="40" rx="8" fill="#12131a" stroke="#B98CFF" stroke-width="1.4"/>
+  <circle cx="52" cy="118" r="4.5" fill="#B98CFF"/>
+  <text x="70" y="123" font-size="11" fill="#B98CFF" font-weight="700">Product motivation</text>
+  <text x="716" y="123" font-size="9.5" fill="#9aa0b4" text-anchor="end">do you know why this product exists?</text>
+  <rect x="30" y="146" width="700" height="40" rx="8" fill="#12131a" stroke="#5AC8FF" stroke-width="1.4"/>
+  <circle cx="52" cy="166" r="4.5" fill="#5AC8FF"/>
+  <text x="70" y="171" font-size="11" fill="#5AC8FF" font-weight="700">Segmentation</text>
+  <text x="716" y="171" font-size="9.5" fill="#9aa0b4" text-anchor="end">did you choose ONE user — and defend it?</text>
+  <rect x="30" y="194" width="700" height="40" rx="8" fill="#12131a" stroke="#f0b429" stroke-width="1.4"/>
+  <circle cx="52" cy="214" r="4.5" fill="#f0b429"/>
+  <text x="70" y="219" font-size="11" fill="#f0b429" font-weight="700">Problem finding</text>
+  <text x="716" y="219" font-size="9.5" fill="#9aa0b4" text-anchor="end">is the pain real, specific, prioritised?</text>
+  <rect x="30" y="242" width="700" height="40" rx="8" fill="#12131a" stroke="#22D3EE" stroke-width="1.4"/>
+  <circle cx="52" cy="262" r="4.5" fill="#22D3EE"/>
+  <text x="70" y="267" font-size="11" fill="#22D3EE" font-weight="700">Solution + V1</text>
+  <text x="716" y="267" font-size="9.5" fill="#9aa0b4" text-anchor="end">is it concrete, and does it solve THAT pain?</text>
+  <rect x="30" y="292" width="700" height="26" rx="7" fill="#22121A" stroke="#FF6B8B" stroke-width="1.3"/>
+  <text x="380" y="309" font-size="9.5" fill="#FF6B8B" text-anchor="middle">a brilliant solution does NOT rescue a vague segment — the dials do not average out</text>
+  </svg>
+<figcaption>The five dials. Interviewers usually have a scorecard with something very close to these on it, and they are listening for each one in turn.</figcaption>
+</figure>
+
+<div class="step reveal"><div class="num-bubble">1</div><div class="body"><strong>Communication.</strong> Can they follow you without doing work? Do you signpost — "I'm going to do three things: pick a user, find their biggest pain, then design for it"?</div></div>
+<div class="step reveal"><div class="num-bubble">2</div><div class="body"><strong>Product motivation.</strong> Do you know why the product exists, who it beats, and what the company is actually trying to win? Or are you designing in a vacuum?</div></div>
+<div class="step reveal"><div class="num-bubble">3</div><div class="body"><strong>Segmentation.</strong> Did you choose <em>one</em> user and defend the choice? "Everyone who commutes" is not a segment.</div></div>
+<div class="step reveal"><div class="num-bubble">4</div><div class="body"><strong>Problem identification.</strong> Is the pain a real obstacle, specific, and prioritised against the others?</div></div>
+<div class="step reveal"><div class="num-bubble">5</div><div class="body"><strong>Solution &amp; V1.</strong> Is it concrete enough to build, and does it solve the pain you just prioritised — not a different, more interesting one?</div></div>
+
+<h2 id="types" class="reveal"><span class="hico"><svg class="ico"><use href="#i-blocks"/></svg></span><span class="n">04.</span> The five question types</h2>
+<p class="reveal lead">Every prompt you will get is one of five. The good news: they all sit on the same spine. Only the entry point changes.</p>
+
+<figure class="fig reveal">
+<svg viewBox="0 0 760 384" width="100%" aria-label="The five question types and who asks them">
+  <defs>
+    <marker id="p-c" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#5AC8FF"/></marker>
+    <marker id="p-v" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#B98CFF"/></marker>
+    <marker id="p-m" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#6b7280"/></marker>
+    <marker id="p-t" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#22D3EE"/></marker>
+    <marker id="p-r" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#FF6B8B"/></marker>
+    <marker id="p-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#f0b429"/></marker>
+  </defs>
+  <text x="380" y="28" font-size="10.5" fill="#9aa0b4" text-anchor="middle" letter-spacing="1.5">FIVE ENTRY POINTS — ONE SPINE</text>
+  <rect x="24" y="48" width="342" height="76" rx="10" fill="#0e2740" stroke="#5AC8FF" stroke-width="1.5"/>
+  <text x="40" y="70" font-size="9.5" fill="#5AC8FF" font-weight="700">PRODUCT DESIGN</text>
+  <text x="40" y="91" font-size="9" fill="#cdd0dd">"Design a parking solution."</text>
+  <text x="40" y="110" font-size="8.5" fill="#6b7280">Meta · Discord</text>
+  <rect x="394" y="48" width="342" height="76" rx="10" fill="#0e2740" stroke="#5AC8FF" stroke-width="1.5"/>
+  <text x="410" y="70" font-size="9.5" fill="#5AC8FF" font-weight="700">PRODUCT IMPROVEMENT</text>
+  <text x="410" y="91" font-size="9" fill="#cdd0dd">"Favourite product — improve it."</text>
+  <text x="410" y="110" font-size="8.5" fill="#6b7280">Google · most others</text>
+  <rect x="24" y="140" width="342" height="76" rx="10" fill="#1e1533" stroke="#B98CFF" stroke-width="1.5"/>
+  <text x="40" y="162" font-size="9.5" fill="#B98CFF" font-weight="700">STRATEGY</text>
+  <text x="40" y="183" font-size="9" fill="#cdd0dd">"You’re CPO of Zoom. Teams is winning."</text>
+  <text x="40" y="202" font-size="8.5" fill="#6b7280">Google · Stripe</text>
+  <rect x="394" y="140" width="342" height="76" rx="10" fill="#241d0f" stroke="#f0b429" stroke-width="1.5"/>
+  <text x="410" y="162" font-size="9.5" fill="#f0b429" font-weight="700">METRICS / DIAGNOSIS</text>
+  <text x="410" y="183" font-size="9" fill="#cdd0dd">"Messenger DAU fell 5%. Why?"</text>
+  <text x="410" y="202" font-size="8.5" fill="#6b7280">Meta · Uber · data roles</text>
+  <rect x="24" y="232" width="342" height="76" rx="10" fill="#0b2029" stroke="#22D3EE" stroke-width="1.5"/>
+  <text x="40" y="254" font-size="9.5" fill="#22D3EE" font-weight="700">NOVEL TECH / AI</text>
+  <text x="40" y="275" font-size="9" fill="#cdd0dd">"10x Claude Code weekly actives."</text>
+  <text x="40" y="294" font-size="8.5" fill="#6b7280">OpenAI · Anthropic · DeepMind</text>
+  <rect x="394" y="232" width="342" height="76" rx="10" fill="#15151b" stroke="#2c2c36" stroke-dasharray="5,3"/>
+  <text x="565" y="262" font-size="9.5" fill="#cdd0dd" text-anchor="middle">Only the first move differs.</text>
+  <text x="565" y="282" font-size="9.5" fill="#cdd0dd" text-anchor="middle">User → pain → solution → metric</text>
+  <text x="565" y="298" font-size="8.5" fill="#6b7280" text-anchor="middle">is the spine under all five.</text>
+  <text x="380" y="344" font-size="10.5" fill="#cdd0dd" text-anchor="middle">Learn one spine properly and you can walk into any of the five.</text>
+  <text x="380" y="366" font-size="9.5" fill="#6b7280" text-anchor="middle">"Favourite product" is not a warm-up — it is the same interview with the segment step hidden.</text>
+  </svg>
+<figcaption>The five entry points. The metrics variant is the one data engineers and data scientists get most; the novel-tech variant is the one AI engineers get most.</figcaption>
+</figure>
+
+<div class="callout gd reveal">
+  <p style="margin:.2em 0"><span class="t"><svg class="ico"><use href="#i-warn"/></svg> "Tell me about a product you love" is not small talk</span></p>
+  <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">It is the whole interview with the hard part hidden, and it is where the most candidates quietly fail — because they describe a product they enjoy instead of analysing it. The trap is that it <em>feels</em> like a chat. Answer it with the same spine: who is it for, what does it do for them that nothing else does, where does it still hurt, what would you ship, how would you know it worked. Have <strong>one</strong> product genuinely prepared this way. Pick one you actually use, ideally one adjacent to the company's problem space — and never pick the interviewer's own product unless you are ready to criticise it to their face.</p>
+</div>
+
+<h2 id="spine" class="reveal"><span class="hico"><svg class="ico"><use href="#i-repeat"/></svg></span><span class="n">05.</span> The spine: how to spend the 35 minutes</h2>
+<p class="reveal lead">A 45-minute slot is about 35 minutes of real work once you subtract introductions and their questions at the end. Here is the split that survives contact with a real interviewer.</p>
+
+<figure class="fig reveal">
+<svg viewBox="0 0 760 236" width="100%" aria-label="How to spend the 35 working minutes of a product sense interview">
+  <defs>
+    <marker id="p-c" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#5AC8FF"/></marker>
+    <marker id="p-v" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#B98CFF"/></marker>
+    <marker id="p-m" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#6b7280"/></marker>
+    <marker id="p-t" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#22D3EE"/></marker>
+    <marker id="p-r" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#FF6B8B"/></marker>
+    <marker id="p-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#f0b429"/></marker>
+  </defs>
+  <text x="380" y="30" font-size="10.5" fill="#9aa0b4" text-anchor="middle" letter-spacing="1.5">35 MINUTES OF ACTUAL WORK</text>
+  <rect x="40" y="70" width="78" height="46" rx="7" fill="#1a1a20" stroke="#6b7280" stroke-width="1.5"/>
+  <text x="79" y="90" font-size="9.5" fill="#6b7280" font-weight="700" text-anchor="middle">frame</text>
+  <text x="79" y="106" font-size="8.5" fill="#6b7280" text-anchor="middle">4 min</text>
+  <rect x="118" y="70" width="78" height="46" rx="7" fill="#1e1533" stroke="#B98CFF" stroke-width="1.5"/>
+  <text x="157" y="90" font-size="9.5" fill="#B98CFF" font-weight="700" text-anchor="middle">mission</text>
+  <text x="157" y="106" font-size="8.5" fill="#6b7280" text-anchor="middle">4 min</text>
+  <rect x="195" y="70" width="175" height="46" rx="7" fill="#0e2740" stroke="#5AC8FF" stroke-width="1.5"/>
+  <text x="283" y="90" font-size="9.5" fill="#5AC8FF" font-weight="700" text-anchor="middle">segment</text>
+  <text x="283" y="106" font-size="8.5" fill="#6b7280" text-anchor="middle">9 min</text>
+  <rect x="370" y="70" width="175" height="46" rx="7" fill="#241d0f" stroke="#f0b429" stroke-width="1.5"/>
+  <text x="458" y="90" font-size="9.5" fill="#f0b429" font-weight="700" text-anchor="middle">pain</text>
+  <text x="458" y="106" font-size="8.5" fill="#6b7280" text-anchor="middle">9 min</text>
+  <rect x="545" y="70" width="175" height="46" rx="7" fill="#0b2029" stroke="#22D3EE" stroke-width="1.5"/>
+  <text x="633" y="90" font-size="9.5" fill="#22D3EE" font-weight="700" text-anchor="middle">solution + V1</text>
+  <text x="633" y="106" font-size="8.5" fill="#6b7280" text-anchor="middle">9 min</text>
+  <path d="M235 122 V 132 H 720 V 122" fill="none" stroke="#6b7280" stroke-width="1.2"/>
+  <text x="478" y="150" font-size="9" fill="#cdd0dd" text-anchor="middle">77% of the clock lives here — segment, pain, and the build</text>
+  <text x="380" y="184" font-size="10.5" fill="#cdd0dd" text-anchor="middle">The three long blocks carry almost all the signal.</text>
+  <text x="380" y="206" font-size="10.5" fill="#FF6B8B" text-anchor="middle">Most candidates fail by spending 15 minutes on mission and running out of clock at the V1.</text>
+  <text x="380" y="226" font-size="9" fill="#6b7280" text-anchor="middle">Wear a watch. Say the time out loud: "I have about ten minutes left, so let me commit to a segment."</text>
+  </svg>
+<figcaption>Time is the hidden rubric. Running out of clock before you reach a concrete V1 is the single most-cited reason candidates fail this round.</figcaption>
+</figure>
+
+<p class="reveal">The tell of a trained candidate is that they <strong>manage the clock out loud</strong>. "That's about five minutes on framing — I'll move to picking a segment now." It sounds mechanical written down; in the room it reads as control.</p>
+
+<h2 id="frame" class="reveal"><span class="hico"><svg class="ico"><use href="#i-question"/></svg></span><span class="n">06.</span> Step 1 · Frame — clarify, assume, plan</h2>
+<p class="reveal lead">The prompt is deliberately under-specified. It is a test, not an oversight. What you do in the first 90 seconds sets your ceiling.</p>
+
+<h4 class="reveal">Take the pause</h4>
+<p class="reveal">Say: <em>"Give me thirty seconds to structure this."</em> Then actually take it, and write. Interviewers do not penalise the silence — they penalise the rambling that happens when you skip it. A candidate who thinks first and speaks second sounds two levels more senior than one who narrates their own confusion.</p>
+
+<h4 class="reveal">Ask clarifying questions — but only the ones that change your answer</h4>
+<p class="reveal">The advice "ask lots of questions" is half-right and gets misapplied. Ask questions whose answers would <em>change what you do next</em>. "What's the business goal — growth, retention, or revenue?" changes everything. "How many users does it have?" usually changes nothing. Two or three good ones, then move.</p>
+
+<h4 class="reveal">State your assumptions, then commit</h4>
+<p class="reveal">Where you don't get an answer, assume out loud and move on: <em>"I'll assume we're talking about the mobile app, in the US, and that we care about retention rather than new signups. Shout if you'd rather I went elsewhere."</em> This is the move that separates senior from mid. Mid-level candidates wait to be told. Senior candidates make a defensible call, name it as a call, and keep moving.</p>
+
+<div class="cb reveal"><span class="lang">the opening 90 seconds — a script you can adapt</span><pre><span class="c"># 1. Take the pause. Out loud, so it isn't dead air.</span>
+"Let me take thirty seconds to structure this."
+
+<span class="c"># 2. Two or three questions that would actually change your answer.</span>
+"Is the goal growth, engagement, or revenue? That'll change which
+ segment I go after."
+
+<span class="c"># 3. Assume, name the assumption, commit.</span>
+"I'll scope to the mobile app in the US, and I'll optimise for
+ retention. Happy to revisit if you'd rather I went broader."
+
+<span class="c"># 4. Give them the map. This is the highest-leverage sentence you say.</span>
+"Here's my plan: I'll spend two minutes on who this product is really
+ for, then pick one segment, find their sharpest pain, and design a V1
+ against it — and I'll finish with how I'd measure whether it worked."
+</pre></div>
+
+<h2 id="mission" class="reveal"><span class="hico"><svg class="ico"><use href="#i-rocket"/></svg></span><span class="n">07.</span> Step 2 · Mission — why does this thing exist?</h2>
+<p class="reveal lead">Four minutes. No more. You are establishing the yardstick you will use to justify every later choice.</p>
+<p class="reveal">Two moves. First, say what the product does <em>for a human</em>, not what it is. Not "it's a photo-sharing app" but "it lets people stay close to the people they love when they can't be in the room." Second, place it strategically: who else is trying to win this, and what does <em>this company</em> have that the others don't — the graph, the distribution, the data, the model?</p>
+<p class="reveal">Then state a mission sentence, because you will use it as a weapon later: when you reject a solution, you reject it <em>against the mission</em>. That is what makes a rejection sound like judgment instead of taste.</p>
+
+<div class="callout mg reveal">
+  <p style="margin:.2em 0"><span class="t"><svg class="ico"><use href="#i-alert"/></svg> The most common way strong engineers lose this round</span></p>
+  <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">They spend fifteen minutes here. Mission and market feel like the "smart" part, so people luxuriate in it — and then sprint through segmentation, hand-wave the pain, and never reach a V1. The interviewer's notes say <em>"never got to a product."</em> Four minutes. Then leave.</p>
+</div>
+
+<h2 id="segment" class="reveal"><span class="hico"><svg class="ico"><use href="#i-user"/></svg></span><span class="n">08.</span> Step 3 · Segment — choose one person</h2>
+<p class="reveal lead">List the users, split them by <em>motivation</em> rather than demographics, then pick one and say why. This is the step most candidates think they did and did not.</p>
+
+<p class="reveal">Bad segmentation splits by attributes that don't change behaviour: "18–24s, 25–40s, over-40s." Good segmentation splits by <em>what someone is trying to get done</em>: for a food-delivery app — "the person feeding a family on a schedule," "the person who forgot to eat and wants food in 20 minutes," "the person treating themselves on a Friday." Those three want genuinely different products. Age doesn't.</p>
+
+<p class="reveal">Then <strong>pick one</strong>, using reach against how badly they're served today, and name a person: <em>"I'm going with Maya, 34, two kids, cooks four nights a week, has about eleven minutes between getting home and someone crying."</em> Specificity here pays for itself for the rest of the interview, because now every later decision has something to be tested against.</p>
+
+<h2 id="pain" class="reveal"><span class="hico"><svg class="ico"><use href="#i-search"/></svg></span><span class="n">09.</span> Step 4 · Pain — find the obstacle, not the wish</h2>
+<p class="reveal lead">Walk your person through the journey, out loud, step by step. Then name where it hurts, and rank the hurts.</p>
+
+<p class="reveal">The distinction that earns points here: <strong>a need is a want; a problem is an obstacle.</strong> "I want dinner ideas" is a need — vague, unactionable. "By 6pm I've already decided forty things and I can't face deciding one more" is a problem: it has a cause, a moment, and an emotional charge. You can build against it. You cannot build against a wish.</p>
+
+<p class="reveal">Rank the pains on frequency against severity, and then <em>choose</em>. Interviewers are listening for the choice. "These are all important" is the sound of someone who cannot prioritise, which is the sound of someone who will not be able to run a project.</p>
+
+<figure class="fig reveal">
+<svg viewBox="0 0 760 360" width="100%" aria-label="The same two-by-two grid applied three times: which user, which pain, which V1">
+  <text x="380" y="24" font-size="10.5" fill="#9aa0b4" text-anchor="middle" letter-spacing="1.5">THE SAME 2×2, THREE TIMES</text>
+
+  <text x="130" y="52" font-size="10" fill="#5AC8FF" font-weight="700" text-anchor="middle">1 · WHICH USER?</text>
+  <rect x="30" y="64" width="200" height="200" rx="8" fill="#101018" stroke="#2c2c36"/>
+  <rect x="130" y="64" width="100" height="100" fill="#5AC8FF" opacity=".10"/>
+  <line x1="130" y1="64" x2="130" y2="264" stroke="#2c2c36" stroke-dasharray="4,3"/>
+  <line x1="30" y1="164" x2="230" y2="164" stroke="#2c2c36" stroke-dasharray="4,3"/>
+  <text x="130" y="282" font-size="8.5" fill="#6b7280" text-anchor="middle">reach →</text>
+  <text x="16" y="164" font-size="8.5" fill="#6b7280" text-anchor="middle" transform="rotate(-90 16 164)">underserved →</text>
+  <circle cx="78" cy="106" r="4.5" fill="#6b7280"/>
+  <text x="78" y="129" font-size="8.5" fill="#6b7280" text-anchor="middle">niche</text>
+  <circle cx="180" cy="210" r="4.5" fill="#6b7280"/>
+  <text x="180" y="233" font-size="8.5" fill="#6b7280" text-anchor="middle">already served</text>
+  <circle cx="180" cy="106" r="9" fill="none" stroke="#5AC8FF" opacity=".35"/>
+  <circle cx="180" cy="106" r="5.5" fill="#5AC8FF"/>
+  <text x="180" y="130" font-size="9" fill="#5AC8FF" font-weight="700" text-anchor="middle">PICK</text>
+  <text x="130" y="304" font-size="9.5" fill="#cdd0dd" text-anchor="middle">big + badly served</text>
+
+  <text x="380" y="52" font-size="10" fill="#f0b429" font-weight="700" text-anchor="middle">2 · WHICH PAIN?</text>
+  <rect x="280" y="64" width="200" height="200" rx="8" fill="#101018" stroke="#2c2c36"/>
+  <rect x="380" y="64" width="100" height="100" fill="#f0b429" opacity=".10"/>
+  <line x1="380" y1="64" x2="380" y2="264" stroke="#2c2c36" stroke-dasharray="4,3"/>
+  <line x1="280" y1="164" x2="480" y2="164" stroke="#2c2c36" stroke-dasharray="4,3"/>
+  <text x="380" y="282" font-size="8.5" fill="#6b7280" text-anchor="middle">frequency →</text>
+  <text x="266" y="164" font-size="8.5" fill="#6b7280" text-anchor="middle" transform="rotate(-90 266 164)">severity →</text>
+  <circle cx="328" cy="106" r="4.5" fill="#6b7280"/>
+  <text x="328" y="129" font-size="8.5" fill="#6b7280" text-anchor="middle">rare + awful</text>
+  <circle cx="430" cy="210" r="4.5" fill="#6b7280"/>
+  <text x="430" y="233" font-size="8.5" fill="#6b7280" text-anchor="middle">daily + trivial</text>
+  <circle cx="430" cy="106" r="9" fill="none" stroke="#f0b429" opacity=".35"/>
+  <circle cx="430" cy="106" r="5.5" fill="#f0b429"/>
+  <text x="430" y="130" font-size="9" fill="#f0b429" font-weight="700" text-anchor="middle">PICK</text>
+  <text x="380" y="304" font-size="9.5" fill="#cdd0dd" text-anchor="middle">often + genuinely hurts</text>
+
+  <text x="630" y="52" font-size="10" fill="#22D3EE" font-weight="700" text-anchor="middle">3 · WHICH V1?</text>
+  <rect x="530" y="64" width="200" height="200" rx="8" fill="#101018" stroke="#2c2c36"/>
+  <rect x="530" y="64" width="100" height="100" fill="#22D3EE" opacity=".10"/>
+  <line x1="630" y1="64" x2="630" y2="264" stroke="#2c2c36" stroke-dasharray="4,3"/>
+  <line x1="530" y1="164" x2="730" y2="164" stroke="#2c2c36" stroke-dasharray="4,3"/>
+  <text x="630" y="282" font-size="8.5" fill="#6b7280" text-anchor="middle">effort →</text>
+  <text x="516" y="164" font-size="8.5" fill="#6b7280" text-anchor="middle" transform="rotate(-90 516 164)">impact →</text>
+  <circle cx="682" cy="106" r="4.5" fill="#6b7280"/>
+  <text x="682" y="129" font-size="8.5" fill="#6b7280" text-anchor="middle">the vision</text>
+  <circle cx="578" cy="210" r="4.5" fill="#6b7280"/>
+  <text x="578" y="233" font-size="8.5" fill="#6b7280" text-anchor="middle">busywork</text>
+  <circle cx="578" cy="106" r="9" fill="none" stroke="#22D3EE" opacity=".35"/>
+  <circle cx="578" cy="106" r="5.5" fill="#22D3EE"/>
+  <text x="578" y="130" font-size="9" fill="#22D3EE" font-weight="700" text-anchor="middle">PICK</text>
+  <text x="630" y="304" font-size="9.5" fill="#cdd0dd" text-anchor="middle">high impact, small build</text>
+
+  <text x="380" y="338" font-size="10.5" fill="#cdd0dd" text-anchor="middle">Prioritisation is the whole job. Saying "these all matter" is the same as saying nothing.</text>
+  </svg>
+<figcaption>The same 2×2, three times — for the user, the pain, and the build. If you internalise one visual from this page, make it this one: product sense is just prioritisation, applied three times in a row, out loud.</figcaption>
+</figure>
+
+<h2 id="solution" class="reveal"><span class="hico"><svg class="ico"><use href="#i-bulb"/></svg></span><span class="n">10.</span> Step 5 · Solutions and the V1</h2>
+<p class="reveal lead">Generate three genuinely different solutions — not three flavours of the same one. Then cut to a V1 you could actually ship this quarter.</p>
+
+<p class="reveal">"Genuinely different" means they attack the problem from different angles. For Maya's decision fatigue: (a) <em>remove</em> the decision — a weekly auto-plan she can veto; (b) <em>shrink</em> the decision — three options, never twelve; (c) <em>move</em> the decision — decide on Sunday when she has slack, not at 6pm when she doesn't. Those are three different products. "Add a recommendations tab" and "add a recommendations carousel" are one product twice.</p>
+
+<p class="reveal">Then commit to a V1 and say what you are <strong>deliberately leaving out</strong>. That sentence — "I'd cut the social features entirely for v1, because they serve a different segment" — is a seniority signal that almost nothing else replicates. Finish with the risk: what would make this fail, and what would you watch to find out early?</p>
+
+<h2 id="metrics" class="reveal"><span class="hico"><svg class="ico"><use href="#i-database"/></svg></span><span class="n">11.</span> Metrics: north star, drivers, guardrails</h2>
+<p class="reveal lead">Whatever your role, you will be asked "how would you know it worked?" Answering with a list of six metrics is a fail. Answering with one metric and no guardrail is also a fail.</p>
+
+<figure class="fig reveal">
+<svg viewBox="0 0 760 330" width="100%" aria-label="A north star metric with its input drivers and guardrail metrics">
+  <defs>
+    <marker id="p-c" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#5AC8FF"/></marker>
+    <marker id="p-v" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#B98CFF"/></marker>
+    <marker id="p-m" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#6b7280"/></marker>
+    <marker id="p-t" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#22D3EE"/></marker>
+    <marker id="p-r" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#FF6B8B"/></marker>
+    <marker id="p-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#f0b429"/></marker>
+  </defs>
+  <rect x="250" y="34" width="260" height="52" rx="10" fill="#1e1533" stroke="#B98CFF" stroke-width="1.8"/>
+  <text x="380" y="56" font-size="11.5" fill="#B98CFF" font-weight="700" text-anchor="middle">NORTH STAR</text>
+  <text x="380" y="74" font-size="9" fill="#9aa0b4" text-anchor="middle">earnings per online hour</text>
+  <line x1="380" y1="90" x2="380" y2="106" stroke="#B98CFF" stroke-width="1.4"/>
+  <line x1="140" y1="106" x2="620" y2="106" stroke="#B98CFF" stroke-width="1.4"/>
+  <line x1="140" y1="106" x2="140" y2="126" stroke="#B98CFF" stroke-width="1.4" marker-end="url(#p-v)"/>
+  <rect x="50" y="130" width="180" height="48" rx="9" fill="#0e2740" stroke="#5AC8FF" stroke-width="1.5"/>
+  <text x="140" y="150" font-size="10" fill="#5AC8FF" font-weight="700" text-anchor="middle">adoption</text>
+  <text x="140" y="167" font-size="8.5" fill="#6b7280" text-anchor="middle">do they try it?</text>
+  <line x1="380" y1="106" x2="380" y2="126" stroke="#B98CFF" stroke-width="1.4" marker-end="url(#p-v)"/>
+  <rect x="290" y="130" width="180" height="48" rx="9" fill="#0e2740" stroke="#5AC8FF" stroke-width="1.5"/>
+  <text x="380" y="150" font-size="10" fill="#5AC8FF" font-weight="700" text-anchor="middle">frequency</text>
+  <text x="380" y="167" font-size="8.5" fill="#6b7280" text-anchor="middle">do they repeat?</text>
+  <line x1="620" y1="106" x2="620" y2="126" stroke="#B98CFF" stroke-width="1.4" marker-end="url(#p-v)"/>
+  <rect x="530" y="130" width="180" height="48" rx="9" fill="#0e2740" stroke="#5AC8FF" stroke-width="1.5"/>
+  <text x="620" y="150" font-size="10" fill="#5AC8FF" font-weight="700" text-anchor="middle">yield</text>
+  <text x="620" y="167" font-size="8.5" fill="#6b7280" text-anchor="middle">does it pay?</text>
+  <text x="380" y="200" font-size="9" fill="#6b7280" text-anchor="middle">input drivers — the things a team can actually move</text>
+  <rect x="60" y="216" width="640" height="62" rx="10" fill="#241d0f" stroke="#f0b429" stroke-width="1.5"/>
+  <text x="80" y="238" font-size="10" fill="#f0b429" font-weight="700">GUARDRAILS — what must NOT get worse while you win</text>
+  <text x="80" y="262" font-size="8.5" fill="#cdd0dd">· cancellation rate</text>
+  <text x="240" y="262" font-size="8.5" fill="#cdd0dd">· p95 latency</text>
+  <text x="400" y="262" font-size="8.5" fill="#cdd0dd">· support tickets</text>
+  <text x="560" y="262" font-size="8.5" fill="#cdd0dd">· trust / report rate</text>
+  <text x="380" y="304" font-size="10.5" fill="#cdd0dd" text-anchor="middle">Name ONE north star, 2–3 drivers, and the guardrails that stop you gaming it.</text>
+  <text x="380" y="322" font-size="9" fill="#FF6B8B" text-anchor="middle">"Tips per trip" is a trap: you can win it by hurting drivers. A metric you can game is not a metric.</text>
+  </svg>
+<figcaption>One north star, a couple of input drivers a team can actually move, and the guardrails that stop you winning the metric while damaging the product.</figcaption>
+</figure>
+
+<p class="reveal">The classic trap, and it comes up constantly: you are asked to measure a change to driver tipping in a rideshare app. <strong>Tips per trip</strong> is the obvious answer and the wrong one — you can raise it by nagging riders until they cancel, and you'd never see the damage. <strong>Earnings per online hour</strong> is the right shape: it captures the value the driver actually cares about, and it can't be won by cannibalising fares or supply. Then you name the guardrails — cancellation rate, rider satisfaction — that would tell you if you were cheating.</p>
+
+<p class="reveal">Say the sentence: <em>"and I'd hold X and Y as guardrails, because the cheap way to win this metric is to hurt them."</em> It is the single highest-leverage sentence in the metrics half of the interview.</p>
+
+<h2 id="drop" class="reveal"><span class="hico"><svg class="ico"><use href="#i-eye"/></svg></span><span class="n">12.</span> The metric-drop playbook</h2>
+<p class="reveal lead">"DAU dropped 5% week over week. Why?" This is its own question type, it has a canonical structure, and if you have the structure you will out-perform people with far more product experience.</p>
+
+<figure class="fig reveal">
+<svg viewBox="0 0 760 396" width="100%" aria-label="A five step playbook for diagnosing a metric drop">
+  <defs>
+    <marker id="p-c" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#5AC8FF"/></marker>
+    <marker id="p-v" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#B98CFF"/></marker>
+    <marker id="p-m" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#6b7280"/></marker>
+    <marker id="p-t" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#22D3EE"/></marker>
+    <marker id="p-r" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#FF6B8B"/></marker>
+    <marker id="p-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#f0b429"/></marker>
+  </defs>
+  <text x="380" y="28" font-size="10.5" fill="#9aa0b4" text-anchor="middle" letter-spacing="1.5">"DAU IS DOWN 5%." — WORK DOWN, NEVER GUESS</text>
+  <rect x="30" y="46" width="700" height="52" rx="9" fill="#22121A" stroke="#FF6B8B" stroke-width="1.5"/>
+  <text x="48" y="67" font-size="10" fill="#FF6B8B" font-weight="700">1 · IS IT REAL?</text>
+  <text x="48" y="86" font-size="8.5" fill="#cdd0dd">logging change · pipeline broke · a bot left</text>
+  <text x="712" y="79" font-size="8.5" fill="#6b7280" text-anchor="end">rule out the instrument before the world</text>
+  <line x1="380" y1="100" x2="380" y2="110" stroke="#6b7280" stroke-width="1.3" marker-end="url(#p-m)"/>
+  <rect x="30" y="112" width="700" height="52" rx="9" fill="#241d0f" stroke="#f0b429" stroke-width="1.5"/>
+  <text x="48" y="133" font-size="10" fill="#f0b429" font-weight="700">2 · IS IT US, OR THE WORLD?</text>
+  <text x="48" y="152" font-size="8.5" fill="#cdd0dd">seasonality · holiday · competitor · outage · press</text>
+  <text x="712" y="145" font-size="8.5" fill="#6b7280" text-anchor="end">external first — it is free to check</text>
+  <line x1="380" y1="166" x2="380" y2="176" stroke="#6b7280" stroke-width="1.3" marker-end="url(#p-m)"/>
+  <rect x="30" y="178" width="700" height="52" rx="9" fill="#0e2740" stroke="#5AC8FF" stroke-width="1.5"/>
+  <text x="48" y="199" font-size="10" fill="#5AC8FF" font-weight="700">3 · WHO EXACTLY?</text>
+  <text x="48" y="218" font-size="8.5" fill="#cdd0dd">cut by platform, geo, tenure, new vs existing</text>
+  <text x="712" y="211" font-size="8.5" fill="#6b7280" text-anchor="end">a flat 5% is never flat underneath</text>
+  <line x1="380" y1="232" x2="380" y2="242" stroke="#6b7280" stroke-width="1.3" marker-end="url(#p-m)"/>
+  <rect x="30" y="244" width="700" height="52" rx="9" fill="#1e1533" stroke="#B98CFF" stroke-width="1.5"/>
+  <text x="48" y="265" font-size="10" fill="#B98CFF" font-weight="700">4 · WHAT CHANGED?</text>
+  <text x="48" y="284" font-size="8.5" fill="#cdd0dd">release log · experiment ramp · pricing · ranking</text>
+  <text x="712" y="277" font-size="8.5" fill="#6b7280" text-anchor="end">line the drop up against the deploy</text>
+  <line x1="380" y1="298" x2="380" y2="308" stroke="#6b7280" stroke-width="1.3" marker-end="url(#p-m)"/>
+  <rect x="30" y="310" width="700" height="52" rx="9" fill="#0b2029" stroke="#22D3EE" stroke-width="1.5"/>
+  <text x="48" y="331" font-size="10" fill="#22D3EE" font-weight="700">5 · SO WHAT?</text>
+  <text x="48" y="350" font-size="8.5" fill="#cdd0dd">size it, name the fix, name the guardrail</text>
+  <text x="712" y="343" font-size="8.5" fill="#6b7280" text-anchor="end">end with a decision, not a list</text>
+  <text x="380" y="386" font-size="10" fill="#cdd0dd" text-anchor="middle">The candidate who says "probably a bug in logging — may I check that first?" has already passed.</text>
+  </svg>
+<figcaption>Work down the ladder. Almost everyone leaps to step 4 — a product theory — and skips the two steps that are cheap, fast, and most often correct.</figcaption>
+</figure>
+
+<p class="reveal">Two things separate a strong answer here. First, <strong>rule out the instrument before you theorise about the world.</strong> A logging change, a broken pipeline, a bot farm that left — these are common, they're fast to check, and a candidate who checks them first is telling the interviewer they have actually been on call. Second, <strong>never accept the aggregate.</strong> A flat 5% drop is almost never flat underneath: it's usually −30% on Android in one country, and 0 everywhere else. Cut by platform, geography, tenure, and new-versus-existing before you say a single word about causes.</p>
+
+<h2 id="ai" class="reveal"><span class="hico"><svg class="ico"><use href="#i-zap"/></svg></span><span class="n">13.</span> AI product sense — the round that is spreading fastest</h2>
+<p class="reveal lead">This is the newest and, for engineers, the most consequential. At OpenAI, Anthropic and DeepMind it isn't a round — it's in every round. Meta added a dedicated <em>Product Sense with AI</em> interview for IC6+. Figma runs one. The questions look like: <em>"How would you 10x Claude Code's weekly actives?"</em> or <em>"How would you double ChatGPT image creation with three engineers?"</em></p>
+
+<figure class="fig reveal">
+<svg viewBox="0 0 760 348" width="100%" aria-label="Classic software is a function; an AI feature is a distribution, so the product loop changes">
+  <defs>
+    <marker id="p-c" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#5AC8FF"/></marker>
+    <marker id="p-v" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#B98CFF"/></marker>
+    <marker id="p-m" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#6b7280"/></marker>
+    <marker id="p-t" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#22D3EE"/></marker>
+    <marker id="p-r" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#FF6B8B"/></marker>
+    <marker id="p-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#f0b429"/></marker>
+  </defs>
+  <rect x="20" y="40" width="340" height="196" rx="12" fill="#0e2740" stroke="#1d3448"/>
+  <text x="190" y="64" font-size="11" fill="#5AC8FF" font-weight="700" text-anchor="middle">CLASSIC FEATURE</text>
+  <text x="190" y="82" font-size="9" fill="#6b7280" text-anchor="middle">same input → same output</text>
+  <rect x="52" y="98" width="276" height="24" rx="6" fill="#0d1420" stroke="#5AC8FF" stroke-width="1.2"/>
+  <text x="190" y="114" font-size="9" fill="#cdd0dd" text-anchor="middle">spec it</text>
+  <rect x="52" y="130" width="276" height="24" rx="6" fill="#0d1420" stroke="#5AC8FF" stroke-width="1.2"/>
+  <text x="190" y="146" font-size="9" fill="#cdd0dd" text-anchor="middle">build it</text>
+  <rect x="52" y="162" width="276" height="24" rx="6" fill="#0d1420" stroke="#5AC8FF" stroke-width="1.2"/>
+  <text x="190" y="178" font-size="9" fill="#cdd0dd" text-anchor="middle">test: pass / fail</text>
+  <rect x="52" y="194" width="276" height="24" rx="6" fill="#0d1420" stroke="#5AC8FF" stroke-width="1.2"/>
+  <text x="190" y="210" font-size="9" fill="#cdd0dd" text-anchor="middle">ship it</text>
+  <text x="190" y="252" font-size="9" fill="#5AC8FF" text-anchor="middle">correctness is binary</text>
+  <rect x="400" y="40" width="340" height="196" rx="12" fill="#1e1533" stroke="#3a3170"/>
+  <text x="570" y="64" font-size="11" fill="#B98CFF" font-weight="700" text-anchor="middle">AI FEATURE</text>
+  <text x="570" y="82" font-size="9" fill="#6b7280" text-anchor="middle">same input → a distribution</text>
+  <rect x="432" y="98" width="276" height="24" rx="6" fill="#16102b" stroke="#B98CFF" stroke-width="1.2"/>
+  <text x="570" y="114" font-size="8.5" fill="#cdd0dd" text-anchor="middle">what can the model actually do?</text>
+  <rect x="432" y="130" width="276" height="24" rx="6" fill="#16102b" stroke="#22D3EE" stroke-width="1.2"/>
+  <text x="570" y="146" font-size="8.5" fill="#cdd0dd" text-anchor="middle">build an EVAL SET first</text>
+  <rect x="432" y="162" width="276" height="24" rx="6" fill="#16102b" stroke="#B98CFF" stroke-width="1.2"/>
+  <text x="570" y="178" font-size="8.5" fill="#cdd0dd" text-anchor="middle">measure: % good, not pass/fail</text>
+  <rect x="432" y="194" width="276" height="24" rx="6" fill="#16102b" stroke="#B98CFF" stroke-width="1.2"/>
+  <text x="570" y="210" font-size="8.5" fill="#cdd0dd" text-anchor="middle">design for the 10% it gets wrong</text>
+  <text x="570" y="252" font-size="9" fill="#B98CFF" text-anchor="middle">correctness is a rate — and the UX must absorb it</text>
+  <rect x="20" y="256" width="720" height="44" rx="9" fill="#241d0f" stroke="#f0b429" stroke-width="1.4"/>
+  <text x="380" y="274" font-size="9.5" fill="#f0b429" font-weight="700" text-anchor="middle">the four questions they are really asking</text>
+  <text x="380" y="291" font-size="8.5" fill="#cdd0dd" text-anchor="middle">what breaks when it is wrong? · how do you evaluate it? · what does a token cost you? · why not just prompt GPT?</text>
+  <text x="380" y="326" font-size="10.5" fill="#cdd0dd" text-anchor="middle">"I would add AI" is a non-answer. Name the capability, the eval, and the failure UX.</text>
+  </svg>
+<figcaption>Why the classic framework cracks. A deterministic feature is a function you can test; an AI feature is a distribution you can only evaluate — which changes the product loop, the UX, and the meaning of &quot;done&quot;.</figcaption>
+</figure>
+
+<p class="reveal">Here is the thing the generic advice misses, and it's why engineers can win this round: <strong>you cannot CIRCLES your way through an AI question.</strong> The frameworks assume a deterministic system. The moment the feature is a model, four engineering questions become product questions, and they are exactly the questions you are already qualified to answer:</p>
+
+<div class="step reveal"><div class="num-bubble">1</div><div class="body"><strong>What happens when it's wrong?</strong> Not <em>if</em> — the model will be wrong some percentage of the time. Is that a shrug, or is it a lawsuit? A wrong autocomplete costs nothing. A wrong medication dosage costs everything. Your product design <em>is</em> your answer to this: confirmation steps, undo, showing sources, degrading to a human. Say this and you have separated yourself from most candidates in the room.</div></div>
+<div class="step reveal"><div class="num-bubble">2</div><div class="body"><strong>How would you evaluate it?</strong> "We'd test it" is a non-answer. What's the eval set, who labels it, what's the pass rate you'd ship at, and what's the offline-to-online gap? Building the eval before the feature is the AI-native instinct, and interviewers listen for it.</div></div>
+<div class="step reveal"><div class="num-bubble">3</div><div class="body"><strong>What does it cost, per call?</strong> Tokens, latency, GPU. A feature that costs $0.40 per user per day and is used ten times a day has a business model problem, not an engineering problem. Senior candidates cost their own idea unprompted.</div></div>
+<div class="step reveal"><div class="num-bubble">4</div><div class="body"><strong>Why is this a model, and not a rule?</strong> The killer follow-up. If regex or a lookup table gets you 90% of the way, the model is a liability — more cost, more latency, less predictability. Knowing when <em>not</em> to use AI is now a senior signal in itself.</div></div>
+
+<div class="callout gr reveal">
+  <p style="margin:.2em 0"><span class="t"><svg class="ico"><use href="#i-check"/></svg> The unfair advantage you already have</span></p>
+  <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">PMs walk into the AI product sense round and talk about the market. Engineers can walk in and say: <em>"The capability is retrieval over the user's own repo. The eval set is 200 real questions with known answers, and I'd ship at 85% top-1. It costs about a cent a query, so I'd cache aggressively. And when it's wrong, it shows the file it read — so the user catches it instead of trusting it."</em> That answer is unbeatable, and it is <strong>made of things you already know</strong>. Your job in prep is not to learn product management. It is to learn to <em>say what you already know in product language.</em></p>
+</div>
+
+<h2 id="level" class="reveal"><span class="hico"><svg class="ico"><use href="#i-layers"/></svg></span><span class="n">14.</span> What "senior" actually sounds like</h2>
+<p class="reveal lead">The same answer, delivered two ways, gets two different levels. The difference is almost never the idea.</p>
+
+<figure class="fig reveal">
+<svg viewBox="0 0 760 296" width="100%" aria-label="What mid, senior and staff level answers sound like">
+  <defs>
+    <marker id="p-c" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#5AC8FF"/></marker>
+    <marker id="p-v" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#B98CFF"/></marker>
+    <marker id="p-m" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#6b7280"/></marker>
+    <marker id="p-t" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#22D3EE"/></marker>
+    <marker id="p-r" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#FF6B8B"/></marker>
+    <marker id="p-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#f0b429"/></marker>
+  </defs>
+  <text x="380" y="28" font-size="10.5" fill="#9aa0b4" text-anchor="middle" letter-spacing="1.5">THE LEVEL IS AUDIBLE IN THE FIRST FIVE MINUTES</text>
+  <rect x="30" y="46" width="700" height="60" rx="10" fill="#1a1a20" stroke="#6b7280" stroke-width="1.6"/>
+  <text x="52" y="70" font-size="11" fill="#6b7280" font-weight="700">MID</text>
+  <text x="128" y="70" font-size="9" fill="#9aa0b4">solves the problem you were handed</text>
+  <text x="52" y="91" font-size="9" fill="#cdd0dd">“I’d build the feature they asked for.”</text>
+  <rect x="30" y="120" width="700" height="60" rx="10" fill="#0e2740" stroke="#5AC8FF" stroke-width="1.6"/>
+  <text x="52" y="144" font-size="11" fill="#5AC8FF" font-weight="700">SENIOR</text>
+  <text x="128" y="144" font-size="9" fill="#9aa0b4">chooses which problem is worth solving</text>
+  <text x="52" y="165" font-size="9" fill="#cdd0dd">“I’d cut scope to this one segment, and here is why the rest can wait.”</text>
+  <rect x="30" y="194" width="700" height="60" rx="10" fill="#1e1533" stroke="#B98CFF" stroke-width="1.6"/>
+  <text x="52" y="218" font-size="11" fill="#B98CFF" font-weight="700">STAFF+</text>
+  <text x="128" y="218" font-size="9" fill="#9aa0b4">changes what the team believes about the user</text>
+  <text x="52" y="239" font-size="9" fill="#cdd0dd">“The metric we picked is the bug. Here is the one I’d ship against, and the guardrail.”</text>
+  <text x="380" y="286" font-size="10" fill="#cdd0dd" text-anchor="middle">Seniority is not more features. It is a sharper NO, said earlier, with a reason.</text>
+  </svg>
+<figcaption>Level shows up in what you refuse, and how early you refuse it.</figcaption>
+</figure>
+
+<p class="reveal">Concretely, the three senior signals interviewers write down:</p>
+<div class="step reveal"><div class="num-bubble">1</div><div class="body"><strong>You narrow before you're comfortable.</strong> Mid-level candidates keep options open because closing them feels risky. Senior candidates close them early, out loud, with a reason — and revisit only if the interviewer pushes.</div></div>
+<div class="step reveal"><div class="num-bubble">2</div><div class="body"><strong>You say what you're not doing.</strong> Naming the cut is worth more than naming the feature. It proves you know the cost of what you chose.</div></div>
+<div class="step reveal"><div class="num-bubble">3</div><div class="body"><strong>You argue with the question.</strong> Carefully. "You asked me to increase shares, but I think shares are a proxy — if we win them the way that's easiest, we'll hurt trust. Can I optimise for X instead?" Done well, this is the strongest thing you can do in the room. Done badly, it's arrogance. The difference is whether you offer an alternative and then <em>do the work anyway</em>.</div></div>
+
+<h2 id="de" class="reveal"><span class="hico"><svg class="ico"><use href="#i-database"/></svg></span><span class="n">15.</span> If you're a data engineer</h2>
+<p class="reveal lead">You will get the metrics variant, and you have an advantage you are probably not using.</p>
+
+<p class="reveal">Your instinct — "what does this number actually mean, and can I trust it?" — <em>is</em> product sense. When you ask whether DAU counts a user who opened the app and bounced in 400ms, you are doing exactly what this round rewards. The failure mode for data engineers is not lacking judgment; it's <strong>staying in the pipeline and never coming up to the user.</strong></p>
+
+<p class="reveal">So make these moves explicitly:</p>
+<div class="step reveal"><div class="num-bubble">1</div><div class="body"><strong>Define the metric before you defend it.</strong> "Active" — over what window, counting what event, deduped how? Interviewers love this because most candidates skip it.</div></div>
+<div class="step reveal"><div class="num-bubble">2</div><div class="body"><strong>Question the instrument first.</strong> You've debugged a dashboard that lied. Say so. "Before I theorise, I'd check whether we changed the event schema last Tuesday" is a sentence a PM cannot say with authority and you can.</div></div>
+<div class="step reveal"><div class="num-bubble">3</div><div class="body"><strong>Then get to the human.</strong> Don't stop at "the pipeline is fine." Finish the sentence: <em>"…so it's real, and it's Android users in Brazil on the pre-paid plan — which suggests the new video autoplay is eating their data."</em> That last step is the one that gets you the offer.</div></div>
+
+<p class="reveal">And when they ask you to design something: your pitch is that you can see the <em>data product</em> nobody else can. The internal tool nobody scoped. The metric that's lying to the whole company. The pipeline whose 6-hour latency is quietly costing the sales team a day. That is product sense with a data engineer's eyes, and it is genuinely rare.</p>
+
+<h2 id="aieng" class="reveal"><span class="hico"><svg class="ico"><use href="#i-code"/></svg></span><span class="n">16.</span> If you're an AI engineer</h2>
+<p class="reveal lead">The AI product sense round is the one where your day job is the answer — but only if you translate it.</p>
+
+<p class="reveal">You know that a demo working three times in a row means nothing. You know that the gap between a great demo and a shippable feature is the long tail. You know what it costs to serve a 100k-context request. Every one of those is a product argument, and almost nobody else in the pipeline can make it.</p>
+
+<p class="reveal">The translation you need to practise is from <em>engineering fact</em> to <em>user consequence</em>:</p>
+<table class="reveal">
+  <tr><th>What you'd normally say</th><th>What wins the round</th></tr>
+  <tr><td>"Latency is about 4 seconds."</td><td>"Four seconds is past the point where people alt-tab away — so either I make it stream, or I make the wait feel like work being done."</td></tr>
+  <tr><td>"It hallucinates sometimes."</td><td>"It's wrong maybe 8% of the time, and the user can't tell which 8%. So the product has to show its sources — otherwise we're training people to trust something unreliable."</td></tr>
+  <tr><td>"We'd need to fine-tune."</td><td>"I'd ship the prompt version first to find out whether anyone wants it. Fine-tuning is a bet I'd only make once the eval set tells me the ceiling is real."</td></tr>
+  <tr><td>"It costs 3 cents a call."</td><td>"At three cents and ten calls a day, this feature costs more per user than we charge. So either it drives conversion, or it's a paid tier."</td></tr>
+</table>
+
+<div class="callout gd reveal">
+  <p style="margin:.2em 0"><span class="t"><svg class="ico"><use href="#i-warn"/></svg> The one that gets AI engineers rejected</span></p>
+  <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">Designing for the demo. You describe the happy path in loving detail — the agent plans, executes, self-corrects, delivers — and never say a word about what the user sees when it fails, loops, or confidently invents an answer. The interviewer's note reads: <em>"no failure model."</em> Reverse it: describe the wrong output <strong>first</strong>, then design the product around containing it. That single reordering makes you sound like someone who has shipped.</p>
+</div>
+
+<h2 id="example" class="reveal"><span class="hico"><svg class="ico"><use href="#i-terminal"/></svg></span><span class="n">17.</span> A worked example, end to end</h2>
+<p class="reveal lead">The real prompt, from the AI labs: <strong>"How would you 10× the weekly active users of an AI coding tool?"</strong> Here is the whole spine, compressed — read it as a transcript of what good sounds like.</p>
+
+<div class="cb reveal"><span class="lang">transcript — the shape of a strong 35 minutes</span><pre><span class="p">FRAME (2 min)</span>
+"Thirty seconds to structure. — Two questions: is 10x a real target or a
+ provocation? I'll treat it as 'find a step change, not an optimisation.'
+ And are we growing users, or usage per user? I'll assume users.
+ Plan: who isn't using it and why, pick the biggest locked door, open it,
+ then say how I'd know."
+
+<span class="p">MISSION (3 min)</span>
+"The tool exists to let a developer stay in flow — to delegate the parts of
+ the work that are typing, not thinking. It wins where it has context nobody
+ else has: your repo, your history, your conventions. That's the moat, and
+ it should constrain everything I pick."
+
+<span class="p">SEGMENT (8 min)</span>
+"Three groups, split by why they're not here:
+   1. Never tried it   — doesn't believe an LLM can handle a real codebase
+   2. Tried, bounced   — it was wrong once on day one and they lost trust
+   3. Uses it daily    — already converted, not where 10x lives
+
+ 10x cannot come from group 3. Group 1 is a marketing problem, and I don't
+ have 10x of marketing. So: <span class="k">group 2 — the bounced.</span> They installed it. They
+ have the intent. Something specific broke, and that's addressable."
+
+<span class="p">PAIN (8 min)</span>
+"Their journey: install → point it at a real repo → ask for something real
+ → it confidently edits the wrong file → they revert → they never open it
+ again. The pain isn't 'it's not smart enough.' It's:
+   <span class="k">one bad edit destroys trust permanently, and the tool never earns it back.</span>
+ Frequency: happens on day one, to nearly everyone. Severity: terminal —
+ they don't come back. That's the one."
+
+<span class="p">SOLUTION (8 min)</span>
+"Three genuinely different attacks:
+   a. Make it right more often  — better retrieval. Real, slow, everyone's doing it.
+   b. Make being wrong cheap    — never let it write without a diff the user
+                                  accepts. Wrongness becomes a suggestion, not damage.
+   c. Make it earn trust slowly — start it read-only. It explains your code
+                                  before it ever touches it.
+
+ V1 is (b) — <span class="k">it's the smallest thing that changes the outcome.</span> Cost of a
+ mistake goes from 'reverted my work' to 'I said no.' I'd explicitly NOT
+ build (a) for v1: it's a six-month bet and it doesn't fix the trust cliff,
+ it just moves it.
+
+ Risk: diffs add friction for the power users in group 3 — so it's default-on
+ for new users and switchable off. I'd watch group 3's usage as a guardrail."
+
+<span class="p">METRIC (3 min)</span>
+"North star: <span class="k">weekly active developers</span>. But the metric that tells me if I'm
+ right is narrower: <span class="k">day-1 to week-2 retention of new installs</span> — because my
+ whole thesis is that we're leaking at the trust cliff.
+ Guardrails: edits accepted per session (did I make it annoying?), and
+ daily usage of group 3 (did I tax the people who already love it?)."
+</pre></div>
+
+<p class="reveal">Notice what that answer does <em>not</em> do. It doesn't list ten features. It doesn't try to be clever. It picks one user, one moment, one fix, says what it's sacrificing, and names the number that would prove it wrong. That is the whole game.</p>
+
+<h2 id="fail" class="reveal"><span class="hico"><svg class="ico"><use href="#i-alert"/></svg></span><span class="n">18.</span> The failure modes, ranked by how often they kill people</h2>
+
+<table class="reveal">
+  <tr><th>Failure</th><th>What it sounds like</th><th>The fix</th></tr>
+  <tr><td><strong>Solution jumping</strong></td><td>You're proposing a feature in minute three.</td><td>Force yourself through user → pain first. Every time. Even when the answer is obvious.</td></tr>
+  <tr><td><strong>Running out of clock</strong></td><td>Beautiful mission, no V1, "…and I guess I'd build something."</td><td>Wear a watch. Mission gets four minutes.</td></tr>
+  <tr><td><strong>Mushy segment</strong></td><td>"Users who want to be more productive."</td><td>Split by motivation, not demographics. Then name a person.</td></tr>
+  <tr><td><strong>Needs, not problems</strong></td><td>"They want it to be easier."</td><td>Find the obstacle: what specifically blocks them, when, and why does it hurt?</td></tr>
+  <tr><td><strong>Refusing to prioritise</strong></td><td>"All three of these are important."</td><td>Pick. Say why. The pick is the answer.</td></tr>
+  <tr><td><strong>Feature listing</strong></td><td>Six ideas, no depth, no choice.</td><td>Three <em>different</em> ideas, then one V1, then what you cut.</td></tr>
+  <tr><td><strong>No failure model</strong> <span style="color:#FF6B8B">(AI roles)</span></td><td>Only the happy path is described.</td><td>Describe the wrong output first. Then design around it.</td></tr>
+  <tr><td><strong>Metric with no guardrail</strong> <span style="color:#FF6B8B">(data roles)</span></td><td>"I'd measure engagement."</td><td>One north star + the guardrails that stop you gaming it.</td></tr>
+  <tr><td><strong>Silent thinking</strong></td><td>Forty seconds of nothing, then a conclusion.</td><td>Narrate. They are scoring the reasoning, and they cannot hear your head.</td></tr>
+</table>
+
+<h2 id="prep" class="reveal"><span class="hico"><svg class="ico"><use href="#i-compass"/></svg></span><span class="n">19.</span> A three-week prep plan</h2>
+<p class="reveal lead">This round rewards reps far more than reading. You cannot think your way to fluency; you have to talk your way there, badly, several times.</p>
+
+<div class="step reveal"><div class="num-bubble">1</div><div class="body"><strong>Week 1 — build the spine.</strong> Learn the five steps until you can recite them cold. Then do five questions <em>out loud, on a timer, recorded</em>. Play them back. It will be worse than you think — that's the point, and it is the single highest-value hour of the whole plan.</div></div>
+<div class="step reveal"><div class="num-bubble">2</div><div class="body"><strong>Week 2 — reps and range.</strong> One question a day, alternating types: design, improve, strategy, metric-drop, AI. Keep a one-page log per question: what segment did I pick, what pain, what V1, what did I cut. You're building a library of <em>moves</em>, not answers.</div></div>
+<div class="step reveal"><div class="num-bubble">3</div><div class="body"><strong>Week 3 — pressure and polish.</strong> Two mock interviews with a human who will interrupt you (that's the part you can't simulate alone). Then prepare your three anchors: the product you know cold, a project of yours told as a product story, and — for AI roles — a crisp opinion on where models are actually useful and where they are theatre.</div></div>
+
+<h4 class="reveal">A question bank to work through</h4>
+<div class="cb reveal"><span class="lang">practice set — say every one of these out loud, on a clock</span><pre><span class="c"># Design</span>
+Design a parking solution.
+Design a feature for Google Maps for people who don't drive.
+Design a product that helps someone learn a language on a commute.
+
+<span class="c"># Improve</span>
+Take your favourite product. What's the one thing you'd change, and why that one?
+Improve the onboarding of a tool your team actually uses.
+
+<span class="c"># Strategy</span>
+You're CPO of Zoom and Teams is bundled free with everything. What now?
+Should a database company build an AI agent? Argue both sides, then pick.
+
+<span class="c"># Metrics / diagnosis</span>
+Messenger DAU is down 5% week over week. Walk me through it.
+Your model's offline accuracy went up and the business metric didn't move. Why?
+Pick a north star for a food delivery app. Now name the guardrails.
+
+<span class="c"># AI product sense</span>
+How would you 10x the weekly actives of an AI coding tool?
+Double image generation usage with three engineers. What do you build?
+Where would you deliberately NOT use a model in this product, and why?
+</pre></div>
+
+<h2 id="cheatsheet" class="reveal"><span class="hico"><svg class="ico"><use href="#i-list"/></svg></span><span class="n">20.</span> Cheat sheet</h2>
+
+<div class="cb reveal"><span class="lang">the whole page, on one card</span><pre><span class="p">THE SPINE</span>              frame → mission → segment → pain → solution/V1 → metric
+<span class="p">THE CLOCK</span>              4 · 4 · 9 · 9 · 9   (mission is 4. FOUR.)
+<span class="p">THE DIALS</span>              communication · motivation · segmentation · problem · solution
+                       they do NOT average — clear all five
+
+<span class="p">SENTENCES THAT SCORE</span>
+  "Let me take thirty seconds to structure this."
+  "I'll assume X and Y — shout if you'd rather I went elsewhere."
+  "Here's my plan for our time together..."
+  "I'm picking this segment because they're big AND badly served today."
+  "That's a need, not a problem. The obstacle is actually..."
+  "I'd explicitly NOT build Z in v1, because..."
+  "I'd hold X as a guardrail — the cheap way to win this metric is to hurt it."
+  "I have ten minutes left, so let me commit and design."
+
+<span class="p">METRICS</span>                one north star + 2-3 drivers + guardrails
+                       a metric you can game is not a metric
+
+<span class="p">METRIC DROP</span>            instrument? → external? → which segment? → what shipped? → so what?
+
+<span class="p">AI ROUNDS</span>              name the capability · name the eval · name the cost
+                       describe the WRONG output before the right one
+                       "why a model and not a rule?" — have the answer ready
+
+<span class="p">SENIORITY</span>              is a sharper NO, said earlier, with a reason
+</pre></div>
+
+<div class="gloss reveal">
+  <h4><svg class="ico"><use href="#i-book"/></svg> Glossary</h4>
+  <dl>
+    <dt id="glossary">Product sense</dt><dd>Judgment about which problem is worth solving, for whom, and what to build first — under ambiguity.</dd>
+    <dt>North star metric</dt><dd>The single number that best represents the value users get. Moves slowly; everything else should ladder up to it.</dd>
+    <dt>Input driver</dt><dd>A metric a team can actually move this quarter (adoption, frequency, yield) that feeds the north star.</dd>
+    <dt>Guardrail metric</dt><dd>A number that must not get worse while you chase the north star. Exists to catch you winning dishonestly.</dd>
+    <dt>Counter-metric</dt><dd>A guardrail chosen specifically because it captures the cheapest way to game your primary metric.</dd>
+    <dt>Segment</dt><dd>A group of users who share a <em>motivation</em>, not a demographic. If two segments would want the same product, they're one segment.</dd>
+    <dt>Persona</dt><dd>One named, specific human standing in for the segment, so later decisions have something concrete to be tested against.</dd>
+    <dt>Need vs problem</dt><dd>A need is a wish ("I want it faster"). A problem is an obstacle with a cause and a moment ("it times out while I'm on the train"). You can only build against problems.</dd>
+    <dt>V1 / MVP</dt><dd>The smallest thing you could ship that would still solve the prioritised pain — and prove or kill the thesis.</dd>
+    <dt>Eval set</dt><dd>A fixed set of labelled examples used to measure an AI feature's quality as a <em>rate</em>. The AI-native replacement for "it works."</dd>
+    <dt>Failure model</dt><dd>The explicit answer to "what does the user see when the model is wrong?" Its absence is the most common AI-round rejection.</dd>
+    <dt>Offline–online gap</dt><dd>When a model improves on your eval set but the business metric doesn't move. Usually means the eval doesn't reflect real use.</dd>
+    <dt>CIRCLES</dt><dd>A popular PM answer framework (Comprehend, Identify, Report, Cut, List, Evaluate, Summarise). Useful scaffolding for design questions; breaks down on AI questions, where the system is probabilistic.</dd>
+  </dl>
+</div>
+
+<footer class="reveal">
+  <p>Part of <a href="../">Data &amp; AI Engineering, Simply Explained</a> · a <a href="../#essentials">Reference</a>. Pairs with <a href="../docker-essentials/">Docker Essentials</a>, <a href="../cicd-essentials/">CI/CD Essentials</a> and <a href="../git-essentials/">Git Essentials</a>.</p>
+  <p>© 2026 · Hao Tieu · Built with GitHub Pages · <a href="https://linkedin.com/in/haotieu2001" target="_blank" rel="noopener">LinkedIn</a></p>
+</footer>
+</div><!-- /page -->
+
+<script>
+  var bar=document.getElementById('bar');
+  function prog(){var h=document.documentElement;var s=h.scrollTop||document.body.scrollTop;var max=(h.scrollHeight-h.clientHeight)||1;bar.style.width=(s/max*100)+'%';}
+  document.addEventListener('scroll',prog,{passive:true});prog();
+  function revealAll(){document.querySelectorAll('.reveal').forEach(function(el){el.classList.add('in');});}
+  try{
+    var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}});},{threshold:.06});
+    document.querySelectorAll('.reveal').forEach(function(el){io.observe(el);});
+    window.addEventListener('load',function(){setTimeout(revealAll,1500);});
+    setTimeout(revealAll,2200);
+  }catch(e){revealAll();}
+</script>
+
+</body>
+</html>

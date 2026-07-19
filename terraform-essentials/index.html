@@ -1,0 +1,1759 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Terraform Essentials for Data Engineers</title>
+<meta name="description" content="A complete, beginner-friendly reference to Terraform — what infrastructure-as-code really is, the three worlds (config, state, reality), the write → init → plan → apply loop, HCL end to end, state &amp; locking, the dependency graph, count vs for_each, modules, environments, Terraform in CI/CD, a fully worked example repo explained file by file, and how data engineers actually use it: buckets, IAM, Databricks, Snowflake and Airflow."/>
+<meta property="og:type" content="article"/>
+<meta property="og:title" content="Terraform Essentials for Data Engineers"/>
+<meta property="og:description" content="From zero to confident: the three worlds (config, state, reality), the plan/apply loop, HCL end to end, state &amp; locking, modules, environments, Terraform in CI/CD — and the data-engineering specifics."/>
+<meta property="og:url" content="https://haotieu2001.github.io/terraform-essentials/"/>
+<meta property="og:image" content="https://haotieu2001.github.io/og-cover.png"/>
+<meta property="og:image:width" content="1200"/>
+<meta property="og:image:height" content="630"/>
+<meta property="og:image:alt" content="Terraform Essentials for Data Engineers"/>
+<meta name="twitter:card" content="summary_large_image"/>
+<meta name="twitter:title" content="Terraform Essentials for Data Engineers"/>
+<meta name="twitter:description" content="A complete, beginner-friendly Terraform reference, with a data-engineering lens and runnable HCL."/>
+<meta name="twitter:image" content="https://haotieu2001.github.io/og-cover.png"/>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,500;0,700;0,800;1,400&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#1A1A1A; --bg2:#121212; --ink:#F1F1F1; --muted:#9aa0b4; --dim:#666666;
+    --blue2:#6B5BE6; --cyan:#7B42BC; --cyan2:#B78AE8; --purple:#7B42BC; --magenta2:#C77DFF;
+    --grad:linear-gradient(90deg,#5C4EE5,#7B42BC,#C77DFF);
+    --font:"JetBrainsMono Nerd Font","JetBrains Mono","Symbols Nerd Font",ui-monospace,"Cascadia Code",Menlo,Consolas,monospace;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font);font-size:16px;line-height:1.85;-webkit-font-smoothing:antialiased}
+  #bar{position:fixed;top:0;left:0;height:3px;width:0;z-index:50;background:var(--grad);box-shadow:0 0 12px #7B42BC99;transition:width .1s linear}
+  .page{max-width:880px;margin:0 auto;padding:0 24px}
+  header{padding:30px 0 6px}
+  .kicker{font-size:13px;color:var(--dim)}
+  .back{color:var(--cyan2);text-decoration:none;font-size:13px;border-bottom:1px dotted #B78AE866}
+  h1{font-size:clamp(28px,4.6vw,46px);line-height:1.12;margin:12px 0 12px;font-weight:800;
+     background:var(--grad);background-size:220% auto;-webkit-background-clip:text;background-clip:text;color:transparent;animation:sheen 9s linear infinite}
+  @keyframes sheen{to{background-position:220% center}}
+  .dek{color:var(--muted);font-size:17px}
+  .byline{margin-top:14px;font-size:13px;color:var(--dim)}
+  h2{font-size:clamp(21px,3.2vw,28px);margin:52px 0 6px;font-weight:800;line-height:1.22;padding-top:14px;border-top:1px solid #23232e}
+  h2 .n{color:var(--blue2)}
+  h3{font-size:18px;margin:28px 0 4px;color:#fff;font-weight:700}
+  h4{font-size:15px;margin:20px 0 4px;color:var(--cyan2);font-weight:700}
+  p,li{color:#dcdce4}
+  .lead{font-size:18px;color:#e7e7ee}
+  a{color:var(--cyan2)}
+  hr{border:0;border-top:1px solid #2c2c36;margin:36px 0}
+  code{font-family:var(--font);background:#23232b;color:#B78AE8;padding:1px 6px;border-radius:5px;font-size:.88em;border:1px solid #2f2f3a}
+  .cb{margin:16px 0}
+  .cb .lang{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:#9aa0b4;background:#1b1b24;border:1px solid #2c2c36;border-bottom:none;border-radius:9px 9px 0 0;padding:4px 12px}
+  pre{margin:0;background:#0d0d13;border:1px solid #23232e;border-radius:0 10px 10px 10px;padding:14px 16px;overflow-x:auto;
+      font-family:var(--font);font-size:13px;line-height:1.65;color:#d8dcea;white-space:pre}
+  pre .c{color:#6b7280}
+  pre .o{color:#9aa0b4}
+  pre .k{color:#B78AE8}
+  pre .g{color:#34d399}
+  pre .y{color:#f0b429}
+  pre .r{color:#f87171}
+  pre .p{color:#C77DFF}
+  .callout{border-left:4px solid var(--blue2);background:#191233;border-radius:0 12px 12px 0;padding:14px 18px;margin:22px 0}
+  .callout.cy{border-color:var(--cyan);background:#1c1230}
+  .callout.mg{border-color:var(--magenta2);background:#2a1240}
+  .callout.gd{border-color:#f0b429;background:#241d0f}
+  .callout.gr{border-color:#34d399;background:#0d1f18}
+  .callout .t{color:var(--cyan2);font-weight:800}
+  .callout.gd .t{color:#f0b429}
+  .callout.gr .t{color:#34d399}
+  .callout.mg .t{color:var(--magenta2)}
+  .tldr{border:1px solid #3a2f66;background:linear-gradient(180deg,#191233,#121212);border-radius:16px;padding:20px 24px;margin:26px 0}
+  .tldr h4{margin:0 0 8px;font-size:13px;letter-spacing:.2em;text-transform:uppercase;color:var(--cyan2)}
+  .gloss{border:1px solid #2c2c36;background:#141419;border-radius:14px;padding:18px 22px;margin:24px 0}
+  .gloss h4{margin:0 0 6px;color:#fff;font-size:15px}
+  .gloss dl{margin:0;font-size:13.5px}
+  .gloss dt{color:var(--cyan2);font-weight:700;margin-top:9px}
+  .gloss dd{margin:1px 0 0;color:#cdd0dd}
+  .toc{background:#15151b;border:1px solid #2c2c36;border-radius:14px;padding:16px 22px;margin:24px 0;column-count:2;column-gap:28px}
+  .toc a{display:block;color:var(--cyan2);text-decoration:none;font-size:13.5px;line-height:1.9;break-inside:avoid}
+  .toc a:hover{color:#fff}
+  .toc>strong{column-span:all;display:block;margin-bottom:6px;color:#fff}
+  table{border-collapse:collapse;width:100%;font-size:13.5px;margin:16px 0}
+  th,td{border:1px solid #2c2c36;padding:8px 11px;text-align:left;vertical-align:top}
+  th{background:#1d1d27;color:#fff}
+  tr:nth-child(even) td{background:#161620}
+  .ico{width:1em;height:1em;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+  .ico.f{fill:currentColor;stroke:none}
+  h2{display:flex;align-items:center;gap:10px}
+  .hico{display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;border-radius:11px;flex:0 0 36px;
+        background:#1c1230;border:1px solid #3a2f66;color:var(--cyan2)}
+  .hico .ico{width:19px;height:19px}
+  .toc a .ico{width:14px;height:14px;margin-right:9px;vertical-align:-2px;opacity:.85}
+  .callout .t .ico{width:16px;height:16px;vertical-align:-3px;margin-right:5px}
+  .tldr h4 .ico,.gloss h4 .ico{width:15px;height:15px;vertical-align:-2px;margin-right:6px}
+  .stack{margin-top:14px;display:flex;align-items:center;gap:10px;font-size:12px;color:var(--dim);flex-wrap:wrap}
+  .chip{display:inline-flex;align-items:center;gap:7px;padding:5px 12px;border-radius:999px;
+        border:1px solid #3a2f66;background:#1c1230;color:#B78AE8;font-weight:700;font-size:11.5px}
+  .chip .ico{width:13px;height:13px}
+  figure.fig{margin:26px 0;text-align:center}
+  figure.fig svg{display:block;width:100%;max-width:100%;height:auto;border:1px solid #23232e;border-radius:14px;background:#0d0d13}
+  figure.fig figcaption{font-size:12.5px;color:var(--muted);margin-top:9px;font-style:italic;line-height:1.6}
+  .step{display:flex;gap:12px;align-items:flex-start;margin:14px 0}
+  .step .num-bubble{flex:0 0 28px;height:28px;border-radius:50%;background:var(--grad);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:#fff;margin-top:2px}
+  .step .body{flex:1}
+  footer{border-top:1px solid #23232e;margin-top:50px;padding:24px 0 90px;color:var(--dim);font-size:13px}
+  footer a{color:var(--cyan2)}
+  .js .reveal{opacity:0;transform:translateY(16px);transition:opacity .6s ease,transform .6s ease}
+  .js .reveal.in{opacity:1;transform:none}
+  @media (prefers-reduced-motion:reduce){.js .reveal{opacity:1;transform:none}}
+</style>
+<script>document.documentElement.classList.add('js');</script>
+</head>
+<body>
+<div id="bar"></div>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs>
+<symbol id="i-question" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.6 9.4a2.5 2.5 0 1 1 3.3 2.4c-.6.2-.9.8-.9 1.5v.6M12 17h.01"/></symbol>
+<symbol id="i-layers" viewBox="0 0 24 24"><path d="m12 3 9 4.8-9 4.8-9-4.8 9-4.8Z"/><path d="m3 12.6 9 4.8 9-4.8M3 17.2l9 4.8 9-4.8"/></symbol>
+<symbol id="i-workflow" viewBox="0 0 24 24"><rect x="3" y="3.5" width="7" height="6" rx="1.5"/><rect x="14" y="14.5" width="7" height="6" rx="1.5"/><path d="M6.5 9.5v5a3 3 0 0 0 3 3H14"/></symbol>
+<symbol id="i-check" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="m8 12.2 2.7 2.7L16.2 9"/></symbol>
+<symbol id="i-rocket" viewBox="0 0 24 24"><path d="M12 2.5c3 2.6 4.8 6.4 4.8 10.6L12 16.4l-4.8-3.3C7.2 8.9 9 5.1 12 2.5Z"/><path d="M7.2 13.1 4.4 15v4.2l3-1.9M16.8 13.1l2.8 1.9v4.2l-3-1.9M12 19.5v2.3"/><circle cx="12" cy="10" r="1.7"/></symbol>
+<symbol id="i-terminal" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2.5"/><path d="m7.5 9.5 3 2.5-3 2.5M13.5 15h3.5"/></symbol>
+<symbol id="i-package" viewBox="0 0 24 24"><path d="m12 2.8 8.2 4.6v9.2L12 21.2l-8.2-4.6V7.4L12 2.8Z"/><path d="m3.8 7.4 8.2 4.6 8.2-4.6M12 12v9.2"/></symbol>
+<symbol id="i-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18"/><path d="M12 3c2.4 2.7 3.6 5.7 3.6 9s-1.2 6.3-3.6 9c-2.4-2.7-3.6-5.7-3.6-9S9.6 5.7 12 3Z"/></symbol>
+<symbol id="i-repeat" viewBox="0 0 24 24"><path d="M16.5 3 20 6.5 16.5 10"/><path d="M4 11.5V9a2.5 2.5 0 0 1 2.5-2.5H20"/><path d="M7.5 21 4 17.5 7.5 14"/><path d="M20 12.5V15a2.5 2.5 0 0 1-2.5 2.5H4"/></symbol>
+<symbol id="i-database" viewBox="0 0 24 24"><ellipse cx="12" cy="6" rx="8" ry="3.2"/><path d="M4 6v12c0 1.8 3.6 3.2 8 3.2s8-1.4 8-3.2V6"/><path d="M20 12c0 1.8-3.6 3.2-8 3.2S4 13.8 4 12"/></symbol>
+<symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 2.8 4.8 5.6v5.2c0 4.4 3 8.4 7.2 9.8 4.2-1.4 7.2-5.4 7.2-9.8V5.6L12 2.8Z"/><path d="m9 12 2.2 2.2L15.4 10"/></symbol>
+<symbol id="i-list" viewBox="0 0 24 24"><path d="M8.5 6h12M8.5 12h12M8.5 18h12M3.7 6h.01M3.7 12h.01M3.7 18h.01"/></symbol>
+<symbol id="i-book" viewBox="0 0 24 24"><path d="M4 5a3 3 0 0 1 3-3h13v18H7a3 3 0 0 0-3 3V5Z"/><path d="M8 2v18"/></symbol>
+<symbol id="i-key" viewBox="0 0 24 24"><circle cx="7.2" cy="16.3" r="3.4"/><path d="m9.7 13.9 9.6-9.6M16.6 6.9l2.3 2.3M14 9.5l2.3 2.3"/></symbol>
+<symbol id="i-bulb" viewBox="0 0 24 24"><path d="M9.2 18h5.6M10.4 21h3.2"/><path d="M12 3a6 6 0 0 0-3.4 10.9c.5.4.8 1 .8 1.7v.4h5.2v-.4c0-.7.3-1.3.8-1.7A6 6 0 0 0 12 3Z"/></symbol>
+<symbol id="i-warn" viewBox="0 0 24 24"><path d="M12 3.2 2.8 19.6h18.4L12 3.2Z"/><path d="M12 9.5v4.2M12 16.8h.01"/></symbol>
+<symbol id="i-alert" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7.2v5.4M12 16.4h.01"/></symbol>
+<symbol id="i-compass" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="m15.6 8.4-2.1 5.1-5.1 2.1 2.1-5.1 5.1-2.1Z"/></symbol>
+<symbol id="i-blocks" viewBox="0 0 24 24"><rect x="3.5" y="3.5" width="7" height="7" rx="1.6"/><rect x="13.5" y="3.5" width="7" height="7" rx="1.6"/><rect x="3.5" y="13.5" width="7" height="7" rx="1.6"/><rect x="13.5" y="13.5" width="7" height="7" rx="1.6"/></symbol>
+<symbol id="i-search" viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m15.2 15.2 4.3 4.3"/></symbol>
+<symbol id="i-code" viewBox="0 0 24 24"><path d="m8 8.5-4 3.5 4 3.5M16 8.5l4 3.5-4 3.5M13.6 5l-3.2 14"/></symbol>
+<symbol id="i-plug" viewBox="0 0 24 24"><path d="M9 3v5.5M15 3v5.5"/><path d="M6.5 8.5h11V12a5.5 5.5 0 0 1-11 0V8.5Z"/><path d="M12 17.5V21"/></symbol>
+<symbol id="i-file" viewBox="0 0 24 24"><path d="M14 3H7.5A2.5 2.5 0 0 0 5 5.5v13A2.5 2.5 0 0 0 7.5 21h9a2.5 2.5 0 0 0 2.5-2.5V8l-5-5Z"/><path d="M14 3v5h5"/></symbol>
+<symbol id="i-network" viewBox="0 0 24 24"><circle cx="5.5" cy="6" r="2.5"/><circle cx="5.5" cy="18" r="2.5"/><circle cx="18.5" cy="12" r="2.5"/><path d="m7.9 7.2 8.2 3.7M7.9 16.8l8.2-3.7"/></symbol>
+<symbol id="i-vars" viewBox="0 0 24 24"><path d="M7.5 4c-2.6 4.4-2.6 11.6 0 16M16.5 4c2.6 4.4 2.6 11.6 0 16"/><path d="m10 9.5 4 5M14 9.5l-4 5"/></symbol>
+<symbol id="i-copy" viewBox="0 0 24 24"><rect x="8.5" y="8.5" width="12" height="12" rx="2.2"/><path d="M15.5 8.5v-2a2.2 2.2 0 0 0-2.2-2.2H5.7a2.2 2.2 0 0 0-2.2 2.2v7.6a2.2 2.2 0 0 0 2.2 2.2h2"/></symbol>
+<symbol id="i-lock" viewBox="0 0 24 24"><rect x="4.5" y="10" width="15" height="10.5" rx="2.4"/><path d="M8 10V7.2a4 4 0 0 1 8 0V10"/></symbol>
+<symbol id="i-cloud" viewBox="0 0 24 24"><path d="M6.8 19.2h10.6a3.9 3.9 0 0 0 .4-7.8 6.1 6.1 0 0 0-11.7-1.7 3.8 3.8 0 0 0 .7 9.5Z"/></symbol>
+<symbol id="i-eye" viewBox="0 0 24 24"><path d="M2.6 12S6.2 5.8 12 5.8 21.4 12 21.4 12 17.8 18.2 12 18.2 2.6 12 2.6 12Z"/><circle cx="12" cy="12" r="3.1"/></symbol>
+<symbol id="i-zap" viewBox="0 0 24 24"><path d="M13.2 2.5 4.5 14h6.6l-1.3 7.5L19 10h-6.6l.8-7.5Z"/></symbol>
+<symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="3.6"/><path d="M4.8 20.2a7.2 7.2 0 0 1 14.4 0"/></symbol>
+<symbol id="i-branch" viewBox="0 0 24 24"><circle cx="6.5" cy="5.5" r="2.5"/><circle cx="6.5" cy="18.5" r="2.5"/><circle cx="17.5" cy="8.5" r="2.5"/><path d="M6.5 8v8"/><path d="M17.5 11c0 4-4.6 3.2-6.6 5.4"/></symbol>
+<symbol id="i-terraform" viewBox="0 0 24 24"><path d="M1.44 0v7.575l6.561 3.79V3.787zM8.674 4.177v7.575l6.562 3.79V7.966zm6.561 0v7.575l6.562-3.787V.39zM8.674 12.4v7.575L15.236 24v-7.578z"/></symbol>
+</defs></svg>
+<div class="page">
+
+<header>
+  <div class="kicker"><a class="back" href="../">❮ Data &amp; AI Engineering, Simply Explained</a></div>
+  <h1>Terraform Essentials for Data Engineers</h1>
+  <p class="dek"><strong>Terraform</strong> lets you describe your cloud — buckets, warehouses, clusters, permissions — as text files you keep in Git, and then builds it for you. No more clicking through a console and hoping you remember what you did. This guide builds the mental model one piece at a time (the <strong>three worlds</strong>: your config, Terraform's state, and reality), then makes it concrete with <strong>HCL</strong> you can copy, before covering the parts that actually bite: <strong>state and locking</strong>, the <strong>dependency graph</strong>, <strong>count vs for_each</strong>, <strong>modules</strong>, <strong>environments</strong>, and running Terraform in <strong>CI/CD</strong> — finishing with how data engineers really use it: S3, IAM, Databricks, Snowflake and Airflow.</p>
+  <div class="byline">~45 min read · Essentials · Reference</div>
+  <div class="stack reveal">
+    <span class="chip"><svg class="ico f"><use href="#i-terraform"/></svg> Terraform</span>
+    <span class="chip" style="color:#9d8cf5;border-color:#33306b;background:#191632"><svg class="ico f"><use href="#i-terraform"/></svg> OpenTofu</span>
+    <span>same HCL · same commands</span>
+  </div>
+</header>
+
+<figure class="reveal" style="margin:18px 0 6px;background:radial-gradient(130% 150% at 50% 0%,#191233 0%,#0d0d13 72%);border:1px solid #23232e;border-radius:16px;padding:10px 10px;overflow:hidden">
+<svg viewBox="0 0 880 190" width="100%" style="display:block" font-family="var(--font)" aria-label="Terraform's loop: write config, init, plan, apply, and the real cloud appears">
+  <defs>
+    <linearGradient id="tf-grad" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#6B5BE6"/><stop offset=".5" stop-color="#7B42BC"/><stop offset="1" stop-color="#C77DFF"/>
+    </linearGradient>
+    <marker id="ha" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#4a5163"/></marker>
+  </defs>
+  <line x1="84" y1="84" x2="790" y2="84" stroke="#23232e" stroke-width="2"/>
+  <g stroke="#4a5163" stroke-width="1.5" fill="none">
+    <line x1="100" y1="84" x2="144" y2="84" marker-end="url(#ha)"/>
+    <line x1="266" y1="84" x2="304" y2="84" marker-end="url(#ha)"/>
+    <line x1="426" y1="84" x2="464" y2="84" marker-end="url(#ha)"/>
+    <line x1="596" y1="84" x2="634" y2="84" marker-end="url(#ha)"/>
+  </g>
+  <g font-size="12" text-anchor="middle">
+    <circle cx="84" cy="84" r="13" fill="#0f1f17" stroke="#34d399" stroke-width="2.4"/>
+    <circle cx="84" cy="84" r="4" fill="#34d399"/>
+    <text x="84" y="124" fill="#34d399" font-size="11">write</text>
+    <text x="84" y="140" fill="#6b7280" font-size="9.5">main.tf</text>
+
+    <rect x="146" y="62" width="120" height="44" rx="10" fill="#1c1230" stroke="#B78AE8" stroke-width="1.8"/>
+    <use href="#i-plug" x="162" y="78" width="14" height="14" fill="none" stroke="#B78AE8" stroke-width="2.2"/>
+    <text x="216" y="89" fill="#B78AE8">init</text>
+    <text x="206" y="124" fill="#6b7280" font-size="9.5">get the providers</text>
+
+    <rect x="306" y="62" width="120" height="44" rx="10" fill="#1a180d" stroke="#f0b429" stroke-width="1.8"/>
+    <use href="#i-eye" x="322" y="78" width="14" height="14" fill="none" stroke="#f0b429" stroke-width="2.2"/>
+    <text x="376" y="89" fill="#f0b429">plan</text>
+    <text x="366" y="124" fill="#6b7280" font-size="9.5">preview the diff</text>
+
+    <rect x="466" y="62" width="130" height="44" rx="10" fill="#2a1240" stroke="#C77DFF" stroke-width="1.8"/>
+    <use href="#i-zap" x="482" y="78" width="14" height="14" fill="none" stroke="#C77DFF" stroke-width="2.2"/>
+    <text x="541" y="89" fill="#C77DFF">apply</text>
+    <text x="531" y="124" fill="#6b7280" font-size="9.5">make it real</text>
+
+    <rect x="636" y="60" width="150" height="48" rx="10" fill="#2a1240" stroke="url(#tf-grad)" stroke-width="2.4"/>
+    <use href="#i-cloud" x="650" y="78" width="14" height="14" fill="none" stroke="#E0BBFF" stroke-width="2.2"/>
+    <text x="721" y="89" fill="#E0BBFF">your cloud</text>
+    <text x="711" y="124" fill="#6b7280" font-size="9.5">buckets · roles · jobs</text>
+  </g>
+  <circle r="4.5" cy="84" fill="#B78AE8">
+    <animate attributeName="cx" values="84;711;711" dur="4.6s" repeatCount="indefinite"/>
+    <animate attributeName="opacity" values="0;.95;.95;0;0" keyTimes="0;.06;.72;.82;1" dur="4.6s" repeatCount="indefinite"/>
+  </circle>
+  <text x="440" y="170" font-size="12" fill="#6b7280" text-anchor="middle">you describe <tspan fill="#9aa0b4">what you want</tspan> — Terraform works out <tspan fill="#9aa0b4">how to get there</tspan></text>
+</svg>
+</figure>
+
+<div class="tldr reveal">
+  <h4><svg class="ico"><use href="#i-zap"/></svg> The one idea (read this first)</h4>
+  <p style="margin:.2em 0">Terraform is <strong>infrastructure as code</strong>. Instead of clicking "Create bucket" in a web console, you write a text file that says <em>"a bucket named <code>raw-data</code> should exist"</em>, and Terraform makes reality match. It is <strong>declarative</strong>: you describe the <em>destination</em>, not the driving directions. To pull that off, Terraform keeps a <strong>state file</strong> — its private notebook recording which real cloud resource belongs to which line of your code. Every run, it compares three things: <strong>your config</strong> (what you want), <strong>the state</strong> (what it thinks it built) and <strong>the real cloud</strong> (what's actually there). The difference is called a <strong>plan</strong> — a preview you read before anything changes — and <code>apply</code> executes it. Master state and you've mastered Terraform; almost every horror story is really a state story.</p>
+</div>
+
+<div class="toc reveal">
+  <strong>Contents</strong>
+  <a href="#why"><svg class="ico"><use href="#i-question"/></svg>01 · What Terraform is &amp; why IaC exists</a>
+  <a href="#model"><svg class="ico"><use href="#i-layers"/></svg>02 · The mental model: three worlds</a>
+  <a href="#loop"><svg class="ico"><use href="#i-repeat"/></svg>03 · The core loop: init → plan → apply</a>
+  <a href="#hcl"><svg class="ico"><use href="#i-code"/></svg>04 · HCL: the language, block by block</a>
+  <a href="#providers"><svg class="ico"><use href="#i-plug"/></svg>05 · Providers, versions &amp; the lock file</a>
+  <a href="#state"><svg class="ico"><use href="#i-file"/></svg>06 · State: the part that trips everyone up</a>
+  <a href="#graph"><svg class="ico"><use href="#i-network"/></svg>07 · The dependency graph</a>
+  <a href="#vars"><svg class="ico"><use href="#i-vars"/></svg>08 · Variables, outputs, locals &amp; expressions</a>
+  <a href="#meta"><svg class="ico"><use href="#i-copy"/></svg>09 · count, for_each, lifecycle &amp; dynamic</a>
+  <a href="#modules"><svg class="ico"><use href="#i-package"/></svg>10 · Modules — write it once</a>
+  <a href="#envs"><svg class="ico"><use href="#i-globe"/></svg>11 · Environments: workspaces vs directories</a>
+  <a href="#cicd"><svg class="ico"><use href="#i-workflow"/></svg>12 · Terraform in CI/CD</a>
+  <a href="#de"><svg class="ico"><use href="#i-database"/></svg>13 · Terraform for data engineers</a>
+  <a href="#example"><svg class="ico"><use href="#i-blocks"/></svg>14 · A worked example: a real repo</a>
+  <a href="#safety"><svg class="ico"><use href="#i-shield"/></svg>15 · Security, safety &amp; the classic traps</a>
+  <a href="#cheatsheet"><svg class="ico"><use href="#i-list"/></svg>16 · Quick-reference cheat sheet</a>
+  <a href="#glossary"><svg class="ico"><use href="#i-book"/></svg>＊ · Glossary</a>
+</div>
+
+<!-- 01 -->
+<h2 id="why" class="reveal"><span class="hico"><svg class="ico"><use href="#i-question"/></svg></span><span class="n">01.</span> What Terraform is &amp; why IaC exists</h2>
+<p class="reveal lead">Picture setting up a data platform the old way. You open the AWS console and click: a bucket here, an IAM role there, a Glue job, a Databricks workspace, a few permissions you half-remember. It works. Six months later you need the same thing in a second region — and nobody can reconstruct exactly what was clicked. That's <strong>ClickOps</strong>, and it doesn't survive contact with a growing team. <strong>Infrastructure as code (IaC) replaces the clicking with a text file you can review, version, and re-run.</strong></p>
+
+<p class="reveal">Terraform is the most widely used IaC tool. You write <code>.tf</code> files describing the infrastructure you want; Terraform talks to the cloud's API and makes it so. What you get in return:</p>
+<ul class="reveal">
+  <li><strong>Repeatable</strong> — the same config produces the same infrastructure, in dev, in prod, in a new region, on a new AWS account. No snowflake environments that only one person understands.</li>
+  <li><strong>Reviewable</strong> — infrastructure changes arrive as pull requests. "You're deleting the prod bucket" becomes a comment on a diff instead of an outage.</li>
+  <li><strong>Auditable</strong> — Git history tells you who changed the cluster size, when, and why.</li>
+  <li><strong>Disposable</strong> — spin up a full environment for a test and tear it down in one command. Infrastructure stops being precious.</li>
+</ul>
+
+<div class="callout cy reveal">
+  <p style="margin:.2em 0"><span class="t"><svg class="ico"><use href="#i-key"/></svg> Declarative, not imperative — the single most important idea</span></p>
+  <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">A shell script is <em>imperative</em>: "create this, then create that." Run it twice and you get two buckets — or an error. Terraform is <strong>declarative</strong>: your file says <em>"this bucket should exist"</em>, and Terraform figures out whether to create it, change it, or leave it alone. Run it a hundred times and you still have exactly one bucket. That property is called <strong>idempotence</strong>, and it's what makes the whole thing safe to re-run. You describe the <em>destination</em>; Terraform computes the <em>route</em>.</p>
+</div>
+
+<div class="callout reveal">
+  <p style="margin:.2em 0"><span class="t"><svg class="ico"><use href="#i-bulb"/></svg> Where Terraform sits next to the tools you know</span></p>
+  <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">Terraform manages <em>infrastructure</em> — the buckets, roles, warehouses and clusters your pipelines run <em>on</em>. It is not a replacement for <strong>dbt</strong> (which transforms data <em>inside</em> the warehouse) or for <strong>Airflow</strong> (which schedules your pipelines). A clean split: <strong>Terraform creates the Snowflake warehouse and the role; dbt builds the tables in it; Airflow runs dbt on a schedule.</strong> Terraform is also the <em>IaC</em> mentioned in <a href="../cicd-essentials/#de">CI/CD Essentials §10</a> — this guide is that bullet point, fully unpacked.</p>
+</div>
+
+<div class="callout gd reveal">
+  <p style="margin:.2em 0"><span class="t"><svg class="ico"><use href="#i-warn"/></svg> Terraform, OpenTofu, and the licence change</span></p>
+  <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">In 2023 HashiCorp changed Terraform's licence from open-source (MPL) to the <strong>BUSL</strong> (a "source-available" licence with restrictions on competing commercial use). The community forked the last open version into <strong>OpenTofu</strong>, now stewarded by the Linux Foundation. For everything in this guide the two are interchangeable — same HCL, same commands (<code>tofu plan</code> instead of <code>terraform plan</code>), same providers. If your company is licence-sensitive, you'll meet OpenTofu; the concepts transfer 1:1.</p>
+</div>
+
+<!-- 02 -->
+<h2 id="model" class="reveal"><span class="hico"><svg class="ico"><use href="#i-layers"/></svg></span><span class="n">02.</span> The mental model: three worlds</h2>
+<p class="reveal lead">Everything Terraform does is a comparison between <strong>three</strong> things. Once you can name all three and say which command touches which, Terraform stops being mysterious — and every confusing error message suddenly has an obvious home.</p>
+
+<figure class="fig reveal">
+<svg viewBox="0 0 760 336" font-family="var(--font)" aria-label="A triangle showing Terraform's three worlds: your config, the state file, and the real cloud">
+  <defs>
+    <marker id="m2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#B78AE8"/></marker>
+    <marker id="m2p" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#C77DFF"/></marker>
+    <marker id="m2a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#f0b429"/></marker>
+    <marker id="m2s" viewBox="0 0 10 10" refX="1" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M10 0L0 5L10 10z" fill="#f0b429"/></marker>
+  </defs>
+
+  <!-- config -->
+  <rect x="278" y="22" width="204" height="76" rx="11" fill="#1c1230" stroke="#7B42BC" stroke-width="1.8"/>
+  <use href="#i-code" x="292" y="36" width="14" height="14" fill="none" stroke="#B78AE8" stroke-width="2.2"/>
+  <text x="388" y="46" font-size="12" fill="#B78AE8" font-weight="700" text-anchor="middle">1 · YOUR .tf CONFIG</text>
+  <text x="380" y="66" font-size="10.5" fill="#e7e7ee" text-anchor="middle">what you WANT to exist</text>
+  <text x="380" y="84" font-size="9.5" fill="#6b7280" text-anchor="middle">you write this · lives in Git</text>
+
+  <!-- state -->
+  <rect x="26" y="204" width="222" height="82" rx="11" fill="#241d0f" stroke="#f0b429" stroke-width="1.8"/>
+  <use href="#i-file" x="40" y="218" width="14" height="14" fill="none" stroke="#f0b429" stroke-width="2.2"/>
+  <text x="145" y="228" font-size="12" fill="#f0b429" font-weight="700" text-anchor="middle">2 · THE STATE</text>
+  <text x="137" y="248" font-size="10.5" fill="#e7e7ee" text-anchor="middle">what Terraform THINKS</text>
+  <text x="137" y="263" font-size="10.5" fill="#e7e7ee" text-anchor="middle">it built last time</text>
+  <text x="137" y="279" font-size="9.5" fill="#6b7280" text-anchor="middle">terraform.tfstate</text>
+
+  <!-- reality -->
+  <rect x="512" y="204" width="222" height="82" rx="11" fill="#2a1240" stroke="#C77DFF" stroke-width="1.8"/>
+  <use href="#i-cloud" x="526" y="218" width="14" height="14" fill="none" stroke="#E0BBFF" stroke-width="2.2"/>
+  <text x="631" y="228" font-size="12" fill="#E0BBFF" font-weight="700" text-anchor="middle">3 · THE REAL CLOUD</text>
+  <text x="623" y="248" font-size="10.5" fill="#e7e7ee" text-anchor="middle">what ACTUALLY exists</text>
+  <text x="623" y="263" font-size="10.5" fill="#e7e7ee" text-anchor="middle">right now</text>
+  <text x="623" y="279" font-size="9.5" fill="#6b7280" text-anchor="middle">S3 · IAM · clusters</text>
+
+  <!-- edges -->
+  <line x1="292" y1="100" x2="196" y2="198" stroke="#B78AE8" stroke-width="1.6" marker-end="url(#m2)"/>
+  <line x1="468" y1="100" x2="564" y2="198" stroke="#C77DFF" stroke-width="1.6" marker-end="url(#m2p)"/>
+  <line x1="256" y1="245" x2="504" y2="245" stroke="#f0b429" stroke-width="1.4" stroke-dasharray="5 4" marker-end="url(#m2a)" marker-start="url(#m2s)"/>
+
+  <!-- edge labels -->
+  <text x="206" y="128" font-size="10" fill="#B78AE8" text-anchor="middle">plan compares</text>
+  <text x="206" y="142" font-size="10" fill="#B78AE8" text-anchor="middle">1 against 2</text>
+  <text x="556" y="128" font-size="10" fill="#E0BBFF" text-anchor="middle">apply changes 3</text>
+  <text x="556" y="142" font-size="10" fill="#E0BBFF" text-anchor="middle">and updates 2</text>
+  <text x="380" y="232" font-size="10" fill="#f0b429" text-anchor="middle">refresh: re-read reality</text>
+  <text x="380" y="266" font-size="9.5" fill="#f87171" text-anchor="middle">if these two disagree, that's DRIFT</text>
+
+  <!-- centre chip -->
+  <rect x="308" y="140" width="144" height="34" rx="8" fill="#191632" stroke="#6B5BE6" stroke-width="1.5"/>
+  <text x="380" y="162" font-size="11" fill="#9d8cf5" text-anchor="middle">plan = the diff</text>
+
+  <text x="380" y="316" font-size="10.5" fill="#6b7280" text-anchor="middle">Terraform's whole job: make 3 look like 1 — and keep 2 an honest record of it.</text>
+</svg>
+<figcaption>Every Terraform command is some combination of these three. Read an error message by asking: <em>which of the three is out of sync?</em></figcaption>
+</figure>
+
+<div class="step reveal"><div class="num-bubble">1</div><div class="body"><strong>Your config</strong> — the <code>.tf</code> files you write and commit. This is the <em>desired state</em>: the world as you want it. It's the only one of the three you edit by hand.</div></div>
+<div class="step reveal"><div class="num-bubble">2</div><div class="body"><strong>The state</strong> — a JSON file Terraform maintains, mapping each resource in your code (<code>aws_s3_bucket.raw</code>) to the real thing it created (<code>arn:aws:s3:::acme-raw-prod</code>). Without it Terraform has no idea that the bucket in your config <em>is</em> the bucket in the cloud — it would try to create a second one. This is Terraform's memory.</div></div>
+<div class="step reveal"><div class="num-bubble">3</div><div class="body"><strong>Reality</strong> — what's actually running in AWS/Azure/GCP/Databricks right now, including anything a colleague changed by hand at 2am during an incident.</div></div>
+
+<div class="callout mg reveal">
+  <p style="margin:.2em 0"><span class="t"><svg class="ico"><use href="#i-repeat"/></svg> Drift, defined</span></p>
+  <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd"><strong>Drift</strong> is when reality (3) no longer matches the state (2) — because someone changed something outside Terraform. At the start of every <code>plan</code>, Terraform <em>refreshes</em>: it calls the cloud API and re-reads each resource it knows about, so its picture is current. That's why a plan can show changes you didn't make — it's not being weird, it's telling you <strong>someone clicked in the console</strong> and it intends to put things back the way your code says. The fix is almost always to bring the change into code, not to fight the plan.</p>
+</div>
+
+<!-- 03 -->
+<h2 id="loop" class="reveal"><span class="hico"><svg class="ico"><use href="#i-repeat"/></svg></span><span class="n">03.</span> The core loop: init → plan → apply</h2>
+<p class="reveal lead">Terraform has dozens of subcommands, but day to day you use four. The rhythm never changes: <strong>edit the code, preview the diff, approve it, repeat.</strong></p>
+
+<figure class="fig reveal">
+<svg viewBox="0 0 760 250" font-family="var(--font)" aria-label="The Terraform loop: init, then plan and apply repeatedly, with destroy as a separate tear-down path">
+  <defs>
+    <marker id="m3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#6B5BE6"/></marker>
+    <marker id="m3r" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#f87171"/></marker>
+    <marker id="m3g" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#34d399"/></marker>
+  </defs>
+
+  <g stroke="#6B5BE6" stroke-width="1.5" fill="none">
+    <line x1="162" y1="96" x2="184" y2="96" marker-end="url(#m3)"/>
+    <line x1="336" y1="96" x2="358" y2="96" marker-end="url(#m3)"/>
+    <line x1="510" y1="96" x2="532" y2="96" marker-end="url(#m3)"/>
+  </g>
+
+  <rect x="30" y="72" width="132" height="48" rx="9" fill="#1c1230" stroke="#B78AE8"/>
+  <text x="96" y="94" font-size="11" fill="#B78AE8" text-anchor="middle">terraform init</text>
+  <text x="96" y="110" font-size="9" fill="#6b7280" text-anchor="middle">once per project</text>
+
+  <rect x="186" y="72" width="150" height="48" rx="9" fill="#241d0f" stroke="#f0b429"/>
+  <text x="261" y="94" font-size="11" fill="#f0b429" text-anchor="middle">terraform plan</text>
+  <text x="261" y="110" font-size="9" fill="#6b7280" text-anchor="middle">read-only · changes nothing</text>
+
+  <rect x="360" y="72" width="150" height="48" rx="9" fill="#2a1240" stroke="#C77DFF"/>
+  <text x="435" y="94" font-size="11" fill="#E0BBFF" text-anchor="middle">terraform apply</text>
+  <text x="435" y="110" font-size="9" fill="#6b7280" text-anchor="middle">asks &quot;yes?&quot; then acts</text>
+
+  <rect x="534" y="72" width="150" height="48" rx="9" fill="#0f1f17" stroke="#34d399"/>
+  <text x="602" y="94" font-size="11" fill="#34d399" text-anchor="middle">it exists</text>
+  <use href="#i-check" x="646" y="85" width="13" height="13" fill="none" stroke="#34d399" stroke-width="2.2"/>
+  <text x="609" y="110" font-size="9" fill="#6b7280" text-anchor="middle">state updated</text>
+
+  <!-- loop back -->
+  <path d="M609 72 V 40 H 261 V 66" fill="none" stroke="#34d399" stroke-width="1.4" stroke-dasharray="5 4" marker-end="url(#m3g)"/>
+  <text x="435" y="32" font-size="10" fill="#34d399" text-anchor="middle">edit the .tf files → plan again (this is the loop you live in)</text>
+
+  <!-- destroy -->
+  <path d="M609 120 V 174 H 476" fill="none" stroke="#f87171" stroke-width="1.4" marker-end="url(#m3r)"/>
+  <rect x="290" y="152" width="184" height="46" rx="9" fill="#1c1212" stroke="#f87171"/>
+  <text x="382" y="174" font-size="11" fill="#f87171" text-anchor="middle">terraform destroy</text>
+  <text x="382" y="190" font-size="9" fill="#9aa0b4" text-anchor="middle">tears down everything it manages</text>
+
+  <text x="180" y="182" font-size="9.5" fill="#6b7280" text-anchor="middle">wonderful in dev,</text>
+  <text x="180" y="196" font-size="9.5" fill="#6b7280" text-anchor="middle">terrifying in prod</text>
+
+  <text x="380" y="230" font-size="10.5" fill="#6b7280" text-anchor="middle">plan is free and safe — run it as often as you like. apply is the only command that changes the world.</text>
+</svg>
+<figcaption>Four commands cover 95% of the job. Everything else in this guide is detail hanging off this loop.</figcaption>
+</figure>
+
+<h3 class="reveal">The four commands, in order</h3>
+<div class="step reveal"><div class="num-bubble">1</div><div class="body"><strong><code>terraform init</code></strong> — run once when you start (and again whenever you add a provider or module). It downloads the <strong>providers</strong> (the plugins that know how to talk to AWS, Databricks, Snowflake…), fetches any modules, and wires up the <strong>backend</strong> where state will live. It creates a <code>.terraform/</code> folder and a <code>.terraform.lock.hcl</code> file. Safe to re-run.</div></div>
+<div class="step reveal"><div class="num-bubble">2</div><div class="body"><strong><code>terraform plan</code></strong> — the dry run. Terraform refreshes its view of reality, compares it to your config, and prints exactly what it <em>would</em> do. <strong>It changes nothing.</strong> This is the single most important habit in Terraform: <em>read the plan before every apply.</em></div></div>
+<div class="step reveal"><div class="num-bubble">3</div><div class="body"><strong><code>terraform apply</code></strong> — does it for real. By default it shows you the plan again and waits for you to type <code>yes</code>. In CI you skip the prompt with <code>-auto-approve</code>, or (better) hand it a <em>saved plan file</em> so it executes exactly the diff a human already reviewed.</div></div>
+<div class="step reveal"><div class="num-bubble">4</div><div class="body"><strong><code>terraform destroy</code></strong> — deletes everything in this configuration's state. Genuinely useful for throwaway dev environments and CI test runs. In production, this is the command that ends careers — see <a href="#safety">§15</a> for the guardrail (<code>prevent_destroy</code>).</div></div>
+
+<h3 class="reveal">How to read a plan</h3>
+<p class="reveal">The plan output uses four symbols. Learn them and you can review any infrastructure PR:</p>
+<div class="cb reveal"><span class="lang">terraform plan — the four symbols</span><pre><span class="g">  + create</span>         <span class="c"># a new resource will be made — usually harmless</span>
+<span class="y">  ~ update in-place</span> <span class="c"># an attribute changes, the resource survives — usually fine</span>
+<span class="r">  - destroy</span>        <span class="c"># the resource will be DELETED — read this line twice</span>
+<span class="r">-/+ replace</span>        <span class="c"># destroy, THEN create a new one — the dangerous one:</span>
+                   <span class="c">#   the resource gets a new ID, and any data on it is gone</span>
+
+Plan: <span class="g">2 to add</span>, <span class="y">1 to change</span>, <span class="r">0 to destroy</span>.   <span class="c"># ← the line everyone skims. Don't.</span></pre></div>
+
+<div class="callout gd reveal">
+  <p style="margin:.2em 0"><span class="t"><svg class="ico"><use href="#i-warn"/></svg> <code>-/+ replace</code> is the line that ruins weekends</span></p>
+  <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">Some attributes <em>cannot</em> be changed on a live resource — a bucket's name, an instance's availability zone, a database's engine. Change one in your config and Terraform can't "update" it; it must <strong>destroy and recreate</strong>. For a stateless app server, fine. For an S3 bucket holding 4 TB of raw data, or a production database, that's a data-loss event. Terraform tells you why with a line like <code># forces replacement</code> right next to the offending attribute. <strong>Whenever you see <code>-/+</code> or "forces replacement" in a plan against a stateful resource, stop and think.</strong></p>
+</div>
+
+<!-- 04 -->
+<h2 id="hcl" class="reveal"><span class="hico"><svg class="ico"><use href="#i-code"/></svg></span><span class="n">04.</span> HCL: the language, block by block</h2>
+<p class="reveal lead">Terraform files are written in <strong>HCL</strong> (HashiCorp Configuration Language) — a config language that reads like a cross between JSON and a normal programming language. It's built from <em>blocks</em>. There are only about eight you'll ever use, and this section is all of them.</p>
+
+<p class="reveal">Every block follows the same shape: a <strong>type</strong>, zero or more <strong>labels</strong>, and a body in braces.</p>
+<div class="cb reveal"><span class="lang">the anatomy of a block</span><pre><span class="p">resource</span>  <span class="g">"aws_s3_bucket"</span>  <span class="g">"raw"</span>  {      <span class="c"># type · label 1 (kind) · label 2 (your name)</span>
+  <span class="k">bucket</span> = <span class="g">"acme-raw-data-prod"</span>          <span class="c"># arguments: key = value</span>
+}
+<span class="c">#          └─ together, the two labels form the ADDRESS: aws_s3_bucket.raw
+#             That address is how you refer to it everywhere else.</span></pre></div>
+
+<h3 class="reveal">A complete, real file</h3>
+<p class="reveal">Here is a small but genuinely usable configuration — a raw-data bucket and an IAM role your ETL job can assume. Every block type is labelled; the rest of the section explains each one.</p>
+<div class="cb reveal"><span class="lang">main.tf</span><pre><span class="c"># ── 1. TERRAFORM block: settings for Terraform itself ──</span>
+<span class="p">terraform</span> {
+  <span class="k">required_version</span> = <span class="g">"&gt;= 1.6"</span>
+  <span class="k">required_providers</span> {
+    <span class="k">aws</span> = {
+      <span class="k">source</span>  = <span class="g">"hashicorp/aws"</span>
+      <span class="k">version</span> = <span class="g">"~&gt; 5.0"</span>            <span class="c"># any 5.x, but not 6.0 — see §05</span>
+    }
+  }
+  <span class="k">backend</span> <span class="g">"s3"</span> {                     <span class="c"># where the STATE lives — see §06</span>
+    <span class="k">bucket</span>       = <span class="g">"acme-tfstate"</span>
+    <span class="k">key</span>          = <span class="g">"data-platform/prod.tfstate"</span>
+    <span class="k">region</span>       = <span class="g">"eu-west-1"</span>
+    <span class="k">use_lockfile</span> = <span class="o">true</span>            <span class="c"># state locking — see §06</span>
+  }
+}
+
+<span class="c"># ── 2. PROVIDER block: configure the plugin that talks to AWS ──</span>
+<span class="p">provider</span> <span class="g">"aws"</span> {
+  <span class="k">region</span> = <span class="o">var</span>.region
+}
+
+<span class="c"># ── 3. VARIABLE block: an input you can change per environment ──</span>
+<span class="p">variable</span> <span class="g">"env"</span> {
+  <span class="k">type</span>        = <span class="o">string</span>
+  <span class="k">description</span> = <span class="g">"Which environment this is (dev / prod)"</span>
+}
+<span class="p">variable</span> <span class="g">"region"</span> {
+  <span class="k">type</span>    = <span class="o">string</span>
+  <span class="k">default</span> = <span class="g">"eu-west-1"</span>
+}
+
+<span class="c"># ── 4. LOCALS block: named values computed once, reused below ──</span>
+<span class="p">locals</span> {
+  name_prefix = <span class="g">"acme-${</span><span class="o">var</span>.env<span class="g">}"</span>          <span class="c"># "acme-prod"</span>
+  common_tags = {
+    Environment = <span class="o">var</span>.env
+    ManagedBy   = <span class="g">"terraform"</span>              <span class="c"># tag everything: see §15</span>
+  }
+}
+
+<span class="c"># ── 5. DATA block: READ something that already exists (never creates) ──</span>
+<span class="p">data</span> <span class="g">"aws_caller_identity"</span> <span class="g">"current"</span> {}   <span class="c"># "who am I?" → account id</span>
+
+<span class="c"># ── 6. RESOURCE block: the thing Terraform actually creates ──</span>
+<span class="p">resource</span> <span class="g">"aws_s3_bucket"</span> <span class="g">"raw"</span> {
+  <span class="k">bucket</span> = <span class="g">"${</span><span class="o">local</span>.name_prefix<span class="g">}-raw"</span>      <span class="c"># "acme-prod-raw"</span>
+  <span class="k">tags</span>   = <span class="o">local</span>.common_tags
+}
+
+<span class="p">resource</span> <span class="g">"aws_iam_role"</span> <span class="g">"etl"</span> {
+  <span class="k">name</span> = <span class="g">"${</span><span class="o">local</span>.name_prefix<span class="g">}-etl-role"</span>
+  <span class="k">tags</span> = <span class="o">local</span>.common_tags
+
+  <span class="k">assume_role_policy</span> = <span class="o">jsonencode</span>({        <span class="c"># build JSON without writing JSON</span>
+    Version = <span class="g">"2012-10-17"</span>
+    Statement = [{
+      Effect    = <span class="g">"Allow"</span>
+      Action    = <span class="g">"sts:AssumeRole"</span>
+      Principal = { Service = <span class="g">"glue.amazonaws.com"</span> }
+    }]
+  })
+}
+
+<span class="c"># ── 7. OUTPUT block: publish a value for humans &amp; other configs ──</span>
+<span class="p">output</span> <span class="g">"raw_bucket_name"</span> {
+  <span class="k">value</span>       = <span class="o">aws_s3_bucket</span>.raw.bucket   <span class="c"># ← referencing by ADDRESS</span>
+  <span class="k">description</span> = <span class="g">"Where the ingestion job should land files"</span>
+}</pre></div>
+
+<div class="gloss reveal">
+  <h4>The blocks you'll actually write</h4>
+  <dl>
+    <dt>terraform { }</dt><dd>Settings for Terraform itself: the minimum version, which <strong>providers</strong> you need (and their versions), and the <strong>backend</strong> where state is stored. One per configuration.</dd>
+    <dt>provider "aws" { }</dt><dd>Configures a plugin — region, credentials, endpoints. You can have several (AWS <em>and</em> Databricks <em>and</em> Snowflake in one config), and even two of the same kind via <code>alias</code> (e.g. two AWS regions).</dd>
+    <dt>resource "type" "name" { }</dt><dd><strong>The only block that creates things.</strong> The first label is the <em>kind</em> of thing (defined by the provider); the second is <em>your</em> name for it, used to reference it elsewhere. Address: <code>type.name</code>.</dd>
+    <dt>data "type" "name" { }</dt><dd>A read-only <strong>lookup</strong> of something that already exists — an AMI id, the current account number, an existing VPC someone else manages. Data sources never create or change anything. Address: <code>data.type.name</code>.</dd>
+    <dt>variable "name" { }</dt><dd>An <strong>input</strong>. Lets one config serve dev and prod by changing values, not code. See <a href="#vars">§08</a>.</dd>
+    <dt>output "name" { }</dt><dd>A published <strong>result</strong> — printed after apply, and readable by other configurations. The way a module hands values back to its caller.</dd>
+    <dt>locals { }</dt><dd>Named intermediate values — like a <code>const</code> in a normal language. Computed once, referenced as <code>local.name</code>. Great for killing copy-paste.</dd>
+    <dt>module "name" { }</dt><dd>Calls a reusable bundle of resources. See <a href="#modules">§10</a>.</dd>
+  </dl>
+</div>
+
+<div class="callout cy reveal">
+  <p style="margin:.2em 0"><span class="t"><svg class="ico"><use href="#i-blocks"/></svg> <code>resource</code> vs <code>data</code> — the distinction beginners miss</span></p>
+  <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">A <strong>resource</strong> is something Terraform <em>owns</em>: it created it, it tracks it in state, and if you delete the block, Terraform deletes the real thing. A <strong>data source</strong> is something Terraform merely <em>looks at</em>: it's owned by someone else (another team, another Terraform config, or a human), and deleting the block deletes nothing. Rule: if you'd be sad when <code>terraform destroy</code> removes it, make sure it's not in <em>your</em> config as a resource by accident.</p>
+</div>
+
+<h3 class="reveal">File layout — Terraform doesn't care, but humans do</h3>
+<p class="reveal">Terraform loads <em>every</em> <code>.tf</code> file in the directory and glues them together — file names are meaningless to it, and order doesn't matter (it works out dependencies itself, see <a href="#graph">§07</a>). But there's a near-universal convention worth following, because every Terraform repo you'll ever join uses it:</p>
+<div class="cb reveal"><span class="lang">the conventional layout</span><pre>.
+├── main.tf           <span class="c"># the resources (the bulk of it)</span>
+├── variables.tf      <span class="c"># all variable blocks (the inputs)</span>
+├── outputs.tf        <span class="c"># all output blocks (the results)</span>
+├── providers.tf      <span class="c"># terraform{} + provider{} blocks</span>
+├── terraform.tfvars  <span class="c"># the actual values  ← NEVER commit secrets here</span>
+└── .terraform.lock.hcl  <span class="c"># provider version lock  ← DO commit this</span></pre></div>
+
+<!-- 05 -->
+<h2 id="providers" class="reveal"><span class="hico"><svg class="ico"><use href="#i-plug"/></svg></span><span class="n">05.</span> Providers, versions &amp; the lock file</h2>
+<p class="reveal lead">Terraform itself knows nothing about AWS. It's a small engine that reads HCL, builds a graph, and calls plugins. Those plugins are <strong>providers</strong> — and there are thousands of them, which is the real reason Terraform won.</p>
+
+<p class="reveal">A provider is the translator between Terraform's generic idea of "a resource" and one specific API. <code>hashicorp/aws</code> knows how to create an S3 bucket; <code>databricks/databricks</code> knows how to create a job cluster; <code>snowflakedb/snowflake</code> knows how to create a warehouse and grant a role. They all come from the <strong>Terraform Registry</strong>, and <code>terraform init</code> downloads them.</p>
+
+<div class="cb reveal"><span class="lang">a multi-provider data platform</span><pre><span class="p">terraform</span> {
+  <span class="k">required_providers</span> {
+    <span class="k">aws</span>        = { <span class="k">source</span> = <span class="g">"hashicorp/aws"</span>,          <span class="k">version</span> = <span class="g">"~&gt; 5.0"</span> }
+    <span class="k">databricks</span> = { <span class="k">source</span> = <span class="g">"databricks/databricks"</span>,  <span class="k">version</span> = <span class="g">"~&gt; 1.50"</span> }
+    <span class="k">snowflake</span>  = { <span class="k">source</span> = <span class="g">"snowflakedb/snowflake"</span>,  <span class="k">version</span> = <span class="g">"~&gt; 0.95"</span> }
+  }
+}
+
+<span class="c"># two AWS regions at once — the SAME provider, twice, distinguished by alias</span>
+<span class="p">provider</span> <span class="g">"aws"</span> {
+  <span class="k">region</span> = <span class="g">"eu-west-1"</span>                   <span class="c"># the default one</span>
+}
+<span class="p">provider</span> <span class="g">"aws"</span> {
+  <span class="k">alias</span>  = <span class="g">"us"</span>                          <span class="c"># the extra one</span>
+  <span class="k">region</span> = <span class="g">"us-east-1"</span>
+}
+
+<span class="p">resource</span> <span class="g">"aws_s3_bucket"</span> <span class="g">"dr_copy"</span> {
+  <span class="k">provider</span> = <span class="o">aws</span>.us                       <span class="c"># ← this one lands in us-east-1</span>
+  <span class="k">bucket</span>   = <span class="g">"acme-prod-raw-dr"</span>
+}</pre></div>
+
+<h3 class="reveal">Version constraints — pin them, or be surprised</h3>
+<p class="reveal">Providers ship breaking changes. If you don't pin a version, a colleague running <code>init</code> next month can pull a newer provider that renames an attribute — and suddenly the plan wants to replace your bucket. The <code>~&gt;</code> operator (the "pessimistic constraint") is the usual answer:</p>
+<table class="reveal">
+  <tr><th>Constraint</th><th>Means</th><th>Use when</th></tr>
+  <tr><td><code>version = "5.31.0"</code></td><td>Exactly this. Nothing else.</td><td>Maximum paranoia (prod, regulated)</td></tr>
+  <tr><td><code>version = "~&gt; 5.31"</code></td><td>≥ 5.31, &lt; 6.0 — patches and minors, no major</td><td><strong>The sane default</strong></td></tr>
+  <tr><td><code>version = "~&gt; 5.31.0"</code></td><td>≥ 5.31.0, &lt; 5.32.0 — patches only</td><td>Conservative</td></tr>
+  <tr><td><code>version = "&gt;= 5.0"</code></td><td>Anything newer. Includes 6.0's breaking changes.</td><td>Almost never — this is how you get ambushed</td></tr>
+</table>
+
+<div class="callout gr reveal">
+  <p style="margin:.2em 0"><span class="t"><svg class="ico"><use href="#i-check"/></svg> Commit <code>.terraform.lock.hcl</code></span></p>
+  <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">Your constraint says "any 5.x". The <strong>lock file</strong> records which exact 5.x <em>you</em> resolved to, plus checksums. Commit it, and every teammate — and CI — gets byte-identical providers, so "works on my machine" can't happen. It's the same idea as <code>package-lock.json</code> or <code>poetry.lock</code>. Upgrade deliberately with <code>terraform init -upgrade</code>, and review the resulting plan.</p>
+</div>
+
+<!-- 06 -->
+<h2 id="state" class="reveal"><span class="hico"><svg class="ico"><use href="#i-file"/></svg></span><span class="n">06.</span> State: the part that trips everyone up</h2>
+<p class="reveal lead">If you only deeply learn one section of this guide, make it this one. State is where Terraform's power comes from, and it's where every genuinely bad day originates.</p>
+
+<h3 class="reveal">What state actually is</h3>
+<p class="reveal">A JSON file. For every resource in your config, it records the real-world ID the cloud handed back, plus a snapshot of that resource's attributes at last apply. That's it. It exists to answer one question Terraform otherwise couldn't: <em>"the bucket described on line 12 of my code — which real bucket is that?"</em></p>
+<div class="cb reveal"><span class="lang">terraform.tfstate (trimmed)</span><pre>{
+  <span class="k">"resources"</span>: [{
+    <span class="k">"type"</span>: <span class="g">"aws_s3_bucket"</span>,
+    <span class="k">"name"</span>: <span class="g">"raw"</span>,                              <span class="c">// ← your code's address: aws_s3_bucket.raw</span>
+    <span class="k">"instances"</span>: [{
+      <span class="k">"attributes"</span>: {
+        <span class="k">"id"</span>: <span class="g">"acme-prod-raw"</span>,                   <span class="c">// ← the REAL thing in AWS</span>
+        <span class="k">"arn"</span>: <span class="g">"arn:aws:s3:::acme-prod-raw"</span>
+      }
+    }]
+  }]
+}</pre></div>
+
+<div class="callout gd reveal">
+  <p style="margin:.2em 0"><span class="t"><svg class="ico"><use href="#i-warn"/></svg> State is not a backup — and it is not a secret store</span></p>
+  <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">Two consequences people learn the hard way. <strong>(1) Delete the state and Terraform forgets it owns anything</strong> — your infrastructure keeps running, but Terraform's next plan will cheerfully try to create it all again (and fail on name collisions). <strong>(2) State contains every attribute in plaintext</strong>, including generated database passwords and access keys, even if you marked them <code>sensitive</code> in your config. So: never commit <code>.tfstate</code> to Git, always encrypt the bucket it lives in, and lock down who can read it. Anyone who can read state can read your secrets.</p>
+</div>
+
+<h3 class="reveal">Remote state &amp; locking — the first thing to set up on a team</h3>
+<p class="reveal">By default, state is a file on your laptop. That's fine for ten minutes of learning and catastrophic for a team: your colleague has a different copy, and if you both apply at once you corrupt each other's work. So teams put state in a <strong>remote backend</strong> — a shared bucket — with a <strong>lock</strong> so only one apply can run at a time.</p>
+
+<figure class="fig reveal">
+<svg viewBox="0 0 760 316" font-family="var(--font)" aria-label="Two engineers applying at once: the remote backend holds the state file and hands out a lock, so the second one waits">
+  <defs>
+    <marker id="m6g" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#34d399"/></marker>
+    <marker id="m6r" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#f87171"/></marker>
+    <marker id="m6p" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#C77DFF"/></marker>
+  </defs>
+
+  <!-- engineers -->
+  <rect x="20" y="84" width="112" height="46" rx="9" fill="#0f1f17" stroke="#34d399"/>
+  <use href="#i-user" x="30" y="98" width="13" height="13" fill="none" stroke="#34d399" stroke-width="2.2"/>
+  <text x="84" y="106" font-size="11" fill="#34d399" text-anchor="middle">Alice</text>
+  <text x="76" y="121" font-size="9" fill="#6b7280" text-anchor="middle">terraform apply</text>
+
+  <rect x="20" y="178" width="112" height="46" rx="9" fill="#1c1212" stroke="#f87171"/>
+  <use href="#i-user" x="30" y="192" width="13" height="13" fill="none" stroke="#f87171" stroke-width="2.2"/>
+  <text x="84" y="200" font-size="11" fill="#f87171" text-anchor="middle">Bob</text>
+  <text x="76" y="215" font-size="9" fill="#6b7280" text-anchor="middle">terraform apply</text>
+
+  <line x1="136" y1="107" x2="224" y2="107" stroke="#34d399" stroke-width="1.5" marker-end="url(#m6g)"/>
+  <text x="180" y="98" font-size="9" fill="#34d399" text-anchor="middle">gets the lock</text>
+  <line x1="136" y1="201" x2="224" y2="201" stroke="#f87171" stroke-width="1.5" stroke-dasharray="4 3" marker-end="url(#m6r)"/>
+  <text x="180" y="192" font-size="9" fill="#f87171" text-anchor="middle">blocked · waits</text>
+
+  <!-- backend -->
+  <rect x="228" y="52" width="312" height="212" rx="12" fill="#0f1520" stroke="#B78AE8" stroke-width="1.6"/>
+  <text x="244" y="76" font-size="11.5" fill="#B78AE8" font-weight="700">REMOTE BACKEND</text>
+  <text x="244" y="92" font-size="9" fill="#6b7280">S3 · Azure Blob · GCS · HCP Terraform</text>
+
+  <rect x="244" y="106" width="152" height="128" rx="8" fill="#191632" stroke="#6B5BE6"/>
+  <use href="#i-file" x="252" y="117" width="12" height="12" fill="none" stroke="#9d8cf5" stroke-width="2.2"/>
+  <text x="328" y="126" font-size="10" fill="#9d8cf5" text-anchor="middle">terraform.tfstate</text>
+  <text x="256" y="152" font-size="9" fill="#9aa0b4">aws_s3_bucket.raw</text>
+  <text x="266" y="167" font-size="9" fill="#34d399">→ acme-prod-raw</text>
+  <text x="256" y="192" font-size="9" fill="#9aa0b4">aws_iam_role.etl</text>
+  <text x="266" y="207" font-size="9" fill="#34d399">→ arn:aws:iam::…</text>
+
+  <rect x="412" y="128" width="112" height="76" rx="8" fill="#241d0f" stroke="#f0b429" stroke-width="1.6"/>
+  <use href="#i-lock" x="444" y="145" width="13" height="13" fill="none" stroke="#f0b429" stroke-width="2.2"/>
+  <text x="484" y="155" font-size="10.5" fill="#f0b429" text-anchor="middle">LOCK</text>
+  <text x="468" y="176" font-size="9" fill="#9aa0b4" text-anchor="middle">held by</text>
+  <text x="468" y="190" font-size="9" fill="#9aa0b4" text-anchor="middle">Alice</text>
+
+  <!-- cloud -->
+  <line x1="544" y1="158" x2="586" y2="158" stroke="#C77DFF" stroke-width="1.5" marker-end="url(#m6p)"/>
+  <rect x="590" y="120" width="146" height="76" rx="9" fill="#2a1240" stroke="#C77DFF"/>
+  <use href="#i-cloud" x="600" y="141" width="13" height="13" fill="none" stroke="#E0BBFF" stroke-width="2.2"/>
+  <text x="671" y="150" font-size="11" fill="#E0BBFF" text-anchor="middle">the real cloud</text>
+  <text x="663" y="170" font-size="9" fill="#6b7280" text-anchor="middle">S3 · IAM · clusters</text>
+
+  <text x="380" y="288" font-size="10.5" fill="#6b7280" text-anchor="middle">the state file maps each name in your code → the real resource ID in the cloud</text>
+  <text x="380" y="304" font-size="10.5" fill="#6b7280" text-anchor="middle">two applies at once would corrupt it — so the backend hands out a lock</text>
+</svg>
+<figcaption>Remote state is the first thing to set up on any shared project. Bob isn't rejected — his apply politely waits for Alice's lock to release.</figcaption>
+</figure>
+
+<div class="cb reveal"><span class="lang">an S3 backend with locking</span><pre><span class="p">terraform</span> {
+  <span class="k">backend</span> <span class="g">"s3"</span> {
+    <span class="k">bucket</span>       = <span class="g">"acme-tfstate"</span>              <span class="c"># a bucket you create ONCE, by hand</span>
+    <span class="k">key</span>          = <span class="g">"data-platform/prod.tfstate"</span> <span class="c"># the path — one key per environment!</span>
+    <span class="k">region</span>       = <span class="g">"eu-west-1"</span>
+    <span class="k">encrypt</span>      = <span class="o">true</span>                       <span class="c"># state holds secrets → encrypt it</span>
+    <span class="k">use_lockfile</span> = <span class="o">true</span>                       <span class="c"># native S3 locking (Terraform ≥ 1.10)</span>
+    <span class="c"># older setups used: dynamodb_table = "tf-locks"</span>
+  }
+}</pre></div>
+<p class="reveal">Historically, S3 couldn't lock, so everyone paired the bucket with a small <strong>DynamoDB table</strong> that acted as the lock. Recent Terraform versions can lock using S3 itself (<code>use_lockfile</code>), and the DynamoDB approach is being retired — but you will absolutely still meet it in existing repos, so recognise it. Azure Blob and GCS have locking built in; <strong>HCP Terraform</strong> (the hosted service, formerly Terraform Cloud) does state, locking, and a plan UI for you.</p>
+
+<h3 class="reveal">Working with state directly</h3>
+<p class="reveal">Occasionally you must reach into state. These commands are safe to <em>read</em> with, and require care to <em>write</em> with:</p>
+<div class="cb reveal"><span class="lang">state commands</span><pre>terraform state list                      <span class="c"># every resource Terraform is tracking</span>
+terraform state show aws_s3_bucket.raw    <span class="c"># everything it knows about one resource</span>
+
+<span class="c"># ── renaming / restructuring (no cloud changes, just bookkeeping) ──</span>
+terraform state mv aws_s3_bucket.raw aws_s3_bucket.landing   <span class="c"># old way</span>
+
+<span class="c"># ── forget a resource WITHOUT deleting it in the cloud ──</span>
+terraform state rm aws_s3_bucket.raw      <span class="c"># Terraform stops managing it; bucket survives</span>
+
+<span class="c"># ── adopt an existing, hand-made resource INTO Terraform ──</span>
+terraform import aws_s3_bucket.raw acme-prod-raw   <span class="c"># old way</span></pre></div>
+
+<p class="reveal">Modern Terraform prefers <strong>declarative</strong> equivalents you commit to Git, so the change is reviewable in a PR instead of being a command someone typed once on their laptop:</p>
+<div class="cb reveal"><span class="lang">the modern, reviewable way</span><pre><span class="c"># adopt an existing bucket that was created by hand (Terraform ≥ 1.5)</span>
+<span class="p">import</span> {
+  <span class="k">to</span> = <span class="o">aws_s3_bucket</span>.raw
+  <span class="k">id</span> = <span class="g">"acme-prod-raw"</span>       <span class="c"># next plan shows it being ADOPTED, not created</span>
+}
+
+<span class="c"># rename a resource without destroying it (Terraform ≥ 1.1)</span>
+<span class="p">moved</span> {
+  <span class="k">from</span> = <span class="o">aws_s3_bucket</span>.raw
+  <span class="k">to</span>   = <span class="o">aws_s3_bucket</span>.landing   <span class="c"># without this, Terraform would DESTROY + CREATE</span>
+}
+
+<span class="c"># stop managing something without destroying it (Terraform ≥ 1.7)</span>
+<span class="p">removed</span> {
+  <span class="k">from</span> = <span class="o">aws_s3_bucket</span>.legacy
+  <span class="k">lifecycle</span> { <span class="k">destroy</span> = <span class="o">false</span> }   <span class="c"># drop from state, leave the bucket alone</span>
+}</pre></div>
+
+<div class="callout mg reveal">
+  <p style="margin:.2em 0"><span class="t"><svg class="ico"><use href="#i-alert"/></svg> Never hand-edit the state file</span></p>
+  <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">It's JSON, so it's tempting. Don't. It has internal serial numbers and checksums, and a malformed edit can make Terraform lose track of resources — which means the next apply tries to <em>recreate live infrastructure</em>. Use the <code>state</code> subcommands or the <code>import</code>/<code>moved</code>/<code>removed</code> blocks instead. And enable <strong>versioning</strong> on your state bucket, so a corrupted state can be rolled back to yesterday's copy. That single checkbox has saved more platforms than any other.</p>
+</div>
+
+<!-- 07 -->
+<h2 id="graph" class="reveal"><span class="hico"><svg class="ico"><use href="#i-network"/></svg></span><span class="n">07.</span> The dependency graph</h2>
+<p class="reveal lead">You never tell Terraform what order to do things in. It works that out — by reading the <em>references</em> in your code and building a graph. Understanding this explains both why Terraform is fast and why it sometimes needs a nudge.</p>
+
+<p class="reveal">The rule is simple: <strong>if resource A mentions resource B's address, A depends on B.</strong> That's an <em>implicit</em> dependency, and it's how 95% of ordering happens.</p>
+
+<figure class="fig reveal">
+<svg viewBox="0 0 760 280" font-family="var(--font)" aria-label="A dependency graph: the IAM role and the S3 bucket are independent and built in parallel, each feeding into the Glue job">
+  <defs>
+    <marker id="m7" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#6B5BE6"/></marker>
+  </defs>
+
+  <rect x="30" y="48" width="180" height="48" rx="9" fill="#1c1230" stroke="#7B42BC"/>
+  <text x="120" y="70" font-size="10.5" fill="#B78AE8" text-anchor="middle">aws_iam_role</text>
+  <text x="120" y="86" font-size="9" fill="#6b7280" text-anchor="middle">.etl</text>
+
+  <rect x="30" y="150" width="180" height="48" rx="9" fill="#1c1230" stroke="#7B42BC"/>
+  <text x="120" y="172" font-size="10.5" fill="#B78AE8" text-anchor="middle">aws_s3_bucket</text>
+  <text x="120" y="188" font-size="9" fill="#6b7280" text-anchor="middle">.raw</text>
+
+  <rect x="250" y="48" width="190" height="48" rx="9" fill="#191632" stroke="#6B5BE6"/>
+  <text x="345" y="70" font-size="10.5" fill="#9d8cf5" text-anchor="middle">aws_iam_role_policy</text>
+  <text x="345" y="86" font-size="9" fill="#6b7280" text-anchor="middle">uses role.id</text>
+
+  <rect x="250" y="150" width="190" height="48" rx="9" fill="#191632" stroke="#6B5BE6"/>
+  <text x="345" y="172" font-size="10.5" fill="#9d8cf5" text-anchor="middle">…bucket_versioning</text>
+  <text x="345" y="188" font-size="9" fill="#6b7280" text-anchor="middle">uses bucket.id</text>
+
+  <rect x="500" y="90" width="200" height="64" rx="10" fill="#2a1240" stroke="#C77DFF" stroke-width="1.8"/>
+  <text x="600" y="116" font-size="11" fill="#E0BBFF" text-anchor="middle">aws_glue_job.etl</text>
+  <text x="600" y="136" font-size="9" fill="#6b7280" text-anchor="middle">needs BOTH branches</text>
+
+  <g stroke="#6B5BE6" stroke-width="1.5" fill="none">
+    <line x1="214" y1="72" x2="244" y2="72" marker-end="url(#m7)"/>
+    <line x1="214" y1="174" x2="244" y2="174" marker-end="url(#m7)"/>
+    <line x1="444" y1="82" x2="494" y2="108" marker-end="url(#m7)"/>
+    <line x1="444" y1="164" x2="494" y2="138" marker-end="url(#m7)"/>
+  </g>
+
+  <!-- parallel group -->
+  <rect x="20" y="38" width="200" height="170" rx="12" fill="none" stroke="#34d399" stroke-width="1.2" stroke-dasharray="5 4" opacity=".6"/>
+  <text x="120" y="28" font-size="9.5" fill="#34d399" text-anchor="middle">no reference between these two</text>
+  <text x="120" y="226" font-size="9.5" fill="#34d399" text-anchor="middle">→ built at the SAME TIME</text>
+
+  <text x="380" y="252" font-size="10.5" fill="#6b7280" text-anchor="middle">Terraform reads the references in your code and derives this graph itself.</text>
+  <text x="380" y="268" font-size="10.5" fill="#6b7280" text-anchor="middle">Independent branches run in parallel; dependent ones wait. You never write the order down.</text>
+</svg>
+<figcaption>Order is <em>derived</em>, not declared. This is also why Terraform is quick: it fans out everything that doesn't depend on anything else.</figcaption>
+</figure>
+
+<div class="cb reveal"><span class="lang">implicit vs explicit dependencies</span><pre><span class="c"># IMPLICIT — the normal way. The reference IS the dependency.</span>
+<span class="p">resource</span> <span class="g">"aws_glue_job"</span> <span class="g">"etl"</span> {
+  <span class="k">name</span>     = <span class="g">"daily-etl"</span>
+  <span class="k">role_arn</span> = <span class="o">aws_iam_role</span>.etl.arn        <span class="c"># ← Terraform now KNOWS: role first, job second</span>
+
+  <span class="k">command</span> {
+    <span class="k">script_location</span> = <span class="g">"s3://${</span><span class="o">aws_s3_bucket</span>.raw.bucket<span class="g">}/jobs/etl.py"</span>
+  }                                     <span class="c"># ← and the bucket before the job, too</span>
+}
+
+<span class="c"># EXPLICIT — the escape hatch, for dependencies Terraform can't SEE.</span>
+<span class="p">resource</span> <span class="g">"aws_glue_job"</span> <span class="g">"etl2"</span> {
+  <span class="c"># …the job needs the IAM policy ATTACHED before it can run, but nothing in</span>
+  <span class="c"># this block references the policy — so Terraform can't infer the ordering.</span>
+  <span class="k">depends_on</span> = [<span class="o">aws_iam_role_policy</span>.etl]
+}</pre></div>
+
+<div class="callout cy reveal">
+  <p style="margin:.2em 0"><span class="t"><svg class="ico"><use href="#i-key"/></svg> <code>depends_on</code> is a code smell — usually</span></p>
+  <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">If you find yourself reaching for <code>depends_on</code>, first check whether you can express the relationship as a <em>reference</em> instead — pass <code>aws_iam_role.etl.arn</code> rather than hard-coding the ARN string. References make the graph correct automatically <em>and</em> keep values in sync. Save <code>depends_on</code> for genuinely invisible dependencies (IAM permissions that must exist before an API call succeeds is the classic one). Overusing it serialises your graph and makes applies slow.</p>
+</div>
+
+<!-- 08 -->
+<h2 id="vars" class="reveal"><span class="hico"><svg class="ico"><use href="#i-vars"/></svg></span><span class="n">08.</span> Variables, outputs, locals &amp; expressions</h2>
+<p class="reveal lead">A config with hard-coded values can build exactly one environment. Variables are what let the same code build dev, staging and prod — the Terraform equivalent of "build once, deploy many."</p>
+
+<h3 class="reveal">Variables: typed, validated inputs</h3>
+<div class="cb reveal"><span class="lang">variables.tf</span><pre><span class="p">variable</span> <span class="g">"env"</span> {
+  <span class="k">type</span>        = <span class="o">string</span>
+  <span class="k">description</span> = <span class="g">"dev | staging | prod"</span>
+
+  <span class="k">validation</span> {                                <span class="c"># catch typos at PLAN time, not 3am</span>
+    <span class="k">condition</span>     = <span class="o">contains</span>([<span class="g">"dev"</span>, <span class="g">"staging"</span>, <span class="g">"prod"</span>], <span class="o">var</span>.env)
+    <span class="k">error_message</span> = <span class="g">"env must be dev, staging or prod."</span>
+  }
+}
+
+<span class="p">variable</span> <span class="g">"warehouse_size"</span> {
+  <span class="k">type</span>    = <span class="o">string</span>
+  <span class="k">default</span> = <span class="g">"XSMALL"</span>                          <span class="c"># a default makes it optional</span>
+}
+
+<span class="p">variable</span> <span class="g">"snowflake_password"</span> {
+  <span class="k">type</span>      = <span class="o">string</span>
+  <span class="k">sensitive</span> = <span class="o">true</span>                             <span class="c"># hides it from CLI output &amp; logs…</span>
+}                                              <span class="c"># …but NOT from the state file (§06)</span>
+
+<span class="c"># richer types: a whole object, not just a string</span>
+<span class="p">variable</span> <span class="g">"buckets"</span> {
+  <span class="k">type</span> = <span class="o">map</span>(<span class="o">object</span>({
+    versioning    = <span class="o">bool</span>
+    retention_days = <span class="o">number</span>
+  }))
+  <span class="k">default</span> = {
+    raw     = { versioning = <span class="o">true</span>,  retention_days = 365 }
+    curated = { versioning = <span class="o">true</span>,  retention_days = 90  }
+    scratch = { versioning = <span class="o">false</span>, retention_days = 7   }
+  }
+}</pre></div>
+
+<h3 class="reveal">Where values come from — and who wins</h3>
+<p class="reveal">Terraform gathers variable values from several places. When two disagree, the <strong>last one wins</strong>:</p>
+<table class="reveal">
+  <tr><th>#</th><th>Source</th><th>Example</th></tr>
+  <tr><td>1 (lowest)</td><td>The <code>default</code> in the variable block</td><td><code>default = "XSMALL"</code></td></tr>
+  <tr><td>2</td><td>Environment variables prefixed <code>TF_VAR_</code></td><td><code>export TF_VAR_env=prod</code></td></tr>
+  <tr><td>3</td><td><code>terraform.tfvars</code> (auto-loaded)</td><td><code>env = "prod"</code></td></tr>
+  <tr><td>4</td><td><code>*.auto.tfvars</code> (auto-loaded, alphabetical)</td><td><code>prod.auto.tfvars</code></td></tr>
+  <tr><td>5 (highest)</td><td><code>-var</code> / <code>-var-file</code> on the command line</td><td><code>terraform apply -var-file=prod.tfvars</code></td></tr>
+</table>
+
+<h3 class="reveal">Locals &amp; expressions — the "programming" bits</h3>
+<p class="reveal">HCL isn't a full programming language (no loops you can write by hand, no functions you can define), but it has enough expression power to kill nearly all copy-paste.</p>
+<div class="cb reveal"><span class="lang">the expressions you'll use constantly</span><pre><span class="p">locals</span> {
+  <span class="c"># string interpolation</span>
+  prefix = <span class="g">"acme-${</span><span class="o">var</span>.env<span class="g">}"</span>                          <span class="c"># "acme-prod"</span>
+
+  <span class="c"># conditional (ternary) — the if/else of HCL</span>
+  cluster_size = <span class="o">var</span>.env == <span class="g">"prod"</span> ? 10 : 2
+
+  <span class="c"># merging maps — shared tags plus per-thing extras</span>
+  tags = <span class="o">merge</span>(<span class="o">var</span>.common_tags, { Owner = <span class="g">"data-platform"</span> })
+
+  <span class="c"># a FOR expression — transform a collection</span>
+  bucket_names = [<span class="o">for</span> name, cfg <span class="o">in</span> <span class="o">var</span>.buckets : <span class="g">"${</span><span class="o">local</span>.prefix<span class="g">}-${</span>name<span class="g">}"</span>]
+  <span class="c"># → ["acme-prod-raw", "acme-prod-curated", "acme-prod-scratch"]</span>
+
+  <span class="c"># filter while transforming</span>
+  versioned = { <span class="o">for</span> k, v <span class="o">in</span> <span class="o">var</span>.buckets : k =&gt; v <span class="o">if</span> v.versioning }
+
+  <span class="c"># safe defaults — try() swallows errors, coalesce() picks the first non-empty</span>
+  region = <span class="o">coalesce</span>(<span class="o">var</span>.region, <span class="g">"eu-west-1"</span>)
+}
+
+<span class="c"># useful built-ins you'll meet: jsonencode() · file() · templatefile()</span>
+<span class="c">#   toset() · lookup() · length() · upper() · cidrsubnet() · timestamp()</span></pre></div>
+
+<h3 class="reveal">Outputs — how a config talks to the outside</h3>
+<div class="cb reveal"><span class="lang">outputs.tf</span><pre><span class="p">output</span> <span class="g">"raw_bucket_arn"</span> {
+  <span class="k">value</span>       = <span class="o">aws_s3_bucket</span>.raw.arn
+  <span class="k">description</span> = <span class="g">"Pass this to the Airflow connection"</span>
+}
+
+<span class="p">output</span> <span class="g">"db_password"</span> {
+  <span class="k">value</span>     = <span class="o">random_password</span>.db.result
+  <span class="k">sensitive</span> = <span class="o">true</span>          <span class="c"># prints as &lt;sensitive&gt;; read with `terraform output -raw db_password`</span>
+}</pre></div>
+
+<!-- 09 -->
+<h2 id="meta" class="reveal"><span class="hico"><svg class="ico"><use href="#i-copy"/></svg></span><span class="n">09.</span> count, for_each, lifecycle &amp; dynamic</h2>
+<p class="reveal lead">Meta-arguments are settings you can add to <em>any</em> resource, regardless of type. Four of them matter, and one of them — the choice between <code>count</code> and <code>for_each</code> — is the most consequential small decision in Terraform.</p>
+
+<h3 class="reveal">Making many things: <code>count</code> vs <code>for_each</code></h3>
+<p class="reveal">Both create multiple copies of a resource from one block. They differ in <em>how Terraform names each copy in state</em> — and that naming is everything.</p>
+
+<figure class="fig reveal">
+<svg viewBox="0 0 760 330" font-family="var(--font)" aria-label="With count, removing a middle item renumbers everything after it and forces replacement; with for_each, keyed by name, only the removed item is destroyed">
+  <defs>
+    <marker id="m9" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#9aa0b4"/></marker>
+  </defs>
+
+  <!-- COUNT -->
+  <rect x="14" y="14" width="732" height="132" rx="12" fill="#1c1212" stroke="#3a2020"/>
+  <text x="32" y="40" font-size="12" fill="#f87171" font-weight="700">count</text>
+  <text x="94" y="40" font-size="10.5" fill="#9aa0b4">items are identified by POSITION — so removing one renumbers the rest</text>
+
+  <g font-size="10">
+    <rect x="90" y="76" width="92" height="30" rx="6" fill="#191632" stroke="#6B5BE6"/><text x="136" y="96" fill="#9d8cf5" text-anchor="middle">0 · raw</text>
+    <rect x="190" y="76" width="92" height="30" rx="6" fill="#191632" stroke="#6B5BE6"/><text x="236" y="96" fill="#9d8cf5" text-anchor="middle">1 · clean</text>
+    <rect x="290" y="76" width="92" height="30" rx="6" fill="#191632" stroke="#6B5BE6"/><text x="336" y="96" fill="#9d8cf5" text-anchor="middle">2 · curated</text>
+  </g>
+  <line x1="392" y1="91" x2="432" y2="91" stroke="#9aa0b4" stroke-width="1.4" marker-end="url(#m9)"/>
+  <text x="412" y="70" font-size="9" fill="#9aa0b4" text-anchor="middle">drop 'clean'</text>
+
+  <g font-size="10">
+    <rect x="442" y="76" width="92" height="30" rx="6" fill="#0f1f17" stroke="#34d399"/><text x="488" y="96" fill="#34d399" text-anchor="middle">0 · raw</text>
+    <rect x="542" y="76" width="92" height="30" rx="6" fill="#1c1212" stroke="#f87171" stroke-width="1.6"/><text x="588" y="96" fill="#f87171" text-anchor="middle">1 · curated</text>
+  </g>
+  <text x="644" y="80" font-size="9" fill="#f87171">curated: 2 → 1</text>
+  <text x="644" y="96" font-size="9" fill="#f87171">→ destroyed &amp;</text>
+  <text x="644" y="112" font-size="9" fill="#f87171">   recreated!</text>
+
+  <!-- FOR_EACH -->
+  <rect x="14" y="160" width="732" height="132" rx="12" fill="#0d1f18" stroke="#1a3020"/>
+  <text x="32" y="186" font-size="12" fill="#34d399" font-weight="700">for_each</text>
+  <text x="106" y="186" font-size="10.5" fill="#9aa0b4">items are identified by NAME — so the others never move</text>
+
+  <g font-size="10">
+    <rect x="90" y="222" width="92" height="30" rx="6" fill="#191632" stroke="#6B5BE6"/><text x="136" y="242" fill="#9d8cf5" text-anchor="middle">&quot;raw&quot;</text>
+    <rect x="190" y="222" width="92" height="30" rx="6" fill="#191632" stroke="#6B5BE6"/><text x="236" y="242" fill="#9d8cf5" text-anchor="middle">&quot;clean&quot;</text>
+    <rect x="290" y="222" width="92" height="30" rx="6" fill="#191632" stroke="#6B5BE6"/><text x="336" y="242" fill="#9d8cf5" text-anchor="middle">&quot;curated&quot;</text>
+  </g>
+  <line x1="392" y1="237" x2="432" y2="237" stroke="#9aa0b4" stroke-width="1.4" marker-end="url(#m9)"/>
+  <text x="412" y="216" font-size="9" fill="#9aa0b4" text-anchor="middle">drop 'clean'</text>
+
+  <g font-size="10">
+    <rect x="442" y="222" width="92" height="30" rx="6" fill="#0f1f17" stroke="#34d399"/><text x="488" y="242" fill="#34d399" text-anchor="middle">&quot;raw&quot;</text>
+    <rect x="542" y="222" width="92" height="30" rx="6" fill="#0f1f17" stroke="#34d399"/><text x="588" y="242" fill="#34d399" text-anchor="middle">&quot;curated&quot;</text>
+  </g>
+  <text x="644" y="226" font-size="9" fill="#34d399">✓ untouched</text>
+  <text x="644" y="242" font-size="9" fill="#9aa0b4">only &quot;clean&quot; is</text>
+  <text x="644" y="258" font-size="9" fill="#9aa0b4">destroyed</text>
+
+  <text x="380" y="316" font-size="10.5" fill="#6b7280" text-anchor="middle">Rule of thumb: reach for for_each. Use count only for &quot;zero or one of this&quot;, or truly interchangeable copies.</text>
+</svg>
+<figcaption>This is not a style preference. With <code>count</code>, deleting a middle item silently destroys and recreates every resource after it — on stateful things like buckets or databases, that's data loss.</figcaption>
+</figure>
+
+<div class="cb reveal"><span class="lang">count vs for_each in code</span><pre><span class="c"># ── count: indexed by POSITION → aws_s3_bucket.data[0], [1], [2] ──</span>
+<span class="p">resource</span> <span class="g">"aws_s3_bucket"</span> <span class="g">"data"</span> {
+  <span class="k">count</span>  = <span class="o">length</span>(<span class="o">var</span>.bucket_list)              <span class="c"># ["raw","clean","curated"]</span>
+  <span class="k">bucket</span> = <span class="g">"acme-${</span><span class="o">var</span>.bucket_list[<span class="o">count</span>.index]<span class="g">}"</span>
+}                                              <span class="c"># remove "clean" → everything shifts 💥</span>
+
+<span class="c"># ── for_each: keyed by NAME → aws_s3_bucket.data["raw"], ["curated"] ──</span>
+<span class="p">resource</span> <span class="g">"aws_s3_bucket"</span> <span class="g">"data"</span> {
+  <span class="k">for_each</span> = <span class="o">toset</span>([<span class="g">"raw"</span>, <span class="g">"clean"</span>, <span class="g">"curated"</span>])
+  <span class="k">bucket</span>   = <span class="g">"acme-${</span><span class="o">each</span>.key<span class="g">}"</span>                 <span class="c"># each.key = "raw"</span>
+}                                              <span class="c"># remove "clean" → only that one goes ✅</span>
+
+<span class="c"># ── for_each over a MAP: each.key AND each.value ──</span>
+<span class="p">resource</span> <span class="g">"aws_s3_bucket"</span> <span class="g">"zone"</span> {
+  <span class="k">for_each</span> = <span class="o">var</span>.buckets                       <span class="c"># the map(object) from §08</span>
+  <span class="k">bucket</span>   = <span class="g">"acme-${</span><span class="o">var</span>.env<span class="g">}-${</span><span class="o">each</span>.key<span class="g">}"</span>
+  <span class="k">tags</span>     = { RetentionDays = <span class="o">each</span>.value.retention_days }
+}
+
+<span class="c"># ── the one good use of count: an optional resource ──</span>
+<span class="p">resource</span> <span class="g">"aws_cloudwatch_dashboard"</span> <span class="g">"monitoring"</span> {
+  <span class="k">count</span> = <span class="o">var</span>.env == <span class="g">"prod"</span> ? 1 : 0        <span class="c"># exists in prod only</span>
+}</pre></div>
+
+<h3 class="reveal"><code>lifecycle</code> — overriding Terraform's instincts</h3>
+<div class="cb reveal"><span class="lang">the lifecycle block</span><pre><span class="p">resource</span> <span class="g">"aws_s3_bucket"</span> <span class="g">"raw"</span> {
+  <span class="k">bucket</span> = <span class="g">"acme-prod-raw"</span>
+
+  <span class="k">lifecycle</span> {
+    <span class="k">prevent_destroy</span> = <span class="o">true</span>          <span class="c"># ← REFUSE to delete this, ever. Any plan that</span>
+                                     <span class="c">#   would destroy it errors out instead.</span>
+                                     <span class="c">#   Put this on every prod data store. Today.</span>
+
+    <span class="k">ignore_changes</span> = [tags[<span class="g">"LastScan"</span>]] <span class="c"># a security tool edits this tag; stop</span>
+                                     <span class="c">#   fighting it on every plan</span>
+
+    <span class="k">create_before_destroy</span> = <span class="o">true</span>    <span class="c"># when replacing: build the new one FIRST,</span>
+  }                                  <span class="c">#   then remove the old → no downtime gap</span>
+}</pre></div>
+
+<h3 class="reveal"><code>dynamic</code> — generating repeated blocks</h3>
+<p class="reveal">Some resources contain repeated <em>sub-blocks</em> (an S3 lifecycle rule, a security-group ingress rule). <code>for_each</code> makes many resources; <code>dynamic</code> makes many blocks <em>inside</em> one resource.</p>
+<div class="cb reveal"><span class="lang">dynamic blocks</span><pre><span class="p">resource</span> <span class="g">"aws_s3_bucket_lifecycle_configuration"</span> <span class="g">"raw"</span> {
+  <span class="k">bucket</span> = <span class="o">aws_s3_bucket</span>.raw.id
+
+  <span class="p">dynamic</span> <span class="g">"rule"</span> {                       <span class="c"># generate one `rule { }` per entry</span>
+    <span class="k">for_each</span> = <span class="o">var</span>.buckets
+    <span class="k">content</span> {
+      <span class="k">id</span>     = <span class="g">"expire-${</span><span class="o">rule</span>.key<span class="g">}"</span>       <span class="c"># `rule` = the block label</span>
+      <span class="k">status</span> = <span class="g">"Enabled"</span>
+      <span class="k">expiration</span> { <span class="k">days</span> = <span class="o">rule</span>.value.retention_days }
+    }
+  }
+}</pre></div>
+<div class="callout gd reveal">
+  <p style="margin:.2em 0"><span class="t"><svg class="ico"><use href="#i-warn"/></svg> Don't get clever</span></p>
+  <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">Nested <code>dynamic</code> blocks driven by nested <code>for</code> expressions over conditional locals are <em>possible</em>, and they produce configs nobody — including future you — can read or safely change. HCL is a configuration language, not a programming one. When a block gets hard to follow, the answer is usually a <strong>module</strong> (<a href="#modules">§10</a>), not more cleverness.</p>
+</div>
+
+<!-- 10 -->
+<h2 id="modules" class="reveal"><span class="hico"><svg class="ico"><use href="#i-package"/></svg></span><span class="n">10.</span> Modules — write it once</h2>
+<p class="reveal lead">A <strong>module</strong> is just a folder of <code>.tf</code> files that you call from somewhere else, passing values in and getting values out. It's Terraform's function. If you've ever copy-pasted a block of resources between <code>dev/</code> and <code>prod/</code>, you wanted a module.</p>
+
+<figure class="fig reveal">
+<svg viewBox="0 0 760 300" font-family="var(--font)" aria-label="Two environments, dev and prod, both calling the same storage module with different inputs, producing different real infrastructure">
+  <defs>
+    <marker id="m10" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#B78AE8"/></marker>
+    <marker id="m10p" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#C77DFF"/></marker>
+  </defs>
+
+  <!-- callers -->
+  <rect x="20" y="46" width="200" height="86" rx="10" fill="#1c1230" stroke="#7B42BC" stroke-dasharray="5 4"/>
+  <text x="120" y="70" font-size="10.5" fill="#B78AE8" text-anchor="middle">envs/dev/main.tf</text>
+  <text x="36" y="92" font-size="9.5" fill="#9aa0b4">module "storage" {</text>
+  <text x="36" y="107" font-size="9.5" fill="#9aa0b4">  env  = "dev"</text>
+  <text x="36" y="122" font-size="9.5" fill="#9aa0b4">  size = "small"  }</text>
+
+  <rect x="20" y="168" width="200" height="86" rx="10" fill="#2a1240" stroke="#C77DFF" stroke-dasharray="5 4"/>
+  <text x="120" y="192" font-size="10.5" fill="#E0BBFF" text-anchor="middle">envs/prod/main.tf</text>
+  <text x="36" y="214" font-size="9.5" fill="#9aa0b4">module "storage" {</text>
+  <text x="36" y="229" font-size="9.5" fill="#9aa0b4">  env  = "prod"</text>
+  <text x="36" y="244" font-size="9.5" fill="#9aa0b4">  size = "large"  }</text>
+
+  <!-- module -->
+  <rect x="292" y="86" width="216" height="128" rx="11" fill="#0f1f17" stroke="#34d399" stroke-width="1.8"/>
+  <text x="400" y="110" font-size="11" fill="#34d399" text-anchor="middle" font-weight="700">modules/storage/</text>
+  <text x="308" y="136" font-size="9.5" fill="#9aa0b4">variables.tf → the inputs</text>
+  <text x="308" y="158" font-size="9.5" fill="#9aa0b4">main.tf      → the resources</text>
+  <text x="308" y="180" font-size="9.5" fill="#9aa0b4">outputs.tf   → the results</text>
+  <text x="400" y="202" font-size="9" fill="#6b7280" text-anchor="middle">written ONCE</text>
+
+  <line x1="224" y1="94" x2="288" y2="122" stroke="#B78AE8" stroke-width="1.5" marker-end="url(#m10)"/>
+  <line x1="224" y1="206" x2="288" y2="178" stroke="#C77DFF" stroke-width="1.5" marker-end="url(#m10p)"/>
+  <text x="256" y="146" font-size="9" fill="#6b7280" text-anchor="middle">inputs</text>
+
+  <!-- results -->
+  <line x1="512" y1="122" x2="574" y2="100" stroke="#B78AE8" stroke-width="1.5" marker-end="url(#m10)"/>
+  <line x1="512" y1="178" x2="574" y2="200" stroke="#C77DFF" stroke-width="1.5" marker-end="url(#m10p)"/>
+
+  <rect x="578" y="70" width="160" height="60" rx="9" fill="#1c1230" stroke="#7B42BC"/>
+  <text x="658" y="94" font-size="10.5" fill="#B78AE8" text-anchor="middle">dev bucket</text>
+  <text x="658" y="112" font-size="9" fill="#6b7280" text-anchor="middle">cheap · no versioning</text>
+
+  <rect x="578" y="170" width="160" height="60" rx="9" fill="#2a1240" stroke="#C77DFF"/>
+  <text x="658" y="194" font-size="10.5" fill="#E0BBFF" text-anchor="middle">prod bucket</text>
+  <text x="658" y="212" font-size="9" fill="#6b7280" text-anchor="middle">versioned · locked down</text>
+
+  <text x="380" y="282" font-size="10.5" fill="#6b7280" text-anchor="middle">one definition · many calls · the inputs are the only thing that differs</text>
+</svg>
+<figcaption>Modules are how a Terraform repo stays maintainable past about 200 lines. The module is the recipe; each environment is a serving.</figcaption>
+</figure>
+
+<div class="cb reveal"><span class="lang">modules/storage/ — the module itself</span><pre><span class="c"># modules/storage/variables.tf — its INPUTS</span>
+<span class="p">variable</span> <span class="g">"env"</span>  { <span class="k">type</span> = <span class="o">string</span> }
+<span class="p">variable</span> <span class="g">"size"</span> { <span class="k">type</span> = <span class="o">string</span>, <span class="k">default</span> = <span class="g">"small"</span> }
+
+<span class="c"># modules/storage/main.tf — the RESOURCES (no provider block! see below)</span>
+<span class="p">resource</span> <span class="g">"aws_s3_bucket"</span> <span class="g">"this"</span> {
+  <span class="k">bucket</span> = <span class="g">"acme-${</span><span class="o">var</span>.env<span class="g">}-raw"</span>
+  <span class="k">lifecycle</span> { <span class="k">prevent_destroy</span> = <span class="o">true</span> }
+}
+
+<span class="p">resource</span> <span class="g">"aws_s3_bucket_versioning"</span> <span class="g">"this"</span> {
+  <span class="k">bucket</span> = <span class="o">aws_s3_bucket</span>.this.id
+  <span class="k">versioning_configuration</span> {
+    <span class="k">status</span> = <span class="o">var</span>.env == <span class="g">"prod"</span> ? <span class="g">"Enabled"</span> : <span class="g">"Suspended"</span>
+  }
+}
+
+<span class="c"># modules/storage/outputs.tf — what it hands BACK</span>
+<span class="p">output</span> <span class="g">"bucket_arn"</span> { <span class="k">value</span> = <span class="o">aws_s3_bucket</span>.this.arn }</pre></div>
+
+<div class="cb reveal"><span class="lang">envs/prod/main.tf — calling it</span><pre><span class="p">module</span> <span class="g">"storage"</span> {
+  <span class="k">source</span> = <span class="g">"../../modules/storage"</span>       <span class="c"># local path…</span>
+  <span class="k">env</span>    = <span class="g">"prod"</span>                          <span class="c"># …and the inputs</span>
+  <span class="k">size</span>   = <span class="g">"large"</span>
+}
+
+<span class="c"># reference a module's output as module.&lt;name&gt;.&lt;output&gt;</span>
+<span class="p">resource</span> <span class="g">"aws_glue_job"</span> <span class="g">"etl"</span> {
+  <span class="k">command</span> { <span class="k">script_location</span> = <span class="g">"${</span><span class="o">module</span>.storage.bucket_arn<span class="g">}/etl.py"</span> }
+}
+
+<span class="c"># modules can also come from the REGISTRY or from Git — always pin a version:</span>
+<span class="p">module</span> <span class="g">"vpc"</span> {
+  <span class="k">source</span>  = <span class="g">"terraform-aws-modules/vpc/aws"</span>   <span class="c"># the public registry</span>
+  <span class="k">version</span> = <span class="g">"5.8.1"</span>                          <span class="c"># ← pin it, like a provider</span>
+  <span class="k">name</span>    = <span class="g">"data-platform"</span>
+}</pre></div>
+
+<div class="callout cy reveal">
+  <p style="margin:.2em 0"><span class="t"><svg class="ico"><use href="#i-key"/></svg> The rules that keep modules sane</span></p>
+  <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd"><strong>(1) No <code>provider</code> blocks inside a module</strong> — providers are configured by the <em>root</em> module (the directory you run <code>terraform</code> in) and inherited. A provider block in a shared module makes it impossible to use in a multi-region setup. <strong>(2) No hard-coded environment names</strong> — take them as inputs, or the module only works once. <strong>(3) Keep them small.</strong> A module that creates "the whole platform" is just your config with extra steps; a module that creates "a governed S3 bucket with versioning, encryption and a retention policy" is reusable. <strong>(4) Version them</strong> if they're shared across repos, and never point <code>source</code> at a Git branch — pin a tag, or a colleague's merge changes your infrastructure.</p>
+</div>
+
+<!-- 11 -->
+<h2 id="envs" class="reveal"><span class="hico"><svg class="ico"><use href="#i-globe"/></svg></span><span class="n">11.</span> Environments: workspaces vs directories</h2>
+<p class="reveal lead">You need dev, staging and prod. Terraform gives you two ways to do it, and the one that <em>sounds</em> purpose-built is usually the wrong choice.</p>
+
+<h3 class="reveal">Option A: <code>terraform workspace</code> — usually not what you want</h3>
+<p class="reveal">Workspaces give one configuration several <em>separate state files</em>: <code>terraform workspace new prod</code>, then <code>terraform apply</code> writes to a prod-specific state. Same code, different state. Tempting — but they share one backend, one set of credentials, and one provider config, and the only thing distinguishing prod from dev is a shell variable you can forget to set. <strong>The failure mode is applying dev changes to prod because you were in the wrong workspace</strong>, and nothing in the code makes that visible in a PR.</p>
+
+<h3 class="reveal">Option B: a directory per environment — the standard</h3>
+<p class="reveal">Give each environment its own folder, its own backend key, and its own <code>.tfvars</code>. All the shared logic lives in modules, so there's no duplication of substance — just a thin, explicit, greppable entry point per environment. This is what most serious teams do.</p>
+<div class="cb reveal"><span class="lang">the layout that scales</span><pre>.
+├── modules/                    <span class="c"># all the real logic — reusable, environment-agnostic</span>
+│   ├── storage/
+│   ├── warehouse/
+│   └── orchestration/
+└── envs/
+    ├── dev/
+    │   ├── main.tf             <span class="c"># calls the modules with dev inputs</span>
+    │   ├── backend.tf          <span class="c"># key = "data-platform/dev.tfstate"</span>
+    │   └── terraform.tfvars    <span class="c"># cluster_size = 2</span>
+    └── prod/
+        ├── main.tf             <span class="c"># the SAME modules, prod inputs</span>
+        ├── backend.tf          <span class="c"># key = "data-platform/prod.tfstate"  ← separate state!</span>
+        └── terraform.tfvars    <span class="c"># cluster_size = 20</span>
+
+<span class="c"># you run Terraform from inside one env directory:</span>
+cd envs/prod &amp;&amp; terraform init &amp;&amp; terraform plan</pre></div>
+
+<div class="callout gr reveal">
+  <p style="margin:.2em 0"><span class="t"><svg class="ico"><use href="#i-check"/></svg> Why the extra folders are worth it</span></p>
+  <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">Separate directories mean <strong>separate state files</strong>, which means a mistake in dev physically cannot touch prod's state. They also let prod use different credentials, a different AWS account, and a stricter CI job — and they make "what's actually deployed to prod?" a question you answer by reading one small file. Workspaces are genuinely good for <em>ephemeral</em> environments (a temporary copy per pull request); for the long-lived dev/staging/prod ladder from <a href="../cicd-essentials/#cd">CI/CD Essentials §05</a>, use directories.</p>
+</div>
+
+<!-- 12 -->
+<h2 id="cicd" class="reveal"><span class="hico"><svg class="ico"><use href="#i-workflow"/></svg></span><span class="n">12.</span> Terraform in CI/CD</h2>
+<p class="reveal lead">Running <code>terraform apply</code> from a laptop is how small teams start and how outages begin. The mature pattern: <strong>humans review plans, machines run applies.</strong> Nobody needs prod credentials on their laptop, and every infrastructure change arrives as a reviewed pull request.</p>
+
+<figure class="fig reveal">
+<svg viewBox="0 0 760 250" font-family="var(--font)" aria-label="A pull request triggers terraform plan, which is posted as a comment for review; merging triggers terraform apply using the exact saved plan">
+  <defs>
+    <marker id="m12" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#6B5BE6"/></marker>
+    <marker id="m12a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#f0b429"/></marker>
+  </defs>
+
+  <g stroke="#6B5BE6" stroke-width="1.5" fill="none">
+    <line x1="134" y1="96" x2="154" y2="96" marker-end="url(#m12)"/>
+    <line x1="298" y1="96" x2="318" y2="96" marker-end="url(#m12)"/>
+    <line x1="472" y1="96" x2="492" y2="96" marker-end="url(#m12)"/>
+    <line x1="606" y1="96" x2="626" y2="96" marker-end="url(#m12)"/>
+  </g>
+
+  <rect x="24" y="72" width="110" height="48" rx="9" fill="#1c1c22" stroke="#4a5163"/>
+  <text x="79" y="94" font-size="11" fill="#e7e7ee" text-anchor="middle">open a PR</text>
+  <text x="79" y="110" font-size="9" fill="#6b7280" text-anchor="middle">edit the .tf</text>
+
+  <rect x="158" y="72" width="140" height="48" rx="9" fill="#241d0f" stroke="#f0b429"/>
+  <text x="228" y="94" font-size="10.5" fill="#f0b429" text-anchor="middle">terraform plan</text>
+  <text x="228" y="110" font-size="9" fill="#6b7280" text-anchor="middle">-out=tfplan</text>
+
+  <rect x="322" y="72" width="150" height="48" rx="9" fill="#1c1230" stroke="#7B42BC"/>
+  <text x="397" y="94" font-size="10.5" fill="#B78AE8" text-anchor="middle">post the diff</text>
+  <text x="397" y="110" font-size="9" fill="#6b7280" text-anchor="middle">a human reviews it</text>
+
+  <rect x="496" y="72" width="110" height="48" rx="9" fill="#0f1f17" stroke="#34d399"/>
+  <text x="551" y="94" font-size="11" fill="#34d399" text-anchor="middle">merge</text>
+  <text x="551" y="110" font-size="9" fill="#6b7280" text-anchor="middle">approved ✓</text>
+
+  <rect x="630" y="70" width="106" height="52" rx="9" fill="#2a1240" stroke="#C77DFF" stroke-width="1.8"/>
+  <text x="683" y="92" font-size="10" fill="#E0BBFF" text-anchor="middle">apply</text>
+  <use href="#i-lock" x="641" y="100" width="9" height="9" fill="none" stroke="#6b7280" stroke-width="2.6"/>
+  <text x="656" y="108" font-size="8.5" fill="#6b7280">prod env gate</text>
+
+  <!-- the saved plan artifact -->
+  <path d="M228 124 V 176 H 356" fill="none" stroke="#f0b429" stroke-width="1.4" marker-end="url(#m12a)"/>
+  <path d="M524 176 H 683 V 128" fill="none" stroke="#f0b429" stroke-width="1.4" marker-end="url(#m12a)"/>
+  <rect x="360" y="154" width="164" height="44" rx="8" fill="#241d0f" stroke="#f0b429"/>
+  <text x="442" y="172" font-size="10" fill="#f0b429" text-anchor="middle">tfplan (artifact)</text>
+  <text x="442" y="188" font-size="8.5" fill="#9aa0b4" text-anchor="middle">the exact reviewed diff</text>
+
+  <text x="380" y="230" font-size="10.5" fill="#6b7280" text-anchor="middle">apply runs the plan a human already approved — not a fresh one that might have changed underneath</text>
+</svg>
+<figcaption>Saving the plan as an artifact and applying <em>that file</em> is the detail most first attempts miss — otherwise apply re-plans, and can do something the reviewer never saw.</figcaption>
+</figure>
+
+<div class="cb reveal"><span class="lang">.github/workflows/terraform.yml</span><pre><span class="k">name</span>: Terraform
+<span class="k">on</span>:
+  <span class="k">pull_request</span>:                    <span class="c"># every PR → plan only</span>
+  <span class="k">push</span>:
+    <span class="k">branches</span>: [<span class="g">main</span>]               <span class="c"># merge to main → apply</span>
+
+<span class="k">permissions</span>:
+  <span class="k">contents</span>: read
+  <span class="k">id-token</span>: write                  <span class="c"># ← required for OIDC (no stored AWS keys!)</span>
+  <span class="k">pull-requests</span>: write             <span class="c"># ← to post the plan as a comment</span>
+
+<span class="k">jobs</span>:
+  <span class="k">plan</span>:
+    <span class="k">runs-on</span>: ubuntu-latest
+    <span class="k">defaults</span>: { <span class="k">run</span>: { <span class="k">working-directory</span>: envs/prod } }
+    <span class="k">steps</span>:
+      - <span class="k">uses</span>: actions/checkout@v4
+      - <span class="k">uses</span>: aws-actions/configure-aws-credentials@v4
+        <span class="k">with</span>:                                    <span class="c"># short-lived creds, minted per run</span>
+          <span class="k">role-to-assume</span>: arn:aws:iam::123456789012:role/gha-terraform
+          <span class="k">aws-region</span>: eu-west-1
+      - <span class="k">uses</span>: hashicorp/setup-terraform@v3
+      - <span class="k">run</span>: terraform fmt -check -recursive   <span class="c"># style gate (fast, fails first)</span>
+      - <span class="k">run</span>: terraform init
+      - <span class="k">run</span>: terraform validate                <span class="c"># syntax + type checking</span>
+      - <span class="k">run</span>: terraform plan -out=tfplan        <span class="c"># ← SAVE the plan…</span>
+      - <span class="k">uses</span>: actions/upload-artifact@v4       <span class="c"># …and keep it for the apply job</span>
+        <span class="k">with</span>: { <span class="k">name</span>: tfplan, <span class="k">path</span>: envs/prod/tfplan }
+
+  <span class="k">apply</span>:
+    <span class="k">needs</span>: plan
+    <span class="k">if</span>: github.ref == <span class="g">'refs/heads/main'</span>     <span class="c"># never apply from a PR</span>
+    <span class="k">runs-on</span>: ubuntu-latest
+    <span class="k">environment</span>: production                 <span class="c"># ← the human approval gate</span>
+    <span class="k">defaults</span>: { <span class="k">run</span>: { <span class="k">working-directory</span>: envs/prod } }
+    <span class="k">steps</span>:
+      - <span class="k">uses</span>: actions/checkout@v4
+      - <span class="k">uses</span>: actions/download-artifact@v4
+        <span class="k">with</span>: { <span class="k">name</span>: tfplan, <span class="k">path</span>: envs/prod }
+      - <span class="k">run</span>: terraform init
+      - <span class="k">run</span>: terraform apply -auto-approve tfplan   <span class="c"># ← apply THAT plan, exactly</span></pre></div>
+
+<div class="callout cy reveal">
+  <p style="margin:.2em 0"><span class="t"><svg class="ico"><use href="#i-key"/></svg> Why <code>-out=tfplan</code> matters more than it looks</span></p>
+  <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">If your apply job just runs <code>terraform apply -auto-approve</code>, it computes a <em>brand-new plan</em> at apply time — which may differ from the one your reviewer approved (someone else merged, or the cloud drifted in between). Saving the plan to a file and applying <em>that file</em> guarantees the machine does exactly what a human signed off on. It's the Terraform version of "build once, deploy many" from <a href="../cicd-essentials/#cd">CI/CD Essentials §05</a>.</p>
+</div>
+
+<p class="reveal">Three more habits worth adopting on day one:</p>
+<ul class="reveal">
+  <li><strong>Use OIDC, not stored cloud keys.</strong> As in <a href="../cicd-essentials/#security">CI/CD Essentials §11</a>: let the workflow exchange its GitHub identity for a short-lived AWS role, so there's no permanent secret to steal. The plan job can assume a <em>read-only</em> role; only the apply job gets write access.</li>
+  <li><strong>Post the plan on the PR.</strong> A plan nobody reads is theatre. Comment it onto the pull request so the diff is reviewed next to the code change that caused it.</li>
+  <li><strong>Add static checks.</strong> <code>terraform fmt -check</code> (formatting), <code>terraform validate</code> (syntax), <code>tflint</code> (bad practice), and a security scanner like <code>tfsec</code> or <code>checkov</code> (public buckets, unencrypted volumes) — all cheap, all before the plan.</li>
+</ul>
+
+<!-- 13 -->
+<h2 id="de" class="reveal"><span class="hico"><svg class="ico"><use href="#i-database"/></svg></span><span class="n">13.</span> Terraform for data engineers</h2>
+<p class="reveal lead">Everything so far is generic Terraform. Here's what it looks like when the infrastructure you're describing is a <em>data platform</em> — and the one rule that keeps you out of trouble.</p>
+
+<h3 class="reveal">What you'll actually manage</h3>
+<table class="reveal">
+  <tr><th>Layer</th><th>Typical resources</th><th>Provider</th></tr>
+  <tr><td><strong>Storage</strong></td><td>S3 / ADLS / GCS buckets, lifecycle rules, encryption, versioning</td><td><code>aws</code>, <code>azurerm</code>, <code>google</code></td></tr>
+  <tr><td><strong>Permissions</strong></td><td>IAM roles &amp; policies, service principals, Unity Catalog grants</td><td><code>aws</code>, <code>azuread</code>, <code>databricks</code></td></tr>
+  <tr><td><strong>Compute</strong></td><td>Databricks clusters &amp; jobs, EMR, Glue jobs, cluster policies</td><td><code>databricks</code>, <code>aws</code></td></tr>
+  <tr><td><strong>Warehouse</strong></td><td>Snowflake warehouses, databases, roles, grants; BigQuery datasets</td><td><code>snowflake</code>, <code>google</code></td></tr>
+  <tr><td><strong>Orchestration</strong></td><td>MWAA / Composer environments, Airflow connections &amp; variables</td><td><code>aws</code>, <code>google</code></td></tr>
+  <tr><td><strong>Catalog</strong></td><td>Glue databases, Unity Catalog catalogs &amp; schemas</td><td><code>aws</code>, <code>databricks</code></td></tr>
+</table>
+
+<div class="cb reveal"><span class="lang">a realistic Databricks + Snowflake slice</span><pre><span class="c"># ── Databricks: a job cluster and the job that runs on it ──</span>
+<span class="p">resource</span> <span class="g">"databricks_job"</span> <span class="g">"daily_etl"</span> {
+  <span class="k">name</span> = <span class="g">"daily-etl-${</span><span class="o">var</span>.env<span class="g">}"</span>
+
+  <span class="k">job_cluster</span> {
+    <span class="k">job_cluster_key</span> = <span class="g">"main"</span>
+    <span class="k">new_cluster</span> {
+      <span class="k">spark_version</span> = <span class="o">data</span>.databricks_spark_version.lts.id
+      <span class="k">node_type_id</span>  = <span class="o">var</span>.env == <span class="g">"prod"</span> ? <span class="g">"i3.xlarge"</span> : <span class="g">"m5d.large"</span>
+      <span class="k">num_workers</span>   = <span class="o">var</span>.env == <span class="g">"prod"</span> ? 8 : 1        <span class="c"># same code, right-sized</span>
+    }
+  }
+
+  <span class="k">task</span> {
+    <span class="k">task_key</span> = <span class="g">"transform"</span>
+    <span class="k">notebook_task</span> { <span class="k">notebook_path</span> = <span class="g">"/Repos/data/etl/transform"</span> }
+  }
+
+  <span class="k">schedule</span> {
+    <span class="k">quartz_cron_expression</span> = <span class="g">"0 0 6 * * ?"</span>              <span class="c"># 06:00 daily</span>
+    <span class="k">timezone_id</span>            = <span class="g">"UTC"</span>
+  }
+}
+
+<span class="c"># ── Unity Catalog: the catalog + who may read it ──</span>
+<span class="p">resource</span> <span class="g">"databricks_catalog"</span> <span class="g">"main"</span> {
+  <span class="k">name</span>         = <span class="g">"${</span><span class="o">var</span>.env<span class="g">}_analytics"</span>
+  <span class="k">storage_root</span> = <span class="g">"s3://${</span><span class="o">aws_s3_bucket</span>.raw.bucket<span class="g">}/uc"</span>
+}
+
+<span class="p">resource</span> <span class="g">"databricks_grants"</span> <span class="g">"analysts"</span> {
+  <span class="k">catalog</span> = <span class="o">databricks_catalog</span>.main.name
+  <span class="k">grant</span> {
+    <span class="k">principal</span>  = <span class="g">"analysts"</span>
+    <span class="k">privileges</span> = [<span class="g">"USE_CATALOG"</span>, <span class="g">"SELECT"</span>]        <span class="c"># access, reviewed in a PR 🎉</span>
+  }
+}
+
+<span class="c"># ── Snowflake: a warehouse per environment, sized by variable ──</span>
+<span class="p">resource</span> <span class="g">"snowflake_warehouse"</span> <span class="g">"transform"</span> {
+  <span class="k">name</span>           = <span class="g">"TRANSFORM_${</span><span class="o">upper</span>(<span class="o">var</span>.env)<span class="g">}"</span>
+  <span class="k">warehouse_size</span> = <span class="o">var</span>.env == <span class="g">"prod"</span> ? <span class="g">"LARGE"</span> : <span class="g">"XSMALL"</span>
+  <span class="k">auto_suspend</span>   = 60                                <span class="c"># seconds — saves real money</span>
+}</pre></div>
+
+<div class="callout mg reveal">
+  <p style="margin:.2em 0"><span class="t"><svg class="ico"><use href="#i-warn"/></svg> The rule: Terraform manages the container, not the contents</span></p>
+  <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">Terraform should create the <strong>bucket</strong>, not the files in it. The <strong>warehouse and the schema</strong>, not the tables inside them. The <strong>Databricks job</strong>, not the notebook's logic. Why: Terraform's model is "this resource should look exactly like my config," and data is <em>constantly</em> changing outside of Terraform. Point it at data and every plan shows phantom drift — or worse, offers to "fix" a table by replacing it. <strong>Terraform builds the platform; dbt builds the tables; Airflow runs the pipelines.</strong> Keep the seams clean and each tool is easy. Blur them and you get a plan that wants to drop your warehouse.</p>
+</div>
+
+<div class="callout gd reveal">
+  <p style="margin:.2em 0"><span class="t"><svg class="ico"><use href="#i-warn"/></svg> Data-specific traps</span></p>
+  <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd"><strong>Renaming a bucket forces replacement</strong> — and Terraform will happily plan to delete the one holding your raw data. <code>prevent_destroy</code> on every production data store, no exceptions. <strong>Snowflake grants can fight you</strong>: if people also grant privileges by hand, Terraform will revoke them on the next apply — decide who owns grants and stick to it. <strong>Cluster autoscaling looks like drift</strong>: if something outside Terraform changes a worker count, use <code>ignore_changes</code> rather than fighting it every plan.</p>
+</div>
+
+<!-- 14 -->
+<h2 id="example" class="reveal"><span class="hico"><svg class="ico"><use href="#i-blocks"/></svg></span><span class="n">14.</span> A worked example: a real repo, end to end</h2>
+<p class="reveal lead">Everything so far has been pieces. This section assembles them into one small-but-complete data-platform repo — the layout, every file, and <em>why each line is where it is</em>. Copy this shape and you'll have a codebase that still makes sense when it's ten times bigger.</p>
+
+<h3 class="reveal">The tree</h3>
+<p class="reveal">Here is the whole thing. Read it top to bottom: <strong>modules</strong> hold the logic, <strong>envs</strong> hold the wiring, and nothing else exists.</p>
+<div class="cb reveal"><span class="lang">the repo</span><pre>data-platform/
+│
+├── <span class="k">modules/</span>                      <span class="c"># ── THE LOGIC. Written once, environment-agnostic. ──</span>
+│   ├── data-lake/
+│   │   ├── versions.tf           <span class="c"># which providers this module needs (no config!)</span>
+│   │   ├── variables.tf          <span class="c"># its inputs</span>
+│   │   ├── main.tf               <span class="c"># the buckets, the IAM role, the lifecycle rules</span>
+│   │   └── outputs.tf            <span class="c"># what it hands back to the caller</span>
+│   ├── etl-job/                  <span class="c"># same four files: a Glue/Databricks job</span>
+│   └── warehouse/                <span class="c"># same four files: Snowflake WH + roles + grants</span>
+│
+├── <span class="k">envs/</span>                         <span class="c"># ── THE WIRING. One thin root module per environment. ──</span>
+│   ├── dev/
+│   │   ├── backend.tf            <span class="c"># where DEV's state lives</span>
+│   │   ├── providers.tf          <span class="c"># provider config + version pins</span>
+│   │   ├── main.tf               <span class="c"># calls the modules with dev inputs</span>
+│   │   ├── outputs.tf            <span class="c"># re-publish the handful of values humans need</span>
+│   │   ├── terraform.tfvars      <span class="c"># dev's values (small, boring, no secrets)</span>
+│   │   └── .terraform.lock.hcl   <span class="c"># committed — exact provider versions</span>
+│   └── prod/                     <span class="c"># the SAME six files, different values</span>
+│
+├── .github/workflows/terraform.yml   <span class="c"># plan on PR, apply on merge (§12)</span>
+└── .gitignore                        <span class="c"># .terraform/  *.tfstate  *.tfstate.backup</span></pre></div>
+
+<figure class="fig reveal">
+<svg viewBox="0 0 760 344" font-family="var(--font)" aria-label="Repo anatomy: two thin environment roots each with their own state file, both calling the same shared modules, producing right-sized dev and prod infrastructure">
+  <defs>
+    <marker id="m14" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#6B5BE6"/></marker>
+    <marker id="m14p" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#C77DFF"/></marker>
+  </defs>
+
+  <!-- dev root -->
+  <rect x="24" y="54" width="176" height="76" rx="10" fill="#191632" stroke="#6B5BE6" stroke-dasharray="5 4"/>
+  <use href="#i-code" x="36" y="66" width="12" height="12" fill="none" stroke="#9d8cf5" stroke-width="2.2"/>
+  <text x="54" y="76" font-size="11" fill="#9d8cf5">envs/dev/</text>
+  <text x="36" y="97" font-size="8.5" fill="#6b7280">main.tf · providers.tf</text>
+  <text x="36" y="112" font-size="8.5" fill="#6b7280">backend.tf · tfvars</text>
+  <rect x="24" y="140" width="176" height="26" rx="7" fill="#241d0f" stroke="#f0b429"/>
+  <use href="#i-file" x="34" y="146" width="11" height="11" fill="none" stroke="#f0b429" stroke-width="2.4"/>
+  <text x="52" y="158" font-size="9.5" fill="#f0b429">dev.tfstate</text>
+
+  <!-- prod root -->
+  <rect x="24" y="176" width="176" height="76" rx="10" fill="#2a1240" stroke="#C77DFF" stroke-dasharray="5 4"/>
+  <use href="#i-code" x="36" y="188" width="12" height="12" fill="none" stroke="#E0BBFF" stroke-width="2.2"/>
+  <text x="54" y="198" font-size="11" fill="#E0BBFF">envs/prod/</text>
+  <text x="36" y="219" font-size="8.5" fill="#6b7280">main.tf · providers.tf</text>
+  <text x="36" y="234" font-size="8.5" fill="#6b7280">backend.tf · tfvars</text>
+  <rect x="24" y="262" width="176" height="26" rx="7" fill="#241d0f" stroke="#f0b429"/>
+  <use href="#i-file" x="34" y="268" width="11" height="11" fill="none" stroke="#f0b429" stroke-width="2.4"/>
+  <text x="52" y="280" font-size="9.5" fill="#f0b429">prod.tfstate</text>
+
+  <!-- modules -->
+  <rect x="246" y="40" width="220" height="218" rx="11" fill="#0f1f17" stroke="#34d399" stroke-width="1.6"/>
+  <use href="#i-package" x="256" y="48" width="13" height="13" fill="none" stroke="#34d399" stroke-width="2.2"/>
+  <text x="276" y="59" font-size="11" fill="#34d399" font-weight="700">modules/</text>
+  <rect x="256" y="70" width="200" height="48" rx="8" fill="#12261c" stroke="#34d399"/>
+  <text x="270" y="90" font-size="11" fill="#7fe0a0">data-lake</text>
+  <text x="270" y="105" font-size="8.5" fill="#6b7280">S3 + IAM + lifecycle rules</text>
+  <rect x="256" y="132" width="200" height="48" rx="8" fill="#12261c" stroke="#34d399"/>
+  <text x="270" y="152" font-size="11" fill="#7fe0a0">etl-job</text>
+  <text x="270" y="167" font-size="8.5" fill="#6b7280">Glue / Databricks job</text>
+  <rect x="256" y="194" width="200" height="48" rx="8" fill="#12261c" stroke="#34d399"/>
+  <text x="270" y="214" font-size="11" fill="#7fe0a0">warehouse</text>
+  <text x="270" y="229" font-size="8.5" fill="#6b7280">Snowflake WH + grants</text>
+
+  <!-- clouds -->
+  <rect x="520" y="64" width="216" height="76" rx="10" fill="#191632" stroke="#6B5BE6"/>
+  <use href="#i-cloud" x="532" y="76" width="13" height="13" fill="none" stroke="#9d8cf5" stroke-width="2.2"/>
+  <text x="552" y="86" font-size="11" fill="#9d8cf5">dev cloud</text>
+  <text x="532" y="107" font-size="8.5" fill="#6b7280">1 worker · no versioning</text>
+  <text x="532" y="122" font-size="8.5" fill="#6b7280">destroy it any time</text>
+
+  <rect x="520" y="182" width="216" height="76" rx="10" fill="#2a1240" stroke="#C77DFF" stroke-width="1.6"/>
+  <use href="#i-cloud" x="532" y="194" width="13" height="13" fill="none" stroke="#E0BBFF" stroke-width="2.2"/>
+  <text x="552" y="204" font-size="11" fill="#E0BBFF">prod cloud</text>
+  <text x="532" y="225" font-size="8.5" fill="#6b7280">8 workers · versioned</text>
+  <text x="532" y="240" font-size="8.5" fill="#6b7280">prevent_destroy on</text>
+
+  <!-- arrows -->
+  <line x1="204" y1="92" x2="242" y2="94" stroke="#6B5BE6" stroke-width="1.5" marker-end="url(#m14)"/>
+  <text x="223" y="84" font-size="8" fill="#6b7280" text-anchor="middle">dev vars</text>
+  <line x1="204" y1="214" x2="242" y2="212" stroke="#C77DFF" stroke-width="1.5" marker-end="url(#m14p)"/>
+  <text x="223" y="206" font-size="8" fill="#6b7280" text-anchor="middle">prod vars</text>
+  <line x1="470" y1="94" x2="514" y2="96" stroke="#6B5BE6" stroke-width="1.5" marker-end="url(#m14)"/>
+  <text x="492" y="86" font-size="8" fill="#6b7280" text-anchor="middle">apply</text>
+  <line x1="470" y1="212" x2="514" y2="214" stroke="#C77DFF" stroke-width="1.5" marker-end="url(#m14p)"/>
+  <text x="492" y="204" font-size="8" fill="#6b7280" text-anchor="middle">apply</text>
+
+  <text x="380" y="312" font-size="10.5" fill="#6b7280" text-anchor="middle">one definition in modules/ · one thin root per environment · one state file each</text>
+  <text x="380" y="330" font-size="10.5" fill="#6b7280" text-anchor="middle">nothing in envs/ but wiring — so &quot;what is actually in prod?&quot; is one small file you can read</text>
+</svg>
+<figcaption>The whole design in one picture. Both environments run the same code; the only thing that differs is the values they pass in — and they can never touch each other's state.</figcaption>
+</figure>
+
+<div class="callout cy reveal">
+  <p style="margin:.2em 0"><span class="t"><svg class="ico"><use href="#i-key"/></svg> The five rules this layout encodes</span></p>
+  <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd"><strong>(1) Roots are thin.</strong> An <code>envs/*/main.tf</code> should be almost boring — module calls and values, no resources. <strong>(2) Modules are dumb.</strong> They know nothing about "prod"; they take inputs. <strong>(3) State is split per environment</strong>, so a dev mistake physically cannot reach prod. <strong>(4) Providers are configured only in roots</strong> — never inside a module. <strong>(5) Everything is pinned</strong> — provider versions, module versions, and a committed lock file.</p>
+</div>
+
+<h3 class="reveal">The module, file by file</h3>
+<p class="reveal">Each module gets the same four files. That sameness is the point: once you've read one module, you can navigate any of them.</p>
+
+<h4 class="reveal">modules/data-lake/versions.tf — what it needs, not how to reach it</h4>
+<div class="cb reveal"><span class="lang">modules/data-lake/versions.tf</span><pre><span class="p">terraform</span> {
+  <span class="k">required_version</span> = <span class="g">"&gt;= 1.6"</span>
+  <span class="k">required_providers</span> {
+    <span class="k">aws</span> = {
+      <span class="k">source</span>  = <span class="g">"hashicorp/aws"</span>
+      <span class="k">version</span> = <span class="g">"&gt;= 5.0"</span>          <span class="c"># a RANGE, not a pin — see the note below</span>
+    }
+  }
+}</pre></div>
+<p class="reveal">Two things to notice, and both are subtle. First: there is <strong>no <code>provider "aws" { }</code> block</strong> here. The module declares that it <em>needs</em> the AWS provider, but the <em>configuration</em> of that provider (which region, which credentials) is inherited from whichever root calls it. Put a provider block in a shared module and you can never use it twice in one config — no multi-region, no multi-account. Second: a module declares a <strong>permissive range</strong> (<code>&gt;= 5.0</code>), while a <em>root</em> declares a <strong>tight constraint</strong> (<code>~&gt; 5.31</code>). The module is saying "I work with anything from 5.0 up"; the root decides what actually gets installed. If a module pinned an exact version, two modules could demand different versions and your config would be unresolvable.</p>
+
+<h4 class="reveal">modules/data-lake/variables.tf — the module's contract</h4>
+<div class="cb reveal"><span class="lang">modules/data-lake/variables.tf</span><pre><span class="p">variable</span> <span class="g">"env"</span> {
+  <span class="k">type</span>        = <span class="o">string</span>
+  <span class="k">description</span> = <span class="g">"Environment name — used in every resource name"</span>
+  <span class="k">validation</span> {
+    <span class="k">condition</span>     = <span class="o">can</span>(<span class="o">regex</span>(<span class="g">"^(dev|staging|prod)$"</span>, <span class="o">var</span>.env))
+    <span class="k">error_message</span> = <span class="g">"env must be dev, staging or prod."</span>
+  }
+}
+
+<span class="p">variable</span> <span class="g">"zones"</span> {
+  <span class="k">description</span> = <span class="g">"One bucket per zone, with its retention policy"</span>
+  <span class="k">type</span> = <span class="o">map</span>(<span class="o">object</span>({
+    retention_days = <span class="o">number</span>
+    versioning     = <span class="o">bool</span>
+  }))
+}
+
+<span class="p">variable</span> <span class="g">"is_protected"</span> {
+  <span class="k">type</span>        = <span class="o">bool</span>
+  <span class="k">default</span>     = <span class="o">false</span>          <span class="c"># safe default: dev can be destroyed…</span>
+  <span class="k">description</span> = <span class="g">"Refuse to destroy these buckets (turn on in prod)"</span>
+}
+
+<span class="p">variable</span> <span class="g">"tags"</span> {
+  <span class="k">type</span>    = <span class="o">map</span>(<span class="o">string</span>)
+  <span class="k">default</span> = {}                    <span class="c"># the root injects Owner / CostCentre / ManagedBy</span>
+}</pre></div>
+<p class="reveal">This file <em>is</em> the module's public API — treat it like a function signature. Every variable is <strong>typed</strong> and <strong>described</strong>, because the description is what shows up when a colleague runs <code>terraform-docs</code> on it. Note <code>is_protected</code> defaults to <code>false</code>: defaults should always be the <em>safe, cheap, dev</em> answer, so that forgetting to set something gives you a small dev bucket rather than an undeletable production one. Prod then opts in explicitly.</p>
+
+<h4 class="reveal">modules/data-lake/main.tf — the resources</h4>
+<div class="cb reveal"><span class="lang">modules/data-lake/main.tf</span><pre><span class="p">locals</span> {
+  prefix = <span class="g">"acme-${</span><span class="o">var</span>.env<span class="g">}"</span>                    <span class="c"># one place that decides naming</span>
+  tags   = <span class="o">merge</span>(<span class="o">var</span>.tags, { Module = <span class="g">"data-lake"</span> })
+}
+
+<span class="c"># one bucket per zone — keyed by NAME, so adding/removing a zone</span>
+<span class="c"># never disturbs the others (§09)</span>
+<span class="p">resource</span> <span class="g">"aws_s3_bucket"</span> <span class="g">"zone"</span> {
+  <span class="k">for_each</span> = <span class="o">var</span>.zones                        <span class="c"># { raw = {...}, curated = {...} }</span>
+
+  <span class="k">bucket</span> = <span class="g">"${</span><span class="o">local</span>.prefix<span class="g">}-${</span><span class="o">each</span>.key<span class="g">}"</span>       <span class="c"># acme-prod-raw</span>
+  <span class="k">tags</span>   = <span class="o">local</span>.tags
+
+  <span class="k">lifecycle</span> {
+    <span class="k">prevent_destroy</span> = <span class="o">true</span>                    <span class="c"># ⚠️ see the trap below</span>
+  }
+}
+
+<span class="p">resource</span> <span class="g">"aws_s3_bucket_versioning"</span> <span class="g">"zone"</span> {
+  <span class="k">for_each</span> = { <span class="o">for</span> k, v <span class="o">in</span> <span class="o">var</span>.zones : k =&gt; v <span class="o">if</span> v.versioning }
+
+  <span class="k">bucket</span> = <span class="o">aws_s3_bucket</span>.zone[<span class="o">each</span>.key].id     <span class="c"># ← the reference builds the graph (§07)</span>
+  <span class="k">versioning_configuration</span> { <span class="k">status</span> = <span class="g">"Enabled"</span> }
+}
+
+<span class="p">resource</span> <span class="g">"aws_s3_bucket_lifecycle_configuration"</span> <span class="g">"zone"</span> {
+  <span class="k">for_each</span> = <span class="o">var</span>.zones
+  <span class="k">bucket</span>   = <span class="o">aws_s3_bucket</span>.zone[<span class="o">each</span>.key].id
+
+  <span class="k">rule</span> {
+    <span class="k">id</span>     = <span class="g">"expire"</span>
+    <span class="k">status</span> = <span class="g">"Enabled"</span>
+    <span class="k">expiration</span> { <span class="k">days</span> = <span class="o">each</span>.value.retention_days }
+  }
+}
+
+<span class="c"># the role the ETL job assumes to read/write the lake</span>
+<span class="p">resource</span> <span class="g">"aws_iam_role"</span> <span class="g">"etl"</span> {
+  <span class="k">name</span> = <span class="g">"${</span><span class="o">local</span>.prefix<span class="g">}-etl"</span>
+  <span class="k">tags</span> = <span class="o">local</span>.tags
+  <span class="k">assume_role_policy</span> = <span class="o">jsonencode</span>({
+    Version   = <span class="g">"2012-10-17"</span>
+    Statement = [{
+      Effect    = <span class="g">"Allow"</span>
+      Action    = <span class="g">"sts:AssumeRole"</span>
+      Principal = { Service = <span class="g">"glue.amazonaws.com"</span> }
+    }]
+  })
+}</pre></div>
+
+<div class="callout gd reveal">
+  <p style="margin:.2em 0"><span class="t"><svg class="ico"><use href="#i-warn"/></svg> The <code>prevent_destroy</code> trap you'll hit in about a week</span></p>
+  <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">The code above hard-codes <code>prevent_destroy = true</code>, which protects prod — and also makes <code>terraform destroy</code> on your <em>dev</em> environment fail, which is infuriating. The obvious fix is <code>prevent_destroy = var.is_protected</code>… <strong>and that doesn't work.</strong> The <code>lifecycle</code> block is evaluated before variables are resolved, so it accepts only <em>literal</em> values — no <code>var.</code>, no <code>local.</code>, no conditionals. This is one of Terraform's genuinely sharp edges. The real options: (a) accept it and never destroy dev (use <code>-target</code> or delete the state), (b) keep a separate module variant for protected data, or (c) rely on the <code>deletion_protection</code>-style attribute the provider itself offers, which <em>is</em> a normal argument and <em>can</em> take a variable. Know this before you design around it.</p>
+</div>
+
+<h4 class="reveal">modules/data-lake/outputs.tf — the return values</h4>
+<div class="cb reveal"><span class="lang">modules/data-lake/outputs.tf</span><pre><span class="p">output</span> <span class="g">"bucket_names"</span> {
+  <span class="k">description</span> = <span class="g">"Zone name → bucket name, for the ETL job to consume"</span>
+  <span class="k">value</span>       = { <span class="o">for</span> k, b <span class="o">in</span> <span class="o">aws_s3_bucket</span>.zone : k =&gt; b.bucket }
+  <span class="c"># → { raw = "acme-prod-raw", curated = "acme-prod-curated" }</span>
+}
+
+<span class="p">output</span> <span class="g">"etl_role_arn"</span> {
+  <span class="k">description</span> = <span class="g">"Assume this role to read the lake"</span>
+  <span class="k">value</span>       = <span class="o">aws_iam_role</span>.etl.arn
+}</pre></div>
+<p class="reveal">Outputs are how one module talks to the next <em>without</em> either knowing about the other. The <code>etl-job</code> module doesn't hard-code a bucket name or an ARN — the root passes it in from this module's output. That single habit is what lets you rename a bucket in one place and have everything downstream follow.</p>
+
+<h3 class="reveal">The environment root, file by file</h3>
+<p class="reveal">Now the wiring. This is the part a reviewer reads when they ask "what does prod actually look like?" — so it should be small enough to read in a minute.</p>
+
+<div class="cb reveal"><span class="lang">envs/prod/backend.tf</span><pre><span class="p">terraform</span> {
+  <span class="k">backend</span> <span class="g">"s3"</span> {
+    <span class="k">bucket</span>       = <span class="g">"acme-tfstate"</span>
+    <span class="k">key</span>          = <span class="g">"data-platform/prod.tfstate"</span>   <span class="c"># ← dev uses .../dev.tfstate</span>
+    <span class="k">region</span>       = <span class="g">"eu-west-1"</span>                    <span class="c">#   DIFFERENT KEY = separate state = safety</span>
+    <span class="k">encrypt</span>      = <span class="o">true</span>
+    <span class="k">use_lockfile</span> = <span class="o">true</span>
+  }
+}</pre></div>
+<p class="reveal">The one line that matters is <code>key</code>. Dev and prod point at the same bucket but different objects, so they have <strong>separate state files</strong> and separate locks — an apply in dev can't corrupt or block prod. (Backend blocks can't use variables, which is exactly why this is a per-environment file rather than something clever and shared.)</p>
+
+<div class="cb reveal"><span class="lang">envs/prod/providers.tf</span><pre><span class="p">terraform</span> {
+  <span class="k">required_version</span> = <span class="g">"&gt;= 1.6"</span>
+  <span class="k">required_providers</span> {
+    <span class="k">aws</span> = {
+      <span class="k">source</span>  = <span class="g">"hashicorp/aws"</span>
+      <span class="k">version</span> = <span class="g">"~&gt; 5.31"</span>      <span class="c"># the ROOT pins tightly (the module only ranged)</span>
+    }
+  }
+}
+
+<span class="p">provider</span> <span class="g">"aws"</span> {
+  <span class="k">region</span> = <span class="g">"eu-west-1"</span>
+
+  <span class="k">default_tags</span> {              <span class="c"># ← tag EVERY resource, automatically</span>
+    <span class="k">tags</span> = {
+      Environment = <span class="g">"prod"</span>
+      ManagedBy   = <span class="g">"terraform"</span>
+      Repo        = <span class="g">"acme/data-platform"</span>
+    }
+  }
+}</pre></div>
+<p class="reveal"><code>default_tags</code> is one of the highest-value five lines in this whole repo. Every resource the AWS provider creates gets these tags without you writing them anywhere else — which means six months from now, when something expensive appears in the bill, you can answer "who owns this and is it Terraform-managed?" instantly. <code>ManagedBy = terraform</code> in particular tells the next engineer <em>not</em> to fix it by hand.</p>
+
+<div class="cb reveal"><span class="lang">envs/prod/main.tf — the whole of prod, in one readable file</span><pre><span class="c"># ── the lake ──</span>
+<span class="p">module</span> <span class="g">"lake"</span> {
+  <span class="k">source</span> = <span class="g">"../../modules/data-lake"</span>
+
+  <span class="k">env</span>          = <span class="o">var</span>.env
+  <span class="k">zones</span>        = <span class="o">var</span>.zones          <span class="c"># comes from terraform.tfvars, below</span>
+  <span class="k">is_protected</span> = <span class="o">true</span>               <span class="c"># prod opts IN to protection</span>
+  <span class="k">tags</span>         = { CostCentre = <span class="g">"data-eng"</span> }
+}
+
+<span class="c"># ── the job that runs on it ──</span>
+<span class="p">module</span> <span class="g">"etl"</span> {
+  <span class="k">source</span> = <span class="g">"../../modules/etl-job"</span>
+
+  <span class="k">env</span>          = <span class="o">var</span>.env
+  <span class="k">role_arn</span>     = <span class="o">module</span>.lake.etl_role_arn       <span class="c"># ← module → module, via outputs</span>
+  <span class="k">source_bucket</span> = <span class="o">module</span>.lake.bucket_names[<span class="g">"raw"</span>]
+  <span class="k">target_bucket</span> = <span class="o">module</span>.lake.bucket_names[<span class="g">"curated"</span>]
+  <span class="k">workers</span>      = 8                              <span class="c"># dev passes 1</span>
+}
+
+<span class="c"># ── the warehouse the analysts query ──</span>
+<span class="p">module</span> <span class="g">"warehouse"</span> {
+  <span class="k">source</span> = <span class="g">"../../modules/warehouse"</span>
+
+  <span class="k">env</span>            = <span class="o">var</span>.env
+  <span class="k">warehouse_size</span> = <span class="g">"LARGE"</span>                    <span class="c"># dev passes XSMALL</span>
+  <span class="k">readers</span>        = [<span class="g">"ANALYST"</span>, <span class="g">"BI_TOOL"</span>]
+}</pre></div>
+<p class="reveal">That's the entire production platform — three module calls and about twenty meaningful lines. Notice there is <strong>not a single <code>resource</code> block</strong> here. Notice too how <code>module.lake.etl_role_arn</code> flows into the <code>etl</code> module: the two modules never reference each other, only the root wires them together, which is what keeps them independently reusable. And because those are real references, Terraform derives the ordering itself — the lake is built before the job that needs it (<a href="#graph">§07</a>).</p>
+
+<div class="cb reveal"><span class="lang">envs/prod/terraform.tfvars — the values, and nothing else</span><pre>env = <span class="g">"prod"</span>
+
+zones = {
+  raw     = { retention_days = 3650, versioning = <span class="o">true</span>  }   <span class="c"># 10y — the source of truth</span>
+  curated = { retention_days = 730,  versioning = <span class="o">true</span>  }   <span class="c"># 2y — rebuildable, but precious</span>
+  scratch = { retention_days = 7,    versioning = <span class="o">false</span> }   <span class="c"># a week — genuinely disposable</span>
+}
+
+<span class="c"># NOTE: no passwords, no keys, no tokens. Ever. Those come from the</span>
+<span class="c"># secret store at apply time — this file is committed to Git. (§15)</span></pre></div>
+<p class="reveal">Compare with <code>envs/dev/terraform.tfvars</code>, which is the same file with <code>env = "dev"</code> and retention measured in days rather than years. <strong>That diff is the entire difference between your environments</strong> — and it fits on a screen, which is exactly the property you want.</p>
+
+<h3 class="reveal">The life of a change</h3>
+<p class="reveal">Now watch it work. Suppose the analytics team asks for a new <code>features</code> zone in the lake. Here is every step, and the thing to notice is how little of it involves Terraform knowledge at all:</p>
+<div class="step reveal"><div class="num-bubble">1</div><div class="body"><strong>Edit one file.</strong> Add <code>features = { retention_days = 365, versioning = true }</code> to <code>envs/prod/terraform.tfvars</code>. That's it — no new resources, no new module, no copy-paste. The <code>for_each</code> in the module does the rest.</div></div>
+<div class="step reveal"><div class="num-bubble">2</div><div class="body"><strong>Open a PR.</strong> CI runs <code>fmt</code>, <code>validate</code>, then <code>terraform plan</code>, and posts the diff as a comment (<a href="#cicd">§12</a>).</div></div>
+<div class="step reveal"><div class="num-bubble">3</div><div class="body"><strong>Read the plan.</strong> This is the moment the whole design pays off — because of <code>for_each</code>, the plan touches <em>only</em> the new bucket. Nothing else moves:</div></div>
+<div class="cb reveal"><span class="lang">the plan a reviewer sees</span><pre><span class="g">  # module.lake.aws_s3_bucket.zone["features"] will be created</span>
+<span class="g">  + resource "aws_s3_bucket" "zone" {</span>
+<span class="g">      + bucket = "acme-prod-features"</span>
+<span class="g">      + tags   = { Environment = "prod", ManagedBy = "terraform", … }</span>
+<span class="g">    }</span>
+<span class="g">  # module.lake.aws_s3_bucket_versioning.zone["features"] will be created</span>
+<span class="g">  # module.lake.aws_s3_bucket_lifecycle_configuration.zone["features"] will be created</span>
+
+Plan: <span class="g">3 to add</span>, 0 to change, <span class="r">0 to destroy</span>.
+<span class="c">#            ↑ exactly what you asked for, and NOTHING ELSE.</span>
+<span class="c">#   The existing raw/curated/scratch buckets aren't even mentioned —</span>
+<span class="c">#   that is what "keyed by name" buys you. With `count`, this same</span>
+<span class="c">#   change could have shown "3 to add, 0 to change, 2 to destroy". (§09)</span></pre></div>
+<div class="step reveal"><div class="num-bubble">4</div><div class="body"><strong>Merge.</strong> CI applies the <em>saved</em> plan — the exact diff that was reviewed — behind the production environment's approval gate. The bucket exists. The PR is the audit trail.</div></div>
+
+<h3 class="reveal">Structures to avoid (and what they cost you)</h3>
+<table class="reveal">
+  <tr><th>Anti-pattern</th><th>Why it feels right</th><th>What it costs</th></tr>
+  <tr><td>One giant <code>main.tf</code></td><td>No abstraction to learn; everything's in one place</td><td>Past ~300 lines nobody can review it; every plan refreshes everything; one state file for the whole company</td></tr>
+  <tr><td>Copy-pasting <code>dev/</code> to make <code>prod/</code></td><td>Fast, obvious, no modules needed</td><td>The two drift apart silently. A fix applied to dev quietly never reaches prod — and you find out during an incident</td></tr>
+  <tr><td>A module per single resource<br/><span style="color:#9aa0b4">(<code>modules/s3-bucket/</code>)</span></td><td>Feels DRY and tidy</td><td>Pure overhead — a wrapper that adds nothing but indirection. A module should encapsulate a <em>decision</em> ("our governed lake zone"), not a resource</td></tr>
+  <tr><td>A <code>provider</code> block inside a module</td><td>Makes the module "self-contained"</td><td>Can't be used twice (no multi-region, no multi-account), and removing it later is a painful state migration</td></tr>
+  <tr><td>Environments as <code>workspaces</code></td><td>It's the built-in feature named after the problem</td><td>One backend, one credential set, and the only thing between you and prod is a shell variable (<a href="#envs">§11</a>)</td></tr>
+  <tr><td>Secrets in <code>terraform.tfvars</code></td><td>It's just a values file</td><td>It's committed to Git. Forever. Use the secret store (<a href="#safety">§15</a>)</td></tr>
+</table>
+
+<div class="callout gr reveal">
+  <p style="margin:.2em 0"><span class="t"><svg class="ico"><use href="#i-check"/></svg> When to grow beyond this shape</span></p>
+  <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">This layout comfortably carries a team to a few hundred resources per environment. The signals that you've outgrown it: <strong>plans take minutes</strong> (Terraform refreshes everything in state), or <strong>unrelated teams keep colliding on the lock</strong>. The fix is not a cleverer directory tree — it's <strong>splitting state further</strong>, by blast radius: <code>envs/prod/networking/</code>, <code>envs/prod/data-lake/</code>, <code>envs/prod/warehouse/</code>, each with its own backend key and its own plan. Where one needs a value from another, publish an <code>output</code> and read it with a <code>terraform_remote_state</code> data source. Same rules, smaller blast radius, faster plans.</p>
+</div>
+
+<!-- 15 -->
+<h2 id="safety" class="reveal"><span class="hico"><svg class="ico"><use href="#i-shield"/></svg></span><span class="n">15.</span> Security, safety &amp; the classic traps</h2>
+<p class="reveal lead">Terraform holds the keys to your entire cloud, and its state file holds your secrets in plaintext. A short list of habits keeps that from becoming a headline.</p>
+
+<h3 class="reveal">Security</h3>
+<ul class="reveal">
+  <li><strong>Never hard-code secrets in <code>.tf</code> files.</strong> They go to Git, and Git is forever. Inject them as variables from your CI secret store, or better, read them from a secrets manager at apply time (<code>data "aws_secretsmanager_secret_version"</code>) so the value never lives in your repo.</li>
+  <li><strong>Treat state as a secret.</strong> It contains generated passwords and keys in plaintext regardless of <code>sensitive = true</code>. Encrypt the state bucket, enable versioning, and restrict read access to the CI role and a couple of humans.</li>
+  <li><strong>Prefer OIDC over long-lived cloud keys</strong> in CI — short-lived credentials minted per run, nothing permanent to leak.</li>
+  <li><strong>Least privilege for the plan job.</strong> Planning only needs <em>read</em>. Give the PR job a read-only role and reserve write permissions for the apply job on <code>main</code>.</li>
+  <li><strong>Scan before you apply.</strong> <code>tfsec</code> / <code>checkov</code> catch public buckets, unencrypted volumes and over-broad IAM in CI, before they exist.</li>
+  <li><strong><code>.gitignore</code> the right things</strong> — <code>.terraform/</code>, <code>*.tfstate</code>, <code>*.tfstate.backup</code>, and any <code>*.tfvars</code> holding secrets. <em>Do</em> commit <code>.terraform.lock.hcl</code>.</li>
+</ul>
+
+<h3 class="reveal">The traps everyone falls into once</h3>
+<div class="cb reveal"><span class="lang">learn these the easy way</span><pre><span class="r">✗ Running apply from a laptop against prod</span>
+  <span class="g">→ nobody has prod credentials; CI applies, humans review (§12)</span>
+
+<span class="r">✗ Local state on a team</span>
+  <span class="g">→ remote backend + locking, on day one (§06)</span>
+
+<span class="r">✗ Ignoring the plan and typing "yes" on autopilot</span>
+  <span class="g">→ read every line that says destroy or replace. Every time.</span>
+
+<span class="r">✗ Using count for named things, then deleting one from the middle</span>
+  <span class="g">→ for_each, keyed by name (§09)</span>
+
+<span class="r">✗ Hand-editing terraform.tfstate to "fix" something</span>
+  <span class="g">→ state mv / import / moved blocks; and turn on bucket versioning (§06)</span>
+
+<span class="r">✗ Unpinned provider and module versions</span>
+  <span class="g">→ ~&gt; constraints + a committed lock file (§05)</span>
+
+<span class="r">✗ No prevent_destroy on the bucket holding 4 TB of raw data</span>
+  <span class="g">→ add it now, before you read the next section (§09)</span>
+
+<span class="r">✗ One giant state file for the whole company</span>
+  <span class="g">→ split by blast radius: per environment, per platform area (§11)</span></pre></div>
+
+<div class="callout gr reveal">
+  <p style="margin:.2em 0"><span class="t"><svg class="ico"><use href="#i-check"/></svg> Split state by blast radius</span></p>
+  <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">As a config grows, every plan gets slower (Terraform refreshes <em>everything</em> in state) and every apply gets scarier (one bad change can touch anything). So teams split state along boundaries that rarely change together: <strong>per environment</strong> first (dev/prod), then <strong>per area</strong> (networking · storage · warehouse · orchestration). Each gets its own state file and its own plan. Where one needs a value from another, publish it as an <code>output</code> and read it with a <code>terraform_remote_state</code> data source — or, more loosely coupled, look it up by name/tag with a normal data source.</p>
+</div>
+
+<!-- 16 -->
+<h2 id="cheatsheet" class="reveal"><span class="hico"><svg class="ico"><use href="#i-list"/></svg></span><span class="n">16.</span> Quick-reference cheat sheet</h2>
+<p class="reveal">The commands and blocks you'll reach for most, in one place.</p>
+<div class="cb reveal"><span class="lang">terraform — keep this handy</span><pre><span class="c">── the loop ──────────────────────────────────────────</span>
+terraform init                    <span class="c"># providers + modules + backend (re-run when they change)</span>
+terraform init -upgrade           <span class="c"># deliberately bump provider versions</span>
+terraform fmt -recursive          <span class="c"># auto-format (run before every commit)</span>
+terraform validate                <span class="c"># syntax &amp; type check — no cloud calls</span>
+terraform plan                    <span class="c"># preview. Changes NOTHING. Free. Do it often.</span>
+terraform plan -out=tfplan        <span class="c"># save the plan…</span>
+terraform apply tfplan            <span class="c"># …and apply exactly that</span>
+terraform apply -auto-approve     <span class="c"># no prompt (CI only)</span>
+terraform destroy                 <span class="c"># tear it all down (dev only, please)</span>
+
+<span class="c">── targeting &amp; debugging ─────────────────────────────</span>
+terraform plan -target=aws_s3_bucket.raw   <span class="c"># just one resource (escape hatch, not a habit)</span>
+terraform plan -refresh-only               <span class="c"># "has anything drifted?" — no config changes</span>
+terraform apply -replace=aws_glue_job.etl  <span class="c"># force-recreate one thing (replaces old `taint`)</span>
+terraform output -raw bucket_name          <span class="c"># a value, unquoted, for scripts</span>
+terraform console                          <span class="c"># a REPL to try expressions</span>
+TF_LOG=DEBUG terraform plan                <span class="c"># when the provider is misbehaving</span>
+
+<span class="c">── state ─────────────────────────────────────────────</span>
+terraform state list              <span class="c"># everything Terraform tracks</span>
+terraform state show ADDR         <span class="c"># all known attributes of one resource</span>
+terraform state rm ADDR           <span class="c"># forget it (does NOT delete in the cloud)</span>
+terraform import ADDR real-id     <span class="c"># adopt an existing resource (or use an import block)</span>
+terraform force-unlock LOCK_ID    <span class="c"># only when a run died mid-apply. Be sure.</span>
+
+<span class="c">── the blocks ────────────────────────────────────────</span>
+terraform {}   <span class="c"># versions · required_providers · backend</span>
+provider {}    <span class="c"># how to reach a cloud (region, creds, alias)</span>
+resource {}    <span class="c"># CREATES and owns a thing        → addr: type.name</span>
+data {}        <span class="c"># READS a thing it doesn't own    → addr: data.type.name</span>
+variable {}    <span class="c"># an input   (var.name)</span>
+output {}      <span class="c"># a result   (module.mod.name)</span>
+locals {}      <span class="c"># a computed value (local.name)</span>
+module {}      <span class="c"># call a reusable folder of resources</span>
+import{} moved{} removed{}   <span class="c"># declarative state surgery, reviewable in a PR</span>
+
+<span class="c">── meta-arguments (usable on any resource) ───────────</span>
+for_each = toset([...]) / var.map   <span class="c"># many, keyed by NAME  ← prefer this</span>
+count    = var.enabled ? 1 : 0      <span class="c"># many, keyed by INDEX ← "zero or one" only</span>
+depends_on = [other.thing]          <span class="c"># explicit order (rarely needed)</span>
+provider   = aws.us                 <span class="c"># use an aliased provider</span>
+lifecycle { prevent_destroy = true · ignore_changes = [...] · create_before_destroy = true }
+
+<span class="c">── the plan symbols ──────────────────────────────────</span>
+<span class="g">  + create</span>   <span class="y">~ update in-place</span>   <span class="r">- destroy</span>   <span class="r">-/+ REPLACE (destroy then create!)</span></pre></div>
+
+<!-- glossary -->
+<h2 id="glossary" class="reveal"><span class="hico"><svg class="ico"><use href="#i-book"/></svg></span><span class="n">＊</span> Glossary</h2>
+<div class="gloss reveal">
+  <dl>
+    <dt>Infrastructure as code (IaC)</dt><dd>Defining infrastructure in version-controlled text files instead of clicking in a console — so it's reviewable, repeatable and auditable.</dd>
+    <dt>Declarative</dt><dd>You describe the desired <em>end state</em>; the tool works out the steps. (Imperative = you write the steps.) This is why Terraform is safe to re-run.</dd>
+    <dt>Idempotent</dt><dd>Running the same apply twice changes nothing the second time — the destination is already reached.</dd>
+    <dt>HCL</dt><dd>HashiCorp Configuration Language — the block-based syntax Terraform files are written in.</dd>
+    <dt>Provider</dt><dd>The plugin that knows how to talk to one API (<code>aws</code>, <code>databricks</code>, <code>snowflake</code>). Downloaded by <code>terraform init</code>.</dd>
+    <dt>Resource</dt><dd>A thing Terraform creates and owns. Address: <code>type.name</code>. Delete the block and Terraform deletes the real thing.</dd>
+    <dt>Data source</dt><dd>A read-only lookup of something Terraform does <em>not</em> own. Creates nothing, deletes nothing.</dd>
+    <dt>State</dt><dd>Terraform's record of which real resource corresponds to which block in your code, plus its last-known attributes. Stored in <code>terraform.tfstate</code>. Contains secrets in plaintext.</dd>
+    <dt>Backend</dt><dd>Where state is stored. <code>local</code> by default; on a team, a remote backend (S3, Azure Blob, GCS, HCP Terraform) with locking.</dd>
+    <dt>State lock</dt><dd>A mutex the backend hands out so only one apply runs at a time — without it, two concurrent applies corrupt state.</dd>
+    <dt>Drift</dt><dd>When reality no longer matches state, because something was changed outside Terraform (usually by hand, during an incident).</dd>
+    <dt>Plan</dt><dd>The preview diff between your config, the state, and reality. Read-only. The thing you review before every apply.</dd>
+    <dt>Apply</dt><dd>The command that actually changes infrastructure — and the only one that does.</dd>
+    <dt>Replace (<code>-/+</code>)</dt><dd>Terraform must destroy and recreate a resource because an unchangeable attribute changed. The plan line to fear on stateful resources.</dd>
+    <dt>Dependency graph</dt><dd>The order of operations Terraform derives from the references in your code. Independent resources are built in parallel.</dd>
+    <dt><code>depends_on</code></dt><dd>An explicit dependency, for ordering Terraform can't infer from references. Use sparingly.</dd>
+    <dt>Module</dt><dd>A reusable folder of <code>.tf</code> files, called with inputs and returning outputs. Terraform's function.</dd>
+    <dt>Root module</dt><dd>The directory you actually run <code>terraform</code> in. Where providers are configured; the only place a backend is declared.</dd>
+    <dt>Registry</dt><dd>The public catalogue of providers and modules (<code>registry.terraform.io</code>).</dd>
+    <dt>Lock file</dt><dd><code>.terraform.lock.hcl</code> — pins the exact provider versions and checksums. Commit it.</dd>
+    <dt><code>count</code> vs <code>for_each</code></dt><dd>Two ways to make many copies: by <em>index</em> (fragile — removing one renumbers the rest) or by <em>name</em> (stable). Prefer <code>for_each</code>.</dd>
+    <dt><code>prevent_destroy</code></dt><dd>A lifecycle rule that makes Terraform refuse any plan that would delete the resource. Put it on production data stores.</dd>
+    <dt>Workspace</dt><dd>Multiple state files for one configuration. Good for ephemeral per-PR environments; a poor fit for the dev/prod ladder — use directories.</dd>
+    <dt>OIDC</dt><dd>Short-lived, verifiable identity a CI run presents to a cloud, replacing long-lived stored keys.</dd>
+    <dt>OpenTofu</dt><dd>The open-source (MPL) fork of Terraform, created after the 2023 licence change; a drop-in replacement for everything here.</dd>
+  </dl>
+</div>
+
+<hr/>
+<p class="reveal" style="color:#9aa0b4;font-size:14.5px">That's the full toolkit: the three worlds, the plan/apply loop, HCL end to end, state and locking, the graph, <code>for_each</code>, modules, environments, CI/CD, the data-platform specifics, and a <a href="#example">worked repo</a> you can copy. Bookmark <a href="#cheatsheet">§16</a> as your day-to-day reference — and remember the through-line: <em>read the plan, respect the state, pin your versions, and never let a machine destroy what you can't rebuild.</em></p>
+
+<footer class="reveal">
+  <p>Part of <a href="../">Data &amp; AI Engineering, Simply Explained</a> · an <a href="../#essentials">Essentials</a> reference. Pairs with <a href="../cicd-essentials/">CI/CD Essentials</a> and <a href="../git-essentials/">Git Essentials</a>.</p>
+  <p>© 2026 · Hao Tieu · Built with GitHub Pages · <a href="https://linkedin.com/in/haotieu2001" target="_blank" rel="noopener">LinkedIn</a></p>
+</footer>
+</div><!-- /page -->
+
+<script>
+  var bar=document.getElementById('bar');
+  function prog(){var h=document.documentElement;var s=h.scrollTop||document.body.scrollTop;var max=(h.scrollHeight-h.clientHeight)||1;bar.style.width=(s/max*100)+'%';}
+  document.addEventListener('scroll',prog,{passive:true});prog();
+  function revealAll(){document.querySelectorAll('.reveal').forEach(function(el){el.classList.add('in');});}
+  try{
+    var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}});},{threshold:.06});
+    document.querySelectorAll('.reveal').forEach(function(el){io.observe(el);});
+    window.addEventListener('load',function(){setTimeout(revealAll,1500);});
+    setTimeout(revealAll,2200);
+  }catch(e){revealAll();}
+</script>
+</body>
+</html>
