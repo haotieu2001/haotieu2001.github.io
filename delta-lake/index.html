@@ -255,10 +255,10 @@ display(spark.read.json(loc + "/_delta_log/00000000000000000000.json"))   <span 
 <svg viewBox="0 0 760 300" font-family="var(--font)">
   <rect width="760" height="300" rx="12" fill="#20202C"/>
   <text x="24" y="40" font-size="15" font-weight="700" fill="#5AC8FF">The log is an ordered list of add / remove</text>
-  <g font-size="12.5" fill="#D8DCEA">
-    <rect x="24" y="60" width="300" height="34" rx="6" fill="#223650" stroke="#5C78FF"/><text x="38" y="82">commit 0:  + add A   + add B</text>
-    <rect x="24" y="104" width="300" height="34" rx="6" fill="#223650" stroke="#5C78FF"/><text x="38" y="126">commit 1:  + add C   − remove A</text>
-    <rect x="24" y="148" width="300" height="34" rx="6" fill="#223650" stroke="#5C78FF"/><text x="38" y="170">commit 2:  + add D</text>
+  <g font-size="12.5" fill="#E7E7EE">
+    <rect x="24" y="60" width="300" height="34" rx="6" fill="#223650" stroke="#5C78FF"/><text x="38" y="82" fill="#E7E7EE">commit 0:  + add A   + add B</text>
+    <rect x="24" y="104" width="300" height="34" rx="6" fill="#223650" stroke="#5C78FF"/><text x="38" y="126" fill="#E7E7EE">commit 1:  + add C   − remove A</text>
+    <rect x="24" y="148" width="300" height="34" rx="6" fill="#223650" stroke="#5C78FF"/><text x="38" y="170" fill="#E7E7EE">commit 2:  + add D</text>
   </g>
   <path d="M340 130 L420 130" stroke="#28B9FF" stroke-width="3" fill="none"/><path d="M414 124 l12 6 l-12 6 z" fill="#28B9FF"/>
   <text x="380" y="120" text-anchor="middle" font-size="12" fill="#28B9FF">replay</text>
@@ -643,7 +643,7 @@ OPTIMIZE invoices WHERE invoice_date = '2026-01-03';   <span class="c">-- just o
   <rect width="760" height="200" rx="12" fill="#20202C"/>
   <text x="24" y="34" font-size="15" font-weight="700" fill="#5AC8FF">OPTIMIZE packs many tiny files into a few big ones</text>
   <text x="135" y="62" text-anchor="middle" font-size="11.5" fill="#E7E7EE">before: many tiny files (slow)</text>
-  <g fill="#242739" stroke="#6B6B78">
+  <g fill="#E7E7EE" stroke="#6B6B78">
     <rect x="36" y="74" width="22" height="22" rx="3"/><rect x="64" y="74" width="22" height="22" rx="3"/><rect x="92" y="74" width="22" height="22" rx="3"/><rect x="120" y="74" width="22" height="22" rx="3"/><rect x="148" y="74" width="22" height="22" rx="3"/><rect x="176" y="74" width="22" height="22" rx="3"/><rect x="204" y="74" width="22" height="22" rx="3"/>
     <rect x="36" y="102" width="22" height="22" rx="3"/><rect x="64" y="102" width="22" height="22" rx="3"/><rect x="92" y="102" width="22" height="22" rx="3"/><rect x="120" y="102" width="22" height="22" rx="3"/><rect x="148" y="102" width="22" height="22" rx="3"/><rect x="176" y="102" width="22" height="22" rx="3"/><rect x="204" y="102" width="22" height="22" rx="3"/>
     <rect x="36" y="130" width="22" height="22" rx="3"/><rect x="64" y="130" width="22" height="22" rx="3"/><rect x="92" y="130" width="22" height="22" rx="3"/><rect x="120" y="130" width="22" height="22" rx="3"/><rect x="148" y="130" width="22" height="22" rx="3"/>
@@ -685,8 +685,8 @@ OPTIMIZE invoices WHERE invoice_date = '2026-01-03' ZORDER BY (customer_id);</pr
   <text x="24" y="169" font-size="11" fill="#E7E7EE">file 4</text><rect x="220" y="158" width="480" height="14" rx="4" fill="#223650" stroke="#28B9FF"/>
   <!-- value axis -->
   <line x1="110" y1="186" x2="727" y2="186" stroke="#242739"/>
-  <g font-size="9.5" fill="#9AA0B4" text-anchor="middle">
-    <text x="110" y="200">0</text><text x="264" y="200">100</text><text x="418" y="200">200</text><text x="573" y="200">300</text><text x="727" y="200">400</text>
+  <g font-size="9.5" fill="#E7E7EE" text-anchor="middle">
+    <text x="110" y="200" fill="#E7E7EE">0</text><text x="264" y="200" fill="#E7E7EE">100</text><text x="418" y="200" fill="#E7E7EE">200</text><text x="573" y="200" fill="#E7E7EE">300</text><text x="727" y="200" fill="#E7E7EE">400</text>
   </g>
   <text x="24" y="200" font-size="9.5" fill="#E7E7EE">customer_id</text>
   <text x="24" y="222" font-size="12.5" fill="#E7E7EE">All 4 ranges cover 201 → all 4 files read (slow).</text>
@@ -705,8 +705,8 @@ OPTIMIZE invoices WHERE invoice_date = '2026-01-03' ZORDER BY (customer_id);</pr
   <text x="24" y="351" font-size="11" fill="#E7E7EE">file 4</text><rect x="600" y="340" width="120" height="14" rx="4" fill="#242739" stroke="#6B6B78"/>
   <!-- value axis -->
   <line x1="110" y1="368" x2="727" y2="368" stroke="#242739"/>
-  <g font-size="9.5" fill="#9AA0B4" text-anchor="middle">
-    <text x="110" y="382">0</text><text x="264" y="382">100</text><text x="418" y="382">200</text><text x="573" y="382">300</text><text x="727" y="382">400</text>
+  <g font-size="9.5" fill="#E7E7EE" text-anchor="middle">
+    <text x="110" y="382" fill="#E7E7EE">0</text><text x="264" y="382" fill="#E7E7EE">100</text><text x="418" y="382" fill="#E7E7EE">200</text><text x="573" y="382" fill="#E7E7EE">300</text><text x="727" y="382" fill="#E7E7EE">400</text>
   </g>
   <text x="24" y="382" font-size="9.5" fill="#E7E7EE">customer_id</text>
   <text x="24" y="404" font-size="12.5" fill="#5AC8FF">Only file 2's range holds 201 → 1 file read, 3 skipped (grey, fast).</text>

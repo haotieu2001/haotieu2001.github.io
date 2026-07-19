@@ -144,9 +144,9 @@
   <text x="200" y="28" class="hm" font-size="13" fill="#E7E7EE" text-anchor="middle" font-weight="700">ROW STORE  (OLTP)</text>
   <text x="200" y="46" class="hm" font-size="10.5" fill="#E7E7EE" text-anchor="middle">one row = one contiguous block</text>
   <g class="hm" font-size="11">
-    <rect x="40" y="62" width="320" height="26" rx="4" fill="#242739" stroke="#5C78FF"/><text x="50" y="79" fill="#E7E7EE">id1</text><text x="100" y="79" fill="#D8DCEA">name1</text><text x="200" y="79" fill="#5AC8FF">city1</text><text x="290" y="79" fill="#5AC8FF">price1</text>
-    <rect x="40" y="92" width="320" height="26" rx="4" fill="#242739" stroke="#5C78FF"/><text x="50" y="109" fill="#E7E7EE">id2</text><text x="100" y="109" fill="#D8DCEA">name2</text><text x="200" y="109" fill="#5AC8FF">city2</text><text x="290" y="109" fill="#5AC8FF">price2</text>
-    <rect x="40" y="122" width="320" height="26" rx="4" fill="#242739" stroke="#5C78FF"/><text x="50" y="139" fill="#E7E7EE">id3</text><text x="100" y="139" fill="#D8DCEA">name3</text><text x="200" y="139" fill="#5AC8FF">city3</text><text x="290" y="139" fill="#5AC8FF">price3</text>
+    <rect x="40" y="62" width="320" height="26" rx="4" fill="#242739" stroke="#5C78FF"/><text x="50" y="79" fill="#E7E7EE">id1</text><text x="100" y="79" fill="#E7E7EE">name1</text><text x="200" y="79" fill="#5AC8FF">city1</text><text x="290" y="79" fill="#5AC8FF">price1</text>
+    <rect x="40" y="92" width="320" height="26" rx="4" fill="#242739" stroke="#5C78FF"/><text x="50" y="109" fill="#E7E7EE">id2</text><text x="100" y="109" fill="#E7E7EE">name2</text><text x="200" y="109" fill="#5AC8FF">city2</text><text x="290" y="109" fill="#5AC8FF">price2</text>
+    <rect x="40" y="122" width="320" height="26" rx="4" fill="#242739" stroke="#5C78FF"/><text x="50" y="139" fill="#E7E7EE">id3</text><text x="100" y="139" fill="#E7E7EE">name3</text><text x="200" y="139" fill="#5AC8FF">city3</text><text x="290" y="139" fill="#5AC8FF">price3</text>
   </g>
   <text x="200" y="172" class="hm" font-size="10.5" fill="#5AC8FF" text-anchor="middle">+ grab a whole row in one read</text>
   <text x="200" y="190" class="hm" font-size="10.5" fill="#E7E7EE" text-anchor="middle">− to sum prices, you touch every row</text>
@@ -157,7 +157,7 @@
   <text x="650" y="46" class="hm" font-size="10.5" fill="#E7E7EE" text-anchor="middle">one column = one contiguous block</text>
   <g class="hm" font-size="11">
     <rect x="500" y="62" width="300" height="26" rx="4" fill="#18293E" stroke="#5C78FF"/><text x="510" y="79" fill="#E7E7EE">id1 · id2 · id3 · id4 · id5 …</text>
-    <rect x="500" y="92" width="300" height="26" rx="4" fill="#18293E" stroke="#D8DCEA"/><text x="510" y="109" fill="#D8DCEA">name1 · name2 · name3 …</text>
+    <rect x="500" y="92" width="300" height="26" rx="4" fill="#18293E" stroke="#D8DCEA"/><text x="510" y="109" fill="#E7E7EE">name1 · name2 · name3 …</text>
     <rect x="500" y="122" width="300" height="26" rx="4" fill="#18293E" stroke="#5AC8FF"/><text x="510" y="139" fill="#5AC8FF">city1 · city2 · city3 …</text>
     <rect x="500" y="152" width="300" height="26" rx="4" fill="#18293E" stroke="#5AC8FF"/><text x="510" y="169" fill="#5AC8FF">price1 · price2 · price3 …</text>
   </g>
@@ -278,12 +278,12 @@
   <!-- rows -->
   <g class="p1" font-size="10.5">
     <rect x="54" y="72" width="612" height="30" rx="5" fill="#242739" stroke="#5C78FF" stroke-width="1.1"/>
-    <text x="64" y="91" fill="#E7E7EE">8842</text><text x="130" y="91" fill="#D8DCEA">"Hao Tieu Kim"</text><text x="280" y="91" fill="#5AC8FF">"Hanoi"</text><text x="420" y="91" fill="#5AC8FF">"gold"</text><text x="540" y="91" fill="#5AC8FF">2021-06-01</text>
+    <text x="64" y="91" fill="#E7E7EE">8842</text><text x="130" y="91" fill="#E7E7EE">"Hao Tieu Kim"</text><text x="280" y="91" fill="#5AC8FF">"Hanoi"</text><text x="420" y="91" fill="#5AC8FF">"gold"</text><text x="540" y="91" fill="#5AC8FF">2021-06-01</text>
     <text x="64" y="116" fill="#E7E7EE" font-size="9">└─ row 8842: ALL columns of this customer, side by side ─────────────┘</text>
     <rect x="54" y="128" width="612" height="30" rx="5" fill="#242739" stroke="#5C78FF" stroke-width="1.1"/>
-    <text x="64" y="147" fill="#E7E7EE">8843</text><text x="130" y="147" fill="#D8DCEA">"Mai Le"</text><text x="280" y="147" fill="#5AC8FF">"Da Nang"</text><text x="420" y="147" fill="#5AC8FF">"silver"</text><text x="540" y="147" fill="#5AC8FF">2022-03-12</text>
+    <text x="64" y="147" fill="#E7E7EE">8843</text><text x="130" y="147" fill="#E7E7EE">"Mai Le"</text><text x="280" y="147" fill="#5AC8FF">"Da Nang"</text><text x="420" y="147" fill="#5AC8FF">"silver"</text><text x="540" y="147" fill="#5AC8FF">2022-03-12</text>
     <rect x="54" y="166" width="612" height="30" rx="5" fill="#242739" stroke="#5C78FF" stroke-width="1.1"/>
-    <text x="64" y="185" fill="#E7E7EE">8844</text><text x="130" y="185" fill="#D8DCEA">"Quan Vo"</text><text x="280" y="185" fill="#5AC8FF">"Hue"</text><text x="420" y="185" fill="#5AC8FF">"gold"</text><text x="540" y="185" fill="#5AC8FF">2020-11-30</text>
+    <text x="64" y="185" fill="#E7E7EE">8844</text><text x="130" y="185" fill="#E7E7EE">"Quan Vo"</text><text x="280" y="185" fill="#5AC8FF">"Hue"</text><text x="420" y="185" fill="#5AC8FF">"gold"</text><text x="540" y="185" fill="#5AC8FF">2020-11-30</text>
   </g>
 </svg>
 </figure>

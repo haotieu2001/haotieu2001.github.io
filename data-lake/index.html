@@ -157,7 +157,7 @@
     </linearGradient>
     <style>
       .hero-cap { font-family:'JetBrains Mono',monospace; font-weight:800; text-anchor:middle; letter-spacing:.04em; }
-      .hero-sub { font-family:'JetBrains Mono',monospace; font-size:11px; text-anchor:middle; fill:#8A90A6; }
+      .hero-sub { font-family:'JetBrains Mono',monospace; font-size:11px; text-anchor:middle; fill:#E7E7EE; }
       .hero-tag { font-family:'JetBrains Mono',monospace; font-size:9.5px; text-anchor:middle; }
     </style>
   </defs>
@@ -242,9 +242,9 @@
     <text x="95" y="25" class="hero-tag" fill="#5AC8FF" font-size="10">reliable table</text>
     <!-- ACID badges -->
     <g font-family="'JetBrains Mono',monospace" font-size="8.5" fill="#5AC8FF" text-anchor="middle">
-      <rect x="8" y="82" width="40" height="14" rx="7" fill="none" stroke="#5AC8FF" stroke-width=".8"/><text x="28" y="92">ACID</text>
-      <rect x="54" y="82" width="58" height="14" rx="7" fill="none" stroke="#5AC8FF" stroke-width=".8"/><text x="83" y="92">time travel</text>
-      <rect x="118" y="82" width="64" height="14" rx="7" fill="none" stroke="#5AC8FF" stroke-width=".8"/><text x="150" y="92">UPDATE/DEL</text>
+      <rect x="8" y="82" width="40" height="14" rx="7" fill="none" stroke="#5AC8FF" stroke-width=".8"/><text x="28" y="92" fill="#E7E7EE">ACID</text>
+      <rect x="54" y="82" width="58" height="14" rx="7" fill="none" stroke="#5AC8FF" stroke-width=".8"/><text x="83" y="92" fill="#E7E7EE">time travel</text>
+      <rect x="118" y="82" width="64" height="14" rx="7" fill="none" stroke="#5AC8FF" stroke-width=".8"/><text x="150" y="92" fill="#E7E7EE">UPDATE/DEL</text>
     </g>
   </g>
   <text x="747" y="150" class="hero-cap" fill="#5AC8FF" font-size="16">LAKEHOUSE</text>
@@ -329,7 +329,7 @@
       .layer-box { rx:12; ry:12; }
       .icon-label { font-family:'JetBrains Mono',monospace; font-size:13px; text-anchor:middle; }
       .layer-title { font-family:'JetBrains Mono',monospace; font-size:16px; font-weight:700; }
-      .layer-sub { font-family:'JetBrains Mono',monospace; font-size:12.5px; fill:#7A8099; }
+      .layer-sub { font-family:'JetBrains Mono',monospace; font-size:12.5px; fill:#E7E7EE; }
     </style>
     <!-- Spark lightning bolt -->
     <symbol id="ico-spark" viewBox="0 0 24 24">
@@ -349,7 +349,7 @@
     <!-- Hive hexagon -->
     <symbol id="ico-hive" viewBox="0 0 24 24">
       <polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#5AC8FF" opacity=".85"/>
-      <text x="12" y="17" text-anchor="middle" font-size="10" font-weight="700" fill="#333" font-family="sans-serif">H</text>
+      <text x="12" y="17" text-anchor="middle" font-size="10" font-weight="700" fill="#14141C" font-family="sans-serif">H</text>
     </symbol>
     <!-- AWS Glue gear -->
     <symbol id="ico-glue" viewBox="0 0 24 24">
@@ -510,7 +510,7 @@
     <line x1="42" y1="65" x2="62" y2="65" stroke="#444" stroke-width="1"/>
     <use href="#folder" x="63" y="55" width="20" height="17" color="#5AC8FF"/>
     <text x="90" y="68" class="tree-text" fill="#5AC8FF" font-weight="600">raw/</text>
-    <text x="370" y="68" class="tree-text" fill="#444" font-size="11px">← data lands here first, untouched</text>
+    <text x="370" y="68" class="tree-text" fill="#E7E7EE" font-size="11px">← data lands here first, untouched</text>
   </g>
 
   <!-- raw sub-lines -->
@@ -525,7 +525,7 @@
   <!-- partition day 01 -->
   <g class="row-anim-3">
     <line x1="108" y1="113" x2="128" y2="113" stroke="#444" stroke-width="1"/>
-    <text x="132" y="116" class="tree-text" fill="#555">year=2026/month=06/day=01/</text>
+    <text x="132" y="116" class="tree-text" fill="#E7E7EE">year=2026/month=06/day=01/</text>
   </g>
   <line x1="130" y1="121" x2="130" y2="150" stroke="#3C4356" stroke-width="1" stroke-dasharray="2,3"/>
   <g class="row-anim-4">
@@ -539,7 +539,7 @@
   <!-- day 02 -->
   <g class="row-anim-6">
     <line x1="108" y1="164" x2="128" y2="164" stroke="#444" stroke-width="1"/>
-    <text x="132" y="167" class="tree-text" fill="#555">year=2026/month=06/day=02/</text>
+    <text x="132" y="167" class="tree-text" fill="#E7E7EE">year=2026/month=06/day=02/</text>
   </g>
 
   <!-- customers/ -->
@@ -549,7 +549,7 @@
   </g>
   <g class="row-anim-8">
     <line x1="108" y1="199" x2="128" y2="199" stroke="#444" stroke-width="1"/>
-    <text x="132" y="202" class="tree-text" fill="#555">2026-06-01.csv</text>
+    <text x="132" y="202" class="tree-text" fill="#E7E7EE">2026-06-01.csv</text>
   </g>
 
   <!-- processed/ folder -->
@@ -557,7 +557,7 @@
     <line x1="42" y1="222" x2="62" y2="222" stroke="#444" stroke-width="1"/>
     <use href="#folder" x="63" y="212" width="20" height="17" color="#9AA0B4"/>
     <text x="90" y="225" class="tree-text" fill="#E7E7EE" font-weight="600">processed/</text>
-    <text x="370" y="225" class="tree-text" fill="#444" font-size="11px">← cleaned and transformed data</text>
+    <text x="370" y="225" class="tree-text" fill="#E7E7EE" font-size="11px">← cleaned and transformed data</text>
   </g>
   <line x1="86" y1="232" x2="86" y2="270" stroke="#333" stroke-width="1" stroke-dasharray="2,3"/>
   <g class="row-anim-10">
@@ -574,7 +574,7 @@
     <line x1="42" y1="282" x2="62" y2="282" stroke="#444" stroke-width="1"/>
     <use href="#folder" x="63" y="272" width="20" height="17" color="#5AC8FF"/>
     <text x="90" y="285" class="tree-text" fill="#5AC8FF" font-weight="600">analytics/</text>
-    <text x="370" y="285" class="tree-text" fill="#444" font-size="11px">← aggregated, ready for dashboards</text>
+    <text x="370" y="285" class="tree-text" fill="#E7E7EE" font-size="11px">← aggregated, ready for dashboards</text>
   </g>
   <line x1="86" y1="292" x2="86" y2="320" stroke="#333" stroke-width="1" stroke-dasharray="2,3"/>
   <g class="row-anim-13">
@@ -649,7 +649,7 @@ GROUP BY category;</pre></div>
       @keyframes highlight-col { 0%,100%{opacity:.15} 50%{opacity:.55} }
       @keyframes scan-line { 0%{transform:translateX(-200px);opacity:0} 10%{opacity:.6} 90%{opacity:.6} 100%{transform:translateX(700px);opacity:0} }
       .pq-title { font-family:'JetBrains Mono',monospace; font-size:12px; font-weight:700; }
-      .pq-sub { font-family:'JetBrains Mono',monospace; font-size:10.5px; fill:#555; }
+      .pq-sub { font-family:'JetBrains Mono',monospace; font-size:10.5px; fill:#E7E7EE; }
       .pq-label { font-family:'JetBrains Mono',monospace; font-size:10px; }
     </style>
   </defs>
@@ -723,23 +723,23 @@ GROUP BY category;</pre></div>
   <!-- Footer contents -->
   <rect x="32" y="300" width="200" height="88" rx="4" fill="#1C1C2A" stroke="#5AC8FF" stroke-width=".8"/>
   <text x="132" y="316" class="pq-label" fill="#5AC8FF" text-anchor="middle" font-weight="700">Schema</text>
-  <text x="42" y="332" class="pq-label" fill="#555">order_id  → INT64</text>
-  <text x="42" y="347" class="pq-label" fill="#555">category  → STRING</text>
-  <text x="42" y="362" class="pq-label" fill="#555">amount    → DOUBLE</text>
-  <text x="42" y="377" class="pq-label" fill="#555">order_date→ DATE</text>
+  <text x="42" y="332" class="pq-label" fill="#E7E7EE">order_id  → INT64</text>
+  <text x="42" y="347" class="pq-label" fill="#E7E7EE">category  → STRING</text>
+  <text x="42" y="362" class="pq-label" fill="#E7E7EE">amount    → DOUBLE</text>
+  <text x="42" y="377" class="pq-label" fill="#E7E7EE">order_date→ DATE</text>
 
   <rect x="244" y="300" width="220" height="88" rx="4" fill="#1C1C2A" stroke="#5C78FF" stroke-width=".8"/>
   <text x="354" y="316" class="pq-label" fill="#E7E7EE" text-anchor="middle" font-weight="700">Row Group Byte Offsets</text>
-  <text x="254" y="332" class="pq-label" fill="#555">RG1 starts at offset 0</text>
-  <text x="254" y="347" class="pq-label" fill="#555">RG2 starts at offset 67,108,864</text>
-  <text x="254" y="362" class="pq-label" fill="#555">RG3 starts at offset 134,217,728</text>
-  <text x="254" y="377" class="pq-label" fill="#555">(jump straight — no scanning)</text>
+  <text x="254" y="332" class="pq-label" fill="#E7E7EE">RG1 starts at offset 0</text>
+  <text x="254" y="347" class="pq-label" fill="#E7E7EE">RG2 starts at offset 67,108,864</text>
+  <text x="254" y="362" class="pq-label" fill="#E7E7EE">RG3 starts at offset 134,217,728</text>
+  <text x="254" y="377" class="pq-label" fill="#E7E7EE">(jump straight — no scanning)</text>
 
   <rect x="476" y="300" width="196" height="88" rx="4" fill="#1C1C2A" stroke="#5C78FF" stroke-width=".8"/>
   <text x="574" y="316" class="pq-label" fill="#5C78FF" text-anchor="middle" font-weight="700">Column Statistics / RG</text>
-  <text x="486" y="332" class="pq-label" fill="#555">amount: min=10 max=200 ← skip!</text>
+  <text x="486" y="332" class="pq-label" fill="#E7E7EE">amount: min=10 max=200 ← skip!</text>
   <text x="486" y="347" class="pq-label" fill="#E7E7EE">amount: min=100 max=9000 ← read</text>
-  <text x="486" y="362" class="pq-label" fill="#555">amount: min=1 max=50   ← skip!</text>
+  <text x="486" y="362" class="pq-label" fill="#E7E7EE">amount: min=1 max=50   ← skip!</text>
   <text x="486" y="377" class="pq-label" fill="#5AC8FF">→ data skipping / pushdown</text>
 
   <!-- Animated scan line (simulates engine reading footer first) -->
@@ -953,7 +953,7 @@ GROUP BY category;</pre></div>
       .col-feat { font-family:'JetBrains Mono',monospace; font-size:11px; }
       .col-val { font-family:'JetBrains Mono',monospace; font-size:11.5px; text-anchor:middle; }
       .chk-y { fill:#5AC8FF; animation:check-pop .3s ease both; }
-      .chk-n { fill:#9AA0B4; }
+      .chk-n { fill:#E7E7EE; }
     </style>
   </defs>
 
@@ -961,13 +961,13 @@ GROUP BY category;</pre></div>
   <!-- DW card -->
   <rect x="8" y="8" width="210" height="290" rx="8" fill="#1C1C2A" stroke="#5AC8FF" stroke-width="1.2"/>
   <text x="113" y="34" class="col-head" fill="#5AC8FF">DATA WAREHOUSE</text>
-  <text x="113" y="52" font-family="'JetBrains Mono',monospace" font-size="10" fill="#555" text-anchor="middle">Redshift · BigQuery · Snowflake</text>
+  <text x="113" y="52" font-family="'JetBrains Mono',monospace" font-size="10" fill="#E7E7EE" text-anchor="middle">Redshift · BigQuery · Snowflake</text>
   <line x1="16" y1="60" x2="210" y2="60" stroke="#3C4356" stroke-width="1"/>
 
   <!-- Lake card -->
   <rect x="244" y="8" width="210" height="290" rx="8" fill="#1C1C2A" stroke="#5C78FF" stroke-width="1.2"/>
   <text x="349" y="34" class="col-head" fill="#E7E7EE">PLAIN DATA LAKE</text>
-  <text x="349" y="52" font-family="'JetBrains Mono',monospace" font-size="10" fill="#555" text-anchor="middle">S3 + raw Parquet files</text>
+  <text x="349" y="52" font-family="'JetBrains Mono',monospace" font-size="10" fill="#E7E7EE" text-anchor="middle">S3 + raw Parquet files</text>
   <line x1="252" y1="60" x2="446" y2="60" stroke="#3C4356" stroke-width="1"/>
 
   <!-- Lakehouse card (highlighted) -->
@@ -976,7 +976,7 @@ GROUP BY category;</pre></div>
   </rect>
   <text x="587" y="30" class="col-head" fill="#5AC8FF">DATA LAKEHOUSE</text>
   <text x="587" y="48" font-family="'JetBrains Mono',monospace" font-size="10" fill="#5AC8FF" text-anchor="middle" opacity=".7">← this one</text>
-  <text x="587" y="62" font-family="'JetBrains Mono',monospace" font-size="10" fill="#555" text-anchor="middle">Delta Lake on S3 / ADLS / GCS</text>
+  <text x="587" y="62" font-family="'JetBrains Mono',monospace" font-size="10" fill="#E7E7EE" text-anchor="middle">Delta Lake on S3 / ADLS / GCS</text>
   <line x1="488" y1="70" x2="686" y2="70" stroke="#242739" stroke-width="1"/>
 
   <!-- Feature rows -->
@@ -1036,7 +1036,7 @@ GROUP BY category;</pre></div>
 
   <!-- Bottom label row -->
   <text x="113" y="290" class="col-val" fill="#5AC8FF" font-size="10" opacity=".7">Redshift · BigQuery</text>
-  <text x="349" y="290" class="col-val" fill="#555" font-size="10">S3 + raw files</text>
+  <text x="349" y="290" class="col-val" fill="#E7E7EE" font-size="10">S3 + raw files</text>
   <text x="587" y="290" class="col-val" fill="#5AC8FF" font-size="10">Delta Lake ← this</text>
 </svg>
 </figure>
@@ -1061,7 +1061,7 @@ GROUP BY category;</pre></div>
       @keyframes inactive-fade { 0%,100%{opacity:.3} 50%{opacity:.5} }
       .dl-text { font-family:'JetBrains Mono',monospace; font-size:12px; }
       .dl-file { font-family:'JetBrains Mono',monospace; font-size:11.5px; }
-      .dl-comment { font-family:'JetBrains Mono',monospace; font-size:10.5px; fill:#444; }
+      .dl-comment { font-family:'JetBrains Mono',monospace; font-size:10.5px; fill:#E7E7EE; }
     </style>
   </defs>
 
