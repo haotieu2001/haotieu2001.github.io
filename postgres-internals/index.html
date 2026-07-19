@@ -21,9 +21,9 @@
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
 <style>
   :root{
-    --bg:#191921; --bg2:#20202A; --ink:#F1F1F1; --muted:#9aa0b4; --dim:#666666;
-    --blue2:#9AA0B4; --cyan:#9AA0B4; --cyan2:#9AA0B4; --purple:#9AA0B4; --magenta2:#9AA0B4;
-    --grad:linear-gradient(90deg,#9AA0B4,#9AA0B4,#9AA0B4);
+    --bg:#111117; --bg2:#16161D; --ink:#F1F1F1; --muted:#9aa0b4; --dim:#6b6b78;
+    --blue2:#5C78FF; --cyan:#28B9FF; --cyan2:#5AC8FF; --purple:#5C78FF; --magenta2:#5AC8FF;
+    --grad:linear-gradient(90deg,#28B9FF,#5C78FF);
     --font:"JetBrainsMono Nerd Font","JetBrains Mono","Symbols Nerd Font",ui-monospace,"Cascadia Code",Menlo,Consolas,monospace;
   }
   *{box-sizing:border-box}
@@ -39,18 +39,18 @@
   @keyframes sheen{to{background-position:220% center}}
   .dek{color:var(--muted);font-size:17px}
   .byline{margin-top:14px;font-size:13px;color:var(--dim)}
-  h2{font-size:clamp(21px,3.2vw,28px);margin:52px 0 6px;font-weight:800;line-height:1.22;padding-top:14px;border-top:1px solid #34343F;display:flex;align-items:center;gap:10px}
+  h2{font-size:clamp(21px,3.2vw,28px);margin:52px 0 6px;font-weight:800;line-height:1.22;padding-top:14px;border-top:1px solid #2C2C38;display:flex;align-items:center;gap:10px}
   h2 .n{color:var(--blue2)}
   h3{font-size:18px;margin:28px 0 4px;color:#fff;font-weight:700}
   h4{font-size:15px;margin:20px 0 4px;color:var(--cyan2);font-weight:700}
   p,li{color:#dcdce4}
   .lead{font-size:18px;color:#e7e7ee}
   a{color:var(--cyan2)}
-  hr{border:0;border-top:1px solid #34343F;margin:36px 0}
-  code{font-family:var(--font);background:#23232b;color:#9AA0B4;padding:1px 6px;border-radius:5px;font-size:.88em;border:1px solid #34343F}
+  hr{border:0;border-top:1px solid #2C2C38;margin:36px 0}
+  code{font-family:var(--font);background:#23232b;color:#9AA0B4;padding:1px 6px;border-radius:5px;font-size:.88em;border:1px solid #2C2C38}
   .cb{margin:16px 0}
-  .cb .lang{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:#9aa0b4;background:#1b1b24;border:1px solid #34343F;border-bottom:none;border-radius:9px 9px 0 0;padding:4px 12px}
-  pre{margin:0;background:#101017;border:1px solid #34343F;border-radius:0 10px 10px 10px;padding:14px 16px;overflow-x:auto;
+  .cb .lang{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:#9aa0b4;background:#1b1b24;border:1px solid #2C2C38;border-bottom:none;border-radius:9px 9px 0 0;padding:4px 12px}
+  pre{margin:0;background:#101017;border:1px solid #2C2C38;border-radius:0 10px 10px 10px;padding:14px 16px;overflow-x:auto;
       font-family:var(--font);font-size:13px;line-height:1.65;color:#d8dcea;white-space:pre}
   pre .c{color:#6B6B78}
   pre .o{color:#9aa0b4}
@@ -72,18 +72,18 @@
   .callout.rd .t{color:#9AA0B4}
   .tldr{border:1px solid #28B9FF44;background:linear-gradient(180deg,#12161d,#0d0d12);border-radius:16px;padding:20px 24px;margin:26px 0;box-shadow:0 0 24px -10px #28B9FF55}
   .tldr h4{margin:0 0 8px;font-size:13px;letter-spacing:.2em;text-transform:uppercase;color:var(--cyan2)}
-  .gloss{border:1px solid #34343F;background:#1D1D26;border-radius:14px;padding:18px 22px;margin:24px 0}
+  .gloss{border:1px solid #2C2C38;background:#1D1D26;border-radius:14px;padding:18px 22px;margin:24px 0}
   .gloss h4{margin:0 0 6px;color:#fff;font-size:15px}
   .gloss dl{margin:0;font-size:13.5px}
   .gloss dt{color:var(--cyan2);font-weight:700;margin-top:9px}
   .gloss dd{margin:1px 0 0;color:#cdd0dd}
-  .toc{background:#23232C;border:1px solid #34343F;border-radius:14px;padding:16px 22px;margin:24px 0;column-count:2;column-gap:28px}
+  .toc{background:#191921;border:1px solid #2C2C38;border-radius:14px;padding:16px 22px;margin:24px 0;column-count:2;column-gap:28px}
   .toc a{display:block;color:var(--cyan2);text-decoration:none;font-size:13.5px;line-height:1.9;break-inside:avoid}
   .toc a:hover{color:#fff}
   .toc>strong{column-span:all;display:block;margin-bottom:6px;color:#fff}
   .tw{overflow-x:auto;margin:16px 0}
   table{border-collapse:collapse;width:100%;font-size:13.5px;margin:0}
-  th,td{border:1px solid #34343F;padding:8px 11px;text-align:left;vertical-align:top}
+  th,td{border:1px solid #2C2C38;padding:8px 11px;text-align:left;vertical-align:top}
   th{background:#17171E;color:#fff}
   tr:nth-child(even) td{background:#17171E}
   td.ok{color:#5AC8FF}
@@ -101,23 +101,23 @@
         border:1px solid #1D1D26;background:#1D1D26;color:#9AA0B4;font-weight:700;font-size:11.5px}
   .chip .ico{width:14px;height:14px}
   figure.fig{margin:26px 0;text-align:center}
-  figure.fig svg{display:block;width:100%;max-width:100%;height:auto;border:1px solid #34343F;border-radius:14px;background:#101017}
+  figure.fig svg{display:block;width:100%;max-width:100%;height:auto;border:1px solid #2C2C38;border-radius:14px;background:#101017}
   figure.fig figcaption{font-size:12.5px;color:var(--muted);margin-top:9px;font-style:italic;line-height:1.6}
   .step{display:flex;gap:12px;align-items:flex-start;margin:14px 0}
   .step .num-bubble{flex:0 0 28px;height:28px;border-radius:50%;background:var(--grad);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:#fff;margin-top:2px}
   .step .body{flex:1}
-  footer{border-top:1px solid #34343F;margin-top:50px;padding:24px 0 90px;color:var(--dim);font-size:13px}
+  footer{border-top:1px solid #2C2C38;margin-top:50px;padding:24px 0 90px;color:var(--dim);font-size:13px}
   footer a{color:var(--cyan2)}
   .js .reveal{opacity:0;transform:translateY(16px);transition:opacity .6s ease,transform .6s ease}
   .js .reveal.in{opacity:1;transform:none}
   @media (prefers-reduced-motion:reduce){.js .reveal{opacity:1;transform:none}}
   /* ---- shared theme: top nav + a11y (appended) ---- */
-  .nav{position:sticky;top:0;z-index:60;background:rgba(25,25,33,.82);backdrop-filter:blur(10px);border-bottom:1px solid #34343f}
+  .nav{position:sticky;top:0;z-index:60;background:rgba(25,25,33,.82);backdrop-filter:blur(10px);border-bottom:1px solid #2C2C38}
   .nav-inner{max-width:1040px;margin:0 auto;padding:12px 24px;display:flex;align-items:center;gap:18px;flex-wrap:wrap}
   .nav-brand{font-weight:800;letter-spacing:.16em;font-size:15px;text-decoration:none;border:0;color:#5AC8FF}
   .nav-links{display:flex;gap:6px;flex-wrap:wrap;margin-left:auto}
   .nav-links a{text-decoration:none;border:1px solid transparent;color:#9aa0b4;font-weight:700;font-size:13.5px;padding:6px 14px;border-radius:999px;transition:.2s}
-  .nav-links a:hover{color:#fff;border-color:#34343f;background:#23232c}
+  .nav-links a:hover{color:#fff;border-color:#2C2C38;background:#191921}
   .nav-links a.active{color:#5AC8FF;border-color:#28B9FF55;background:#28B9FF14}
   :focus-visible{outline:2px solid #5AC8FF;outline-offset:3px;border-radius:6px}
   @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{animation:none !important;transition:none !important}.js .reveal{opacity:1 !important;transform:none !important}}
@@ -416,7 +416,7 @@ postgres: <span class="g">client backend</span>                  <span class="c"
   <text x="195" y="108" font-size="9" fill="#5AC8FF" text-anchor="middle">line pointers</text>
   <text x="195" y="122" font-size="7.5" fill="#6B6B78" text-anchor="middle">4 B each</text>
 
-  <rect x="260" y="70" width="180" height="90" fill="#101015" stroke="#34343F"/>
+  <rect x="260" y="70" width="180" height="90" fill="#101015" stroke="#2C2C38"/>
   <text x="350" y="108" font-size="9" fill="#4a4a55" text-anchor="middle">free space</text>
   <text x="350" y="122" font-size="7.5" fill="#4a4a55" text-anchor="middle">shrinks</text>
 
@@ -487,7 +487,7 @@ postgres: <span class="g">client backend</span>                  <span class="c"
   <text x="188" y="228" font-size="8.5" fill="#5AC8FF" text-anchor="middle">one traversal → you have the data</text>
   <text x="188" y="246" font-size="8.5" fill="#6B6B78" text-anchor="middle">there is no separate table</text>
 
-  <path d="M380 56 V 296" stroke="#34343F" stroke-width="1" stroke-dasharray="4,4"/>
+  <path d="M380 56 V 296" stroke="#2C2C38" stroke-width="1" stroke-dasharray="4,4"/>
 
   <text x="572" y="46" font-size="10.5" fill="#9AA0B4" text-anchor="middle" font-weight="700">POSTGRES · always a heap</text>
   <rect x="446" y="58" width="150" height="28" rx="5" fill="#1D1D26" stroke="#5C78FF"/>

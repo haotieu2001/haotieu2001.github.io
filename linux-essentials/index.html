@@ -21,9 +21,9 @@
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
 <style>
   :root{
-    --bg:#191921; --bg2:#20202A; --ink:#F1F1F1; --muted:#9aa0b4; --dim:#666666;
-    --blue2:#9AA0B4; --cyan:#9AA0B4; --cyan2:#9AA0B4; --purple:#9AA0B4; --magenta2:#9AA0B4;
-    --grad:linear-gradient(90deg,#9AA0B4,#9AA0B4,#9AA0B4);
+    --bg:#111117; --bg2:#16161D; --ink:#F1F1F1; --muted:#9aa0b4; --dim:#6b6b78;
+    --blue2:#5C78FF; --cyan:#28B9FF; --cyan2:#5AC8FF; --purple:#5C78FF; --magenta2:#5AC8FF;
+    --grad:linear-gradient(90deg,#28B9FF,#5C78FF);
     --font:"JetBrainsMono Nerd Font","JetBrains Mono","Symbols Nerd Font",ui-monospace,"Cascadia Code",Menlo,Consolas,monospace;
   }
   *{box-sizing:border-box}
@@ -39,18 +39,18 @@
   @keyframes sheen{to{background-position:220% center}}
   .dek{color:var(--muted);font-size:17px}
   .byline{margin-top:14px;font-size:13px;color:var(--dim)}
-  h2{font-size:clamp(21px,3.2vw,28px);margin:52px 0 6px;font-weight:800;line-height:1.22;padding-top:14px;border-top:1px solid #34343F;display:flex;align-items:center;gap:10px}
+  h2{font-size:clamp(21px,3.2vw,28px);margin:52px 0 6px;font-weight:800;line-height:1.22;padding-top:14px;border-top:1px solid #2C2C38;display:flex;align-items:center;gap:10px}
   h2 .n{color:var(--blue2)}
   h3{font-size:18px;margin:28px 0 4px;color:#fff;font-weight:700}
   h4{font-size:15px;margin:20px 0 4px;color:var(--cyan2);font-weight:700}
   p,li{color:#dcdce4}
   .lead{font-size:18px;color:#e7e7ee}
   a{color:var(--cyan2)}
-  hr{border:0;border-top:1px solid #34343F;margin:36px 0}
-  code{font-family:var(--font);background:#23232b;color:#9AA0B4;padding:1px 6px;border-radius:5px;font-size:.88em;border:1px solid #34343F}
+  hr{border:0;border-top:1px solid #2C2C38;margin:36px 0}
+  code{font-family:var(--font);background:#23232b;color:#9AA0B4;padding:1px 6px;border-radius:5px;font-size:.88em;border:1px solid #2C2C38}
   .cb{margin:16px 0}
-  .cb .lang{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:#9aa0b4;background:#1b1b24;border:1px solid #34343F;border-bottom:none;border-radius:9px 9px 0 0;padding:4px 12px}
-  pre{margin:0;background:#101017;border:1px solid #34343F;border-radius:0 10px 10px 10px;padding:14px 16px;overflow-x:auto;
+  .cb .lang{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:#9aa0b4;background:#1b1b24;border:1px solid #2C2C38;border-bottom:none;border-radius:9px 9px 0 0;padding:4px 12px}
+  pre{margin:0;background:#101017;border:1px solid #2C2C38;border-radius:0 10px 10px 10px;padding:14px 16px;overflow-x:auto;
       font-family:var(--font);font-size:13px;line-height:1.65;color:#d8dcea;white-space:pre}
   pre .c{color:#6B6B78}
   pre .o{color:#9aa0b4}
@@ -70,17 +70,17 @@
   .callout.mg .t{color:#8AA0FF}
   .tldr{border:1px solid #28B9FF44;background:linear-gradient(180deg,#12161d,#0d0d12);border-radius:16px;padding:20px 24px;margin:26px 0;box-shadow:0 0 24px -10px #28B9FF55}
   .tldr h4{margin:0 0 8px;font-size:13px;letter-spacing:.2em;text-transform:uppercase;color:var(--cyan2)}
-  .gloss{border:1px solid #34343F;background:#1D1D26;border-radius:14px;padding:18px 22px;margin:24px 0}
+  .gloss{border:1px solid #2C2C38;background:#1D1D26;border-radius:14px;padding:18px 22px;margin:24px 0}
   .gloss h4{margin:0 0 6px;color:#fff;font-size:15px}
   .gloss dl{margin:0;font-size:13.5px}
   .gloss dt{color:var(--cyan2);font-weight:700;margin-top:9px}
   .gloss dd{margin:1px 0 0;color:#cdd0dd}
-  .toc{background:#23232C;border:1px solid #34343F;border-radius:14px;padding:16px 22px;margin:24px 0;column-count:2;column-gap:28px}
+  .toc{background:#191921;border:1px solid #2C2C38;border-radius:14px;padding:16px 22px;margin:24px 0;column-count:2;column-gap:28px}
   .toc a{display:block;color:var(--cyan2);text-decoration:none;font-size:13.5px;line-height:1.9;break-inside:avoid}
   .toc a:hover{color:#fff}
   .toc>strong{column-span:all;display:block;margin-bottom:6px;color:#fff}
   table{border-collapse:collapse;width:100%;font-size:13.5px;margin:16px 0}
-  th,td{border:1px solid #34343F;padding:8px 11px;text-align:left;vertical-align:top}
+  th,td{border:1px solid #2C2C38;padding:8px 11px;text-align:left;vertical-align:top}
   th{background:#17171E;color:#fff}
   tr:nth-child(even) td{background:#17171E}
   .ico{width:1em;height:1em;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
@@ -96,23 +96,23 @@
         border:1px solid #1D1D26;background:#1D1D26;color:#9AA0B4;font-weight:700;font-size:11.5px}
   .chip .ico{width:14px;height:14px}
   figure.fig{margin:26px 0;text-align:center}
-  figure.fig svg{display:block;width:100%;max-width:100%;height:auto;border:1px solid #34343F;border-radius:14px;background:#101017}
+  figure.fig svg{display:block;width:100%;max-width:100%;height:auto;border:1px solid #2C2C38;border-radius:14px;background:#101017}
   figure.fig figcaption{font-size:12.5px;color:var(--muted);margin-top:9px;font-style:italic;line-height:1.6}
   .step{display:flex;gap:12px;align-items:flex-start;margin:14px 0}
   .step .num-bubble{flex:0 0 28px;height:28px;border-radius:50%;background:var(--grad);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:#fff;margin-top:2px}
   .step .body{flex:1}
-  footer{border-top:1px solid #34343F;margin-top:50px;padding:24px 0 90px;color:var(--dim);font-size:13px}
+  footer{border-top:1px solid #2C2C38;margin-top:50px;padding:24px 0 90px;color:var(--dim);font-size:13px}
   footer a{color:var(--cyan2)}
   .js .reveal{opacity:0;transform:translateY(16px);transition:opacity .6s ease,transform .6s ease}
   .js .reveal.in{opacity:1;transform:none}
   @media (prefers-reduced-motion:reduce){.js .reveal{opacity:1;transform:none}}
   /* ---- shared theme: top nav + a11y (appended) ---- */
-  .nav{position:sticky;top:0;z-index:60;background:rgba(25,25,33,.82);backdrop-filter:blur(10px);border-bottom:1px solid #34343f}
+  .nav{position:sticky;top:0;z-index:60;background:rgba(25,25,33,.82);backdrop-filter:blur(10px);border-bottom:1px solid #2C2C38}
   .nav-inner{max-width:1040px;margin:0 auto;padding:12px 24px;display:flex;align-items:center;gap:18px;flex-wrap:wrap}
   .nav-brand{font-weight:800;letter-spacing:.16em;font-size:15px;text-decoration:none;border:0;color:#5AC8FF}
   .nav-links{display:flex;gap:6px;flex-wrap:wrap;margin-left:auto}
   .nav-links a{text-decoration:none;border:1px solid transparent;color:#9aa0b4;font-weight:700;font-size:13.5px;padding:6px 14px;border-radius:999px;transition:.2s}
-  .nav-links a:hover{color:#fff;border-color:#34343f;background:#23232c}
+  .nav-links a:hover{color:#fff;border-color:#2C2C38;background:#191921}
   .nav-links a.active{color:#5AC8FF;border-color:#28B9FF55;background:#28B9FF14}
   :focus-visible{outline:2px solid #5AC8FF;outline-offset:3px;border-radius:6px}
   @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{animation:none !important;transition:none !important}.js .reveal{opacity:1 !important;transform:none !important}}
@@ -466,7 +466,7 @@
   <text x="560" y="152" font-size="11" fill="#9AA0B4" font-family="monospace">x = 1</text>
   <text x="628" y="152" font-size="9" fill="#6B6B78">execute</text>
 
-  <line x1="26" y1="188" x2="734" y2="188" stroke="#34343F" stroke-dasharray="4,3"/>
+  <line x1="26" y1="188" x2="734" y2="188" stroke="#2C2C38" stroke-dasharray="4,3"/>
 
   <text x="26" y="212" font-size="10" fill="#9aa0b4" letter-spacing="1">ON A DIRECTORY THE SAME BITS MEAN SOMETHING ELSE</text>
   <rect x="26" y="224" width="222" height="52" rx="6" fill="#17171E" stroke="#1D1D26"/>
@@ -820,7 +820,7 @@ cmd1 | cmd2 | cmd3       <span class="c"># a pipeline: 1's stdout becomes 2's st
   <text x="620" y="100" font-size="9" fill="#6B6B78" text-anchor="middle">ignores the hangup signal.</text>
   <text x="620" y="114" font-size="9" fill="#6B6B78" text-anchor="middle">output &#8594; nohup.out</text>
 
-  <line x1="26" y1="146" x2="734" y2="146" stroke="#34343F" stroke-dasharray="4,3"/>
+  <line x1="26" y1="146" x2="734" y2="146" stroke="#2C2C38" stroke-dasharray="4,3"/>
   <text x="26" y="170" font-size="10" fill="#9aa0b4" letter-spacing="1">THREE WAYS TO STOP IT &#183; IN ESCALATING ORDER OF RUDENESS</text>
 
   <rect x="26" y="182" width="228" height="62" rx="7" fill="#1D1D26" stroke="#5C78FF"/>
@@ -912,7 +912,7 @@ Ctrl-Z                       <span class="c"># suspend the foreground job</span>
     <path d="M542 82 H 560" marker-end="url(#l-k)"/>
   </g>
 
-  <line x1="26" y1="132" x2="734" y2="132" stroke="#34343F" stroke-dasharray="4,3"/>
+  <line x1="26" y1="132" x2="734" y2="132" stroke="#2C2C38" stroke-dasharray="4,3"/>
 
   <text x="26" y="158" font-size="10" fill="#28B9FF" font-weight="700">QUOTED</text>
   <rect x="26" y="168" width="156" height="52" rx="6" fill="#0f1f1d" stroke="#28B9FF"/>

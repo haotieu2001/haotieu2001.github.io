@@ -22,9 +22,9 @@
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,500;0,700;0,800;1,400&display=swap" rel="stylesheet">
 <style>
   :root{
-    --bg:#191921; --bg2:#20202A; --ink:#F1F1F1; --muted:#9aa0b4; --dim:#666666;
-    --blue2:#388BFD; --cyan:#2088FF; --cyan2:#58A6FF; --purple:#5AC8FF; --magenta2:#9AA0B4;
-    --grad:linear-gradient(90deg,#58A6FF,#5AC8FF,#9AA0B4);
+    --bg:#111117; --bg2:#16161D; --ink:#F1F1F1; --muted:#9aa0b4; --dim:#6b6b78;
+    --blue2:#5C78FF; --cyan:#28B9FF; --cyan2:#5AC8FF; --purple:#5C78FF; --magenta2:#5AC8FF;
+    --grad:linear-gradient(90deg,#28B9FF,#5C78FF);
     --font:"JetBrainsMono Nerd Font","JetBrains Mono","Symbols Nerd Font",ui-monospace,"Cascadia Code",Menlo,Consolas,monospace;
   }
   *{box-sizing:border-box}
@@ -40,18 +40,18 @@
   @keyframes sheen{to{background-position:220% center}}
   .dek{color:var(--muted);font-size:17px}
   .byline{margin-top:14px;font-size:13px;color:var(--dim)}
-  h2{font-size:clamp(21px,3.2vw,28px);margin:52px 0 6px;font-weight:800;line-height:1.22;padding-top:14px;border-top:1px solid #34343F}
+  h2{font-size:clamp(21px,3.2vw,28px);margin:52px 0 6px;font-weight:800;line-height:1.22;padding-top:14px;border-top:1px solid #2C2C38}
   h2 .n{color:var(--blue2)}
   h3{font-size:18px;margin:28px 0 4px;color:#fff;font-weight:700}
   h4{font-size:15px;margin:20px 0 4px;color:var(--cyan2);font-weight:700}
   p,li{color:#dcdce4}
   .lead{font-size:18px;color:#e7e7ee}
   a{color:var(--cyan2)}
-  hr{border:0;border-top:1px solid #34343F;margin:36px 0}
-  code{font-family:var(--font);background:#23232b;color:#58A6FF;padding:1px 6px;border-radius:5px;font-size:.88em;border:1px solid #34343F}
+  hr{border:0;border-top:1px solid #2C2C38;margin:36px 0}
+  code{font-family:var(--font);background:#23232b;color:#58A6FF;padding:1px 6px;border-radius:5px;font-size:.88em;border:1px solid #2C2C38}
   .cb{margin:16px 0}
-  .cb .lang{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:#9aa0b4;background:#1b1b24;border:1px solid #34343F;border-bottom:none;border-radius:9px 9px 0 0;padding:4px 12px}
-  pre{margin:0;background:#101017;border:1px solid #34343F;border-radius:0 10px 10px 10px;padding:14px 16px;overflow-x:auto;
+  .cb .lang{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:#9aa0b4;background:#1b1b24;border:1px solid #2C2C38;border-bottom:none;border-radius:9px 9px 0 0;padding:4px 12px}
+  pre{margin:0;background:#101017;border:1px solid #2C2C38;border-radius:0 10px 10px 10px;padding:14px 16px;overflow-x:auto;
       font-family:var(--font);font-size:13px;line-height:1.65;color:#d8dcea;white-space:pre}
   pre .c{color:#8B949E}
   pre .o{color:#9aa0b4}
@@ -71,17 +71,17 @@
   .callout.mg .t{color:#8AA0FF}
   .tldr{border:1px solid #28B9FF44;background:linear-gradient(180deg,#12161d,#0d0d12);border-radius:16px;padding:20px 24px;margin:26px 0;box-shadow:0 0 24px -10px #28B9FF55}
   .tldr h4{margin:0 0 8px;font-size:13px;letter-spacing:.2em;text-transform:uppercase;color:var(--cyan2)}
-  .gloss{border:1px solid #34343F;background:#1D1D26;border-radius:14px;padding:18px 22px;margin:24px 0}
+  .gloss{border:1px solid #2C2C38;background:#1D1D26;border-radius:14px;padding:18px 22px;margin:24px 0}
   .gloss h4{margin:0 0 6px;color:#fff;font-size:15px}
   .gloss dl{margin:0;font-size:13.5px}
   .gloss dt{color:var(--cyan2);font-weight:700;margin-top:9px}
   .gloss dd{margin:1px 0 0;color:#cdd0dd}
-  .toc{background:#23232C;border:1px solid #34343F;border-radius:14px;padding:16px 22px;margin:24px 0;column-count:2;column-gap:28px}
+  .toc{background:#191921;border:1px solid #2C2C38;border-radius:14px;padding:16px 22px;margin:24px 0;column-count:2;column-gap:28px}
   .toc a{display:block;color:var(--cyan2);text-decoration:none;font-size:13.5px;line-height:1.9;break-inside:avoid}
   .toc a:hover{color:#fff}
   .toc>strong{column-span:all;display:block;margin-bottom:6px;color:#fff}
   table{border-collapse:collapse;width:100%;font-size:13.5px;margin:16px 0}
-  th,td{border:1px solid #34343F;padding:8px 11px;text-align:left;vertical-align:top}
+  th,td{border:1px solid #2C2C38;padding:8px 11px;text-align:left;vertical-align:top}
   th{background:#17171E;color:#fff}
   tr:nth-child(even) td{background:#17171E}
   .ico{width:1em;height:1em;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
@@ -94,7 +94,7 @@
   .callout .t .ico{width:16px;height:16px;vertical-align:-3px;margin-right:5px}
   .tldr h4 .ico,.gloss h4 .ico{width:15px;height:15px;vertical-align:-2px;margin-right:6px}
   figure.fig{margin:26px 0;text-align:center}
-  figure.fig svg{display:block;width:100%;max-width:100%;height:auto;border:1px solid #34343F;border-radius:14px;background:#101017}
+  figure.fig svg{display:block;width:100%;max-width:100%;height:auto;border:1px solid #2C2C38;border-radius:14px;background:#101017}
   figure.fig figcaption{font-size:12.5px;color:var(--muted);margin-top:9px;font-style:italic;line-height:1.6}
   .pain{border:1px solid #4a3a1a;border-left:4px solid #FFB454;background:linear-gradient(160deg,#221b0e,#141019);border-radius:0 14px 14px 0;padding:16px 20px;margin:14px 0;box-shadow:0 0 20px -8px #FFB45444}
   .pain h4{margin:0 0 4px;color:#FFC978}
@@ -103,18 +103,18 @@
   .step{display:flex;gap:12px;align-items:flex-start;margin:14px 0}
   .step .num-bubble{flex:0 0 28px;height:28px;border-radius:50%;background:var(--grad);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:#fff;margin-top:2px}
   .step .body{flex:1}
-  footer{border-top:1px solid #34343F;margin-top:50px;padding:24px 0 90px;color:var(--dim);font-size:13px}
+  footer{border-top:1px solid #2C2C38;margin-top:50px;padding:24px 0 90px;color:var(--dim);font-size:13px}
   footer a{color:var(--cyan2)}
   .js .reveal{opacity:0;transform:translateY(16px);transition:opacity .6s ease,transform .6s ease}
   .js .reveal.in{opacity:1;transform:none}
   @media (prefers-reduced-motion:reduce){.js .reveal{opacity:1;transform:none}}
   /* ---- shared theme: top nav + a11y (appended) ---- */
-  .nav{position:sticky;top:0;z-index:60;background:rgba(25,25,33,.82);backdrop-filter:blur(10px);border-bottom:1px solid #34343f}
+  .nav{position:sticky;top:0;z-index:60;background:rgba(25,25,33,.82);backdrop-filter:blur(10px);border-bottom:1px solid #2C2C38}
   .nav-inner{max-width:1040px;margin:0 auto;padding:12px 24px;display:flex;align-items:center;gap:18px;flex-wrap:wrap}
   .nav-brand{font-weight:800;letter-spacing:.16em;font-size:15px;text-decoration:none;border:0;color:#5AC8FF}
   .nav-links{display:flex;gap:6px;flex-wrap:wrap;margin-left:auto}
   .nav-links a{text-decoration:none;border:1px solid transparent;color:#9aa0b4;font-weight:700;font-size:13.5px;padding:6px 14px;border-radius:999px;transition:.2s}
-  .nav-links a:hover{color:#fff;border-color:#34343f;background:#23232c}
+  .nav-links a:hover{color:#fff;border-color:#2C2C38;background:#191921}
   .nav-links a.active{color:#5AC8FF;border-color:#28B9FF55;background:#28B9FF14}
   :focus-visible{outline:2px solid #5AC8FF;outline-offset:3px;border-radius:6px}
   @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{animation:none !important;transition:none !important}.js .reveal{opacity:1 !important;transform:none !important}}
@@ -170,7 +170,7 @@
   <div class="byline">~40 min read · Essentials · Reference</div>
 </header>
 
-<figure class="reveal" style="margin:18px 0 6px;background:radial-gradient(130% 150% at 50% 0%,#16182a 0%,#101017 72%);border:1px solid #34343F;border-radius:16px;padding:10px 10px;overflow:hidden">
+<figure class="reveal" style="margin:18px 0 6px;background:radial-gradient(130% 150% at 50% 0%,#16182a 0%,#101017 72%);border:1px solid #2C2C38;border-radius:16px;padding:10px 10px;overflow:hidden">
 <svg viewBox="0 0 880 190" width="100%" style="display:block" font-family="var(--font)" aria-label="A commit flowing through build, test, staging and production stages of a pipeline">
   <defs>
     <linearGradient id="hero-grad" x1="0" y1="0" x2="1" y2="0">
@@ -179,7 +179,7 @@
     <marker id="pa" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#5C78FF"/></marker>
   </defs>
   <!-- the pipeline track -->
-  <line x1="84" y1="84" x2="790" y2="84" stroke="#34343F" stroke-width="2"/>
+  <line x1="84" y1="84" x2="790" y2="84" stroke="#2C2C38" stroke-width="2"/>
   <!-- connecting arrows -->
   <g stroke="#4a5163" stroke-width="1.5" fill="none">
     <line x1="100" y1="84" x2="144" y2="84" marker-end="url(#pa)"/>
@@ -202,7 +202,7 @@
     <text x="366" y="89" fill="#9AA0B4">test</text>
     <text x="366" y="124" fill="#6B6B78" font-size="9.5">lint · unit · data</text>
     <!-- staging -->
-    <rect x="466" y="62" width="130" height="44" rx="10" fill="#23232C" stroke="#5C78FF" stroke-width="1.8"/>
+    <rect x="466" y="62" width="130" height="44" rx="10" fill="#191921" stroke="#5C78FF" stroke-width="1.8"/>
     <text x="531" y="89" fill="#9AA0B4">staging</text>
     <text x="531" y="124" fill="#6B6B78" font-size="9.5">deploy · verify</text>
     <!-- prod -->
@@ -295,7 +295,7 @@
   <text x="142" y="116" font-size="12" fill="#58A6FF" font-weight="700">1 · Continuous Integration</text>
 
   <!-- ticks dropping from each bracket's right edge down to the pipeline -->
-  <g stroke="#34343F" stroke-width="1" stroke-dasharray="3 3">
+  <g stroke="#2C2C38" stroke-width="1" stroke-dasharray="3 3">
     <line x1="128" y1="126" x2="128" y2="150"/>
     <line x1="340" y1="126" x2="340" y2="150"/>
     <line x1="568" y1="88" x2="568" y2="150"/>
@@ -313,7 +313,7 @@
 
   <g text-anchor="middle">
     <!-- push / PR -->
-    <rect x="22" y="154" width="94" height="44" rx="9" fill="#23232C" stroke="#5C78FF"/>
+    <rect x="22" y="154" width="94" height="44" rx="9" fill="#191921" stroke="#5C78FF"/>
     <text x="69" y="181" font-size="12" fill="#e7e7ee">push / PR</text>
     <text x="69" y="218" font-size="9.5" fill="#6B6B78">a Git event</text>
 
@@ -740,7 +740,7 @@
   </g>
 
   <!-- merge -->
-  <rect x="18" y="72" width="112" height="48" rx="9" fill="#23232C" stroke="#5C78FF"/>
+  <rect x="18" y="72" width="112" height="48" rx="9" fill="#191921" stroke="#5C78FF"/>
   <text x="74" y="94" font-size="11.5" fill="#e7e7ee" text-anchor="middle">merge to</text>
   <text x="74" y="110" font-size="11.5" fill="#e7e7ee" text-anchor="middle">main</text>
 
@@ -755,7 +755,7 @@
   <text x="355" y="110" font-size="10" fill="#9aa0b4" text-anchor="middle">is it alive?</text>
 
   <!-- the gate -->
-  <path d="M496 46 L556 96 L496 146 L436 96 Z" fill="#23232C" stroke="#5C78FF" stroke-width="1.6"/>
+  <path d="M496 46 L556 96 L496 146 L436 96 Z" fill="#191921" stroke="#5C78FF" stroke-width="1.6"/>
   <text x="496" y="85" font-size="10.5" fill="#9AA0B4" text-anchor="middle">required</text>
   <text x="496" y="99" font-size="10.5" fill="#9AA0B4" text-anchor="middle">reviewer</text>
   <text x="496" y="113" font-size="10.5" fill="#9AA0B4" text-anchor="middle">approves?</text>
@@ -820,7 +820,7 @@
   </defs>
 
   <!-- ─────────── BLUE-GREEN ─────────── -->
-  <rect x="14" y="14" width="732" height="146" rx="12" fill="#0d1a2b" stroke="#34343F"/>
+  <rect x="14" y="14" width="732" height="146" rx="12" fill="#0d1a2b" stroke="#2C2C38"/>
   <text x="32" y="40" font-size="12.5" fill="#58A6FF" font-weight="700">BLUE-GREEN</text>
   <text x="132" y="40" font-size="11" fill="#6B6B78">flip everyone at once · keep the old copy warm as an instant undo</text>
 
@@ -849,7 +849,7 @@
   <text x="594" y="127" font-size="9.5" fill="#6B6B78">◀ standby = instant undo</text>
 
   <!-- ─────────── CANARY ─────────── -->
-  <rect x="14" y="174" width="732" height="148" rx="12" fill="#0d1a2b" stroke="#34343F"/>
+  <rect x="14" y="174" width="732" height="148" rx="12" fill="#0d1a2b" stroke="#2C2C38"/>
   <text x="32" y="200" font-size="12.5" fill="#9AA0B4" font-weight="700">CANARY</text>
   <text x="102" y="200" font-size="11" fill="#6B6B78">let a trickle taste v2 first · watch the metrics · then ramp up</text>
 
@@ -860,7 +860,7 @@
   <path d="M80 261 L 96 280" fill="none" stroke="#5C78FF" stroke-width="1.4" marker-end="url(#a9c)"/>
   <rect x="100" y="216" width="104" height="30" rx="7" fill="#0d1a2b" stroke="#58A6FF"/>
   <text x="152" y="236" font-size="11" fill="#58A6FF" text-anchor="middle">v1 · 95%</text>
-  <rect x="100" y="272" width="104" height="30" rx="7" fill="#23232C" stroke="#5C78FF"/>
+  <rect x="100" y="272" width="104" height="30" rx="7" fill="#191921" stroke="#5C78FF"/>
   <text x="152" y="292" font-size="11" fill="#9AA0B4" text-anchor="middle">v2 · 5%</text>
 
   <line x1="212" y1="259" x2="242" y2="259" stroke="#5C78FF" stroke-width="1.4" marker-end="url(#a9c)"/>
@@ -869,14 +869,14 @@
   <!-- phase 2 -->
   <rect x="248" y="216" width="104" height="30" rx="7" fill="#0d1a2b" stroke="#58A6FF"/>
   <text x="300" y="236" font-size="11" fill="#58A6FF" text-anchor="middle">v1 · 50%</text>
-  <rect x="248" y="272" width="104" height="30" rx="7" fill="#23232C" stroke="#5C78FF"/>
+  <rect x="248" y="272" width="104" height="30" rx="7" fill="#191921" stroke="#5C78FF"/>
   <text x="300" y="292" font-size="11" fill="#9AA0B4" text-anchor="middle">v2 · 50%</text>
 
   <line x1="360" y1="259" x2="390" y2="259" stroke="#5C78FF" stroke-width="1.4" marker-end="url(#a9c)"/>
   <text x="375" y="250" font-size="9" fill="#6B6B78" text-anchor="middle">watch</text>
 
   <!-- phase 3 -->
-  <rect x="396" y="244" width="118" height="30" rx="7" fill="#23232C" stroke="#5C78FF" stroke-width="1.8"/>
+  <rect x="396" y="244" width="118" height="30" rx="7" fill="#191921" stroke="#5C78FF" stroke-width="1.8"/>
   <text x="455" y="264" font-size="11" fill="#9AA0B4" text-anchor="middle">v2 · 100%</text>
 
   <!-- rollback note -->

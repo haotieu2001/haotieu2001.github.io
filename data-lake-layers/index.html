@@ -22,9 +22,9 @@
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,500;0,700;0,800;1,400&display=swap" rel="stylesheet">
 <style>
   :root{
-    --bg:#191921; --bg2:#20202A; --ink:#F1F1F1; --muted:#9aa0b4; --dim:#666666;
+    --bg:#111117; --bg2:#16161D; --ink:#F1F1F1; --muted:#9aa0b4; --dim:#6b6b78;
     --blue2:#5C78FF; --cyan:#28B9FF; --cyan2:#5AC8FF; --purple:#5C78FF; --magenta2:#5AC8FF;
-    --grad:linear-gradient(90deg,#5C78FF,#28B9FF,#A52AFF);
+    --grad:linear-gradient(90deg,#28B9FF,#5C78FF);
     --font:"JetBrainsMono Nerd Font","JetBrains Mono","Symbols Nerd Font",ui-monospace,"Cascadia Code",Menlo,Consolas,monospace;
   }
   *{box-sizing:border-box}
@@ -40,18 +40,18 @@
   @keyframes sheen{to{background-position:220% center}}
   .dek{color:var(--muted);font-size:17px}
   .byline{margin-top:14px;font-size:13px;color:var(--dim)}
-  h2{font-size:clamp(21px,3.2vw,28px);margin:52px 0 6px;font-weight:800;line-height:1.22;padding-top:14px;border-top:1px solid #34343F}
+  h2{font-size:clamp(21px,3.2vw,28px);margin:52px 0 6px;font-weight:800;line-height:1.22;padding-top:14px;border-top:1px solid #2C2C38}
   h2 .n{color:var(--blue2)}
   h3{font-size:18px;margin:28px 0 4px;color:#fff;font-weight:700}
   h4{font-size:15px;margin:20px 0 4px;color:var(--cyan2);font-weight:700}
   p,li{color:#dcdce4}
   .lead{font-size:18px;color:#e7e7ee}
   a{color:var(--cyan2)}
-  hr{border:0;border-top:1px solid #34343F;margin:36px 0}
-  code{font-family:var(--font);background:#23232b;color:#5AC8FF;padding:1px 6px;border-radius:5px;font-size:.88em;border:1px solid #34343F}
+  hr{border:0;border-top:1px solid #2C2C38;margin:36px 0}
+  code{font-family:var(--font);background:#23232b;color:#5AC8FF;padding:1px 6px;border-radius:5px;font-size:.88em;border:1px solid #2C2C38}
   .cb{margin:16px 0}
-  .cb .lang{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:#9aa0b4;background:#1b1b24;border:1px solid #34343F;border-bottom:none;border-radius:9px 9px 0 0;padding:4px 12px}
-  pre{margin:0;background:#101017;border:1px solid #34343F;border-radius:0 10px 10px 10px;padding:14px 16px;overflow-x:auto;
+  .cb .lang{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:#9aa0b4;background:#1b1b24;border:1px solid #2C2C38;border-bottom:none;border-radius:9px 9px 0 0;padding:4px 12px}
+  pre{margin:0;background:#101017;border:1px solid #2C2C38;border-radius:0 10px 10px 10px;padding:14px 16px;overflow-x:auto;
       font-family:var(--font);font-size:13px;line-height:1.6;color:#d8dcea;white-space:pre}
   pre .c{color:#6B6B78}
   .callout{border-left:4px solid #28B9FF;background:linear-gradient(160deg,#12202e,#101019);border-radius:0 12px 12px 0;padding:14px 18px;margin:22px 0;box-shadow:0 0 16px -8px #28B9FF66}
@@ -65,20 +65,20 @@
   .callout.mg .t{color:#8AA0FF}
   .tldr{border:1px solid #28B9FF44;background:linear-gradient(180deg,#12161d,#0d0d12);border-radius:16px;padding:20px 24px;margin:26px 0;box-shadow:0 0 24px -10px #28B9FF55}
   .tldr h4{margin:0 0 8px;font-size:13px;letter-spacing:.2em;text-transform:uppercase;color:var(--cyan2)}
-  .gloss{border:1px solid #34343F;background:#1D1D26;border-radius:14px;padding:18px 22px;margin:24px 0}
+  .gloss{border:1px solid #2C2C38;background:#1D1D26;border-radius:14px;padding:18px 22px;margin:24px 0}
   .gloss h4{margin:0 0 6px;color:#fff;font-size:15px}
   .gloss dl{margin:0;font-size:13.5px}
   .gloss dt{color:var(--cyan2);font-weight:700;margin-top:9px}
   .gloss dd{margin:1px 0 0;color:#cdd0dd}
-  .toc{background:#23232C;border:1px solid #34343F;border-radius:14px;padding:16px 22px;margin:24px 0;column-count:2;column-gap:28px}
+  .toc{background:#191921;border:1px solid #2C2C38;border-radius:14px;padding:16px 22px;margin:24px 0;column-count:2;column-gap:28px}
   .toc a{display:block;color:var(--cyan2);text-decoration:none;font-size:13.5px;line-height:1.9;break-inside:avoid}
   .toc a:hover{color:#fff}
   .toc>strong{column-span:all;display:block;margin-bottom:6px;color:#fff}
   table{border-collapse:collapse;width:100%;font-size:13.5px;margin:16px 0}
-  th,td{border:1px solid #34343F;padding:8px 11px;text-align:left;vertical-align:top}
+  th,td{border:1px solid #2C2C38;padding:8px 11px;text-align:left;vertical-align:top}
   th{background:#17171E;color:#fff}
   tr:nth-child(even) td{background:#17171E}
-  .diagram{background:#101017;border:1px solid #34343F;border-radius:14px;padding:18px;margin:20px 0;overflow-x:auto;font-size:12.5px;line-height:1.7;color:#d8dcea;white-space:pre;font-family:var(--font)}
+  .diagram{background:#101017;border:1px solid #2C2C38;border-radius:14px;padding:18px;margin:20px 0;overflow-x:auto;font-size:12.5px;line-height:1.7;color:#d8dcea;white-space:pre;font-family:var(--font)}
   .diagram .hl{color:#5AC8FF}
   .diagram .dim{color:#6B6B78}
   .diagram .ok{color:#5AC8FF}
@@ -91,18 +91,18 @@
   .step{display:flex;gap:12px;align-items:flex-start;margin:14px 0}
   .step .num-bubble{flex:0 0 28px;height:28px;border-radius:50%;background:var(--grad);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:#fff;margin-top:2px}
   .step .body{flex:1}
-  footer{border-top:1px solid #34343F;margin-top:50px;padding:24px 0 90px;color:var(--dim);font-size:13px}
+  footer{border-top:1px solid #2C2C38;margin-top:50px;padding:24px 0 90px;color:var(--dim);font-size:13px}
   footer a{color:var(--cyan2)}
   .js .reveal{opacity:0;transform:translateY(16px);transition:opacity .6s ease,transform .6s ease}
   .js .reveal.in{opacity:1;transform:none}
   @media (prefers-reduced-motion:reduce){.js .reveal{opacity:1;transform:none}}
   /* ---- shared theme: top nav + a11y (appended) ---- */
-  .nav{position:sticky;top:0;z-index:60;background:rgba(25,25,33,.82);backdrop-filter:blur(10px);border-bottom:1px solid #34343f}
+  .nav{position:sticky;top:0;z-index:60;background:rgba(25,25,33,.82);backdrop-filter:blur(10px);border-bottom:1px solid #2C2C38}
   .nav-inner{max-width:1040px;margin:0 auto;padding:12px 24px;display:flex;align-items:center;gap:18px;flex-wrap:wrap}
   .nav-brand{font-weight:800;letter-spacing:.16em;font-size:15px;text-decoration:none;border:0;color:#5AC8FF}
   .nav-links{display:flex;gap:6px;flex-wrap:wrap;margin-left:auto}
   .nav-links a{text-decoration:none;border:1px solid transparent;color:#9aa0b4;font-weight:700;font-size:13.5px;padding:6px 14px;border-radius:999px;transition:.2s}
-  .nav-links a:hover{color:#fff;border-color:#34343f;background:#23232c}
+  .nav-links a:hover{color:#fff;border-color:#2C2C38;background:#191921}
   .nav-links a.active{color:#5AC8FF;border-color:#28B9FF55;background:#28B9FF14}
   :focus-visible{outline:2px solid #5AC8FF;outline-offset:3px;border-radius:6px}
   @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{animation:none !important;transition:none !important}.js .reveal{opacity:1 !important;transform:none !important}}
@@ -123,7 +123,7 @@
   <div class="byline">~26 min read · Data Engineering · Jun 2026</div>
 </header>
 
-<figure class="reveal" style="margin:18px 0 6px;background:radial-gradient(130% 150% at 50% 0%,#16182a 0%,#101017 72%);border:1px solid #34343F;border-radius:16px;padding:10px 10px;overflow:hidden">
+<figure class="reveal" style="margin:18px 0 6px;background:radial-gradient(130% 150% at 50% 0%,#16182a 0%,#101017 72%);border:1px solid #2C2C38;border-radius:16px;padding:10px 10px;overflow:hidden">
 <svg viewBox="0 0 880 230" width="100%" style="display:block" aria-label="The three layers of a Data Lake: Compute on top, Metadata in the middle, Storage at the bottom">
   <defs>
     <linearGradient id="hero-grad" x1="0" y1="0" x2="1" y2="0">
@@ -267,7 +267,7 @@
 <p class="reveal">Recall one limitation from the rules above: object storage can't search <em>inside</em> files. Its only fast lookup is by <strong>prefix</strong> — the leading part of a path, like a folder name: <em>"give me every file whose path starts with X."</em></p>
 <p class="reveal">That's why <em>where you put a file</em> decides query speed. Put the rows a query wants under one prefix and the engine reads just that prefix; scatter them and it must open everything, then throw most of it away. Compare two ways to store the same <code>orders</code> data:</p>
 
-<figure class="reveal" style="margin:1.4em 0;background:#101017;border:1px solid #34343F;border-radius:10px;padding:1.2em 1em 1em;overflow:hidden">
+<figure class="reveal" style="margin:1.4em 0;background:#101017;border:1px solid #2C2C38;border-radius:10px;padding:1.2em 1em 1em;overflow:hidden">
 <figcaption style="font-size:12px;color:#555;text-align:center;margin-bottom:.8em;letter-spacing:.06em;text-transform:uppercase">Same data, two key layouts</figcaption>
 <svg viewBox="0 0 700 250" width="100%" style="display:block;max-width:700px;margin:0 auto" aria-label="Flat layout versus partitioned layout">
   <defs>
@@ -390,7 +390,7 @@ Partition values known:
   <li><strong>What partitions exist?</strong> → so for <code>WHERE order_date = '2026-06-01'</code> the engine knows to read only the <code>order_date=2026-06-01</code> prefix. This is <strong>partition pruning</strong>: the engine does the skipping, using the partition list the catalogue hands back — and it happens before a single file is opened.</li>
 </ol>
 
-<figure class="reveal" style="margin:1.4em 0;background:#101017;border:1px solid #34343F;border-radius:10px;padding:1.2em 1em 1em;overflow:hidden">
+<figure class="reveal" style="margin:1.4em 0;background:#101017;border:1px solid #2C2C38;border-radius:10px;padding:1.2em 1em 1em;overflow:hidden">
 <figcaption style="font-size:12px;color:#555;text-align:center;margin-bottom:.8em;letter-spacing:.06em;text-transform:uppercase">The metastore is the translator between names and locations</figcaption>
 <svg viewBox="0 0 700 220" width="100%" style="display:block;max-width:700px;margin:0 auto" aria-label="Engine asks metastore for a table location and gets back a path and schema">
   <defs>
@@ -520,7 +520,7 @@ Partition values known:
   <li><strong>The executors</strong> (many machines) — the workers. Each executor reads <em>some</em> of the files from storage and processes them in parallel with the others.</li>
 </ul>
 
-<figure class="reveal" style="margin:1.4em 0;background:#101017;border:1px solid #34343F;border-radius:10px;padding:1.2em 1em 1em;overflow:hidden">
+<figure class="reveal" style="margin:1.4em 0;background:#101017;border:1px solid #2C2C38;border-radius:10px;padding:1.2em 1em 1em;overflow:hidden">
 <figcaption style="font-size:12px;color:#555;text-align:center;margin-bottom:.8em;letter-spacing:.06em;text-transform:uppercase">Driver splits the files; executors read them in parallel</figcaption>
 <svg viewBox="0 0 700 280" width="100%" style="display:block;max-width:700px;margin:0 auto" aria-label="A driver assigning file-reading tasks to three executors that read from object storage">
   <defs>
@@ -627,7 +627,7 @@ GROUP BY category;</pre></div>
 
 <p class="reveal">We'll assume the common <strong>plain-lake</strong> setup: Parquet files plus a Hive-style metastore (no table format yet). That means one extra <code>LIST</code> on storage to discover the files in a partition — exactly the step Section 03 flagged. With a Lakehouse table format, that LIST disappears (the manifest already names the files); everything else is identical.</p>
 
-<figure class="reveal" style="margin:1.4em 0;background:#101017;border:1px solid #34343F;border-radius:10px;padding:1.2em 1em 1em;overflow:hidden">
+<figure class="reveal" style="margin:1.4em 0;background:#101017;border:1px solid #2C2C38;border-radius:10px;padding:1.2em 1em 1em;overflow:hidden">
 <figcaption style="font-size:12px;color:#8a90a6;text-align:center;margin-bottom:.8em;letter-spacing:.06em;text-transform:uppercase">The query's journey — down through the layers, then rows back up</figcaption>
 <svg viewBox="0 0 700 330" width="100%" style="display:block;max-width:700px;margin:0 auto" font-family="'JetBrains Mono',monospace" aria-label="A query descends compute to metadata to storage, then result rows travel back up">
   <defs>
