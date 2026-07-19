@@ -82,8 +82,8 @@
   .diagram .hl{color:#5AC8FF}
   .diagram .dim{color:#6B6B78}
   .diagram .ok{color:#5AC8FF}
-  .diagram .warn{color:#9AA0B4}
-  .diagram .bad{color:#9AA0B4}
+  .diagram .warn{color:#BA5AFF}
+  .diagram .bad{color:#5C78FF}
   .pain{border:1px solid #3a2020;background:#1c1212;border-radius:14px;padding:16px 20px;margin:14px 0}
   .pain h4{margin:0 0 4px;color:#9AA0B4}
   .fix{border:1px solid #1a3020;background:#1D1D26;border-radius:14px;padding:16px 20px;margin:14px 0}
@@ -142,7 +142,7 @@
     <symbol id="h-hive" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#FDEE21" opacity=".85"/><text x="12" y="17" text-anchor="middle" font-size="10" font-weight="700" fill="#333" font-family="sans-serif">H</text></symbol>
     <symbol id="h-glue" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4" fill="#FF9900"/><path d="M12 2v4M12 18v4M2 12h4M18 12h4M5.6 5.6l2.8 2.8M15.6 15.6l2.8 2.8M5.6 18.4l2.8-2.8M15.6 8.4l2.8-2.8" stroke="#FF9900" stroke-width="2" stroke-linecap="round"/></symbol>
     <symbol id="h-unity" viewBox="0 0 24 24"><rect x="3" y="2" width="14" height="20" rx="2" fill="none" stroke="#5AC8FF" stroke-width="2"/><path d="M7 2v20" stroke="#5AC8FF" stroke-width="1.5"/><line x1="10" y1="7" x2="15" y2="7" stroke="#5AC8FF" stroke-width="1.5"/><line x1="10" y1="11" x2="15" y2="11" stroke="#5AC8FF" stroke-width="1.5"/><line x1="10" y1="15" x2="15" y2="15" stroke="#5AC8FF" stroke-width="1.5"/></symbol>
-    <symbol id="h-s3" viewBox="0 0 24 24"><ellipse cx="12" cy="6" rx="9" ry="3.5" fill="#FF9900" opacity=".9"/><path d="M3 6v12c0 1.9 4 3.5 9 3.5s9-1.6 9-3.5V6" fill="none" stroke="#FF9900" stroke-width="2"/><line x1="12" y1="2.5" x2="12" y2="21.5" stroke="#9AA0B4" stroke-width="1"/></symbol>
+    <symbol id="h-s3" viewBox="0 0 24 24"><ellipse cx="12" cy="6" rx="9" ry="3.5" fill="#FF9900" opacity=".9"/><path d="M3 6v12c0 1.9 4 3.5 9 3.5s9-1.6 9-3.5V6" fill="none" stroke="#FF9900" stroke-width="2"/><line x1="12" y1="2.5" x2="12" y2="21.5" stroke="#5C78FF" stroke-width="1"/></symbol>
     <symbol id="h-adls" viewBox="0 0 24 24"><polygon points="12,2 22,20 2,20" fill="none" stroke="#0078D4" stroke-width="2"/><polygon points="12,8 18,20 6,20" fill="#0078D4" opacity=".5"/></symbol>
     <symbol id="h-gcs" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="none" stroke="#4285F4" stroke-width="2"/><circle cx="12" cy="12" r="4" fill="#4285F4" opacity=".7"/></symbol>
   </defs>
@@ -158,7 +158,7 @@
   <use href="#h-trino" x="752" y="32" width="28" height="28"><animateTransform attributeName="transform" type="translate" values="0 0;0 -3;0 0" dur="2.6s" begin=".8s" repeatCount="indefinite"/></use>
 
   <!-- LAYER 2: METADATA -->
-  <rect x="40" y="86" width="800" height="56" rx="10" fill="#1D1D26" stroke="#9AA0B4" stroke-width="1.8">
+  <rect x="40" y="86" width="800" height="56" rx="10" fill="#1D1D26" stroke="#5C78FF" stroke-width="1.8">
     <animate attributeName="stroke-opacity" values=".5;1;.5" dur="3.4s" repeatCount="indefinite" begin=".5s"/>
   </rect>
   <text x="60" y="110" class="h-title" font-size="15" fill="#9AA0B4">LAYER 2 · METADATA</text>
@@ -290,7 +290,7 @@
   </g>
   <text x="162" y="106" class="lay" fill="#9AA0B4">…10,000</text>
   <!-- wasteful red scan sweep over ALL files -->
-  <rect x="40" y="72" width="120" height="22" rx="3" fill="#9AA0B4" opacity="0">
+  <rect x="40" y="72" width="120" height="22" rx="3" fill="#5C78FF" opacity="0">
     <animate attributeName="y" values="72;96;120;72" dur="2.4s" repeatCount="indefinite"/>
     <animate attributeName="opacity" values=".0;.45;.45;.0" dur="2.4s" repeatCount="indefinite"/>
   </rect>
@@ -397,7 +397,7 @@ Partition values known:
   <defs>
     <style>.m{font-family:'JetBrains Mono',monospace;font-size:12px;}</style>
     <symbol id="m-spark" viewBox="0 0 24 24"><polygon points="13,2 4,14 11,14 10,22 20,10 13,10" fill="#E25A1C"/></symbol>
-    <symbol id="m-unity" viewBox="0 0 24 24"><rect x="3" y="2" width="14" height="20" rx="2" fill="none" stroke="#9AA0B4" stroke-width="2"/><path d="M7 2v20" stroke="#9AA0B4" stroke-width="1.5"/><line x1="10" y1="7" x2="15" y2="7" stroke="#9AA0B4" stroke-width="1.5"/><line x1="10" y1="11" x2="15" y2="11" stroke="#9AA0B4" stroke-width="1.5"/><line x1="10" y1="15" x2="15" y2="15" stroke="#9AA0B4" stroke-width="1.5"/></symbol>
+    <symbol id="m-unity" viewBox="0 0 24 24"><rect x="3" y="2" width="14" height="20" rx="2" fill="none" stroke="#5C78FF" stroke-width="2"/><path d="M7 2v20" stroke="#5C78FF" stroke-width="1.5"/><line x1="10" y1="7" x2="15" y2="7" stroke="#5C78FF" stroke-width="1.5"/><line x1="10" y1="11" x2="15" y2="11" stroke="#5C78FF" stroke-width="1.5"/><line x1="10" y1="15" x2="15" y2="15" stroke="#5C78FF" stroke-width="1.5"/></symbol>
     <symbol id="m-s3" viewBox="0 0 24 24"><ellipse cx="12" cy="6" rx="9" ry="3.5" fill="#FF9900" opacity=".9"/><path d="M3 6v12c0 1.9 4 3.5 9 3.5s9-1.6 9-3.5V6" fill="none" stroke="#FF9900" stroke-width="2"/></symbol>
   </defs>
 
@@ -408,7 +408,7 @@ Partition values known:
   <text x="93" y="130" class="m" fill="#7a8099" text-anchor="middle">"SELECT … orders"</text>
 
   <!-- metastore -->
-  <rect x="270" y="58" width="170" height="104" rx="8" fill="#1D1D26" stroke="#9AA0B4" stroke-width="1.6"><animate attributeName="stroke-opacity" values=".55;1;.55" dur="3.2s" begin=".4s" repeatCount="indefinite"/></rect>
+  <rect x="270" y="58" width="170" height="104" rx="8" fill="#1D1D26" stroke="#5C78FF" stroke-width="1.6"><animate attributeName="stroke-opacity" values=".55;1;.55" dur="3.2s" begin=".4s" repeatCount="indefinite"/></rect>
   <use href="#m-unity" x="282" y="70" width="20" height="20"/>
   <text x="360" y="84" class="m" fill="#9AA0B4" text-anchor="middle" font-weight="700">METASTORE</text>
   <text x="355" y="110" class="m" fill="#7a8099" text-anchor="middle">orders →</text>
@@ -422,16 +422,16 @@ Partition values known:
   <text x="615" y="130" class="m" fill="#7a8099" text-anchor="middle">s3://…/orders/</text>
 
   <!-- arrow 1: request -->
-  <line x1="168" y1="96" x2="266" y2="96" stroke="#9AA0B4" stroke-width="1.6" stroke-dasharray="4,3"/>
-  <polygon points="266,91 276,96 266,101" fill="#9AA0B4"/>
+  <line x1="168" y1="96" x2="266" y2="96" stroke="#5C78FF" stroke-width="1.6" stroke-dasharray="4,3"/>
+  <polygon points="266,91 276,96 266,101" fill="#5C78FF"/>
   <text x="217" y="88" class="m" fill="#9AA0B4" text-anchor="middle" font-size="10">1. where?</text>
-  <circle r="3.5" fill="#9AA0B4"><animate attributeName="cx" values="168;266" dur="1.6s" repeatCount="indefinite"/><animate attributeName="cy" values="96;96" dur="1.6s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;1;1;0" dur="1.6s" repeatCount="indefinite"/></circle>
+  <circle r="3.5" fill="#5C78FF"><animate attributeName="cx" values="168;266" dur="1.6s" repeatCount="indefinite"/><animate attributeName="cy" values="96;96" dur="1.6s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;1;1;0" dur="1.6s" repeatCount="indefinite"/></circle>
 
   <!-- arrow 2: response -->
-  <line x1="276" y1="124" x2="170" y2="124" stroke="#9AA0B4" stroke-width="1.6" stroke-dasharray="4,3"/>
-  <polygon points="170,119 160,124 170,129" fill="#9AA0B4"/>
+  <line x1="276" y1="124" x2="170" y2="124" stroke="#5C78FF" stroke-width="1.6" stroke-dasharray="4,3"/>
+  <polygon points="170,119 160,124 170,129" fill="#5C78FF"/>
   <text x="217" y="142" class="m" fill="#9AA0B4" text-anchor="middle" font-size="10">2. here + schema</text>
-  <circle r="3.5" fill="#9AA0B4"><animate attributeName="cx" values="276;170" dur="1.6s" begin=".8s" repeatCount="indefinite"/><animate attributeName="cy" values="124;124" dur="1.6s" begin=".8s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;1;1;0" dur="1.6s" begin=".8s" repeatCount="indefinite"/></circle>
+  <circle r="3.5" fill="#5C78FF"><animate attributeName="cx" values="276;170" dur="1.6s" begin=".8s" repeatCount="indefinite"/><animate attributeName="cy" values="124;124" dur="1.6s" begin=".8s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;1;1;0" dur="1.6s" begin=".8s" repeatCount="indefinite"/></circle>
 
   <!-- arrow 3: targeted read -->
   <line x1="168" y1="110" x2="538" y2="110" stroke="#5AC8FF" stroke-width="1.4" stroke-dasharray="2,4" opacity=".5"/>
@@ -528,7 +528,7 @@ Partition values known:
     <style>.cm{font-family:'JetBrains Mono',monospace;font-size:11.5px;}</style>
     <symbol id="c-databricks" viewBox="0 0 24 24"><polygon points="12,2 20,7 12,12 4,7" fill="#FF3621" opacity=".9"/><polygon points="12,8 20,13 12,18 4,13" fill="#FF3621" opacity=".7"/><polygon points="12,14 20,19 12,24 4,19" fill="#FF3621" opacity=".5"/></symbol>
     <symbol id="c-spark" viewBox="0 0 24 24"><polygon points="13,2 4,14 11,14 10,22 20,10 13,10" fill="#E25A1C"/></symbol>
-    <symbol id="c-s3" viewBox="0 0 24 24"><ellipse cx="12" cy="6" rx="9" ry="3.5" fill="#FF9900" opacity=".9"/><path d="M3 6v12c0 1.9 4 3.5 9 3.5s9-1.6 9-3.5V6" fill="none" stroke="#FF9900" stroke-width="2"/><line x1="12" y1="2.5" x2="12" y2="21.5" stroke="#9AA0B4" stroke-width="1"/></symbol>
+    <symbol id="c-s3" viewBox="0 0 24 24"><ellipse cx="12" cy="6" rx="9" ry="3.5" fill="#FF9900" opacity=".9"/><path d="M3 6v12c0 1.9 4 3.5 9 3.5s9-1.6 9-3.5V6" fill="none" stroke="#FF9900" stroke-width="2"/><line x1="12" y1="2.5" x2="12" y2="21.5" stroke="#5C78FF" stroke-width="1"/></symbol>
   </defs>
 
   <!-- driver -->
@@ -634,8 +634,8 @@ GROUP BY category;</pre></div>
   <defs>
     <style>.tr{font-family:'JetBrains Mono',monospace;font-size:11px;}</style>
     <symbol id="t-spark" viewBox="0 0 24 24"><polygon points="13,2 4,14 11,14 10,22 20,10 13,10" fill="#E25A1C"/></symbol>
-    <symbol id="t-unity" viewBox="0 0 24 24"><rect x="3" y="2" width="14" height="20" rx="2" fill="none" stroke="#9AA0B4" stroke-width="2"/><path d="M7 2v20" stroke="#9AA0B4" stroke-width="1.5"/><line x1="10" y1="7" x2="15" y2="7" stroke="#9AA0B4" stroke-width="1.5"/><line x1="10" y1="11" x2="15" y2="11" stroke="#9AA0B4" stroke-width="1.5"/><line x1="10" y1="15" x2="15" y2="15" stroke="#9AA0B4" stroke-width="1.5"/></symbol>
-    <symbol id="t-s3" viewBox="0 0 24 24"><ellipse cx="12" cy="6" rx="9" ry="3.5" fill="#FF9900" opacity=".9"/><path d="M3 6v12c0 1.9 4 3.5 9 3.5s9-1.6 9-3.5V6" fill="none" stroke="#FF9900" stroke-width="2"/><line x1="12" y1="2.5" x2="12" y2="21.5" stroke="#9AA0B4" stroke-width="1"/></symbol>
+    <symbol id="t-unity" viewBox="0 0 24 24"><rect x="3" y="2" width="14" height="20" rx="2" fill="none" stroke="#5C78FF" stroke-width="2"/><path d="M7 2v20" stroke="#5C78FF" stroke-width="1.5"/><line x1="10" y1="7" x2="15" y2="7" stroke="#5C78FF" stroke-width="1.5"/><line x1="10" y1="11" x2="15" y2="11" stroke="#5C78FF" stroke-width="1.5"/><line x1="10" y1="15" x2="15" y2="15" stroke="#5C78FF" stroke-width="1.5"/></symbol>
+    <symbol id="t-s3" viewBox="0 0 24 24"><ellipse cx="12" cy="6" rx="9" ry="3.5" fill="#FF9900" opacity=".9"/><path d="M3 6v12c0 1.9 4 3.5 9 3.5s9-1.6 9-3.5V6" fill="none" stroke="#FF9900" stroke-width="2"/><line x1="12" y1="2.5" x2="12" y2="21.5" stroke="#5C78FF" stroke-width="1"/></symbol>
   </defs>
 
   <!-- compute -->
@@ -646,7 +646,7 @@ GROUP BY category;</pre></div>
   <text x="36" y="80" class="tr" fill="#cdd0dd">⑥ executors aggregate → SUM(amount) per category → return rows</text>
 
   <!-- metadata -->
-  <rect x="20" y="112" width="660" height="64" rx="8" fill="#1D1D26" stroke="#9AA0B4" stroke-width="1.6"><animate attributeName="stroke-opacity" values=".45;1;.45;.45;.45" keyTimes="0;.3;.5;.85;1" dur="4s" repeatCount="indefinite"/></rect>
+  <rect x="20" y="112" width="660" height="64" rx="8" fill="#1D1D26" stroke="#5C78FF" stroke-width="1.6"><animate attributeName="stroke-opacity" values=".45;1;.45;.45;.45" keyTimes="0;.3;.5;.85;1" dur="4s" repeatCount="indefinite"/></rect>
   <use href="#t-unity" x="642" y="118" width="24" height="24"/>
   <text x="36" y="134" class="tr" fill="#9AA0B4" font-weight="700">2 · METADATA (catalogue)</text>
   <text x="36" y="154" class="tr" fill="#cdd0dd">③ orders → s3://…/orders/ , schema ok</text>
@@ -731,11 +731,12 @@ GROUP BY category;</pre></div>
   </dl>
 </div>
 
-<footer class="reveal">
-  <p>Written by Hao Tieu · <a href="../">More posts</a> · <a href="https://linkedin.com/in/haotieu2001" target="_blank" rel="noopener">LinkedIn</a></p>
-  <p>© 2026 · Built with GitHub Pages</p>
-</footer>
 
+
+<footer class="reveal">
+  <p style="margin-bottom:8px"><a href="../blogs.html">← Back to all articles</a></p>
+  <p>© 2026 · Hao Tieu · Built with GitHub Pages</p>
+</footer>
 </div><!-- /page -->
 
 <script>

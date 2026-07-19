@@ -266,13 +266,13 @@ postgres: <span class="g">client backend</span>                  <span class="c"
 <svg viewBox="0 0 760 320" width="100%" aria-label="The Postgres write path in two tracks: the synchronous commit path through the WAL, and the lazy background path through shared buffers and the checkpointer to the data file">
   <defs>
     <marker id="w-g" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#5AC8FF"/></marker>
-    <marker id="w-d" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#9aa0b4"/></marker>
+    <marker id="w-d" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#5C78FF"/></marker>
   </defs>
   <text x="380" y="20" font-size="10.5" fill="#9aa0b4" text-anchor="middle" letter-spacing="1.5">WAL FIRST &#183; DATA PAGES LATER</text>
 
   <text x="475" y="40" font-size="8.5" fill="#5AC8FF" text-anchor="middle" font-weight="700">&#9312; COMMIT PATH &#183; synchronous</text>
 
-  <rect x="30" y="115" width="120" height="56" rx="7" fill="#1D1D26" stroke="#9AA0B4"/>
+  <rect x="30" y="115" width="120" height="56" rx="7" fill="#1D1D26" stroke="#5C78FF"/>
   <text x="90" y="139" font-size="10" fill="#9AA0B4" text-anchor="middle" font-weight="700">BACKEND</text>
   <text x="90" y="157" font-size="8" fill="#9aa0b4" text-anchor="middle">your connection</text>
 
@@ -287,21 +287,21 @@ postgres: <span class="g">client backend</span>                  <span class="c"
   <path d="M154 132 L 214 86" stroke="#5AC8FF" stroke-width="1.6" fill="none" marker-end="url(#w-g)"/>
   <path d="M404 80 H 534" stroke="#5AC8FF" stroke-width="2.4" fill="none" marker-end="url(#w-g)"/>
 
-  <rect x="190" y="190" width="155" height="60" rx="7" fill="#1D1D26" stroke="#9AA0B4"/>
+  <rect x="190" y="190" width="155" height="60" rx="7" fill="#1D1D26" stroke="#5C78FF"/>
   <text x="267" y="214" font-size="9" fill="#9AA0B4" text-anchor="middle" font-weight="700">SHARED_BUFFERS</text>
   <text x="267" y="232" font-size="7.5" fill="#cdd0dd" text-anchor="middle">dirty page in RAM</text>
 
-  <rect x="375" y="190" width="155" height="60" rx="7" fill="#14141c" stroke="#4a4a55"/>
+  <rect x="375" y="190" width="155" height="60" rx="7" fill="#14141c" stroke="#5C78FF"/>
   <text x="452" y="214" font-size="9" fill="#cdd0dd" text-anchor="middle" font-weight="700">CHECKPOINTER</text>
   <text x="452" y="232" font-size="7.5" fill="#9aa0b4" text-anchor="middle">flushes dirty pages</text>
 
-  <rect x="560" y="190" width="170" height="60" rx="7" fill="#14141c" stroke="#4a4a55"/>
+  <rect x="560" y="190" width="170" height="60" rx="7" fill="#14141c" stroke="#5C78FF"/>
   <text x="645" y="214" font-size="9" fill="#cdd0dd" text-anchor="middle" font-weight="700">DATA FILE &#183; on disk</text>
   <text x="645" y="232" font-size="7.5" fill="#9aa0b4" text-anchor="middle">written LATER</text>
 
-  <path d="M154 154 L 184 206" stroke="#9AA0B4" stroke-width="1.6" fill="none" marker-end="url(#w-d)"/>
-  <path d="M349 220 H 369" stroke="#9aa0b4" stroke-width="1.4" fill="none" stroke-dasharray="5,3" marker-end="url(#w-d)"/>
-  <path d="M534 220 H 554" stroke="#9aa0b4" stroke-width="1.4" fill="none" stroke-dasharray="5,3" marker-end="url(#w-d)"/>
+  <path d="M154 154 L 184 206" stroke="#5C78FF" stroke-width="1.6" fill="none" marker-end="url(#w-d)"/>
+  <path d="M349 220 H 369" stroke="#5C78FF" stroke-width="1.4" fill="none" stroke-dasharray="5,3" marker-end="url(#w-d)"/>
+  <path d="M534 220 H 554" stroke="#5C78FF" stroke-width="1.4" fill="none" stroke-dasharray="5,3" marker-end="url(#w-d)"/>
 
   <text x="460" y="272" font-size="8.5" fill="#6B6B78" text-anchor="middle">&#9313; DATA PATH &#183; lazy, in the background, minutes later</text>
 
@@ -351,27 +351,27 @@ postgres: <span class="g">client backend</span>                  <span class="c"
 <svg viewBox="0 0 760 396" width="100%" aria-label="Six nested layers of Postgres storage: cluster, database, tablespace, table, segment file, page, and tuple">
   <text x="380" y="20" font-size="10.5" fill="#9aa0b4" text-anchor="middle" letter-spacing="1.5">FROM THE SERVER DOWN TO ONE ROW</text>
 
-  <rect x="30" y="40" width="700" height="38" rx="6" fill="#14141c" stroke="#4a4a55"/>
+  <rect x="30" y="40" width="700" height="38" rx="6" fill="#14141c" stroke="#5C78FF"/>
   <text x="44" y="57" font-size="11" fill="#cdd0dd" font-weight="700">CLUSTER</text>
   <text x="44" y="71" font-size="8.5" fill="#6B6B78">one server &#183; one data directory ($PGDATA)</text>
 
-  <rect x="52" y="86" width="656" height="38" rx="6" fill="#14141c" stroke="#4a4a55"/>
+  <rect x="52" y="86" width="656" height="38" rx="6" fill="#14141c" stroke="#5C78FF"/>
   <text x="66" y="103" font-size="11" fill="#cdd0dd" font-weight="700">DATABASE</text>
   <text x="66" y="117" font-size="8.5" fill="#6B6B78">one subdirectory per database &#183; base/5/</text>
 
-  <rect x="74" y="132" width="612" height="38" rx="6" fill="#1D1D26" stroke="#9AA0B4"/>
+  <rect x="74" y="132" width="612" height="38" rx="6" fill="#1D1D26" stroke="#5C78FF"/>
   <text x="88" y="149" font-size="11" fill="#9AA0B4" font-weight="700">TABLESPACE</text>
   <text x="88" y="163" font-size="8.5" fill="#9aa0b4">a location on disk &#183; SQL Server calls this a FILEGROUP</text>
 
-  <rect x="96" y="178" width="568" height="38" rx="6" fill="#1D1D26" stroke="#9AA0B4"/>
+  <rect x="96" y="178" width="568" height="38" rx="6" fill="#1D1D26" stroke="#5C78FF"/>
   <text x="110" y="195" font-size="11" fill="#9AA0B4" font-weight="700">TABLE &#183; the heap</text>
   <text x="110" y="209" font-size="8.5" fill="#9aa0b4">an unordered pile of pages &#183; base/5/16385</text>
 
-  <rect x="118" y="224" width="524" height="38" rx="6" fill="#1D1D26" stroke="#9AA0B4"/>
+  <rect x="118" y="224" width="524" height="38" rx="6" fill="#1D1D26" stroke="#5C78FF"/>
   <text x="132" y="241" font-size="11" fill="#9AA0B4" font-weight="700">SEGMENT FILE</text>
   <text x="132" y="255" font-size="8.5" fill="#cdd0dd">split every 1 GB: 16385, 16385.1, 16385.2 …</text>
 
-  <rect x="140" y="270" width="480" height="38" rx="6" fill="#1D1D26" stroke="#9AA0B4"/>
+  <rect x="140" y="270" width="480" height="38" rx="6" fill="#1D1D26" stroke="#5C78FF"/>
   <text x="154" y="287" font-size="11" fill="#9AA0B4" font-weight="700">PAGE &#183; BLOCK</text>
   <text x="154" y="301" font-size="8.5" fill="#cdd0dd">8 KB &#183; the unit of I/O &#183; nothing smaller is read</text>
 
@@ -402,14 +402,14 @@ postgres: <span class="g">client backend</span>                  <span class="c"
 <figure class="fig reveal">
 <svg viewBox="0 0 760 290" width="100%" aria-label="The layout of one 8KB Postgres page: header, line pointers growing right, free space, tuples growing left, and a special area">
   <defs>
-    <marker id="p-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#9AA0B4"/></marker>
+    <marker id="p-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#5C78FF"/></marker>
   </defs>
   <text x="380" y="20" font-size="10.5" fill="#9aa0b4" text-anchor="middle" letter-spacing="1.5">ONE PAGE &#183; THE UNIT OF EVERYTHING</text>
 
   <path d="M60 62 V 56 H 700 V 62" stroke="#1D1D26" stroke-width="1.2" fill="none"/>
   <text x="380" y="50" font-size="9" fill="#9AA0B4" text-anchor="middle">8 KB &#183; 8192 bytes</text>
 
-  <rect x="60" y="70" width="70" height="90" fill="#1D1D26" stroke="#9AA0B4"/>
+  <rect x="60" y="70" width="70" height="90" fill="#1D1D26" stroke="#5C78FF"/>
   <text x="95" y="108" font-size="9" fill="#9AA0B4" text-anchor="middle">header</text>
   <text x="95" y="122" font-size="7.5" fill="#6B6B78" text-anchor="middle">24 B</text>
 
@@ -421,18 +421,18 @@ postgres: <span class="g">client backend</span>                  <span class="c"
   <text x="350" y="108" font-size="9" fill="#4a4a55" text-anchor="middle">free space</text>
   <text x="350" y="122" font-size="7.5" fill="#4a4a55" text-anchor="middle">shrinks</text>
 
-  <rect x="440" y="70" width="200" height="90" fill="#1D1D26" stroke="#9AA0B4"/>
+  <rect x="440" y="70" width="200" height="90" fill="#1D1D26" stroke="#5C78FF"/>
   <text x="540" y="108" font-size="9" fill="#9AA0B4" text-anchor="middle">tuples &#183; the rows</text>
   <text x="540" y="122" font-size="7.5" fill="#6B6B78" text-anchor="middle">variable size</text>
 
-  <rect x="640" y="70" width="60" height="90" fill="#1D1D26" stroke="#4a4a55"/>
+  <rect x="640" y="70" width="60" height="90" fill="#1D1D26" stroke="#5C78FF"/>
   <text x="670" y="108" font-size="8" fill="#9aa0b4" text-anchor="middle">special</text>
   <text x="670" y="122" font-size="7.5" fill="#E7E7EE" text-anchor="middle">idx only</text>
 
   <path d="M132 186 H 248" stroke="#5AC8FF" stroke-width="1.4" fill="none" marker-end="url(#p-a)"/>
   <text x="190" y="178" font-size="8.5" fill="#5AC8FF" text-anchor="middle">pointers grow →</text>
 
-  <path d="M698 186 H 452" stroke="#9AA0B4" stroke-width="1.4" fill="none" marker-end="url(#p-a)"/>
+  <path d="M698 186 H 452" stroke="#5C78FF" stroke-width="1.4" fill="none" marker-end="url(#p-a)"/>
   <text x="575" y="178" font-size="8.5" fill="#9AA0B4" text-anchor="middle">← tuples grow</text>
 
   <text x="380" y="216" font-size="9.5" fill="#9AA0B4" text-anchor="middle">when they meet, the page is FULL</text>
@@ -471,7 +471,7 @@ postgres: <span class="g">client backend</span>                  <span class="c"
 <figure class="fig reveal">
 <svg viewBox="0 0 760 320" width="100%" aria-label="SQL Server's clustered index stores rows inside the index leaves; Postgres always keeps a separate heap that indexes point into">
   <defs>
-    <marker id="h-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#9AA0B4"/></marker>
+    <marker id="h-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#5C78FF"/></marker>
   </defs>
   <text x="380" y="20" font-size="10.5" fill="#9aa0b4" text-anchor="middle" letter-spacing="1.5">THE INDEX IS THE TABLE &#183; vs &#183; THE INDEX POINTS AT THE TABLE</text>
 
@@ -491,12 +491,12 @@ postgres: <span class="g">client backend</span>                  <span class="c"
   <path d="M380 56 V 296" stroke="#34343F" stroke-width="1" stroke-dasharray="4,4"/>
 
   <text x="572" y="46" font-size="10.5" fill="#9AA0B4" text-anchor="middle" font-weight="700">POSTGRES · always a heap</text>
-  <rect x="446" y="58" width="150" height="28" rx="5" fill="#1D1D26" stroke="#9AA0B4"/>
+  <rect x="446" y="58" width="150" height="28" rx="5" fill="#1D1D26" stroke="#5C78FF"/>
   <text x="521" y="76" font-size="8.5" fill="#9AA0B4" text-anchor="middle">B-tree root</text>
-  <rect x="446" y="96" width="150" height="28" rx="5" fill="#1D1D26" stroke="#9AA0B4"/>
+  <rect x="446" y="96" width="150" height="28" rx="5" fill="#1D1D26" stroke="#5C78FF"/>
   <text x="521" y="114" font-size="8.5" fill="#9AA0B4" text-anchor="middle">leaf: key → ctid</text>
 
-  <rect x="620" y="58" width="110" height="148" rx="5" fill="#1D1D26" stroke="#9AA0B4"/>
+  <rect x="620" y="58" width="110" height="148" rx="5" fill="#1D1D26" stroke="#5C78FF"/>
   <text x="675" y="76" font-size="8.5" fill="#9AA0B4" text-anchor="middle" font-weight="700">HEAP</text>
   <rect x="630" y="86" width="90" height="22" rx="3" fill="#101017" stroke="#1D1D26"/>
   <text x="675" y="101" font-size="7.5" fill="#cdd0dd" text-anchor="middle">page 0</text>
@@ -507,7 +507,7 @@ postgres: <span class="g">client backend</span>                  <span class="c"
   <rect x="630" y="164" width="90" height="22" rx="3" fill="#101017" stroke="#1D1D26"/>
   <text x="675" y="179" font-size="7.5" fill="#cdd0dd" text-anchor="middle">…unordered</text>
 
-  <path d="M600 110 H 616" stroke="#9AA0B4" stroke-width="1.4" fill="none" marker-end="url(#h-a)"/>
+  <path d="M600 110 H 616" stroke="#5C78FF" stroke-width="1.4" fill="none" marker-end="url(#h-a)"/>
   <text x="521" y="146" font-size="8.5" fill="#9AA0B4" text-anchor="middle">then JUMP to the heap</text>
   <text x="572" y="228" font-size="8.5" fill="#9AA0B4" text-anchor="middle">two steps, always</text>
   <text x="572" y="246" font-size="8.5" fill="#6B6B78" text-anchor="middle">even for the PRIMARY KEY</text>
@@ -559,31 +559,31 @@ postgres: <span class="g">client backend</span>                  <span class="c"
 <figure class="fig reveal">
 <svg viewBox="0 0 760 258" width="100%" aria-label="An UPDATE writes a new tuple on a different page and marks the old one dead, so both versions exist until VACUUM removes the old one">
   <defs>
-    <marker id="m-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#9AA0B4"/></marker>
+    <marker id="m-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#5C78FF"/></marker>
   </defs>
   <text x="380" y="20" font-size="10.5" fill="#9aa0b4" text-anchor="middle" letter-spacing="1.5">UPDATE events SET status = 'x' WHERE id = 1</text>
 
   <text x="150" y="48" font-size="9.5" fill="#9aa0b4" text-anchor="middle">BEFORE</text>
-  <rect x="40" y="58" width="220" height="76" rx="7" fill="#1D1D26" stroke="#4a4a55"/>
+  <rect x="40" y="58" width="220" height="76" rx="7" fill="#1D1D26" stroke="#5C78FF"/>
   <text x="150" y="76" font-size="9" fill="#9aa0b4" text-anchor="middle">page 0</text>
   <rect x="54" y="86" width="192" height="36" rx="4" fill="#1D1D26" stroke="#5AC8FF"/>
   <text x="150" y="102" font-size="8.5" fill="#5AC8FF" text-anchor="middle">(0,1) id=1 status='shipped'</text>
   <text x="150" y="115" font-size="7.5" fill="#6B6B78" text-anchor="middle">xmin 752 · LIVE</text>
 
   <text x="610" y="48" font-size="9.5" fill="#9aa0b4" text-anchor="middle">AFTER</text>
-  <rect x="500" y="58" width="220" height="76" rx="7" fill="#1D1D26" stroke="#4a4a55"/>
+  <rect x="500" y="58" width="220" height="76" rx="7" fill="#1D1D26" stroke="#5C78FF"/>
   <text x="610" y="76" font-size="9" fill="#9aa0b4" text-anchor="middle">page 0</text>
-  <rect x="514" y="86" width="192" height="36" rx="4" fill="#241014" stroke="#9AA0B4"/>
+  <rect x="514" y="86" width="192" height="36" rx="4" fill="#241014" stroke="#5C78FF"/>
   <text x="610" y="102" font-size="8.5" fill="#9AA0B4" text-anchor="middle">(0,1) id=1 status='shipped'</text>
   <text x="610" y="115" font-size="7.5" fill="#9AA0B4" text-anchor="middle">xmax set · DEAD TUPLE</text>
 
-  <rect x="500" y="146" width="220" height="76" rx="7" fill="#1D1D26" stroke="#4a4a55"/>
+  <rect x="500" y="146" width="220" height="76" rx="7" fill="#1D1D26" stroke="#5C78FF"/>
   <text x="610" y="164" font-size="9" fill="#9aa0b4" text-anchor="middle">page 14285</text>
   <rect x="514" y="174" width="192" height="36" rx="4" fill="#1D1D26" stroke="#5AC8FF"/>
   <text x="610" y="190" font-size="8.5" fill="#5AC8FF" text-anchor="middle">(14285,51) id=1 status='x'</text>
   <text x="610" y="203" font-size="7.5" fill="#6B6B78" text-anchor="middle">xmin 757 · LIVE</text>
 
-  <path d="M266 100 L 494 100" stroke="#9AA0B4" stroke-width="1.5" fill="none" marker-end="url(#m-a)"/>
+  <path d="M266 100 L 494 100" stroke="#5C78FF" stroke-width="1.5" fill="none" marker-end="url(#m-a)"/>
   <text x="380" y="92" font-size="8.5" fill="#9AA0B4" text-anchor="middle">old version marked dead</text>
 
   <path d="M266 108 L 494 186" stroke="#5AC8FF" stroke-width="1.5" fill="none" marker-end="url(#m-a)"/>
@@ -693,26 +693,26 @@ postgres: <span class="g">client backend</span>                  <span class="c"
 <figure class="fig reveal">
 <svg viewBox="0 0 760 400" width="100%" aria-label="A B-tree with a root, internal nodes and leaves whose entries hold ctid pointers into the unordered heap">
   <defs>
-    <marker id="b-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0 0L10 5L0 10z" fill="#9AA0B4"/></marker>
-    <marker id="b-r" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0 0L10 5L0 10z" fill="#9AA0B4"/></marker>
+    <marker id="b-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0 0L10 5L0 10z" fill="#5C78FF"/></marker>
+    <marker id="b-r" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0 0L10 5L0 10z" fill="#5C78FF"/></marker>
   </defs>
   <text x="380" y="20" font-size="10.5" fill="#9aa0b4" text-anchor="middle" letter-spacing="1.5">SORTED TREE &#8594; ctid &#8594; UNSORTED HEAP</text>
 
-  <rect x="170" y="38" width="150" height="30" rx="5" fill="#1D1D26" stroke="#9AA0B4"/>
+  <rect x="170" y="38" width="150" height="30" rx="5" fill="#1D1D26" stroke="#5C78FF"/>
   <text x="245" y="57" font-size="9" fill="#9AA0B4" text-anchor="middle">ROOT &#183; one page</text>
 
-  <rect x="86" y="92" width="120" height="30" rx="5" fill="#1D1D26" stroke="#9AA0B4"/>
+  <rect x="86" y="92" width="120" height="30" rx="5" fill="#1D1D26" stroke="#5C78FF"/>
   <text x="146" y="111" font-size="8.5" fill="#9AA0B4" text-anchor="middle">internal</text>
-  <rect x="284" y="92" width="120" height="30" rx="5" fill="#1D1D26" stroke="#9AA0B4"/>
+  <rect x="284" y="92" width="120" height="30" rx="5" fill="#1D1D26" stroke="#5C78FF"/>
   <text x="344" y="111" font-size="8.5" fill="#9AA0B4" text-anchor="middle">internal</text>
 
-  <rect x="40" y="146" width="106" height="44" rx="5" fill="#1D1D26" stroke="#9AA0B4"/>
+  <rect x="40" y="146" width="106" height="44" rx="5" fill="#1D1D26" stroke="#5C78FF"/>
   <text x="93" y="164" font-size="8" fill="#9AA0B4" text-anchor="middle">leaf</text>
   <text x="93" y="179" font-size="7.5" fill="#cdd0dd" text-anchor="middle">42 &#8594; (107,3)</text>
-  <rect x="156" y="146" width="106" height="44" rx="5" fill="#1D1D26" stroke="#9AA0B4"/>
+  <rect x="156" y="146" width="106" height="44" rx="5" fill="#1D1D26" stroke="#5C78FF"/>
   <text x="209" y="164" font-size="8" fill="#9AA0B4" text-anchor="middle">leaf</text>
   <text x="209" y="179" font-size="7.5" fill="#cdd0dd" text-anchor="middle">57 &#8594; (2,11)</text>
-  <rect x="272" y="146" width="106" height="44" rx="5" fill="#1D1D26" stroke="#9AA0B4"/>
+  <rect x="272" y="146" width="106" height="44" rx="5" fill="#1D1D26" stroke="#5C78FF"/>
   <text x="325" y="164" font-size="8" fill="#9AA0B4" text-anchor="middle">leaf</text>
   <text x="325" y="179" font-size="7.5" fill="#cdd0dd" text-anchor="middle">63 &#8594; (901,7)</text>
 
@@ -727,7 +727,7 @@ postgres: <span class="g">client backend</span>                  <span class="c"
   <text x="570" y="160" font-size="8" fill="#5AC8FF" text-anchor="middle">leaves are SORTED and linked &#8596;</text>
   <text x="570" y="174" font-size="8" fill="#6B6B78" text-anchor="middle">(that is how range scans work)</text>
 
-  <rect x="470" y="196" width="240" height="130" rx="7" fill="#1D1D26" stroke="#9AA0B4"/>
+  <rect x="470" y="196" width="240" height="130" rx="7" fill="#1D1D26" stroke="#5C78FF"/>
   <text x="590" y="216" font-size="9.5" fill="#9AA0B4" text-anchor="middle" font-weight="700">THE HEAP &#183; unordered</text>
   <rect x="484" y="224" width="212" height="24" rx="3" fill="#101017" stroke="#1D1D26"/>
   <text x="590" y="240" font-size="7.5" fill="#cdd0dd" text-anchor="middle">page 2 &#8230; slot 11</text>
@@ -842,7 +842,7 @@ Index Only Scan using idx_user on events (actual rows=109 loops=1)
 <svg viewBox="0 0 760 290" width="100%" aria-label="The three Postgres join algorithms compared: nested loop, hash join and merge join, with what each is best at and what to watch for">
   <text x="380" y="20" font-size="10.5" fill="#9aa0b4" text-anchor="middle" letter-spacing="1.5">THREE ALGORITHMS &#183; SAME ROWS &#183; VERY DIFFERENT COSTS</text>
 
-  <rect x="20" y="44" width="230" height="204" rx="8" fill="#1D1D26" stroke="#9AA0B4"/>
+  <rect x="20" y="44" width="230" height="204" rx="8" fill="#1D1D26" stroke="#5C78FF"/>
   <text x="135" y="68" font-size="11" fill="#9AA0B4" text-anchor="middle" font-weight="700">NESTED LOOP</text>
   <text x="135" y="94" font-size="8.5" fill="#cdd0dd" text-anchor="middle">for each outer row,</text>
   <text x="135" y="108" font-size="8.5" fill="#cdd0dd" text-anchor="middle">look up the inner side</text>
@@ -959,11 +959,11 @@ Hash Join (actual rows=81184 loops=3)
 <svg viewBox="0 0 760 268" width="100%" aria-label="An index-only scan checks the visibility map; if the page bit is set it skips the heap, otherwise it must fetch the heap tuple anyway">
   <defs>
     <marker id="v-g" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#5AC8FF"/></marker>
-    <marker id="v-r" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#9AA0B4"/></marker>
+    <marker id="v-r" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#5C78FF"/></marker>
   </defs>
   <text x="380" y="20" font-size="10.5" fill="#9aa0b4" text-anchor="middle" letter-spacing="1.5">THE INDEX HAS THE VALUE — BUT IS THE ROW VISIBLE?</text>
 
-  <rect x="30" y="52" width="150" height="60" rx="7" fill="#1D1D26" stroke="#9AA0B4"/>
+  <rect x="30" y="52" width="150" height="60" rx="7" fill="#1D1D26" stroke="#5C78FF"/>
   <text x="105" y="76" font-size="9.5" fill="#9AA0B4" text-anchor="middle" font-weight="700">INDEX LEAF</text>
   <text x="105" y="94" font-size="8" fill="#cdd0dd" text-anchor="middle">42 → (107,3)</text>
 
@@ -972,20 +972,20 @@ Hash Join (actual rows=81184 loops=3)
   <text x="346" y="88" font-size="8" fill="#cdd0dd" text-anchor="middle">1 bit per heap page</text>
   <text x="346" y="104" font-size="8" fill="#9aa0b4" text-anchor="middle">"is page 107 all-visible?"</text>
 
-  <path d="M184 82 H 250" stroke="#9AA0B4" stroke-width="1.5" fill="none" marker-end="url(#v-g)"/>
+  <path d="M184 82 H 250" stroke="#5C78FF" stroke-width="1.5" fill="none" marker-end="url(#v-g)"/>
 
   <rect x="530" y="40" width="200" height="52" rx="7" fill="#1D1D26" stroke="#5AC8FF"/>
   <text x="630" y="60" font-size="9" fill="#5AC8FF" text-anchor="middle" font-weight="700">BIT SET → skip the heap</text>
   <text x="630" y="78" font-size="8" fill="#cdd0dd" text-anchor="middle">Heap Fetches: 0 · 4 pages</text>
 
-  <rect x="530" y="106" width="200" height="52" rx="7" fill="#241014" stroke="#9AA0B4"/>
+  <rect x="530" y="106" width="200" height="52" rx="7" fill="#241014" stroke="#5C78FF"/>
   <text x="630" y="126" font-size="9" fill="#9AA0B4" text-anchor="middle" font-weight="700">BIT NOT SET → fetch anyway</text>
   <text x="630" y="144" font-size="8" fill="#cdd0dd" text-anchor="middle">Heap Fetches: 109 · 110 pages</text>
 
   <path d="M440 72 L 524 62" stroke="#5AC8FF" stroke-width="1.5" fill="none" marker-end="url(#v-g)"/>
-  <path d="M440 96 L 524 128" stroke="#9AA0B4" stroke-width="1.5" fill="none" marker-end="url(#v-r)"/>
+  <path d="M440 96 L 524 128" stroke="#5C78FF" stroke-width="1.5" fill="none" marker-end="url(#v-r)"/>
 
-  <rect x="80" y="176" width="600" height="52" rx="7" fill="#1D1D26" stroke="#9AA0B4"/>
+  <rect x="80" y="176" width="600" height="52" rx="7" fill="#1D1D26" stroke="#5C78FF"/>
   <text x="380" y="198" font-size="9.5" fill="#9AA0B4" text-anchor="middle" font-weight="700">Only VACUUM sets those bits.</text>
   <text x="380" y="216" font-size="8.5" fill="#cdd0dd" text-anchor="middle">A heavily-written table that autovacuum can't keep up with gets NO index-only scans.</text>
 
@@ -1040,9 +1040,9 @@ Hash Join (actual rows=81184 loops=3)
 <svg viewBox="0 0 760 262" width="100%" aria-label="On a time-correlated column a B-tree index is 21 MB while a BRIN index over the same column is 24 kB">
   <text x="380" y="20" font-size="10.5" fill="#9aa0b4" text-anchor="middle" letter-spacing="1.5">SAME COLUMN &#183; SAME TABLE &#183; 1,000,000 ROWS</text>
 
-  <rect x="60" y="44" width="290" height="132" rx="8" fill="#241014" stroke="#9AA0B4"/>
+  <rect x="60" y="44" width="290" height="132" rx="8" fill="#241014" stroke="#5C78FF"/>
   <text x="205" y="68" font-size="11" fill="#9AA0B4" text-anchor="middle" font-weight="700">B-TREE on created_at</text>
-  <rect x="80" y="82" width="250" height="36" rx="4" fill="#9AA0B4" fill-opacity="0.25" stroke="#9AA0B4"/>
+  <rect x="80" y="82" width="250" height="36" rx="4" fill="#5C78FF" fill-opacity="0.25" stroke="#5C78FF"/>
   <text x="205" y="142" font-size="16" fill="#9AA0B4" text-anchor="middle" font-weight="800">21 MB</text>
   <text x="205" y="163" font-size="8" fill="#9aa0b4" text-anchor="middle">one entry per row &#183; 1,000,000 entries</text>
 
@@ -1250,16 +1250,16 @@ Aggregate
 <figure class="fig reveal">
 <svg viewBox="0 0 760 232" width="100%" aria-label="The optimization loop: find the slow query, explain it, identify the problem, make one change, then measure again">
   <defs>
-    <marker id="o-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#9AA0B4"/></marker>
+    <marker id="o-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#5C78FF"/></marker>
   </defs>
   <text x="380" y="20" font-size="10.5" fill="#9aa0b4" text-anchor="middle" letter-spacing="1.5">MEASURE · DIAGNOSE · CHANGE ONE THING · MEASURE AGAIN</text>
 
-  <rect x="24" y="52" width="150" height="72" rx="8" fill="#1D1D26" stroke="#9AA0B4"/>
+  <rect x="24" y="52" width="150" height="72" rx="8" fill="#1D1D26" stroke="#5C78FF"/>
   <text x="99" y="76" font-size="10" fill="#9AA0B4" text-anchor="middle" font-weight="700">1 · FIND IT</text>
   <text x="99" y="94" font-size="8" fill="#cdd0dd" text-anchor="middle">pg_stat_statements</text>
   <text x="99" y="108" font-size="8" fill="#6B6B78" text-anchor="middle">slowest total time</text>
 
-  <rect x="198" y="52" width="150" height="72" rx="8" fill="#1D1D26" stroke="#9AA0B4"/>
+  <rect x="198" y="52" width="150" height="72" rx="8" fill="#1D1D26" stroke="#5C78FF"/>
   <text x="273" y="76" font-size="10" fill="#9AA0B4" text-anchor="middle" font-weight="700">2 · EXPLAIN IT</text>
   <text x="273" y="94" font-size="8" fill="#cdd0dd" text-anchor="middle">ANALYZE, BUFFERS</text>
   <text x="273" y="108" font-size="8" fill="#6B6B78" text-anchor="middle">read it bottom-up</text>
@@ -1279,7 +1279,7 @@ Aggregate
     <path d="M352 88 H 366" marker-end="url(#o-a)"/>
     <path d="M526 88 H 540" marker-end="url(#o-a)"/>
   </g>
-  <path d="M621 128 V 152 H 99 V 130" stroke="#9AA0B4" stroke-width="1.4" fill="none" stroke-dasharray="5,3" marker-end="url(#o-a)"/>
+  <path d="M621 128 V 152 H 99 V 130" stroke="#5C78FF" stroke-width="1.4" fill="none" stroke-dasharray="5,3" marker-end="url(#o-a)"/>
   <text x="360" y="168" font-size="8.5" fill="#6B6B78" text-anchor="middle">repeat — the next bottleneck is never where you expect</text>
 
   <text x="380" y="204" font-size="10" fill="#9AA0B4" text-anchor="middle">Never add an index without an EXPLAIN that shows you needed it.</text>
@@ -1595,9 +1595,10 @@ blocking         pg_stat_activity       <span class="p">pg_blocking_pids</span>(
   </dl>
 </div>
 
+
 <footer class="reveal">
-  <p>Part of <a href="../">Data &amp; AI Engineering, Simply Explained</a> · a <a href="../#essentials">Reference</a>. Pairs with <a href="../sql-essentials/">SQL for Data Engineers</a>, <a href="../oltp-vs-olap/">OLTP vs OLAP</a> and <a href="../delta-lake/">Delta Lake</a>.</p>
-  <p>© 2026 · Hao Tieu · Built with GitHub Pages · <a href="https://linkedin.com/in/haotieu2001" target="_blank" rel="noopener">LinkedIn</a></p>
+  <p style="margin-bottom:8px"><a href="../essentials.html">← Back to all articles</a></p>
+  <p>© 2026 · Hao Tieu · Built with GitHub Pages</p>
 </footer>
 </div><!-- /page -->
 

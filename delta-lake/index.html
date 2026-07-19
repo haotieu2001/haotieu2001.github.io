@@ -384,8 +384,8 @@ display(dbutils.fs.ls(loc + "/_delta_log"))</pre></div>
   <text x="24" y="172" font-size="11.5" font-weight="700" fill="#5AC8FF">Job B</text>
   <rect x="74" y="154" width="92" height="30" rx="6" fill="#16182e" stroke="#5AC8FF"/><text x="120" y="174" text-anchor="middle" font-size="10.5" fill="#cdd0dd">read v4</text>
   <path d="M170 169 L196 169" stroke="#5AC8FF" stroke-width="2.5"/><path d="M191 164 l10 5 l-10 5 z" fill="#5AC8FF"/>
-  <rect x="200" y="154" width="120" height="30" rx="6" fill="#2a1620" stroke="#9AA0B4"/><text x="260" y="174" text-anchor="middle" font-size="10.5" fill="#9AA0B4">0005 exists −</text>
-  <path d="M324 169 L350 169" stroke="#9AA0B4" stroke-width="2.5"/><path d="M345 164 l10 5 l-10 5 z" fill="#9AA0B4"/>
+  <rect x="200" y="154" width="120" height="30" rx="6" fill="#2a1620" stroke="#5C78FF"/><text x="260" y="174" text-anchor="middle" font-size="10.5" fill="#9AA0B4">0005 exists −</text>
+  <path d="M324 169 L350 169" stroke="#5C78FF" stroke-width="2.5"/><path d="M345 164 l10 5 l-10 5 z" fill="#5C78FF"/>
   <rect x="354" y="154" width="200" height="30" rx="6" fill="#16182e" stroke="#28B9FF"/><text x="454" y="174" text-anchor="middle" font-size="10.5" fill="#5AC8FF">re-read v5, create 0006.json</text>
   <path d="M558 169 L584 169" stroke="#28B9FF" stroke-width="2.5"/><path d="M579 164 l10 5 l-10 5 z" fill="#28B9FF"/>
   <rect x="588" y="154" width="120" height="30" rx="6" fill="#10241c" stroke="#5AC8FF"/><text x="648" y="174" text-anchor="middle" font-size="11" font-weight="700" fill="#5AC8FF">+ → v6</text>
@@ -416,7 +416,7 @@ RESTORE TABLE invoices TO VERSION AS OF 0;   <span class="c">-- one-line undo; r
   <circle cx="450" cy="112" r="9" fill="#16182e" stroke="#5C78FF" stroke-width="2"/><text x="450" y="142" text-anchor="middle" font-size="11" fill="#9aa0b4">v2</text><text x="450" y="158" text-anchor="middle" font-size="9.5" fill="#7c8090">update</text>
   <circle cx="620" cy="112" r="9" fill="#16182e" stroke="#5C78FF" stroke-width="2"/><text x="620" y="142" text-anchor="middle" font-size="11" fill="#9aa0b4">v3</text><text x="620" y="158" text-anchor="middle" font-size="9.5" fill="#7c8090">now</text>
   <text x="280" y="66" text-anchor="middle" font-size="10.5" fill="#9AA0B4">SELECT … VERSION AS OF 1</text>
-  <path d="M280 72 L280 100" stroke="#9AA0B4" stroke-width="2" stroke-dasharray="4 4"/><path d="M275 94 l5 10 l5 -10 z" fill="#9AA0B4"/>
+  <path d="M280 72 L280 100" stroke="#5C78FF" stroke-width="2" stroke-dasharray="4 4"/><path d="M275 94 l5 10 l5 -10 z" fill="#5C78FF"/>
   <path d="M620 100 C 560 60, 170 60, 110 100" stroke="#5AC8FF" stroke-width="2" fill="none"/><path d="M104 94 l6 10 l8 -8 z" fill="#5AC8FF"/>
   <text x="365" y="52" text-anchor="middle" font-size="10.5" fill="#5AC8FF">RESTORE TO 0  (recorded as a new version)</text>
 </svg>
@@ -454,10 +454,10 @@ WHEN NOT MATCHED THEN INSERT *;</pre></div>
   <text x="114" y="131" text-anchor="middle" font-size="10.5" fill="#9aa0b4">ON customer_id</text>
   <path d="M204 108 C 252 108, 250 72, 296 72" stroke="#28B9FF" stroke-width="2" fill="none"/>
   <path d="M204 117 L296 124" stroke="#5AC8FF" stroke-width="2" fill="none"/>
-  <path d="M204 126 C 252 126, 250 176, 296 176" stroke="#9AA0B4" stroke-width="2" fill="none"/>
+  <path d="M204 126 C 252 126, 250 176, 296 176" stroke="#5C78FF" stroke-width="2" fill="none"/>
   <rect x="300" y="56" width="436" height="32" rx="6" fill="#0f2230" stroke="#28B9FF"/><text x="318" y="77" font-size="11.5" fill="#5AC8FF">WHEN MATCHED → UPDATE the existing row</text>
   <rect x="300" y="108" width="436" height="32" rx="6" fill="#10241c" stroke="#5AC8FF"/><text x="318" y="129" font-size="11.5" fill="#5AC8FF">WHEN NOT MATCHED → INSERT the new row</text>
-  <rect x="300" y="160" width="436" height="32" rx="6" fill="#2a1620" stroke="#9AA0B4"/><text x="318" y="181" font-size="11.5" fill="#9AA0B4">WHEN NOT MATCHED BY SOURCE → DELETE (optional)</text>
+  <rect x="300" y="160" width="436" height="32" rx="6" fill="#2a1620" stroke="#5C78FF"/><text x="318" y="181" font-size="11.5" fill="#9AA0B4">WHEN NOT MATCHED BY SOURCE → DELETE (optional)</text>
   <text x="24" y="214" font-size="11" fill="#9aa0b4">Matching is by column name (not position) — the safe choice for loads that may change.</text>
 </svg>
 <figcaption>One MERGE handles update + insert + delete by matching the source against the target on a key.</figcaption>
@@ -478,15 +478,15 @@ WHEN NOT MATCHED THEN INSERT *;</pre></div>
   <text x="24" y="34" font-size="15" font-weight="700" fill="#5AC8FF">Delta checks the data before it writes (schema-on-write)</text>
   <text x="24" y="54" font-size="11" fill="#9aa0b4">checks in order: type → NULL/CHECK → column set</text>
   <rect x="24" y="78" width="150" height="32" rx="6" fill="#10241c" stroke="#5AC8FF"/><text x="99" y="99" text-anchor="middle" font-size="11" fill="#5AC8FF">'99' → INT  +</text>
-  <rect x="24" y="120" width="150" height="32" rx="6" fill="#2a1620" stroke="#9AA0B4"/><text x="99" y="141" text-anchor="middle" font-size="11" fill="#9AA0B4">'ABC' → INT  −</text>
-  <path d="M178 110 L246 110" stroke="#9aa0b4" stroke-width="2"/><path d="M240 105 l10 5 l-10 5 z" fill="#9aa0b4"/>
+  <rect x="24" y="120" width="150" height="32" rx="6" fill="#2a1620" stroke="#5C78FF"/><text x="99" y="141" text-anchor="middle" font-size="11" fill="#9AA0B4">'ABC' → INT  −</text>
+  <path d="M178 110 L246 110" stroke="#5C78FF" stroke-width="2"/><path d="M240 105 l10 5 l-10 5 z" fill="#5C78FF"/>
   <rect x="250" y="84" width="120" height="62" rx="10" fill="#16182e" stroke="#5C78FF" stroke-width="2"/>
   <text x="310" y="112" text-anchor="middle" font-size="12" font-weight="700" fill="#9db0ff">schema</text>
   <text x="310" y="130" text-anchor="middle" font-size="12" font-weight="700" fill="#9db0ff">check</text>
   <path d="M370 105 L470 105" stroke="#28B9FF" stroke-width="2.5"/><path d="M464 99 l12 6 l-12 6 z" fill="#28B9FF"/>
   <rect x="474" y="86" width="262" height="38" rx="8" fill="#0f2230" stroke="#28B9FF"/><text x="605" y="110" text-anchor="middle" font-size="11.5" fill="#5AC8FF">all rows valid → written</text>
-  <path d="M310 146 L310 172" stroke="#9AA0B4" stroke-width="2.5"/><path d="M304 166 l6 10 l6 -10 z" fill="#9AA0B4"/>
-  <rect x="100" y="174" width="540" height="32" rx="8" fill="#2a1620" stroke="#9AA0B4"/><text x="370" y="195" text-anchor="middle" font-size="11.5" fill="#9AA0B4">any bad row → the whole write is rejected, table unchanged</text>
+  <path d="M310 146 L310 172" stroke="#5C78FF" stroke-width="2.5"/><path d="M304 166 l6 10 l6 -10 z" fill="#5C78FF"/>
+  <rect x="100" y="174" width="540" height="32" rx="8" fill="#2a1620" stroke="#5C78FF"/><text x="370" y="195" text-anchor="middle" font-size="11.5" fill="#9AA0B4">any bad row → the whole write is rejected, table unchanged</text>
 </svg>
 <figcaption>Bad data never lands: the whole write is rejected and the table stays exactly as it was.</figcaption>
 </figure>
@@ -677,7 +677,7 @@ OPTIMIZE invoices WHERE invoice_date = '2026-01-03' ZORDER BY (customer_id);</pr
   <!-- ===== BEFORE ===== -->
   <text x="24" y="84" font-size="13" fill="#cdd0dd">Before Z-Order — file ranges overlap</text>
   <text x="420" y="84" text-anchor="middle" font-size="10.5" font-weight="700" fill="#9AA0B4">201</text>
-  <line x1="420" y1="90" x2="420" y2="180" stroke="#9AA0B4" stroke-width="2" stroke-dasharray="4 4"/>
+  <line x1="420" y1="90" x2="420" y2="180" stroke="#5C78FF" stroke-width="2" stroke-dasharray="4 4"/>
   <!-- four files, all crossing 201 -> all read (cyan) -->
   <text x="24" y="109" font-size="11" fill="#9aa0b4">file 1</text><rect x="140" y="98"  width="420" height="14" rx="4" fill="#13243a" stroke="#28B9FF"/>
   <text x="24" y="129" font-size="11" fill="#9aa0b4">file 2</text><rect x="170" y="118" width="470" height="14" rx="4" fill="#13243a" stroke="#28B9FF"/>
@@ -697,7 +697,7 @@ OPTIMIZE invoices WHERE invoice_date = '2026-01-03' ZORDER BY (customer_id);</pr
   <!-- ===== AFTER ===== -->
   <text x="24" y="266" font-size="13" fill="#cdd0dd">After Z-Order — ranges sorted, no overlap</text>
   <text x="420" y="266" text-anchor="middle" font-size="10.5" font-weight="700" fill="#9AA0B4">201</text>
-  <line x1="420" y1="272" x2="420" y2="362" stroke="#9AA0B4" stroke-width="2" stroke-dasharray="4 4"/>
+  <line x1="420" y1="272" x2="420" y2="362" stroke="#5C78FF" stroke-width="2" stroke-dasharray="4 4"/>
   <!-- file 2 holds 201 -> read; others skipped (grey) -->
   <text x="24" y="291" font-size="11" fill="#9aa0b4">file 1</text><rect x="110" y="280" width="170" height="14" rx="4" fill="#23232C" stroke="#44444e"/>
   <text x="24" y="311" font-size="11" font-weight="700" fill="#5AC8FF">file 2</text><rect x="290" y="300" width="140" height="14" rx="4" fill="#13243a" stroke="#28B9FF" stroke-width="2"/>
@@ -733,7 +733,7 @@ OPTIMIZE invoices WHERE invoice_date = '2026-01-03' ZORDER BY (customer_id);</pr
   <line x1="44" y1="208" x2="304" y2="208" stroke="#33333d"/>
   <rect x="52"  y="182" width="34" height="26"  fill="#44444e"/>
   <rect x="104" y="190" width="34" height="18"  fill="#44444e"/>
-  <rect x="156" y="90"  width="34" height="118" fill="#9AA0B4"/>
+  <rect x="156" y="90"  width="34" height="118" fill="#5C78FF"/>
   <rect x="208" y="168" width="34" height="40"  fill="#44444e"/>
   <rect x="260" y="188" width="34" height="20"  fill="#44444e"/>
   <text x="174" y="224" text-anchor="middle" font-size="10.5" fill="#9AA0B4">one giant file = one slow task</text>
@@ -1013,11 +1013,13 @@ ALTER SHARE sales_share ADD TABLE demo.delta_db.invoices;</pre></div>
   </dl>
 </div>
 
-<footer class="reveal">
-<p><strong>Putting it together.</strong> In real work you'll use a few of these very often: <code>MERGE</code> for safe, repeatable loads; deletion vectors for cheap updates; partitioning or liquid clustering plus a scheduled <code>OPTIMIZE</code> for fast reads; <code>VACUUM</code> for cleanup; time travel for audits and recovery; and Change Data Feed to pass only what changed to the next layer. Learn the transaction log once, and the rest follows from it.</p>
-<p style="margin-top:14px">← Back to <a href="../">Data &amp; AI Engineering, Simply Explained</a> · © 2026 Hao Tieu</p>
-</footer>
 
+
+<footer class="reveal">
+  <p><strong>Putting it together.</strong> In real work you'll use a few of these very often: <code>MERGE</code> for safe, repeatable loads; deletion vectors for cheap updates; partitioning or liquid clustering plus a scheduled <code>OPTIMIZE</code> for fast reads; <code>VACUUM</code> for cleanup; time travel for audits and recovery; and Change Data Feed to pass only what changed to the next layer. Learn the transaction log once, and the rest follows from it.</p>
+  <p style="margin-bottom:8px"><a href="../blogs.html">← Back to all articles</a></p>
+  <p>© 2026 · Hao Tieu · Built with GitHub Pages</p>
+</footer>
 </div><!-- /page -->
 <script>
   var bar=document.getElementById('bar');
