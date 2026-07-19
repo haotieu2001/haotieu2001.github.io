@@ -62,7 +62,7 @@
   .callout{border-left:4px solid #28B9FF;background:linear-gradient(160deg,#12202e,#1C1C2A);border-radius:0 12px 12px 0;padding:14px 18px;margin:22px 0;box-shadow:0 0 16px -8px #28B9FF66}
   .why{border-left:4px solid var(--cyan);background:#22344F}
   .why .t{color:var(--cyan2);font-weight:800}
-  .note{border-left:4px solid var(--magenta2);background:#242739}
+  .note{border:1px solid #2c2c38;border-left:4px solid #28B9FF;background:#191921;border-radius:0 10px 10px 0;padding:12px 16px;margin:18px 0}
   .warn{border-left:4px solid #9AA0B4;background:#1D1D26}
   .tldr{border:1px solid #28B9FF44;background:linear-gradient(180deg,#12161d,#1C1C2A);border-radius:16px;padding:20px 24px;margin:26px 0;box-shadow:0 0 24px -10px #28B9FF55}
   .tldr h4{margin:0 0 8px;font-size:13px;letter-spacing:.2em;text-transform:uppercase;color:var(--cyan2)}
@@ -938,10 +938,10 @@ ALTER SHARE sales_share ADD TABLE demo.delta_db.invoices;</pre></div>
   <rect x="300" y="92" width="160" height="64" rx="10" fill="#223650" stroke="#5C78FF" stroke-width="2"/>
   <text x="380" y="120" text-anchor="middle" font-size="13" font-weight="700" fill="#8AA0FF">Delta table</text>
   <text x="380" y="140" text-anchor="middle" font-size="10" fill="#E7E7EE">_delta_log + Parquet</text>
-  <path d="M300 112 L180 100" stroke="#28B9FF" stroke-width="2"/><path d="M186 94 l-11 5 l10 7 z" fill="#28B9FF"/>
+  <line x1="298" y1="124" x2="180" y2="124" stroke="#28B9FF" stroke-width="2"/><polygon points="176,124 189,118 189,130" fill="#28B9FF"/>
   <text x="232" y="74" text-anchor="middle" font-size="9.5" fill="#28B9FF">UniForm: + Iceberg metadata</text>
   <rect x="24" y="100" width="150" height="48" rx="8" fill="#223650" stroke="#28B9FF"/><text x="99" y="122" text-anchor="middle" font-size="10.5" fill="#5AC8FF">Iceberg / Hudi</text><text x="99" y="138" text-anchor="middle" font-size="9.5" fill="#E7E7EE">readers (read-only)</text>
-  <path d="M460 136 L586 150" stroke="#5AC8FF" stroke-width="2"/><path d="M580 144 l12 6 l-13 5 z" fill="#5AC8FF"/>
+  <line x1="462" y1="124" x2="584" y2="124" stroke="#5AC8FF" stroke-width="2"/><polygon points="588,124 575,118 575,130" fill="#5AC8FF"/>
   <text x="540" y="184" text-anchor="middle" font-size="9.5" fill="#5AC8FF">Delta Sharing: secure, no copy</text>
   <rect x="586" y="100" width="150" height="48" rx="8" fill="#223650" stroke="#5AC8FF"/><text x="661" y="122" text-anchor="middle" font-size="10.5" fill="#5AC8FF">another team /</text><text x="661" y="138" text-anchor="middle" font-size="10.5" fill="#5AC8FF">company</text>
   <text x="24" y="210" font-size="11" fill="#E7E7EE">UniForm is read-only for other engines; Delta Sharing gives others your live data without copying it.</text>
