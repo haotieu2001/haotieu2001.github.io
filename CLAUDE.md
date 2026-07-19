@@ -42,6 +42,17 @@ follow the conventions below.
   section as decoration, and never a rainbow gradient.
 - **Gradient ≤ 2 stops, same cool family** (e.g. cyan→blue), used at one
   hero moment + the scroll bar — not on every card/heading.
+- **Two-tier colour rule (important):**
+  - **UI / chrome** — nav, panels, cards, callouts, `.pain`/`.fix`, `.tldr`,
+    badges, headings, text — stays on the restrained set above: cyan primary
+    + blue support, functional amber for warnings (e.g. `.pain`), red for
+    errors. No decorative purple/magenta.
+  - **Diagrams** (inline SVG + `.diagram` ASCII) **may use the fuller "neon"
+    palette** — cyan `#5AC8FF`, blue `#5C78FF`, purple `#A56BFF`, magenta
+    `#FF6B9D`, amber `#FFB454` — **but only when colour encodes distinct
+    information** (multiple series/categories/layers). If a diagram is really
+    one thing, keep it cyan. Brand logos keep their real colours. Text must
+    stay high-contrast (never same colour as the shape behind it).
 - **Gradient is reserved.** Use `--grad` ONLY for: the `h1` (background-clip text
   with the slow `sheen` animation), the top scroll-progress `#bar`, the primary
   button, and thin dividers/rings. Never gradient body text or many elements.
