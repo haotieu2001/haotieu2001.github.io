@@ -321,7 +321,7 @@
 <p class="reveal">A Data Lake has three layers stacked on top of each other. Each layer builds on the one below it:</p>
 
 <figure class="reveal" style="margin:1.6em 0;background:#141826;border:1px solid #3C4356;border-radius:10px;padding:1.2em 1em 1em;overflow:hidden">
-<figcaption style="font-size:12px;color:#555;text-align:center;margin-bottom:.8em;letter-spacing:.06em;text-transform:uppercase">Data Lake — Three-Layer Architecture</figcaption>
+<figcaption style="font-size:12px;color:#E7E7EE;text-align:center;margin-bottom:.8em;letter-spacing:.06em;text-transform:uppercase">Data Lake — Three-Layer Architecture</figcaption>
 <svg viewBox="0 0 740 440" width="100%" style="display:block;max-width:740px;margin:0 auto" aria-label="Data Lake Three-Layer Architecture">
   <defs>
     <style>
@@ -470,7 +470,7 @@
 <p class="reveal">The base layer is a folder structure in cloud object storage. A typical layout looks like this:</p>
 
 <figure class="reveal" style="margin:1.6em 0;background:#141826;border:1px solid #3C4356;border-radius:10px;padding:1.2em 1em 1em;overflow:hidden">
-<figcaption style="font-size:12px;color:#555;text-align:center;margin-bottom:.8em;letter-spacing:.06em;text-transform:uppercase">S3 Bucket — Typical Data Lake Folder Layout</figcaption>
+<figcaption style="font-size:12px;color:#E7E7EE;text-align:center;margin-bottom:.8em;letter-spacing:.06em;text-transform:uppercase">S3 Bucket — Typical Data Lake Folder Layout</figcaption>
 <svg viewBox="0 0 700 340" width="100%" style="display:block;max-width:700px;margin:0 auto" aria-label="S3 folder tree">
   <defs>
     <style>
@@ -642,7 +642,7 @@ GROUP BY category;</pre></div>
 <p class="reveal">A single Parquet file is organised in three nested layers — row groups contain column chunks, which contain pages:</p>
 
 <figure class="reveal" style="margin:1.6em 0;background:#141826;border:1px solid #3C4356;border-radius:10px;padding:1.2em 1em 1em;overflow:hidden">
-<figcaption style="font-size:12px;color:#555;text-align:center;margin-bottom:.8em;letter-spacing:.06em;text-transform:uppercase">Parquet File — Physical Layout</figcaption>
+<figcaption style="font-size:12px;color:#E7E7EE;text-align:center;margin-bottom:.8em;letter-spacing:.06em;text-transform:uppercase">Parquet File — Physical Layout</figcaption>
 <svg viewBox="0 0 700 420" width="100%" style="display:block;max-width:700px;margin:0 auto" aria-label="Parquet file internal structure">
   <defs>
     <style>
@@ -817,7 +817,7 @@ GROUP BY category;</pre></div>
 <p class="reveal">Real-world Data Lakes divide storage into <strong>zones</strong> (also called <em>layers</em>). The most popular pattern is the <strong>Medallion Architecture</strong>:</p>
 
 <figure class="reveal" style="margin:1.4em 0;background:#141826;border:1px solid #2c2c38;border-radius:10px;padding:1.2em 1em 1em;overflow:hidden">
-<figcaption style="font-size:12px;color:#8a90a6;text-align:center;margin-bottom:.8em;letter-spacing:.06em;text-transform:uppercase">Medallion Architecture — Data Flow</figcaption>
+<figcaption style="font-size:12px;color:#E7E7EE;text-align:center;margin-bottom:.8em;letter-spacing:.06em;text-transform:uppercase">Medallion Architecture — Data Flow</figcaption>
 <svg viewBox="0 0 880 250" width="100%" style="display:block;max-width:880px;margin:0 auto" font-family="'JetBrains Mono',monospace" aria-label="Data flows from sources into Bronze (raw), then Silver (cleaned), then Gold (business-ready), then out to BI and ML">
   <!-- SOURCES -->
   <rect x="14" y="80" width="104" height="60" rx="12" fill="#1B2A46" stroke="#28B9FF" stroke-opacity=".6" stroke-width="1.6"/>
@@ -943,7 +943,7 @@ GROUP BY category;</pre></div>
 <p class="reveal">That software layer is <strong>Delta Lake</strong> (open source, from Databricks, now a Linux Foundation project). It's not a separate database server, a cloud service you pay for, or a different file format. It's an <strong>open-source library</strong> that sits between your query engine (Spark, Databricks, Trino) and your Parquet files, adding a transaction log that makes everything safe.</p>
 
 <figure class="reveal" style="margin:1.6em 0;background:#141826;border:1px solid #3C4356;border-radius:10px;padding:1.2em 1em 1em;overflow:hidden">
-<figcaption style="font-size:12px;color:#555;text-align:center;margin-bottom:.8em;letter-spacing:.06em;text-transform:uppercase">Data Warehouse vs Plain Data Lake vs Data Lakehouse</figcaption>
+<figcaption style="font-size:12px;color:#E7E7EE;text-align:center;margin-bottom:.8em;letter-spacing:.06em;text-transform:uppercase">Data Warehouse vs Plain Data Lake vs Data Lakehouse</figcaption>
 <svg viewBox="0 0 744 310" width="100%" style="display:block;max-width:744px;margin:0 auto" aria-label="Comparison of Data Warehouse, Plain Data Lake, and Data Lakehouse">
   <defs>
     <style>
@@ -1052,7 +1052,7 @@ GROUP BY category;</pre></div>
 </div>
 
 <figure class="reveal" style="margin:1.6em 0;background:#141826;border:1px solid #3C4356;border-radius:10px;padding:1.2em 1em 1em;overflow:hidden">
-<figcaption style="font-size:12px;color:#555;text-align:center;margin-bottom:.8em;letter-spacing:.06em;text-transform:uppercase">Delta Lake — _delta_log/ Transaction Log Structure</figcaption>
+<figcaption style="font-size:12px;color:#E7E7EE;text-align:center;margin-bottom:.8em;letter-spacing:.06em;text-transform:uppercase">Delta Lake — _delta_log/ Transaction Log Structure</figcaption>
 <svg viewBox="0 0 700 360" width="100%" style="display:block;max-width:700px;margin:0 auto" aria-label="Delta Lake transaction log folder structure">
   <defs>
     <style>

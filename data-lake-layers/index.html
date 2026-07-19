@@ -269,7 +269,7 @@
 <p class="reveal">That's why <em>where you put a file</em> decides query speed. Put the rows a query wants under one prefix and the engine reads just that prefix; scatter them and it must open everything, then throw most of it away. Compare two ways to store the same <code>orders</code> data:</p>
 
 <figure class="reveal" style="margin:1.4em 0;background:#1C1C2A;border:1px solid #3C4356;border-radius:10px;padding:1.2em 1em 1em;overflow:hidden">
-<figcaption style="font-size:12px;color:#555;text-align:center;margin-bottom:.8em;letter-spacing:.06em;text-transform:uppercase">Same data, two key layouts</figcaption>
+<figcaption style="font-size:12px;color:#E7E7EE;text-align:center;margin-bottom:.8em;letter-spacing:.06em;text-transform:uppercase">Same data, two key layouts</figcaption>
 <svg viewBox="0 0 700 250" width="100%" style="display:block;max-width:700px;margin:0 auto" aria-label="Flat layout versus partitioned layout">
   <defs>
     <style>.lay{font-family:'JetBrains Mono',monospace;font-size:12px;}</style>
@@ -392,7 +392,7 @@ Partition values known:
 </ol>
 
 <figure class="reveal" style="margin:1.4em 0;background:#1C1C2A;border:1px solid #3C4356;border-radius:10px;padding:1.2em 1em 1em;overflow:hidden">
-<figcaption style="font-size:12px;color:#555;text-align:center;margin-bottom:.8em;letter-spacing:.06em;text-transform:uppercase">The metastore is the translator between names and locations</figcaption>
+<figcaption style="font-size:12px;color:#E7E7EE;text-align:center;margin-bottom:.8em;letter-spacing:.06em;text-transform:uppercase">The metastore is the translator between names and locations</figcaption>
 <svg viewBox="0 0 700 220" width="100%" style="display:block;max-width:700px;margin:0 auto" aria-label="Engine asks metastore for a table location and gets back a path and schema">
   <defs>
     <style>.m{font-family:'JetBrains Mono',monospace;font-size:12px;}</style>
@@ -522,7 +522,7 @@ Partition values known:
 </ul>
 
 <figure class="reveal" style="margin:1.4em 0;background:#1C1C2A;border:1px solid #3C4356;border-radius:10px;padding:1.2em 1em 1em;overflow:hidden">
-<figcaption style="font-size:12px;color:#555;text-align:center;margin-bottom:.8em;letter-spacing:.06em;text-transform:uppercase">Driver splits the files; executors read them in parallel</figcaption>
+<figcaption style="font-size:12px;color:#E7E7EE;text-align:center;margin-bottom:.8em;letter-spacing:.06em;text-transform:uppercase">Driver splits the files; executors read them in parallel</figcaption>
 <svg viewBox="0 0 700 280" width="100%" style="display:block;max-width:700px;margin:0 auto" aria-label="A driver assigning file-reading tasks to three executors that read from object storage">
   <defs>
     <style>.cm{font-family:'JetBrains Mono',monospace;font-size:11.5px;}</style>
@@ -629,7 +629,7 @@ GROUP BY category;</pre></div>
 <p class="reveal">We'll assume the common <strong>plain-lake</strong> setup: Parquet files plus a Hive-style metastore (no table format yet). That means one extra <code>LIST</code> on storage to discover the files in a partition — exactly the step Section 03 flagged. With a Lakehouse table format, that LIST disappears (the manifest already names the files); everything else is identical.</p>
 
 <figure class="reveal" style="margin:1.4em 0;background:#1C1C2A;border:1px solid #3C4356;border-radius:10px;padding:1.2em 1em 1em;overflow:hidden">
-<figcaption style="font-size:12px;color:#8a90a6;text-align:center;margin-bottom:.8em;letter-spacing:.06em;text-transform:uppercase">The query's journey — down through the layers, then rows back up</figcaption>
+<figcaption style="font-size:12px;color:#E7E7EE;text-align:center;margin-bottom:.8em;letter-spacing:.06em;text-transform:uppercase">The query's journey — down through the layers, then rows back up</figcaption>
 <svg viewBox="0 0 700 330" width="100%" style="display:block;max-width:700px;margin:0 auto" font-family="'JetBrains Mono',monospace" aria-label="A query descends compute to metadata to storage, then result rows travel back up">
   <defs>
     <marker id="qj-down" markerWidth="9" markerHeight="9" refX="4.5" refY="6" orient="auto"><path d="M0 0 L4.5 6 L9 0 z" fill="#5C78FF"/></marker>

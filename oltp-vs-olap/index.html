@@ -134,7 +134,7 @@
 </header>
 
 <figure class="reveal" style="margin:18px 0 6px;background:#141826;border:1px solid #3C4356;border-radius:16px;padding:14px 10px;overflow:hidden">
-<figcaption style="font-size:12px;color:#555;text-align:center;margin-bottom:.6em;letter-spacing:.06em;text-transform:uppercase">The one picture: the same table, stored two ways</figcaption>
+<figcaption style="font-size:12px;color:#E7E7EE;text-align:center;margin-bottom:.6em;letter-spacing:.06em;text-transform:uppercase">The one picture: the same table, stored two ways</figcaption>
 <svg viewBox="0 0 860 250" width="100%" style="display:block;max-width:860px;margin:0 auto" aria-label="Row storage keeps each row's fields together; column storage keeps each column's values together">
   <defs>
     <linearGradient id="hero-grad" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#5C78FF"/><stop offset=".5" stop-color="#28B9FF"/><stop offset="1" stop-color="#A56BFF"/></linearGradient>
@@ -199,7 +199,7 @@
 </ul>
 
 <figure class="reveal" style="margin:1.4em 0;background:#1C1C2A;border:1px solid #3C4356;border-radius:10px;padding:1.2em 1em 1em;overflow:hidden">
-<figcaption style="font-size:12px;color:#555;text-align:center;margin-bottom:.8em;letter-spacing:.06em;text-transform:uppercase">Same company, two databases, two jobs</figcaption>
+<figcaption style="font-size:12px;color:#E7E7EE;text-align:center;margin-bottom:.8em;letter-spacing:.06em;text-transform:uppercase">Same company, two databases, two jobs</figcaption>
 <svg viewBox="0 0 760 220" width="100%" style="display:block;max-width:760px;margin:0 auto" aria-label="The app writes to OLTP; data is copied into OLAP where analysts run reports">
   <defs><style>.s1{font-family:'JetBrains Mono',monospace;}</style></defs>
   <!-- app users -->
@@ -267,7 +267,7 @@
 <p class="reveal">Disks (and the operating system) move data in blocks, not bytes. So databases adopt a fixed <strong>page</strong> size — typically <strong>8&nbsp;KB</strong> (PostgreSQL) or <strong>16&nbsp;KB</strong> (MySQL/InnoDB) — as the smallest unit they ever read from or write to disk. A table is, on disk, just a long sequence of these pages. Each page holds a small header, a slot directory (pointers to where each row lives inside the page), and then the rows themselves packed in.</p>
 
 <figure class="reveal" style="margin:1.4em 0;background:#1C1C2A;border:1px solid #3C4356;border-radius:10px;padding:1.2em 1em 1em;overflow:hidden">
-<figcaption style="font-size:12px;color:#555;text-align:center;margin-bottom:.8em;letter-spacing:.06em;text-transform:uppercase">One 8&nbsp;KB page — rows of all columns, packed together</figcaption>
+<figcaption style="font-size:12px;color:#E7E7EE;text-align:center;margin-bottom:.8em;letter-spacing:.06em;text-transform:uppercase">One 8&nbsp;KB page — rows of all columns, packed together</figcaption>
 <svg viewBox="0 0 720 230" width="100%" style="display:block;max-width:720px;margin:0 auto" aria-label="A page contains a header, a slot directory, and several whole rows stored contiguously">
   <defs><style>.p1{font-family:'JetBrains Mono',monospace;}</style></defs>
   <rect x="40" y="20" width="640" height="190" rx="10" fill="#1C1C2A" stroke="#5C78FF" stroke-width="1.6"/>
@@ -319,7 +319,7 @@
 <p class="reveal">A <strong>B-tree</strong> is a balanced tree kept sorted by the indexed column. The top <em>root</em> node and middle <em>branch</em> nodes hold only signposts ("keys 1–1000 are this way, 1001–2000 that way"); the bottom <em>leaf</em> nodes hold the actual keys in sorted order, each pointing to the row's location on disk. Because the tree is balanced and very wide (each node fans out to hundreds of children), it stays only 3–4 levels deep even for billions of rows.</p>
 
 <figure class="reveal" style="margin:1.4em 0;background:#1C1C2A;border:1px solid #3C4356;border-radius:10px;padding:1.2em 1em 1em;overflow:hidden">
-<figcaption style="font-size:12px;color:#8a90a6;text-align:center;margin-bottom:.8em;letter-spacing:.06em;text-transform:uppercase">Finding id = 8842 — 3 hops instead of millions of reads</figcaption>
+<figcaption style="font-size:12px;color:#E7E7EE;text-align:center;margin-bottom:.8em;letter-spacing:.06em;text-transform:uppercase">Finding id = 8842 — 3 hops instead of millions of reads</figcaption>
 <svg viewBox="0 0 640 320" width="100%" style="display:block;max-width:640px;margin:0 auto" font-family="'JetBrains Mono',monospace" aria-label="B-tree lookup: root to branch to leaf, then one page read to the row">
   <defs><marker id="bt2" markerWidth="9" markerHeight="9" refX="4.5" refY="6" orient="auto"><path d="M0 0 L4.5 6 L9 0 z" fill="#5C78FF"/></marker></defs>
 
@@ -375,7 +375,7 @@
 <p class="reveal lead">Let's trace one query — <code>SELECT * FROM customers WHERE id = 8842</code> — from the text you type to the row you get back. Every relational database follows the same five stages.</p>
 
 <figure class="reveal" style="margin:1.4em 0;background:#1C1C2A;border:1px solid #3C4356;border-radius:10px;padding:1.2em 1em 1em;overflow:hidden">
-<figcaption style="font-size:12px;color:#555;text-align:center;margin-bottom:.8em;letter-spacing:.06em;text-transform:uppercase">The five stages of running a SQL query</figcaption>
+<figcaption style="font-size:12px;color:#E7E7EE;text-align:center;margin-bottom:.8em;letter-spacing:.06em;text-transform:uppercase">The five stages of running a SQL query</figcaption>
 <div class="diagram" style="background:none;border:none;padding:6px 4px;margin:0">  SQL text
      │
      ▼
@@ -477,7 +477,7 @@
 <p class="reveal lead">The core move is <strong>column-oriented storage</strong>: instead of keeping each row's fields together, keep each <em>column's</em> values together. All the <code>city</code> values in one run, all the <code>total</code> values in another, all the <code>created_at</code> values in another.</p>
 
 <figure class="reveal" style="margin:1.4em 0;background:#1C1C2A;border:1px solid #3C4356;border-radius:10px;padding:1.2em 1em 1em;overflow:hidden">
-<figcaption style="font-size:12px;color:#555;text-align:center;margin-bottom:.8em;letter-spacing:.06em;text-transform:uppercase">Same rows, stored by column — read only what you need</figcaption>
+<figcaption style="font-size:12px;color:#E7E7EE;text-align:center;margin-bottom:.8em;letter-spacing:.06em;text-transform:uppercase">Same rows, stored by column — read only what you need</figcaption>
 <div class="diagram" style="background:none;border:none;padding:6px 4px;margin:0">  the logical table:                          stored on disk as columns:
 
    id  city    total  notes                    <span class="hl">id    </span>: 1, 2, 3, 4, 5, …      ◀ skip
@@ -499,7 +499,7 @@
 <p class="reveal">In the modern data world the data usually lives in <strong>files</strong> (in cloud object storage like S3), and the dominant columnar file format is <strong>Apache Parquet</strong>. Understanding its layout makes every OLAP optimization obvious. A Parquet file is organised into a hierarchy:</p>
 
 <figure class="reveal" style="margin:1.4em 0;background:#1C1C2A;border:1px solid #3C4356;border-radius:10px;padding:1.2em 1em 1em;overflow:hidden">
-<figcaption style="font-size:12px;color:#8a90a6;text-align:center;margin-bottom:.8em;letter-spacing:.06em;text-transform:uppercase">Inside one Parquet file</figcaption>
+<figcaption style="font-size:12px;color:#E7E7EE;text-align:center;margin-bottom:.8em;letter-spacing:.06em;text-transform:uppercase">Inside one Parquet file</figcaption>
 <svg viewBox="0 0 700 340" width="100%" style="display:block;max-width:700px;margin:0 auto" font-family="'JetBrains Mono',monospace" aria-label="A Parquet file: two row groups each with column chunks, plus a footer with min/max stats">
   <!-- outer file -->
   <rect x="18" y="30" width="664" height="286" rx="10" fill="#242739" stroke="#5C78FF" stroke-width="1.5"/>
@@ -548,7 +548,7 @@
 <p class="reveal lead">Now the payoff. Let's run the same query that broke the row store — <code>SELECT city, AVG(total) FROM orders WHERE created_at &gt;= '2023-01-01' GROUP BY city</code> — but on a columnar, distributed OLAP engine. The same parse → bind → plan front-end from §05 still runs first; what's different — and what makes analytics fast — is the <em>execute</em> stage. It works like a funnel: each stage throws away data so the next stage does less.</p>
 
 <figure class="reveal" style="margin:1.4em 0;background:#1C1C2A;border:1px solid #3C4356;border-radius:10px;padding:1.2em 1em 1em;overflow:hidden">
-<figcaption style="font-size:12px;color:#8a90a6;text-align:center;margin-bottom:.8em;letter-spacing:.06em;text-transform:uppercase">The OLAP funnel — drop data at every stage before reading it</figcaption>
+<figcaption style="font-size:12px;color:#E7E7EE;text-align:center;margin-bottom:.8em;letter-spacing:.06em;text-transform:uppercase">The OLAP funnel — drop data at every stage before reading it</figcaption>
 <svg viewBox="0 0 700 424" width="100%" style="display:block;max-width:700px;margin:0 auto" font-family="'JetBrains Mono',monospace" aria-label="Seven stages, each dropping data before the next: partition pruning, data skipping, column pruning, predicate pushdown, vectorized scan, partial aggregate, shuffle and merge">
   <rect x="20" y="22" width="620" height="40" rx="8" fill="#242739" stroke="#5C78FF" stroke-width="1.3"/>
   <text x="330" y="47" font-size="12" font-weight="700" fill="#E7E7EE" text-anchor="middle">500,000,000 rows × 50 columns — the whole dataset</text>
@@ -567,7 +567,7 @@
 <div class="step reveal"><div class="num-bubble">7</div><div class="body"><strong>Shuffle &amp; final merge.</strong> Partial results are <em>shuffled</em> so all partials for the same <code>city</code> meet on one node, which combines them into the final average. The handful of result rows go back to the client.</div></div>
 
 <figure class="reveal" style="margin:1.4em 0;background:#1C1C2A;border:1px solid #3C4356;border-radius:10px;padding:1.2em 1em 1em;overflow:hidden">
-<figcaption style="font-size:12px;color:#8a90a6;text-align:center;margin-bottom:.8em;letter-spacing:.06em;text-transform:uppercase">MPP — split the scan across nodes, then combine</figcaption>
+<figcaption style="font-size:12px;color:#E7E7EE;text-align:center;margin-bottom:.8em;letter-spacing:.06em;text-transform:uppercase">MPP — split the scan across nodes, then combine</figcaption>
 <svg viewBox="0 0 720 250" width="100%" style="display:block;max-width:720px;margin:0 auto" font-family="'JetBrains Mono',monospace" aria-label="A coordinator splits work across four worker nodes; their partial sums are shuffled by city and merged into the final result">
   <defs><marker id="mpp" markerWidth="9" markerHeight="9" refX="4.5" refY="6" orient="auto"><path d="M0 0 L4.5 6 L9 0 z" fill="#5C78FF"/></marker></defs>
 
@@ -667,7 +667,7 @@
 <h3 class="reveal">So which do you use?</h3>
 
 <figure class="reveal" style="margin:1.4em 0;background:#1C1C2A;border:1px solid #3C4356;border-radius:10px;padding:1.2em 1em 1em;overflow:hidden">
-<figcaption style="font-size:12px;color:#8a90a6;text-align:center;margin-bottom:.8em;letter-spacing:.06em;text-transform:uppercase">A decision shortcut — what is the query really doing?</figcaption>
+<figcaption style="font-size:12px;color:#E7E7EE;text-align:center;margin-bottom:.8em;letter-spacing:.06em;text-transform:uppercase">A decision shortcut — what is the query really doing?</figcaption>
 <svg viewBox="0 0 720 340" width="100%" style="display:block;max-width:720px;margin:0 auto" font-family="'JetBrains Mono',monospace" aria-label="Decision: few rows by key leads to OLTP row store; scans and aggregates lead to OLAP column store; in practice both are used together">
   <defs><marker id="fl-ar" markerWidth="9" markerHeight="9" refX="6" refY="3" orient="auto"><path d="M0 0 L6 3 L0 6 z" fill="#5C78FF"/></marker></defs>
   <!-- question -->
