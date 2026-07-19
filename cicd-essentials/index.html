@@ -22,9 +22,9 @@
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,500;0,700;0,800;1,400&display=swap" rel="stylesheet">
 <style>
   :root{
-    --bg:#1A1A1A; --bg2:#121212; --ink:#F1F1F1; --muted:#9aa0b4; --dim:#666666;
-    --blue2:#388BFD; --cyan:#2088FF; --cyan2:#58A6FF; --purple:#A371F7; --magenta2:#DB61A2;
-    --grad:linear-gradient(90deg,#58A6FF,#A371F7,#DB61A2);
+    --bg:#191921; --bg2:#20202A; --ink:#F1F1F1; --muted:#9aa0b4; --dim:#666666;
+    --blue2:#388BFD; --cyan:#2088FF; --cyan2:#58A6FF; --purple:#5AC8FF; --magenta2:#9AA0B4;
+    --grad:linear-gradient(90deg,#58A6FF,#5AC8FF,#9AA0B4);
     --font:"JetBrainsMono Nerd Font","JetBrains Mono","Symbols Nerd Font",ui-monospace,"Cascadia Code",Menlo,Consolas,monospace;
   }
   *{box-sizing:border-box}
@@ -40,50 +40,50 @@
   @keyframes sheen{to{background-position:220% center}}
   .dek{color:var(--muted);font-size:17px}
   .byline{margin-top:14px;font-size:13px;color:var(--dim)}
-  h2{font-size:clamp(21px,3.2vw,28px);margin:52px 0 6px;font-weight:800;line-height:1.22;padding-top:14px;border-top:1px solid #23232e}
+  h2{font-size:clamp(21px,3.2vw,28px);margin:52px 0 6px;font-weight:800;line-height:1.22;padding-top:14px;border-top:1px solid #34343F}
   h2 .n{color:var(--blue2)}
   h3{font-size:18px;margin:28px 0 4px;color:#fff;font-weight:700}
   h4{font-size:15px;margin:20px 0 4px;color:var(--cyan2);font-weight:700}
   p,li{color:#dcdce4}
   .lead{font-size:18px;color:#e7e7ee}
   a{color:var(--cyan2)}
-  hr{border:0;border-top:1px solid #2c2c36;margin:36px 0}
-  code{font-family:var(--font);background:#23232b;color:#58A6FF;padding:1px 6px;border-radius:5px;font-size:.88em;border:1px solid #2f2f3a}
+  hr{border:0;border-top:1px solid #34343F;margin:36px 0}
+  code{font-family:var(--font);background:#23232b;color:#58A6FF;padding:1px 6px;border-radius:5px;font-size:.88em;border:1px solid #34343F}
   .cb{margin:16px 0}
-  .cb .lang{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:#9aa0b4;background:#1b1b24;border:1px solid #2c2c36;border-bottom:none;border-radius:9px 9px 0 0;padding:4px 12px}
-  pre{margin:0;background:#0d0d13;border:1px solid #23232e;border-radius:0 10px 10px 10px;padding:14px 16px;overflow-x:auto;
+  .cb .lang{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:#9aa0b4;background:#1b1b24;border:1px solid #34343F;border-bottom:none;border-radius:9px 9px 0 0;padding:4px 12px}
+  pre{margin:0;background:#101017;border:1px solid #34343F;border-radius:0 10px 10px 10px;padding:14px 16px;overflow-x:auto;
       font-family:var(--font);font-size:13px;line-height:1.65;color:#d8dcea;white-space:pre}
   pre .c{color:#8B949E}
   pre .o{color:#9aa0b4}
   pre .k{color:#79C0FF}
   pre .g{color:#A5D6FF}
-  pre .y{color:#D29922}
-  pre .r{color:#F78166}
+  pre .y{color:#9AA0B4}
+  pre .r{color:#9AA0B4}
   pre .p{color:#D2A8FF}
   .callout{border-left:4px solid var(--blue2);background:#16182a;border-radius:0 12px 12px 0;padding:14px 18px;margin:22px 0}
   .callout.cy{border-color:var(--cyan);background:#0f1f2b}
-  .callout.mg{border-color:var(--magenta2);background:#1d1526}
-  .callout.gd{border-color:#D29922;background:#241d0f}
+  .callout.mg{border-color:var(--magenta2);background:#23232C}
+  .callout.gd{border-color:#9AA0B4;background:#1D1D26}
   .callout.gr{border-color:#58A6FF;background:#0d1a2b}
   .callout .t{color:var(--cyan2);font-weight:800}
-  .callout.gd .t{color:#D29922}
+  .callout.gd .t{color:#9AA0B4}
   .callout.gr .t{color:#58A6FF}
   .callout.mg .t{color:var(--magenta2)}
-  .tldr{border:1px solid #2f3a66;background:linear-gradient(180deg,#15182a,#121212);border-radius:16px;padding:20px 24px;margin:26px 0}
+  .tldr{border:1px solid #2f3a66;background:linear-gradient(180deg,#15182a,#20202A);border-radius:16px;padding:20px 24px;margin:26px 0}
   .tldr h4{margin:0 0 8px;font-size:13px;letter-spacing:.2em;text-transform:uppercase;color:var(--cyan2)}
-  .gloss{border:1px solid #2c2c36;background:#141419;border-radius:14px;padding:18px 22px;margin:24px 0}
+  .gloss{border:1px solid #34343F;background:#1D1D26;border-radius:14px;padding:18px 22px;margin:24px 0}
   .gloss h4{margin:0 0 6px;color:#fff;font-size:15px}
   .gloss dl{margin:0;font-size:13.5px}
   .gloss dt{color:var(--cyan2);font-weight:700;margin-top:9px}
   .gloss dd{margin:1px 0 0;color:#cdd0dd}
-  .toc{background:#15151b;border:1px solid #2c2c36;border-radius:14px;padding:16px 22px;margin:24px 0;column-count:2;column-gap:28px}
+  .toc{background:#23232C;border:1px solid #34343F;border-radius:14px;padding:16px 22px;margin:24px 0;column-count:2;column-gap:28px}
   .toc a{display:block;color:var(--cyan2);text-decoration:none;font-size:13.5px;line-height:1.9;break-inside:avoid}
   .toc a:hover{color:#fff}
   .toc>strong{column-span:all;display:block;margin-bottom:6px;color:#fff}
   table{border-collapse:collapse;width:100%;font-size:13.5px;margin:16px 0}
-  th,td{border:1px solid #2c2c36;padding:8px 11px;text-align:left;vertical-align:top}
-  th{background:#1d1d27;color:#fff}
-  tr:nth-child(even) td{background:#161620}
+  th,td{border:1px solid #34343F;padding:8px 11px;text-align:left;vertical-align:top}
+  th{background:#17171E;color:#fff}
+  tr:nth-child(even) td{background:#17171E}
   .ico{width:1em;height:1em;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
   .ico.f{fill:currentColor;stroke:none}
   h2{display:flex;align-items:center;gap:10px}
@@ -94,25 +94,39 @@
   .callout .t .ico{width:16px;height:16px;vertical-align:-3px;margin-right:5px}
   .tldr h4 .ico,.gloss h4 .ico{width:15px;height:15px;vertical-align:-2px;margin-right:6px}
   figure.fig{margin:26px 0;text-align:center}
-  figure.fig svg{display:block;width:100%;max-width:100%;height:auto;border:1px solid #23232e;border-radius:14px;background:#0d0d13}
+  figure.fig svg{display:block;width:100%;max-width:100%;height:auto;border:1px solid #34343F;border-radius:14px;background:#101017}
   figure.fig figcaption{font-size:12.5px;color:var(--muted);margin-top:9px;font-style:italic;line-height:1.6}
   .pain{border:1px solid #3a2020;background:#1c1212;border-radius:14px;padding:16px 20px;margin:14px 0}
-  .pain h4{margin:0 0 4px;color:#F78166}
-  .fix{border:1px solid #1a3020;background:#0d1f14;border-radius:14px;padding:16px 20px;margin:14px 0}
+  .pain h4{margin:0 0 4px;color:#9AA0B4}
+  .fix{border:1px solid #1a3020;background:#1D1D26;border-radius:14px;padding:16px 20px;margin:14px 0}
   .fix h4{margin:0 0 4px;color:#58A6FF}
   .step{display:flex;gap:12px;align-items:flex-start;margin:14px 0}
   .step .num-bubble{flex:0 0 28px;height:28px;border-radius:50%;background:var(--grad);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:#fff;margin-top:2px}
   .step .body{flex:1}
-  footer{border-top:1px solid #23232e;margin-top:50px;padding:24px 0 90px;color:var(--dim);font-size:13px}
+  footer{border-top:1px solid #34343F;margin-top:50px;padding:24px 0 90px;color:var(--dim);font-size:13px}
   footer a{color:var(--cyan2)}
   .js .reveal{opacity:0;transform:translateY(16px);transition:opacity .6s ease,transform .6s ease}
   .js .reveal.in{opacity:1;transform:none}
   @media (prefers-reduced-motion:reduce){.js .reveal{opacity:1;transform:none}}
+  /* ---- shared theme: top nav + a11y (appended) ---- */
+  .nav{position:sticky;top:0;z-index:60;background:rgba(25,25,33,.82);backdrop-filter:blur(10px);border-bottom:1px solid #34343f}
+  .nav-inner{max-width:1040px;margin:0 auto;padding:12px 24px;display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+  .nav-brand{font-weight:800;letter-spacing:.16em;font-size:15px;text-decoration:none;border:0;
+             background:linear-gradient(90deg,#5C78FF,#28B9FF,#A52AFF);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .nav-links{display:flex;gap:6px;flex-wrap:wrap;margin-left:auto}
+  .nav-links a{text-decoration:none;border:1px solid transparent;color:#9aa0b4;font-weight:700;font-size:13.5px;padding:6px 14px;border-radius:999px;transition:.2s}
+  .nav-links a:hover{color:#fff;border-color:#34343f;background:#23232c}
+  .nav-links a.active{color:#5AC8FF;border-color:#28B9FF55;background:#28B9FF14}
+  :focus-visible{outline:2px solid #5AC8FF;outline-offset:3px;border-radius:6px}
+  @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{animation:none !important;transition:none !important}.js .reveal{opacity:1 !important;transform:none !important}}
 </style>
+
 <script>document.documentElement.classList.add('js');</script>
 </head>
 <body>
 <div id="bar"></div>
+
+<nav class="nav"><div class="nav-inner"><a class="nav-brand" href="../index.html">HAO TIEU</a><div class="nav-links"><a href="../index.html">Portfolio</a><a href="../blogs.html">Blogs</a><a href="../essentials.html" class="active">Data Engineer Essentials</a></div></div></nav>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs>
 <symbol id="i-question" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.6 9.4a2.5 2.5 0 1 1 3.3 2.4c-.6.2-.9.8-.9 1.5v.6M12 17h.01"/></symbol>
 <symbol id="i-layers" viewBox="0 0 24 24"><path d="m12 3 9 4.8-9 4.8-9-4.8 9-4.8Z"/><path d="m3 12.6 9 4.8 9-4.8M3 17.2l9 4.8 9-4.8"/></symbol>
@@ -157,16 +171,16 @@
   <div class="byline">~40 min read · Essentials · Reference</div>
 </header>
 
-<figure class="reveal" style="margin:18px 0 6px;background:radial-gradient(130% 150% at 50% 0%,#16182a 0%,#0d0d13 72%);border:1px solid #23232e;border-radius:16px;padding:10px 10px;overflow:hidden">
+<figure class="reveal" style="margin:18px 0 6px;background:radial-gradient(130% 150% at 50% 0%,#16182a 0%,#101017 72%);border:1px solid #34343F;border-radius:16px;padding:10px 10px;overflow:hidden">
 <svg viewBox="0 0 880 190" width="100%" style="display:block" font-family="var(--font)" aria-label="A commit flowing through build, test, staging and production stages of a pipeline">
   <defs>
     <linearGradient id="hero-grad" x1="0" y1="0" x2="1" y2="0">
-      <stop offset="0" stop-color="#A371F7"/><stop offset=".5" stop-color="#2088FF"/><stop offset="1" stop-color="#DB61A2"/>
+      <stop offset="0" stop-color="#5AC8FF"/><stop offset=".5" stop-color="#2088FF"/><stop offset="1" stop-color="#9AA0B4"/>
     </linearGradient>
     <marker id="pa" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#4a5163"/></marker>
   </defs>
   <!-- the pipeline track -->
-  <line x1="84" y1="84" x2="790" y2="84" stroke="#23232e" stroke-width="2"/>
+  <line x1="84" y1="84" x2="790" y2="84" stroke="#34343F" stroke-width="2"/>
   <!-- connecting arrows -->
   <g stroke="#4a5163" stroke-width="1.5" fill="none">
     <line x1="100" y1="84" x2="144" y2="84" marker-end="url(#pa)"/>
@@ -179,31 +193,31 @@
     <circle cx="84" cy="84" r="13" fill="#0d1a2b" stroke="#58A6FF" stroke-width="2.4"/>
     <circle cx="84" cy="84" r="4" fill="#58A6FF"/>
     <text x="84" y="124" fill="#58A6FF" font-size="11">commit</text>
-    <text x="84" y="140" fill="#6b7280" font-size="9.5">git push</text>
+    <text x="84" y="140" fill="#6B6B78" font-size="9.5">git push</text>
     <!-- build -->
-    <rect x="146" y="62" width="120" height="44" rx="10" fill="#1c1230" stroke="#A371F7" stroke-width="1.8"/>
-    <text x="206" y="89" fill="#A371F7">build</text>
-    <text x="206" y="124" fill="#6b7280" font-size="9.5">compile · package</text>
+    <rect x="146" y="62" width="120" height="44" rx="10" fill="#1c1230" stroke="#5AC8FF" stroke-width="1.8"/>
+    <text x="206" y="89" fill="#5AC8FF">build</text>
+    <text x="206" y="124" fill="#6B6B78" font-size="9.5">compile · package</text>
     <!-- test -->
-    <rect x="306" y="62" width="120" height="44" rx="10" fill="#1a180d" stroke="#D29922" stroke-width="1.8"/>
-    <text x="366" y="89" fill="#D29922">test</text>
-    <text x="366" y="124" fill="#6b7280" font-size="9.5">lint · unit · data</text>
+    <rect x="306" y="62" width="120" height="44" rx="10" fill="#1D1D26" stroke="#9AA0B4" stroke-width="1.8"/>
+    <text x="366" y="89" fill="#9AA0B4">test</text>
+    <text x="366" y="124" fill="#6B6B78" font-size="9.5">lint · unit · data</text>
     <!-- staging -->
-    <rect x="466" y="62" width="130" height="44" rx="10" fill="#1d1526" stroke="#DB61A2" stroke-width="1.8"/>
-    <text x="531" y="89" fill="#DB61A2">staging</text>
-    <text x="531" y="124" fill="#6b7280" font-size="9.5">deploy · verify</text>
+    <rect x="466" y="62" width="130" height="44" rx="10" fill="#23232C" stroke="#9AA0B4" stroke-width="1.8"/>
+    <text x="531" y="89" fill="#9AA0B4">staging</text>
+    <text x="531" y="124" fill="#6B6B78" font-size="9.5">deploy · verify</text>
     <!-- prod -->
     <rect x="636" y="60" width="150" height="48" rx="10" fill="#0d1a2b" stroke="url(#hero-grad)" stroke-width="2.4"/>
-    <text x="711" y="89" fill="#F0A3CE">production</text>
-    <text x="700" y="124" fill="#6b7280" font-size="9.5">released to users</text>
-    <use href="#i-rocket" x="757" y="115" width="11" height="11" fill="none" stroke="#F0A3CE" stroke-width="2.2"/>
+    <text x="711" y="89" fill="#9AA0B4">production</text>
+    <text x="700" y="124" fill="#6B6B78" font-size="9.5">released to users</text>
+    <use href="#i-rocket" x="757" y="115" width="11" height="11" fill="none" stroke="#9AA0B4" stroke-width="2.2"/>
   </g>
   <!-- travelling particle -->
-  <circle r="4.5" cy="84" fill="#A371F7">
+  <circle r="4.5" cy="84" fill="#5AC8FF">
     <animate attributeName="cx" values="84;711;711" dur="4.6s" repeatCount="indefinite"/>
     <animate attributeName="opacity" values="0;.95;.95;0;0" keyTimes="0;.06;.72;.82;1" dur="4.6s" repeatCount="indefinite"/>
   </circle>
-  <text x="440" y="170" font-size="12" fill="#6b7280" text-anchor="middle">one push triggers the whole assembly line — build, test, ship — with no human hand-offs</text>
+  <text x="440" y="170" font-size="12" fill="#6B6B78" text-anchor="middle">one push triggers the whole assembly line — build, test, ship — with no human hand-offs</text>
 </svg>
 </figure>
 
@@ -264,17 +278,17 @@
 <figure class="fig reveal">
 <svg viewBox="0 0 760 286" font-family="var(--font)" aria-label="One pipeline with three brackets above it showing what CI, Continuous Delivery and Continuous Deployment each cover">
   <defs>
-    <marker id="a2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#A371F7"/></marker>
+    <marker id="a2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#5AC8FF"/></marker>
   </defs>
 
   <!-- 3. Continuous Deployment : covers everything -->
-  <rect x="128" y="20" width="596" height="30" rx="8" fill="#0d1a2b" stroke="#DB61A2" stroke-width="1.6"/>
-  <text x="142" y="40" font-size="12" fill="#DB61A2" font-weight="700">3 · Continuous Deployment</text>
+  <rect x="128" y="20" width="596" height="30" rx="8" fill="#0d1a2b" stroke="#9AA0B4" stroke-width="1.6"/>
+  <text x="142" y="40" font-size="12" fill="#9AA0B4" font-weight="700">3 · Continuous Deployment</text>
   <text x="338" y="40" font-size="11" fill="#9aa0b4">= Delivery, minus the gate — the tests ARE the gate</text>
 
   <!-- 2. Continuous Delivery : build → staging, ready to release -->
   <rect x="128" y="58" width="440" height="30" rx="8" fill="#0f1f2b" stroke="#2088FF" stroke-width="1.6"/>
-  <text x="142" y="78" font-size="12" fill="#A371F7" font-weight="700">2 · Continuous Delivery</text>
+  <text x="142" y="78" font-size="12" fill="#5AC8FF" font-weight="700">2 · Continuous Delivery</text>
   <text x="316" y="78" font-size="11" fill="#9aa0b4">= CI + always release-ready</text>
 
   <!-- 1. Continuous Integration : build + test only -->
@@ -282,7 +296,7 @@
   <text x="142" y="116" font-size="12" fill="#58A6FF" font-weight="700">1 · Continuous Integration</text>
 
   <!-- ticks dropping from each bracket's right edge down to the pipeline -->
-  <g stroke="#2c2c36" stroke-width="1" stroke-dasharray="3 3">
+  <g stroke="#34343F" stroke-width="1" stroke-dasharray="3 3">
     <line x1="128" y1="126" x2="128" y2="150"/>
     <line x1="340" y1="126" x2="340" y2="150"/>
     <line x1="568" y1="88" x2="568" y2="150"/>
@@ -290,7 +304,7 @@
   </g>
 
   <!-- the single pipeline -->
-  <g stroke="#A371F7" stroke-width="1.5" fill="none">
+  <g stroke="#5AC8FF" stroke-width="1.5" fill="none">
     <line x1="118" y1="176" x2="138" y2="176" marker-end="url(#a2)"/>
     <line x1="226" y1="176" x2="244" y2="176" marker-end="url(#a2)"/>
     <line x1="332" y1="176" x2="350" y2="176" marker-end="url(#a2)"/>
@@ -300,9 +314,9 @@
 
   <g text-anchor="middle">
     <!-- push / PR -->
-    <rect x="22" y="154" width="94" height="44" rx="9" fill="#1c1c22" stroke="#4a5163"/>
+    <rect x="22" y="154" width="94" height="44" rx="9" fill="#23232C" stroke="#4a5163"/>
     <text x="69" y="181" font-size="12" fill="#e7e7ee">push / PR</text>
-    <text x="69" y="218" font-size="9.5" fill="#6b7280">a Git event</text>
+    <text x="69" y="218" font-size="9.5" fill="#6B6B78">a Git event</text>
 
     <!-- build -->
     <rect x="140" y="154" width="86" height="44" rx="9" fill="#0d1a2b" stroke="#58A6FF"/>
@@ -311,26 +325,26 @@
     <!-- test -->
     <rect x="246" y="154" width="86" height="44" rx="9" fill="#0d1a2b" stroke="#58A6FF"/>
     <text x="289" y="181" font-size="12" fill="#58A6FF">test</text>
-    <text x="236" y="218" font-size="9.5" fill="#6b7280">lint · unit · data tests</text>
+    <text x="236" y="218" font-size="9.5" fill="#6B6B78">lint · unit · data tests</text>
 
     <!-- package + staging -->
     <rect x="352" y="154" width="110" height="44" rx="9" fill="#0f1f2b" stroke="#2088FF"/>
-    <text x="407" y="175" font-size="11.5" fill="#A371F7">package +</text>
-    <text x="407" y="190" font-size="11.5" fill="#A371F7">deploy staging</text>
+    <text x="407" y="175" font-size="11.5" fill="#5AC8FF">package +</text>
+    <text x="407" y="190" font-size="11.5" fill="#5AC8FF">deploy staging</text>
 
     <!-- the human gate -->
-    <path d="M516 146 L558 176 L516 206 L474 176 Z" fill="#241d0f" stroke="#D29922" stroke-dasharray="4 3"/>
-    <text x="516" y="173" font-size="10.5" fill="#D29922">human</text>
-    <text x="516" y="187" font-size="10.5" fill="#D29922">approves?</text>
-    <text x="516" y="228" font-size="9.5" fill="#D29922">kept in 2 · removed in 3</text>
+    <path d="M516 146 L558 176 L516 206 L474 176 Z" fill="#1D1D26" stroke="#9AA0B4" stroke-dasharray="4 3"/>
+    <text x="516" y="173" font-size="10.5" fill="#9AA0B4">human</text>
+    <text x="516" y="187" font-size="10.5" fill="#9AA0B4">approves?</text>
+    <text x="516" y="228" font-size="9.5" fill="#9AA0B4">kept in 2 · removed in 3</text>
 
     <!-- production -->
-    <rect x="580" y="154" width="120" height="44" rx="9" fill="#0d1a2b" stroke="#DB61A2"/>
-    <text x="640" y="181" font-size="12" fill="#F0A3CE">production</text>
-    <text x="640" y="218" font-size="9.5" fill="#6b7280">real users</text>
+    <rect x="580" y="154" width="120" height="44" rx="9" fill="#0d1a2b" stroke="#9AA0B4"/>
+    <text x="640" y="181" font-size="12" fill="#9AA0B4">production</text>
+    <text x="640" y="218" font-size="9.5" fill="#6B6B78">real users</text>
   </g>
 
-  <text x="380" y="262" text-anchor="middle" font-size="11" fill="#6b7280">CI stops at &quot;does it work?&quot; · Delivery parks it at prod's door · Deployment opens the door itself</text>
+  <text x="380" y="262" text-anchor="middle" font-size="11" fill="#6B6B78">CI stops at &quot;does it work?&quot; · Delivery parks it at prod's door · Deployment opens the door itself</text>
 </svg>
 <figcaption>One pipeline, three names. Each term covers everything the one before it does — and adds one more step.</figcaption>
 </figure>
@@ -358,27 +372,27 @@
 <figure class="fig reveal">
 <svg viewBox="0 0 760 424" font-family="var(--font)" aria-label="A trigger fires a pipeline containing two jobs, each a list of steps, with an artifact passed from the first job to the second">
   <defs>
-    <marker id="a3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#D29922"/></marker>
-    <marker id="a3d" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#A371F7"/></marker>
+    <marker id="a3" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#9AA0B4"/></marker>
+    <marker id="a3d" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#5AC8FF"/></marker>
   </defs>
 
   <!-- TRIGGER -->
-  <rect x="22" y="20" width="212" height="38" rx="9" fill="#241d0f" stroke="#D29922" stroke-width="1.6"/>
-  <text x="38" y="44" font-size="11.5" fill="#D29922" font-weight="700">TRIGGER</text>
+  <rect x="22" y="20" width="212" height="38" rx="9" fill="#1D1D26" stroke="#9AA0B4" stroke-width="1.6"/>
+  <text x="38" y="44" font-size="11.5" fill="#9AA0B4" font-weight="700">TRIGGER</text>
   <text x="108" y="44" font-size="11.5" fill="#e7e7ee">push to main</text>
-  <text x="250" y="44" font-size="11" fill="#6b7280">an event happens → it fires the pipeline below</text>
-  <line x1="128" y1="58" x2="128" y2="86" stroke="#D29922" stroke-width="1.5" marker-end="url(#a3)"/>
+  <text x="250" y="44" font-size="11" fill="#6B6B78">an event happens → it fires the pipeline below</text>
+  <line x1="128" y1="58" x2="128" y2="86" stroke="#9AA0B4" stroke-width="1.5" marker-end="url(#a3)"/>
 
   <!-- PIPELINE container -->
-  <rect x="22" y="88" width="716" height="300" rx="12" fill="#1c1230" stroke="#A371F7" stroke-width="1.6"/>
-  <text x="40" y="112" font-size="11.5" fill="#A371F7" font-weight="700">PIPELINE</text>
-  <text x="112" y="112" font-size="10.5" fill="#6b7280">one whole run — GitHub Actions calls it a &quot;workflow&quot;</text>
+  <rect x="22" y="88" width="716" height="300" rx="12" fill="#1c1230" stroke="#5AC8FF" stroke-width="1.6"/>
+  <text x="40" y="112" font-size="11.5" fill="#5AC8FF" font-weight="700">PIPELINE</text>
+  <text x="112" y="112" font-size="10.5" fill="#6B6B78">one whole run — GitHub Actions calls it a &quot;workflow&quot;</text>
 
   <!-- JOB 1 -->
   <rect x="42" y="126" width="300" height="244" rx="10" fill="#0d1a2b" stroke="#58A6FF" stroke-width="1.5"/>
   <text x="58" y="148" font-size="11.5" fill="#58A6FF" font-weight="700">JOB</text>
   <text x="98" y="148" font-size="11.5" fill="#e7e7ee">build-and-test</text>
-  <text x="58" y="164" font-size="9.5" fill="#6b7280">on its own fresh machine (a &quot;runner&quot;)</text>
+  <text x="58" y="164" font-size="9.5" fill="#6B6B78">on its own fresh machine (a &quot;runner&quot;)</text>
   <g font-size="11" fill="#d8dcea">
     <rect x="58" y="174" width="268" height="26" rx="6" fill="#2a1424" stroke="#6E40C9"/><text x="72" y="191">STEP · check out the code</text>
     <rect x="58" y="206" width="268" height="26" rx="6" fill="#2a1424" stroke="#6E40C9"/><text x="72" y="223">STEP · install dependencies</text>
@@ -386,34 +400,34 @@
     <rect x="58" y="270" width="268" height="26" rx="6" fill="#2a1424" stroke="#6E40C9"/><text x="72" y="287">STEP · run the unit tests</text>
     <rect x="58" y="302" width="268" height="26" rx="6" fill="#2a1424" stroke="#6E40C9"/><text x="72" y="319">STEP · upload the build</text>
   </g>
-  <text x="58" y="352" font-size="9.5" fill="#6b7280">steps run top-to-bottom, sharing one filesystem</text>
+  <text x="58" y="352" font-size="9.5" fill="#6B6B78">steps run top-to-bottom, sharing one filesystem</text>
 
   <!-- ARTIFACT chip -->
-  <rect x="368" y="222" width="84" height="46" rx="8" fill="#241d0f" stroke="#D29922" stroke-width="1.6"/>
-  <text x="410" y="242" font-size="10.5" fill="#D29922" font-weight="700" text-anchor="middle">ARTIFACT</text>
+  <rect x="368" y="222" width="84" height="46" rx="8" fill="#1D1D26" stroke="#9AA0B4" stroke-width="1.6"/>
+  <text x="410" y="242" font-size="10.5" fill="#9AA0B4" font-weight="700" text-anchor="middle">ARTIFACT</text>
   <text x="410" y="257" font-size="9" fill="#9aa0b4" text-anchor="middle">dist/*.whl</text>
 
   <!-- artifact handoff path: out of step 5, up into job 2's first step -->
-  <path d="M326 315 H 410 V 276" fill="none" stroke="#D29922" stroke-width="1.5" marker-end="url(#a3)"/>
-  <path d="M410 214 V 187 H 468" fill="none" stroke="#D29922" stroke-width="1.5" marker-end="url(#a3)"/>
-  <text x="410" y="298" font-size="9" fill="#6b7280" text-anchor="middle">upload</text>
-  <text x="443" y="176" font-size="9" fill="#6b7280" text-anchor="middle">download</text>
+  <path d="M326 315 H 410 V 276" fill="none" stroke="#9AA0B4" stroke-width="1.5" marker-end="url(#a3)"/>
+  <path d="M410 214 V 187 H 468" fill="none" stroke="#9AA0B4" stroke-width="1.5" marker-end="url(#a3)"/>
+  <text x="410" y="298" font-size="9" fill="#6B6B78" text-anchor="middle">upload</text>
+  <text x="443" y="176" font-size="9" fill="#6B6B78" text-anchor="middle">download</text>
 
   <!-- JOB 2 -->
   <rect x="472" y="126" width="246" height="244" rx="10" fill="#0d1a2b" stroke="#58A6FF" stroke-width="1.5"/>
   <text x="488" y="148" font-size="11.5" fill="#58A6FF" font-weight="700">JOB</text>
   <text x="528" y="148" font-size="11.5" fill="#e7e7ee">deploy</text>
-  <text x="488" y="164" font-size="9.5" fill="#6b7280">needs: build-and-test</text>
+  <text x="488" y="164" font-size="9.5" fill="#6B6B78">needs: build-and-test</text>
   <g font-size="11" fill="#d8dcea">
     <rect x="488" y="174" width="214" height="26" rx="6" fill="#2a1424" stroke="#6E40C9"/><text x="502" y="191">STEP · get the artifact</text>
     <rect x="488" y="206" width="214" height="26" rx="6" fill="#2a1424" stroke="#6E40C9"/><text x="502" y="223">STEP · ship it to the server</text>
   </g>
-  <text x="488" y="264" font-size="9.5" fill="#F78166">⚠ a different, clean machine —</text>
-  <text x="488" y="280" font-size="9.5" fill="#F78166">nothing from job 1 survives here,</text>
-  <text x="488" y="296" font-size="9.5" fill="#F78166">which is exactly why artifacts exist.</text>
-  <text x="488" y="352" font-size="9.5" fill="#6b7280">waits for job 1 to pass, then runs</text>
+  <text x="488" y="264" font-size="9.5" fill="#9AA0B4">⚠ a different, clean machine —</text>
+  <text x="488" y="280" font-size="9.5" fill="#9AA0B4">nothing from job 1 survives here,</text>
+  <text x="488" y="296" font-size="9.5" fill="#9AA0B4">which is exactly why artifacts exist.</text>
+  <text x="488" y="352" font-size="9.5" fill="#6B6B78">waits for job 1 to pass, then runs</text>
 
-  <text x="380" y="410" text-anchor="middle" font-size="11" fill="#6b7280">a TRIGGER fires a PIPELINE · a pipeline holds JOBS · a job holds STEPS · jobs swap files via ARTIFACTS</text>
+  <text x="380" y="410" text-anchor="middle" font-size="11" fill="#6B6B78">a TRIGGER fires a PIPELINE · a pipeline holds JOBS · a job holds STEPS · jobs swap files via ARTIFACTS</text>
 </svg>
 <figcaption>How the pieces nest. Jobs run on separate clean machines — so anything job 1 wants to hand to job 2 must travel as an artifact.</figcaption>
 </figure>
@@ -480,7 +494,7 @@
 
 <div class="callout gr reveal">
   <p style="margin:.2em 0"><span class="t"><svg class="ico"><use href="#i-check"/></svg> The golden rule of CI: keep <code>main</code> green</span></p>
-  <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">The whole point of CI is that the shared branch <em>always works</em>. Wire CI to run on pull requests, then turn on <strong>branch protection</strong> (a GitHub setting) so a PR <em>cannot be merged</em> until its checks pass. Now a broken change physically can't reach <code>main</code> — the red ✗ blocks the merge button. A green <code>main</code> means anyone can branch off it with confidence.</p>
+  <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">The whole point of CI is that the shared branch <em>always works</em>. Wire CI to run on pull requests, then turn on <strong>branch protection</strong> (a GitHub setting) so a PR <em>cannot be merged</em> until its checks pass. Now a broken change physically can't reach <code>main</code> — the red − blocks the merge button. A green <code>main</code> means anyone can branch off it with confidence.</p>
 </div>
 
 <h3 class="reveal">Why "fast" matters more than it sounds</h3>
@@ -496,16 +510,16 @@
 <figure class="fig reveal">
 <svg viewBox="0 0 760 320" font-family="var(--font)" aria-label="One artifact built in CI is promoted up a staircase of environments: dev, then staging, then production">
   <defs>
-    <marker id="a5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#A371F7"/></marker>
+    <marker id="a5" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#5AC8FF"/></marker>
   </defs>
 
   <!-- built once, in CI -->
   <rect x="26" y="26" width="180" height="52" rx="10" fill="#0f1f2b" stroke="#2088FF" stroke-width="1.6"/>
-  <text x="116" y="48" font-size="11.5" fill="#A371F7" font-weight="700" text-anchor="middle">CI builds it ONCE</text>
+  <text x="116" y="48" font-size="11.5" fill="#5AC8FF" font-weight="700" text-anchor="middle">CI builds it ONCE</text>
   <use href="#i-package" x="52" y="57" width="12" height="12" fill="none" stroke="#9aa0b4" stroke-width="2.2"/>
   <text x="124" y="66" font-size="10.5" fill="#9aa0b4" text-anchor="middle">app-1.4.0.whl</text>
-  <text x="222" y="50" font-size="11" fill="#6b7280">…and that exact package —</text>
-  <text x="222" y="68" font-size="11" fill="#6b7280">never a rebuild — climbs the ladder.</text>
+  <text x="222" y="50" font-size="11" fill="#6B6B78">…and that exact package —</text>
+  <text x="222" y="68" font-size="11" fill="#6B6B78">never a rebuild — climbs the ladder.</text>
 
   <!-- drop into dev -->
   <path d="M116 78 V 196" fill="none" stroke="#2088FF" stroke-width="1.5" stroke-dasharray="5 4" marker-end="url(#a5)"/>
@@ -514,31 +528,31 @@
   <rect x="26" y="200" width="184" height="72" rx="10" fill="#0d1a2b" stroke="#58A6FF" stroke-width="1.6"/>
   <text x="118" y="226" font-size="13" fill="#58A6FF" font-weight="700" text-anchor="middle">DEV</text>
   <text x="118" y="245" font-size="10" fill="#9aa0b4" text-anchor="middle">your sandbox</text>
-  <text x="118" y="261" font-size="10" fill="#6b7280" text-anchor="middle">break things freely</text>
+  <text x="118" y="261" font-size="10" fill="#6B6B78" text-anchor="middle">break things freely</text>
 
   <!-- promote 1 -->
-  <path d="M214 214 L 268 168" fill="none" stroke="#A371F7" stroke-width="1.6" marker-end="url(#a5)"/>
-  <text x="241" y="205" font-size="10" fill="#A371F7" text-anchor="middle">promote</text>
+  <path d="M214 214 L 268 168" fill="none" stroke="#5AC8FF" stroke-width="1.6" marker-end="url(#a5)"/>
+  <text x="241" y="205" font-size="10" fill="#5AC8FF" text-anchor="middle">promote</text>
 
   <!-- STAGING -->
-  <rect x="272" y="144" width="196" height="72" rx="10" fill="#241d0f" stroke="#D29922" stroke-width="1.6"/>
-  <text x="370" y="170" font-size="13" fill="#D29922" font-weight="700" text-anchor="middle">STAGING</text>
+  <rect x="272" y="144" width="196" height="72" rx="10" fill="#1D1D26" stroke="#9AA0B4" stroke-width="1.6"/>
+  <text x="370" y="170" font-size="13" fill="#9AA0B4" font-weight="700" text-anchor="middle">STAGING</text>
   <text x="370" y="189" font-size="10" fill="#9aa0b4" text-anchor="middle">a faithful prod look-alike</text>
-  <text x="370" y="205" font-size="10" fill="#6b7280" text-anchor="middle">the dress rehearsal</text>
+  <text x="370" y="205" font-size="10" fill="#6B6B78" text-anchor="middle">the dress rehearsal</text>
 
   <!-- promote 2 -->
-  <path d="M472 158 L 526 112" fill="none" stroke="#A371F7" stroke-width="1.6" marker-end="url(#a5)"/>
-  <text x="499" y="149" font-size="10" fill="#A371F7" text-anchor="middle">promote</text>
+  <path d="M472 158 L 526 112" fill="none" stroke="#5AC8FF" stroke-width="1.6" marker-end="url(#a5)"/>
+  <text x="499" y="149" font-size="10" fill="#5AC8FF" text-anchor="middle">promote</text>
 
   <!-- PRODUCTION -->
-  <rect x="530" y="88" width="204" height="72" rx="10" fill="#0d1a2b" stroke="#DB61A2" stroke-width="1.8"/>
-  <text x="632" y="114" font-size="13" fill="#F0A3CE" font-weight="700" text-anchor="middle">PRODUCTION</text>
+  <rect x="530" y="88" width="204" height="72" rx="10" fill="#0d1a2b" stroke="#9AA0B4" stroke-width="1.8"/>
+  <text x="632" y="114" font-size="13" fill="#9AA0B4" font-weight="700" text-anchor="middle">PRODUCTION</text>
   <text x="632" y="133" font-size="10" fill="#9aa0b4" text-anchor="middle">real users, real data</text>
-  <text x="632" y="149" font-size="10" fill="#6b7280" text-anchor="middle">approval gate + monitoring</text>
+  <text x="632" y="149" font-size="10" fill="#6B6B78" text-anchor="middle">approval gate + monitoring</text>
 
   <!-- what changes between rungs -->
-  <text x="380" y="292" text-anchor="middle" font-size="10.5" fill="#6b7280">the <tspan fill="#A371F7">artifact</tspan> is identical at every rung — only the <tspan fill="#D29922">config</tspan> changes</text>
-  <text x="380" y="308" text-anchor="middle" font-size="10.5" fill="#6b7280">(db URL, secrets, scale), injected at deploy time</text>
+  <text x="380" y="292" text-anchor="middle" font-size="10.5" fill="#6B6B78">the <tspan fill="#5AC8FF">artifact</tspan> is identical at every rung — only the <tspan fill="#9AA0B4">config</tspan> changes</text>
+  <text x="380" y="308" text-anchor="middle" font-size="10.5" fill="#6B6B78">(db URL, secrets, scale), injected at deploy time</text>
 </svg>
 <figcaption>&quot;Build once, deploy many&quot;: rebuilding per environment can quietly pull in a different dependency — so the thing you tested in staging is no longer the thing that lands in prod.</figcaption>
 </figure>
@@ -714,26 +728,26 @@
 <figure class="fig reveal">
 <svg viewBox="0 0 760 268" font-family="var(--font)" aria-label="A merge to main deploys to staging automatically, runs a smoke test, then waits for a required reviewer before deploying to production">
   <defs>
-    <marker id="a8" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#A371F7"/></marker>
+    <marker id="a8" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#5AC8FF"/></marker>
     <marker id="a8g" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#58A6FF"/></marker>
-    <marker id="a8r" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#D29922"/></marker>
+    <marker id="a8r" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#9AA0B4"/></marker>
   </defs>
 
   <!-- flow arrows -->
-  <g stroke="#A371F7" stroke-width="1.5" fill="none">
+  <g stroke="#5AC8FF" stroke-width="1.5" fill="none">
     <line x1="130" y1="96" x2="152" y2="96" marker-end="url(#a8)"/>
     <line x1="278" y1="96" x2="300" y2="96" marker-end="url(#a8)"/>
     <line x1="410" y1="96" x2="436" y2="96" marker-end="url(#a8)"/>
   </g>
 
   <!-- merge -->
-  <rect x="18" y="72" width="112" height="48" rx="9" fill="#1c1c22" stroke="#4a5163"/>
+  <rect x="18" y="72" width="112" height="48" rx="9" fill="#23232C" stroke="#4a5163"/>
   <text x="74" y="94" font-size="11.5" fill="#e7e7ee" text-anchor="middle">merge to</text>
   <text x="74" y="110" font-size="11.5" fill="#e7e7ee" text-anchor="middle">main</text>
 
   <!-- staging -->
-  <rect x="152" y="72" width="126" height="48" rx="9" fill="#241d0f" stroke="#D29922"/>
-  <text x="215" y="94" font-size="11.5" fill="#D29922" text-anchor="middle">deploy → staging</text>
+  <rect x="152" y="72" width="126" height="48" rx="9" fill="#1D1D26" stroke="#9AA0B4"/>
+  <text x="215" y="94" font-size="11.5" fill="#9AA0B4" text-anchor="middle">deploy → staging</text>
   <text x="215" y="110" font-size="10" fill="#9aa0b4" text-anchor="middle">automatic, no gate</text>
 
   <!-- smoke test -->
@@ -742,28 +756,28 @@
   <text x="355" y="110" font-size="10" fill="#9aa0b4" text-anchor="middle">is it alive?</text>
 
   <!-- the gate -->
-  <path d="M496 46 L556 96 L496 146 L436 96 Z" fill="#1d1526" stroke="#DB61A2" stroke-width="1.6"/>
-  <text x="496" y="85" font-size="10.5" fill="#F0A3CE" text-anchor="middle">required</text>
-  <text x="496" y="99" font-size="10.5" fill="#F0A3CE" text-anchor="middle">reviewer</text>
-  <text x="496" y="113" font-size="10.5" fill="#F0A3CE" text-anchor="middle">approves?</text>
+  <path d="M496 46 L556 96 L496 146 L436 96 Z" fill="#23232C" stroke="#9AA0B4" stroke-width="1.6"/>
+  <text x="496" y="85" font-size="10.5" fill="#9AA0B4" text-anchor="middle">required</text>
+  <text x="496" y="99" font-size="10.5" fill="#9AA0B4" text-anchor="middle">reviewer</text>
+  <text x="496" y="113" font-size="10.5" fill="#9AA0B4" text-anchor="middle">approves?</text>
 
   <!-- yes → production -->
   <line x1="556" y1="96" x2="592" y2="96" stroke="#58A6FF" stroke-width="1.5" marker-end="url(#a8g)"/>
   <text x="574" y="86" font-size="10" fill="#58A6FF" text-anchor="middle">yes</text>
-  <rect x="596" y="70" width="146" height="52" rx="9" fill="#0d1a2b" stroke="#DB61A2" stroke-width="1.8"/>
-  <text x="669" y="92" font-size="11.5" fill="#F0A3CE" text-anchor="middle">deploy → production</text>
-  <use href="#i-lock" x="608" y="101" width="10" height="10" fill="none" stroke="#6b7280" stroke-width="2.4"/>
-  <text x="622" y="109" font-size="9" fill="#6b7280">prod secrets unlocked</text>
+  <rect x="596" y="70" width="146" height="52" rx="9" fill="#0d1a2b" stroke="#9AA0B4" stroke-width="1.8"/>
+  <text x="669" y="92" font-size="11.5" fill="#9AA0B4" text-anchor="middle">deploy → production</text>
+  <use href="#i-lock" x="608" y="101" width="10" height="10" fill="none" stroke="#6B6B78" stroke-width="2.4"/>
+  <text x="622" y="109" font-size="9" fill="#6B6B78">prod secrets unlocked</text>
 
   <!-- no / wait → paused -->
-  <path d="M496 146 V 186" fill="none" stroke="#D29922" stroke-width="1.5" marker-end="url(#a8r)"/>
-  <text x="508" y="170" font-size="10" fill="#D29922" text-anchor="start">no / not yet</text>
-  <rect x="404" y="190" width="184" height="48" rx="9" fill="#241d0f" stroke="#D29922" stroke-dasharray="4 3"/>
-  <text x="496" y="212" font-size="11.5" fill="#D29922" text-anchor="middle">the job just waits</text>
+  <path d="M496 146 V 186" fill="none" stroke="#9AA0B4" stroke-width="1.5" marker-end="url(#a8r)"/>
+  <text x="508" y="170" font-size="10" fill="#9AA0B4" text-anchor="start">no / not yet</text>
+  <rect x="404" y="190" width="184" height="48" rx="9" fill="#1D1D26" stroke="#9AA0B4" stroke-dasharray="4 3"/>
+  <text x="496" y="212" font-size="11.5" fill="#9AA0B4" text-anchor="middle">the job just waits</text>
   <text x="496" y="228" font-size="10" fill="#9aa0b4" text-anchor="middle">paused until a human clicks</text>
 
-  <text x="120" y="216" font-size="10.5" fill="#6b7280" text-anchor="middle">nothing reaches prod</text>
-  <text x="120" y="232" font-size="10.5" fill="#6b7280" text-anchor="middle">without passing every rung</text>
+  <text x="120" y="216" font-size="10.5" fill="#6B6B78" text-anchor="middle">nothing reaches prod</text>
+  <text x="120" y="232" font-size="10.5" fill="#6B6B78" text-anchor="middle">without passing every rung</text>
 </svg>
 <figcaption>The approval gate is what makes this Continuous <em>Delivery</em>. Delete the required reviewer and the same pipeline becomes Continuous <em>Deployment</em>.</figcaption>
 </figure>
@@ -807,19 +821,19 @@
   </defs>
 
   <!-- ─────────── BLUE-GREEN ─────────── -->
-  <rect x="14" y="14" width="732" height="146" rx="12" fill="#0d1a2b" stroke="#23232e"/>
+  <rect x="14" y="14" width="732" height="146" rx="12" fill="#0d1a2b" stroke="#34343F"/>
   <text x="32" y="40" font-size="12.5" fill="#58A6FF" font-weight="700">BLUE-GREEN</text>
-  <text x="132" y="40" font-size="11" fill="#6b7280">flip everyone at once · keep the old copy warm as an instant undo</text>
+  <text x="132" y="40" font-size="11" fill="#6B6B78">flip everyone at once · keep the old copy warm as an instant undo</text>
 
   <!-- before -->
   <text x="30" y="102" font-size="10.5" fill="#9aa0b4">users</text>
   <path d="M72 98 L 106 86" fill="none" stroke="#58A6FF" stroke-width="1.5" marker-end="url(#a9)"/>
   <rect x="110" y="62" width="120" height="32" rx="7" fill="#0d1a2b" stroke="#58A6FF" stroke-width="1.6"/>
   <text x="170" y="83" font-size="11.5" fill="#58A6FF" text-anchor="middle">BLUE · v1</text>
-  <text x="238" y="83" font-size="10" fill="#3FB950">◀ live</text>
-  <rect x="110" y="106" width="120" height="32" rx="7" fill="#0d1f14" stroke="#3FB950" stroke-width="1.6" stroke-dasharray="4 3"/>
-  <text x="170" y="127" font-size="11.5" fill="#3FB950" text-anchor="middle">GREEN · v2</text>
-  <text x="238" y="127" font-size="10" fill="#6b7280">◀ warming up</text>
+  <text x="238" y="83" font-size="10" fill="#5AC8FF">◀ live</text>
+  <rect x="110" y="106" width="120" height="32" rx="7" fill="#1D1D26" stroke="#5AC8FF" stroke-width="1.6" stroke-dasharray="4 3"/>
+  <text x="170" y="127" font-size="11.5" fill="#5AC8FF" text-anchor="middle">GREEN · v2</text>
+  <text x="238" y="127" font-size="10" fill="#6B6B78">◀ warming up</text>
 
   <!-- flip -->
   <line x1="316" y1="100" x2="374" y2="100" stroke="#58A6FF" stroke-width="2" marker-end="url(#a9)"/>
@@ -828,17 +842,17 @@
   <!-- after -->
   <text x="386" y="102" font-size="10.5" fill="#9aa0b4">users</text>
   <path d="M428 98 L 462 86" fill="none" stroke="#58A6FF" stroke-width="1.5" marker-end="url(#a9)"/>
-  <rect x="466" y="62" width="120" height="32" rx="7" fill="#0d1f14" stroke="#3FB950" stroke-width="1.6"/>
-  <text x="526" y="83" font-size="11.5" fill="#3FB950" text-anchor="middle">GREEN · v2</text>
-  <text x="594" y="83" font-size="10" fill="#3FB950">◀ now live — all traffic</text>
+  <rect x="466" y="62" width="120" height="32" rx="7" fill="#1D1D26" stroke="#5AC8FF" stroke-width="1.6"/>
+  <text x="526" y="83" font-size="11.5" fill="#5AC8FF" text-anchor="middle">GREEN · v2</text>
+  <text x="594" y="83" font-size="10" fill="#5AC8FF">◀ now live — all traffic</text>
   <rect x="466" y="106" width="120" height="32" rx="7" fill="#0d1a2b" stroke="#58A6FF" stroke-width="1.6" stroke-dasharray="4 3"/>
   <text x="526" y="127" font-size="11.5" fill="#58A6FF" text-anchor="middle">BLUE · v1</text>
-  <text x="594" y="127" font-size="9.5" fill="#6b7280">◀ standby = instant undo</text>
+  <text x="594" y="127" font-size="9.5" fill="#6B6B78">◀ standby = instant undo</text>
 
   <!-- ─────────── CANARY ─────────── -->
-  <rect x="14" y="174" width="732" height="148" rx="12" fill="#0d1a2b" stroke="#23232e"/>
-  <text x="32" y="200" font-size="12.5" fill="#DB61A2" font-weight="700">CANARY</text>
-  <text x="102" y="200" font-size="11" fill="#6b7280">let a trickle taste v2 first · watch the metrics · then ramp up</text>
+  <rect x="14" y="174" width="732" height="148" rx="12" fill="#0d1a2b" stroke="#34343F"/>
+  <text x="32" y="200" font-size="12.5" fill="#9AA0B4" font-weight="700">CANARY</text>
+  <text x="102" y="200" font-size="11" fill="#6B6B78">let a trickle taste v2 first · watch the metrics · then ramp up</text>
 
   <!-- phase 1 -->
   <text x="30" y="262" font-size="10.5" fill="#9aa0b4">users</text>
@@ -847,27 +861,27 @@
   <path d="M80 261 L 96 280" fill="none" stroke="#4a5163" stroke-width="1.4" marker-end="url(#a9c)"/>
   <rect x="100" y="216" width="104" height="30" rx="7" fill="#0d1a2b" stroke="#58A6FF"/>
   <text x="152" y="236" font-size="11" fill="#58A6FF" text-anchor="middle">v1 · 95%</text>
-  <rect x="100" y="272" width="104" height="30" rx="7" fill="#1d1526" stroke="#DB61A2"/>
-  <text x="152" y="292" font-size="11" fill="#F0A3CE" text-anchor="middle">v2 · 5%</text>
+  <rect x="100" y="272" width="104" height="30" rx="7" fill="#23232C" stroke="#9AA0B4"/>
+  <text x="152" y="292" font-size="11" fill="#9AA0B4" text-anchor="middle">v2 · 5%</text>
 
   <line x1="212" y1="259" x2="242" y2="259" stroke="#4a5163" stroke-width="1.4" marker-end="url(#a9c)"/>
-  <text x="227" y="250" font-size="9" fill="#6b7280" text-anchor="middle">watch</text>
+  <text x="227" y="250" font-size="9" fill="#6B6B78" text-anchor="middle">watch</text>
 
   <!-- phase 2 -->
   <rect x="248" y="216" width="104" height="30" rx="7" fill="#0d1a2b" stroke="#58A6FF"/>
   <text x="300" y="236" font-size="11" fill="#58A6FF" text-anchor="middle">v1 · 50%</text>
-  <rect x="248" y="272" width="104" height="30" rx="7" fill="#1d1526" stroke="#DB61A2"/>
-  <text x="300" y="292" font-size="11" fill="#F0A3CE" text-anchor="middle">v2 · 50%</text>
+  <rect x="248" y="272" width="104" height="30" rx="7" fill="#23232C" stroke="#9AA0B4"/>
+  <text x="300" y="292" font-size="11" fill="#9AA0B4" text-anchor="middle">v2 · 50%</text>
 
   <line x1="360" y1="259" x2="390" y2="259" stroke="#4a5163" stroke-width="1.4" marker-end="url(#a9c)"/>
-  <text x="375" y="250" font-size="9" fill="#6b7280" text-anchor="middle">watch</text>
+  <text x="375" y="250" font-size="9" fill="#6B6B78" text-anchor="middle">watch</text>
 
   <!-- phase 3 -->
-  <rect x="396" y="244" width="118" height="30" rx="7" fill="#1d1526" stroke="#DB61A2" stroke-width="1.8"/>
-  <text x="455" y="264" font-size="11" fill="#F0A3CE" text-anchor="middle">v2 · 100%</text>
+  <rect x="396" y="244" width="118" height="30" rx="7" fill="#23232C" stroke="#9AA0B4" stroke-width="1.8"/>
+  <text x="455" y="264" font-size="11" fill="#9AA0B4" text-anchor="middle">v2 · 100%</text>
 
   <!-- rollback note -->
-  <text x="540" y="248" font-size="10.5" fill="#F78166">if the metrics dip at any point:</text>
+  <text x="540" y="248" font-size="10.5" fill="#9AA0B4">if the metrics dip at any point:</text>
   <text x="540" y="266" font-size="10.5" fill="#9aa0b4">send 100% straight back to v1 —</text>
   <text x="540" y="282" font-size="10.5" fill="#9aa0b4">only a few users ever saw v2.</text>
 </svg>

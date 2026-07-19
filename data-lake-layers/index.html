@@ -22,8 +22,8 @@
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,500;0,700;0,800;1,400&display=swap" rel="stylesheet">
 <style>
   :root{
-    --bg:#1A1A1A; --bg2:#121212; --ink:#F1F1F1; --muted:#9aa0b4; --dim:#666666;
-    --blue2:#5C78FF; --cyan:#28B9FF; --cyan2:#5AC8FF; --purple:#905AFF; --magenta2:#BA5AFF;
+    --bg:#191921; --bg2:#20202A; --ink:#F1F1F1; --muted:#9aa0b4; --dim:#666666;
+    --blue2:#5C78FF; --cyan:#28B9FF; --cyan2:#5AC8FF; --purple:#5C78FF; --magenta2:#5AC8FF;
     --grad:linear-gradient(90deg,#5C78FF,#28B9FF,#A52AFF);
     --font:"JetBrainsMono Nerd Font","JetBrains Mono","Symbols Nerd Font",ui-monospace,"Cascadia Code",Menlo,Consolas,monospace;
   }
@@ -40,67 +40,81 @@
   @keyframes sheen{to{background-position:220% center}}
   .dek{color:var(--muted);font-size:17px}
   .byline{margin-top:14px;font-size:13px;color:var(--dim)}
-  h2{font-size:clamp(21px,3.2vw,28px);margin:52px 0 6px;font-weight:800;line-height:1.22;padding-top:14px;border-top:1px solid #23232e}
+  h2{font-size:clamp(21px,3.2vw,28px);margin:52px 0 6px;font-weight:800;line-height:1.22;padding-top:14px;border-top:1px solid #34343F}
   h2 .n{color:var(--blue2)}
   h3{font-size:18px;margin:28px 0 4px;color:#fff;font-weight:700}
   h4{font-size:15px;margin:20px 0 4px;color:var(--cyan2);font-weight:700}
   p,li{color:#dcdce4}
   .lead{font-size:18px;color:#e7e7ee}
   a{color:var(--cyan2)}
-  hr{border:0;border-top:1px solid #2c2c36;margin:36px 0}
-  code{font-family:var(--font);background:#23232b;color:#5AC8FF;padding:1px 6px;border-radius:5px;font-size:.88em;border:1px solid #2f2f3a}
+  hr{border:0;border-top:1px solid #34343F;margin:36px 0}
+  code{font-family:var(--font);background:#23232b;color:#5AC8FF;padding:1px 6px;border-radius:5px;font-size:.88em;border:1px solid #34343F}
   .cb{margin:16px 0}
-  .cb .lang{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:#9aa0b4;background:#1b1b24;border:1px solid #2c2c36;border-bottom:none;border-radius:9px 9px 0 0;padding:4px 12px}
-  pre{margin:0;background:#0d0d13;border:1px solid #23232e;border-radius:0 10px 10px 10px;padding:14px 16px;overflow-x:auto;
+  .cb .lang{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:#9aa0b4;background:#1b1b24;border:1px solid #34343F;border-bottom:none;border-radius:9px 9px 0 0;padding:4px 12px}
+  pre{margin:0;background:#101017;border:1px solid #34343F;border-radius:0 10px 10px 10px;padding:14px 16px;overflow-x:auto;
       font-family:var(--font);font-size:13px;line-height:1.6;color:#d8dcea;white-space:pre}
-  pre .c{color:#6b7280}
+  pre .c{color:#6B6B78}
   .callout{border-left:4px solid var(--blue2);background:#16182a;border-radius:0 12px 12px 0;padding:14px 18px;margin:22px 0}
   .callout.cy{border-color:var(--cyan);background:#0f1f2b}
-  .callout.mg{border-color:var(--magenta2);background:#1d1526}
-  .callout.gd{border-color:#f0b429;background:#241d0f}
-  .callout.gr{border-color:#34d399;background:#0d1f18}
+  .callout.mg{border-color:var(--magenta2);background:#23232C}
+  .callout.gd{border-color:#9AA0B4;background:#1D1D26}
+  .callout.gr{border-color:#5AC8FF;background:#1D1D26}
   .callout .t{color:var(--cyan2);font-weight:800}
-  .callout.gd .t{color:#f0b429}
-  .callout.gr .t{color:#34d399}
+  .callout.gd .t{color:#9AA0B4}
+  .callout.gr .t{color:#5AC8FF}
   .callout.mg .t{color:var(--magenta2)}
-  .tldr{border:1px solid #2f3a66;background:linear-gradient(180deg,#15182a,#121212);border-radius:16px;padding:20px 24px;margin:26px 0}
+  .tldr{border:1px solid #2f3a66;background:linear-gradient(180deg,#15182a,#20202A);border-radius:16px;padding:20px 24px;margin:26px 0}
   .tldr h4{margin:0 0 8px;font-size:13px;letter-spacing:.2em;text-transform:uppercase;color:var(--cyan2)}
-  .gloss{border:1px solid #2c2c36;background:#141419;border-radius:14px;padding:18px 22px;margin:24px 0}
+  .gloss{border:1px solid #34343F;background:#1D1D26;border-radius:14px;padding:18px 22px;margin:24px 0}
   .gloss h4{margin:0 0 6px;color:#fff;font-size:15px}
   .gloss dl{margin:0;font-size:13.5px}
   .gloss dt{color:var(--cyan2);font-weight:700;margin-top:9px}
   .gloss dd{margin:1px 0 0;color:#cdd0dd}
-  .toc{background:#15151b;border:1px solid #2c2c36;border-radius:14px;padding:16px 22px;margin:24px 0;column-count:2;column-gap:28px}
+  .toc{background:#23232C;border:1px solid #34343F;border-radius:14px;padding:16px 22px;margin:24px 0;column-count:2;column-gap:28px}
   .toc a{display:block;color:var(--cyan2);text-decoration:none;font-size:13.5px;line-height:1.9;break-inside:avoid}
   .toc a:hover{color:#fff}
   .toc>strong{column-span:all;display:block;margin-bottom:6px;color:#fff}
   table{border-collapse:collapse;width:100%;font-size:13.5px;margin:16px 0}
-  th,td{border:1px solid #2c2c36;padding:8px 11px;text-align:left;vertical-align:top}
-  th{background:#1d1d27;color:#fff}
-  tr:nth-child(even) td{background:#161620}
-  .diagram{background:#0d0d13;border:1px solid #23232e;border-radius:14px;padding:18px;margin:20px 0;overflow-x:auto;font-size:12.5px;line-height:1.7;color:#d8dcea;white-space:pre;font-family:var(--font)}
+  th,td{border:1px solid #34343F;padding:8px 11px;text-align:left;vertical-align:top}
+  th{background:#17171E;color:#fff}
+  tr:nth-child(even) td{background:#17171E}
+  .diagram{background:#101017;border:1px solid #34343F;border-radius:14px;padding:18px;margin:20px 0;overflow-x:auto;font-size:12.5px;line-height:1.7;color:#d8dcea;white-space:pre;font-family:var(--font)}
   .diagram .hl{color:#5AC8FF}
-  .diagram .dim{color:#6b7280}
-  .diagram .ok{color:#34d399}
-  .diagram .warn{color:#f0b429}
-  .diagram .bad{color:#f87171}
+  .diagram .dim{color:#6B6B78}
+  .diagram .ok{color:#5AC8FF}
+  .diagram .warn{color:#9AA0B4}
+  .diagram .bad{color:#9AA0B4}
   .pain{border:1px solid #3a2020;background:#1c1212;border-radius:14px;padding:16px 20px;margin:14px 0}
-  .pain h4{margin:0 0 4px;color:#f87171}
-  .fix{border:1px solid #1a3020;background:#0d1f14;border-radius:14px;padding:16px 20px;margin:14px 0}
-  .fix h4{margin:0 0 4px;color:#34d399}
+  .pain h4{margin:0 0 4px;color:#9AA0B4}
+  .fix{border:1px solid #1a3020;background:#1D1D26;border-radius:14px;padding:16px 20px;margin:14px 0}
+  .fix h4{margin:0 0 4px;color:#5AC8FF}
   .step{display:flex;gap:12px;align-items:flex-start;margin:14px 0}
   .step .num-bubble{flex:0 0 28px;height:28px;border-radius:50%;background:var(--grad);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:#fff;margin-top:2px}
   .step .body{flex:1}
-  footer{border-top:1px solid #23232e;margin-top:50px;padding:24px 0 90px;color:var(--dim);font-size:13px}
+  footer{border-top:1px solid #34343F;margin-top:50px;padding:24px 0 90px;color:var(--dim);font-size:13px}
   footer a{color:var(--cyan2)}
   .js .reveal{opacity:0;transform:translateY(16px);transition:opacity .6s ease,transform .6s ease}
   .js .reveal.in{opacity:1;transform:none}
   @media (prefers-reduced-motion:reduce){.js .reveal{opacity:1;transform:none}}
+  /* ---- shared theme: top nav + a11y (appended) ---- */
+  .nav{position:sticky;top:0;z-index:60;background:rgba(25,25,33,.82);backdrop-filter:blur(10px);border-bottom:1px solid #34343f}
+  .nav-inner{max-width:1040px;margin:0 auto;padding:12px 24px;display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+  .nav-brand{font-weight:800;letter-spacing:.16em;font-size:15px;text-decoration:none;border:0;
+             background:linear-gradient(90deg,#5C78FF,#28B9FF,#A52AFF);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .nav-links{display:flex;gap:6px;flex-wrap:wrap;margin-left:auto}
+  .nav-links a{text-decoration:none;border:1px solid transparent;color:#9aa0b4;font-weight:700;font-size:13.5px;padding:6px 14px;border-radius:999px;transition:.2s}
+  .nav-links a:hover{color:#fff;border-color:#34343f;background:#23232c}
+  .nav-links a.active{color:#5AC8FF;border-color:#28B9FF55;background:#28B9FF14}
+  :focus-visible{outline:2px solid #5AC8FF;outline-offset:3px;border-radius:6px}
+  @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{animation:none !important;transition:none !important}.js .reveal{opacity:1 !important;transform:none !important}}
 </style>
+
 <script>document.documentElement.classList.add('js');</script>
 </head>
 <body>
 <div id="bar"></div>
+
+<nav class="nav"><div class="nav-inner"><a class="nav-brand" href="../index.html">HAO TIEU</a><div class="nav-links"><a href="../index.html">Portfolio</a><a href="../blogs.html" class="active">Blogs</a><a href="../essentials.html">Data Engineer Essentials</a></div></div></nav>
 <div class="page">
 
 <header>
@@ -110,7 +124,7 @@
   <div class="byline">~26 min read · Data Engineering · Jun 2026</div>
 </header>
 
-<figure class="reveal" style="margin:18px 0 6px;background:radial-gradient(130% 150% at 50% 0%,#16182a 0%,#0d0d13 72%);border:1px solid #23232e;border-radius:16px;padding:10px 10px;overflow:hidden">
+<figure class="reveal" style="margin:18px 0 6px;background:radial-gradient(130% 150% at 50% 0%,#16182a 0%,#101017 72%);border:1px solid #34343F;border-radius:16px;padding:10px 10px;overflow:hidden">
 <svg viewBox="0 0 880 230" width="100%" style="display:block" aria-label="The three layers of a Data Lake: Compute on top, Metadata in the middle, Storage at the bottom">
   <defs>
     <linearGradient id="hero-grad" x1="0" y1="0" x2="1" y2="0">
@@ -124,30 +138,30 @@
     <!-- ===== tool / cloud icons ===== -->
     <symbol id="h-spark" viewBox="0 0 24 24"><polygon points="13,2 4,14 11,14 10,22 20,10 13,10" fill="#E25A1C"/></symbol>
     <symbol id="h-databricks" viewBox="0 0 24 24"><polygon points="12,2 20,7 12,12 4,7" fill="#FF3621" opacity=".9"/><polygon points="12,8 20,13 12,18 4,13" fill="#FF3621" opacity=".7"/><polygon points="12,14 20,19 12,24 4,19" fill="#FF3621" opacity=".5"/></symbol>
-    <symbol id="h-trino" viewBox="0 0 24 24"><circle cx="12" cy="12" r="11" fill="none" stroke="#c060e0" stroke-width="2"/><text x="12" y="17" text-anchor="middle" font-size="13" font-weight="700" fill="#c060e0" font-family="sans-serif">T</text></symbol>
+    <symbol id="h-trino" viewBox="0 0 24 24"><circle cx="12" cy="12" r="11" fill="none" stroke="#5AC8FF" stroke-width="2"/><text x="12" y="17" text-anchor="middle" font-size="13" font-weight="700" fill="#5AC8FF" font-family="sans-serif">T</text></symbol>
     <symbol id="h-hive" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="#FDEE21" opacity=".85"/><text x="12" y="17" text-anchor="middle" font-size="10" font-weight="700" fill="#333" font-family="sans-serif">H</text></symbol>
     <symbol id="h-glue" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4" fill="#FF9900"/><path d="M12 2v4M12 18v4M2 12h4M18 12h4M5.6 5.6l2.8 2.8M15.6 15.6l2.8 2.8M5.6 18.4l2.8-2.8M15.6 8.4l2.8-2.8" stroke="#FF9900" stroke-width="2" stroke-linecap="round"/></symbol>
     <symbol id="h-unity" viewBox="0 0 24 24"><rect x="3" y="2" width="14" height="20" rx="2" fill="none" stroke="#5AC8FF" stroke-width="2"/><path d="M7 2v20" stroke="#5AC8FF" stroke-width="1.5"/><line x1="10" y1="7" x2="15" y2="7" stroke="#5AC8FF" stroke-width="1.5"/><line x1="10" y1="11" x2="15" y2="11" stroke="#5AC8FF" stroke-width="1.5"/><line x1="10" y1="15" x2="15" y2="15" stroke="#5AC8FF" stroke-width="1.5"/></symbol>
-    <symbol id="h-s3" viewBox="0 0 24 24"><ellipse cx="12" cy="6" rx="9" ry="3.5" fill="#FF9900" opacity=".9"/><path d="M3 6v12c0 1.9 4 3.5 9 3.5s9-1.6 9-3.5V6" fill="none" stroke="#FF9900" stroke-width="2"/><line x1="12" y1="2.5" x2="12" y2="21.5" stroke="#b36b00" stroke-width="1"/></symbol>
+    <symbol id="h-s3" viewBox="0 0 24 24"><ellipse cx="12" cy="6" rx="9" ry="3.5" fill="#FF9900" opacity=".9"/><path d="M3 6v12c0 1.9 4 3.5 9 3.5s9-1.6 9-3.5V6" fill="none" stroke="#FF9900" stroke-width="2"/><line x1="12" y1="2.5" x2="12" y2="21.5" stroke="#9AA0B4" stroke-width="1"/></symbol>
     <symbol id="h-adls" viewBox="0 0 24 24"><polygon points="12,2 22,20 2,20" fill="none" stroke="#0078D4" stroke-width="2"/><polygon points="12,8 18,20 6,20" fill="#0078D4" opacity=".5"/></symbol>
     <symbol id="h-gcs" viewBox="0 0 24 24"><polygon points="12,1 22,6.5 22,17.5 12,23 2,17.5 2,6.5" fill="none" stroke="#4285F4" stroke-width="2"/><circle cx="12" cy="12" r="4" fill="#4285F4" opacity=".7"/></symbol>
   </defs>
 
   <!-- LAYER 3: COMPUTE -->
-  <rect x="40" y="18" width="800" height="56" rx="10" fill="#0f1f17" stroke="#34d399" stroke-width="1.8">
+  <rect x="40" y="18" width="800" height="56" rx="10" fill="#0f1f17" stroke="#5AC8FF" stroke-width="1.8">
     <animate attributeName="stroke-opacity" values=".5;1;.5" dur="3s" repeatCount="indefinite"/>
   </rect>
-  <text x="60" y="42" class="h-title" font-size="15" fill="#34d399">LAYER 3 · COMPUTE</text>
+  <text x="60" y="42" class="h-title" font-size="15" fill="#5AC8FF">LAYER 3 · COMPUTE</text>
   <text x="60" y="62" class="h-sub">engines that read &amp; process</text>
   <use href="#h-spark" x="648" y="32" width="28" height="28"><animateTransform attributeName="transform" type="translate" values="0 0;0 -3;0 0" dur="2.6s" repeatCount="indefinite"/></use>
   <use href="#h-databricks" x="700" y="32" width="28" height="28"><animateTransform attributeName="transform" type="translate" values="0 0;0 -3;0 0" dur="2.6s" begin=".4s" repeatCount="indefinite"/></use>
   <use href="#h-trino" x="752" y="32" width="28" height="28"><animateTransform attributeName="transform" type="translate" values="0 0;0 -3;0 0" dur="2.6s" begin=".8s" repeatCount="indefinite"/></use>
 
   <!-- LAYER 2: METADATA -->
-  <rect x="40" y="86" width="800" height="56" rx="10" fill="#1a180d" stroke="#f0b429" stroke-width="1.8">
+  <rect x="40" y="86" width="800" height="56" rx="10" fill="#1D1D26" stroke="#9AA0B4" stroke-width="1.8">
     <animate attributeName="stroke-opacity" values=".5;1;.5" dur="3.4s" repeatCount="indefinite" begin=".5s"/>
   </rect>
-  <text x="60" y="110" class="h-title" font-size="15" fill="#f0b429">LAYER 2 · METADATA</text>
+  <text x="60" y="110" class="h-title" font-size="15" fill="#9AA0B4">LAYER 2 · METADATA</text>
   <text x="60" y="130" class="h-sub">the catalogue: "table = path + columns"</text>
   <use href="#h-hive" x="648" y="100" width="28" height="28"><animateTransform attributeName="transform" type="translate" values="0 0;0 -3;0 0" dur="2.8s" begin=".2s" repeatCount="indefinite"/></use>
   <use href="#h-glue" x="700" y="100" width="28" height="28"><animateTransform attributeName="transform" type="translate" values="0 0;0 -3;0 0" dur="2.8s" begin=".6s" repeatCount="indefinite"/></use>
@@ -165,18 +179,18 @@
 
   <!-- a query travelling down then rows back up -->
   <g>
-    <text x="820" y="14" class="h-tag" fill="#905AFF">SELECT</text>
-    <circle r="4.5" fill="#905AFF">
+    <text x="820" y="14" class="h-tag" fill="#5C78FF">SELECT</text>
+    <circle r="4.5" fill="#5C78FF">
       <animate attributeName="cx" values="820;820" dur="3s" repeatCount="indefinite"/>
       <animate attributeName="cy" values="22;200" dur="3s" repeatCount="indefinite"/>
       <animate attributeName="opacity" values="0;1;1;0" dur="3s" repeatCount="indefinite"/>
     </circle>
-    <circle r="4.5" fill="#34d399">
+    <circle r="4.5" fill="#5AC8FF">
       <animate attributeName="cx" values="838;838" dur="3s" repeatCount="indefinite" begin="1.5s"/>
       <animate attributeName="cy" values="200;22" dur="3s" repeatCount="indefinite" begin="1.5s"/>
       <animate attributeName="opacity" values="0;1;1;0" dur="3s" repeatCount="indefinite" begin="1.5s"/>
     </circle>
-    <text x="836" y="226" class="h-tag" fill="#34d399">rows ↑</text>
+    <text x="836" y="226" class="h-tag" fill="#5AC8FF">rows ↑</text>
   </g>
 </svg>
 </figure>
@@ -208,8 +222,8 @@
 
 <table class="reveal">
   <tr><th>Layer</th><th>What it is</th><th>What it knows</th><th>Examples</th></tr>
-  <tr><td><strong style="color:#34d399">3 · Compute</strong></td><td>The engines that read files and compute results</td><td>How to run a query in parallel across many machines</td><td>Spark, Trino/Presto, Databricks, Athena</td></tr>
-  <tr><td><strong style="color:#f0b429">2 · Metadata</strong></td><td>A catalogue mapping table names → locations + columns</td><td>What tables exist, where their files are, their schema</td><td>Hive Metastore, AWS Glue, Unity Catalog</td></tr>
+  <tr><td><strong style="color:#5AC8FF">3 · Compute</strong></td><td>The engines that read files and compute results</td><td>How to run a query in parallel across many machines</td><td>Spark, Trino/Presto, Databricks, Athena</td></tr>
+  <tr><td><strong style="color:#9AA0B4">2 · Metadata</strong></td><td>A catalogue mapping table names → locations + columns</td><td>What tables exist, where their files are, their schema</td><td>Hive Metastore, AWS Glue, Unity Catalog</td></tr>
   <tr><td><strong style="color:#5AC8FF">1 · Storage</strong></td><td>Raw files sitting in cheap object storage</td><td>Nothing about "tables" — just bytes in keys</td><td>Amazon S3, Azure ADLS, Google GCS</td></tr>
 </table>
 
@@ -254,7 +268,7 @@
 <p class="reveal">Recall one limitation from the rules above: object storage can't search <em>inside</em> files. Its only fast lookup is by <strong>prefix</strong> — the leading part of a path, like a folder name: <em>"give me every file whose path starts with X."</em></p>
 <p class="reveal">That's why <em>where you put a file</em> decides query speed. Put the rows a query wants under one prefix and the engine reads just that prefix; scatter them and it must open everything, then throw most of it away. Compare two ways to store the same <code>orders</code> data:</p>
 
-<figure class="reveal" style="margin:1.4em 0;background:#0d0d13;border:1px solid #23232e;border-radius:10px;padding:1.2em 1em 1em;overflow:hidden">
+<figure class="reveal" style="margin:1.4em 0;background:#101017;border:1px solid #34343F;border-radius:10px;padding:1.2em 1em 1em;overflow:hidden">
 <figcaption style="font-size:12px;color:#555;text-align:center;margin-bottom:.8em;letter-spacing:.06em;text-transform:uppercase">Same data, two key layouts</figcaption>
 <svg viewBox="0 0 700 250" width="100%" style="display:block;max-width:700px;margin:0 auto" aria-label="Flat layout versus partitioned layout">
   <defs>
@@ -266,42 +280,42 @@
   <!-- ===== flat ===== -->
   <rect x="14" y="14" width="320" height="222" rx="8" fill="#1c1212" stroke="#3a2020" stroke-width="1.4"/>
   <use href="#l-s3" x="276" y="22" width="22" height="22"/>
-  <text x="30" y="38" class="lay" fill="#f87171" font-weight="700">❌ FLAT — one big prefix</text>
+  <text x="30" y="38" class="lay" fill="#9AA0B4" font-weight="700"> FLAT — one big prefix</text>
   <text x="30" y="62" class="lay" fill="#7a8099">orders/</text>
   <!-- a grid of file glyphs being scanned -->
-  <g color="#f87171">
+  <g color="#9AA0B4">
     <use href="#l-file" x="44"  y="74" width="15" height="18"/><use href="#l-file" x="66" y="74" width="15" height="18"/><use href="#l-file" x="88" y="74" width="15" height="18"/><use href="#l-file" x="110" y="74" width="15" height="18"/><use href="#l-file" x="132" y="74" width="15" height="18"/>
     <use href="#l-file" x="44"  y="98" width="15" height="18"/><use href="#l-file" x="66" y="98" width="15" height="18"/><use href="#l-file" x="88" y="98" width="15" height="18"/><use href="#l-file" x="110" y="98" width="15" height="18"/><use href="#l-file" x="132" y="98" width="15" height="18"/>
     <use href="#l-file" x="44"  y="122" width="15" height="18"/><use href="#l-file" x="66" y="122" width="15" height="18"/><use href="#l-file" x="88" y="122" width="15" height="18"/><use href="#l-file" x="110" y="122" width="15" height="18"/><use href="#l-file" x="132" y="122" width="15" height="18"/>
   </g>
-  <text x="162" y="106" class="lay" fill="#f87171">…10,000</text>
+  <text x="162" y="106" class="lay" fill="#9AA0B4">…10,000</text>
   <!-- wasteful red scan sweep over ALL files -->
-  <rect x="40" y="72" width="120" height="22" rx="3" fill="#f87171" opacity="0">
+  <rect x="40" y="72" width="120" height="22" rx="3" fill="#9AA0B4" opacity="0">
     <animate attributeName="y" values="72;96;120;72" dur="2.4s" repeatCount="indefinite"/>
     <animate attributeName="opacity" values=".0;.45;.45;.0" dur="2.4s" repeatCount="indefinite"/>
   </rect>
-  <text x="30" y="170" class="lay" fill="#f87171">Query "June 1 orders":</text>
-  <text x="30" y="190" class="lay" fill="#f87171">must LIST + open</text>
-  <text x="30" y="210" class="lay" fill="#f87171" font-weight="700">ALL 10,000 files ✗</text>
+  <text x="30" y="170" class="lay" fill="#9AA0B4">Query "June 1 orders":</text>
+  <text x="30" y="190" class="lay" fill="#9AA0B4">must LIST + open</text>
+  <text x="30" y="210" class="lay" fill="#9AA0B4" font-weight="700">ALL 10,000 files −</text>
 
   <!-- ===== partitioned ===== -->
-  <rect x="366" y="14" width="320" height="222" rx="8" fill="#0d1f14" stroke="#1a3020" stroke-width="1.4"/>
+  <rect x="366" y="14" width="320" height="222" rx="8" fill="#1D1D26" stroke="#1a3020" stroke-width="1.4"/>
   <use href="#l-s3" x="628" y="22" width="22" height="22"/>
-  <text x="382" y="38" class="lay" fill="#34d399" font-weight="700">✅ PARTITIONED by date</text>
+  <text x="382" y="38" class="lay" fill="#5AC8FF" font-weight="700">PARTITIONED by date</text>
   <text x="382" y="62" class="lay" fill="#7a8099">orders/</text>
   <!-- 06-01 row (read) -->
-  <rect x="392" y="72" width="282" height="24" rx="4" fill="#34d399" opacity=".10" stroke="#34d399" stroke-width="1">
+  <rect x="392" y="72" width="282" height="24" rx="4" fill="#5AC8FF" opacity=".10" stroke="#5AC8FF" stroke-width="1">
     <animate attributeName="opacity" values=".10;.30;.10" dur="1.8s" repeatCount="indefinite"/>
   </rect>
-  <text x="400" y="86" class="lay" font-size="9.5"><tspan fill="#b7c0cc">order_date=2026-06-01/</tspan><tspan dx="14" fill="#34d399" font-weight="700">← read 2 ✓</tspan></text>
+  <text x="400" y="86" class="lay" font-size="9.5"><tspan fill="#b7c0cc">order_date=2026-06-01/</tspan><tspan dx="14" fill="#5AC8FF" font-weight="700">← read 2 +</tspan></text>
   <!-- 06-02 row (skipped) -->
   <text x="400" y="120" class="lay" font-size="9.5" fill="#555"><tspan>order_date=2026-06-02/</tspan><tspan dx="14">skip ⊘</tspan></text>
   <text x="400" y="146" class="lay" font-size="9.5" fill="#555"><tspan>order_date=2026-06-03/</tspan><tspan dx="14">… skip ⊘</tspan></text>
-  <text x="382" y="178" class="lay" fill="#34d399">Query "June 1 orders":</text>
-  <text x="382" y="200" class="lay" fill="#34d399">reads 1 folder →</text>
-  <text x="382" y="222" class="lay" fill="#34d399" font-weight="700">just 2 files ✓</text>
+  <text x="382" y="178" class="lay" fill="#5AC8FF">Query "June 1 orders":</text>
+  <text x="382" y="200" class="lay" fill="#5AC8FF">reads 1 folder →</text>
+  <text x="382" y="222" class="lay" fill="#5AC8FF" font-weight="700">just 2 files +</text>
   <!-- a single happy particle hopping toward the read row, in the left gutter -->
-  <circle r="3.5" fill="#34d399">
+  <circle r="3.5" fill="#5AC8FF">
     <animate attributeName="cx" values="372;390" dur="1.8s" repeatCount="indefinite"/>
     <animate attributeName="cy" values="84;84" dur="1.8s" repeatCount="indefinite"/>
     <animate attributeName="opacity" values="0;1;1;0" dur="1.8s" repeatCount="indefinite"/>
@@ -345,7 +359,7 @@
 <p class="reveal">Object storage offers tiers at different price/speed trade-offs: a <strong>hot/standard</strong> tier for frequently read data, and cheaper <strong>cold/archive</strong> tiers (e.g. S3 Glacier) for data you rarely touch but must keep. You set <strong>lifecycle rules</strong> like "move anything older than 90 days to archive, delete after 7 years." Archive tiers cost a fraction of standard storage but take minutes to hours to retrieve — fine for compliance backups, not for live queries.</p>
 
 <div class="callout gr reveal">
-  <p style="margin:.2em 0"><span class="t">✅ Layer 1 in one line</span></p>
+  <p style="margin:.2em 0"><span class="t">Layer 1 in one line</span></p>
   <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">Storage is a cheap, infinite, immutable key→bytes dictionary. It knows nothing about tables — it just hands back bytes for a key, or a byte-range of one. Everything clever (tables, skipping, updates) is added by the layers above.</p>
 </div>
 
@@ -377,26 +391,26 @@ Partition values known:
   <li><strong>What partitions exist?</strong> → so for <code>WHERE order_date = '2026-06-01'</code> the engine knows to read only the <code>order_date=2026-06-01</code> prefix. This is <strong>partition pruning</strong>: the engine does the skipping, using the partition list the catalogue hands back — and it happens before a single file is opened.</li>
 </ol>
 
-<figure class="reveal" style="margin:1.4em 0;background:#0d0d13;border:1px solid #23232e;border-radius:10px;padding:1.2em 1em 1em;overflow:hidden">
+<figure class="reveal" style="margin:1.4em 0;background:#101017;border:1px solid #34343F;border-radius:10px;padding:1.2em 1em 1em;overflow:hidden">
 <figcaption style="font-size:12px;color:#555;text-align:center;margin-bottom:.8em;letter-spacing:.06em;text-transform:uppercase">The metastore is the translator between names and locations</figcaption>
 <svg viewBox="0 0 700 220" width="100%" style="display:block;max-width:700px;margin:0 auto" aria-label="Engine asks metastore for a table location and gets back a path and schema">
   <defs>
     <style>.m{font-family:'JetBrains Mono',monospace;font-size:12px;}</style>
     <symbol id="m-spark" viewBox="0 0 24 24"><polygon points="13,2 4,14 11,14 10,22 20,10 13,10" fill="#E25A1C"/></symbol>
-    <symbol id="m-unity" viewBox="0 0 24 24"><rect x="3" y="2" width="14" height="20" rx="2" fill="none" stroke="#f0b429" stroke-width="2"/><path d="M7 2v20" stroke="#f0b429" stroke-width="1.5"/><line x1="10" y1="7" x2="15" y2="7" stroke="#f0b429" stroke-width="1.5"/><line x1="10" y1="11" x2="15" y2="11" stroke="#f0b429" stroke-width="1.5"/><line x1="10" y1="15" x2="15" y2="15" stroke="#f0b429" stroke-width="1.5"/></symbol>
+    <symbol id="m-unity" viewBox="0 0 24 24"><rect x="3" y="2" width="14" height="20" rx="2" fill="none" stroke="#9AA0B4" stroke-width="2"/><path d="M7 2v20" stroke="#9AA0B4" stroke-width="1.5"/><line x1="10" y1="7" x2="15" y2="7" stroke="#9AA0B4" stroke-width="1.5"/><line x1="10" y1="11" x2="15" y2="11" stroke="#9AA0B4" stroke-width="1.5"/><line x1="10" y1="15" x2="15" y2="15" stroke="#9AA0B4" stroke-width="1.5"/></symbol>
     <symbol id="m-s3" viewBox="0 0 24 24"><ellipse cx="12" cy="6" rx="9" ry="3.5" fill="#FF9900" opacity=".9"/><path d="M3 6v12c0 1.9 4 3.5 9 3.5s9-1.6 9-3.5V6" fill="none" stroke="#FF9900" stroke-width="2"/></symbol>
   </defs>
 
   <!-- engine -->
-  <rect x="18" y="76" width="150" height="68" rx="8" fill="#0f1f17" stroke="#34d399" stroke-width="1.6"><animate attributeName="stroke-opacity" values=".55;1;.55" dur="3s" repeatCount="indefinite"/></rect>
+  <rect x="18" y="76" width="150" height="68" rx="8" fill="#0f1f17" stroke="#5AC8FF" stroke-width="1.6"><animate attributeName="stroke-opacity" values=".55;1;.55" dur="3s" repeatCount="indefinite"/></rect>
   <use href="#m-spark" x="30" y="86" width="22" height="22"/>
-  <text x="100" y="102" class="m" fill="#34d399" text-anchor="middle" font-weight="700">COMPUTE</text>
+  <text x="100" y="102" class="m" fill="#5AC8FF" text-anchor="middle" font-weight="700">COMPUTE</text>
   <text x="93" y="130" class="m" fill="#7a8099" text-anchor="middle">"SELECT … orders"</text>
 
   <!-- metastore -->
-  <rect x="270" y="58" width="170" height="104" rx="8" fill="#1a180d" stroke="#f0b429" stroke-width="1.6"><animate attributeName="stroke-opacity" values=".55;1;.55" dur="3.2s" begin=".4s" repeatCount="indefinite"/></rect>
+  <rect x="270" y="58" width="170" height="104" rx="8" fill="#1D1D26" stroke="#9AA0B4" stroke-width="1.6"><animate attributeName="stroke-opacity" values=".55;1;.55" dur="3.2s" begin=".4s" repeatCount="indefinite"/></rect>
   <use href="#m-unity" x="282" y="70" width="20" height="20"/>
-  <text x="360" y="84" class="m" fill="#f0b429" text-anchor="middle" font-weight="700">METASTORE</text>
+  <text x="360" y="84" class="m" fill="#9AA0B4" text-anchor="middle" font-weight="700">METASTORE</text>
   <text x="355" y="110" class="m" fill="#7a8099" text-anchor="middle">orders →</text>
   <text x="355" y="128" class="m" fill="#7a8099" text-anchor="middle">path + schema</text>
   <text x="355" y="146" class="m" fill="#7a8099" text-anchor="middle">+ partitions</text>
@@ -408,16 +422,16 @@ Partition values known:
   <text x="615" y="130" class="m" fill="#7a8099" text-anchor="middle">s3://…/orders/</text>
 
   <!-- arrow 1: request -->
-  <line x1="168" y1="96" x2="266" y2="96" stroke="#f0b429" stroke-width="1.6" stroke-dasharray="4,3"/>
-  <polygon points="266,91 276,96 266,101" fill="#f0b429"/>
-  <text x="217" y="88" class="m" fill="#f0b429" text-anchor="middle" font-size="10">1. where?</text>
-  <circle r="3.5" fill="#f0b429"><animate attributeName="cx" values="168;266" dur="1.6s" repeatCount="indefinite"/><animate attributeName="cy" values="96;96" dur="1.6s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;1;1;0" dur="1.6s" repeatCount="indefinite"/></circle>
+  <line x1="168" y1="96" x2="266" y2="96" stroke="#9AA0B4" stroke-width="1.6" stroke-dasharray="4,3"/>
+  <polygon points="266,91 276,96 266,101" fill="#9AA0B4"/>
+  <text x="217" y="88" class="m" fill="#9AA0B4" text-anchor="middle" font-size="10">1. where?</text>
+  <circle r="3.5" fill="#9AA0B4"><animate attributeName="cx" values="168;266" dur="1.6s" repeatCount="indefinite"/><animate attributeName="cy" values="96;96" dur="1.6s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;1;1;0" dur="1.6s" repeatCount="indefinite"/></circle>
 
   <!-- arrow 2: response -->
-  <line x1="276" y1="124" x2="170" y2="124" stroke="#f0b429" stroke-width="1.6" stroke-dasharray="4,3"/>
-  <polygon points="170,119 160,124 170,129" fill="#f0b429"/>
-  <text x="217" y="142" class="m" fill="#f0b429" text-anchor="middle" font-size="10">2. here + schema</text>
-  <circle r="3.5" fill="#f0b429"><animate attributeName="cx" values="276;170" dur="1.6s" begin=".8s" repeatCount="indefinite"/><animate attributeName="cy" values="124;124" dur="1.6s" begin=".8s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;1;1;0" dur="1.6s" begin=".8s" repeatCount="indefinite"/></circle>
+  <line x1="276" y1="124" x2="170" y2="124" stroke="#9AA0B4" stroke-width="1.6" stroke-dasharray="4,3"/>
+  <polygon points="170,119 160,124 170,129" fill="#9AA0B4"/>
+  <text x="217" y="142" class="m" fill="#9AA0B4" text-anchor="middle" font-size="10">2. here + schema</text>
+  <circle r="3.5" fill="#9AA0B4"><animate attributeName="cx" values="276;170" dur="1.6s" begin=".8s" repeatCount="indefinite"/><animate attributeName="cy" values="124;124" dur="1.6s" begin=".8s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;1;1;0" dur="1.6s" begin=".8s" repeatCount="indefinite"/></circle>
 
   <!-- arrow 3: targeted read -->
   <line x1="168" y1="110" x2="538" y2="110" stroke="#5AC8FF" stroke-width="1.4" stroke-dasharray="2,4" opacity=".5"/>
@@ -484,7 +498,7 @@ Partition values known:
 </div>
 
 <div class="callout gr reveal">
-  <p style="margin:.2em 0"><span class="t">✅ Layer 2 in one line</span></p>
+  <p style="margin:.2em 0"><span class="t">Layer 2 in one line</span></p>
   <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">Metadata is the catalogue that turns files into named tables — it answers <em>where</em>, <em>what columns</em>, and <em>which partitions</em>, so the engine can plan a query and prune before reading. Table formats extend it down to the individual file.</p>
 </div>
 
@@ -507,14 +521,14 @@ Partition values known:
   <li><strong>The executors</strong> (many machines) — the workers. Each executor reads <em>some</em> of the files from storage and processes them in parallel with the others.</li>
 </ul>
 
-<figure class="reveal" style="margin:1.4em 0;background:#0d0d13;border:1px solid #23232e;border-radius:10px;padding:1.2em 1em 1em;overflow:hidden">
+<figure class="reveal" style="margin:1.4em 0;background:#101017;border:1px solid #34343F;border-radius:10px;padding:1.2em 1em 1em;overflow:hidden">
 <figcaption style="font-size:12px;color:#555;text-align:center;margin-bottom:.8em;letter-spacing:.06em;text-transform:uppercase">Driver splits the files; executors read them in parallel</figcaption>
 <svg viewBox="0 0 700 280" width="100%" style="display:block;max-width:700px;margin:0 auto" aria-label="A driver assigning file-reading tasks to three executors that read from object storage">
   <defs>
     <style>.cm{font-family:'JetBrains Mono',monospace;font-size:11.5px;}</style>
     <symbol id="c-databricks" viewBox="0 0 24 24"><polygon points="12,2 20,7 12,12 4,7" fill="#FF3621" opacity=".9"/><polygon points="12,8 20,13 12,18 4,13" fill="#FF3621" opacity=".7"/><polygon points="12,14 20,19 12,24 4,19" fill="#FF3621" opacity=".5"/></symbol>
     <symbol id="c-spark" viewBox="0 0 24 24"><polygon points="13,2 4,14 11,14 10,22 20,10 13,10" fill="#E25A1C"/></symbol>
-    <symbol id="c-s3" viewBox="0 0 24 24"><ellipse cx="12" cy="6" rx="9" ry="3.5" fill="#FF9900" opacity=".9"/><path d="M3 6v12c0 1.9 4 3.5 9 3.5s9-1.6 9-3.5V6" fill="none" stroke="#FF9900" stroke-width="2"/><line x1="12" y1="2.5" x2="12" y2="21.5" stroke="#b36b00" stroke-width="1"/></symbol>
+    <symbol id="c-s3" viewBox="0 0 24 24"><ellipse cx="12" cy="6" rx="9" ry="3.5" fill="#FF9900" opacity=".9"/><path d="M3 6v12c0 1.9 4 3.5 9 3.5s9-1.6 9-3.5V6" fill="none" stroke="#FF9900" stroke-width="2"/><line x1="12" y1="2.5" x2="12" y2="21.5" stroke="#9AA0B4" stroke-width="1"/></symbol>
   </defs>
 
   <!-- driver -->
@@ -525,19 +539,19 @@ Partition values known:
 
   <!-- executors -->
   <g>
-    <rect x="40" y="118" width="180" height="58" rx="8" fill="#0f1f17" stroke="#34d399" stroke-width="1.4"><animate attributeName="stroke-opacity" values=".5;1;.5" dur="2.6s" repeatCount="indefinite"/></rect>
+    <rect x="40" y="118" width="180" height="58" rx="8" fill="#0f1f17" stroke="#5AC8FF" stroke-width="1.4"><animate attributeName="stroke-opacity" values=".5;1;.5" dur="2.6s" repeatCount="indefinite"/></rect>
     <use href="#c-spark" x="52" y="128" width="22" height="22"/>
-    <text x="138" y="140" class="cm" fill="#34d399" text-anchor="middle" font-weight="700">EXECUTOR 1</text>
+    <text x="138" y="140" class="cm" fill="#5AC8FF" text-anchor="middle" font-weight="700">EXECUTOR 1</text>
     <text x="130" y="164" class="cm" fill="#7a8099" text-anchor="middle">reads files A, B</text>
 
-    <rect x="260" y="118" width="180" height="58" rx="8" fill="#0f1f17" stroke="#34d399" stroke-width="1.4"><animate attributeName="stroke-opacity" values=".5;1;.5" dur="2.6s" begin=".4s" repeatCount="indefinite"/></rect>
+    <rect x="260" y="118" width="180" height="58" rx="8" fill="#0f1f17" stroke="#5AC8FF" stroke-width="1.4"><animate attributeName="stroke-opacity" values=".5;1;.5" dur="2.6s" begin=".4s" repeatCount="indefinite"/></rect>
     <use href="#c-spark" x="272" y="128" width="22" height="22"/>
-    <text x="358" y="140" class="cm" fill="#34d399" text-anchor="middle" font-weight="700">EXECUTOR 2</text>
+    <text x="358" y="140" class="cm" fill="#5AC8FF" text-anchor="middle" font-weight="700">EXECUTOR 2</text>
     <text x="350" y="164" class="cm" fill="#7a8099" text-anchor="middle">reads files C, D</text>
 
-    <rect x="480" y="118" width="180" height="58" rx="8" fill="#0f1f17" stroke="#34d399" stroke-width="1.4"><animate attributeName="stroke-opacity" values=".5;1;.5" dur="2.6s" begin=".8s" repeatCount="indefinite"/></rect>
+    <rect x="480" y="118" width="180" height="58" rx="8" fill="#0f1f17" stroke="#5AC8FF" stroke-width="1.4"><animate attributeName="stroke-opacity" values=".5;1;.5" dur="2.6s" begin=".8s" repeatCount="indefinite"/></rect>
     <use href="#c-spark" x="492" y="128" width="22" height="22"/>
-    <text x="578" y="140" class="cm" fill="#34d399" text-anchor="middle" font-weight="700">EXECUTOR 3</text>
+    <text x="578" y="140" class="cm" fill="#5AC8FF" text-anchor="middle" font-weight="700">EXECUTOR 3</text>
     <text x="570" y="164" class="cm" fill="#7a8099" text-anchor="middle">reads files E, F</text>
   </g>
 
@@ -598,7 +612,7 @@ Partition values known:
 </ul>
 
 <div class="callout gr reveal">
-  <p style="margin:.2em 0"><span class="t">✅ Layer 3 in one line</span></p>
+  <p style="margin:.2em 0"><span class="t">Layer 3 in one line</span></p>
   <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">Compute is the rented, parallel engine that plans a query (driver), reads files in parallel (executors), and is billed only while running — so the cheaper you make its reads, the cheaper the whole lake.</p>
 </div>
 
@@ -614,27 +628,27 @@ GROUP BY category;</pre></div>
 
 <p class="reveal">We'll assume the common <strong>plain-lake</strong> setup: Parquet files plus a Hive-style metastore (no table format yet). That means one extra <code>LIST</code> on storage to discover the files in a partition — exactly the step Section 03 flagged. With a Lakehouse table format, that LIST disappears (the manifest already names the files); everything else is identical.</p>
 
-<figure class="reveal" style="margin:1.4em 0;background:#0d0d13;border:1px solid #23232e;border-radius:10px;padding:1.2em 1em 1em;overflow:hidden">
+<figure class="reveal" style="margin:1.4em 0;background:#101017;border:1px solid #34343F;border-radius:10px;padding:1.2em 1em 1em;overflow:hidden">
 <figcaption style="font-size:12px;color:#555;text-align:center;margin-bottom:.8em;letter-spacing:.06em;text-transform:uppercase">The query's journey — down through the layers, then rows back up</figcaption>
 <svg viewBox="0 0 700 320" width="100%" style="display:block;max-width:700px;margin:0 auto" aria-label="A query passing from compute to metadata to storage and results returning">
   <defs>
     <style>.tr{font-family:'JetBrains Mono',monospace;font-size:11px;}</style>
     <symbol id="t-spark" viewBox="0 0 24 24"><polygon points="13,2 4,14 11,14 10,22 20,10 13,10" fill="#E25A1C"/></symbol>
-    <symbol id="t-unity" viewBox="0 0 24 24"><rect x="3" y="2" width="14" height="20" rx="2" fill="none" stroke="#f0b429" stroke-width="2"/><path d="M7 2v20" stroke="#f0b429" stroke-width="1.5"/><line x1="10" y1="7" x2="15" y2="7" stroke="#f0b429" stroke-width="1.5"/><line x1="10" y1="11" x2="15" y2="11" stroke="#f0b429" stroke-width="1.5"/><line x1="10" y1="15" x2="15" y2="15" stroke="#f0b429" stroke-width="1.5"/></symbol>
-    <symbol id="t-s3" viewBox="0 0 24 24"><ellipse cx="12" cy="6" rx="9" ry="3.5" fill="#FF9900" opacity=".9"/><path d="M3 6v12c0 1.9 4 3.5 9 3.5s9-1.6 9-3.5V6" fill="none" stroke="#FF9900" stroke-width="2"/><line x1="12" y1="2.5" x2="12" y2="21.5" stroke="#b36b00" stroke-width="1"/></symbol>
+    <symbol id="t-unity" viewBox="0 0 24 24"><rect x="3" y="2" width="14" height="20" rx="2" fill="none" stroke="#9AA0B4" stroke-width="2"/><path d="M7 2v20" stroke="#9AA0B4" stroke-width="1.5"/><line x1="10" y1="7" x2="15" y2="7" stroke="#9AA0B4" stroke-width="1.5"/><line x1="10" y1="11" x2="15" y2="11" stroke="#9AA0B4" stroke-width="1.5"/><line x1="10" y1="15" x2="15" y2="15" stroke="#9AA0B4" stroke-width="1.5"/></symbol>
+    <symbol id="t-s3" viewBox="0 0 24 24"><ellipse cx="12" cy="6" rx="9" ry="3.5" fill="#FF9900" opacity=".9"/><path d="M3 6v12c0 1.9 4 3.5 9 3.5s9-1.6 9-3.5V6" fill="none" stroke="#FF9900" stroke-width="2"/><line x1="12" y1="2.5" x2="12" y2="21.5" stroke="#9AA0B4" stroke-width="1"/></symbol>
   </defs>
 
   <!-- compute -->
-  <rect x="20" y="20" width="660" height="74" rx="8" fill="#0f1f17" stroke="#34d399" stroke-width="1.6"><animate attributeName="stroke-opacity" values="1;.45;.45;.45;1" keyTimes="0;.15;.5;.85;1" dur="4s" repeatCount="indefinite"/></rect>
+  <rect x="20" y="20" width="660" height="74" rx="8" fill="#0f1f17" stroke="#5AC8FF" stroke-width="1.6"><animate attributeName="stroke-opacity" values="1;.45;.45;.45;1" keyTimes="0;.15;.5;.85;1" dur="4s" repeatCount="indefinite"/></rect>
   <use href="#t-spark" x="640" y="26" width="26" height="26"/>
-  <text x="36" y="42" class="tr" fill="#34d399" font-weight="700">3 · COMPUTE (driver)</text>
+  <text x="36" y="42" class="tr" fill="#5AC8FF" font-weight="700">3 · COMPUTE (driver)</text>
   <text x="36" y="62" class="tr" fill="#cdd0dd">① parse SQL  ② ask catalogue where 'orders' is</text>
   <text x="36" y="80" class="tr" fill="#cdd0dd">⑥ executors aggregate → SUM(amount) per category → return rows</text>
 
   <!-- metadata -->
-  <rect x="20" y="112" width="660" height="64" rx="8" fill="#1a180d" stroke="#f0b429" stroke-width="1.6"><animate attributeName="stroke-opacity" values=".45;1;.45;.45;.45" keyTimes="0;.3;.5;.85;1" dur="4s" repeatCount="indefinite"/></rect>
+  <rect x="20" y="112" width="660" height="64" rx="8" fill="#1D1D26" stroke="#9AA0B4" stroke-width="1.6"><animate attributeName="stroke-opacity" values=".45;1;.45;.45;.45" keyTimes="0;.3;.5;.85;1" dur="4s" repeatCount="indefinite"/></rect>
   <use href="#t-unity" x="642" y="118" width="24" height="24"/>
-  <text x="36" y="134" class="tr" fill="#f0b429" font-weight="700">2 · METADATA (catalogue)</text>
+  <text x="36" y="134" class="tr" fill="#9AA0B4" font-weight="700">2 · METADATA (catalogue)</text>
   <text x="36" y="154" class="tr" fill="#cdd0dd">③ orders → s3://…/orders/ , schema ok</text>
   <text x="36" y="170" class="tr" fill="#cdd0dd">④ partition list → engine keeps only order_date=2026-06-01/</text>
 
@@ -647,16 +661,16 @@ GROUP BY category;</pre></div>
   <text x="36" y="272" class="tr" fill="#cdd0dd">   read only the category + amount column chunks that survive</text>
 
   <!-- down rail: query descending -->
-  <line x1="693" y1="30" x2="693" y2="250" stroke="#905AFF" stroke-width="2" opacity=".4"/>
-  <polygon points="688,248 698,248 693,262" fill="#905AFF"/>
-  <text x="693" y="300" class="tr" fill="#905AFF" text-anchor="middle" font-size="10">query ↓</text>
-  <circle r="4.5" fill="#905AFF" cx="693"><animate attributeName="cy" values="30;250" dur="4s" keyTimes="0;.55" repeatCount="indefinite"/><animate attributeName="opacity" values="1;1;0;0" keyTimes="0;.5;.55;1" dur="4s" repeatCount="indefinite"/></circle>
+  <line x1="693" y1="30" x2="693" y2="250" stroke="#5C78FF" stroke-width="2" opacity=".4"/>
+  <polygon points="688,248 698,248 693,262" fill="#5C78FF"/>
+  <text x="693" y="300" class="tr" fill="#5C78FF" text-anchor="middle" font-size="10">query ↓</text>
+  <circle r="4.5" fill="#5C78FF" cx="693"><animate attributeName="cy" values="30;250" dur="4s" keyTimes="0;.55" repeatCount="indefinite"/><animate attributeName="opacity" values="1;1;0;0" keyTimes="0;.5;.55;1" dur="4s" repeatCount="indefinite"/></circle>
 
   <!-- up rail: rows ascending -->
-  <line x1="8" y1="250" x2="8" y2="30" stroke="#34d399" stroke-width="2" opacity=".4"/>
-  <polygon points="3,42 13,42 8,28" fill="#34d399"/>
-  <text x="8" y="300" class="tr" fill="#34d399" text-anchor="middle" font-size="10">rows ↑</text>
-  <circle r="4.5" fill="#34d399" cx="8"><animate attributeName="cy" values="250;30" dur="4s" keyTimes="0;.45" begin="2.2s" repeatCount="indefinite"/><animate attributeName="opacity" values="1;1;0;0" keyTimes="0;.4;.45;1" dur="4s" begin="2.2s" repeatCount="indefinite"/></circle>
+  <line x1="8" y1="250" x2="8" y2="30" stroke="#5AC8FF" stroke-width="2" opacity=".4"/>
+  <polygon points="3,42 13,42 8,28" fill="#5AC8FF"/>
+  <text x="8" y="300" class="tr" fill="#5AC8FF" text-anchor="middle" font-size="10">rows ↑</text>
+  <circle r="4.5" fill="#5AC8FF" cx="8"><animate attributeName="cy" values="250;30" dur="4s" keyTimes="0;.45" begin="2.2s" repeatCount="indefinite"/><animate attributeName="opacity" values="1;1;0;0" keyTimes="0;.4;.45;1" dur="4s" begin="2.2s" repeatCount="indefinite"/></circle>
 </svg>
 </figure>
 
@@ -668,7 +682,7 @@ GROUP BY category;</pre></div>
 <div class="step reveal"><div class="num-bubble">6</div><div class="body"><strong>Compute finishes</strong>: each executor sums its slice, the driver combines the partial sums per <code>category</code>, and the final rows travel back up to you.</div></div>
 
 <div class="callout gr reveal">
-  <p style="margin:.2em 0"><span class="t">✅ The big picture</span></p>
+  <p style="margin:.2em 0"><span class="t">The big picture</span></p>
   <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">A query on a 10,000-file table physically read just <strong>two files</strong> (the only two in the matching day), and inside them just <strong>two columns</strong> of a <strong>few row groups</strong>. Metadata did the coarse cut (which files), Storage's Parquet footers did the fine cut (which parts of those files), and Compute ran the whole thing in parallel and only while needed. Three layers, each doing one job — that's a Data Lake working as designed.</p>
 </div>
 
@@ -677,14 +691,14 @@ GROUP BY category;</pre></div>
 <table class="reveal">
   <tr><th>Layer</th><th>Job</th><th>Key idea to remember</th><th>Main pitfall</th></tr>
   <tr><td><strong style="color:#5AC8FF">Storage</strong></td><td>Hold raw bytes cheaply</td><td>Immutable key→bytes store; layout = performance</td><td>Small files &amp; over-partitioning</td></tr>
-  <tr><td><strong style="color:#f0b429">Metadata</strong></td><td>Turn files into named tables</td><td>Catalogue maps name → location + schema + partitions</td><td>Can't track files atomically (→ table formats)</td></tr>
-  <tr><td><strong style="color:#34d399">Compute</strong></td><td>Read &amp; process in parallel</td><td>Rented driver + executors; pay only while running</td><td>Reading too much data = slow &amp; costly</td></tr>
+  <tr><td><strong style="color:#9AA0B4">Metadata</strong></td><td>Turn files into named tables</td><td>Catalogue maps name → location + schema + partitions</td><td>Can't track files atomically (→ table formats)</td></tr>
+  <tr><td><strong style="color:#5AC8FF">Compute</strong></td><td>Read &amp; process in parallel</td><td>Rented driver + executors; pay only while running</td><td>Reading too much data = slow &amp; costly</td></tr>
 </table>
 
 <p class="reveal">The three layers are deliberately <strong>decoupled</strong>: cheap storage you keep forever, a small catalogue that gives it meaning, and elastic compute you rent by the minute. Keep them separate and you get the Data Lake's superpower — scale and pay for each piece independently, and point any engine at any data.</p>
 
 <div class="callout reveal">
-  <p style="margin:.2em 0"><span class="t">📚 Where to go next</span></p>
+  <p style="margin:.2em 0"><span class="t">Where to go next</span></p>
   <ul style="font-size:14.5px;color:#cdd0dd;margin:.4em 0 0">
     <li><a href="../data-lake/">Data Lake &amp; Data Lakehouse, Simply Explained</a> — the foundations, plus the six ways a plain lake breaks and how the Lakehouse pattern fixes them.</li>
     <li><a href="../delta-lake/">Delta Lake, Under the Hood</a> — a deep dive into the table-format manifest mentioned in Layer 2: the transaction log, ACID, time travel, and file-level skipping.</li>

@@ -21,15 +21,15 @@
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
 <style>
   :root{
-    --bg:#1A1A1A; --bg2:#121212; --ink:#F1F1F1; --muted:#9aa0b4; --dim:#666666;
-    --blue2:#7C5CFF; --cyan:#28B9FF; --cyan2:#7AD1FF; --purple:#7C5CFF; --magenta2:#C08CFF;
-    --grad:linear-gradient(90deg,#28B9FF,#7C5CFF,#C08CFF);
+    --bg:#191921; --bg2:#20202A; --ink:#F1F1F1; --muted:#9aa0b4; --dim:#666666;
+    --blue2:#5C78FF; --cyan:#28B9FF; --cyan2:#7AD1FF; --purple:#5C78FF; --magenta2:#5AC8FF;
+    --grad:linear-gradient(90deg,#28B9FF,#5C78FF,#5AC8FF);
     --font:"JetBrainsMono Nerd Font","JetBrains Mono","Symbols Nerd Font",ui-monospace,"Cascadia Code",Menlo,Consolas,monospace;
   }
   *{box-sizing:border-box}
   html{scroll-behavior:smooth}
   body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font);font-size:16px;line-height:1.85;-webkit-font-smoothing:antialiased}
-  #bar{position:fixed;top:0;left:0;height:3px;width:0;z-index:50;background:var(--grad);box-shadow:0 0 12px #7C5CFF99;transition:width .1s linear}
+  #bar{position:fixed;top:0;left:0;height:3px;width:0;z-index:50;background:var(--grad);box-shadow:0 0 12px #5C78FF99;transition:width .1s linear}
   .page{max-width:880px;margin:0 auto;padding:0 24px}
   header{padding:30px 0 6px}
   .kicker{font-size:13px;color:var(--dim)}
@@ -39,78 +39,92 @@
   @keyframes sheen{to{background-position:220% center}}
   .dek{color:var(--muted);font-size:17px}
   .byline{margin-top:14px;font-size:13px;color:var(--dim)}
-  h2{font-size:clamp(21px,3.2vw,28px);margin:52px 0 6px;font-weight:800;line-height:1.22;padding-top:14px;border-top:1px solid #23232e;display:flex;align-items:center;gap:10px}
+  h2{font-size:clamp(21px,3.2vw,28px);margin:52px 0 6px;font-weight:800;line-height:1.22;padding-top:14px;border-top:1px solid #34343F;display:flex;align-items:center;gap:10px}
   h2 .n{color:var(--blue2)}
   h3{font-size:18px;margin:28px 0 4px;color:#fff;font-weight:700}
   h4{font-size:15px;margin:20px 0 4px;color:var(--cyan2);font-weight:700}
   p,li{color:#dcdce4}
   .lead{font-size:18px;color:#e7e7ee}
   a{color:var(--cyan2)}
-  hr{border:0;border-top:1px solid #2c2c36;margin:36px 0}
-  code{font-family:var(--font);background:#23232b;color:#7AD1FF;padding:1px 6px;border-radius:5px;font-size:.88em;border:1px solid #2f2f3a}
+  hr{border:0;border-top:1px solid #34343F;margin:36px 0}
+  code{font-family:var(--font);background:#23232b;color:#7AD1FF;padding:1px 6px;border-radius:5px;font-size:.88em;border:1px solid #34343F}
   .cb{margin:16px 0}
-  .cb .lang{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:#9aa0b4;background:#1b1b24;border:1px solid #2c2c36;border-bottom:none;border-radius:9px 9px 0 0;padding:4px 12px}
-  pre{margin:0;background:#0d0d13;border:1px solid #23232e;border-radius:0 10px 10px 10px;padding:14px 16px;overflow-x:auto;
+  .cb .lang{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:#9aa0b4;background:#1b1b24;border:1px solid #34343F;border-bottom:none;border-radius:9px 9px 0 0;padding:4px 12px}
+  pre{margin:0;background:#101017;border:1px solid #34343F;border-radius:0 10px 10px 10px;padding:14px 16px;overflow-x:auto;
       font-family:var(--font);font-size:13px;line-height:1.65;color:#d8dcea;white-space:pre}
-  pre .c{color:#6b7280}
+  pre .c{color:#6B6B78}
   pre .o{color:#9aa0b4}
   pre .k{color:#7AD1FF}
-  pre .g{color:#22D3EE}
-  pre .y{color:#f0b429}
-  pre .r{color:#FF6B8B}
-  pre .p{color:#C08CFF}
+  pre .g{color:#28B9FF}
+  pre .y{color:#9AA0B4}
+  pre .r{color:#9AA0B4}
+  pre .p{color:#5AC8FF}
   .callout{border-left:4px solid var(--blue2);background:#161233;border-radius:0 12px 12px 0;padding:14px 18px;margin:22px 0}
   .callout.cy{border-color:var(--cyan);background:#0e2740}
   .callout.mg{border-color:var(--magenta2);background:#1e1533}
-  .callout.gd{border-color:#f0b429;background:#241d0f}
-  .callout.gr{border-color:#22D3EE;background:#0A2028}
+  .callout.gd{border-color:#9AA0B4;background:#1D1D26}
+  .callout.gr{border-color:#28B9FF;background:#0A2028}
   .callout .t{color:var(--cyan2);font-weight:800}
-  .callout.gd .t{color:#f0b429}
-  .callout.gr .t{color:#22D3EE}
+  .callout.gd .t{color:#9AA0B4}
+  .callout.gr .t{color:#28B9FF}
   .callout.mg .t{color:var(--magenta2)}
-  .tldr{border:1px solid #3a3170;background:linear-gradient(180deg,#161233,#121212);border-radius:16px;padding:20px 24px;margin:26px 0}
+  .tldr{border:1px solid #23232C;background:linear-gradient(180deg,#161233,#20202A);border-radius:16px;padding:20px 24px;margin:26px 0}
   .tldr h4{margin:0 0 8px;font-size:13px;letter-spacing:.2em;text-transform:uppercase;color:var(--cyan2)}
-  .gloss{border:1px solid #2c2c36;background:#141419;border-radius:14px;padding:18px 22px;margin:24px 0}
+  .gloss{border:1px solid #34343F;background:#1D1D26;border-radius:14px;padding:18px 22px;margin:24px 0}
   .gloss h4{margin:0 0 6px;color:#fff;font-size:15px}
   .gloss dl{margin:0;font-size:13.5px}
   .gloss dt{color:var(--cyan2);font-weight:700;margin-top:9px}
   .gloss dd{margin:1px 0 0;color:#cdd0dd}
-  .toc{background:#15151b;border:1px solid #2c2c36;border-radius:14px;padding:16px 22px;margin:24px 0;column-count:2;column-gap:28px}
+  .toc{background:#23232C;border:1px solid #34343F;border-radius:14px;padding:16px 22px;margin:24px 0;column-count:2;column-gap:28px}
   .toc a{display:block;color:var(--cyan2);text-decoration:none;font-size:13.5px;line-height:1.9;break-inside:avoid}
   .toc a:hover{color:#fff}
   .toc>strong{column-span:all;display:block;margin-bottom:6px;color:#fff}
   table{border-collapse:collapse;width:100%;font-size:13.5px;margin:16px 0}
-  th,td{border:1px solid #2c2c36;padding:8px 11px;text-align:left;vertical-align:top}
-  th{background:#1d1d27;color:#fff}
-  tr:nth-child(even) td{background:#161620}
+  th,td{border:1px solid #34343F;padding:8px 11px;text-align:left;vertical-align:top}
+  th{background:#17171E;color:#fff}
+  tr:nth-child(even) td{background:#17171E}
   .ico{width:1em;height:1em;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
   .ico.f{fill:currentColor;stroke:none}
   .hico{display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;border-radius:11px;flex:0 0 36px;
-        background:#161233;border:1px solid #3a3170;color:var(--cyan2)}
+        background:#161233;border:1px solid #23232C;color:var(--cyan2)}
   .hico .ico{width:19px;height:19px}
   .toc a .ico{width:14px;height:14px;margin-right:9px;vertical-align:-2px;opacity:.85}
   .callout .t .ico{width:16px;height:16px;vertical-align:-3px;margin-right:5px}
   .tldr h4 .ico,.gloss h4 .ico{width:15px;height:15px;vertical-align:-2px;margin-right:6px}
   .stack{margin-top:14px;display:flex;align-items:center;gap:10px;font-size:12px;color:var(--dim);flex-wrap:wrap}
   .chip{display:inline-flex;align-items:center;gap:7px;padding:5px 12px;border-radius:999px;
-        border:1px solid #3a3170;background:#161233;color:#C08CFF;font-weight:700;font-size:11.5px}
+        border:1px solid #23232C;background:#161233;color:#5AC8FF;font-weight:700;font-size:11.5px}
   .chip .ico{width:14px;height:14px}
   figure.fig{margin:26px 0;text-align:center}
-  figure.fig svg{display:block;width:100%;max-width:100%;height:auto;border:1px solid #23232e;border-radius:14px;background:#0d0d13}
+  figure.fig svg{display:block;width:100%;max-width:100%;height:auto;border:1px solid #34343F;border-radius:14px;background:#101017}
   figure.fig figcaption{font-size:12.5px;color:var(--muted);margin-top:9px;font-style:italic;line-height:1.6}
   .step{display:flex;gap:12px;align-items:flex-start;margin:14px 0}
   .step .num-bubble{flex:0 0 28px;height:28px;border-radius:50%;background:var(--grad);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:#fff;margin-top:2px}
   .step .body{flex:1}
-  footer{border-top:1px solid #23232e;margin-top:50px;padding:24px 0 90px;color:var(--dim);font-size:13px}
+  footer{border-top:1px solid #34343F;margin-top:50px;padding:24px 0 90px;color:var(--dim);font-size:13px}
   footer a{color:var(--cyan2)}
   .js .reveal{opacity:0;transform:translateY(16px);transition:opacity .6s ease,transform .6s ease}
   .js .reveal.in{opacity:1;transform:none}
   @media (prefers-reduced-motion:reduce){.js .reveal{opacity:1;transform:none}}
+  /* ---- shared theme: top nav + a11y (appended) ---- */
+  .nav{position:sticky;top:0;z-index:60;background:rgba(25,25,33,.82);backdrop-filter:blur(10px);border-bottom:1px solid #34343f}
+  .nav-inner{max-width:1040px;margin:0 auto;padding:12px 24px;display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+  .nav-brand{font-weight:800;letter-spacing:.16em;font-size:15px;text-decoration:none;border:0;
+             background:linear-gradient(90deg,#5C78FF,#28B9FF,#A52AFF);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .nav-links{display:flex;gap:6px;flex-wrap:wrap;margin-left:auto}
+  .nav-links a{text-decoration:none;border:1px solid transparent;color:#9aa0b4;font-weight:700;font-size:13.5px;padding:6px 14px;border-radius:999px;transition:.2s}
+  .nav-links a:hover{color:#fff;border-color:#34343f;background:#23232c}
+  .nav-links a.active{color:#5AC8FF;border-color:#28B9FF55;background:#28B9FF14}
+  :focus-visible{outline:2px solid #5AC8FF;outline-offset:3px;border-radius:6px}
+  @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{animation:none !important;transition:none !important}.js .reveal{opacity:1 !important;transform:none !important}}
 </style>
+
 <script>document.documentElement.classList.add('js');</script>
 </head>
 <body>
 <div id="bar"></div>
+
+<nav class="nav"><div class="nav-inner"><a class="nav-brand" href="../index.html">HAO TIEU</a><div class="nav-links"><a href="../index.html">Portfolio</a><a href="../blogs.html">Blogs</a><a href="../essentials.html" class="active">Data Engineer Essentials</a></div></div></nav>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs>
 <symbol id="i-question" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.6 9.4a2.5 2.5 0 1 1 3.3 2.4c-.6.2-.9.8-.9 1.5v.6M12 17h.01"/></symbol>
 <symbol id="i-layers" viewBox="0 0 24 24"><path d="m12 3 9 4.8-9 4.8-9-4.8 9-4.8Z"/><path d="m3 12.6 9 4.8 9-4.8M3 17.2l9 4.8 9-4.8"/></symbol>
@@ -151,7 +165,7 @@
   <div class="stack">
     <span class="chip"><svg class="ico"><use href="#i-compass"/></svg> Product Sense</span>
     <span class="chip" style="color:#7AD1FF;border-color:#2b4a80;background:#0e2740"><svg class="ico"><use href="#i-user"/></svg> Interview prep</span>
-    <span class="chip" style="color:#f0b429;border-color:#3a2f16;background:#241d0f"><svg class="ico"><use href="#i-zap"/></svg> AI rounds</span>
+    <span class="chip" style="color:#9AA0B4;border-color:#3a2f16;background:#1D1D26"><svg class="ico"><use href="#i-zap"/></svg> AI rounds</span>
   </div>
   <div class="byline">~30 min read · Career · Reference</div>
 </header>
@@ -195,39 +209,39 @@
 <svg viewBox="0 0 880 214" width="100%" aria-label="The narrative arc of a product sense answer: prompt, mission, segment, pain, solution, metric">
   <defs>
     <marker id="p-c" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#5AC8FF"/></marker>
-    <marker id="p-v" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#B98CFF"/></marker>
-    <marker id="p-m" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#6b7280"/></marker>
-    <marker id="p-t" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#22D3EE"/></marker>
-    <marker id="p-r" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#FF6B8B"/></marker>
-    <marker id="p-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#f0b429"/></marker>
+    <marker id="p-v" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#5AC8FF"/></marker>
+    <marker id="p-m" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#6B6B78"/></marker>
+    <marker id="p-t" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#28B9FF"/></marker>
+    <marker id="p-r" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#9AA0B4"/></marker>
+    <marker id="p-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#9AA0B4"/></marker>
   </defs>
   <text x="440" y="30" font-size="10.5" fill="#9aa0b4" text-anchor="middle" letter-spacing="1.5">THE INTERVIEWER IS FOLLOWING YOUR NARRATIVE — NOT YOUR IDEA</text>
-  <rect x="22" y="66" width="116" height="52" rx="10" fill="#1a1a20" stroke="#6b7280" stroke-width="1.6"/>
-  <text x="80" y="88" font-size="10" fill="#6b7280" font-weight="700" text-anchor="middle">the prompt</text>
-  <text x="80" y="105" font-size="8" fill="#6b7280" text-anchor="middle">deliberately vague</text>
-  <line x1="144" y1="92" x2="160" y2="92" stroke="#6b7280" stroke-width="1.4" marker-end="url(#p-m)"/>
-  <rect x="166" y="66" width="116" height="52" rx="10" fill="#1e1533" stroke="#B98CFF" stroke-width="1.6"/>
-  <text x="224" y="88" font-size="10" fill="#B98CFF" font-weight="700" text-anchor="middle">mission</text>
-  <text x="224" y="105" font-size="8" fill="#6b7280" text-anchor="middle">why this exists</text>
-  <line x1="288" y1="92" x2="304" y2="92" stroke="#6b7280" stroke-width="1.4" marker-end="url(#p-m)"/>
+  <rect x="22" y="66" width="116" height="52" rx="10" fill="#1a1a20" stroke="#6B6B78" stroke-width="1.6"/>
+  <text x="80" y="88" font-size="10" fill="#6B6B78" font-weight="700" text-anchor="middle">the prompt</text>
+  <text x="80" y="105" font-size="8" fill="#6B6B78" text-anchor="middle">deliberately vague</text>
+  <line x1="144" y1="92" x2="160" y2="92" stroke="#6B6B78" stroke-width="1.4" marker-end="url(#p-m)"/>
+  <rect x="166" y="66" width="116" height="52" rx="10" fill="#1e1533" stroke="#5AC8FF" stroke-width="1.6"/>
+  <text x="224" y="88" font-size="10" fill="#5AC8FF" font-weight="700" text-anchor="middle">mission</text>
+  <text x="224" y="105" font-size="8" fill="#6B6B78" text-anchor="middle">why this exists</text>
+  <line x1="288" y1="92" x2="304" y2="92" stroke="#6B6B78" stroke-width="1.4" marker-end="url(#p-m)"/>
   <rect x="310" y="66" width="116" height="52" rx="10" fill="#0e2740" stroke="#5AC8FF" stroke-width="1.6"/>
   <text x="368" y="88" font-size="10" fill="#5AC8FF" font-weight="700" text-anchor="middle">segment</text>
-  <text x="368" y="105" font-size="8" fill="#6b7280" text-anchor="middle">one person</text>
-  <line x1="432" y1="92" x2="448" y2="92" stroke="#6b7280" stroke-width="1.4" marker-end="url(#p-m)"/>
-  <rect x="454" y="66" width="116" height="52" rx="10" fill="#241d0f" stroke="#f0b429" stroke-width="1.6"/>
-  <text x="512" y="88" font-size="10" fill="#f0b429" font-weight="700" text-anchor="middle">pain</text>
-  <text x="512" y="105" font-size="8" fill="#6b7280" text-anchor="middle">one obstacle</text>
-  <line x1="576" y1="92" x2="592" y2="92" stroke="#6b7280" stroke-width="1.4" marker-end="url(#p-m)"/>
-  <rect x="598" y="66" width="116" height="52" rx="10" fill="#0b2029" stroke="#22D3EE" stroke-width="1.6"/>
-  <text x="656" y="88" font-size="10" fill="#22D3EE" font-weight="700" text-anchor="middle">solution + V1</text>
-  <text x="656" y="105" font-size="8" fill="#6b7280" text-anchor="middle">smallest real thing</text>
-  <line x1="720" y1="92" x2="736" y2="92" stroke="#6b7280" stroke-width="1.4" marker-end="url(#p-m)"/>
-  <rect x="742" y="66" width="116" height="52" rx="10" fill="#1e1533" stroke="#B98CFF" stroke-width="1.6"/>
-  <text x="800" y="88" font-size="10" fill="#B98CFF" font-weight="700" text-anchor="middle">metric</text>
-  <text x="800" y="105" font-size="8" fill="#6b7280" text-anchor="middle">how you'd know</text>
-  <path d="M80 124 C 80 160, 800 160, 800 124" fill="none" stroke="#B98CFF" stroke-width="1.3" stroke-dasharray="5,3"/>
-  <rect x="298" y="146" width="284" height="17" rx="4" fill="#0d0d13"/>
-  <text x="440" y="159" font-size="9" fill="#B98CFF" text-anchor="middle">every step must constrain the next one</text>
+  <text x="368" y="105" font-size="8" fill="#6B6B78" text-anchor="middle">one person</text>
+  <line x1="432" y1="92" x2="448" y2="92" stroke="#6B6B78" stroke-width="1.4" marker-end="url(#p-m)"/>
+  <rect x="454" y="66" width="116" height="52" rx="10" fill="#1D1D26" stroke="#9AA0B4" stroke-width="1.6"/>
+  <text x="512" y="88" font-size="10" fill="#9AA0B4" font-weight="700" text-anchor="middle">pain</text>
+  <text x="512" y="105" font-size="8" fill="#6B6B78" text-anchor="middle">one obstacle</text>
+  <line x1="576" y1="92" x2="592" y2="92" stroke="#6B6B78" stroke-width="1.4" marker-end="url(#p-m)"/>
+  <rect x="598" y="66" width="116" height="52" rx="10" fill="#0b2029" stroke="#28B9FF" stroke-width="1.6"/>
+  <text x="656" y="88" font-size="10" fill="#28B9FF" font-weight="700" text-anchor="middle">solution + V1</text>
+  <text x="656" y="105" font-size="8" fill="#6B6B78" text-anchor="middle">smallest real thing</text>
+  <line x1="720" y1="92" x2="736" y2="92" stroke="#6B6B78" stroke-width="1.4" marker-end="url(#p-m)"/>
+  <rect x="742" y="66" width="116" height="52" rx="10" fill="#1e1533" stroke="#5AC8FF" stroke-width="1.6"/>
+  <text x="800" y="88" font-size="10" fill="#5AC8FF" font-weight="700" text-anchor="middle">metric</text>
+  <text x="800" y="105" font-size="8" fill="#6B6B78" text-anchor="middle">how you'd know</text>
+  <path d="M80 124 C 80 160, 800 160, 800 124" fill="none" stroke="#5AC8FF" stroke-width="1.3" stroke-dasharray="5,3"/>
+  <rect x="298" y="146" width="284" height="17" rx="4" fill="#101017"/>
+  <text x="440" y="159" font-size="9" fill="#5AC8FF" text-anchor="middle">every step must constrain the next one</text>
   <text x="440" y="190" font-size="10.5" fill="#cdd0dd" text-anchor="middle">A great answer is one chain of reasoning. A weak answer is a pile of good ideas.</text>
   </svg>
 <figcaption>The shape of a strong answer. Each step must <em>constrain</em> the next one — the pain you pick has to belong to the user you picked, and the V1 has to solve <em>that</em> pain. A pile of good ideas with no chain between them reads as noise.</figcaption>
@@ -260,35 +274,35 @@
 <svg viewBox="0 0 760 330" width="100%" aria-label="The five dimensions a product sense interviewer scores">
   <defs>
     <marker id="p-c" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#5AC8FF"/></marker>
-    <marker id="p-v" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#B98CFF"/></marker>
-    <marker id="p-m" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#6b7280"/></marker>
-    <marker id="p-t" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#22D3EE"/></marker>
-    <marker id="p-r" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#FF6B8B"/></marker>
-    <marker id="p-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#f0b429"/></marker>
+    <marker id="p-v" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#5AC8FF"/></marker>
+    <marker id="p-m" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#6B6B78"/></marker>
+    <marker id="p-t" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#28B9FF"/></marker>
+    <marker id="p-r" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#9AA0B4"/></marker>
+    <marker id="p-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#9AA0B4"/></marker>
   </defs>
   <text x="380" y="28" font-size="10.5" fill="#9aa0b4" text-anchor="middle" letter-spacing="1.5">FIVE DIALS — AND YOU MUST CLEAR THE BAR ON ALL FIVE</text>
   <rect x="30" y="50" width="700" height="40" rx="8" fill="#12131a" stroke="#5AC8FF" stroke-width="1.4"/>
   <circle cx="52" cy="70" r="4.5" fill="#5AC8FF"/>
   <text x="70" y="75" font-size="11" fill="#5AC8FF" font-weight="700">Communication</text>
   <text x="716" y="75" font-size="9.5" fill="#9aa0b4" text-anchor="end">can I follow you without doing work?</text>
-  <rect x="30" y="98" width="700" height="40" rx="8" fill="#12131a" stroke="#B98CFF" stroke-width="1.4"/>
-  <circle cx="52" cy="118" r="4.5" fill="#B98CFF"/>
-  <text x="70" y="123" font-size="11" fill="#B98CFF" font-weight="700">Product motivation</text>
+  <rect x="30" y="98" width="700" height="40" rx="8" fill="#12131a" stroke="#5AC8FF" stroke-width="1.4"/>
+  <circle cx="52" cy="118" r="4.5" fill="#5AC8FF"/>
+  <text x="70" y="123" font-size="11" fill="#5AC8FF" font-weight="700">Product motivation</text>
   <text x="716" y="123" font-size="9.5" fill="#9aa0b4" text-anchor="end">do you know why this product exists?</text>
   <rect x="30" y="146" width="700" height="40" rx="8" fill="#12131a" stroke="#5AC8FF" stroke-width="1.4"/>
   <circle cx="52" cy="166" r="4.5" fill="#5AC8FF"/>
   <text x="70" y="171" font-size="11" fill="#5AC8FF" font-weight="700">Segmentation</text>
   <text x="716" y="171" font-size="9.5" fill="#9aa0b4" text-anchor="end">did you choose ONE user — and defend it?</text>
-  <rect x="30" y="194" width="700" height="40" rx="8" fill="#12131a" stroke="#f0b429" stroke-width="1.4"/>
-  <circle cx="52" cy="214" r="4.5" fill="#f0b429"/>
-  <text x="70" y="219" font-size="11" fill="#f0b429" font-weight="700">Problem finding</text>
+  <rect x="30" y="194" width="700" height="40" rx="8" fill="#12131a" stroke="#9AA0B4" stroke-width="1.4"/>
+  <circle cx="52" cy="214" r="4.5" fill="#9AA0B4"/>
+  <text x="70" y="219" font-size="11" fill="#9AA0B4" font-weight="700">Problem finding</text>
   <text x="716" y="219" font-size="9.5" fill="#9aa0b4" text-anchor="end">is the pain real, specific, prioritised?</text>
-  <rect x="30" y="242" width="700" height="40" rx="8" fill="#12131a" stroke="#22D3EE" stroke-width="1.4"/>
-  <circle cx="52" cy="262" r="4.5" fill="#22D3EE"/>
-  <text x="70" y="267" font-size="11" fill="#22D3EE" font-weight="700">Solution + V1</text>
+  <rect x="30" y="242" width="700" height="40" rx="8" fill="#12131a" stroke="#28B9FF" stroke-width="1.4"/>
+  <circle cx="52" cy="262" r="4.5" fill="#28B9FF"/>
+  <text x="70" y="267" font-size="11" fill="#28B9FF" font-weight="700">Solution + V1</text>
   <text x="716" y="267" font-size="9.5" fill="#9aa0b4" text-anchor="end">is it concrete, and does it solve THAT pain?</text>
-  <rect x="30" y="292" width="700" height="26" rx="7" fill="#22121A" stroke="#FF6B8B" stroke-width="1.3"/>
-  <text x="380" y="309" font-size="9.5" fill="#FF6B8B" text-anchor="middle">a brilliant solution does NOT rescue a vague segment — the dials do not average out</text>
+  <rect x="30" y="292" width="700" height="26" rx="7" fill="#22121A" stroke="#9AA0B4" stroke-width="1.3"/>
+  <text x="380" y="309" font-size="9.5" fill="#9AA0B4" text-anchor="middle">a brilliant solution does NOT rescue a vague segment — the dials do not average out</text>
   </svg>
 <figcaption>The five dials. Interviewers usually have a scorecard with something very close to these on it, and they are listening for each one in turn.</figcaption>
 </figure>
@@ -306,39 +320,39 @@
 <svg viewBox="0 0 760 384" width="100%" aria-label="The five question types and who asks them">
   <defs>
     <marker id="p-c" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#5AC8FF"/></marker>
-    <marker id="p-v" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#B98CFF"/></marker>
-    <marker id="p-m" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#6b7280"/></marker>
-    <marker id="p-t" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#22D3EE"/></marker>
-    <marker id="p-r" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#FF6B8B"/></marker>
-    <marker id="p-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#f0b429"/></marker>
+    <marker id="p-v" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#5AC8FF"/></marker>
+    <marker id="p-m" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#6B6B78"/></marker>
+    <marker id="p-t" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#28B9FF"/></marker>
+    <marker id="p-r" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#9AA0B4"/></marker>
+    <marker id="p-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#9AA0B4"/></marker>
   </defs>
   <text x="380" y="28" font-size="10.5" fill="#9aa0b4" text-anchor="middle" letter-spacing="1.5">FIVE ENTRY POINTS — ONE SPINE</text>
   <rect x="24" y="48" width="342" height="76" rx="10" fill="#0e2740" stroke="#5AC8FF" stroke-width="1.5"/>
   <text x="40" y="70" font-size="9.5" fill="#5AC8FF" font-weight="700">PRODUCT DESIGN</text>
   <text x="40" y="91" font-size="9" fill="#cdd0dd">"Design a parking solution."</text>
-  <text x="40" y="110" font-size="8.5" fill="#6b7280">Meta · Discord</text>
+  <text x="40" y="110" font-size="8.5" fill="#6B6B78">Meta · Discord</text>
   <rect x="394" y="48" width="342" height="76" rx="10" fill="#0e2740" stroke="#5AC8FF" stroke-width="1.5"/>
   <text x="410" y="70" font-size="9.5" fill="#5AC8FF" font-weight="700">PRODUCT IMPROVEMENT</text>
   <text x="410" y="91" font-size="9" fill="#cdd0dd">"Favourite product — improve it."</text>
-  <text x="410" y="110" font-size="8.5" fill="#6b7280">Google · most others</text>
-  <rect x="24" y="140" width="342" height="76" rx="10" fill="#1e1533" stroke="#B98CFF" stroke-width="1.5"/>
-  <text x="40" y="162" font-size="9.5" fill="#B98CFF" font-weight="700">STRATEGY</text>
+  <text x="410" y="110" font-size="8.5" fill="#6B6B78">Google · most others</text>
+  <rect x="24" y="140" width="342" height="76" rx="10" fill="#1e1533" stroke="#5AC8FF" stroke-width="1.5"/>
+  <text x="40" y="162" font-size="9.5" fill="#5AC8FF" font-weight="700">STRATEGY</text>
   <text x="40" y="183" font-size="9" fill="#cdd0dd">"You’re CPO of Zoom. Teams is winning."</text>
-  <text x="40" y="202" font-size="8.5" fill="#6b7280">Google · Stripe</text>
-  <rect x="394" y="140" width="342" height="76" rx="10" fill="#241d0f" stroke="#f0b429" stroke-width="1.5"/>
-  <text x="410" y="162" font-size="9.5" fill="#f0b429" font-weight="700">METRICS / DIAGNOSIS</text>
+  <text x="40" y="202" font-size="8.5" fill="#6B6B78">Google · Stripe</text>
+  <rect x="394" y="140" width="342" height="76" rx="10" fill="#1D1D26" stroke="#9AA0B4" stroke-width="1.5"/>
+  <text x="410" y="162" font-size="9.5" fill="#9AA0B4" font-weight="700">METRICS / DIAGNOSIS</text>
   <text x="410" y="183" font-size="9" fill="#cdd0dd">"Messenger DAU fell 5%. Why?"</text>
-  <text x="410" y="202" font-size="8.5" fill="#6b7280">Meta · Uber · data roles</text>
-  <rect x="24" y="232" width="342" height="76" rx="10" fill="#0b2029" stroke="#22D3EE" stroke-width="1.5"/>
-  <text x="40" y="254" font-size="9.5" fill="#22D3EE" font-weight="700">NOVEL TECH / AI</text>
+  <text x="410" y="202" font-size="8.5" fill="#6B6B78">Meta · Uber · data roles</text>
+  <rect x="24" y="232" width="342" height="76" rx="10" fill="#0b2029" stroke="#28B9FF" stroke-width="1.5"/>
+  <text x="40" y="254" font-size="9.5" fill="#28B9FF" font-weight="700">NOVEL TECH / AI</text>
   <text x="40" y="275" font-size="9" fill="#cdd0dd">"10x Claude Code weekly actives."</text>
-  <text x="40" y="294" font-size="8.5" fill="#6b7280">OpenAI · Anthropic · DeepMind</text>
-  <rect x="394" y="232" width="342" height="76" rx="10" fill="#15151b" stroke="#2c2c36" stroke-dasharray="5,3"/>
+  <text x="40" y="294" font-size="8.5" fill="#6B6B78">OpenAI · Anthropic · DeepMind</text>
+  <rect x="394" y="232" width="342" height="76" rx="10" fill="#23232C" stroke="#34343F" stroke-dasharray="5,3"/>
   <text x="565" y="262" font-size="9.5" fill="#cdd0dd" text-anchor="middle">Only the first move differs.</text>
   <text x="565" y="282" font-size="9.5" fill="#cdd0dd" text-anchor="middle">User → pain → solution → metric</text>
-  <text x="565" y="298" font-size="8.5" fill="#6b7280" text-anchor="middle">is the spine under all five.</text>
+  <text x="565" y="298" font-size="8.5" fill="#6B6B78" text-anchor="middle">is the spine under all five.</text>
   <text x="380" y="344" font-size="10.5" fill="#cdd0dd" text-anchor="middle">Learn one spine properly and you can walk into any of the five.</text>
-  <text x="380" y="366" font-size="9.5" fill="#6b7280" text-anchor="middle">"Favourite product" is not a warm-up — it is the same interview with the segment step hidden.</text>
+  <text x="380" y="366" font-size="9.5" fill="#6B6B78" text-anchor="middle">"Favourite product" is not a warm-up — it is the same interview with the segment step hidden.</text>
   </svg>
 <figcaption>The five entry points. The metrics variant is the one data engineers and data scientists get most; the novel-tech variant is the one AI engineers get most.</figcaption>
 </figure>
@@ -355,33 +369,33 @@
 <svg viewBox="0 0 760 236" width="100%" aria-label="How to spend the 35 working minutes of a product sense interview">
   <defs>
     <marker id="p-c" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#5AC8FF"/></marker>
-    <marker id="p-v" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#B98CFF"/></marker>
-    <marker id="p-m" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#6b7280"/></marker>
-    <marker id="p-t" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#22D3EE"/></marker>
-    <marker id="p-r" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#FF6B8B"/></marker>
-    <marker id="p-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#f0b429"/></marker>
+    <marker id="p-v" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#5AC8FF"/></marker>
+    <marker id="p-m" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#6B6B78"/></marker>
+    <marker id="p-t" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#28B9FF"/></marker>
+    <marker id="p-r" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#9AA0B4"/></marker>
+    <marker id="p-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#9AA0B4"/></marker>
   </defs>
   <text x="380" y="30" font-size="10.5" fill="#9aa0b4" text-anchor="middle" letter-spacing="1.5">35 MINUTES OF ACTUAL WORK</text>
-  <rect x="40" y="70" width="78" height="46" rx="7" fill="#1a1a20" stroke="#6b7280" stroke-width="1.5"/>
-  <text x="79" y="90" font-size="9.5" fill="#6b7280" font-weight="700" text-anchor="middle">frame</text>
-  <text x="79" y="106" font-size="8.5" fill="#6b7280" text-anchor="middle">4 min</text>
-  <rect x="118" y="70" width="78" height="46" rx="7" fill="#1e1533" stroke="#B98CFF" stroke-width="1.5"/>
-  <text x="157" y="90" font-size="9.5" fill="#B98CFF" font-weight="700" text-anchor="middle">mission</text>
-  <text x="157" y="106" font-size="8.5" fill="#6b7280" text-anchor="middle">4 min</text>
+  <rect x="40" y="70" width="78" height="46" rx="7" fill="#1a1a20" stroke="#6B6B78" stroke-width="1.5"/>
+  <text x="79" y="90" font-size="9.5" fill="#6B6B78" font-weight="700" text-anchor="middle">frame</text>
+  <text x="79" y="106" font-size="8.5" fill="#6B6B78" text-anchor="middle">4 min</text>
+  <rect x="118" y="70" width="78" height="46" rx="7" fill="#1e1533" stroke="#5AC8FF" stroke-width="1.5"/>
+  <text x="157" y="90" font-size="9.5" fill="#5AC8FF" font-weight="700" text-anchor="middle">mission</text>
+  <text x="157" y="106" font-size="8.5" fill="#6B6B78" text-anchor="middle">4 min</text>
   <rect x="195" y="70" width="175" height="46" rx="7" fill="#0e2740" stroke="#5AC8FF" stroke-width="1.5"/>
   <text x="283" y="90" font-size="9.5" fill="#5AC8FF" font-weight="700" text-anchor="middle">segment</text>
-  <text x="283" y="106" font-size="8.5" fill="#6b7280" text-anchor="middle">9 min</text>
-  <rect x="370" y="70" width="175" height="46" rx="7" fill="#241d0f" stroke="#f0b429" stroke-width="1.5"/>
-  <text x="458" y="90" font-size="9.5" fill="#f0b429" font-weight="700" text-anchor="middle">pain</text>
-  <text x="458" y="106" font-size="8.5" fill="#6b7280" text-anchor="middle">9 min</text>
-  <rect x="545" y="70" width="175" height="46" rx="7" fill="#0b2029" stroke="#22D3EE" stroke-width="1.5"/>
-  <text x="633" y="90" font-size="9.5" fill="#22D3EE" font-weight="700" text-anchor="middle">solution + V1</text>
-  <text x="633" y="106" font-size="8.5" fill="#6b7280" text-anchor="middle">9 min</text>
-  <path d="M235 122 V 132 H 720 V 122" fill="none" stroke="#6b7280" stroke-width="1.2"/>
+  <text x="283" y="106" font-size="8.5" fill="#6B6B78" text-anchor="middle">9 min</text>
+  <rect x="370" y="70" width="175" height="46" rx="7" fill="#1D1D26" stroke="#9AA0B4" stroke-width="1.5"/>
+  <text x="458" y="90" font-size="9.5" fill="#9AA0B4" font-weight="700" text-anchor="middle">pain</text>
+  <text x="458" y="106" font-size="8.5" fill="#6B6B78" text-anchor="middle">9 min</text>
+  <rect x="545" y="70" width="175" height="46" rx="7" fill="#0b2029" stroke="#28B9FF" stroke-width="1.5"/>
+  <text x="633" y="90" font-size="9.5" fill="#28B9FF" font-weight="700" text-anchor="middle">solution + V1</text>
+  <text x="633" y="106" font-size="8.5" fill="#6B6B78" text-anchor="middle">9 min</text>
+  <path d="M235 122 V 132 H 720 V 122" fill="none" stroke="#6B6B78" stroke-width="1.2"/>
   <text x="478" y="150" font-size="9" fill="#cdd0dd" text-anchor="middle">77% of the clock lives here — segment, pain, and the build</text>
   <text x="380" y="184" font-size="10.5" fill="#cdd0dd" text-anchor="middle">The three long blocks carry almost all the signal.</text>
-  <text x="380" y="206" font-size="10.5" fill="#FF6B8B" text-anchor="middle">Most candidates fail by spending 15 minutes on mission and running out of clock at the V1.</text>
-  <text x="380" y="226" font-size="9" fill="#6b7280" text-anchor="middle">Wear a watch. Say the time out loud: "I have about ten minutes left, so let me commit to a segment."</text>
+  <text x="380" y="206" font-size="10.5" fill="#9AA0B4" text-anchor="middle">Most candidates fail by spending 15 minutes on mission and running out of clock at the V1.</text>
+  <text x="380" y="226" font-size="9" fill="#6B6B78" text-anchor="middle">Wear a watch. Say the time out loud: "I have about ten minutes left, so let me commit to a segment."</text>
   </svg>
 <figcaption>Time is the hidden rubric. Running out of clock before you reach a concrete V1 is the single most-cited reason candidates fail this round.</figcaption>
 </figure>
@@ -446,51 +460,51 @@
   <text x="380" y="24" font-size="10.5" fill="#9aa0b4" text-anchor="middle" letter-spacing="1.5">THE SAME 2×2, THREE TIMES</text>
 
   <text x="130" y="52" font-size="10" fill="#5AC8FF" font-weight="700" text-anchor="middle">1 · WHICH USER?</text>
-  <rect x="30" y="64" width="200" height="200" rx="8" fill="#101018" stroke="#2c2c36"/>
+  <rect x="30" y="64" width="200" height="200" rx="8" fill="#17171E" stroke="#34343F"/>
   <rect x="130" y="64" width="100" height="100" fill="#5AC8FF" opacity=".10"/>
-  <line x1="130" y1="64" x2="130" y2="264" stroke="#2c2c36" stroke-dasharray="4,3"/>
-  <line x1="30" y1="164" x2="230" y2="164" stroke="#2c2c36" stroke-dasharray="4,3"/>
-  <text x="130" y="282" font-size="8.5" fill="#6b7280" text-anchor="middle">reach →</text>
-  <text x="16" y="164" font-size="8.5" fill="#6b7280" text-anchor="middle" transform="rotate(-90 16 164)">underserved →</text>
-  <circle cx="78" cy="106" r="4.5" fill="#6b7280"/>
-  <text x="78" y="129" font-size="8.5" fill="#6b7280" text-anchor="middle">niche</text>
-  <circle cx="180" cy="210" r="4.5" fill="#6b7280"/>
-  <text x="180" y="233" font-size="8.5" fill="#6b7280" text-anchor="middle">already served</text>
+  <line x1="130" y1="64" x2="130" y2="264" stroke="#34343F" stroke-dasharray="4,3"/>
+  <line x1="30" y1="164" x2="230" y2="164" stroke="#34343F" stroke-dasharray="4,3"/>
+  <text x="130" y="282" font-size="8.5" fill="#6B6B78" text-anchor="middle">reach →</text>
+  <text x="16" y="164" font-size="8.5" fill="#6B6B78" text-anchor="middle" transform="rotate(-90 16 164)">underserved →</text>
+  <circle cx="78" cy="106" r="4.5" fill="#6B6B78"/>
+  <text x="78" y="129" font-size="8.5" fill="#6B6B78" text-anchor="middle">niche</text>
+  <circle cx="180" cy="210" r="4.5" fill="#6B6B78"/>
+  <text x="180" y="233" font-size="8.5" fill="#6B6B78" text-anchor="middle">already served</text>
   <circle cx="180" cy="106" r="9" fill="none" stroke="#5AC8FF" opacity=".35"/>
   <circle cx="180" cy="106" r="5.5" fill="#5AC8FF"/>
   <text x="180" y="130" font-size="9" fill="#5AC8FF" font-weight="700" text-anchor="middle">PICK</text>
   <text x="130" y="304" font-size="9.5" fill="#cdd0dd" text-anchor="middle">big + badly served</text>
 
-  <text x="380" y="52" font-size="10" fill="#f0b429" font-weight="700" text-anchor="middle">2 · WHICH PAIN?</text>
-  <rect x="280" y="64" width="200" height="200" rx="8" fill="#101018" stroke="#2c2c36"/>
-  <rect x="380" y="64" width="100" height="100" fill="#f0b429" opacity=".10"/>
-  <line x1="380" y1="64" x2="380" y2="264" stroke="#2c2c36" stroke-dasharray="4,3"/>
-  <line x1="280" y1="164" x2="480" y2="164" stroke="#2c2c36" stroke-dasharray="4,3"/>
-  <text x="380" y="282" font-size="8.5" fill="#6b7280" text-anchor="middle">frequency →</text>
-  <text x="266" y="164" font-size="8.5" fill="#6b7280" text-anchor="middle" transform="rotate(-90 266 164)">severity →</text>
-  <circle cx="328" cy="106" r="4.5" fill="#6b7280"/>
-  <text x="328" y="129" font-size="8.5" fill="#6b7280" text-anchor="middle">rare + awful</text>
-  <circle cx="430" cy="210" r="4.5" fill="#6b7280"/>
-  <text x="430" y="233" font-size="8.5" fill="#6b7280" text-anchor="middle">daily + trivial</text>
-  <circle cx="430" cy="106" r="9" fill="none" stroke="#f0b429" opacity=".35"/>
-  <circle cx="430" cy="106" r="5.5" fill="#f0b429"/>
-  <text x="430" y="130" font-size="9" fill="#f0b429" font-weight="700" text-anchor="middle">PICK</text>
+  <text x="380" y="52" font-size="10" fill="#9AA0B4" font-weight="700" text-anchor="middle">2 · WHICH PAIN?</text>
+  <rect x="280" y="64" width="200" height="200" rx="8" fill="#17171E" stroke="#34343F"/>
+  <rect x="380" y="64" width="100" height="100" fill="#9AA0B4" opacity=".10"/>
+  <line x1="380" y1="64" x2="380" y2="264" stroke="#34343F" stroke-dasharray="4,3"/>
+  <line x1="280" y1="164" x2="480" y2="164" stroke="#34343F" stroke-dasharray="4,3"/>
+  <text x="380" y="282" font-size="8.5" fill="#6B6B78" text-anchor="middle">frequency →</text>
+  <text x="266" y="164" font-size="8.5" fill="#6B6B78" text-anchor="middle" transform="rotate(-90 266 164)">severity →</text>
+  <circle cx="328" cy="106" r="4.5" fill="#6B6B78"/>
+  <text x="328" y="129" font-size="8.5" fill="#6B6B78" text-anchor="middle">rare + awful</text>
+  <circle cx="430" cy="210" r="4.5" fill="#6B6B78"/>
+  <text x="430" y="233" font-size="8.5" fill="#6B6B78" text-anchor="middle">daily + trivial</text>
+  <circle cx="430" cy="106" r="9" fill="none" stroke="#9AA0B4" opacity=".35"/>
+  <circle cx="430" cy="106" r="5.5" fill="#9AA0B4"/>
+  <text x="430" y="130" font-size="9" fill="#9AA0B4" font-weight="700" text-anchor="middle">PICK</text>
   <text x="380" y="304" font-size="9.5" fill="#cdd0dd" text-anchor="middle">often + genuinely hurts</text>
 
-  <text x="630" y="52" font-size="10" fill="#22D3EE" font-weight="700" text-anchor="middle">3 · WHICH V1?</text>
-  <rect x="530" y="64" width="200" height="200" rx="8" fill="#101018" stroke="#2c2c36"/>
-  <rect x="530" y="64" width="100" height="100" fill="#22D3EE" opacity=".10"/>
-  <line x1="630" y1="64" x2="630" y2="264" stroke="#2c2c36" stroke-dasharray="4,3"/>
-  <line x1="530" y1="164" x2="730" y2="164" stroke="#2c2c36" stroke-dasharray="4,3"/>
-  <text x="630" y="282" font-size="8.5" fill="#6b7280" text-anchor="middle">effort →</text>
-  <text x="516" y="164" font-size="8.5" fill="#6b7280" text-anchor="middle" transform="rotate(-90 516 164)">impact →</text>
-  <circle cx="682" cy="106" r="4.5" fill="#6b7280"/>
-  <text x="682" y="129" font-size="8.5" fill="#6b7280" text-anchor="middle">the vision</text>
-  <circle cx="578" cy="210" r="4.5" fill="#6b7280"/>
-  <text x="578" y="233" font-size="8.5" fill="#6b7280" text-anchor="middle">busywork</text>
-  <circle cx="578" cy="106" r="9" fill="none" stroke="#22D3EE" opacity=".35"/>
-  <circle cx="578" cy="106" r="5.5" fill="#22D3EE"/>
-  <text x="578" y="130" font-size="9" fill="#22D3EE" font-weight="700" text-anchor="middle">PICK</text>
+  <text x="630" y="52" font-size="10" fill="#28B9FF" font-weight="700" text-anchor="middle">3 · WHICH V1?</text>
+  <rect x="530" y="64" width="200" height="200" rx="8" fill="#17171E" stroke="#34343F"/>
+  <rect x="530" y="64" width="100" height="100" fill="#28B9FF" opacity=".10"/>
+  <line x1="630" y1="64" x2="630" y2="264" stroke="#34343F" stroke-dasharray="4,3"/>
+  <line x1="530" y1="164" x2="730" y2="164" stroke="#34343F" stroke-dasharray="4,3"/>
+  <text x="630" y="282" font-size="8.5" fill="#6B6B78" text-anchor="middle">effort →</text>
+  <text x="516" y="164" font-size="8.5" fill="#6B6B78" text-anchor="middle" transform="rotate(-90 516 164)">impact →</text>
+  <circle cx="682" cy="106" r="4.5" fill="#6B6B78"/>
+  <text x="682" y="129" font-size="8.5" fill="#6B6B78" text-anchor="middle">the vision</text>
+  <circle cx="578" cy="210" r="4.5" fill="#6B6B78"/>
+  <text x="578" y="233" font-size="8.5" fill="#6B6B78" text-anchor="middle">busywork</text>
+  <circle cx="578" cy="106" r="9" fill="none" stroke="#28B9FF" opacity=".35"/>
+  <circle cx="578" cy="106" r="5.5" fill="#28B9FF"/>
+  <text x="578" y="130" font-size="9" fill="#28B9FF" font-weight="700" text-anchor="middle">PICK</text>
   <text x="630" y="304" font-size="9.5" fill="#cdd0dd" text-anchor="middle">high impact, small build</text>
 
   <text x="380" y="338" font-size="10.5" fill="#cdd0dd" text-anchor="middle">Prioritisation is the whole job. Saying "these all matter" is the same as saying nothing.</text>
@@ -512,38 +526,38 @@
 <svg viewBox="0 0 760 330" width="100%" aria-label="A north star metric with its input drivers and guardrail metrics">
   <defs>
     <marker id="p-c" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#5AC8FF"/></marker>
-    <marker id="p-v" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#B98CFF"/></marker>
-    <marker id="p-m" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#6b7280"/></marker>
-    <marker id="p-t" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#22D3EE"/></marker>
-    <marker id="p-r" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#FF6B8B"/></marker>
-    <marker id="p-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#f0b429"/></marker>
+    <marker id="p-v" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#5AC8FF"/></marker>
+    <marker id="p-m" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#6B6B78"/></marker>
+    <marker id="p-t" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#28B9FF"/></marker>
+    <marker id="p-r" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#9AA0B4"/></marker>
+    <marker id="p-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#9AA0B4"/></marker>
   </defs>
-  <rect x="250" y="34" width="260" height="52" rx="10" fill="#1e1533" stroke="#B98CFF" stroke-width="1.8"/>
-  <text x="380" y="56" font-size="11.5" fill="#B98CFF" font-weight="700" text-anchor="middle">NORTH STAR</text>
+  <rect x="250" y="34" width="260" height="52" rx="10" fill="#1e1533" stroke="#5AC8FF" stroke-width="1.8"/>
+  <text x="380" y="56" font-size="11.5" fill="#5AC8FF" font-weight="700" text-anchor="middle">NORTH STAR</text>
   <text x="380" y="74" font-size="9" fill="#9aa0b4" text-anchor="middle">earnings per online hour</text>
-  <line x1="380" y1="90" x2="380" y2="106" stroke="#B98CFF" stroke-width="1.4"/>
-  <line x1="140" y1="106" x2="620" y2="106" stroke="#B98CFF" stroke-width="1.4"/>
-  <line x1="140" y1="106" x2="140" y2="126" stroke="#B98CFF" stroke-width="1.4" marker-end="url(#p-v)"/>
+  <line x1="380" y1="90" x2="380" y2="106" stroke="#5AC8FF" stroke-width="1.4"/>
+  <line x1="140" y1="106" x2="620" y2="106" stroke="#5AC8FF" stroke-width="1.4"/>
+  <line x1="140" y1="106" x2="140" y2="126" stroke="#5AC8FF" stroke-width="1.4" marker-end="url(#p-v)"/>
   <rect x="50" y="130" width="180" height="48" rx="9" fill="#0e2740" stroke="#5AC8FF" stroke-width="1.5"/>
   <text x="140" y="150" font-size="10" fill="#5AC8FF" font-weight="700" text-anchor="middle">adoption</text>
-  <text x="140" y="167" font-size="8.5" fill="#6b7280" text-anchor="middle">do they try it?</text>
-  <line x1="380" y1="106" x2="380" y2="126" stroke="#B98CFF" stroke-width="1.4" marker-end="url(#p-v)"/>
+  <text x="140" y="167" font-size="8.5" fill="#6B6B78" text-anchor="middle">do they try it?</text>
+  <line x1="380" y1="106" x2="380" y2="126" stroke="#5AC8FF" stroke-width="1.4" marker-end="url(#p-v)"/>
   <rect x="290" y="130" width="180" height="48" rx="9" fill="#0e2740" stroke="#5AC8FF" stroke-width="1.5"/>
   <text x="380" y="150" font-size="10" fill="#5AC8FF" font-weight="700" text-anchor="middle">frequency</text>
-  <text x="380" y="167" font-size="8.5" fill="#6b7280" text-anchor="middle">do they repeat?</text>
-  <line x1="620" y1="106" x2="620" y2="126" stroke="#B98CFF" stroke-width="1.4" marker-end="url(#p-v)"/>
+  <text x="380" y="167" font-size="8.5" fill="#6B6B78" text-anchor="middle">do they repeat?</text>
+  <line x1="620" y1="106" x2="620" y2="126" stroke="#5AC8FF" stroke-width="1.4" marker-end="url(#p-v)"/>
   <rect x="530" y="130" width="180" height="48" rx="9" fill="#0e2740" stroke="#5AC8FF" stroke-width="1.5"/>
   <text x="620" y="150" font-size="10" fill="#5AC8FF" font-weight="700" text-anchor="middle">yield</text>
-  <text x="620" y="167" font-size="8.5" fill="#6b7280" text-anchor="middle">does it pay?</text>
-  <text x="380" y="200" font-size="9" fill="#6b7280" text-anchor="middle">input drivers — the things a team can actually move</text>
-  <rect x="60" y="216" width="640" height="62" rx="10" fill="#241d0f" stroke="#f0b429" stroke-width="1.5"/>
-  <text x="80" y="238" font-size="10" fill="#f0b429" font-weight="700">GUARDRAILS — what must NOT get worse while you win</text>
+  <text x="620" y="167" font-size="8.5" fill="#6B6B78" text-anchor="middle">does it pay?</text>
+  <text x="380" y="200" font-size="9" fill="#6B6B78" text-anchor="middle">input drivers — the things a team can actually move</text>
+  <rect x="60" y="216" width="640" height="62" rx="10" fill="#1D1D26" stroke="#9AA0B4" stroke-width="1.5"/>
+  <text x="80" y="238" font-size="10" fill="#9AA0B4" font-weight="700">GUARDRAILS — what must NOT get worse while you win</text>
   <text x="80" y="262" font-size="8.5" fill="#cdd0dd">· cancellation rate</text>
   <text x="240" y="262" font-size="8.5" fill="#cdd0dd">· p95 latency</text>
   <text x="400" y="262" font-size="8.5" fill="#cdd0dd">· support tickets</text>
   <text x="560" y="262" font-size="8.5" fill="#cdd0dd">· trust / report rate</text>
   <text x="380" y="304" font-size="10.5" fill="#cdd0dd" text-anchor="middle">Name ONE north star, 2–3 drivers, and the guardrails that stop you gaming it.</text>
-  <text x="380" y="322" font-size="9" fill="#FF6B8B" text-anchor="middle">"Tips per trip" is a trap: you can win it by hurting drivers. A metric you can game is not a metric.</text>
+  <text x="380" y="322" font-size="9" fill="#9AA0B4" text-anchor="middle">"Tips per trip" is a trap: you can win it by hurting drivers. A metric you can game is not a metric.</text>
   </svg>
 <figcaption>One north star, a couple of input drivers a team can actually move, and the guardrails that stop you winning the metric while damaging the product.</figcaption>
 </figure>
@@ -559,37 +573,37 @@
 <svg viewBox="0 0 760 396" width="100%" aria-label="A five step playbook for diagnosing a metric drop">
   <defs>
     <marker id="p-c" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#5AC8FF"/></marker>
-    <marker id="p-v" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#B98CFF"/></marker>
-    <marker id="p-m" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#6b7280"/></marker>
-    <marker id="p-t" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#22D3EE"/></marker>
-    <marker id="p-r" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#FF6B8B"/></marker>
-    <marker id="p-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#f0b429"/></marker>
+    <marker id="p-v" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#5AC8FF"/></marker>
+    <marker id="p-m" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#6B6B78"/></marker>
+    <marker id="p-t" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#28B9FF"/></marker>
+    <marker id="p-r" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#9AA0B4"/></marker>
+    <marker id="p-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#9AA0B4"/></marker>
   </defs>
   <text x="380" y="28" font-size="10.5" fill="#9aa0b4" text-anchor="middle" letter-spacing="1.5">"DAU IS DOWN 5%." — WORK DOWN, NEVER GUESS</text>
-  <rect x="30" y="46" width="700" height="52" rx="9" fill="#22121A" stroke="#FF6B8B" stroke-width="1.5"/>
-  <text x="48" y="67" font-size="10" fill="#FF6B8B" font-weight="700">1 · IS IT REAL?</text>
+  <rect x="30" y="46" width="700" height="52" rx="9" fill="#22121A" stroke="#9AA0B4" stroke-width="1.5"/>
+  <text x="48" y="67" font-size="10" fill="#9AA0B4" font-weight="700">1 · IS IT REAL?</text>
   <text x="48" y="86" font-size="8.5" fill="#cdd0dd">logging change · pipeline broke · a bot left</text>
-  <text x="712" y="79" font-size="8.5" fill="#6b7280" text-anchor="end">rule out the instrument before the world</text>
-  <line x1="380" y1="100" x2="380" y2="110" stroke="#6b7280" stroke-width="1.3" marker-end="url(#p-m)"/>
-  <rect x="30" y="112" width="700" height="52" rx="9" fill="#241d0f" stroke="#f0b429" stroke-width="1.5"/>
-  <text x="48" y="133" font-size="10" fill="#f0b429" font-weight="700">2 · IS IT US, OR THE WORLD?</text>
+  <text x="712" y="79" font-size="8.5" fill="#6B6B78" text-anchor="end">rule out the instrument before the world</text>
+  <line x1="380" y1="100" x2="380" y2="110" stroke="#6B6B78" stroke-width="1.3" marker-end="url(#p-m)"/>
+  <rect x="30" y="112" width="700" height="52" rx="9" fill="#1D1D26" stroke="#9AA0B4" stroke-width="1.5"/>
+  <text x="48" y="133" font-size="10" fill="#9AA0B4" font-weight="700">2 · IS IT US, OR THE WORLD?</text>
   <text x="48" y="152" font-size="8.5" fill="#cdd0dd">seasonality · holiday · competitor · outage · press</text>
-  <text x="712" y="145" font-size="8.5" fill="#6b7280" text-anchor="end">external first — it is free to check</text>
-  <line x1="380" y1="166" x2="380" y2="176" stroke="#6b7280" stroke-width="1.3" marker-end="url(#p-m)"/>
+  <text x="712" y="145" font-size="8.5" fill="#6B6B78" text-anchor="end">external first — it is free to check</text>
+  <line x1="380" y1="166" x2="380" y2="176" stroke="#6B6B78" stroke-width="1.3" marker-end="url(#p-m)"/>
   <rect x="30" y="178" width="700" height="52" rx="9" fill="#0e2740" stroke="#5AC8FF" stroke-width="1.5"/>
   <text x="48" y="199" font-size="10" fill="#5AC8FF" font-weight="700">3 · WHO EXACTLY?</text>
   <text x="48" y="218" font-size="8.5" fill="#cdd0dd">cut by platform, geo, tenure, new vs existing</text>
-  <text x="712" y="211" font-size="8.5" fill="#6b7280" text-anchor="end">a flat 5% is never flat underneath</text>
-  <line x1="380" y1="232" x2="380" y2="242" stroke="#6b7280" stroke-width="1.3" marker-end="url(#p-m)"/>
-  <rect x="30" y="244" width="700" height="52" rx="9" fill="#1e1533" stroke="#B98CFF" stroke-width="1.5"/>
-  <text x="48" y="265" font-size="10" fill="#B98CFF" font-weight="700">4 · WHAT CHANGED?</text>
+  <text x="712" y="211" font-size="8.5" fill="#6B6B78" text-anchor="end">a flat 5% is never flat underneath</text>
+  <line x1="380" y1="232" x2="380" y2="242" stroke="#6B6B78" stroke-width="1.3" marker-end="url(#p-m)"/>
+  <rect x="30" y="244" width="700" height="52" rx="9" fill="#1e1533" stroke="#5AC8FF" stroke-width="1.5"/>
+  <text x="48" y="265" font-size="10" fill="#5AC8FF" font-weight="700">4 · WHAT CHANGED?</text>
   <text x="48" y="284" font-size="8.5" fill="#cdd0dd">release log · experiment ramp · pricing · ranking</text>
-  <text x="712" y="277" font-size="8.5" fill="#6b7280" text-anchor="end">line the drop up against the deploy</text>
-  <line x1="380" y1="298" x2="380" y2="308" stroke="#6b7280" stroke-width="1.3" marker-end="url(#p-m)"/>
-  <rect x="30" y="310" width="700" height="52" rx="9" fill="#0b2029" stroke="#22D3EE" stroke-width="1.5"/>
-  <text x="48" y="331" font-size="10" fill="#22D3EE" font-weight="700">5 · SO WHAT?</text>
+  <text x="712" y="277" font-size="8.5" fill="#6B6B78" text-anchor="end">line the drop up against the deploy</text>
+  <line x1="380" y1="298" x2="380" y2="308" stroke="#6B6B78" stroke-width="1.3" marker-end="url(#p-m)"/>
+  <rect x="30" y="310" width="700" height="52" rx="9" fill="#0b2029" stroke="#28B9FF" stroke-width="1.5"/>
+  <text x="48" y="331" font-size="10" fill="#28B9FF" font-weight="700">5 · SO WHAT?</text>
   <text x="48" y="350" font-size="8.5" fill="#cdd0dd">size it, name the fix, name the guardrail</text>
-  <text x="712" y="343" font-size="8.5" fill="#6b7280" text-anchor="end">end with a decision, not a list</text>
+  <text x="712" y="343" font-size="8.5" fill="#6B6B78" text-anchor="end">end with a decision, not a list</text>
   <text x="380" y="386" font-size="10" fill="#cdd0dd" text-anchor="middle">The candidate who says "probably a bug in logging — may I check that first?" has already passed.</text>
   </svg>
 <figcaption>Work down the ladder. Almost everyone leaps to step 4 — a product theory — and skips the two steps that are cheap, fast, and most often correct.</figcaption>
@@ -604,15 +618,15 @@
 <svg viewBox="0 0 760 348" width="100%" aria-label="Classic software is a function; an AI feature is a distribution, so the product loop changes">
   <defs>
     <marker id="p-c" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#5AC8FF"/></marker>
-    <marker id="p-v" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#B98CFF"/></marker>
-    <marker id="p-m" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#6b7280"/></marker>
-    <marker id="p-t" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#22D3EE"/></marker>
-    <marker id="p-r" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#FF6B8B"/></marker>
-    <marker id="p-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#f0b429"/></marker>
+    <marker id="p-v" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#5AC8FF"/></marker>
+    <marker id="p-m" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#6B6B78"/></marker>
+    <marker id="p-t" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#28B9FF"/></marker>
+    <marker id="p-r" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#9AA0B4"/></marker>
+    <marker id="p-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#9AA0B4"/></marker>
   </defs>
   <rect x="20" y="40" width="340" height="196" rx="12" fill="#0e2740" stroke="#1d3448"/>
   <text x="190" y="64" font-size="11" fill="#5AC8FF" font-weight="700" text-anchor="middle">CLASSIC FEATURE</text>
-  <text x="190" y="82" font-size="9" fill="#6b7280" text-anchor="middle">same input → same output</text>
+  <text x="190" y="82" font-size="9" fill="#6B6B78" text-anchor="middle">same input → same output</text>
   <rect x="52" y="98" width="276" height="24" rx="6" fill="#0d1420" stroke="#5AC8FF" stroke-width="1.2"/>
   <text x="190" y="114" font-size="9" fill="#cdd0dd" text-anchor="middle">spec it</text>
   <rect x="52" y="130" width="276" height="24" rx="6" fill="#0d1420" stroke="#5AC8FF" stroke-width="1.2"/>
@@ -622,20 +636,20 @@
   <rect x="52" y="194" width="276" height="24" rx="6" fill="#0d1420" stroke="#5AC8FF" stroke-width="1.2"/>
   <text x="190" y="210" font-size="9" fill="#cdd0dd" text-anchor="middle">ship it</text>
   <text x="190" y="252" font-size="9" fill="#5AC8FF" text-anchor="middle">correctness is binary</text>
-  <rect x="400" y="40" width="340" height="196" rx="12" fill="#1e1533" stroke="#3a3170"/>
-  <text x="570" y="64" font-size="11" fill="#B98CFF" font-weight="700" text-anchor="middle">AI FEATURE</text>
-  <text x="570" y="82" font-size="9" fill="#6b7280" text-anchor="middle">same input → a distribution</text>
-  <rect x="432" y="98" width="276" height="24" rx="6" fill="#16102b" stroke="#B98CFF" stroke-width="1.2"/>
+  <rect x="400" y="40" width="340" height="196" rx="12" fill="#1e1533" stroke="#23232C"/>
+  <text x="570" y="64" font-size="11" fill="#5AC8FF" font-weight="700" text-anchor="middle">AI FEATURE</text>
+  <text x="570" y="82" font-size="9" fill="#6B6B78" text-anchor="middle">same input → a distribution</text>
+  <rect x="432" y="98" width="276" height="24" rx="6" fill="#16102b" stroke="#5AC8FF" stroke-width="1.2"/>
   <text x="570" y="114" font-size="8.5" fill="#cdd0dd" text-anchor="middle">what can the model actually do?</text>
-  <rect x="432" y="130" width="276" height="24" rx="6" fill="#16102b" stroke="#22D3EE" stroke-width="1.2"/>
+  <rect x="432" y="130" width="276" height="24" rx="6" fill="#16102b" stroke="#28B9FF" stroke-width="1.2"/>
   <text x="570" y="146" font-size="8.5" fill="#cdd0dd" text-anchor="middle">build an EVAL SET first</text>
-  <rect x="432" y="162" width="276" height="24" rx="6" fill="#16102b" stroke="#B98CFF" stroke-width="1.2"/>
+  <rect x="432" y="162" width="276" height="24" rx="6" fill="#16102b" stroke="#5AC8FF" stroke-width="1.2"/>
   <text x="570" y="178" font-size="8.5" fill="#cdd0dd" text-anchor="middle">measure: % good, not pass/fail</text>
-  <rect x="432" y="194" width="276" height="24" rx="6" fill="#16102b" stroke="#B98CFF" stroke-width="1.2"/>
+  <rect x="432" y="194" width="276" height="24" rx="6" fill="#16102b" stroke="#5AC8FF" stroke-width="1.2"/>
   <text x="570" y="210" font-size="8.5" fill="#cdd0dd" text-anchor="middle">design for the 10% it gets wrong</text>
-  <text x="570" y="252" font-size="9" fill="#B98CFF" text-anchor="middle">correctness is a rate — and the UX must absorb it</text>
-  <rect x="20" y="256" width="720" height="44" rx="9" fill="#241d0f" stroke="#f0b429" stroke-width="1.4"/>
-  <text x="380" y="274" font-size="9.5" fill="#f0b429" font-weight="700" text-anchor="middle">the four questions they are really asking</text>
+  <text x="570" y="252" font-size="9" fill="#5AC8FF" text-anchor="middle">correctness is a rate — and the UX must absorb it</text>
+  <rect x="20" y="256" width="720" height="44" rx="9" fill="#1D1D26" stroke="#9AA0B4" stroke-width="1.4"/>
+  <text x="380" y="274" font-size="9.5" fill="#9AA0B4" font-weight="700" text-anchor="middle">the four questions they are really asking</text>
   <text x="380" y="291" font-size="8.5" fill="#cdd0dd" text-anchor="middle">what breaks when it is wrong? · how do you evaluate it? · what does a token cost you? · why not just prompt GPT?</text>
   <text x="380" y="326" font-size="10.5" fill="#cdd0dd" text-anchor="middle">"I would add AI" is a non-answer. Name the capability, the eval, and the failure UX.</text>
   </svg>
@@ -661,23 +675,23 @@
 <svg viewBox="0 0 760 296" width="100%" aria-label="What mid, senior and staff level answers sound like">
   <defs>
     <marker id="p-c" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#5AC8FF"/></marker>
-    <marker id="p-v" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#B98CFF"/></marker>
-    <marker id="p-m" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#6b7280"/></marker>
-    <marker id="p-t" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#22D3EE"/></marker>
-    <marker id="p-r" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#FF6B8B"/></marker>
-    <marker id="p-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#f0b429"/></marker>
+    <marker id="p-v" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#5AC8FF"/></marker>
+    <marker id="p-m" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#6B6B78"/></marker>
+    <marker id="p-t" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#28B9FF"/></marker>
+    <marker id="p-r" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#9AA0B4"/></marker>
+    <marker id="p-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#9AA0B4"/></marker>
   </defs>
   <text x="380" y="28" font-size="10.5" fill="#9aa0b4" text-anchor="middle" letter-spacing="1.5">THE LEVEL IS AUDIBLE IN THE FIRST FIVE MINUTES</text>
-  <rect x="30" y="46" width="700" height="60" rx="10" fill="#1a1a20" stroke="#6b7280" stroke-width="1.6"/>
-  <text x="52" y="70" font-size="11" fill="#6b7280" font-weight="700">MID</text>
+  <rect x="30" y="46" width="700" height="60" rx="10" fill="#1a1a20" stroke="#6B6B78" stroke-width="1.6"/>
+  <text x="52" y="70" font-size="11" fill="#6B6B78" font-weight="700">MID</text>
   <text x="128" y="70" font-size="9" fill="#9aa0b4">solves the problem you were handed</text>
   <text x="52" y="91" font-size="9" fill="#cdd0dd">“I’d build the feature they asked for.”</text>
   <rect x="30" y="120" width="700" height="60" rx="10" fill="#0e2740" stroke="#5AC8FF" stroke-width="1.6"/>
   <text x="52" y="144" font-size="11" fill="#5AC8FF" font-weight="700">SENIOR</text>
   <text x="128" y="144" font-size="9" fill="#9aa0b4">chooses which problem is worth solving</text>
   <text x="52" y="165" font-size="9" fill="#cdd0dd">“I’d cut scope to this one segment, and here is why the rest can wait.”</text>
-  <rect x="30" y="194" width="700" height="60" rx="10" fill="#1e1533" stroke="#B98CFF" stroke-width="1.6"/>
-  <text x="52" y="218" font-size="11" fill="#B98CFF" font-weight="700">STAFF+</text>
+  <rect x="30" y="194" width="700" height="60" rx="10" fill="#1e1533" stroke="#5AC8FF" stroke-width="1.6"/>
+  <text x="52" y="218" font-size="11" fill="#5AC8FF" font-weight="700">STAFF+</text>
   <text x="128" y="218" font-size="9" fill="#9aa0b4">changes what the team believes about the user</text>
   <text x="52" y="239" font-size="9" fill="#cdd0dd">“The metric we picked is the bug. Here is the one I’d ship against, and the guardrail.”</text>
   <text x="380" y="286" font-size="10" fill="#cdd0dd" text-anchor="middle">Seniority is not more features. It is a sharper NO, said earlier, with a reason.</text>
@@ -791,8 +805,8 @@
   <tr><td><strong>Needs, not problems</strong></td><td>"They want it to be easier."</td><td>Find the obstacle: what specifically blocks them, when, and why does it hurt?</td></tr>
   <tr><td><strong>Refusing to prioritise</strong></td><td>"All three of these are important."</td><td>Pick. Say why. The pick is the answer.</td></tr>
   <tr><td><strong>Feature listing</strong></td><td>Six ideas, no depth, no choice.</td><td>Three <em>different</em> ideas, then one V1, then what you cut.</td></tr>
-  <tr><td><strong>No failure model</strong> <span style="color:#FF6B8B">(AI roles)</span></td><td>Only the happy path is described.</td><td>Describe the wrong output first. Then design around it.</td></tr>
-  <tr><td><strong>Metric with no guardrail</strong> <span style="color:#FF6B8B">(data roles)</span></td><td>"I'd measure engagement."</td><td>One north star + the guardrails that stop you gaming it.</td></tr>
+  <tr><td><strong>No failure model</strong> <span style="color:#9AA0B4">(AI roles)</span></td><td>Only the happy path is described.</td><td>Describe the wrong output first. Then design around it.</td></tr>
+  <tr><td><strong>Metric with no guardrail</strong> <span style="color:#9AA0B4">(data roles)</span></td><td>"I'd measure engagement."</td><td>One north star + the guardrails that stop you gaming it.</td></tr>
   <tr><td><strong>Silent thinking</strong></td><td>Forty seconds of nothing, then a conclusion.</td><td>Narrate. They are scoring the reasoning, and they cannot hear your head.</td></tr>
 </table>
 

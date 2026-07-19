@@ -17,11 +17,11 @@
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,500;0,700;0,800;1,400&display=swap" rel="stylesheet">
 <style>
   :root{
-    --bg:#1A1A1A; --bg2:#121212; --panel:#1c1c22; --panel2:#1b1410;
+    --bg:#191921; --bg2:#20202A; --panel:#23232C; --panel2:#1D1D26;
     --ink:#F1F1F1; --muted:#9aa0b4; --dim:#666666;
-    --spark:#E25A1C; --spark2:#FF7E33; --amber:#FFB23F; --ember:#FFC24B;
-    --teal:#2BB3A3; --blue2:#5C78FF; --magenta2:#BA5AFF; --green:#5BC97A; --red:#FF6B6B;
-    --grad:linear-gradient(90deg,#E25A1C,#FF7E33,#FFB23F);
+    --spark:#E25A1C; --spark2:#FF7E33; --amber:#9AA0B4; --ember:#9AA0B4;
+    --teal:#5AC8FF; --blue2:#5C78FF; --magenta2:#5AC8FF; --green:#5AC8FF; --red:#9AA0B4;
+    --grad:linear-gradient(90deg,#E25A1C,#FF7E33,#9AA0B4);
     --font:"JetBrainsMono Nerd Font","JetBrains Mono","Symbols Nerd Font",ui-monospace,"Cascadia Code",Menlo,Consolas,monospace;
   }
   *{box-sizing:border-box}
@@ -32,10 +32,10 @@
   .wrap > *{max-width:none !important;margin-left:0 !important;margin-right:0 !important}
   .prose{max-width:780px;margin-left:auto;margin-right:auto}
   p,li{color:#dcdce4}
-  a{color:var(--amber);text-decoration:none;border-bottom:1px dotted #FFB23F66}
+  a{color:var(--amber);text-decoration:none;border-bottom:1px dotted #9AA0B466}
   a:hover{color:#fff;border-bottom-color:#fff}
   code{font-family:var(--font);background:#231a14;color:var(--amber);padding:1px 7px;border-radius:5px;font-size:.9em;border:1px solid #3a2a1e}
-  pre{font-family:var(--font);background:#15151b;border:1px solid #2c2c36;border-radius:12px;padding:16px 18px;overflow-x:auto;font-size:13.5px;line-height:1.7;color:#dcdce4;margin:18px auto;max-width:820px}
+  pre{font-family:var(--font);background:#23232C;border:1px solid #34343F;border-radius:12px;padding:16px 18px;overflow-x:auto;font-size:13.5px;line-height:1.7;color:#dcdce4;margin:18px auto;max-width:820px}
   pre .k{color:var(--spark2)} pre .s{color:var(--green)} pre .c{color:var(--dim);font-style:italic} pre .n{color:var(--amber)} pre .f{color:var(--blue2)}
   header.hero{padding:64px 22px 30px;text-align:center;position:relative;overflow:hidden}
   .kicker{font-size:12.5px;letter-spacing:.32em;text-transform:uppercase;color:var(--muted)}
@@ -52,63 +52,77 @@
   .lead{font-size:18px;color:#e7e7ee}
   .sectionsub{color:var(--muted);margin-top:0}
   figure.fig{margin:30px auto;text-align:center;max-width:980px}
-  figure.fig svg{width:100%;height:auto;border:1px solid #2c2c36;border-radius:16px;background:#121212;box-shadow:0 18px 50px rgba(0,0,0,.45);display:block}
+  figure.fig svg{width:100%;height:auto;border:1px solid #34343F;border-radius:16px;background:#20202A;box-shadow:0 18px 50px rgba(0,0,0,.45);display:block}
   figure.fig figcaption{font-size:12.5px;color:var(--muted);margin-top:10px;font-style:italic}
-  .tldr{border:1px solid #3a2a1e;background:linear-gradient(180deg,#1b1410,#121212);border-radius:16px;padding:22px 26px;margin:30px auto;max-width:820px}
+  .tldr{border:1px solid #3a2a1e;background:linear-gradient(180deg,#1D1D26,#20202A);border-radius:16px;padding:22px 26px;margin:30px auto;max-width:820px}
   .tldr h4{margin:0 0 8px;font-size:13px;letter-spacing:.2em;text-transform:uppercase;color:var(--amber)}
-  .callout{border-left:4px solid var(--spark);background:#1b1410;border-radius:0 12px 12px 0;padding:14px 20px;margin:24px auto;max-width:800px}
+  .callout{border-left:4px solid var(--spark);background:#1D1D26;border-radius:0 12px 12px 0;padding:14px 20px;margin:24px auto;max-width:800px}
   .callout.cy{border-color:var(--teal)} .callout.mg{border-color:var(--magenta2)} .callout.gd{border-color:var(--amber)} .callout.gn{border-color:var(--green)} .callout.rd{border-color:var(--red)}
   .pull{font-size:23px;line-height:1.45;font-weight:700;color:#fff;margin:34px auto;max-width:760px;padding-left:18px;border-left:4px solid transparent;border-image:var(--grad) 1;}
-  .def{border:1px solid #2c2c36;background:#15151b;border-radius:12px;padding:14px 18px;margin:16px auto;max-width:800px}
+  .def{border:1px solid #34343F;background:#23232C;border-radius:12px;padding:14px 18px;margin:16px auto;max-width:800px}
   .def .t{font-weight:700;color:#fff}
   .def .ex{color:var(--muted);font-size:14px;margin-top:6px}
   .def .ex b{color:var(--amber)}
   .tag{display:inline-flex;align-items:center;gap:9px;padding:4px 12px;border-radius:999px;font-size:14px;font-weight:700;border:1px solid}
   .tag.s{color:var(--spark);border-color:#E25A1C55;background:#E25A1C14}
-  .tag.t{color:var(--teal);border-color:#2BB3A355;background:#2BB3A314}
+  .tag.t{color:var(--teal);border-color:#5AC8FF55;background:#5AC8FF14}
   .tag.b{color:var(--blue2);border-color:#5C78FF55;background:#5C78FF14}
-  .tag.m{color:var(--magenta2);border-color:#BA5AFF55;background:#BA5AFF14}
-  .layer{border:1px solid #2c2c36;border-radius:14px;padding:18px 22px;margin:18px auto;max-width:820px;background:#15151b}
+  .tag.m{color:var(--magenta2);border-color:#5AC8FF55;background:#5AC8FF14}
+  .layer{border:1px solid #34343F;border-radius:14px;padding:18px 22px;margin:18px auto;max-width:820px;background:#23232C}
   .layer h3{margin-top:0}
   .layer .role{font-size:13px;color:var(--muted);margin:-2px 0 10px}
   .kv{font-size:14.5px;color:#cdd0dd;margin:5px 0}
   .kv b{color:#fff}
   .tablewrap{overflow-x:auto;margin:22px auto;max-width:900px}
   table{border-collapse:collapse;width:100%;font-size:13.5px;min-width:640px}
-  th,td{border:1px solid #2c2c36;padding:10px 12px;text-align:left;vertical-align:top}
-  th{background:#1d1d27;color:#fff;font-weight:700}
-  tr:nth-child(even) td{background:#161620}
+  th,td{border:1px solid #34343F;padding:10px 12px;text-align:left;vertical-align:top}
+  th{background:#17171E;color:#fff;font-weight:700}
+  tr:nth-child(even) td{background:#17171E}
   .cell-s{color:var(--spark);font-weight:700}.cell-t{color:var(--teal);font-weight:700}.cell-b{color:var(--blue2);font-weight:700}.cell-m{color:var(--magenta2);font-weight:700}
   .promptline{color:var(--dim);font-size:13px;margin:54px 0 -6px}
   .promptline b{color:var(--amber)}
   .js .reveal{opacity:0;transform:translateY(22px);transition:opacity .7s ease,transform .7s ease}
   .js .reveal.in{opacity:1;transform:none}
   @media (prefers-reduced-motion: reduce){.js .reveal{opacity:1;transform:none;transition:none}}
-  details{border:1px solid #2c2c36;border-radius:12px;padding:6px 16px;margin:16px auto;max-width:800px;background:#141419}
+  details{border:1px solid #34343F;border-radius:12px;padding:6px 16px;margin:16px auto;max-width:800px;background:#1D1D26}
   summary{cursor:pointer;font-weight:700;color:var(--amber);padding:8px 0}
-  hr{border:0;border-top:1px solid #2c2c36;margin:48px auto;max-width:780px}
+  hr{border:0;border-top:1px solid #34343F;margin:48px auto;max-width:780px}
   .end{color:var(--muted);font-size:13px;max-width:780px;margin:28px auto}
   .footnav a{margin-right:18px}
-  .toc{border:1px solid #2c2c36;border-radius:14px;padding:18px 22px;margin:26px auto;max-width:820px;background:#15151b;font-size:14px}
+  .toc{border:1px solid #34343F;border-radius:14px;padding:18px 22px;margin:26px auto;max-width:820px;background:#23232C;font-size:14px}
   .toc h4{margin:0 0 10px;color:var(--amber)}
   .toc ol{margin:0;padding-left:20px}
   .toc li{margin:3px 0}
   .num30{display:grid;grid-template-columns:1fr 1fr;gap:10px 22px;max-width:820px;margin:18px auto;font-size:13.5px}
   @media (max-width:620px){.num30{grid-template-columns:1fr}}
-  .num30 div{border-left:3px solid var(--spark);padding:4px 10px;background:#15151b;border-radius:0 8px 8px 0}
+  .num30 div{border-left:3px solid var(--spark);padding:4px 10px;background:#23232C;border-radius:0 8px 8px 0}
   .num30 b{color:var(--amber)}
+  /* ---- shared theme: top nav + a11y (appended) ---- */
+  .nav{position:sticky;top:0;z-index:60;background:rgba(25,25,33,.82);backdrop-filter:blur(10px);border-bottom:1px solid #34343f}
+  .nav-inner{max-width:1040px;margin:0 auto;padding:12px 24px;display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+  .nav-brand{font-weight:800;letter-spacing:.16em;font-size:15px;text-decoration:none;border:0;
+             background:linear-gradient(90deg,#5C78FF,#28B9FF,#A52AFF);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .nav-links{display:flex;gap:6px;flex-wrap:wrap;margin-left:auto}
+  .nav-links a{text-decoration:none;border:1px solid transparent;color:#9aa0b4;font-weight:700;font-size:13.5px;padding:6px 14px;border-radius:999px;transition:.2s}
+  .nav-links a:hover{color:#fff;border-color:#34343f;background:#23232c}
+  .nav-links a.active{color:#5AC8FF;border-color:#28B9FF55;background:#28B9FF14}
+  :focus-visible{outline:2px solid #5AC8FF;outline-offset:3px;border-radius:6px}
+  @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{animation:none !important;transition:none !important}.js .reveal{opacity:1 !important;transform:none !important}}
 </style>
+
 <script>document.documentElement.classList.add('js');</script>
 </head>
 <body id="top">
 <div id="bar"></div>
+
+<nav class="nav"><div class="nav-inner"><a class="nav-brand" href="../index.html">HAO TIEU</a><div class="nav-links"><a href="../index.html">Portfolio</a><a href="../blogs.html">Blogs</a><a href="../essentials.html" class="active">Data Engineer Essentials</a></div></div></nav>
 
 <header class="hero">
   <div class="kicker">Data Engineering · Deep Dive</div>
   <svg class="sparklogo" viewBox="0 0 120 120" role="img" aria-label="Apache Spark (stylized)">
     <defs>
       <linearGradient id="spk" x1="0" y1="0" x2="1" y2="1">
-        <stop offset="0" stop-color="#E25A1C"/><stop offset="1" stop-color="#FFB23F"/>
+        <stop offset="0" stop-color="#E25A1C"/><stop offset="1" stop-color="#9AA0B4"/>
       </linearGradient>
     </defs>
     <g>
@@ -171,19 +185,19 @@
 </div>
 <figure class="fig reveal">
 <svg viewBox="0 0 1000 420" font-family="'JetBrains Mono','Courier New',monospace" role="img" aria-label="MapReduce word count: map, shuffle/sort, reduce, all hitting disk">
-  <rect width="1000" height="420" rx="16" fill="#121212"/>
+  <rect width="1000" height="420" rx="16" fill="#20202A"/>
   <text x="500" y="40" text-anchor="middle" font-size="22" font-weight="700" fill="#F1F1F1">MapReduce word count — everything hits disk</text>
-  <text x="500" y="64" text-anchor="middle" font-size="13" fill="#9aa0b4">read → MAP → <tspan fill="#FF6B6B">write disk</tspan> → shuffle/sort → <tspan fill="#FF6B6B">write disk</tspan> → REDUCE → write</text>
+  <text x="500" y="64" text-anchor="middle" font-size="13" fill="#9aa0b4">read → MAP → <tspan fill="#9AA0B4">write disk</tspan> → shuffle/sort → <tspan fill="#9AA0B4">write disk</tspan> → REDUCE → write</text>
 
   <!-- input -->
-  <rect x="30" y="120" width="120" height="180" rx="10" fill="#1c1c22" stroke="#666"/>
+  <rect x="30" y="120" width="120" height="180" rx="10" fill="#23232C" stroke="#666"/>
   <text x="90" y="150" text-anchor="middle" font-size="13" fill="#9aa0b4">HDFS input</text>
   <text x="90" y="178" text-anchor="middle" font-size="11" fill="#dcdce4">the cat sat</text>
   <text x="90" y="198" text-anchor="middle" font-size="11" fill="#dcdce4">the cat ran</text>
   <text x="90" y="218" text-anchor="middle" font-size="11" fill="#dcdce4">sat sat ran</text>
 
   <!-- map -->
-  <rect x="210" y="120" width="150" height="180" rx="10" fill="#1b1410" stroke="#E25A1C"/>
+  <rect x="210" y="120" width="150" height="180" rx="10" fill="#1D1D26" stroke="#E25A1C"/>
   <text x="285" y="150" text-anchor="middle" font-size="14" font-weight="700" fill="#FF7E33">MAP</text>
   <text x="285" y="178" text-anchor="middle" font-size="11" fill="#dcdce4">(the,1)(cat,1)</text>
   <text x="285" y="198" text-anchor="middle" font-size="11" fill="#dcdce4">(sat,1)(the,1)</text>
@@ -192,15 +206,15 @@
 
   <!-- disk write 1 -->
   <g>
-    <rect x="400" y="150" width="120" height="120" rx="8" fill="#2a1414" stroke="#FF6B6B"/>
-    <text x="460" y="178" text-anchor="middle" font-size="12" fill="#FF6B6B">DISK</text>
+    <rect x="400" y="150" width="120" height="120" rx="8" fill="#2a1414" stroke="#9AA0B4"/>
+    <text x="460" y="178" text-anchor="middle" font-size="12" fill="#9AA0B4">DISK</text>
     <text x="460" y="200" text-anchor="middle" font-size="11" fill="#dcdce4">write all</text>
     <text x="460" y="218" text-anchor="middle" font-size="11" fill="#dcdce4">pairs out</text>
-    <circle cx="460" cy="240" r="4" fill="#FF6B6B"><animate attributeName="opacity" values="1;.2;1" dur="1.3s" repeatCount="indefinite"/></circle>
+    <circle cx="460" cy="240" r="4" fill="#9AA0B4"><animate attributeName="opacity" values="1;.2;1" dur="1.3s" repeatCount="indefinite"/></circle>
   </g>
 
   <!-- shuffle/sort -->
-  <rect x="570" y="120" width="160" height="180" rx="10" fill="#1b1410" stroke="#E25A1C"/>
+  <rect x="570" y="120" width="160" height="180" rx="10" fill="#1D1D26" stroke="#E25A1C"/>
   <text x="650" y="150" text-anchor="middle" font-size="14" font-weight="700" fill="#FF7E33">SHUFFLE</text>
   <text x="650" y="168" text-anchor="middle" font-size="11" fill="#9aa0b4">&amp; sort by key</text>
   <text x="650" y="196" text-anchor="middle" font-size="11" fill="#dcdce4">cat:[1,1]</text>
@@ -211,28 +225,28 @@
 
   <!-- disk write 2 -->
   <g>
-    <rect x="780" y="150" width="120" height="120" rx="8" fill="#2a1414" stroke="#FF6B6B"/>
-    <text x="840" y="178" text-anchor="middle" font-size="12" fill="#FF6B6B">DISK</text>
+    <rect x="780" y="150" width="120" height="120" rx="8" fill="#2a1414" stroke="#9AA0B4"/>
+    <text x="840" y="178" text-anchor="middle" font-size="12" fill="#9AA0B4">DISK</text>
     <text x="840" y="200" text-anchor="middle" font-size="11" fill="#dcdce4">write sorted</text>
     <text x="840" y="218" text-anchor="middle" font-size="11" fill="#dcdce4">groups out</text>
-    <circle cx="840" cy="240" r="4" fill="#FF6B6B"><animate attributeName="opacity" values="1;.2;1" dur="1.3s" begin="0.4s" repeatCount="indefinite"/></circle>
+    <circle cx="840" cy="240" r="4" fill="#9AA0B4"><animate attributeName="opacity" values="1;.2;1" dur="1.3s" begin="0.4s" repeatCount="indefinite"/></circle>
   </g>
 
   <!-- reduce -->
-  <rect x="780" y="300" width="120" height="70" rx="10" fill="#1b1410" stroke="#E25A1C"/>
+  <rect x="780" y="300" width="120" height="70" rx="10" fill="#1D1D26" stroke="#E25A1C"/>
   <text x="840" y="326" text-anchor="middle" font-size="14" font-weight="700" fill="#FF7E33">REDUCE</text>
   <text x="840" y="348" text-anchor="middle" font-size="11" fill="#dcdce4">sum → (cat,2)</text>
 
   <!-- arrows -->
   <g fill="#E25A1C">
     <path d="M150 210 L205 210 l0 -5 l10 5 l-10 5 l0 -5 Z"/>
-    <path d="M360 210 L395 210 l0 -5 l10 5 l-10 5 l0 -5 Z" fill="#FF6B6B"/>
-    <path d="M520 210 L565 210 l0 -5 l10 5 l-10 5 l0 -5 Z" fill="#FF6B6B"/>
+    <path d="M360 210 L395 210 l0 -5 l10 5 l-10 5 l0 -5 Z" fill="#9AA0B4"/>
+    <path d="M520 210 L565 210 l0 -5 l10 5 l-10 5 l0 -5 Z" fill="#9AA0B4"/>
     <path d="M730 210 L775 210 l0 -5 l10 5 l-10 5 l0 -5 Z"/>
     <path d="M840 270 L840 295 l-5 0 l5 8 l5 -8 l-5 0 Z"/>
   </g>
 
-  <text x="500" y="392" text-anchor="middle" font-size="12.5" fill="#FF6B6B">Every stage reads from disk and writes back to disk. Multi-step pipelines repeat this between <tspan font-weight="700">every</tspan> job.</text>
+  <text x="500" y="392" text-anchor="middle" font-size="12.5" fill="#9AA0B4">Every stage reads from disk and writes back to disk. Multi-step pipelines repeat this between <tspan font-weight="700">every</tspan> job.</text>
 </svg>
 <figcaption>MapReduce word count. The two red DISK writes per stage are the bottleneck — and a real pipeline chains many such jobs.</figcaption>
 </figure>
@@ -255,47 +269,47 @@
 </div>
 <figure class="fig reveal">
 <svg viewBox="0 0 1000 460" font-family="'JetBrains Mono','Courier New',monospace" role="img" aria-label="MapReduce chain of jobs vs Spark single in-memory DAG">
-  <rect width="1000" height="460" rx="16" fill="#121212"/>
+  <rect width="1000" height="460" rx="16" fill="#20202A"/>
   <text x="500" y="38" text-anchor="middle" font-size="22" font-weight="700" fill="#F1F1F1">Chain of jobs (MapReduce) vs one DAG (Spark)</text>
 
   <!-- MapReduce chain -->
-  <text x="40" y="92" font-size="13" font-weight="700" fill="#FF6B6B">MapReduce: 4 separate jobs, disk between each</text>
+  <text x="40" y="92" font-size="13" font-weight="700" fill="#9AA0B4">MapReduce: 4 separate jobs, disk between each</text>
   <g font-size="11">
-    <rect x="40" y="110" width="120" height="50" rx="8" fill="#1b1410" stroke="#E25A1C"/><text x="100" y="140" text-anchor="middle" fill="#FF7E33">read HDFS</text>
-    <rect x="200" y="110" width="120" height="50" rx="8" fill="#1b1410" stroke="#E25A1C"/><text x="260" y="140" text-anchor="middle" fill="#FF7E33">Job1: filter</text>
-    <rect x="360" y="110" width="120" height="50" rx="8" fill="#1b1410" stroke="#E25A1C"/><text x="420" y="140" text-anchor="middle" fill="#FF7E33">Job2: join</text>
-    <rect x="520" y="110" width="120" height="50" rx="8" fill="#1b1410" stroke="#E25A1C"/><text x="580" y="140" text-anchor="middle" fill="#FF7E33">Job3: group</text>
-    <rect x="680" y="110" width="120" height="50" rx="8" fill="#1b1410" stroke="#E25A1C"/><text x="740" y="140" text-anchor="middle" fill="#FF7E33">Job4: write</text>
-    <rect x="840" y="110" width="120" height="50" rx="8" fill="#1b1410" stroke="#E25A1C"/><text x="900" y="140" text-anchor="middle" fill="#FF7E33">HDFS out</text>
+    <rect x="40" y="110" width="120" height="50" rx="8" fill="#1D1D26" stroke="#E25A1C"/><text x="100" y="140" text-anchor="middle" fill="#FF7E33">read HDFS</text>
+    <rect x="200" y="110" width="120" height="50" rx="8" fill="#1D1D26" stroke="#E25A1C"/><text x="260" y="140" text-anchor="middle" fill="#FF7E33">Job1: filter</text>
+    <rect x="360" y="110" width="120" height="50" rx="8" fill="#1D1D26" stroke="#E25A1C"/><text x="420" y="140" text-anchor="middle" fill="#FF7E33">Job2: join</text>
+    <rect x="520" y="110" width="120" height="50" rx="8" fill="#1D1D26" stroke="#E25A1C"/><text x="580" y="140" text-anchor="middle" fill="#FF7E33">Job3: group</text>
+    <rect x="680" y="110" width="120" height="50" rx="8" fill="#1D1D26" stroke="#E25A1C"/><text x="740" y="140" text-anchor="middle" fill="#FF7E33">Job4: write</text>
+    <rect x="840" y="110" width="120" height="50" rx="8" fill="#1D1D26" stroke="#E25A1C"/><text x="900" y="140" text-anchor="middle" fill="#FF7E33">HDFS out</text>
   </g>
-  <g fill="#FF6B6B" font-size="10">
+  <g fill="#9AA0B4" font-size="10">
     <text x="180" y="180" text-anchor="middle">DISK</text><text x="340" y="180" text-anchor="middle">DISK</text><text x="500" y="180" text-anchor="middle">DISK</text><text x="660" y="180" text-anchor="middle">DISK</text><text x="820" y="180" text-anchor="middle">DISK</text>
   </g>
-  <g fill="#FF6B6B">
+  <g fill="#9AA0B4">
     <path d="M160 135 L196 135 l0 -4 l9 4 l-9 4 l0 -4 Z"/><path d="M320 135 L356 135 l0 -4 l9 4 l-9 4 l0 -4 Z"/><path d="M480 135 L516 135 l0 -4 l9 4 l-9 4 l0 -4 Z"/><path d="M640 135 L676 135 l0 -4 l9 4 l-9 4 l0 -4 Z"/><path d="M800 135 L836 135 l0 -4 l9 4 l-9 4 l0 -4 Z"/>
   </g>
-  <text x="500" y="212" text-anchor="middle" font-size="12" fill="#FF6B6B">full dataset written to &amp; read from disk between every job</text>
+  <text x="500" y="212" text-anchor="middle" font-size="12" fill="#9AA0B4">full dataset written to &amp; read from disk between every job</text>
 
   <!-- Spark DAG -->
-  <text x="40" y="270" font-size="13" font-weight="700" fill="#5BC97A">Spark: one DAG, in-memory, optimized as a whole</text>
+  <text x="40" y="270" font-size="13" font-weight="700" fill="#5AC8FF">Spark: one DAG, in-memory, optimized as a whole</text>
   <g font-size="11">
-    <rect x="40" y="290" width="120" height="50" rx="8" fill="#0f2420" stroke="#2BB3A3"/><text x="100" y="320" text-anchor="middle" fill="#2BB3A3">read (lazy)</text>
-    <rect x="210" y="290" width="120" height="50" rx="8" fill="#0f2420" stroke="#2BB3A3"/><text x="270" y="320" text-anchor="middle" fill="#2BB3A3">filter</text>
-    <rect x="380" y="290" width="120" height="50" rx="8" fill="#0f2420" stroke="#2BB3A3"/><text x="440" y="320" text-anchor="middle" fill="#2BB3A3">join</text>
-    <rect x="380" y="360" width="120" height="50" rx="8" fill="#0f2420" stroke="#2BB3A3"/><text x="440" y="390" text-anchor="middle" fill="#2BB3A3">groupBy</text>
-    <rect x="560" y="325" width="130" height="50" rx="8" fill="#1b1410" stroke="#FFB23F"/><text x="625" y="355" text-anchor="middle" fill="#FFB23F">ACTION → run</text>
-    <rect x="740" y="325" width="120" height="50" rx="8" fill="#0f2420" stroke="#2BB3A3"/><text x="800" y="355" text-anchor="middle" fill="#2BB3A3">write out</text>
+    <rect x="40" y="290" width="120" height="50" rx="8" fill="#1D1D26" stroke="#5AC8FF"/><text x="100" y="320" text-anchor="middle" fill="#5AC8FF">read (lazy)</text>
+    <rect x="210" y="290" width="120" height="50" rx="8" fill="#1D1D26" stroke="#5AC8FF"/><text x="270" y="320" text-anchor="middle" fill="#5AC8FF">filter</text>
+    <rect x="380" y="290" width="120" height="50" rx="8" fill="#1D1D26" stroke="#5AC8FF"/><text x="440" y="320" text-anchor="middle" fill="#5AC8FF">join</text>
+    <rect x="380" y="360" width="120" height="50" rx="8" fill="#1D1D26" stroke="#5AC8FF"/><text x="440" y="390" text-anchor="middle" fill="#5AC8FF">groupBy</text>
+    <rect x="560" y="325" width="130" height="50" rx="8" fill="#1D1D26" stroke="#9AA0B4"/><text x="625" y="355" text-anchor="middle" fill="#9AA0B4">ACTION → run</text>
+    <rect x="740" y="325" width="120" height="50" rx="8" fill="#1D1D26" stroke="#5AC8FF"/><text x="800" y="355" text-anchor="middle" fill="#5AC8FF">write out</text>
   </g>
-  <g fill="#2BB3A3">
+  <g fill="#5AC8FF">
     <path d="M160 315 L206 315 l0 -4 l9 4 l-9 4 l0 -4 Z"/><path d="M330 315 L376 315 l0 -4 l9 4 l-9 4 l0 -4 Z"/><path d="M440 340 L440 356 l-4 0 l4 8 l4 -8 l-4 0 Z" transform="translate(0,0)"/>
   </g>
-  <g fill="#FFB23F">
+  <g fill="#9AA0B4">
     <path d="M500 315 L556 350 l-3 -3 l8 1 l-4 7 l-1 -8 l-3 3 Z"/>
     <path d="M500 385 L556 358 l-3 3 l8 -1 l-4 -7 l-1 8 l-3 -3 Z"/>
-    <path d="M690 350 L736 350 l0 -4 l9 4 l-9 4 l0 -4 Z" fill="#2BB3A3"/>
+    <path d="M690 350 L736 350 l0 -4 l9 4 l-9 4 l0 -4 Z" fill="#5AC8FF"/>
   </g>
   <text x="625" y="392" text-anchor="middle" font-size="10.5" fill="#9aa0b4">partitions stay in RAM between nodes</text>
-  <text x="500" y="440" text-anchor="middle" font-size="12.5" fill="#5BC97A">One plan. Steps fuse (pipeline), data stays in memory, failures re-run only the missing piece.</text>
+  <text x="500" y="440" text-anchor="middle" font-size="12.5" fill="#5AC8FF">One plan. Steps fuse (pipeline), data stays in memory, failures re-run only the missing piece.</text>
 </svg>
 <figcaption>MapReduce chains whole jobs through disk. Spark builds one DAG, keeps partitions in memory, and pipelines narrow steps into a single pass.</figcaption>
 </figure>
@@ -311,7 +325,7 @@
 
 <div class="callout cy reveal">
 <p style="margin:.2em 0"><strong>Myth check:</strong> "Spark is always faster than MapReduce."</p>
-<p class="kv">✗ Not for a single, simple, one-pass job. A plain Map → Reduce with no iteration can be similar, because Spark has overhead (planning, JVM, serialization). Spark wins decisively on <em>multi-step</em> and <em>iterative</em> workloads — which is almost everything real pipelines do.</p>
+<p class="kv">− Not for a single, simple, one-pass job. A plain Map → Reduce with no iteration can be similar, because Spark has overhead (planning, JVM, serialization). Spark wins decisively on <em>multi-step</em> and <em>iterative</em> workloads — which is almost everything real pipelines do.</p>
 </div>
 
 <!-- 03 -->
@@ -323,27 +337,27 @@
 </div>
 <figure class="fig reveal">
 <svg viewBox="0 0 1000 300" font-family="'JetBrains Mono','Courier New',monospace" role="img" aria-label="Nested concepts: job contains stages contains tasks; transformations build a plan, an action triggers a job">
-  <rect width="1000" height="300" rx="16" fill="#121212"/>
+  <rect width="1000" height="300" rx="16" fill="#20202A"/>
   <text x="500" y="40" text-anchor="middle" font-size="22" font-weight="700" fill="#F1F1F1">The five nested concepts</text>
 
   <!-- left: lazy plan -->
-  <rect x="40" y="70" width="430" height="200" rx="12" fill="#0f2420" stroke="#2BB3A3"/>
-  <text x="255" y="98" text-anchor="middle" font-size="14" font-weight="700" fill="#2BB3A3">Building the plan (lazy)</text>
-  <rect x="60" y="120" width="180" height="40" rx="8" fill="#1c1c22" stroke="#2BB3A3"/><text x="150" y="145" text-anchor="middle" font-size="12" fill="#dcdce4">Transformation: filter</text>
-  <rect x="60" y="170" width="180" height="40" rx="8" fill="#1c1c22" stroke="#2BB3A3"/><text x="150" y="195" text-anchor="middle" font-size="12" fill="#dcdce4">Transformation: join</text>
-  <rect x="60" y="220" width="180" height="40" rx="8" fill="#1c1c22" stroke="#2BB3A3"/><text x="150" y="245" text-anchor="middle" font-size="12" fill="#dcdce4">Transformation: groupBy</text>
+  <rect x="40" y="70" width="430" height="200" rx="12" fill="#1D1D26" stroke="#5AC8FF"/>
+  <text x="255" y="98" text-anchor="middle" font-size="14" font-weight="700" fill="#5AC8FF">Building the plan (lazy)</text>
+  <rect x="60" y="120" width="180" height="40" rx="8" fill="#23232C" stroke="#5AC8FF"/><text x="150" y="145" text-anchor="middle" font-size="12" fill="#dcdce4">Transformation: filter</text>
+  <rect x="60" y="170" width="180" height="40" rx="8" fill="#23232C" stroke="#5AC8FF"/><text x="150" y="195" text-anchor="middle" font-size="12" fill="#dcdce4">Transformation: join</text>
+  <rect x="60" y="220" width="180" height="40" rx="8" fill="#23232C" stroke="#5AC8FF"/><text x="150" y="245" text-anchor="middle" font-size="12" fill="#dcdce4">Transformation: groupBy</text>
   <text x="300" y="150" font-size="12" fill="#9aa0b4">→ only adds a</text>
   <text x="300" y="168" font-size="12" fill="#9aa0b4">  node to the DAG</text>
   <text x="300" y="190" font-size="12" fill="#9aa0b4">→ no data moves</text>
-  <text x="300" y="240" font-size="12" fill="#FFB23F" font-weight="700">nothing runs yet</text>
+  <text x="300" y="240" font-size="12" fill="#9AA0B4" font-weight="700">nothing runs yet</text>
 
   <!-- right: execution -->
-  <rect x="530" y="70" width="430" height="200" rx="12" fill="#1b1410" stroke="#FFB23F"/>
-  <text x="745" y="98" text-anchor="middle" font-size="14" font-weight="700" fill="#FFB23F">Triggering execution (eager)</text>
-  <rect x="550" y="112" width="390" height="34" rx="8" fill="#1c1c22" stroke="#FFB23F"/><text x="745" y="134" text-anchor="middle" font-size="12" fill="#FFB23F">ACTION (count / write / show) → 1 JOB</text>
-  <rect x="570" y="152" width="350" height="30" rx="6" fill="#1c1c22" stroke="#E25A1C"/><text x="745" y="172" text-anchor="middle" font-size="11.5" fill="#FF7E33">Stage 0 (read+filter+map)  ┊shuffle┊  Stage 1 (join) ┊shuffle┊ Stage 2 (group)</text>
-  <rect x="600" y="190" width="290" height="26" rx="6" fill="#1c1c22" stroke="#9aa0b4"/><text x="745" y="208" text-anchor="middle" font-size="11" fill="#dcdce4">each stage = many TASKS (1 per partition)</text>
-  <text x="745" y="244" text-anchor="middle" font-size="11.5" fill="#5BC97A">1 job = N stages = Σ tasks across partitions</text>
+  <rect x="530" y="70" width="430" height="200" rx="12" fill="#1D1D26" stroke="#9AA0B4"/>
+  <text x="745" y="98" text-anchor="middle" font-size="14" font-weight="700" fill="#9AA0B4">Triggering execution (eager)</text>
+  <rect x="550" y="112" width="390" height="34" rx="8" fill="#23232C" stroke="#9AA0B4"/><text x="745" y="134" text-anchor="middle" font-size="12" fill="#9AA0B4">ACTION (count / write / show) → 1 JOB</text>
+  <rect x="570" y="152" width="350" height="30" rx="6" fill="#23232C" stroke="#E25A1C"/><text x="745" y="172" text-anchor="middle" font-size="11.5" fill="#FF7E33">Stage 0 (read+filter+map)  ┊shuffle┊  Stage 1 (join) ┊shuffle┊ Stage 2 (group)</text>
+  <rect x="600" y="190" width="290" height="26" rx="6" fill="#23232C" stroke="#9aa0b4"/><text x="745" y="208" text-anchor="middle" font-size="11" fill="#dcdce4">each stage = many TASKS (1 per partition)</text>
+  <text x="745" y="244" text-anchor="middle" font-size="11.5" fill="#5AC8FF">1 job = N stages = Σ tasks across partitions</text>
 </svg>
 <figcaption>Transformations quietly build the DAG; one action launches one job, split into stages by shuffles, each stage into one task per partition.</figcaption>
 </figure>
@@ -375,20 +389,20 @@
 </div>
 <figure class="fig reveal">
 <svg viewBox="0 0 1000 360" font-family="'JetBrains Mono','Courier New',monospace" role="img" aria-label="Narrow transformation: each partition stays independent. Wide transformation: data is reshuffled across the network.">
-  <rect width="1000" height="360" rx="16" fill="#121212"/>
+  <rect width="1000" height="360" rx="16" fill="#20202A"/>
   <text x="500" y="38" text-anchor="middle" font-size="22" font-weight="700" fill="#F1F1F1">Narrow vs wide transformations</text>
 
   <!-- NARROW -->
-  <text x="250" y="78" text-anchor="middle" font-size="15" font-weight="700" fill="#2BB3A3">Narrow — no shuffle, pipelines in one stage</text>
+  <text x="250" y="78" text-anchor="middle" font-size="15" font-weight="700" fill="#5AC8FF">Narrow — no shuffle, pipelines in one stage</text>
   <g font-size="11">
-    <rect x="60" y="100" width="80" height="46" rx="7" fill="#0f2420" stroke="#2BB3A3"/><text x="100" y="128" text-anchor="middle" fill="#dcdce4">P0</text>
-    <rect x="60" y="156" width="80" height="46" rx="7" fill="#0f2420" stroke="#2BB3A3"/><text x="100" y="184" text-anchor="middle" fill="#dcdce4">P1</text>
-    <rect x="60" y="212" width="80" height="46" rx="7" fill="#0f2420" stroke="#2BB3A3"/><text x="100" y="240" text-anchor="middle" fill="#dcdce4">P2</text>
-    <rect x="360" y="100" width="80" height="46" rx="7" fill="#0f2420" stroke="#2BB3A3"/><text x="400" y="128" text-anchor="middle" fill="#dcdce4">P0'</text>
-    <rect x="360" y="156" width="80" height="46" rx="7" fill="#0f2420" stroke="#2BB3A3"/><text x="400" y="184" text-anchor="middle" fill="#dcdce4">P1'</text>
-    <rect x="360" y="212" width="80" height="46" rx="7" fill="#0f2420" stroke="#2BB3A3"/><text x="400" y="240" text-anchor="middle" fill="#dcdce4">P2'</text>
+    <rect x="60" y="100" width="80" height="46" rx="7" fill="#1D1D26" stroke="#5AC8FF"/><text x="100" y="128" text-anchor="middle" fill="#dcdce4">P0</text>
+    <rect x="60" y="156" width="80" height="46" rx="7" fill="#1D1D26" stroke="#5AC8FF"/><text x="100" y="184" text-anchor="middle" fill="#dcdce4">P1</text>
+    <rect x="60" y="212" width="80" height="46" rx="7" fill="#1D1D26" stroke="#5AC8FF"/><text x="100" y="240" text-anchor="middle" fill="#dcdce4">P2</text>
+    <rect x="360" y="100" width="80" height="46" rx="7" fill="#1D1D26" stroke="#5AC8FF"/><text x="400" y="128" text-anchor="middle" fill="#dcdce4">P0'</text>
+    <rect x="360" y="156" width="80" height="46" rx="7" fill="#1D1D26" stroke="#5AC8FF"/><text x="400" y="184" text-anchor="middle" fill="#dcdce4">P1'</text>
+    <rect x="360" y="212" width="80" height="46" rx="7" fill="#1D1D26" stroke="#5AC8FF"/><text x="400" y="240" text-anchor="middle" fill="#dcdce4">P2'</text>
   </g>
-  <g stroke="#2BB3A3" stroke-width="2">
+  <g stroke="#5AC8FF" stroke-width="2">
     <line x1="140" y1="123" x2="356" y2="123"/><line x1="140" y1="179" x2="356" y2="179"/><line x1="140" y1="235" x2="356" y2="235"/>
   </g>
   <text x="250" y="300" text-anchor="middle" font-size="12" fill="#9aa0b4">each output partition depends on ONE input</text>
@@ -397,19 +411,19 @@
   <!-- WIDE -->
   <text x="740" y="78" text-anchor="middle" font-size="15" font-weight="700" fill="#E25A1C">Wide — shuffle, starts a new stage</text>
   <g font-size="11">
-    <rect x="560" y="100" width="80" height="46" rx="7" fill="#1b1410" stroke="#E25A1C"/><text x="600" y="128" text-anchor="middle" fill="#dcdce4">P0</text>
-    <rect x="560" y="156" width="80" height="46" rx="7" fill="#1b1410" stroke="#E25A1C"/><text x="600" y="184" text-anchor="middle" fill="#dcdce4">P1</text>
-    <rect x="560" y="212" width="80" height="46" rx="7" fill="#1b1410" stroke="#E25A1C"/><text x="600" y="240" text-anchor="middle" fill="#dcdce4">P2</text>
-    <rect x="860" y="100" width="80" height="46" rx="7" fill="#1b1410" stroke="#E25A1C"/><text x="900" y="128" text-anchor="middle" fill="#dcdce4">Q0</text>
-    <rect x="860" y="156" width="80" height="46" rx="7" fill="#1b1410" stroke="#E25A1C"/><text x="900" y="184" text-anchor="middle" fill="#dcdce4">Q1</text>
-    <rect x="860" y="212" width="80" height="46" rx="7" fill="#1b1410" stroke="#E25A1C"/><text x="900" y="240" text-anchor="middle" fill="#dcdce4">Q2</text>
+    <rect x="560" y="100" width="80" height="46" rx="7" fill="#1D1D26" stroke="#E25A1C"/><text x="600" y="128" text-anchor="middle" fill="#dcdce4">P0</text>
+    <rect x="560" y="156" width="80" height="46" rx="7" fill="#1D1D26" stroke="#E25A1C"/><text x="600" y="184" text-anchor="middle" fill="#dcdce4">P1</text>
+    <rect x="560" y="212" width="80" height="46" rx="7" fill="#1D1D26" stroke="#E25A1C"/><text x="600" y="240" text-anchor="middle" fill="#dcdce4">P2</text>
+    <rect x="860" y="100" width="80" height="46" rx="7" fill="#1D1D26" stroke="#E25A1C"/><text x="900" y="128" text-anchor="middle" fill="#dcdce4">Q0</text>
+    <rect x="860" y="156" width="80" height="46" rx="7" fill="#1D1D26" stroke="#E25A1C"/><text x="900" y="184" text-anchor="middle" fill="#dcdce4">Q1</text>
+    <rect x="860" y="212" width="80" height="46" rx="7" fill="#1D1D26" stroke="#E25A1C"/><text x="900" y="240" text-anchor="middle" fill="#dcdce4">Q2</text>
   </g>
   <g stroke="#FF7E33" stroke-width="1.6" opacity="0.85">
     <line x1="640" y1="123" x2="856" y2="123"/><line x1="640" y1="123" x2="856" y2="179"/><line x1="640" y1="123" x2="856" y2="235"/>
     <line x1="640" y1="179" x2="856" y2="123"/><line x1="640" y1="179" x2="856" y2="179"/><line x1="640" y1="179" x2="856" y2="235"/>
     <line x1="640" y1="235" x2="856" y2="123"/><line x1="640" y1="235" x2="856" y2="179"/><line x1="640" y1="235" x2="856" y2="235"/>
   </g>
-  <circle cx="748" cy="179" r="5" fill="#FFB23F"><animate attributeName="cx" values="640;856;640" dur="2.4s" repeatCount="indefinite"/></circle>
+  <circle cx="748" cy="179" r="5" fill="#9AA0B4"><animate attributeName="cx" values="640;856;640" dur="2.4s" repeatCount="indefinite"/></circle>
   <text x="740" y="300" text-anchor="middle" font-size="12" fill="#9aa0b4">each output partition depends on MANY inputs</text>
   <text x="740" y="320" text-anchor="middle" font-size="12" fill="#9aa0b4">groupBy · join · distinct · repartition · orderBy</text>
   <text x="500" y="346" text-anchor="middle" font-size="12" fill="#FF7E33">A shuffle = write to local disk + send across the network + read on the other side. That is the expensive wall between stages.</text>
@@ -443,31 +457,31 @@
 </div>
 <figure class="fig reveal">
 <svg viewBox="0 0 1000 560" font-family="'JetBrains Mono','Courier New',monospace" role="img" aria-label="Spark architecture: driver, cluster manager, executors with tasks and block managers, shuffle">
-  <rect width="1000" height="560" rx="16" fill="#121212"/>
+  <rect width="1000" height="560" rx="16" fill="#20202A"/>
   <text x="500" y="40" text-anchor="middle" font-size="22" font-weight="700" fill="#F1F1F1">Spark application architecture</text>
   <text x="500" y="64" text-anchor="middle" font-size="13" fill="#9aa0b4">1 driver · N executors · 1 cluster manager · each executor runs tasks &amp; owns a block manager</text>
 
   <!-- DRIVER -->
-  <rect x="40" y="90" width="380" height="380" rx="14" fill="#1b1410" stroke="#E25A1C" stroke-width="2"/>
+  <rect x="40" y="90" width="380" height="380" rx="14" fill="#1D1D26" stroke="#E25A1C" stroke-width="2"/>
   <text x="230" y="120" text-anchor="middle" font-size="16" font-weight="700" fill="#FF7E33">DRIVER (1 process)</text>
   <text x="230" y="140" text-anchor="middle" font-size="11.5" fill="#9aa0b4">your program · the brain</text>
 
-  <rect x="60" y="160" width="340" height="56" rx="8" fill="#1c1c22" stroke="#FFB23F"/>
-  <text x="230" y="182" text-anchor="middle" font-size="12.5" font-weight="700" fill="#FFB23F">SparkSession / SparkContext</text>
+  <rect x="60" y="160" width="340" height="56" rx="8" fill="#23232C" stroke="#9AA0B4"/>
+  <text x="230" y="182" text-anchor="middle" font-size="12.5" font-weight="700" fill="#9AA0B4">SparkSession / SparkContext</text>
   <text x="230" y="202" text-anchor="middle" font-size="11" fill="#9aa0b4">entry point · holds config · talks to cluster manager</text>
 
-  <rect x="60" y="226" width="340" height="56" rx="8" fill="#1c1c22" stroke="#FFB23F"/>
-  <text x="230" y="248" text-anchor="middle" font-size="12.5" font-weight="700" fill="#FFB23F">DAGScheduler</text>
+  <rect x="60" y="226" width="340" height="56" rx="8" fill="#23232C" stroke="#9AA0B4"/>
+  <text x="230" y="248" text-anchor="middle" font-size="12.5" font-weight="700" fill="#9AA0B4">DAGScheduler</text>
   <text x="230" y="268" text-anchor="middle" font-size="11" fill="#9aa0b4">turns the plan into stages (split at shuffles)</text>
 
-  <rect x="60" y="292" width="340" height="56" rx="8" fill="#1c1c22" stroke="#FFB23F"/>
-  <text x="230" y="314" text-anchor="middle" font-size="12.5" font-weight="700" fill="#FFB23F">TaskScheduler</text>
+  <rect x="60" y="292" width="340" height="56" rx="8" fill="#23232C" stroke="#9AA0B4"/>
+  <text x="230" y="314" text-anchor="middle" font-size="12.5" font-weight="700" fill="#9AA0B4">TaskScheduler</text>
   <text x="230" y="334" text-anchor="middle" font-size="11" fill="#9aa0b4">sends tasks to executors · retries · handles locality</text>
 
-  <rect x="60" y="358" width="164" height="52" rx="8" fill="#1c1c22" stroke="#5C78FF"/>
+  <rect x="60" y="358" width="164" height="52" rx="8" fill="#23232C" stroke="#5C78FF"/>
   <text x="142" y="380" text-anchor="middle" font-size="12" font-weight="700" fill="#5C78FF">Tracker</text>
   <text x="142" y="398" text-anchor="middle" font-size="10.5" fill="#9aa0b4">BlockManagerMaster</text>
-  <rect x="236" y="358" width="164" height="52" rx="8" fill="#1c1c22" stroke="#5C78FF"/>
+  <rect x="236" y="358" width="164" height="52" rx="8" fill="#23232C" stroke="#5C78FF"/>
   <text x="318" y="380" text-anchor="middle" font-size="12" font-weight="700" fill="#5C78FF">SchedulerBackend</text>
   <text x="318" y="398" text-anchor="middle" font-size="10.5" fill="#9aa0b4">RPC to executors</text>
 
@@ -475,70 +489,70 @@
   <circle cx="230" cy="455" r="5" fill="#FF7E33"><animate attributeName="opacity" values="1;.2;1" dur="1.6s" repeatCount="indefinite"/></circle>
 
   <!-- CLUSTER MANAGER -->
-  <rect x="470" y="90" width="200" height="170" rx="14" fill="#0f2420" stroke="#2BB3A3" stroke-width="2"/>
-  <text x="570" y="120" text-anchor="middle" font-size="15" font-weight="700" fill="#2BB3A3">CLUSTER</text>
-  <text x="570" y="138" text-anchor="middle" font-size="15" font-weight="700" fill="#2BB3A3">MANAGER</text>
+  <rect x="470" y="90" width="200" height="170" rx="14" fill="#1D1D26" stroke="#5AC8FF" stroke-width="2"/>
+  <text x="570" y="120" text-anchor="middle" font-size="15" font-weight="700" fill="#5AC8FF">CLUSTER</text>
+  <text x="570" y="138" text-anchor="middle" font-size="15" font-weight="700" fill="#5AC8FF">MANAGER</text>
   <text x="570" y="162" text-anchor="middle" font-size="11.5" fill="#9aa0b4">allocates containers</text>
-  <rect x="490" y="178" width="160" height="30" rx="6" fill="#1c1c22" stroke="#2BB3A3"/><text x="570" y="198" text-anchor="middle" font-size="11" fill="#dcdce4">YARN / K8s / Standalone</text>
+  <rect x="490" y="178" width="160" height="30" rx="6" fill="#23232C" stroke="#5AC8FF"/><text x="570" y="198" text-anchor="middle" font-size="11" fill="#dcdce4">YARN / K8s / Standalone</text>
   <text x="570" y="226" text-anchor="middle" font-size="10.5" fill="#9aa0b4">"give me 1 driver +</text>
   <text x="570" y="240" text-anchor="middle" font-size="10.5" fill="#9aa0b4">N executor containers"</text>
 
   <!-- EXECUTORS -->
-  <rect x="700" y="90" width="270" height="380" rx="14" fill="#1b1410" stroke="#E25A1C" stroke-width="2"/>
+  <rect x="700" y="90" width="270" height="380" rx="14" fill="#1D1D26" stroke="#E25A1C" stroke-width="2"/>
   <text x="835" y="120" text-anchor="middle" font-size="16" font-weight="700" fill="#FF7E33">EXECUTORS (N)</text>
   <text x="835" y="140" text-anchor="middle" font-size="11.5" fill="#9aa0b4">one JVM per executor · the muscle</text>
 
   <!-- executor 1 -->
-  <rect x="716" y="158" width="238" height="150" rx="10" fill="#1c1c22" stroke="#666"/>
+  <rect x="716" y="158" width="238" height="150" rx="10" fill="#23232C" stroke="#666"/>
   <text x="835" y="180" text-anchor="middle" font-size="12.5" font-weight="700" fill="#dcdce4">Executor 1</text>
-  <rect x="728" y="190" width="100" height="30" rx="6" fill="#0f2420" stroke="#2BB3A3"/><text x="778" y="210" text-anchor="middle" font-size="10.5" fill="#2BB3A3">Task slots (cores)</text>
-  <rect x="836" y="190" width="106" height="30" rx="6" fill="#0f2420" stroke="#2BB3A3"/><text x="889" y="210" text-anchor="middle" font-size="10.5" fill="#2BB3A3">BlockManager</text>
-  <rect x="728" y="228" width="48" height="30" rx="6" fill="#1b1410" stroke="#FF7E33"/><text x="752" y="248" text-anchor="middle" font-size="10" fill="#FF7E33">task</text>
-  <rect x="782" y="228" width="48" height="30" rx="6" fill="#1b1410" stroke="#FF7E33"/><text x="806" y="248" text-anchor="middle" font-size="10" fill="#FF7E33">task</text>
-  <rect x="836" y="228" width="48" height="30" rx="6" fill="#1b1410" stroke="#FF7E33"/><text x="860" y="248" text-anchor="middle" font-size="10" fill="#FF7E33">task</text>
-  <rect x="890" y="228" width="52" height="30" rx="6" fill="#1b1410" stroke="#FF7E33"/><text x="916" y="248" text-anchor="middle" font-size="10" fill="#FF7E33">task</text>
+  <rect x="728" y="190" width="100" height="30" rx="6" fill="#1D1D26" stroke="#5AC8FF"/><text x="778" y="210" text-anchor="middle" font-size="10.5" fill="#5AC8FF">Task slots (cores)</text>
+  <rect x="836" y="190" width="106" height="30" rx="6" fill="#1D1D26" stroke="#5AC8FF"/><text x="889" y="210" text-anchor="middle" font-size="10.5" fill="#5AC8FF">BlockManager</text>
+  <rect x="728" y="228" width="48" height="30" rx="6" fill="#1D1D26" stroke="#FF7E33"/><text x="752" y="248" text-anchor="middle" font-size="10" fill="#FF7E33">task</text>
+  <rect x="782" y="228" width="48" height="30" rx="6" fill="#1D1D26" stroke="#FF7E33"/><text x="806" y="248" text-anchor="middle" font-size="10" fill="#FF7E33">task</text>
+  <rect x="836" y="228" width="48" height="30" rx="6" fill="#1D1D26" stroke="#FF7E33"/><text x="860" y="248" text-anchor="middle" font-size="10" fill="#FF7E33">task</text>
+  <rect x="890" y="228" width="52" height="30" rx="6" fill="#1D1D26" stroke="#FF7E33"/><text x="916" y="248" text-anchor="middle" font-size="10" fill="#FF7E33">task</text>
   <text x="835" y="280" text-anchor="middle" font-size="10.5" fill="#9aa0b4">cache · shuffle files · memory</text>
-  <circle cx="835" cy="296" r="4" fill="#FFB23F"><animate attributeName="opacity" values="1;.15;1" dur="1.2s" repeatCount="indefinite"/></circle>
+  <circle cx="835" cy="296" r="4" fill="#9AA0B4"><animate attributeName="opacity" values="1;.15;1" dur="1.2s" repeatCount="indefinite"/></circle>
 
   <!-- executor 2 -->
-  <rect x="716" y="318" width="238" height="140" rx="10" fill="#1c1c22" stroke="#666"/>
+  <rect x="716" y="318" width="238" height="140" rx="10" fill="#23232C" stroke="#666"/>
   <text x="835" y="340" text-anchor="middle" font-size="12.5" font-weight="700" fill="#dcdce4">Executor 2 … N</text>
-  <rect x="728" y="350" width="100" height="30" rx="6" fill="#0f2420" stroke="#2BB3A3"/><text x="778" y="370" text-anchor="middle" font-size="10.5" fill="#2BB3A3">Task slots</text>
-  <rect x="836" y="350" width="106" height="30" rx="6" fill="#0f2420" stroke="#2BB3A3"/><text x="889" y="370" text-anchor="middle" font-size="10.5" fill="#2BB3A3">BlockManager</text>
-  <rect x="728" y="388" width="48" height="30" rx="6" fill="#1b1410" stroke="#FF7E33"/><text x="752" y="408" text-anchor="middle" font-size="10" fill="#FF7E33">task</text>
-  <rect x="782" y="388" width="48" height="30" rx="6" fill="#1b1410" stroke="#FF7E33"/><text x="806" y="408" text-anchor="middle" font-size="10" fill="#FF7E33">task</text>
-  <rect x="836" y="388" width="48" height="30" rx="6" fill="#1b1410" stroke="#FF7E33"/><text x="860" y="408" text-anchor="middle" font-size="10" fill="#FF7E33">task</text>
-  <rect x="890" y="388" width="52" height="30" rx="6" fill="#1b1410" stroke="#FF7E33"/><text x="916" y="408" text-anchor="middle" font-size="10" fill="#FF7E33">task</text>
+  <rect x="728" y="350" width="100" height="30" rx="6" fill="#1D1D26" stroke="#5AC8FF"/><text x="778" y="370" text-anchor="middle" font-size="10.5" fill="#5AC8FF">Task slots</text>
+  <rect x="836" y="350" width="106" height="30" rx="6" fill="#1D1D26" stroke="#5AC8FF"/><text x="889" y="370" text-anchor="middle" font-size="10.5" fill="#5AC8FF">BlockManager</text>
+  <rect x="728" y="388" width="48" height="30" rx="6" fill="#1D1D26" stroke="#FF7E33"/><text x="752" y="408" text-anchor="middle" font-size="10" fill="#FF7E33">task</text>
+  <rect x="782" y="388" width="48" height="30" rx="6" fill="#1D1D26" stroke="#FF7E33"/><text x="806" y="408" text-anchor="middle" font-size="10" fill="#FF7E33">task</text>
+  <rect x="836" y="388" width="48" height="30" rx="6" fill="#1D1D26" stroke="#FF7E33"/><text x="860" y="408" text-anchor="middle" font-size="10" fill="#FF7E33">task</text>
+  <rect x="890" y="388" width="52" height="30" rx="6" fill="#1D1D26" stroke="#FF7E33"/><text x="916" y="408" text-anchor="middle" font-size="10" fill="#FF7E33">task</text>
 
   <!-- storage / shuffle -->
-  <rect x="470" y="300" width="200" height="170" rx="14" fill="#1c1c22" stroke="#BA5AFF" stroke-width="2"/>
-  <text x="570" y="328" text-anchor="middle" font-size="14" font-weight="700" fill="#BA5AFF">STORAGE / SOURCE</text>
+  <rect x="470" y="300" width="200" height="170" rx="14" fill="#23232C" stroke="#5AC8FF" stroke-width="2"/>
+  <text x="570" y="328" text-anchor="middle" font-size="14" font-weight="700" fill="#5AC8FF">STORAGE / SOURCE</text>
   <text x="570" y="350" text-anchor="middle" font-size="11" fill="#9aa0b4">HDFS · S3 · ADLS</text>
   <text x="570" y="368" text-anchor="middle" font-size="11" fill="#9aa0b4">Parquet · Delta · ORC</text>
   <text x="570" y="392" text-anchor="middle" font-size="11" fill="#9aa0b4">+ external shuffle</text>
   <text x="570" y="410" text-anchor="middle" font-size="11" fill="#9aa0b4">service (optional)</text>
-  <circle cx="570" cy="434" r="4" fill="#BA5AFF"><animate attributeName="opacity" values="1;.2;1" dur="2s" begin="0.5s" repeatCount="indefinite"/></circle>
+  <circle cx="570" cy="434" r="4" fill="#5AC8FF"><animate attributeName="opacity" values="1;.2;1" dur="2s" begin="0.5s" repeatCount="indefinite"/></circle>
 
   <!-- arrows driver -> cluster manager -> executors -->
-  <g fill="none" stroke="#2BB3A3" stroke-width="2.5">
+  <g fill="none" stroke="#5AC8FF" stroke-width="2.5">
     <path d="M420 175 L466 175" marker-end="url(#arr)"/>
     <path d="M670 175 L696 175" marker-end="url(#arr)" stroke="#E25A1C"/>
   </g>
   <defs>
     <marker id="arr" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto"><path d="M0 0 L7 3 L0 6 Z" fill="#FF7E33"/></marker>
   </defs>
-  <text x="443" y="167" text-anchor="middle" font-size="10" fill="#2BB3A3">request</text>
+  <text x="443" y="167" text-anchor="middle" font-size="10" fill="#5AC8FF">request</text>
   <text x="683" y="167" text-anchor="middle" font-size="10" fill="#FF7E33">launch</text>
 
   <!-- executor reads storage -->
-  <g fill="none" stroke="#BA5AFF" stroke-width="2" stroke-dasharray="6 5"><path d="M700 385 L672 385" marker-end="url(#arrp)"/></g>
-  <defs><marker id="arrp" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto"><path d="M0 0 L7 3 L0 6 Z" fill="#BA5AFF"/></marker></defs>
-  <text x="686" y="378" text-anchor="middle" font-size="10" fill="#BA5AFF">read/write</text>
+  <g fill="none" stroke="#5AC8FF" stroke-width="2" stroke-dasharray="6 5"><path d="M700 385 L672 385" marker-end="url(#arrp)"/></g>
+  <defs><marker id="arrp" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto"><path d="M0 0 L7 3 L0 6 Z" fill="#5AC8FF"/></marker></defs>
+  <text x="686" y="378" text-anchor="middle" font-size="10" fill="#5AC8FF">read/write</text>
 
   <!-- task results back -->
-  <g fill="none" stroke="#FFB23F" stroke-width="2" stroke-dasharray="4 4"><path d="M835 300 Q 600 300 420 410" marker-end="url(#arry)"/></g>
-  <defs><marker id="arry" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto"><path d="M0 0 L7 3 L0 6 Z" fill="#FFB23F"/></marker></defs>
-  <text x="620" y="470" text-anchor="middle" font-size="10.5" fill="#FFB23F">task results &amp; status → driver</text>
+  <g fill="none" stroke="#9AA0B4" stroke-width="2" stroke-dasharray="4 4"><path d="M835 300 Q 600 300 420 410" marker-end="url(#arry)"/></g>
+  <defs><marker id="arry" markerWidth="10" markerHeight="10" refX="7" refY="3" orient="auto"><path d="M0 0 L7 3 L0 6 Z" fill="#9AA0B4"/></marker></defs>
+  <text x="620" y="470" text-anchor="middle" font-size="10.5" fill="#9AA0B4">task results &amp; status → driver</text>
 
   <text x="500" y="520" text-anchor="middle" font-size="12.5" fill="#9aa0b4">The driver plans &amp; coordinates; the cluster manager hands out machines; executors do the work and hold the data.</text>
 </svg>
@@ -609,26 +623,26 @@
 </div>
 <figure class="fig reveal">
 <svg viewBox="0 0 1000 360" font-family="'JetBrains Mono','Courier New',monospace" role="img" aria-label="Cluster mode vs client mode: where the driver JVM runs">
-  <rect width="1000" height="360" rx="16" fill="#121212"/>
+  <rect width="1000" height="360" rx="16" fill="#20202A"/>
   <text x="500" y="38" text-anchor="middle" font-size="22" font-weight="700" fill="#F1F1F1">Cluster mode vs client mode</text>
 
   <!-- cluster mode -->
-  <rect x="30" y="70" width="460" height="270" rx="12" fill="#0f2420" stroke="#2BB3A3"/>
-  <text x="260" y="98" text-anchor="middle" font-size="15" font-weight="700" fill="#2BB3A3">Cluster mode — driver inside the cluster</text>
-  <rect x="60" y="120" width="170" height="60" rx="8" fill="#1c1c22" stroke="#2BB3A3"/><text x="145" y="145" text-anchor="middle" font-size="12" fill="#dcdce4">your laptop /</text><text x="145" y="162" text-anchor="middle" font-size="12" fill="#dcdce4">gateway (submit)</text>
-  <rect x="290" y="120" width="170" height="60" rx="8" fill="#1b1410" stroke="#E25A1C"/><text x="375" y="145" text-anchor="middle" font-size="12" font-weight="700" fill="#FF7E33">DRIVER</text><text x="375" y="162" text-anchor="middle" font-size="11" fill="#9aa0b4">on a cluster node</text>
-  <rect x="290" y="200" width="170" height="50" rx="8" fill="#1c1c22" stroke="#666"/><text x="375" y="222" text-anchor="middle" font-size="12" fill="#dcdce4">executor</text>
-  <rect x="290" y="260" width="170" height="50" rx="8" fill="#1c1c22" stroke="#666"/><text x="375" y="282" text-anchor="middle" font-size="12" fill="#dcdce4">executor …</text>
-  <g fill="#2BB3A3"><path d="M230 150 L286 150 l0 -4 l9 4 l-9 4 l0 -4 Z"/></g>
+  <rect x="30" y="70" width="460" height="270" rx="12" fill="#1D1D26" stroke="#5AC8FF"/>
+  <text x="260" y="98" text-anchor="middle" font-size="15" font-weight="700" fill="#5AC8FF">Cluster mode — driver inside the cluster</text>
+  <rect x="60" y="120" width="170" height="60" rx="8" fill="#23232C" stroke="#5AC8FF"/><text x="145" y="145" text-anchor="middle" font-size="12" fill="#dcdce4">your laptop /</text><text x="145" y="162" text-anchor="middle" font-size="12" fill="#dcdce4">gateway (submit)</text>
+  <rect x="290" y="120" width="170" height="60" rx="8" fill="#1D1D26" stroke="#E25A1C"/><text x="375" y="145" text-anchor="middle" font-size="12" font-weight="700" fill="#FF7E33">DRIVER</text><text x="375" y="162" text-anchor="middle" font-size="11" fill="#9aa0b4">on a cluster node</text>
+  <rect x="290" y="200" width="170" height="50" rx="8" fill="#23232C" stroke="#666"/><text x="375" y="222" text-anchor="middle" font-size="12" fill="#dcdce4">executor</text>
+  <rect x="290" y="260" width="170" height="50" rx="8" fill="#23232C" stroke="#666"/><text x="375" y="282" text-anchor="middle" font-size="12" fill="#dcdce4">executor …</text>
+  <g fill="#5AC8FF"><path d="M230 150 L286 150 l0 -4 l9 4 l-9 4 l0 -4 Z"/></g>
   <text x="260" y="318" text-anchor="middle" font-size="11.5" fill="#9aa0b4">laptop can disconnect; job keeps running</text>
 
   <!-- client mode -->
-  <rect x="510" y="70" width="460" height="270" rx="12" fill="#1b1410" stroke="#E25A1C"/>
+  <rect x="510" y="70" width="460" height="270" rx="12" fill="#1D1D26" stroke="#E25A1C"/>
   <text x="740" y="98" text-anchor="middle" font-size="15" font-weight="700" fill="#FF7E33">Client mode — driver on the submitter</text>
-  <rect x="540" y="120" width="170" height="60" rx="8" fill="#1b1410" stroke="#E25A1C"/><text x="625" y="145" text-anchor="middle" font-size="12" font-weight="700" fill="#FF7E33">DRIVER</text><text x="625" y="162" text-anchor="middle" font-size="11" fill="#9aa0b4">on your machine</text>
-  <rect x="770" y="120" width="170" height="60" rx="8" fill="#1c1c22" stroke="#666"/><text x="855" y="150" text-anchor="middle" font-size="12" fill="#dcdce4">cluster manager</text>
-  <rect x="770" y="200" width="170" height="50" rx="8" fill="#1c1c22" stroke="#666"/><text x="855" y="222" text-anchor="middle" font-size="12" fill="#dcdce4">executor</text>
-  <rect x="770" y="260" width="170" height="50" rx="8" fill="#1c1c22" stroke="#666"/><text x="855" y="282" text-anchor="middle" font-size="12" fill="#dcdce4">executor …</text>
+  <rect x="540" y="120" width="170" height="60" rx="8" fill="#1D1D26" stroke="#E25A1C"/><text x="625" y="145" text-anchor="middle" font-size="12" font-weight="700" fill="#FF7E33">DRIVER</text><text x="625" y="162" text-anchor="middle" font-size="11" fill="#9aa0b4">on your machine</text>
+  <rect x="770" y="120" width="170" height="60" rx="8" fill="#23232C" stroke="#666"/><text x="855" y="150" text-anchor="middle" font-size="12" fill="#dcdce4">cluster manager</text>
+  <rect x="770" y="200" width="170" height="50" rx="8" fill="#23232C" stroke="#666"/><text x="855" y="222" text-anchor="middle" font-size="12" fill="#dcdce4">executor</text>
+  <rect x="770" y="260" width="170" height="50" rx="8" fill="#23232C" stroke="#666"/><text x="855" y="282" text-anchor="middle" font-size="12" fill="#dcdce4">executor …</text>
   <g fill="#E25A1C"><path d="M710 150 L766 150 l0 -4 l9 4 l-9 4 l0 -4 Z"/></g>
   <text x="740" y="318" text-anchor="middle" font-size="11.5" fill="#9aa0b4">laptop must stay online; UI is local</text>
 </svg>
@@ -652,33 +666,33 @@
 </div>
 <figure class="fig reveal">
 <svg viewBox="0 0 1000 480" font-family="'JetBrains Mono','Courier New',monospace" role="img" aria-label="Spark query plan pipeline: unresolved -> analyzed(resolved) -> optimized -> physical -> RDDs -> jobs/stages/tasks">
-  <rect width="1000" height="480" rx="16" fill="#121212"/>
+  <rect width="1000" height="480" rx="16" fill="#20202A"/>
   <text x="500" y="40" text-anchor="middle" font-size="22" font-weight="700" fill="#F1F1F1">The plan pipeline (Catalyst + Tungsten)</text>
   <text x="500" y="64" text-anchor="middle" font-size="13" fill="#9aa0b4">your code → 4 logical plans → physical plan → RDDs → execution</text>
 
   <!-- stages as stacked boxes -->
   <g font-size="12">
-    <rect x="60" y="90" width="880" height="48" rx="8" fill="#1c1c22" stroke="#666"/>
+    <rect x="60" y="90" width="880" height="48" rx="8" fill="#23232C" stroke="#666"/>
     <text x="80" y="119" fill="#9aa0b4">0 · Your code</text>
     <text x="500" y="119" text-anchor="middle" fill="#dcdce4">spark.sql("...")   /   df.filter().join().groupBy()   →  unresolved logical plan</text>
 
-    <rect x="60" y="150" width="880" height="48" rx="8" fill="#1b1410" stroke="#E25A1C"/>
+    <rect x="60" y="150" width="880" height="48" rx="8" fill="#1D1D26" stroke="#E25A1C"/>
     <text x="80" y="179" fill="#FF7E33">1 · Unresolved logical plan</text>
     <text x="500" y="179" text-anchor="middle" fill="#dcdce4">"what you wrote, literally" — column names not yet checked, types unknown</text>
 
-    <rect x="60" y="210" width="880" height="48" rx="8" fill="#0f2420" stroke="#2BB3A3"/>
-    <text x="80" y="239" fill="#2BB3A3">2 · Analyzed (resolved) logical plan</text>
+    <rect x="60" y="210" width="880" height="48" rx="8" fill="#1D1D26" stroke="#5AC8FF"/>
+    <text x="80" y="239" fill="#5AC8FF">2 · Analyzed (resolved) logical plan</text>
     <text x="500" y="239" text-anchor="middle" fill="#dcdce4">catalog lookup → bind names to real columns &amp; types → resolve [unresolved]</text>
 
-    <rect x="60" y="270" width="880" height="48" rx="8" fill="#0f2420" stroke="#2BB3A3"/>
-    <text x="80" y="299" fill="#2BB3A3">3 · Optimized logical plan</text>
+    <rect x="60" y="270" width="880" height="48" rx="8" fill="#1D1D26" stroke="#5AC8FF"/>
+    <text x="80" y="299" fill="#5AC8FF">3 · Optimized logical plan</text>
     <text x="500" y="299" text-anchor="middle" fill="#dcdce4">Catalyst rules: push filters down, fold constants, prune columns, collapse projects</text>
 
-    <rect x="60" y="330" width="880" height="48" rx="8" fill="#1b1410" stroke="#FFB23F"/>
-    <text x="80" y="359" fill="#FFB23F">4 · Physical plan</text>
+    <rect x="60" y="330" width="880" height="48" rx="8" fill="#1D1D26" stroke="#9AA0B4"/>
+    <text x="80" y="359" fill="#9AA0B4">4 · Physical plan</text>
     <text x="500" y="359" text-anchor="middle" fill="#dcdce4">pick join strategies (BroadcastHashJoin vs SortMergeJoin) · partitioning · codegen</text>
 
-    <rect x="60" y="390" width="880" height="48" rx="8" fill="#1c1c22" stroke="#5C78FF"/>
+    <rect x="60" y="390" width="880" height="48" rx="8" fill="#23232C" stroke="#5C78FF"/>
     <text x="80" y="419" fill="#5C78FF">5 · RDDs → execution</text>
     <text x="500" y="419" text-anchor="middle" fill="#dcdce4">DAGScheduler → stages (shuffle boundaries) → TaskScheduler → tasks on executors</text>
   </g>
@@ -687,9 +701,9 @@
   <g fill="#FF7E33">
     <path d="M500 138 L500 146 l-4 0 l4 8 l4 -8 l-4 0 Z"/>
     <path d="M500 198 L500 206 l-4 0 l4 8 l4 -8 l-4 0 Z"/>
-    <path d="M500 258 L500 266 l-4 0 l4 8 l4 -8 l-4 0 Z" fill="#2BB3A3"/>
-    <path d="M500 318 L500 326 l-4 0 l4 8 l4 -8 l-4 0 Z" fill="#2BB3A3"/>
-    <path d="M500 378 L500 386 l-4 0 l4 8 l4 -8 l-4 0 Z" fill="#FFB23F"/>
+    <path d="M500 258 L500 266 l-4 0 l4 8 l4 -8 l-4 0 Z" fill="#5AC8FF"/>
+    <path d="M500 318 L500 326 l-4 0 l4 8 l4 -8 l-4 0 Z" fill="#5AC8FF"/>
+    <path d="M500 378 L500 386 l-4 0 l4 8 l4 -8 l-4 0 Z" fill="#9AA0B4"/>
   </g>
   <text x="500" y="462" text-anchor="middle" font-size="12" fill="#9aa0b4">Lazy until an action; then this whole pipeline runs once per job.</text>
 </svg>
@@ -736,26 +750,26 @@ joined.<span class="f">write</span>.mode(<span class="s">"overwrite"</span>).par
 
 <figure class="fig reveal">
 <svg viewBox="0 0 1000 300" font-family="'JetBrains Mono','Courier New',monospace" role="img" aria-label="Example: how the optimizer reorders filter before join">
-  <rect width="1000" height="300" rx="16" fill="#121212"/>
+  <rect width="1000" height="300" rx="16" fill="#20202A"/>
   <text x="500" y="38" text-anchor="middle" font-size="20" font-weight="700" fill="#F1F1F1">Example: the optimizer moves your filter down ( = earlier )</text>
 
   <text x="250" y="84" text-anchor="middle" font-size="14" font-weight="700" fill="#9aa0b4">What you wrote (unresolved)</text>
   <g font-size="12">
-    <rect x="150" y="100" width="200" height="38" rx="7" fill="#1c1c22" stroke="#666"/><text x="250" y="124" text-anchor="middle" fill="#dcdce4">Aggregate sum(amount)</text>
-    <rect x="150" y="146" width="200" height="38" rx="7" fill="#1c1c22" stroke="#666"/><text x="250" y="170" text-anchor="middle" fill="#dcdce4">Join on customer_id</text>
-    <rect x="150" y="192" width="200" height="38" rx="7" fill="#1c1c22" stroke="#666"/><text x="250" y="216" text-anchor="middle" fill="#dcdce4">Filter amount &gt; 100</text>
-    <rect x="150" y="238" width="200" height="34" rx="7" fill="#1c1c22" stroke="#666"/><text x="250" y="260" text-anchor="middle" fill="#dcdce4">Scan orders + customers</text>
+    <rect x="150" y="100" width="200" height="38" rx="7" fill="#23232C" stroke="#666"/><text x="250" y="124" text-anchor="middle" fill="#dcdce4">Aggregate sum(amount)</text>
+    <rect x="150" y="146" width="200" height="38" rx="7" fill="#23232C" stroke="#666"/><text x="250" y="170" text-anchor="middle" fill="#dcdce4">Join on customer_id</text>
+    <rect x="150" y="192" width="200" height="38" rx="7" fill="#23232C" stroke="#666"/><text x="250" y="216" text-anchor="middle" fill="#dcdce4">Filter amount &gt; 100</text>
+    <rect x="150" y="238" width="200" height="34" rx="7" fill="#23232C" stroke="#666"/><text x="250" y="260" text-anchor="middle" fill="#dcdce4">Scan orders + customers</text>
   </g>
   <g fill="#666"><path d="M250 138 L250 144 l-3 0 l3 6 l3 -6 l-3 0 Z"/><path d="M250 184 L250 190 l-3 0 l3 6 l3 -6 l-3 0 Z"/><path d="M250 230 L250 236 l-3 0 l3 6 l3 -6 l-3 0 Z"/></g>
 
-  <text x="650" y="84" text-anchor="middle" font-size="14" font-weight="700" fill="#5BC97A">After optimization (physical)</text>
+  <text x="650" y="84" text-anchor="middle" font-size="14" font-weight="700" fill="#5AC8FF">After optimization (physical)</text>
   <g font-size="12">
-    <rect x="550" y="100" width="200" height="38" rx="7" fill="#0f2420" stroke="#2BB3A3"/><text x="650" y="124" text-anchor="middle" fill="#dcdce4">Aggregate sum(amount)</text>
-    <rect x="550" y="146" width="200" height="38" rx="7" fill="#0f2420" stroke="#2BB3A3"/><text x="650" y="170" text-anchor="middle" fill="#dcdce4">Join (broadcast customers)</text>
-    <rect x="550" y="192" width="200" height="38" rx="7" fill="#1b1410" stroke="#FF7E33"/><text x="650" y="216" text-anchor="middle" fill="#FF7E33">Filter amount&gt;100 (pushed)</text>
-    <rect x="550" y="238" width="200" height="34" rx="7" fill="#0f2420" stroke="#2BB3A3"/><text x="650" y="260" text-anchor="middle" fill="#dcdce4">Scan orders (col-pruned)</text>
+    <rect x="550" y="100" width="200" height="38" rx="7" fill="#1D1D26" stroke="#5AC8FF"/><text x="650" y="124" text-anchor="middle" fill="#dcdce4">Aggregate sum(amount)</text>
+    <rect x="550" y="146" width="200" height="38" rx="7" fill="#1D1D26" stroke="#5AC8FF"/><text x="650" y="170" text-anchor="middle" fill="#dcdce4">Join (broadcast customers)</text>
+    <rect x="550" y="192" width="200" height="38" rx="7" fill="#1D1D26" stroke="#FF7E33"/><text x="650" y="216" text-anchor="middle" fill="#FF7E33">Filter amount&gt;100 (pushed)</text>
+    <rect x="550" y="238" width="200" height="34" rx="7" fill="#1D1D26" stroke="#5AC8FF"/><text x="650" y="260" text-anchor="middle" fill="#dcdce4">Scan orders (col-pruned)</text>
   </g>
-  <g fill="#2BB3A3"><path d="M650 138 L650 144 l-3 0 l3 6 l3 -6 l-3 0 Z"/><path d="M650 184 L650 190 l-3 0 l3 6 l3 -6 l-3 0 Z"/><path d="M650 230 L650 236 l-3 0 l3 6 l3 -6 l-3 0 Z"/></g>
+  <g fill="#5AC8FF"><path d="M650 138 L650 144 l-3 0 l3 6 l3 -6 l-3 0 Z"/><path d="M650 184 L650 190 l-3 0 l3 6 l3 -6 l-3 0 Z"/><path d="M650 230 L650 236 l-3 0 l3 6 l3 -6 l-3 0 Z"/></g>
   <text x="500" y="288" text-anchor="middle" font-size="11.5" fill="#9aa0b4">filter runs at the scan (less data into the join); small table is broadcast (no shuffle)</text>
 </svg>
 <figcaption>Catalyst rewrites your tree so the filter happens at the read and the small table is broadcast — even if you wrote them in a different order.</figcaption>
@@ -849,46 +863,46 @@ df.withColumn(<span class="s">"rnk"</span>, F.row_number().over(w)).filter(<span
 </div>
 <figure class="fig reveal">
 <svg viewBox="0 0 1000 380" font-family="'JetBrains Mono','Courier New',monospace" role="img" aria-label="Spark executor memory regions: reserved, user, unified(execution+storage) and optional off-heap">
-  <rect width="1000" height="380" rx="16" fill="#121212"/>
+  <rect width="1000" height="380" rx="16" fill="#20202A"/>
   <text x="500" y="40" text-anchor="middle" font-size="22" font-weight="700" fill="#F1F1F1">Inside one executor's memory</text>
   <text x="500" y="64" text-anchor="middle" font-size="13" fill="#9aa0b4">spark.executor.memory = M  →  carved into Reserved · User · Unified (Execution ⇄ Storage) · optional Off-heap</text>
 
   <!-- heap bar -->
   <text x="60" y="110" font-size="13" font-weight="700" fill="#FF7E33">On-heap (M)</text>
-  <rect x="60" y="120" width="120" height="120" rx="6" fill="#2a1414" stroke="#FF6B6B"/>
-  <text x="120" y="170" text-anchor="middle" font-size="12" fill="#FF6B6B">Reserved</text>
+  <rect x="60" y="120" width="120" height="120" rx="6" fill="#2a1414" stroke="#9AA0B4"/>
+  <text x="120" y="170" text-anchor="middle" font-size="12" fill="#9AA0B4">Reserved</text>
   <text x="120" y="190" text-anchor="middle" font-size="11" fill="#dcdce4">~299MB</text>
   <text x="120" y="208" text-anchor="middle" font-size="10" fill="#9aa0b4">JVM + Spark internals</text>
 
-  <rect x="180" y="120" width="140" height="120" rx="6" fill="#1c1c22" stroke="#666"/>
+  <rect x="180" y="120" width="140" height="120" rx="6" fill="#23232C" stroke="#666"/>
   <text x="250" y="170" text-anchor="middle" font-size="12" fill="#dcdce4">User</text>
   <text x="250" y="190" text-anchor="middle" font-size="11" fill="#9aa0b4">0.4 · (M−R)</text>
   <text x="250" y="208" text-anchor="middle" font-size="10" fill="#9aa0b4">your code's objects</text>
 
   <!-- unified region split into execution + storage -->
-  <rect x="320" y="120" width="500" height="120" rx="6" fill="#0f2420" stroke="#2BB3A3"/>
-  <text x="570" y="140" text-anchor="middle" font-size="13" font-weight="700" fill="#2BB3A3">Unified (0.6 · (M−R))  —  soft boundary, borrowed back &amp; forth</text>
-  <rect x="335" y="156" width="230" height="74" rx="5" fill="#1b1410" stroke="#FF7E33"/>
+  <rect x="320" y="120" width="500" height="120" rx="6" fill="#1D1D26" stroke="#5AC8FF"/>
+  <text x="570" y="140" text-anchor="middle" font-size="13" font-weight="700" fill="#5AC8FF">Unified (0.6 · (M−R))  —  soft boundary, borrowed back &amp; forth</text>
+  <rect x="335" y="156" width="230" height="74" rx="5" fill="#1D1D26" stroke="#FF7E33"/>
   <text x="450" y="184" text-anchor="middle" font-size="12.5" font-weight="700" fill="#FF7E33">Execution</text>
   <text x="450" y="204" text-anchor="middle" font-size="10.5" fill="#9aa0b4">shuffles · joins · sorts</text>
   <text x="450" y="220" text-anchor="middle" font-size="10.5" fill="#9aa0b4">spills to disk if full</text>
-  <rect x="575" y="156" width="230" height="74" rx="5" fill="#1b1410" stroke="#FFB23F"/>
-  <text x="690" y="184" text-anchor="middle" font-size="12.5" font-weight="700" fill="#FFB23F">Storage</text>
+  <rect x="575" y="156" width="230" height="74" rx="5" fill="#1D1D26" stroke="#9AA0B4"/>
+  <text x="690" y="184" text-anchor="middle" font-size="12.5" font-weight="700" fill="#9AA0B4">Storage</text>
   <text x="690" y="204" text-anchor="middle" font-size="10.5" fill="#9aa0b4">cached blocks · broadcasts</text>
   <text x="690" y="220" text-anchor="middle" font-size="10.5" fill="#9aa0b4">evicts (drops) if full</text>
   <!-- borrow arrows -->
-  <path d="M565 193 L585 193 l0 -4 l8 4 l-8 4 l0 -4 Z" fill="#5BC97A"/>
-  <path d="M585 197 L565 197 l0 4 l-8 -4 l8 -4 l0 4 Z" fill="#5BC97A" opacity="0.6"/>
+  <path d="M565 193 L585 193 l0 -4 l8 4 l-8 4 l0 -4 Z" fill="#5AC8FF"/>
+  <path d="M585 197 L565 197 l0 4 l-8 -4 l8 -4 l0 4 Z" fill="#5AC8FF" opacity="0.6"/>
 
   <!-- off-heap -->
-  <text x="870" y="110" font-size="13" font-weight="700" fill="#BA5AFF">Off-heap</text>
-  <rect x="850" y="120" width="110" height="120" rx="6" fill="#221430" stroke="#BA5AFF"/>
-  <text x="905" y="170" text-anchor="middle" font-size="11.5" fill="#BA5AFF">offHeap.size</text>
+  <text x="870" y="110" font-size="13" font-weight="700" fill="#5AC8FF">Off-heap</text>
+  <rect x="850" y="120" width="110" height="120" rx="6" fill="#221430" stroke="#5AC8FF"/>
+  <text x="905" y="170" text-anchor="middle" font-size="11.5" fill="#5AC8FF">offHeap.size</text>
   <text x="905" y="190" text-anchor="middle" font-size="11" fill="#dcdce4">off-heap pool</text>
   <text x="905" y="212" text-anchor="middle" font-size="10" fill="#9aa0b4">Tungsten</text>
   <text x="905" y="226" text-anchor="middle" font-size="10" fill="#9aa0b4">binary rows</text>
 
-  <text x="500" y="280" text-anchor="middle" font-size="12.5" fill="#dcdce4"><tspan fill="#2BB3A3" font-weight="700">Unified memory</tspan>: execution &amp; storage share one pool — if one needs room it can borrow from the other.</text>
+  <text x="500" y="280" text-anchor="middle" font-size="12.5" fill="#dcdce4"><tspan fill="#5AC8FF" font-weight="700">Unified memory</tspan>: execution &amp; storage share one pool — if one needs room it can borrow from the other.</text>
   <text x="500" y="306" text-anchor="middle" font-size="12" fill="#9aa0b4">execution outgrows → spills to disk ·  storage outgrows → evicts cached blocks (not spill).<tspan x="500" dy="18">Tune with spark.memory.fraction &amp; spark.memory.storageFraction.</tspan></text>
   <text x="500" y="358" text-anchor="middle" font-size="12" fill="#FF7E33">R ≈ 300 MB reserved. Usable ≈ M − 0.3 GB. Default: 60% unified (0.5 storage of that), 40% user.</text>
 </svg>
@@ -929,10 +943,10 @@ spark.sql.shuffle.partitions  = <span class="n">200</span> <span class="c"># rai
 
 <div class="callout rd reveal">
 <p style="margin:.2em 0"><strong>Common memory mistakes:</strong></p>
-<p class="kv">✗ <b>One fat executor per node</b> (e.g. 64 GB / 16 core). GC pauses dominate. Prefer ~5 cores × several executors per node.</p>
-<p class="kv">✗ <b><code>collect()</code> on a big DataFrame</b> — pulls everything to the <em>driver</em>; OOMs the driver, not the executors. Use <code>take()</code>, <code>toPandas()</code> on a sample, or write to storage.</p>
-<p class="kv">✗ <b>Too few shuffle partitions</b> → each task gets a huge partition → execution memory spills constantly. Raise <code>spark.sql.shuffle.partitions</code> or enable AQE.</p>
-<p class="kv">✗ <b>Caching everything</b> → Storage fills, evictions thrash. Cache only reused DataFrames, and <code>unpersist()</code> when done.</p>
+<p class="kv">− <b>One fat executor per node</b> (e.g. 64 GB / 16 core). GC pauses dominate. Prefer ~5 cores × several executors per node.</p>
+<p class="kv">− <b><code>collect()</code> on a big DataFrame</b> — pulls everything to the <em>driver</em>; OOMs the driver, not the executors. Use <code>take()</code>, <code>toPandas()</code> on a sample, or write to storage.</p>
+<p class="kv">− <b>Too few shuffle partitions</b> → each task gets a huge partition → execution memory spills constantly. Raise <code>spark.sql.shuffle.partitions</code> or enable AQE.</p>
+<p class="kv">− <b>Caching everything</b> → Storage fills, evictions thrash. Cache only reused DataFrames, and <code>unpersist()</code> when done.</p>
 </div>
 
 <!-- 10 MONITORING + OPT -->
@@ -958,17 +972,17 @@ spark.sql.shuffle.partitions  = <span class="n">200</span> <span class="c"># rai
 
 <figure class="fig reveal">
 <svg viewBox="0 0 1000 320" font-family="'JetBrains Mono','Courier New',monospace" role="img" aria-label="Data skew: one task handles most of the data while others finish fast">
-  <rect width="1000" height="320" rx="16" fill="#121212"/>
+  <rect width="1000" height="320" rx="16" fill="#20202A"/>
   <text x="500" y="40" text-anchor="middle" font-size="22" font-weight="700" fill="#F1F1F1">Spotting data skew in the Stages tab</text>
   <text x="500" y="64" text-anchor="middle" font-size="13" fill="#9aa0b4">task duration bar — one straggler dominates while the rest finished long ago</text>
 
   <g font-size="11">
-    <text x="60" y="110" fill="#9aa0b4">task 1</text><rect x="160" y="98" width="120" height="20" rx="4" fill="#0f2420" stroke="#2BB3A3"/><text x="290" y="113" fill="#2BB3A3">0.4s</text>
-    <text x="60" y="138" fill="#9aa0b4">task 2</text><rect x="160" y="126" width="110" height="20" rx="4" fill="#0f2420" stroke="#2BB3A3"/><text x="280" y="141" fill="#2BB3A3">0.3s</text>
-    <text x="60" y="166" fill="#9aa0b4">task 3</text><rect x="160" y="154" width="125" height="20" rx="4" fill="#0f2420" stroke="#2BB3A3"/><text x="295" y="169" fill="#2BB3A3">0.4s</text>
-    <text x="60" y="194" fill="#9aa0b4">task 4</text><rect x="160" y="182" width="115" height="20" rx="4" fill="#0f2420" stroke="#2BB3A3"/><text x="285" y="197" fill="#2BB3A3">0.3s</text>
-    <text x="60" y="222" fill="#FF6B6B" font-weight="700">task 5</text><rect x="160" y="210" width="700" height="20" rx="4" fill="#2a1414" stroke="#FF6B6B"/><text x="865" y="225" fill="#FF6B6B" font-weight="700">2.5 min  ← straggler</text>
-    <text x="60" y="250" fill="#9aa0b4">task 6</text><rect x="160" y="238" width="118" height="20" rx="4" fill="#0f2420" stroke="#2BB3A3"/><text x="288" y="253" fill="#2BB3A3">0.4s</text>
+    <text x="60" y="110" fill="#9aa0b4">task 1</text><rect x="160" y="98" width="120" height="20" rx="4" fill="#1D1D26" stroke="#5AC8FF"/><text x="290" y="113" fill="#5AC8FF">0.4s</text>
+    <text x="60" y="138" fill="#9aa0b4">task 2</text><rect x="160" y="126" width="110" height="20" rx="4" fill="#1D1D26" stroke="#5AC8FF"/><text x="280" y="141" fill="#5AC8FF">0.3s</text>
+    <text x="60" y="166" fill="#9aa0b4">task 3</text><rect x="160" y="154" width="125" height="20" rx="4" fill="#1D1D26" stroke="#5AC8FF"/><text x="295" y="169" fill="#5AC8FF">0.4s</text>
+    <text x="60" y="194" fill="#9aa0b4">task 4</text><rect x="160" y="182" width="115" height="20" rx="4" fill="#1D1D26" stroke="#5AC8FF"/><text x="285" y="197" fill="#5AC8FF">0.3s</text>
+    <text x="60" y="222" fill="#9AA0B4" font-weight="700">task 5</text><rect x="160" y="210" width="700" height="20" rx="4" fill="#2a1414" stroke="#9AA0B4"/><text x="865" y="225" fill="#9AA0B4" font-weight="700">2.5 min  ← straggler</text>
+    <text x="60" y="250" fill="#9aa0b4">task 6</text><rect x="160" y="238" width="118" height="20" rx="4" fill="#1D1D26" stroke="#5AC8FF"/><text x="288" y="253" fill="#5AC8FF">0.4s</text>
   </g>
   <text x="500" y="290" text-anchor="middle" font-size="12" fill="#FF7E33">One task = 2.5 min, the rest = 0.4s. The stage wall-clock = the straggler. That is data skew — fix the key, not the cluster.</text>
   <text x="500" y="308" text-anchor="middle" font-size="11" fill="#9aa0b4">Check the stage's "Shuffle Read Size" per task: if one task read 1000× the others, that's the smoking gun.</text>

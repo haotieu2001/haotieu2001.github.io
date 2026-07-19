@@ -22,9 +22,9 @@
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,500;0,700;0,800;1,400&display=swap" rel="stylesheet">
 <style>
   :root{
-    --bg:#1A1A1A; --bg2:#121212; --ink:#F1F1F1; --muted:#a39d9a; --dim:#6f6862;
-    --blue2:#F05032; --cyan:#F05032; --cyan2:#FF8A65; --purple:#A66BFF; --magenta2:#A66BFF;
-    --grad:linear-gradient(90deg,#C1350F,#F05032,#FF8A65);
+    --bg:#191921; --bg2:#20202A; --ink:#F1F1F1; --muted:#a39d9a; --dim:#6f6862;
+    --blue2:#F05032; --cyan:#F05032; --cyan2:#9AA0B4; --purple:#5AC8FF; --magenta2:#5AC8FF;
+    --grad:linear-gradient(90deg,#C1350F,#F05032,#9AA0B4);
     --font:"JetBrainsMono Nerd Font","JetBrains Mono","Symbols Nerd Font",ui-monospace,"Cascadia Code",Menlo,Consolas,monospace;
   }
   *{box-sizing:border-box}
@@ -34,7 +34,7 @@
   .page{max-width:880px;margin:0 auto;padding:0 24px}
   header{padding:30px 0 6px}
   .kicker{font-size:13px;color:var(--dim)}
-  .back{color:var(--cyan2);text-decoration:none;font-size:13px;border-bottom:1px dotted #FF8A6566}
+  .back{color:var(--cyan2);text-decoration:none;font-size:13px;border-bottom:1px dotted #9AA0B466}
   h1{font-size:clamp(28px,4.6vw,46px);line-height:1.12;margin:12px 0 12px;font-weight:800;
      background:var(--grad);background-size:220% auto;-webkit-background-clip:text;background-clip:text;color:transparent;animation:sheen 9s linear infinite}
   @keyframes sheen{to{background-position:220% center}}
@@ -48,34 +48,34 @@
   .lead{font-size:18px;color:#e7e7ee}
   a{color:var(--cyan2)}
   hr{border:0;border-top:1px solid #2f2823;margin:36px 0}
-  code{font-family:var(--font);background:#241a15;color:#FF8A65;padding:1px 6px;border-radius:5px;font-size:.88em;border:1px solid #4a2a1c2f3a}
+  code{font-family:var(--font);background:#241a15;color:#9AA0B4;padding:1px 6px;border-radius:5px;font-size:.88em;border:1px solid #4a2a1c2f3a}
   .cb{margin:16px 0}
-  .cb .lang{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:#9aa0b4;background:#1b1b24;border:1px solid #2c2c36;border-bottom:none;border-radius:9px 9px 0 0;padding:4px 12px}
-  pre{margin:0;background:#0d0d13;border:1px solid #23232e;border-radius:0 10px 10px 10px;padding:14px 16px;overflow-x:auto;
+  .cb .lang{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:#9aa0b4;background:#1b1b24;border:1px solid #34343F;border-bottom:none;border-radius:9px 9px 0 0;padding:4px 12px}
+  pre{margin:0;background:#101017;border:1px solid #34343F;border-radius:0 10px 10px 10px;padding:14px 16px;overflow-x:auto;
       font-family:var(--font);font-size:13px;line-height:1.65;color:#d8dcea;white-space:pre}
-  pre .c{color:#6b7280}
+  pre .c{color:#6B6B78}
   pre .o{color:#9aa0b4}
-  pre .k{color:#FF8A65}
+  pre .k{color:#9AA0B4}
   pre .g{color:#5AC8FF}
-  pre .y{color:#f0b429}
-  pre .r{color:#FF6B8B}
+  pre .y{color:#9AA0B4}
+  pre .r{color:#9AA0B4}
   .callout{border-left:4px solid var(--blue2);background:#1c1714;border-radius:0 12px 12px 0;padding:14px 18px;margin:22px 0}
-  .callout.cy{border-color:var(--cyan);background:#2A1610}
+  .callout.cy{border-color:var(--cyan);background:#1D1D26}
   .callout.mg{border-color:var(--magenta2);background:#1B1030}
-  .callout.gd{border-color:#f0b429;background:#241d0f}
+  .callout.gd{border-color:#9AA0B4;background:#1D1D26}
   .callout.gr{border-color:#5AC8FF;background:#0d1820}
   .callout .t{color:var(--cyan2);font-weight:800}
-  .callout.gd .t{color:#f0b429}
+  .callout.gd .t{color:#9AA0B4}
   .callout.gr .t{color:#5AC8FF}
   .callout.mg .t{color:var(--magenta2)}
-  .tldr{border:1px solid #4a2a1c;background:linear-gradient(180deg,#241610,#121212);border-radius:16px;padding:20px 24px;margin:26px 0}
+  .tldr{border:1px solid #4a2a1c;background:linear-gradient(180deg,#241610,#20202A);border-radius:16px;padding:20px 24px;margin:26px 0}
   .tldr h4{margin:0 0 8px;font-size:13px;letter-spacing:.2em;text-transform:uppercase;color:var(--cyan2)}
   .gloss{border:1px solid #302823;background:#171411;border-radius:14px;padding:18px 22px;margin:24px 0}
   .gloss h4{margin:0 0 6px;color:#fff;font-size:15px}
   .gloss dl{margin:0;font-size:13.5px}
   .gloss dt{color:var(--cyan2);font-weight:700;margin-top:9px}
   .gloss dd{margin:1px 0 0;color:#cdd0dd}
-  .toc{background:#171310;border:1px solid #302823;border-radius:14px;padding:16px 22px;margin:24px 0;column-count:2;column-gap:28px}
+  .toc{background:#1D1D26;border:1px solid #302823;border-radius:14px;padding:16px 22px;margin:24px 0;column-count:2;column-gap:28px}
   .toc a{display:block;color:var(--cyan2);text-decoration:none;font-size:13.5px;line-height:1.9;break-inside:avoid}
   .toc a:hover{color:#fff}
   .toc>strong{column-span:all;display:block;margin-bottom:6px;color:#fff}
@@ -85,25 +85,39 @@
   tr:nth-child(even) td{background:#1a1614}
 
   figure.fig{margin:26px 0;text-align:center}
-  figure.fig svg{display:block;width:100%;max-width:100%;height:auto;border:1px solid #2a2622;border-radius:14px;background:#0d0d13}
+  figure.fig svg{display:block;width:100%;max-width:100%;height:auto;border:1px solid #2a2622;border-radius:14px;background:#101017}
   figure.fig figcaption{font-size:12.5px;color:var(--muted);margin-top:9px;font-style:italic;line-height:1.6}
   .pain{border:1px solid #3D2130;background:#22121A;border-radius:14px;padding:16px 20px;margin:14px 0}
-  .pain h4{margin:0 0 4px;color:#FF6B8B}
+  .pain h4{margin:0 0 4px;color:#9AA0B4}
   .fix{border:1px solid #1d3448;background:#0d1820;border-radius:14px;padding:16px 20px;margin:14px 0}
   .fix h4{margin:0 0 4px;color:#5AC8FF}
   .step{display:flex;gap:12px;align-items:flex-start;margin:14px 0}
   .step .num-bubble{flex:0 0 28px;height:28px;border-radius:50%;background:var(--grad);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:#fff;margin-top:2px}
   .step .body{flex:1}
-  footer{border-top:1px solid #23232e;margin-top:50px;padding:24px 0 90px;color:var(--dim);font-size:13px}
+  footer{border-top:1px solid #34343F;margin-top:50px;padding:24px 0 90px;color:var(--dim);font-size:13px}
   footer a{color:var(--cyan2)}
   .js .reveal{opacity:0;transform:translateY(16px);transition:opacity .6s ease,transform .6s ease}
   .js .reveal.in{opacity:1;transform:none}
   @media (prefers-reduced-motion:reduce){.js .reveal{opacity:1;transform:none}}
+  /* ---- shared theme: top nav + a11y (appended) ---- */
+  .nav{position:sticky;top:0;z-index:60;background:rgba(25,25,33,.82);backdrop-filter:blur(10px);border-bottom:1px solid #34343f}
+  .nav-inner{max-width:1040px;margin:0 auto;padding:12px 24px;display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+  .nav-brand{font-weight:800;letter-spacing:.16em;font-size:15px;text-decoration:none;border:0;
+             background:linear-gradient(90deg,#5C78FF,#28B9FF,#A52AFF);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .nav-links{display:flex;gap:6px;flex-wrap:wrap;margin-left:auto}
+  .nav-links a{text-decoration:none;border:1px solid transparent;color:#9aa0b4;font-weight:700;font-size:13.5px;padding:6px 14px;border-radius:999px;transition:.2s}
+  .nav-links a:hover{color:#fff;border-color:#34343f;background:#23232c}
+  .nav-links a.active{color:#5AC8FF;border-color:#28B9FF55;background:#28B9FF14}
+  :focus-visible{outline:2px solid #5AC8FF;outline-offset:3px;border-radius:6px}
+  @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{animation:none !important;transition:none !important}.js .reveal{opacity:1 !important;transform:none !important}}
 </style>
+
 <script>document.documentElement.classList.add('js');</script>
 </head>
 <body>
 <div id="bar"></div>
+
+<nav class="nav"><div class="nav-inner"><a class="nav-brand" href="../index.html">HAO TIEU</a><div class="nav-links"><a href="../index.html">Portfolio</a><a href="../blogs.html">Blogs</a><a href="../essentials.html" class="active">Data Engineer Essentials</a></div></div></nav>
 <div class="page">
 
 <header>
@@ -118,33 +132,33 @@
   <defs>
     <marker id="ga" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#5AC8FF"/></marker>
     <marker id="go" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#F05032"/></marker>
-    <marker id="gv" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#A66BFF"/></marker>
-    <marker id="gr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#FF6B8B"/></marker>
-    <marker id="gm" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#6b7280"/></marker>
+    <marker id="gv" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#5AC8FF"/></marker>
+    <marker id="gr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#9AA0B4"/></marker>
+    <marker id="gm" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#6B6B78"/></marker>
   </defs>
-  <line x1="60" y1="164" x2="826" y2="164" stroke="#2c2c36" stroke-width="1.4"/>
-  <path d="M250 164 C 286 164 296 84 332 84" fill="none" stroke="#A66BFF" stroke-width="1.8"/>
-  <path d="M512 84 C 560 84 588 164 632 164" fill="none" stroke="#A66BFF" stroke-width="1.8"/>
-  <line x1="332" y1="84" x2="512" y2="84" stroke="#A66BFF" stroke-width="1.8"/>
+  <line x1="60" y1="164" x2="826" y2="164" stroke="#34343F" stroke-width="1.4"/>
+  <path d="M250 164 C 286 164 296 84 332 84" fill="none" stroke="#5AC8FF" stroke-width="1.8"/>
+  <path d="M512 84 C 560 84 588 164 632 164" fill="none" stroke="#5AC8FF" stroke-width="1.8"/>
+  <line x1="332" y1="84" x2="512" y2="84" stroke="#5AC8FF" stroke-width="1.8"/>
 
   <text x="46" y="168" font-size="11" fill="#5AC8FF" font-weight="700" text-anchor="end">main</text>
-  <text x="332" y="52" font-size="11" fill="#A66BFF" font-weight="700">feature/revenue</text>
+  <text x="332" y="52" font-size="11" fill="#5AC8FF" font-weight="700">feature/revenue</text>
 
-  <circle cx="90" cy="164" r="9" fill="#0d0d13" stroke="#5AC8FF" stroke-width="2"/><circle cx="170" cy="164" r="9" fill="#0d0d13" stroke="#5AC8FF" stroke-width="2"/><circle cx="250" cy="164" r="9" fill="#0d0d13" stroke="#5AC8FF" stroke-width="2"/><circle cx="450" cy="164" r="9" fill="#0d0d13" stroke="#5AC8FF" stroke-width="2"/>
-  <circle cx="632" cy="164" r="11" fill="#0d0d13" stroke="#F05032" stroke-width="2.4"/><circle cx="740" cy="164" r="9" fill="#0d0d13" stroke="#5AC8FF" stroke-width="2"/>
-  <circle cx="332" cy="84" r="9" fill="#0d0d13" stroke="#A66BFF" stroke-width="2"/><circle cx="422" cy="84" r="9" fill="#0d0d13" stroke="#A66BFF" stroke-width="2"/><circle cx="512" cy="84" r="9" fill="#0d0d13" stroke="#A66BFF" stroke-width="2"/>
+  <circle cx="90" cy="164" r="9" fill="#101017" stroke="#5AC8FF" stroke-width="2"/><circle cx="170" cy="164" r="9" fill="#101017" stroke="#5AC8FF" stroke-width="2"/><circle cx="250" cy="164" r="9" fill="#101017" stroke="#5AC8FF" stroke-width="2"/><circle cx="450" cy="164" r="9" fill="#101017" stroke="#5AC8FF" stroke-width="2"/>
+  <circle cx="632" cy="164" r="11" fill="#101017" stroke="#F05032" stroke-width="2.4"/><circle cx="740" cy="164" r="9" fill="#101017" stroke="#5AC8FF" stroke-width="2"/>
+  <circle cx="332" cy="84" r="9" fill="#101017" stroke="#5AC8FF" stroke-width="2"/><circle cx="422" cy="84" r="9" fill="#101017" stroke="#5AC8FF" stroke-width="2"/><circle cx="512" cy="84" r="9" fill="#101017" stroke="#5AC8FF" stroke-width="2"/>
 
-  <text x="90"  y="192" font-size="9.5" fill="#6b7280" text-anchor="middle">init</text>
-  <text x="170" y="192" font-size="9.5" fill="#6b7280" text-anchor="middle">add ingest</text>
-  <text x="250" y="192" font-size="9.5" fill="#6b7280" text-anchor="middle">schema</text>
-  <text x="450" y="192" font-size="9.5" fill="#6b7280" text-anchor="middle">hotfix typo</text>
+  <text x="90"  y="192" font-size="9.5" fill="#6B6B78" text-anchor="middle">init</text>
+  <text x="170" y="192" font-size="9.5" fill="#6B6B78" text-anchor="middle">add ingest</text>
+  <text x="250" y="192" font-size="9.5" fill="#6B6B78" text-anchor="middle">schema</text>
+  <text x="450" y="192" font-size="9.5" fill="#6B6B78" text-anchor="middle">hotfix typo</text>
   <text x="632" y="192" font-size="9.5" fill="#F05032" text-anchor="middle">merge</text>
-  <text x="740" y="192" font-size="9.5" fill="#6b7280" text-anchor="middle">next work</text>
+  <text x="740" y="192" font-size="9.5" fill="#6B6B78" text-anchor="middle">next work</text>
   <text x="332" y="66" font-size="9.5" fill="#9aa0b4" text-anchor="middle">draft model</text>
   <text x="422" y="66" font-size="9.5" fill="#9aa0b4" text-anchor="middle">add tests</text>
   <text x="512" y="66" font-size="9.5" fill="#9aa0b4" text-anchor="middle">review fixes</text>
 
-  <text x="440" y="222" font-size="10.5" fill="#6b7280" text-anchor="middle">each circle is a commit — a complete, named snapshot of the whole project</text>
+  <text x="440" y="222" font-size="10.5" fill="#6B6B78" text-anchor="middle">each circle is a commit — a complete, named snapshot of the whole project</text>
 </svg>
 </figure>
 
@@ -203,34 +217,34 @@
   <defs>
     <marker id="ga" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#5AC8FF"/></marker>
     <marker id="go" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#F05032"/></marker>
-    <marker id="gv" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#A66BFF"/></marker>
-    <marker id="gr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#FF6B8B"/></marker>
-    <marker id="gm" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#6b7280"/></marker>
+    <marker id="gv" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#5AC8FF"/></marker>
+    <marker id="gr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#9AA0B4"/></marker>
+    <marker id="gm" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#6B6B78"/></marker>
   </defs>
   <text x="380" y="26" font-size="10.5" fill="#9aa0b4" text-anchor="middle" letter-spacing="1.6">EVERY COMMIT IS A FULL SNAPSHOT — NOT A DIFF</text>
 
   <rect x="35" y="70" width="138" height="96" rx="10" fill="#12131a" stroke="#5AC8FF" stroke-width="1.6"/>
   <text x="51" y="92" font-size="11" fill="#5AC8FF" font-weight="700">9f2c1ab</text>
-  <text x="51" y="106" font-size="9" fill="#6b7280">init repo</text><rect x="51" y="110" width="92" height="5" rx="2.5" fill="#3a3f4b"/><rect x="51" y="121" width="70" height="5" rx="2.5" fill="#3a3f4b"/><rect x="51" y="132" width="84" height="5" rx="2.5" fill="#3a3f4b"/>
+  <text x="51" y="106" font-size="9" fill="#6B6B78">init repo</text><rect x="51" y="110" width="92" height="5" rx="2.5" fill="#3a3f4b"/><rect x="51" y="121" width="70" height="5" rx="2.5" fill="#3a3f4b"/><rect x="51" y="132" width="84" height="5" rx="2.5" fill="#3a3f4b"/>
   <rect x="219" y="70" width="138" height="96" rx="10" fill="#12131a" stroke="#5AC8FF" stroke-width="1.6"/>
   <text x="235" y="92" font-size="11" fill="#5AC8FF" font-weight="700">3ba91cd</text>
-  <text x="235" y="106" font-size="9" fill="#6b7280">add ingest</text><rect x="235" y="110" width="92" height="5" rx="2.5" fill="#3a3f4b"/><rect x="235" y="121" width="70" height="5" rx="2.5" fill="#3a3f4b"/><rect x="235" y="132" width="84" height="5" rx="2.5" fill="#3a3f4b"/>
+  <text x="235" y="106" font-size="9" fill="#6B6B78">add ingest</text><rect x="235" y="110" width="92" height="5" rx="2.5" fill="#3a3f4b"/><rect x="235" y="121" width="70" height="5" rx="2.5" fill="#3a3f4b"/><rect x="235" y="132" width="84" height="5" rx="2.5" fill="#3a3f4b"/>
   <rect x="403" y="70" width="138" height="96" rx="10" fill="#12131a" stroke="#5AC8FF" stroke-width="1.6"/>
   <text x="419" y="92" font-size="11" fill="#5AC8FF" font-weight="700">7de40f2</text>
-  <text x="419" y="106" font-size="9" fill="#6b7280">add tests</text><rect x="419" y="110" width="92" height="5" rx="2.5" fill="#3a3f4b"/><rect x="419" y="121" width="70" height="5" rx="2.5" fill="#3a3f4b"/><rect x="419" y="132" width="84" height="5" rx="2.5" fill="#3a3f4b"/>
+  <text x="419" y="106" font-size="9" fill="#6B6B78">add tests</text><rect x="419" y="110" width="92" height="5" rx="2.5" fill="#3a3f4b"/><rect x="419" y="121" width="70" height="5" rx="2.5" fill="#3a3f4b"/><rect x="419" y="132" width="84" height="5" rx="2.5" fill="#3a3f4b"/>
   <rect x="587" y="70" width="138" height="96" rx="10" fill="#12131a" stroke="#F05032" stroke-width="1.6"/>
   <text x="603" y="92" font-size="11" fill="#F05032" font-weight="700">c81b5aa</text>
-  <text x="603" y="106" font-size="9" fill="#6b7280">fix null check</text><rect x="603" y="110" width="92" height="5" rx="2.5" fill="#5a3a30"/><rect x="603" y="121" width="70" height="5" rx="2.5" fill="#5a3a30"/><rect x="603" y="132" width="84" height="5" rx="2.5" fill="#5a3a30"/>
+  <text x="603" y="106" font-size="9" fill="#6B6B78">fix null check</text><rect x="603" y="110" width="92" height="5" rx="2.5" fill="#5a3a30"/><rect x="603" y="121" width="70" height="5" rx="2.5" fill="#5a3a30"/><rect x="603" y="132" width="84" height="5" rx="2.5" fill="#5a3a30"/>
 
-  <line x1="213" y1="118" x2="179" y2="118" stroke="#6b7280" stroke-width="1.4" marker-end="url(#gm)"/>
-  <line x1="397" y1="118" x2="363" y2="118" stroke="#6b7280" stroke-width="1.4" marker-end="url(#gm)"/>
-  <line x1="581" y1="118" x2="547" y2="118" stroke="#6b7280" stroke-width="1.4" marker-end="url(#gm)"/>
+  <line x1="213" y1="118" x2="179" y2="118" stroke="#6B6B78" stroke-width="1.4" marker-end="url(#gm)"/>
+  <line x1="397" y1="118" x2="363" y2="118" stroke="#6B6B78" stroke-width="1.4" marker-end="url(#gm)"/>
+  <line x1="581" y1="118" x2="547" y2="118" stroke="#6B6B78" stroke-width="1.4" marker-end="url(#gm)"/>
 
-  <rect x="596" y="34" width="120" height="22" rx="6" fill="#2A1610" stroke="#F05032" stroke-width="1.4"/>
+  <rect x="596" y="34" width="120" height="22" rx="6" fill="#1D1D26" stroke="#F05032" stroke-width="1.4"/>
   <text x="656" y="49" font-size="10" fill="#F05032" font-weight="700" text-anchor="middle">HEAD → main</text>
   <line x1="656" y1="58" x2="656" y2="68" stroke="#F05032" stroke-width="1.4" marker-end="url(#go)"/>
 
-  <text x="380" y="196" font-size="9.5" fill="#6b7280" text-anchor="middle">the arrows are parent pointers — they run backwards, from newer to older</text>
+  <text x="380" y="196" font-size="9.5" fill="#6B6B78" text-anchor="middle">the arrows are parent pointers — they run backwards, from newer to older</text>
   <text x="380" y="222" font-size="10.5" fill="#cdd0dd" text-anchor="middle">Git rebuilds any version by walking the chain — it never stores "the lines you changed"</text>
 </svg>
 <figcaption>A commit chain — each snapshot points back to its parent</figcaption>
@@ -246,44 +260,44 @@
   <defs>
     <marker id="ga" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#5AC8FF"/></marker>
     <marker id="go" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#F05032"/></marker>
-    <marker id="gv" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#A66BFF"/></marker>
-    <marker id="gr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#FF6B8B"/></marker>
-    <marker id="gm" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#6b7280"/></marker>
+    <marker id="gv" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#5AC8FF"/></marker>
+    <marker id="gr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#9AA0B4"/></marker>
+    <marker id="gm" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#6B6B78"/></marker>
   </defs>
   <text x="380" y="26" font-size="10.5" fill="#9aa0b4" text-anchor="middle" letter-spacing="1.6">THE THREE AREAS — AND THE COMMANDS THAT MOVE FILES BETWEEN THEM</text>
 
-  <rect x="30" y="60" width="190" height="112" rx="10" fill="#22121A" stroke="#FF6B8B" stroke-width="1.6"/>
-  <text x="125" y="48" font-size="11" fill="#FF6B8B" font-weight="700" text-anchor="middle">WORKING DIRECTORY</text>
+  <rect x="30" y="60" width="190" height="112" rx="10" fill="#22121A" stroke="#9AA0B4" stroke-width="1.6"/>
+  <text x="125" y="48" font-size="11" fill="#9AA0B4" font-weight="700" text-anchor="middle">WORKING DIRECTORY</text>
   <text x="125" y="84" font-size="9.5" fill="#9aa0b4" text-anchor="middle">the real files on disk</text>
-  <rect x="52" y="98" width="146" height="7" rx="3.5" fill="#FF6B8B" opacity=".75"/>
-  <rect x="52" y="112" width="112" height="7" rx="3.5" fill="#FF6B8B" opacity=".45"/>
-  <rect x="52" y="126" width="130" height="7" rx="3.5" fill="#FF6B8B" opacity=".6"/>
-  <text x="125" y="156" font-size="9" fill="#6b7280" text-anchor="middle">edited · not recorded yet</text>
+  <rect x="52" y="98" width="146" height="7" rx="3.5" fill="#9AA0B4" opacity=".75"/>
+  <rect x="52" y="112" width="112" height="7" rx="3.5" fill="#9AA0B4" opacity=".45"/>
+  <rect x="52" y="126" width="130" height="7" rx="3.5" fill="#9AA0B4" opacity=".6"/>
+  <text x="125" y="156" font-size="9" fill="#6B6B78" text-anchor="middle">edited · not recorded yet</text>
 
-  <rect x="285" y="60" width="190" height="112" rx="10" fill="#2A1610" stroke="#F05032" stroke-width="1.6"/>
+  <rect x="285" y="60" width="190" height="112" rx="10" fill="#1D1D26" stroke="#F05032" stroke-width="1.6"/>
   <text x="380" y="48" font-size="11" fill="#F05032" font-weight="700" text-anchor="middle">STAGING AREA</text>
   <text x="380" y="82" font-size="9" fill="#9aa0b4" text-anchor="middle">the shortlist for</text>
   <text x="380" y="94" font-size="9" fill="#9aa0b4" text-anchor="middle">the next commit</text>
   <rect x="307" y="106" width="146" height="7" rx="3.5" fill="#F05032" opacity=".85"/>
   <rect x="307" y="120" width="112" height="7" rx="3.5" fill="#F05032" opacity=".5"/>
-  <text x="380" y="156" font-size="9" fill="#6b7280" text-anchor="middle">you choose exactly what goes in</text>
+  <text x="380" y="156" font-size="9" fill="#6B6B78" text-anchor="middle">you choose exactly what goes in</text>
 
   <rect x="540" y="60" width="190" height="112" rx="10" fill="#0d1820" stroke="#5AC8FF" stroke-width="1.6"/>
   <text x="635" y="48" font-size="11" fill="#5AC8FF" font-weight="700" text-anchor="middle">REPOSITORY (.git)</text>
   <text x="635" y="84" font-size="9.5" fill="#9aa0b4" text-anchor="middle">permanent history</text>
-  <circle cx="585" cy="116" r="8" fill="#0d0d13" stroke="#5AC8FF" stroke-width="1.8"/><circle cx="615" cy="116" r="8" fill="#0d0d13" stroke="#5AC8FF" stroke-width="1.8"/><circle cx="645" cy="116" r="8" fill="#0d0d13" stroke="#5AC8FF" stroke-width="1.8"/><circle cx="675" cy="116" r="8" fill="#0d0d13" stroke="#5AC8FF" stroke-width="1.8"/>
+  <circle cx="585" cy="116" r="8" fill="#101017" stroke="#5AC8FF" stroke-width="1.8"/><circle cx="615" cy="116" r="8" fill="#101017" stroke="#5AC8FF" stroke-width="1.8"/><circle cx="645" cy="116" r="8" fill="#101017" stroke="#5AC8FF" stroke-width="1.8"/><circle cx="675" cy="116" r="8" fill="#101017" stroke="#5AC8FF" stroke-width="1.8"/>
   <line x1="593" y1="116" x2="607" y2="116" stroke="#5AC8FF" stroke-width="1.3"/>
   <line x1="623" y1="116" x2="637" y2="116" stroke="#5AC8FF" stroke-width="1.3"/>
   <line x1="653" y1="116" x2="667" y2="116" stroke="#5AC8FF" stroke-width="1.3"/>
-  <text x="635" y="156" font-size="9" fill="#6b7280" text-anchor="middle">immutable · safe</text>
+  <text x="635" y="156" font-size="9" fill="#6B6B78" text-anchor="middle">immutable · safe</text>
 
   <line x1="224" y1="116" x2="277" y2="116" stroke="#F05032" stroke-width="1.8" marker-end="url(#go)"/>
   <text x="250" y="106" font-size="8.5" fill="#F05032" text-anchor="middle">git add</text>
   <line x1="479" y1="116" x2="532" y2="116" stroke="#5AC8FF" stroke-width="1.8" marker-end="url(#ga)"/>
   <text x="505" y="106" font-size="8.5" fill="#5AC8FF" text-anchor="middle">git commit</text>
 
-  <path d="M600 180 C 420 224 320 224 130 182" fill="none" stroke="#A66BFF" stroke-width="1.4" stroke-dasharray="5,3" marker-end="url(#gv)"/>
-  <text x="380" y="240" font-size="9.5" fill="#A66BFF" text-anchor="middle">git checkout / git restore — pull an old version back out</text>
+  <path d="M600 180 C 420 224 320 224 130 182" fill="none" stroke="#5AC8FF" stroke-width="1.4" stroke-dasharray="5,3" marker-end="url(#gv)"/>
+  <text x="380" y="240" font-size="9.5" fill="#5AC8FF" text-anchor="middle">git checkout / git restore — pull an old version back out</text>
 </svg>
 </figure>
 
@@ -377,34 +391,34 @@ __pycache__/
 <svg viewBox="0 0 760 300" width="100%" aria-label="A branch label points at one commit and moves forward when you commit">
   <defs>
     <marker id="go" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#F05032"/></marker>
-    <marker id="gm" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#6b7280"/></marker>
+    <marker id="gm" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#6B6B78"/></marker>
   </defs>
   <text x="380" y="24" font-size="10.5" fill="#9aa0b4" text-anchor="middle" letter-spacing="1.6">A BRANCH IS JUST A LABEL POINTING AT ONE COMMIT</text>
 
-  <text x="70" y="128" font-size="9.5" fill="#6b7280">before</text>
-  <line x1="150" y1="124" x2="560" y2="124" stroke="#2c2c36" stroke-width="1.4"/>
-  <circle cx="190" cy="124" r="9" fill="#0d0d13" stroke="#5AC8FF" stroke-width="2"/><circle cx="280" cy="124" r="9" fill="#0d0d13" stroke="#5AC8FF" stroke-width="2"/><circle cx="370" cy="124" r="9" fill="#0d0d13" stroke="#5AC8FF" stroke-width="2"/><circle cx="460" cy="124" r="9" fill="#0d0d13" stroke="#5AC8FF" stroke-width="2"/>
-  <rect x="412" y="62" width="96" height="23" rx="6" fill="#2A1610" stroke="#F05032" stroke-width="1.6"/>
+  <text x="70" y="128" font-size="9.5" fill="#6B6B78">before</text>
+  <line x1="150" y1="124" x2="560" y2="124" stroke="#34343F" stroke-width="1.4"/>
+  <circle cx="190" cy="124" r="9" fill="#101017" stroke="#5AC8FF" stroke-width="2"/><circle cx="280" cy="124" r="9" fill="#101017" stroke="#5AC8FF" stroke-width="2"/><circle cx="370" cy="124" r="9" fill="#101017" stroke="#5AC8FF" stroke-width="2"/><circle cx="460" cy="124" r="9" fill="#101017" stroke="#5AC8FF" stroke-width="2"/>
+  <rect x="412" y="62" width="96" height="23" rx="6" fill="#1D1D26" stroke="#F05032" stroke-width="1.6"/>
   <text x="460" y="78" font-size="10.5" fill="#F05032" font-weight="700" text-anchor="middle">main</text>
   <line x1="460" y1="87" x2="460" y2="112" stroke="#F05032" stroke-width="1.5" marker-end="url(#go)"/>
-  <rect x="396" y="30" width="128" height="21" rx="6" fill="#0d0d13" stroke="#F05032" stroke-width="1.4" stroke-dasharray="4,3"/>
+  <rect x="396" y="30" width="128" height="21" rx="6" fill="#101017" stroke="#F05032" stroke-width="1.4" stroke-dasharray="4,3"/>
   <text x="460" y="45" font-size="10" fill="#F05032" font-weight="700" text-anchor="middle">HEAD → main</text>
   <line x1="460" y1="53" x2="460" y2="58" stroke="#F05032" stroke-width="1.3"/>
 
-  <line x1="40" y1="168" x2="720" y2="168" stroke="#2c2c36" stroke-width="1" stroke-dasharray="3,4"/>
-  <text x="380" y="186" font-size="9.5" fill="#6b7280" text-anchor="middle">git commit</text>
-  <line x1="330" y1="182" x2="300" y2="182" stroke="#6b7280" stroke-width="1.2" marker-end="url(#gm)"/>
-  <line x1="430" y1="182" x2="460" y2="182" stroke="#6b7280" stroke-width="1.2" marker-end="url(#gm)"/>
+  <line x1="40" y1="168" x2="720" y2="168" stroke="#34343F" stroke-width="1" stroke-dasharray="3,4"/>
+  <text x="380" y="186" font-size="9.5" fill="#6B6B78" text-anchor="middle">git commit</text>
+  <line x1="330" y1="182" x2="300" y2="182" stroke="#6B6B78" stroke-width="1.2" marker-end="url(#gm)"/>
+  <line x1="430" y1="182" x2="460" y2="182" stroke="#6B6B78" stroke-width="1.2" marker-end="url(#gm)"/>
 
-  <text x="70" y="248" font-size="9.5" fill="#6b7280">after</text>
-  <line x1="150" y1="244" x2="620" y2="244" stroke="#2c2c36" stroke-width="1.4"/>
-  <circle cx="190" cy="244" r="9" fill="#0d0d13" stroke="#5AC8FF" stroke-width="2"/><circle cx="280" cy="244" r="9" fill="#0d0d13" stroke="#5AC8FF" stroke-width="2"/><circle cx="370" cy="244" r="9" fill="#0d0d13" stroke="#5AC8FF" stroke-width="2"/><circle cx="460" cy="244" r="9" fill="#0d0d13" stroke="#5AC8FF" stroke-width="2"/>
-  <circle cx="550" cy="244" r="10" fill="#2A1610" stroke="#F05032" stroke-width="2.4"/>
+  <text x="70" y="248" font-size="9.5" fill="#6B6B78">after</text>
+  <line x1="150" y1="244" x2="620" y2="244" stroke="#34343F" stroke-width="1.4"/>
+  <circle cx="190" cy="244" r="9" fill="#101017" stroke="#5AC8FF" stroke-width="2"/><circle cx="280" cy="244" r="9" fill="#101017" stroke="#5AC8FF" stroke-width="2"/><circle cx="370" cy="244" r="9" fill="#101017" stroke="#5AC8FF" stroke-width="2"/><circle cx="460" cy="244" r="9" fill="#101017" stroke="#5AC8FF" stroke-width="2"/>
+  <circle cx="550" cy="244" r="10" fill="#1D1D26" stroke="#F05032" stroke-width="2.4"/>
   <rect x="502" y="288" width="96" height="0" rx="6" fill="none"/>
-  <rect x="502" y="196" width="96" height="23" rx="6" fill="#2A1610" stroke="#F05032" stroke-width="1.6"/>
+  <rect x="502" y="196" width="96" height="23" rx="6" fill="#1D1D26" stroke="#F05032" stroke-width="1.6"/>
   <text x="550" y="212" font-size="10.5" fill="#F05032" font-weight="700" text-anchor="middle">main</text>
   <line x1="550" y1="221" x2="550" y2="232" stroke="#F05032" stroke-width="1.5" marker-end="url(#go)"/>
-  <text x="640" y="248" font-size="9" fill="#6b7280">new commit</text>
+  <text x="640" y="248" font-size="9" fill="#6B6B78">new commit</text>
 
   <text x="380" y="286" font-size="10.5" fill="#cdd0dd" text-anchor="middle">The old commits never moved — only the label did. That is all "being on a branch" means.</text>
 </svg>
@@ -439,36 +453,36 @@ __pycache__/
   <defs>
     <marker id="ga" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#5AC8FF"/></marker>
     <marker id="go" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#F05032"/></marker>
-    <marker id="gv" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#A66BFF"/></marker>
-    <marker id="gr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#FF6B8B"/></marker>
-    <marker id="gm" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#6b7280"/></marker>
+    <marker id="gv" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#5AC8FF"/></marker>
+    <marker id="gr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#9AA0B4"/></marker>
+    <marker id="gm" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#6B6B78"/></marker>
   </defs>
   <rect x="270" y="30" width="220" height="76" rx="12" fill="#0d1820" stroke="#5AC8FF" stroke-width="1.8"/>
   <text x="380" y="58" font-size="12" fill="#5AC8FF" font-weight="700" text-anchor="middle">origin (GitHub)</text>
   <text x="380" y="78" font-size="9.5" fill="#9aa0b4" text-anchor="middle">the shared copy everyone</text>
   <text x="380" y="92" font-size="9.5" fill="#9aa0b4" text-anchor="middle">agrees to sync through</text>
 
-  <rect x="20" y="184" width="210" height="80" rx="12" fill="#2A1610" stroke="#F05032" stroke-width="1.6"/>
+  <rect x="20" y="184" width="210" height="80" rx="12" fill="#1D1D26" stroke="#F05032" stroke-width="1.6"/>
   <text x="125" y="212" font-size="11.5" fill="#F05032" font-weight="700" text-anchor="middle">your laptop</text>
   <text x="125" y="232" font-size="9.5" fill="#9aa0b4" text-anchor="middle">a FULL copy of the</text>
   <text x="125" y="246" font-size="9.5" fill="#9aa0b4" text-anchor="middle">entire history</text>
 
-  <rect x="530" y="184" width="210" height="80" rx="12" fill="#1B1030" stroke="#A66BFF" stroke-width="1.6"/>
-  <text x="635" y="212" font-size="11.5" fill="#A66BFF" font-weight="700" text-anchor="middle">teammate's laptop</text>
+  <rect x="530" y="184" width="210" height="80" rx="12" fill="#1B1030" stroke="#5AC8FF" stroke-width="1.6"/>
+  <text x="635" y="212" font-size="11.5" fill="#5AC8FF" font-weight="700" text-anchor="middle">teammate's laptop</text>
   <text x="635" y="232" font-size="9.5" fill="#9aa0b4" text-anchor="middle">also a full copy —</text>
   <text x="635" y="246" font-size="9.5" fill="#9aa0b4" text-anchor="middle">Git is distributed</text>
 
   <path d="M150 180 C 150 120 210 92 266 82" fill="none" stroke="#F05032" stroke-width="1.6" marker-end="url(#go)"/>
-  <rect x="146" y="118" width="66" height="17" rx="4" fill="#0d0d13"/>
+  <rect x="146" y="118" width="66" height="17" rx="4" fill="#101017"/>
   <text x="179" y="131" font-size="9.5" fill="#F05032" text-anchor="middle">git push</text>
 
   <path d="M300 108 C 250 140 210 160 196 180" fill="none" stroke="#5AC8FF" stroke-width="1.6" marker-end="url(#ga)"/>
-  <rect x="228" y="152" width="66" height="17" rx="4" fill="#0d0d13"/>
+  <rect x="228" y="152" width="66" height="17" rx="4" fill="#101017"/>
   <text x="261" y="165" font-size="9.5" fill="#5AC8FF" text-anchor="middle">git pull</text>
 
-  <path d="M494 82 C 550 92 610 120 610 180" fill="none" stroke="#A66BFF" stroke-width="1.6" marker-end="url(#gv)"/>
-  <rect x="546" y="118" width="74" height="17" rx="4" fill="#0d0d13"/>
-  <text x="583" y="131" font-size="9.5" fill="#A66BFF" text-anchor="middle">git clone</text>
+  <path d="M494 82 C 550 92 610 120 610 180" fill="none" stroke="#5AC8FF" stroke-width="1.6" marker-end="url(#gv)"/>
+  <rect x="546" y="118" width="74" height="17" rx="4" fill="#101017"/>
+  <text x="583" y="131" font-size="9.5" fill="#5AC8FF" text-anchor="middle">git clone</text>
 
   <text x="380" y="284" font-size="10.5" fill="#cdd0dd" text-anchor="middle">Every clone holds the whole history — origin has no special powers, it is just the copy you all agree on.</text>
 </svg>
@@ -508,32 +522,32 @@ __pycache__/
   <defs>
     <marker id="ga" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#5AC8FF"/></marker>
     <marker id="go" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#F05032"/></marker>
-    <marker id="gv" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#A66BFF"/></marker>
-    <marker id="gr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#FF6B8B"/></marker>
-    <marker id="gm" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#6b7280"/></marker>
+    <marker id="gv" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#5AC8FF"/></marker>
+    <marker id="gr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#9AA0B4"/></marker>
+    <marker id="gm" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#6B6B78"/></marker>
   </defs>
-  <line x1="60" y1="168" x2="700" y2="168" stroke="#2c2c36" stroke-width="1.4"/>
+  <line x1="60" y1="168" x2="700" y2="168" stroke="#34343F" stroke-width="1.4"/>
   <text x="46" y="172" font-size="10.5" fill="#5AC8FF" font-weight="700" text-anchor="end">main</text>
-  <text x="240" y="62" font-size="10.5" fill="#A66BFF" font-weight="700">feature</text>
+  <text x="240" y="62" font-size="10.5" fill="#5AC8FF" font-weight="700">feature</text>
 
-  <path d="M180 168 C 216 168 224 88 260 88" fill="none" stroke="#A66BFF" stroke-width="1.8"/>
-  <line x1="260" y1="88" x2="380" y2="88" stroke="#A66BFF" stroke-width="1.8"/>
-  <path d="M380 88 C 460 88 480 168 540 168" fill="none" stroke="#A66BFF" stroke-width="1.8"/>
+  <path d="M180 168 C 216 168 224 88 260 88" fill="none" stroke="#5AC8FF" stroke-width="1.8"/>
+  <line x1="260" y1="88" x2="380" y2="88" stroke="#5AC8FF" stroke-width="1.8"/>
+  <path d="M380 88 C 460 88 480 168 540 168" fill="none" stroke="#5AC8FF" stroke-width="1.8"/>
 
-  <circle cx="100" cy="168" r="9" fill="#0d0d13" stroke="#5AC8FF" stroke-width="2"/><circle cx="180" cy="168" r="9" fill="#0d0d13" stroke="#5AC8FF" stroke-width="2"/><circle cx="420" cy="168" r="9" fill="#0d0d13" stroke="#5AC8FF" stroke-width="2"/>
-  <circle cx="260" cy="88" r="9" fill="#0d0d13" stroke="#A66BFF" stroke-width="2"/><circle cx="380" cy="88" r="9" fill="#0d0d13" stroke="#A66BFF" stroke-width="2"/>
-  <circle cx="540" cy="168" r="12" fill="#2A1610" stroke="#F05032" stroke-width="2.6"/>
-  <circle cx="640" cy="168" r="9" fill="#0d0d13" stroke="#5AC8FF" stroke-width="2"/>
+  <circle cx="100" cy="168" r="9" fill="#101017" stroke="#5AC8FF" stroke-width="2"/><circle cx="180" cy="168" r="9" fill="#101017" stroke="#5AC8FF" stroke-width="2"/><circle cx="420" cy="168" r="9" fill="#101017" stroke="#5AC8FF" stroke-width="2"/>
+  <circle cx="260" cy="88" r="9" fill="#101017" stroke="#5AC8FF" stroke-width="2"/><circle cx="380" cy="88" r="9" fill="#101017" stroke="#5AC8FF" stroke-width="2"/>
+  <circle cx="540" cy="168" r="12" fill="#1D1D26" stroke="#F05032" stroke-width="2.6"/>
+  <circle cx="640" cy="168" r="9" fill="#101017" stroke="#5AC8FF" stroke-width="2"/>
 
-  <text x="100" y="196" font-size="9.5" fill="#6b7280" text-anchor="middle">A</text>
-  <text x="180" y="196" font-size="9.5" fill="#6b7280" text-anchor="middle">B</text>
-  <text x="420" y="196" font-size="9.5" fill="#6b7280" text-anchor="middle">E</text>
-  <text x="640" y="196" font-size="9.5" fill="#6b7280" text-anchor="middle">next</text>
+  <text x="100" y="196" font-size="9.5" fill="#6B6B78" text-anchor="middle">A</text>
+  <text x="180" y="196" font-size="9.5" fill="#6B6B78" text-anchor="middle">B</text>
+  <text x="420" y="196" font-size="9.5" fill="#6B6B78" text-anchor="middle">E</text>
+  <text x="640" y="196" font-size="9.5" fill="#6B6B78" text-anchor="middle">next</text>
   <text x="260" y="70" font-size="9.5" fill="#9aa0b4" text-anchor="middle">C</text>
   <text x="380" y="70" font-size="9.5" fill="#9aa0b4" text-anchor="middle">D</text>
 
   <text x="540" y="200" font-size="10" fill="#F05032" font-weight="700" text-anchor="middle">M</text>
-  <rect x="452" y="26" width="176" height="20" rx="6" fill="#2A1610" stroke="#F05032" stroke-width="1.3"/>
+  <rect x="452" y="26" width="176" height="20" rx="6" fill="#1D1D26" stroke="#F05032" stroke-width="1.3"/>
   <text x="540" y="40" font-size="9.5" fill="#F05032" font-weight="700" text-anchor="middle">merge commit · two parents</text>
   <line x1="540" y1="48" x2="540" y2="152" stroke="#F05032" stroke-width="1.3" stroke-dasharray="4,3"/>
 
@@ -550,37 +564,37 @@ __pycache__/
   <defs>
     <marker id="ga" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#5AC8FF"/></marker>
     <marker id="go" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#F05032"/></marker>
-    <marker id="gv" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#A66BFF"/></marker>
-    <marker id="gr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#FF6B8B"/></marker>
-    <marker id="gm" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#6b7280"/></marker>
+    <marker id="gv" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#5AC8FF"/></marker>
+    <marker id="gr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#9AA0B4"/></marker>
+    <marker id="gm" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#6B6B78"/></marker>
   </defs>
   <text x="380" y="24" font-size="10.5" fill="#9aa0b4" text-anchor="middle">same work · two very different shapes of history</text>
 
   <rect x="20" y="40" width="350" height="200" rx="12" fill="#0d1820" stroke="#1d3448"/>
   <text x="195" y="66" font-size="11.5" fill="#5AC8FF" font-weight="700" text-anchor="middle">MERGE — keep the true shape</text>
-  <line x1="50" y1="160" x2="340" y2="160" stroke="#2c2c36" stroke-width="1.3"/>
-  <path d="M110 160 C 132 160 138 112 160 112" fill="none" stroke="#A66BFF" stroke-width="1.6"/>
-  <line x1="160" y1="112" x2="220" y2="112" stroke="#A66BFF" stroke-width="1.6"/>
-  <path d="M220 112 C 258 112 262 160 290 160" fill="none" stroke="#A66BFF" stroke-width="1.6"/>
-  <circle cx="70" cy="160" r="7" fill="#0d0d13" stroke="#5AC8FF" stroke-width="1.7"/><circle cx="110" cy="160" r="7" fill="#0d0d13" stroke="#5AC8FF" stroke-width="1.7"/><circle cx="220" cy="160" r="7" fill="#0d0d13" stroke="#5AC8FF" stroke-width="1.7"/>
-  <circle cx="160" cy="112" r="7" fill="#0d0d13" stroke="#A66BFF" stroke-width="1.7"/><circle cx="220" cy="112" r="7" fill="#0d0d13" stroke="#A66BFF" stroke-width="1.7"/>
-  <circle cx="290" cy="160" r="9" fill="#2A1610" stroke="#F05032" stroke-width="2.2"/>
+  <line x1="50" y1="160" x2="340" y2="160" stroke="#34343F" stroke-width="1.3"/>
+  <path d="M110 160 C 132 160 138 112 160 112" fill="none" stroke="#5AC8FF" stroke-width="1.6"/>
+  <line x1="160" y1="112" x2="220" y2="112" stroke="#5AC8FF" stroke-width="1.6"/>
+  <path d="M220 112 C 258 112 262 160 290 160" fill="none" stroke="#5AC8FF" stroke-width="1.6"/>
+  <circle cx="70" cy="160" r="7" fill="#101017" stroke="#5AC8FF" stroke-width="1.7"/><circle cx="110" cy="160" r="7" fill="#101017" stroke="#5AC8FF" stroke-width="1.7"/><circle cx="220" cy="160" r="7" fill="#101017" stroke="#5AC8FF" stroke-width="1.7"/>
+  <circle cx="160" cy="112" r="7" fill="#101017" stroke="#5AC8FF" stroke-width="1.7"/><circle cx="220" cy="112" r="7" fill="#101017" stroke="#5AC8FF" stroke-width="1.7"/>
+  <circle cx="290" cy="160" r="9" fill="#1D1D26" stroke="#F05032" stroke-width="2.2"/>
   <text x="290" y="184" font-size="9" fill="#F05032" text-anchor="middle">M</text>
   <text x="195" y="212" font-size="9.5" fill="#9aa0b4" text-anchor="middle">the fork stays visible forever</text>
   <text x="195" y="228" font-size="9.5" fill="#5AC8FF" text-anchor="middle">safe on shared branches · nothing rewritten</text>
 
-  <rect x="390" y="40" width="350" height="200" rx="12" fill="#2A1610" stroke="#4a2a1c"/>
+  <rect x="390" y="40" width="350" height="200" rx="12" fill="#1D1D26" stroke="#4a2a1c"/>
   <text x="565" y="66" font-size="11.5" fill="#F05032" font-weight="700" text-anchor="middle">REBASE — replay into a line</text>
-  <line x1="420" y1="160" x2="710" y2="160" stroke="#2c2c36" stroke-width="1.3"/>
-  <circle cx="450" cy="160" r="7" fill="#0d0d13" stroke="#5AC8FF" stroke-width="1.7"/><circle cx="500" cy="160" r="7" fill="#0d0d13" stroke="#5AC8FF" stroke-width="1.7"/><circle cx="550" cy="160" r="7" fill="#0d0d13" stroke="#5AC8FF" stroke-width="1.7"/>
-  <circle cx="610" cy="160" r="7" fill="#0d0d13" stroke="#A66BFF" stroke-width="1.7" stroke-dasharray="3,2"/>
-  <circle cx="670" cy="160" r="7" fill="#0d0d13" stroke="#A66BFF" stroke-width="1.7" stroke-dasharray="3,2"/>
-  <text x="610" y="184" font-size="9" fill="#A66BFF" text-anchor="middle">C&#8242;</text>
-  <text x="670" y="184" font-size="9" fill="#A66BFF" text-anchor="middle">D&#8242;</text>
-  <text x="640" y="114" font-size="9" fill="#A66BFF" text-anchor="middle">same changes,</text>
-  <text x="640" y="126" font-size="9" fill="#A66BFF" text-anchor="middle">brand-new hashes</text>
+  <line x1="420" y1="160" x2="710" y2="160" stroke="#34343F" stroke-width="1.3"/>
+  <circle cx="450" cy="160" r="7" fill="#101017" stroke="#5AC8FF" stroke-width="1.7"/><circle cx="500" cy="160" r="7" fill="#101017" stroke="#5AC8FF" stroke-width="1.7"/><circle cx="550" cy="160" r="7" fill="#101017" stroke="#5AC8FF" stroke-width="1.7"/>
+  <circle cx="610" cy="160" r="7" fill="#101017" stroke="#5AC8FF" stroke-width="1.7" stroke-dasharray="3,2"/>
+  <circle cx="670" cy="160" r="7" fill="#101017" stroke="#5AC8FF" stroke-width="1.7" stroke-dasharray="3,2"/>
+  <text x="610" y="184" font-size="9" fill="#5AC8FF" text-anchor="middle">C&#8242;</text>
+  <text x="670" y="184" font-size="9" fill="#5AC8FF" text-anchor="middle">D&#8242;</text>
+  <text x="640" y="114" font-size="9" fill="#5AC8FF" text-anchor="middle">same changes,</text>
+  <text x="640" y="126" font-size="9" fill="#5AC8FF" text-anchor="middle">brand-new hashes</text>
   <text x="565" y="212" font-size="9.5" fill="#9aa0b4" text-anchor="middle">one clean line — easy to read</text>
-  <text x="565" y="228" font-size="9.5" fill="#FF6B8B" text-anchor="middle">rewrites history · never on a shared branch</text>
+  <text x="565" y="228" font-size="9.5" fill="#9AA0B4" text-anchor="middle">rewrites history · never on a shared branch</text>
 
   <text x="380" y="272" font-size="10.5" fill="#cdd0dd" text-anchor="middle">Rebase your own un-pushed work to tidy it up. Merge when the branch is already shared —</text>
   <text x="380" y="290" font-size="10.5" fill="#cdd0dd" text-anchor="middle">rewriting commits other people have pulled is how you ruin an afternoon.</text>
@@ -614,7 +628,7 @@ __pycache__/
      A ─ B ─ <span class="ok">C'</span>         <span class="dim">your rebased local branch</span>
 
   <span class="bad">git push --force</span>            → remote becomes A ─ B ─ C'   <span class="bad">… D is gone 💥</span>
-  <span class="ok">git push --force-with-lease</span> → "remote moved past C?"     <span class="ok">rejected ✓ — D is safe</span></div>
+  <span class="ok">git push --force-with-lease</span> → "remote moved past C?"     <span class="ok">rejected + — D is safe</span></div>
 
 <h3 class="reveal">Merge conflicts — what they are and how to fix them</h3>
 <p class="reveal">A <strong>conflict</strong> happens when two branches changed <em>the same lines of the same file</em> in different ways. Git can't know which version is right, so it stops and asks you. This is normal — not an error you did wrong. Git marks the clashing spot inside the file like this:</p>
@@ -648,7 +662,7 @@ SELECT revenue, country
 <p class="reveal">The reassuring part: a paused merge or rebase always offers two doors — <em>resolve and proceed</em>, or <em>abort</em> and land back exactly where you started. You can never get irreversibly stuck.</p>
 
 <div class="callout gr reveal">
-  <p style="margin:.2em 0"><span class="t">✅ Conflicts get smaller the more often you sync</span></p>
+  <p style="margin:.2em 0"><span class="t">Conflicts get smaller the more often you sync</span></p>
   <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">Big, scary conflicts come from branches that drifted apart for weeks. Pull <code>main</code> into your branch (or rebase onto it) <em>frequently</em> — daily — and each reconciliation is tiny. Small, short-lived branches are the single best defence against conflict pain.</p>
 </div>
 
@@ -679,7 +693,7 @@ SELECT revenue, country
 <div class="cb reveal"><span class="lang">bash</span><pre><span class="k">git reflog</span>                  <span class="c"># a timeline of everywhere HEAD has been</span>
 <span class="k">git reset</span> --hard HEAD@{2}   <span class="c"># jump back to how things were 2 moves ago</span></pre></div>
 <div class="callout gr reveal">
-  <p style="margin:.2em 0"><span class="t">✅ The reassuring truth</span></p>
+  <p style="margin:.2em 0"><span class="t">The reassuring truth</span></p>
   <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">Once something is <em>committed</em> in Git, it's very hard to truly lose — even after a scary reset, the reflog usually has your back. The things that <em>are</em> easy to lose are changes you never committed (un-staged edits wiped by <code>restore</code> or <code>reset --hard</code>). Lesson: commit early, commit often, and your work is safe.</p>
 </div>
 
@@ -702,34 +716,34 @@ SELECT revenue, country
   <defs>
     <marker id="ga" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#5AC8FF"/></marker>
     <marker id="go" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#F05032"/></marker>
-    <marker id="gv" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#A66BFF"/></marker>
-    <marker id="gr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#FF6B8B"/></marker>
-    <marker id="gm" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#6b7280"/></marker>
+    <marker id="gv" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#5AC8FF"/></marker>
+    <marker id="gr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#9AA0B4"/></marker>
+    <marker id="gm" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#6B6B78"/></marker>
   </defs>
   <text x="380" y="24" font-size="10.5" fill="#9aa0b4" text-anchor="middle" letter-spacing="1.4">GITHUB FLOW — ONE LONG-LIVED BRANCH, MANY SHORT ONES</text>
 
-  <line x1="60" y1="170" x2="712" y2="170" stroke="#2c2c36" stroke-width="1.4"/>
+  <line x1="60" y1="170" x2="712" y2="170" stroke="#34343F" stroke-width="1.4"/>
   <text x="48" y="174" font-size="10.5" fill="#F05032" font-weight="700" text-anchor="end">main</text>
 
-  <path d="M150 170 C 178 170 182 100 210 100" fill="none" stroke="#A66BFF" stroke-width="1.6"/>
-  <line x1="210" y1="100" x2="270" y2="100" stroke="#A66BFF" stroke-width="1.6"/>
-  <path d="M270 100 C 306 100 310 170 340 170" fill="none" stroke="#A66BFF" stroke-width="1.6"/>
-  <circle cx="210" cy="100" r="7" fill="#0d0d13" stroke="#A66BFF" stroke-width="1.7"/><circle cx="270" cy="100" r="7" fill="#0d0d13" stroke="#A66BFF" stroke-width="1.7"/>
-  <text x="240" y="86" font-size="9" fill="#A66BFF" text-anchor="middle">feature-a</text>
+  <path d="M150 170 C 178 170 182 100 210 100" fill="none" stroke="#5AC8FF" stroke-width="1.6"/>
+  <line x1="210" y1="100" x2="270" y2="100" stroke="#5AC8FF" stroke-width="1.6"/>
+  <path d="M270 100 C 306 100 310 170 340 170" fill="none" stroke="#5AC8FF" stroke-width="1.6"/>
+  <circle cx="210" cy="100" r="7" fill="#101017" stroke="#5AC8FF" stroke-width="1.7"/><circle cx="270" cy="100" r="7" fill="#101017" stroke="#5AC8FF" stroke-width="1.7"/>
+  <text x="240" y="86" font-size="9" fill="#5AC8FF" text-anchor="middle">feature-a</text>
 
-  <path d="M420 170 C 448 170 452 100 480 100" fill="none" stroke="#A66BFF" stroke-width="1.6"/>
-  <line x1="480" y1="100" x2="540" y2="100" stroke="#A66BFF" stroke-width="1.6"/>
-  <path d="M540 100 C 576 100 580 170 610 170" fill="none" stroke="#A66BFF" stroke-width="1.6"/>
-  <circle cx="480" cy="100" r="7" fill="#0d0d13" stroke="#A66BFF" stroke-width="1.7"/><circle cx="540" cy="100" r="7" fill="#0d0d13" stroke="#A66BFF" stroke-width="1.7"/>
-  <text x="510" y="86" font-size="9" fill="#A66BFF" text-anchor="middle">feature-b</text>
+  <path d="M420 170 C 448 170 452 100 480 100" fill="none" stroke="#5AC8FF" stroke-width="1.6"/>
+  <line x1="480" y1="100" x2="540" y2="100" stroke="#5AC8FF" stroke-width="1.6"/>
+  <path d="M540 100 C 576 100 580 170 610 170" fill="none" stroke="#5AC8FF" stroke-width="1.6"/>
+  <circle cx="480" cy="100" r="7" fill="#101017" stroke="#5AC8FF" stroke-width="1.7"/><circle cx="540" cy="100" r="7" fill="#101017" stroke="#5AC8FF" stroke-width="1.7"/>
+  <text x="510" y="86" font-size="9" fill="#5AC8FF" text-anchor="middle">feature-b</text>
 
-  <circle cx="90" cy="170" r="8" fill="#0d0d13" stroke="#5AC8FF" stroke-width="1.8"/><circle cx="150" cy="170" r="8" fill="#0d0d13" stroke="#5AC8FF" stroke-width="1.8"/><circle cx="420" cy="170" r="8" fill="#0d0d13" stroke="#5AC8FF" stroke-width="1.8"/><circle cx="680" cy="170" r="8" fill="#0d0d13" stroke="#5AC8FF" stroke-width="1.8"/>
-  <circle cx="340" cy="170" r="10" fill="#2A1610" stroke="#F05032" stroke-width="2.2"/>
-  <circle cx="610" cy="170" r="10" fill="#2A1610" stroke="#F05032" stroke-width="2.2"/>
+  <circle cx="90" cy="170" r="8" fill="#101017" stroke="#5AC8FF" stroke-width="1.8"/><circle cx="150" cy="170" r="8" fill="#101017" stroke="#5AC8FF" stroke-width="1.8"/><circle cx="420" cy="170" r="8" fill="#101017" stroke="#5AC8FF" stroke-width="1.8"/><circle cx="680" cy="170" r="8" fill="#101017" stroke="#5AC8FF" stroke-width="1.8"/>
+  <circle cx="340" cy="170" r="10" fill="#1D1D26" stroke="#F05032" stroke-width="2.2"/>
+  <circle cx="610" cy="170" r="10" fill="#1D1D26" stroke="#F05032" stroke-width="2.2"/>
 
-  <rect x="296" y="196" width="88" height="19" rx="5" fill="#2A1610" stroke="#F05032" stroke-width="1.2"/>
+  <rect x="296" y="196" width="88" height="19" rx="5" fill="#1D1D26" stroke="#F05032" stroke-width="1.2"/>
   <text x="340" y="209" font-size="9" fill="#F05032" font-weight="700" text-anchor="middle">PR → deploy</text>
-  <rect x="566" y="196" width="88" height="19" rx="5" fill="#2A1610" stroke="#F05032" stroke-width="1.2"/>
+  <rect x="566" y="196" width="88" height="19" rx="5" fill="#1D1D26" stroke="#F05032" stroke-width="1.2"/>
   <text x="610" y="209" font-size="9" fill="#F05032" font-weight="700" text-anchor="middle">PR → deploy</text>
 
   <text x="380" y="238" font-size="10.5" fill="#cdd0dd" text-anchor="middle">main is always deployable. Branch, open a PR, review, merge, ship — then delete the branch.</text>
@@ -763,43 +777,43 @@ SELECT revenue, country
   <defs>
     <marker id="ga" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#5AC8FF"/></marker>
     <marker id="go" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#F05032"/></marker>
-    <marker id="gv" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#A66BFF"/></marker>
-    <marker id="gr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#FF6B8B"/></marker>
-    <marker id="gm" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#6b7280"/></marker>
+    <marker id="gv" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#5AC8FF"/></marker>
+    <marker id="gr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#9AA0B4"/></marker>
+    <marker id="gm" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#6B6B78"/></marker>
   </defs>
   <text x="380" y="24" font-size="10.5" fill="#9aa0b4" text-anchor="middle" letter-spacing="1.4">GITFLOW — MORE LANES, MORE CEREMONY</text>
 
-  <line x1="130" y1="66"  x2="716" y2="66"  stroke="#2c2c36" stroke-width="1.3"/>
-  <line x1="130" y1="140" x2="716" y2="140" stroke="#2c2c36" stroke-width="1.3"/>
-  <line x1="130" y1="214" x2="716" y2="214" stroke="#2c2c36" stroke-width="1.3"/>
-  <line x1="130" y1="284" x2="716" y2="284" stroke="#2c2c36" stroke-width="1.3"/>
+  <line x1="130" y1="66"  x2="716" y2="66"  stroke="#34343F" stroke-width="1.3"/>
+  <line x1="130" y1="140" x2="716" y2="140" stroke="#34343F" stroke-width="1.3"/>
+  <line x1="130" y1="214" x2="716" y2="214" stroke="#34343F" stroke-width="1.3"/>
+  <line x1="130" y1="284" x2="716" y2="284" stroke="#34343F" stroke-width="1.3"/>
 
   <text x="118" y="70"  font-size="10" fill="#F05032"  font-weight="700" text-anchor="end">main</text>
-  <text x="118" y="144" font-size="10" fill="#FF8A65" font-weight="700" text-anchor="end">release</text>
+  <text x="118" y="144" font-size="10" fill="#9AA0B4" font-weight="700" text-anchor="end">release</text>
   <text x="118" y="218" font-size="10" fill="#5AC8FF" font-weight="700" text-anchor="end">develop</text>
-  <text x="118" y="288" font-size="10" fill="#A66BFF" font-weight="700" text-anchor="end">feature</text>
+  <text x="118" y="288" font-size="10" fill="#5AC8FF" font-weight="700" text-anchor="end">feature</text>
 
   <path d="M160 66 C 180 66 180 214 200 214" fill="none" stroke="#5AC8FF" stroke-width="1.5"/>
-  <path d="M240 214 C 262 214 264 284 286 284" fill="none" stroke="#A66BFF" stroke-width="1.5"/>
-  <line x1="286" y1="284" x2="356" y2="284" stroke="#A66BFF" stroke-width="1.5"/>
-  <path d="M356 284 C 384 284 388 214 416 214" fill="none" stroke="#A66BFF" stroke-width="1.5"/>
-  <path d="M470 214 C 492 214 494 140 516 140" fill="none" stroke="#FF8A65" stroke-width="1.5"/>
-  <line x1="516" y1="140" x2="566" y2="140" stroke="#FF8A65" stroke-width="1.5"/>
-  <path d="M566 140 C 592 140 596 66 620 66" fill="none" stroke="#FF8A65" stroke-width="1.5"/>
-  <path d="M566 140 C 596 140 600 214 640 214" fill="none" stroke="#FF8A65" stroke-width="1.5" stroke-dasharray="4,3"/>
+  <path d="M240 214 C 262 214 264 284 286 284" fill="none" stroke="#5AC8FF" stroke-width="1.5"/>
+  <line x1="286" y1="284" x2="356" y2="284" stroke="#5AC8FF" stroke-width="1.5"/>
+  <path d="M356 284 C 384 284 388 214 416 214" fill="none" stroke="#5AC8FF" stroke-width="1.5"/>
+  <path d="M470 214 C 492 214 494 140 516 140" fill="none" stroke="#9AA0B4" stroke-width="1.5"/>
+  <line x1="516" y1="140" x2="566" y2="140" stroke="#9AA0B4" stroke-width="1.5"/>
+  <path d="M566 140 C 592 140 596 66 620 66" fill="none" stroke="#9AA0B4" stroke-width="1.5"/>
+  <path d="M566 140 C 596 140 600 214 640 214" fill="none" stroke="#9AA0B4" stroke-width="1.5" stroke-dasharray="4,3"/>
 
-  <circle cx="160" cy="66" r="8" fill="#0d0d13" stroke="#F05032" stroke-width="1.8"/>
-  <circle cx="620" cy="66" r="10" fill="#2A1610" stroke="#F05032" stroke-width="2.2"/>
-  <circle cx="200" cy="214" r="7" fill="#0d0d13" stroke="#5AC8FF" stroke-width="1.7"/><circle cx="240" cy="214" r="7" fill="#0d0d13" stroke="#5AC8FF" stroke-width="1.7"/><circle cx="416" cy="214" r="7" fill="#0d0d13" stroke="#5AC8FF" stroke-width="1.7"/><circle cx="470" cy="214" r="7" fill="#0d0d13" stroke="#5AC8FF" stroke-width="1.7"/><circle cx="640" cy="214" r="7" fill="#0d0d13" stroke="#5AC8FF" stroke-width="1.7"/>
-  <circle cx="286" cy="284" r="7" fill="#0d0d13" stroke="#A66BFF" stroke-width="1.7"/><circle cx="356" cy="284" r="7" fill="#0d0d13" stroke="#A66BFF" stroke-width="1.7"/>
-  <circle cx="516" cy="140" r="7" fill="#0d0d13" stroke="#FF8A65" stroke-width="1.7"/><circle cx="566" cy="140" r="7" fill="#0d0d13" stroke="#FF8A65" stroke-width="1.7"/>
+  <circle cx="160" cy="66" r="8" fill="#101017" stroke="#F05032" stroke-width="1.8"/>
+  <circle cx="620" cy="66" r="10" fill="#1D1D26" stroke="#F05032" stroke-width="2.2"/>
+  <circle cx="200" cy="214" r="7" fill="#101017" stroke="#5AC8FF" stroke-width="1.7"/><circle cx="240" cy="214" r="7" fill="#101017" stroke="#5AC8FF" stroke-width="1.7"/><circle cx="416" cy="214" r="7" fill="#101017" stroke="#5AC8FF" stroke-width="1.7"/><circle cx="470" cy="214" r="7" fill="#101017" stroke="#5AC8FF" stroke-width="1.7"/><circle cx="640" cy="214" r="7" fill="#101017" stroke="#5AC8FF" stroke-width="1.7"/>
+  <circle cx="286" cy="284" r="7" fill="#101017" stroke="#5AC8FF" stroke-width="1.7"/><circle cx="356" cy="284" r="7" fill="#101017" stroke="#5AC8FF" stroke-width="1.7"/>
+  <circle cx="516" cy="140" r="7" fill="#101017" stroke="#9AA0B4" stroke-width="1.7"/><circle cx="566" cy="140" r="7" fill="#101017" stroke="#9AA0B4" stroke-width="1.7"/>
 
-  <rect x="580" y="30" width="80" height="19" rx="5" fill="#2A1610" stroke="#F05032" stroke-width="1.2"/>
+  <rect x="580" y="30" width="80" height="19" rx="5" fill="#1D1D26" stroke="#F05032" stroke-width="1.2"/>
   <text x="620" y="43" font-size="9" fill="#F05032" font-weight="700" text-anchor="middle">tag v1.0</text>
-  <text x="321" y="306" font-size="9" fill="#A66BFF" text-anchor="middle">build the feature</text>
-  <text x="516" y="122" font-size="9" fill="#FF8A65" text-anchor="middle">only bug fixes</text>
-  <text x="676" y="192" font-size="8.5" fill="#FF8A65" text-anchor="middle">merged back</text>
-  <text x="676" y="204" font-size="8.5" fill="#FF8A65" text-anchor="middle">into develop too</text>
+  <text x="321" y="306" font-size="9" fill="#5AC8FF" text-anchor="middle">build the feature</text>
+  <text x="516" y="122" font-size="9" fill="#9AA0B4" text-anchor="middle">only bug fixes</text>
+  <text x="676" y="192" font-size="8.5" fill="#9AA0B4" text-anchor="middle">merged back</text>
+  <text x="676" y="204" font-size="8.5" fill="#9AA0B4" text-anchor="middle">into develop too</text>
 
   <text x="380" y="336" font-size="10.5" fill="#cdd0dd" text-anchor="middle">Suits scheduled, versioned releases. For continuous delivery it is usually more machinery than you need.</text>
 </svg>
@@ -848,7 +862,7 @@ SELECT revenue, country
 
 <p class="reveal">The PR lifecycle, step by step:</p>
 <div class="step reveal"><div class="num-bubble">1</div><div class="body"><strong>Push your branch</strong> and open a PR on GitHub, targeting <code>main</code>. Write a clear title and a description of <em>what</em> changed and <em>why</em>.</div></div>
-<div class="step reveal"><div class="num-bubble">2</div><div class="body"><strong>Automated checks run (CI).</strong> Tests, linters, and builds fire automatically. A red ✗ blocks the merge until fixed.</div></div>
+<div class="step reveal"><div class="num-bubble">2</div><div class="body"><strong>Automated checks run (CI).</strong> Tests, linters, and builds fire automatically. A red − blocks the merge until fixed.</div></div>
 <div class="step reveal"><div class="num-bubble">3</div><div class="body"><strong>Teammates review.</strong> They read the diff, leave inline comments, ask questions, and request changes. You push more commits to address them — the PR updates live.</div></div>
 <div class="step reveal"><div class="num-bubble">4</div><div class="body"><strong>Approve &amp; merge.</strong> Once approved and green, the PR is merged into <code>main</code>. The feature branch is then deleted.</div></div>
 
@@ -858,7 +872,7 @@ SELECT revenue, country
 </div>
 
 <div class="callout gr reveal">
-  <p style="margin:.2em 0"><span class="t">✅ What makes a PR easy to review</span></p>
+  <p style="margin:.2em 0"><span class="t">What makes a PR easy to review</span></p>
   <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">Keep it <strong>small</strong> (a few hundred lines beats a few thousand), <strong>focused</strong> on one logical change, well-described, and green on CI. A reviewer can give a thoughtful read to 200 lines; faced with 2,000 they'll rubber-stamp it. Small PRs get better review <em>and</em> merge faster — the rare win-win.</p>
 </div>
 

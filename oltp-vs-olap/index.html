@@ -22,8 +22,8 @@
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,500;0,700;0,800;1,400&display=swap" rel="stylesheet">
 <style>
   :root{
-    --bg:#1A1A1A; --bg2:#121212; --ink:#F1F1F1; --muted:#9aa0b4; --dim:#666666;
-    --blue2:#5C78FF; --cyan:#28B9FF; --cyan2:#5AC8FF; --purple:#905AFF; --magenta2:#BA5AFF;
+    --bg:#191921; --bg2:#20202A; --ink:#F1F1F1; --muted:#9aa0b4; --dim:#666666;
+    --blue2:#5C78FF; --cyan:#28B9FF; --cyan2:#5AC8FF; --purple:#5C78FF; --magenta2:#5AC8FF;
     --grad:linear-gradient(90deg,#5C78FF,#28B9FF,#A52AFF);
     --font:"JetBrainsMono Nerd Font","JetBrains Mono","Symbols Nerd Font",ui-monospace,"Cascadia Code",Menlo,Consolas,monospace;
   }
@@ -40,76 +40,90 @@
   @keyframes sheen{to{background-position:220% center}}
   .dek{color:var(--muted);font-size:17px}
   .byline{margin-top:14px;font-size:13px;color:var(--dim)}
-  h2{font-size:clamp(21px,3.2vw,28px);margin:52px 0 6px;font-weight:800;line-height:1.22;padding-top:14px;border-top:1px solid #23232e}
+  h2{font-size:clamp(21px,3.2vw,28px);margin:52px 0 6px;font-weight:800;line-height:1.22;padding-top:14px;border-top:1px solid #34343F}
   h2 .n{color:var(--blue2)}
   h3{font-size:18px;margin:28px 0 4px;color:#fff;font-weight:700}
   h4{font-size:15px;margin:20px 0 4px;color:var(--cyan2);font-weight:700}
   p,li{color:#dcdce4}
   .lead{font-size:18px;color:#e7e7ee}
   a{color:var(--cyan2)}
-  hr{border:0;border-top:1px solid #2c2c36;margin:36px 0}
-  code{font-family:var(--font);background:#23232b;color:#5AC8FF;padding:1px 6px;border-radius:5px;font-size:.88em;border:1px solid #2f2f3a}
+  hr{border:0;border-top:1px solid #34343F;margin:36px 0}
+  code{font-family:var(--font);background:#23232b;color:#5AC8FF;padding:1px 6px;border-radius:5px;font-size:.88em;border:1px solid #34343F}
   .cb{margin:16px 0}
-  .cb .lang{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:#9aa0b4;background:#1b1b24;border:1px solid #2c2c36;border-bottom:none;border-radius:9px 9px 0 0;padding:4px 12px}
-  pre{margin:0;background:#0d0d13;border:1px solid #23232e;border-radius:0 10px 10px 10px;padding:14px 16px;overflow-x:auto;
+  .cb .lang{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:#9aa0b4;background:#1b1b24;border:1px solid #34343F;border-bottom:none;border-radius:9px 9px 0 0;padding:4px 12px}
+  pre{margin:0;background:#101017;border:1px solid #34343F;border-radius:0 10px 10px 10px;padding:14px 16px;overflow-x:auto;
       font-family:var(--font);font-size:13px;line-height:1.65;color:#d8dcea;white-space:pre}
-  pre .c{color:#6b7280}
+  pre .c{color:#6B6B78}
   pre .o{color:#9aa0b4}
   pre .k{color:#5AC8FF}
-  pre .g{color:#34d399}
-  pre .y{color:#f0b429}
-  pre .r{color:#f87171}
+  pre .g{color:#5AC8FF}
+  pre .y{color:#9AA0B4}
+  pre .r{color:#9AA0B4}
   .callout{border-left:4px solid var(--blue2);background:#16182a;border-radius:0 12px 12px 0;padding:14px 18px;margin:22px 0}
   .callout.cy{border-color:var(--cyan);background:#0f1f2b}
-  .callout.mg{border-color:var(--magenta2);background:#1d1526}
-  .callout.gd{border-color:#f0b429;background:#241d0f}
-  .callout.gr{border-color:#34d399;background:#0d1f18}
+  .callout.mg{border-color:var(--magenta2);background:#23232C}
+  .callout.gd{border-color:#9AA0B4;background:#1D1D26}
+  .callout.gr{border-color:#5AC8FF;background:#1D1D26}
   .callout .t{color:var(--cyan2);font-weight:800}
-  .callout.gd .t{color:#f0b429}
-  .callout.gr .t{color:#34d399}
+  .callout.gd .t{color:#9AA0B4}
+  .callout.gr .t{color:#5AC8FF}
   .callout.mg .t{color:var(--magenta2)}
-  .tldr{border:1px solid #2f3a66;background:linear-gradient(180deg,#15182a,#121212);border-radius:16px;padding:20px 24px;margin:26px 0}
+  .tldr{border:1px solid #2f3a66;background:linear-gradient(180deg,#15182a,#20202A);border-radius:16px;padding:20px 24px;margin:26px 0}
   .tldr h4{margin:0 0 8px;font-size:13px;letter-spacing:.2em;text-transform:uppercase;color:var(--cyan2)}
-  .gloss{border:1px solid #2c2c36;background:#141419;border-radius:14px;padding:18px 22px;margin:24px 0}
+  .gloss{border:1px solid #34343F;background:#1D1D26;border-radius:14px;padding:18px 22px;margin:24px 0}
   .gloss h4{margin:0 0 6px;color:#fff;font-size:15px}
   .gloss dl{margin:0;font-size:13.5px}
   .gloss dt{color:var(--cyan2);font-weight:700;margin-top:9px}
   .gloss dd{margin:1px 0 0;color:#cdd0dd}
-  .toc{background:#15151b;border:1px solid #2c2c36;border-radius:14px;padding:16px 22px;margin:24px 0;column-count:2;column-gap:28px}
+  .toc{background:#23232C;border:1px solid #34343F;border-radius:14px;padding:16px 22px;margin:24px 0;column-count:2;column-gap:28px}
   .toc a{display:block;color:var(--cyan2);text-decoration:none;font-size:13.5px;line-height:1.9;break-inside:avoid}
   .toc a:hover{color:#fff}
   .toc>strong{column-span:all;display:block;margin-bottom:6px;color:#fff}
   table{border-collapse:collapse;width:100%;font-size:13.5px;margin:16px 0}
-  th,td{border:1px solid #2c2c36;padding:8px 11px;text-align:left;vertical-align:top}
-  th{background:#1d1d27;color:#fff}
-  tr:nth-child(even) td{background:#161620}
-  .diagram{background:#0d0d13;border:1px solid #23232e;border-radius:14px;padding:18px;margin:20px 0;overflow-x:auto;font-size:12.5px;line-height:1.7;color:#d8dcea;white-space:pre;font-family:var(--font)}
+  th,td{border:1px solid #34343F;padding:8px 11px;text-align:left;vertical-align:top}
+  th{background:#17171E;color:#fff}
+  tr:nth-child(even) td{background:#17171E}
+  .diagram{background:#101017;border:1px solid #34343F;border-radius:14px;padding:18px;margin:20px 0;overflow-x:auto;font-size:12.5px;line-height:1.7;color:#d8dcea;white-space:pre;font-family:var(--font)}
   .diagram .hl{color:#5AC8FF}
-  .diagram .dim{color:#6b7280}
-  .diagram .ok{color:#34d399}
-  .diagram .warn{color:#f0b429}
-  .diagram .bad{color:#f87171}
-  .diagram .pu{color:#b98cff}
+  .diagram .dim{color:#6B6B78}
+  .diagram .ok{color:#5AC8FF}
+  .diagram .warn{color:#9AA0B4}
+  .diagram .bad{color:#9AA0B4}
+  .diagram .pu{color:#5AC8FF}
   .pain{border:1px solid #3a2020;background:#1c1212;border-radius:14px;padding:16px 20px;margin:14px 0}
-  .pain h4{margin:0 0 4px;color:#f87171}
-  .fix{border:1px solid #1a3020;background:#0d1f14;border-radius:14px;padding:16px 20px;margin:14px 0}
-  .fix h4{margin:0 0 4px;color:#34d399}
+  .pain h4{margin:0 0 4px;color:#9AA0B4}
+  .fix{border:1px solid #1a3020;background:#1D1D26;border-radius:14px;padding:16px 20px;margin:14px 0}
+  .fix h4{margin:0 0 4px;color:#5AC8FF}
   .step{display:flex;gap:12px;align-items:flex-start;margin:14px 0}
   .step .num-bubble{flex:0 0 28px;height:28px;border-radius:50%;background:var(--grad);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:#fff;margin-top:2px}
   .step .body{flex:1}
-  figure.mm{background:radial-gradient(130% 150% at 50% 0%,#16182a 0%,#0d0d13 72%);border:1px solid #23232e;border-radius:14px;padding:14px 10px 6px;margin:20px 0;overflow-x:auto}
+  figure.mm{background:radial-gradient(130% 150% at 50% 0%,#16182a 0%,#101017 72%);border:1px solid #34343F;border-radius:14px;padding:14px 10px 6px;margin:20px 0;overflow-x:auto}
   figure.mm figcaption{font-size:12px;color:#555;text-align:center;margin-bottom:.4em;letter-spacing:.06em;text-transform:uppercase}
   .mermaid{display:flex;justify-content:center;font-family:var(--font)!important}
-  footer{border-top:1px solid #23232e;margin-top:50px;padding:24px 0 90px;color:var(--dim);font-size:13px}
+  footer{border-top:1px solid #34343F;margin-top:50px;padding:24px 0 90px;color:var(--dim);font-size:13px}
   footer a{color:var(--cyan2)}
   .js .reveal{opacity:0;transform:translateY(16px);transition:opacity .6s ease,transform .6s ease}
   .js .reveal.in{opacity:1;transform:none}
   @media (prefers-reduced-motion:reduce){.js .reveal{opacity:1;transform:none}}
+  /* ---- shared theme: top nav + a11y (appended) ---- */
+  .nav{position:sticky;top:0;z-index:60;background:rgba(25,25,33,.82);backdrop-filter:blur(10px);border-bottom:1px solid #34343f}
+  .nav-inner{max-width:1040px;margin:0 auto;padding:12px 24px;display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+  .nav-brand{font-weight:800;letter-spacing:.16em;font-size:15px;text-decoration:none;border:0;
+             background:linear-gradient(90deg,#5C78FF,#28B9FF,#A52AFF);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .nav-links{display:flex;gap:6px;flex-wrap:wrap;margin-left:auto}
+  .nav-links a{text-decoration:none;border:1px solid transparent;color:#9aa0b4;font-weight:700;font-size:13.5px;padding:6px 14px;border-radius:999px;transition:.2s}
+  .nav-links a:hover{color:#fff;border-color:#34343f;background:#23232c}
+  .nav-links a.active{color:#5AC8FF;border-color:#28B9FF55;background:#28B9FF14}
+  :focus-visible{outline:2px solid #5AC8FF;outline-offset:3px;border-radius:6px}
+  @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{animation:none !important;transition:none !important}.js .reveal{opacity:1 !important;transform:none !important}}
 </style>
+
 <script>document.documentElement.classList.add('js');</script>
 </head>
 <body>
 <div id="bar"></div>
+
+<nav class="nav"><div class="nav-inner"><a class="nav-brand" href="../index.html">HAO TIEU</a><div class="nav-links"><a href="../index.html">Portfolio</a><a href="../blogs.html" class="active">Blogs</a><a href="../essentials.html">Data Engineer Essentials</a></div></div></nav>
 <div class="page">
 
 <header>
@@ -119,7 +133,7 @@
   <div class="byline">~30 min read · Deep dive · Fundamentals</div>
 </header>
 
-<figure class="reveal" style="margin:18px 0 6px;background:radial-gradient(130% 150% at 50% 0%,#16182a 0%,#0d0d13 72%);border:1px solid #23232e;border-radius:16px;padding:14px 10px;overflow:hidden">
+<figure class="reveal" style="margin:18px 0 6px;background:radial-gradient(130% 150% at 50% 0%,#16182a 0%,#101017 72%);border:1px solid #34343F;border-radius:16px;padding:14px 10px;overflow:hidden">
 <figcaption style="font-size:12px;color:#555;text-align:center;margin-bottom:.6em;letter-spacing:.06em;text-transform:uppercase">The one picture: the same table, stored two ways</figcaption>
 <svg viewBox="0 0 860 250" width="100%" style="display:block;max-width:860px;margin:0 auto" aria-label="Row storage keeps each row's fields together; column storage keeps each column's values together">
   <defs>
@@ -127,27 +141,27 @@
     <style>.hm{font-family:'JetBrains Mono',monospace;}</style>
   </defs>
   <!-- ROW side -->
-  <text x="200" y="28" class="hm" font-size="13" fill="#f0b429" text-anchor="middle" font-weight="700">ROW STORE  (OLTP)</text>
+  <text x="200" y="28" class="hm" font-size="13" fill="#9AA0B4" text-anchor="middle" font-weight="700">ROW STORE  (OLTP)</text>
   <text x="200" y="46" class="hm" font-size="10.5" fill="#8a90a6" text-anchor="middle">one row = one contiguous block</text>
   <g class="hm" font-size="11">
-    <rect x="40" y="62" width="320" height="26" rx="4" fill="#1a180d" stroke="#f0b429"/><text x="50" y="79" fill="#f0b429">id1</text><text x="100" y="79" fill="#d8dcea">name1</text><text x="200" y="79" fill="#34d399">city1</text><text x="290" y="79" fill="#5AC8FF">price1</text>
-    <rect x="40" y="92" width="320" height="26" rx="4" fill="#1a180d" stroke="#f0b429"/><text x="50" y="109" fill="#f0b429">id2</text><text x="100" y="109" fill="#d8dcea">name2</text><text x="200" y="109" fill="#34d399">city2</text><text x="290" y="109" fill="#5AC8FF">price2</text>
-    <rect x="40" y="122" width="320" height="26" rx="4" fill="#1a180d" stroke="#f0b429"/><text x="50" y="139" fill="#f0b429">id3</text><text x="100" y="139" fill="#d8dcea">name3</text><text x="200" y="139" fill="#34d399">city3</text><text x="290" y="139" fill="#5AC8FF">price3</text>
+    <rect x="40" y="62" width="320" height="26" rx="4" fill="#1D1D26" stroke="#9AA0B4"/><text x="50" y="79" fill="#9AA0B4">id1</text><text x="100" y="79" fill="#d8dcea">name1</text><text x="200" y="79" fill="#5AC8FF">city1</text><text x="290" y="79" fill="#5AC8FF">price1</text>
+    <rect x="40" y="92" width="320" height="26" rx="4" fill="#1D1D26" stroke="#9AA0B4"/><text x="50" y="109" fill="#9AA0B4">id2</text><text x="100" y="109" fill="#d8dcea">name2</text><text x="200" y="109" fill="#5AC8FF">city2</text><text x="290" y="109" fill="#5AC8FF">price2</text>
+    <rect x="40" y="122" width="320" height="26" rx="4" fill="#1D1D26" stroke="#9AA0B4"/><text x="50" y="139" fill="#9AA0B4">id3</text><text x="100" y="139" fill="#d8dcea">name3</text><text x="200" y="139" fill="#5AC8FF">city3</text><text x="290" y="139" fill="#5AC8FF">price3</text>
   </g>
-  <text x="200" y="172" class="hm" font-size="10.5" fill="#34d399" text-anchor="middle">✓ grab a whole row in one read</text>
-  <text x="200" y="190" class="hm" font-size="10.5" fill="#f87171" text-anchor="middle">✗ to sum prices, you touch every row</text>
+  <text x="200" y="172" class="hm" font-size="10.5" fill="#5AC8FF" text-anchor="middle">+ grab a whole row in one read</text>
+  <text x="200" y="190" class="hm" font-size="10.5" fill="#9AA0B4" text-anchor="middle">− to sum prices, you touch every row</text>
   <!-- divider -->
-  <line x1="430" y1="58" x2="430" y2="200" stroke="#2c2c36" stroke-width="1.5" stroke-dasharray="4,4"/>
+  <line x1="430" y1="58" x2="430" y2="200" stroke="#34343F" stroke-width="1.5" stroke-dasharray="4,4"/>
   <!-- COLUMN side -->
   <text x="650" y="28" class="hm" font-size="13" fill="#5AC8FF" text-anchor="middle" font-weight="700">COLUMN STORE  (OLAP)</text>
   <text x="650" y="46" class="hm" font-size="10.5" fill="#8a90a6" text-anchor="middle">one column = one contiguous block</text>
   <g class="hm" font-size="11">
-    <rect x="500" y="62" width="300" height="26" rx="4" fill="#0d1820" stroke="#f0b429"/><text x="510" y="79" fill="#f0b429">id1 · id2 · id3 · id4 · id5 …</text>
+    <rect x="500" y="62" width="300" height="26" rx="4" fill="#0d1820" stroke="#9AA0B4"/><text x="510" y="79" fill="#9AA0B4">id1 · id2 · id3 · id4 · id5 …</text>
     <rect x="500" y="92" width="300" height="26" rx="4" fill="#0d1820" stroke="#d8dcea"/><text x="510" y="109" fill="#d8dcea">name1 · name2 · name3 …</text>
-    <rect x="500" y="122" width="300" height="26" rx="4" fill="#0d1820" stroke="#34d399"/><text x="510" y="139" fill="#34d399">city1 · city2 · city3 …</text>
+    <rect x="500" y="122" width="300" height="26" rx="4" fill="#0d1820" stroke="#5AC8FF"/><text x="510" y="139" fill="#5AC8FF">city1 · city2 · city3 …</text>
     <rect x="500" y="152" width="300" height="26" rx="4" fill="#0d1820" stroke="#5AC8FF"/><text x="510" y="169" fill="#5AC8FF">price1 · price2 · price3 …</text>
   </g>
-  <text x="650" y="196" class="hm" font-size="10.5" fill="#34d399" text-anchor="middle">✓ sum prices = read just the price block</text>
+  <text x="650" y="196" class="hm" font-size="10.5" fill="#5AC8FF" text-anchor="middle">+ sum prices = read just the price block</text>
   <circle r="4" fill="#5AC8FF"><animate attributeName="cx" values="500;800" dur="3s" repeatCount="indefinite"/><animate attributeName="cy" values="165;165" dur="3s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;1;1;0" dur="3s" repeatCount="indefinite"/></circle>
 </svg>
 </figure>
@@ -184,7 +198,7 @@
   <li><strong>OLAP — Online Analytical Processing.</strong> An <em>analytical</em> query reads huge swaths of history to compute a summary: total revenue by region, average session length by month, the funnel conversion rate. Each query scans <em>millions to billions</em> of rows, runs for <em>seconds to minutes</em>, and there are relatively <em>few</em> of them. This is the database <em>behind your dashboards and reports</em>. Think BigQuery, Snowflake, Redshift, Spark, ClickHouse, Databricks.</li>
 </ul>
 
-<figure class="reveal" style="margin:1.4em 0;background:#0d0d13;border:1px solid #23232e;border-radius:10px;padding:1.2em 1em 1em;overflow:hidden">
+<figure class="reveal" style="margin:1.4em 0;background:#101017;border:1px solid #34343F;border-radius:10px;padding:1.2em 1em 1em;overflow:hidden">
 <figcaption style="font-size:12px;color:#555;text-align:center;margin-bottom:.8em;letter-spacing:.06em;text-transform:uppercase">Same company, two databases, two jobs</figcaption>
 <svg viewBox="0 0 760 220" width="100%" style="display:block;max-width:760px;margin:0 auto" aria-label="The app writes to OLTP; data is copied into OLAP where analysts run reports">
   <defs><style>.s1{font-family:'JetBrains Mono',monospace;}</style></defs>
@@ -193,14 +207,14 @@
   <text x="95" y="106" class="s1" font-size="11.5" fill="#8aa0ff" text-anchor="middle" font-weight="700">the app</text>
   <text x="95" y="124" class="s1" font-size="10" fill="#8a90a6" text-anchor="middle">millions of users</text>
   <!-- oltp -->
-  <rect x="240" y="70" width="170" height="80" rx="9" fill="#1a180d" stroke="#f0b429" stroke-width="1.8"/>
-  <text x="325" y="98" class="s1" font-size="12" fill="#f0b429" text-anchor="middle" font-weight="700">OLTP (row store)</text>
+  <rect x="240" y="70" width="170" height="80" rx="9" fill="#1D1D26" stroke="#9AA0B4" stroke-width="1.8"/>
+  <text x="325" y="98" class="s1" font-size="12" fill="#9AA0B4" text-anchor="middle" font-weight="700">OLTP (row store)</text>
   <text x="325" y="118" class="s1" font-size="10" fill="#b7c0cc" text-anchor="middle">Postgres / MySQL</text>
   <text x="325" y="134" class="s1" font-size="10" fill="#8a90a6" text-anchor="middle">tiny, fast writes</text>
   <!-- oltp -> olap -->
-  <line x1="410" y1="110" x2="488" y2="110" stroke="#34d399" stroke-width="1.8" stroke-dasharray="5,3"/>
-  <polygon points="488,105 498,110 488,115" fill="#34d399"/>
-  <text x="449" y="100" class="s1" font-size="9.5" fill="#34d399" text-anchor="middle">ETL / ELT</text>
+  <line x1="410" y1="110" x2="488" y2="110" stroke="#5AC8FF" stroke-width="1.8" stroke-dasharray="5,3"/>
+  <polygon points="488,105 498,110 488,115" fill="#5AC8FF"/>
+  <text x="449" y="100" class="s1" font-size="9.5" fill="#5AC8FF" text-anchor="middle">ETL / ELT</text>
   <text x="449" y="128" class="s1" font-size="9.5" fill="#8a90a6" text-anchor="middle">nightly / streaming</text>
   <!-- olap -->
   <rect x="500" y="70" width="170" height="80" rx="9" fill="#0d1820" stroke="#5AC8FF" stroke-width="1.8"/>
@@ -211,10 +225,10 @@
   <line x1="170" y1="110" x2="238" y2="110" stroke="#5C78FF" stroke-width="1.8"/>
   <polygon points="238,105 248,110 238,115" fill="#5C78FF"/>
   <!-- analysts -->
-  <rect x="500" y="178" width="170" height="34" rx="8" fill="#1d1526" stroke="#BA5AFF" stroke-width="1.4"/>
-  <text x="585" y="200" class="s1" font-size="10.5" fill="#d8b3ff" text-anchor="middle">analysts · dashboards · BI</text>
-  <line x1="585" y1="150" x2="585" y2="176" stroke="#BA5AFF" stroke-width="1.6"/>
-  <polygon points="580,176 585,186 590,176" fill="#BA5AFF"/>
+  <rect x="500" y="178" width="170" height="34" rx="8" fill="#23232C" stroke="#5AC8FF" stroke-width="1.4"/>
+  <text x="585" y="200" class="s1" font-size="10.5" fill="#5AC8FF" text-anchor="middle">analysts · dashboards · BI</text>
+  <line x1="585" y1="150" x2="585" y2="176" stroke="#5AC8FF" stroke-width="1.6"/>
+  <polygon points="580,176 585,186 590,176" fill="#5AC8FF"/>
 </svg>
 </figure>
 
@@ -252,24 +266,24 @@
 <h3 class="reveal">The page: the unit of everything</h3>
 <p class="reveal">Disks (and the operating system) move data in blocks, not bytes. So databases adopt a fixed <strong>page</strong> size — typically <strong>8&nbsp;KB</strong> (PostgreSQL) or <strong>16&nbsp;KB</strong> (MySQL/InnoDB) — as the smallest unit they ever read from or write to disk. A table is, on disk, just a long sequence of these pages. Each page holds a small header, a slot directory (pointers to where each row lives inside the page), and then the rows themselves packed in.</p>
 
-<figure class="reveal" style="margin:1.4em 0;background:#0d0d13;border:1px solid #23232e;border-radius:10px;padding:1.2em 1em 1em;overflow:hidden">
+<figure class="reveal" style="margin:1.4em 0;background:#101017;border:1px solid #34343F;border-radius:10px;padding:1.2em 1em 1em;overflow:hidden">
 <figcaption style="font-size:12px;color:#555;text-align:center;margin-bottom:.8em;letter-spacing:.06em;text-transform:uppercase">One 8&nbsp;KB page — rows of all columns, packed together</figcaption>
 <svg viewBox="0 0 720 230" width="100%" style="display:block;max-width:720px;margin:0 auto" aria-label="A page contains a header, a slot directory, and several whole rows stored contiguously">
   <defs><style>.p1{font-family:'JetBrains Mono',monospace;}</style></defs>
-  <rect x="40" y="20" width="640" height="190" rx="10" fill="#0f0f17" stroke="#f0b429" stroke-width="1.6"/>
-  <text x="360" y="14" class="p1" font-size="11" fill="#f0b429" text-anchor="middle" font-weight="700">PAGE  (8 KB block — the unit of disk I/O)</text>
+  <rect x="40" y="20" width="640" height="190" rx="10" fill="#0f0f17" stroke="#9AA0B4" stroke-width="1.6"/>
+  <text x="360" y="14" class="p1" font-size="11" fill="#9AA0B4" text-anchor="middle" font-weight="700">PAGE  (8 KB block — the unit of disk I/O)</text>
   <!-- header -->
   <rect x="54" y="34" width="612" height="26" rx="5" fill="#16182a" stroke="#5C78FF" stroke-width="1.2"/>
   <text x="360" y="51" class="p1" font-size="10.5" fill="#8aa0ff" text-anchor="middle">page header · slot directory → [ptr row1][ptr row2][ptr row3]…</text>
   <!-- rows -->
   <g class="p1" font-size="10.5">
-    <rect x="54" y="72" width="612" height="30" rx="5" fill="#1a180d" stroke="#f0b429" stroke-width="1.1"/>
-    <text x="64" y="91" fill="#f0b429">8842</text><text x="130" y="91" fill="#d8dcea">"Hao Tieu"</text><text x="280" y="91" fill="#34d399">"Hanoi"</text><text x="420" y="91" fill="#5AC8FF">"gold"</text><text x="540" y="91" fill="#b98cff">2021-06-01</text>
-    <text x="64" y="116" fill="#6b7280" font-size="9">└─ row 8842: ALL columns of this customer, side by side ─────────────┘</text>
-    <rect x="54" y="128" width="612" height="30" rx="5" fill="#1a180d" stroke="#f0b429" stroke-width="1.1"/>
-    <text x="64" y="147" fill="#f0b429">8843</text><text x="130" y="147" fill="#d8dcea">"Mai Le"</text><text x="280" y="147" fill="#34d399">"Da Nang"</text><text x="420" y="147" fill="#5AC8FF">"silver"</text><text x="540" y="147" fill="#b98cff">2022-03-12</text>
-    <rect x="54" y="166" width="612" height="30" rx="5" fill="#1a180d" stroke="#f0b429" stroke-width="1.1"/>
-    <text x="64" y="185" fill="#f0b429">8844</text><text x="130" y="185" fill="#d8dcea">"Quan Vo"</text><text x="280" y="185" fill="#34d399">"Hue"</text><text x="420" y="185" fill="#5AC8FF">"gold"</text><text x="540" y="185" fill="#b98cff">2020-11-30</text>
+    <rect x="54" y="72" width="612" height="30" rx="5" fill="#1D1D26" stroke="#9AA0B4" stroke-width="1.1"/>
+    <text x="64" y="91" fill="#9AA0B4">8842</text><text x="130" y="91" fill="#d8dcea">"Hao Tieu"</text><text x="280" y="91" fill="#5AC8FF">"Hanoi"</text><text x="420" y="91" fill="#5AC8FF">"gold"</text><text x="540" y="91" fill="#5AC8FF">2021-06-01</text>
+    <text x="64" y="116" fill="#6B6B78" font-size="9">└─ row 8842: ALL columns of this customer, side by side ─────────────┘</text>
+    <rect x="54" y="128" width="612" height="30" rx="5" fill="#1D1D26" stroke="#9AA0B4" stroke-width="1.1"/>
+    <text x="64" y="147" fill="#9AA0B4">8843</text><text x="130" y="147" fill="#d8dcea">"Mai Le"</text><text x="280" y="147" fill="#5AC8FF">"Da Nang"</text><text x="420" y="147" fill="#5AC8FF">"silver"</text><text x="540" y="147" fill="#5AC8FF">2022-03-12</text>
+    <rect x="54" y="166" width="612" height="30" rx="5" fill="#1D1D26" stroke="#9AA0B4" stroke-width="1.1"/>
+    <text x="64" y="185" fill="#9AA0B4">8844</text><text x="130" y="185" fill="#d8dcea">"Quan Vo"</text><text x="280" y="185" fill="#5AC8FF">"Hue"</text><text x="420" y="185" fill="#5AC8FF">"gold"</text><text x="540" y="185" fill="#5AC8FF">2020-11-30</text>
   </g>
 </svg>
 </figure>
@@ -304,7 +318,7 @@
 <h3 class="reveal">What a B-tree is</h3>
 <p class="reveal">A <strong>B-tree</strong> is a balanced tree kept sorted by the indexed column. The top <em>root</em> node and middle <em>branch</em> nodes hold only signposts ("keys 1–1000 are this way, 1001–2000 that way"); the bottom <em>leaf</em> nodes hold the actual keys in sorted order, each pointing to the row's location on disk. Because the tree is balanced and very wide (each node fans out to hundreds of children), it stays only 3–4 levels deep even for billions of rows.</p>
 
-<figure class="reveal" style="margin:1.4em 0;background:#0d0d13;border:1px solid #23232e;border-radius:10px;padding:1.2em 1em 1em;overflow:hidden">
+<figure class="reveal" style="margin:1.4em 0;background:#101017;border:1px solid #34343F;border-radius:10px;padding:1.2em 1em 1em;overflow:hidden">
 <figcaption style="font-size:12px;color:#555;text-align:center;margin-bottom:.8em;letter-spacing:.06em;text-transform:uppercase">Finding id = 8842 — 3 hops instead of millions of reads</figcaption>
 <div class="diagram" style="background:none;border:none;padding:6px 4px;margin:0">                         <span class="hl">ROOT</span>   [ &lt;5000 | 5000–9999 | ≥10000 ]
                                    │  <span class="ok">8842 is in 5000–9999</span>
@@ -337,7 +351,7 @@
 <h2 id="oltp-query" class="reveal"><span class="n">05.</span> How an OLTP query runs, step by step</h2>
 <p class="reveal lead">Let's trace one query — <code>SELECT * FROM customers WHERE id = 8842</code> — from the text you type to the row you get back. Every relational database follows the same five stages.</p>
 
-<figure class="reveal" style="margin:1.4em 0;background:#0d0d13;border:1px solid #23232e;border-radius:10px;padding:1.2em 1em 1em;overflow:hidden">
+<figure class="reveal" style="margin:1.4em 0;background:#101017;border:1px solid #34343F;border-radius:10px;padding:1.2em 1em 1em;overflow:hidden">
 <figcaption style="font-size:12px;color:#555;text-align:center;margin-bottom:.8em;letter-spacing:.06em;text-transform:uppercase">The five stages of running a SQL query</figcaption>
 <div class="diagram" style="background:none;border:none;padding:6px 4px;margin:0">  SQL text
      │
@@ -390,7 +404,7 @@
 </table>
 
 <div class="callout gr reveal">
-  <p style="margin:.2em 0"><span class="t">✅ The pattern behind all of them</span></p>
+  <p style="margin:.2em 0"><span class="t">The pattern behind all of them</span></p>
   <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">Every OLTP optimization is doing one of two things: <strong>(a) read fewer pages</strong> to answer a query (indexes, covering indexes, partitioning, smaller rows), or <strong>(b) keep the pages you need in fast memory</strong> (bigger buffer pool, replicas, pooling). Hold that lens and the list stops being a list to memorise.</p>
 </div>
 
@@ -406,19 +420,19 @@
 <p class="reveal">This query needs only <strong>three</strong> columns — <code>city</code>, <code>total</code>, <code>created_at</code> — but it needs them from <em>hundreds of millions of rows</em>. Watch what the row store is forced to do:</p>
 
 <div class="pain reveal">
-  <h4>✗ It reads everything, to use almost nothing</h4>
+  <h4>− It reads everything, to use almost nothing</h4>
   <p style="margin:.3em 0 0;font-size:14.5px;color:#cdd0dd">Columns are glued together inside each row, inside each page. To get the <code>total</code> column from every row, the engine must read <em>every page of the whole table</em> — dragging along <code>customer_name</code>, <code>shipping_address</code>, <code>notes</code> and every other column it doesn't want. If the three columns it needs are 5% of each row, it still reads 100% of the bytes — <strong>20× more disk I/O (the reads and writes between disk and memory) than the query actually needs.</strong></p>
 </div>
 <div class="pain reveal">
-  <h4>✗ The index can't save it</h4>
+  <h4>− The index can't save it</h4>
   <p style="margin:.3em 0 0;font-size:14.5px;color:#cdd0dd">Indexes shine at finding a <em>few</em> rows. This query wants <em>most</em> rows, so the optimizer correctly falls back to a full table scan — the index is useless here. There is no "few rows" to seek to.</p>
 </div>
 <div class="pain reveal">
-  <h4>✗ Poor compression</h4>
+  <h4>− Poor compression</h4>
   <p style="margin:.3em 0 0;font-size:14.5px;color:#cdd0dd">A page holds a jumble of different types — ints, strings, dates, all mixed. Because the page interleaves values from many different columns, there are almost no long runs of similar values for a compressor to latch onto — so a row store compresses far worse than the same data laid out one column at a time. The table stays large on disk, so the scan reads even more bytes.</p>
 </div>
 <div class="pain reveal">
-  <h4>✗ It fights the live app for resources</h4>
+  <h4>− It fights the live app for resources</h4>
   <p style="margin:.3em 0 0;font-size:14.5px;color:#cdd0dd">A scan of 500M rows floods the buffer pool with cold analytical pages, evicting the hot rows your <em>customers'</em> requests need. One heavy report can make the whole app slow. And a <em>traditional single-node</em> OLTP database scales mainly by scaling <em>up</em> (a bigger machine) plus read replicas — not by spreading one query across many machines — so there's a hard ceiling on CPU and RAM for that giant scan. (Distributed SQL systems like Spanner and CockroachDB do scale transactions out, but they trade away some of the simplicity that makes a single-node row store so fast.)</p>
 </div>
 
@@ -439,7 +453,7 @@
 <h2 id="olap-store" class="reveal"><span class="n">09.</span> How OLAP stores data (columnar &amp; Parquet)</h2>
 <p class="reveal lead">The core move is <strong>column-oriented storage</strong>: instead of keeping each row's fields together, keep each <em>column's</em> values together. All the <code>city</code> values in one run, all the <code>total</code> values in another, all the <code>created_at</code> values in another.</p>
 
-<figure class="reveal" style="margin:1.4em 0;background:#0d0d13;border:1px solid #23232e;border-radius:10px;padding:1.2em 1em 1em;overflow:hidden">
+<figure class="reveal" style="margin:1.4em 0;background:#101017;border:1px solid #34343F;border-radius:10px;padding:1.2em 1em 1em;overflow:hidden">
 <figcaption style="font-size:12px;color:#555;text-align:center;margin-bottom:.8em;letter-spacing:.06em;text-transform:uppercase">Same rows, stored by column — read only what you need</figcaption>
 <div class="diagram" style="background:none;border:none;padding:6px 4px;margin:0">  the logical table:                          stored on disk as columns:
 
@@ -461,7 +475,7 @@
 <h3 class="reveal">Parquet: a columnar file, opened up</h3>
 <p class="reveal">In the modern data world the data usually lives in <strong>files</strong> (in cloud object storage like S3), and the dominant columnar file format is <strong>Apache Parquet</strong>. Understanding its layout makes every OLAP optimization obvious. A Parquet file is organised into a hierarchy:</p>
 
-<figure class="reveal" style="margin:1.4em 0;background:#0d0d13;border:1px solid #23232e;border-radius:10px;padding:1.2em 1em 1em;overflow:hidden">
+<figure class="reveal" style="margin:1.4em 0;background:#101017;border:1px solid #34343F;border-radius:10px;padding:1.2em 1em 1em;overflow:hidden">
 <figcaption style="font-size:12px;color:#555;text-align:center;margin-bottom:.8em;letter-spacing:.06em;text-transform:uppercase">Inside one Parquet file</figcaption>
 <div class="diagram" style="background:none;border:none;padding:6px 4px;margin:0"> ┌─────────────────────────── PARQUET FILE ───────────────────────────┐
  │                                                                    │
@@ -504,7 +518,7 @@
 <h2 id="olap-query" class="reveal"><span class="n">10.</span> How an OLAP query runs, step by step</h2>
 <p class="reveal lead">Now the payoff. Let's run the same query that broke the row store — <code>SELECT city, AVG(total) FROM orders WHERE created_at &gt;= '2023-01-01' GROUP BY city</code> — but on a columnar, distributed OLAP engine. The same parse → bind → plan front-end from §05 still runs first; what's different — and what makes analytics fast — is the <em>execute</em> stage. It works like a funnel: each stage throws away data so the next stage does less.</p>
 
-<figure class="reveal" style="margin:1.4em 0;background:#0d0d13;border:1px solid #23232e;border-radius:10px;padding:1.2em 1em 1em;overflow:hidden">
+<figure class="reveal" style="margin:1.4em 0;background:#101017;border:1px solid #34343F;border-radius:10px;padding:1.2em 1em 1em;overflow:hidden">
 <figcaption style="font-size:12px;color:#555;text-align:center;margin-bottom:.8em;letter-spacing:.06em;text-transform:uppercase">The OLAP funnel — drop data at every stage before reading it</figcaption>
 <div class="diagram" style="background:none;border:none;padding:6px 4px;margin:0">  500,000,000 rows × 50 columns  ── the whole dataset ──────────────────┐
                                                                         │
@@ -527,7 +541,7 @@
 <div class="step reveal"><div class="num-bubble">6</div><div class="body"><strong>Distributed partial aggregation.</strong> The data is spread across many worker nodes (this is <strong>MPP</strong> — Massively Parallel Processing). Each node computes a <em>partial</em> result over its slice — its own running sum and count of <code>total</code> per <code>city</code>.</div></div>
 <div class="step reveal"><div class="num-bubble">7</div><div class="body"><strong>Shuffle &amp; final merge.</strong> Partial results are <em>shuffled</em> so all partials for the same <code>city</code> meet on one node, which combines them into the final average. The handful of result rows go back to the client.</div></div>
 
-<figure class="reveal" style="margin:1.4em 0;background:#0d0d13;border:1px solid #23232e;border-radius:10px;padding:1.2em 1em 1em;overflow:hidden">
+<figure class="reveal" style="margin:1.4em 0;background:#101017;border:1px solid #34343F;border-radius:10px;padding:1.2em 1em 1em;overflow:hidden">
 <figcaption style="font-size:12px;color:#555;text-align:center;margin-bottom:.8em;letter-spacing:.06em;text-transform:uppercase">MPP — split the scan across nodes, then combine</figcaption>
 <svg viewBox="0 0 720 220" width="100%" style="display:block;max-width:720px;margin:0 auto" aria-label="A coordinator splits work to several worker nodes that each scan a slice, then results are shuffled and merged">
   <defs><style>.m1{font-family:'JetBrains Mono',monospace;}</style></defs>
@@ -543,16 +557,16 @@
   <!-- coordinator to workers -->
   <g stroke="#5C78FF" stroke-width="1.3"><line x1="320" y1="48" x2="115" y2="78"/><line x1="340" y1="48" x2="280" y2="78"/><line x1="380" y1="48" x2="445" y2="78"/><line x1="400" y1="48" x2="610" y2="78"/></g>
   <!-- shuffle -->
-  <text x="360" y="150" class="m1" font-size="10" fill="#f0b429" text-anchor="middle">▼ each worker emits partial sums per city · SHUFFLE by city ▼</text>
-  <rect x="240" y="166" width="240" height="40" rx="8" fill="#1d1526" stroke="#BA5AFF" stroke-width="1.5"/>
-  <text x="360" y="186" class="m1" font-size="10.5" fill="#d8b3ff" text-anchor="middle">merge partials → final AVG(total) per city</text>
+  <text x="360" y="150" class="m1" font-size="10" fill="#9AA0B4" text-anchor="middle">▼ each worker emits partial sums per city · SHUFFLE by city ▼</text>
+  <rect x="240" y="166" width="240" height="40" rx="8" fill="#23232C" stroke="#5AC8FF" stroke-width="1.5"/>
+  <text x="360" y="186" class="m1" font-size="10.5" fill="#5AC8FF" text-anchor="middle">merge partials → final AVG(total) per city</text>
   <text x="360" y="200" class="m1" font-size="9" fill="#8a90a6" text-anchor="middle">the small result</text>
-  <g stroke="#BA5AFF" stroke-width="1.2" stroke-dasharray="4,3"><line x1="115" y1="126" x2="300" y2="164"/><line x1="280" y1="126" x2="340" y2="164"/><line x1="445" y1="126" x2="380" y2="164"/><line x1="610" y1="126" x2="420" y2="164"/></g>
+  <g stroke="#5AC8FF" stroke-width="1.2" stroke-dasharray="4,3"><line x1="115" y1="126" x2="300" y2="164"/><line x1="280" y1="126" x2="340" y2="164"/><line x1="445" y1="126" x2="380" y2="164"/><line x1="610" y1="126" x2="420" y2="164"/></g>
 </svg>
 </figure>
 
 <div class="callout gr reveal">
-  <p style="margin:.2em 0"><span class="t">✅ Compare the two paths</span></p>
+  <p style="margin:.2em 0"><span class="t">Compare the two paths</span></p>
   <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">The row store read 100% of the bytes on one machine. The column store skipped whole folders and row groups, read 3 columns out of 50, filtered at the scan, processed in vectorized batches, and split what remained across many nodes. Same SQL, same answer — but orders of magnitude less I/O and far more parallelism. <em>That</em> is why analytics belongs on OLAP.</p>
 </div>
 
@@ -684,7 +698,7 @@ flowchart TD
       startOnLoad:true,
       theme:'base',
       themeVariables:{
-        background:'#0d0d13', primaryColor:'#15151b', secondaryColor:'#15151b',
+        background:'#101017', primaryColor:'#23232C', secondaryColor:'#23232C',
         primaryBorderColor:'#5AC8FF', primaryTextColor:'#e7e7ee', lineColor:'#5C78FF',
         fontFamily:"'JetBrains Mono',monospace", fontSize:'13px'
       }

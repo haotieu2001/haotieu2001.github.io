@@ -21,96 +21,110 @@
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
 <style>
   :root{
-    --bg:#1A1A1A; --bg2:#121212; --ink:#F1F1F1; --muted:#9aa0b4; --dim:#666666;
-    --blue2:#E8873A; --cyan:#F5BD1F; --cyan2:#FFD97A; --purple:#E8873A; --magenta2:#FFC857;
-    --grad:linear-gradient(90deg,#C98A00,#F5BD1F,#FFD97A);
+    --bg:#191921; --bg2:#20202A; --ink:#F1F1F1; --muted:#9aa0b4; --dim:#666666;
+    --blue2:#9AA0B4; --cyan:#9AA0B4; --cyan2:#9AA0B4; --purple:#9AA0B4; --magenta2:#9AA0B4;
+    --grad:linear-gradient(90deg,#9AA0B4,#9AA0B4,#9AA0B4);
     --font:"JetBrainsMono Nerd Font","JetBrains Mono","Symbols Nerd Font",ui-monospace,"Cascadia Code",Menlo,Consolas,monospace;
   }
   *{box-sizing:border-box}
   html{scroll-behavior:smooth}
   body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font);font-size:16px;line-height:1.85;-webkit-font-smoothing:antialiased}
-  #bar{position:fixed;top:0;left:0;height:3px;width:0;z-index:50;background:var(--grad);box-shadow:0 0 12px #F5BD1F99;transition:width .1s linear}
+  #bar{position:fixed;top:0;left:0;height:3px;width:0;z-index:50;background:var(--grad);box-shadow:0 0 12px #9AA0B499;transition:width .1s linear}
   .page{max-width:880px;margin:0 auto;padding:0 24px}
   header{padding:30px 0 6px}
   .kicker{font-size:13px;color:var(--dim)}
-  .back{color:var(--cyan2);text-decoration:none;font-size:13px;border-bottom:1px dotted #FFD97A66}
+  .back{color:var(--cyan2);text-decoration:none;font-size:13px;border-bottom:1px dotted #9AA0B466}
   h1{font-size:clamp(28px,4.6vw,46px);line-height:1.12;margin:12px 0 12px;font-weight:800;
      background:var(--grad);background-size:220% auto;-webkit-background-clip:text;background-clip:text;color:transparent;animation:sheen 9s linear infinite}
   @keyframes sheen{to{background-position:220% center}}
   .dek{color:var(--muted);font-size:17px}
   .byline{margin-top:14px;font-size:13px;color:var(--dim)}
-  h2{font-size:clamp(21px,3.2vw,28px);margin:52px 0 6px;font-weight:800;line-height:1.22;padding-top:14px;border-top:1px solid #23232e;display:flex;align-items:center;gap:10px}
+  h2{font-size:clamp(21px,3.2vw,28px);margin:52px 0 6px;font-weight:800;line-height:1.22;padding-top:14px;border-top:1px solid #34343F;display:flex;align-items:center;gap:10px}
   h2 .n{color:var(--blue2)}
   h3{font-size:18px;margin:28px 0 4px;color:#fff;font-weight:700}
   h4{font-size:15px;margin:20px 0 4px;color:var(--cyan2);font-weight:700}
   p,li{color:#dcdce4}
   .lead{font-size:18px;color:#e7e7ee}
   a{color:var(--cyan2)}
-  hr{border:0;border-top:1px solid #2c2c36;margin:36px 0}
-  code{font-family:var(--font);background:#23232b;color:#FFD97A;padding:1px 6px;border-radius:5px;font-size:.88em;border:1px solid #2f2f3a}
+  hr{border:0;border-top:1px solid #34343F;margin:36px 0}
+  code{font-family:var(--font);background:#23232b;color:#9AA0B4;padding:1px 6px;border-radius:5px;font-size:.88em;border:1px solid #34343F}
   .cb{margin:16px 0}
-  .cb .lang{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:#9aa0b4;background:#1b1b24;border:1px solid #2c2c36;border-bottom:none;border-radius:9px 9px 0 0;padding:4px 12px}
-  pre{margin:0;background:#0d0d13;border:1px solid #23232e;border-radius:0 10px 10px 10px;padding:14px 16px;overflow-x:auto;
+  .cb .lang{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:#9aa0b4;background:#1b1b24;border:1px solid #34343F;border-bottom:none;border-radius:9px 9px 0 0;padding:4px 12px}
+  pre{margin:0;background:#101017;border:1px solid #34343F;border-radius:0 10px 10px 10px;padding:14px 16px;overflow-x:auto;
       font-family:var(--font);font-size:13px;line-height:1.65;color:#d8dcea;white-space:pre}
-  pre .c{color:#6b7280}
+  pre .c{color:#6B6B78}
   pre .o{color:#9aa0b4}
-  pre .k{color:#FFD97A}
-  pre .g{color:#8CD98C}
-  pre .y{color:#f0b429}
-  pre .r{color:#FF6B8B}
-  pre .p{color:#E8873A}
+  pre .k{color:#9AA0B4}
+  pre .g{color:#5AC8FF}
+  pre .y{color:#9AA0B4}
+  pre .r{color:#9AA0B4}
+  pre .p{color:#9AA0B4}
   .callout{border-left:4px solid var(--blue2);background:#1c1710;border-radius:0 12px 12px 0;padding:14px 18px;margin:22px 0}
-  .callout.cy{border-color:var(--cyan);background:#241d0b}
-  .callout.mg{border-color:var(--magenta2);background:#241d0b}
-  .callout.gd{border-color:#f0b429;background:#241d0f}
-  .callout.gr{border-color:#22D3EE;background:#0A2028}
+  .callout.cy{border-color:var(--cyan);background:#1D1D26}
+  .callout.mg{border-color:var(--magenta2);background:#1D1D26}
+  .callout.gd{border-color:#9AA0B4;background:#1D1D26}
+  .callout.gr{border-color:#28B9FF;background:#0A2028}
   .callout .t{color:var(--cyan2);font-weight:800}
-  .callout.gd .t{color:#f0b429}
-  .callout.gr .t{color:#22D3EE}
+  .callout.gd .t{color:#9AA0B4}
+  .callout.gr .t{color:#28B9FF}
   .callout.mg .t{color:var(--magenta2)}
-  .tldr{border:1px solid #5a4416;background:linear-gradient(180deg,#1c1710,#121212);border-radius:16px;padding:20px 24px;margin:26px 0}
+  .tldr{border:1px solid #1D1D26;background:linear-gradient(180deg,#1c1710,#20202A);border-radius:16px;padding:20px 24px;margin:26px 0}
   .tldr h4{margin:0 0 8px;font-size:13px;letter-spacing:.2em;text-transform:uppercase;color:var(--cyan2)}
-  .gloss{border:1px solid #2c2c36;background:#141419;border-radius:14px;padding:18px 22px;margin:24px 0}
+  .gloss{border:1px solid #34343F;background:#1D1D26;border-radius:14px;padding:18px 22px;margin:24px 0}
   .gloss h4{margin:0 0 6px;color:#fff;font-size:15px}
   .gloss dl{margin:0;font-size:13.5px}
   .gloss dt{color:var(--cyan2);font-weight:700;margin-top:9px}
   .gloss dd{margin:1px 0 0;color:#cdd0dd}
-  .toc{background:#15151b;border:1px solid #2c2c36;border-radius:14px;padding:16px 22px;margin:24px 0;column-count:2;column-gap:28px}
+  .toc{background:#23232C;border:1px solid #34343F;border-radius:14px;padding:16px 22px;margin:24px 0;column-count:2;column-gap:28px}
   .toc a{display:block;color:var(--cyan2);text-decoration:none;font-size:13.5px;line-height:1.9;break-inside:avoid}
   .toc a:hover{color:#fff}
   .toc>strong{column-span:all;display:block;margin-bottom:6px;color:#fff}
   table{border-collapse:collapse;width:100%;font-size:13.5px;margin:16px 0}
-  th,td{border:1px solid #2c2c36;padding:8px 11px;text-align:left;vertical-align:top}
-  th{background:#1d1d27;color:#fff}
-  tr:nth-child(even) td{background:#161620}
+  th,td{border:1px solid #34343F;padding:8px 11px;text-align:left;vertical-align:top}
+  th{background:#17171E;color:#fff}
+  tr:nth-child(even) td{background:#17171E}
   .ico{width:1em;height:1em;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
   .ico.f{fill:currentColor;stroke:none}
   .hico{display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;border-radius:11px;flex:0 0 36px;
-        background:#241d0b;border:1px solid #5a4416;color:var(--cyan2)}
+        background:#1D1D26;border:1px solid #1D1D26;color:var(--cyan2)}
   .hico .ico{width:19px;height:19px}
   .toc a .ico{width:14px;height:14px;margin-right:9px;vertical-align:-2px;opacity:.85}
   .callout .t .ico{width:16px;height:16px;vertical-align:-3px;margin-right:5px}
   .tldr h4 .ico,.gloss h4 .ico{width:15px;height:15px;vertical-align:-2px;margin-right:6px}
   .stack{margin-top:14px;display:flex;align-items:center;gap:10px;font-size:12px;color:var(--dim);flex-wrap:wrap}
   .chip{display:inline-flex;align-items:center;gap:7px;padding:5px 12px;border-radius:999px;
-        border:1px solid #5a4416;background:#241d0b;color:#FFD97A;font-weight:700;font-size:11.5px}
+        border:1px solid #1D1D26;background:#1D1D26;color:#9AA0B4;font-weight:700;font-size:11.5px}
   .chip .ico{width:14px;height:14px}
   figure.fig{margin:26px 0;text-align:center}
-  figure.fig svg{display:block;width:100%;max-width:100%;height:auto;border:1px solid #23232e;border-radius:14px;background:#0d0d13}
+  figure.fig svg{display:block;width:100%;max-width:100%;height:auto;border:1px solid #34343F;border-radius:14px;background:#101017}
   figure.fig figcaption{font-size:12.5px;color:var(--muted);margin-top:9px;font-style:italic;line-height:1.6}
   .step{display:flex;gap:12px;align-items:flex-start;margin:14px 0}
   .step .num-bubble{flex:0 0 28px;height:28px;border-radius:50%;background:var(--grad);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:#fff;margin-top:2px}
   .step .body{flex:1}
-  footer{border-top:1px solid #23232e;margin-top:50px;padding:24px 0 90px;color:var(--dim);font-size:13px}
+  footer{border-top:1px solid #34343F;margin-top:50px;padding:24px 0 90px;color:var(--dim);font-size:13px}
   footer a{color:var(--cyan2)}
   .js .reveal{opacity:0;transform:translateY(16px);transition:opacity .6s ease,transform .6s ease}
   .js .reveal.in{opacity:1;transform:none}
   @media (prefers-reduced-motion:reduce){.js .reveal{opacity:1;transform:none}}
+  /* ---- shared theme: top nav + a11y (appended) ---- */
+  .nav{position:sticky;top:0;z-index:60;background:rgba(25,25,33,.82);backdrop-filter:blur(10px);border-bottom:1px solid #34343f}
+  .nav-inner{max-width:1040px;margin:0 auto;padding:12px 24px;display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+  .nav-brand{font-weight:800;letter-spacing:.16em;font-size:15px;text-decoration:none;border:0;
+             background:linear-gradient(90deg,#5C78FF,#28B9FF,#A52AFF);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .nav-links{display:flex;gap:6px;flex-wrap:wrap;margin-left:auto}
+  .nav-links a{text-decoration:none;border:1px solid transparent;color:#9aa0b4;font-weight:700;font-size:13.5px;padding:6px 14px;border-radius:999px;transition:.2s}
+  .nav-links a:hover{color:#fff;border-color:#34343f;background:#23232c}
+  .nav-links a.active{color:#5AC8FF;border-color:#28B9FF55;background:#28B9FF14}
+  :focus-visible{outline:2px solid #5AC8FF;outline-offset:3px;border-radius:6px}
+  @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{animation:none !important;transition:none !important}.js .reveal{opacity:1 !important;transform:none !important}}
 </style>
+
 <script>document.documentElement.classList.add('js');</script>
 </head>
 <body>
 <div id="bar"></div>
+
+<nav class="nav"><div class="nav-inner"><a class="nav-brand" href="../index.html">HAO TIEU</a><div class="nav-links"><a href="../index.html">Portfolio</a><a href="../blogs.html">Blogs</a><a href="../essentials.html" class="active">Data Engineer Essentials</a></div></div></nav>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs>
 <symbol id="i-question" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.6 9.4a2.5 2.5 0 1 1 3.3 2.4c-.6.2-.9.8-.9 1.5v.6M12 17h.01"/></symbol>
 <symbol id="i-layers" viewBox="0 0 24 24"><path d="m12 3 9 4.8-9 4.8-9-4.8 9-4.8Z"/><path d="m3 12.6 9 4.8 9-4.8M3 17.2l9 4.8 9-4.8"/></symbol>
@@ -212,43 +226,43 @@
 <figure class="fig reveal">
 <svg viewBox="0 0 760 356" width="100%" aria-label="The Linux stack from your keystroke down to the hardware: you, the shell, the syscall interface, the kernel, and the hardware">
   <defs>
-    <marker id="l-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#F5BD1F"/></marker>
+    <marker id="l-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#9AA0B4"/></marker>
   </defs>
   <text x="380" y="20" font-size="10.5" fill="#9aa0b4" text-anchor="middle" letter-spacing="1.5">FROM YOUR KEYSTROKE TO THE HARDWARE</text>
 
-  <rect x="170" y="34" width="380" height="42" rx="7" fill="#1a1608" stroke="#F5BD1F"/>
-  <text x="360" y="52" font-size="12" fill="#FFD97A" font-weight="700" text-anchor="middle">YOU</text>
+  <rect x="170" y="34" width="380" height="42" rx="7" fill="#1D1D26" stroke="#9AA0B4"/>
+  <text x="360" y="52" font-size="12" fill="#9AA0B4" font-weight="700" text-anchor="middle">YOU</text>
   <text x="360" y="68" font-size="9.5" fill="#cdd0dd" text-anchor="middle">a command, or a script</text>
 
-  <rect x="170" y="98" width="380" height="46" rx="7" fill="#171310" stroke="#E8873A"/>
-  <text x="360" y="117" font-size="12" fill="#E8873A" font-weight="700" text-anchor="middle">SHELL &#183; bash</text>
+  <rect x="170" y="98" width="380" height="46" rx="7" fill="#1D1D26" stroke="#9AA0B4"/>
+  <text x="360" y="117" font-size="12" fill="#9AA0B4" font-weight="700" text-anchor="middle">SHELL &#183; bash</text>
   <text x="360" y="134" font-size="9.5" fill="#cdd0dd" text-anchor="middle">expands globs and $VARS &#183; finds the binary on $PATH &#183; fork + exec</text>
-  <text x="566" y="112" font-size="9" fill="#6b7280">just a program.</text>
-  <text x="566" y="126" font-size="9" fill="#6b7280">not the OS.</text>
+  <text x="566" y="112" font-size="9" fill="#6B6B78">just a program.</text>
+  <text x="566" y="126" font-size="9" fill="#6B6B78">not the OS.</text>
 
-  <rect x="170" y="166" width="380" height="38" rx="7" fill="#101018" stroke="#5AC8FF" stroke-dasharray="5,3"/>
+  <rect x="170" y="166" width="380" height="38" rx="7" fill="#17171E" stroke="#5AC8FF" stroke-dasharray="5,3"/>
   <text x="360" y="181" font-size="11" fill="#5AC8FF" font-weight="700" text-anchor="middle">SYSCALL INTERFACE</text>
   <text x="360" y="196" font-size="9" fill="#9aa0b4" text-anchor="middle">open() &#183; read() &#183; write() &#183; fork() &#183; execve()</text>
-  <text x="566" y="182" font-size="9" fill="#6b7280">the only door</text>
-  <text x="566" y="196" font-size="9" fill="#6b7280">into the kernel.</text>
+  <text x="566" y="182" font-size="9" fill="#6B6B78">the only door</text>
+  <text x="566" y="196" font-size="9" fill="#6B6B78">into the kernel.</text>
 
-  <rect x="170" y="226" width="380" height="74" rx="7" fill="#1a1608" stroke="#F5BD1F"/>
-  <text x="360" y="245" font-size="12" fill="#FFD97A" font-weight="700" text-anchor="middle">KERNEL</text>
-  <rect x="184" y="256" width="84" height="30" rx="4" fill="#0d0d13" stroke="#3a3320"/>
+  <rect x="170" y="226" width="380" height="74" rx="7" fill="#1D1D26" stroke="#9AA0B4"/>
+  <text x="360" y="245" font-size="12" fill="#9AA0B4" font-weight="700" text-anchor="middle">KERNEL</text>
+  <rect x="184" y="256" width="84" height="30" rx="4" fill="#101017" stroke="#1D1D26"/>
   <text x="226" y="275" font-size="8.5" fill="#cdd0dd" text-anchor="middle">scheduler</text>
-  <rect x="276" y="256" width="84" height="30" rx="4" fill="#0d0d13" stroke="#3a3320"/>
+  <rect x="276" y="256" width="84" height="30" rx="4" fill="#101017" stroke="#1D1D26"/>
   <text x="318" y="275" font-size="8.5" fill="#cdd0dd" text-anchor="middle">filesystem</text>
-  <rect x="368" y="256" width="84" height="30" rx="4" fill="#0d0d13" stroke="#3a3320"/>
+  <rect x="368" y="256" width="84" height="30" rx="4" fill="#101017" stroke="#1D1D26"/>
   <text x="410" y="275" font-size="8.5" fill="#cdd0dd" text-anchor="middle">network</text>
-  <rect x="460" y="256" width="76" height="30" rx="4" fill="#0d0d13" stroke="#3a3320"/>
+  <rect x="460" y="256" width="76" height="30" rx="4" fill="#101017" stroke="#1D1D26"/>
   <text x="498" y="275" font-size="8.5" fill="#cdd0dd" text-anchor="middle">memory</text>
-  <text x="566" y="262" font-size="9" fill="#6b7280">owns the hardware.</text>
-  <text x="566" y="276" font-size="9" fill="#6b7280">does the real work.</text>
+  <text x="566" y="262" font-size="9" fill="#6B6B78">owns the hardware.</text>
+  <text x="566" y="276" font-size="9" fill="#6B6B78">does the real work.</text>
 
-  <rect x="170" y="312" width="380" height="34" rx="7" fill="#171310" stroke="#4a4a55"/>
+  <rect x="170" y="312" width="380" height="34" rx="7" fill="#1D1D26" stroke="#4a4a55"/>
   <text x="360" y="334" font-size="10.5" fill="#9aa0b4" text-anchor="middle">HARDWARE &#183; CPU &#183; RAM &#183; disk &#183; network card</text>
 
-  <g stroke="#F5BD1F" stroke-width="1.5" fill="none">
+  <g stroke="#9AA0B4" stroke-width="1.5" fill="none">
     <path d="M360 76 V 92" marker-end="url(#l-a)"/>
     <path d="M360 144 V 160" marker-end="url(#l-a)"/>
     <path d="M360 204 V 220" marker-end="url(#l-a)"/>
@@ -272,53 +286,53 @@
 <svg viewBox="0 0 760 336" width="100%" aria-label="The Linux filesystem hierarchy: the directories under root and what a data engineer uses each one for">
   <text x="380" y="20" font-size="10.5" fill="#9aa0b4" text-anchor="middle" letter-spacing="1.5">ONE TREE &#183; AND THE PARTS YOU ACTUALLY TOUCH</text>
 
-  <rect x="26" y="150" width="46" height="34" rx="6" fill="#1a1608" stroke="#F5BD1F"/>
-  <text x="49" y="172" font-size="14" fill="#FFD97A" font-weight="700" text-anchor="middle">/</text>
-  <path d="M72 167 H 96" stroke="#3a3320" fill="none"/>
-  <line x1="96" y1="50" x2="96" y2="300" stroke="#3a3320"/>
+  <rect x="26" y="150" width="46" height="34" rx="6" fill="#1D1D26" stroke="#9AA0B4"/>
+  <text x="49" y="172" font-size="14" fill="#9AA0B4" font-weight="700" text-anchor="middle">/</text>
+  <path d="M72 167 H 96" stroke="#1D1D26" fill="none"/>
+  <line x1="96" y1="50" x2="96" y2="300" stroke="#1D1D26"/>
 
   <g font-size="10" font-weight="700">
-    <line x1="96" y1="50" x2="116" y2="50" stroke="#3a3320"/>
-    <rect x="116" y="36" width="104" height="28" rx="5" fill="#101018" stroke="#3a3320"/>
-    <text x="130" y="55" fill="#FFD97A">/etc</text>
+    <line x1="96" y1="50" x2="116" y2="50" stroke="#1D1D26"/>
+    <rect x="116" y="36" width="104" height="28" rx="5" fill="#17171E" stroke="#1D1D26"/>
+    <text x="130" y="55" fill="#9AA0B4">/etc</text>
     <text x="234" y="55" font-size="9.5" font-weight="400" fill="#cdd0dd">config for everything &#183; cron jobs live in /etc/cron.d</text>
 
-    <line x1="96" y1="86" x2="116" y2="86" stroke="#3a3320"/>
-    <rect x="116" y="72" width="104" height="28" rx="5" fill="#101018" stroke="#3a3320"/>
-    <text x="130" y="91" fill="#FFD97A">/var</text>
+    <line x1="96" y1="86" x2="116" y2="86" stroke="#1D1D26"/>
+    <rect x="116" y="72" width="104" height="28" rx="5" fill="#17171E" stroke="#1D1D26"/>
+    <text x="130" y="91" fill="#9AA0B4">/var</text>
     <text x="234" y="91" font-size="9.5" font-weight="400" fill="#cdd0dd">things that grow &#183; /var/log is where you go when it breaks</text>
 
-    <line x1="96" y1="122" x2="116" y2="122" stroke="#3a3320"/>
-    <rect x="116" y="108" width="104" height="28" rx="5" fill="#101018" stroke="#3a3320"/>
-    <text x="130" y="127" fill="#FFD97A">/home</text>
+    <line x1="96" y1="122" x2="116" y2="122" stroke="#1D1D26"/>
+    <rect x="116" y="108" width="104" height="28" rx="5" fill="#17171E" stroke="#1D1D26"/>
+    <text x="130" y="127" fill="#9AA0B4">/home</text>
     <text x="234" y="127" font-size="9.5" font-weight="400" fill="#cdd0dd">your stuff &#183; ~/.ssh, ~/.bashrc, your scripts</text>
 
-    <line x1="96" y1="158" x2="116" y2="158" stroke="#3a3320"/>
-    <rect x="116" y="144" width="104" height="28" rx="5" fill="#101018" stroke="#3a3320"/>
-    <text x="130" y="163" fill="#FFD97A">/tmp</text>
+    <line x1="96" y1="158" x2="116" y2="158" stroke="#1D1D26"/>
+    <rect x="116" y="144" width="104" height="28" rx="5" fill="#17171E" stroke="#1D1D26"/>
+    <text x="130" y="163" fill="#9AA0B4">/tmp</text>
     <text x="234" y="163" font-size="9.5" font-weight="400" fill="#cdd0dd">scratch space &#183; wiped on reboot &#183; fills up and kills jobs</text>
 
-    <line x1="96" y1="194" x2="116" y2="194" stroke="#3a3320"/>
-    <rect x="116" y="180" width="104" height="28" rx="5" fill="#101018" stroke="#3a3320"/>
-    <text x="130" y="199" fill="#FFD97A">/mnt</text>
+    <line x1="96" y1="194" x2="116" y2="194" stroke="#1D1D26"/>
+    <rect x="116" y="180" width="104" height="28" rx="5" fill="#17171E" stroke="#1D1D26"/>
+    <text x="130" y="199" fill="#9AA0B4">/mnt</text>
     <text x="234" y="199" font-size="9.5" font-weight="400" fill="#cdd0dd">mounted disks &#183; the big data volume is usually here</text>
 
-    <line x1="96" y1="230" x2="116" y2="230" stroke="#3a3320"/>
-    <rect x="116" y="216" width="104" height="28" rx="5" fill="#101018" stroke="#3a3320"/>
-    <text x="130" y="235" fill="#FFD97A">/usr</text>
+    <line x1="96" y1="230" x2="116" y2="230" stroke="#1D1D26"/>
+    <rect x="116" y="216" width="104" height="28" rx="5" fill="#17171E" stroke="#1D1D26"/>
+    <text x="130" y="235" fill="#9AA0B4">/usr</text>
     <text x="234" y="235" font-size="9.5" font-weight="400" fill="#cdd0dd">installed programs &#183; /usr/bin/python3 lives here</text>
 
-    <line x1="96" y1="266" x2="116" y2="266" stroke="#3a3320"/>
-    <rect x="116" y="252" width="104" height="28" rx="5" fill="#101018" stroke="#3a3320"/>
-    <text x="130" y="271" fill="#FFD97A">/opt</text>
+    <line x1="96" y1="266" x2="116" y2="266" stroke="#1D1D26"/>
+    <rect x="116" y="252" width="104" height="28" rx="5" fill="#17171E" stroke="#1D1D26"/>
+    <text x="130" y="271" fill="#9AA0B4">/opt</text>
     <text x="234" y="271" font-size="9.5" font-weight="400" fill="#cdd0dd">third-party apps &#183; a good home for your pipeline code</text>
 
-    <line x1="96" y1="300" x2="116" y2="300" stroke="#3a3320"/>
-    <rect x="116" y="286" width="104" height="28" rx="5" fill="#101018" stroke="#5AC8FF"/>
+    <line x1="96" y1="300" x2="116" y2="300" stroke="#1D1D26"/>
+    <rect x="116" y="286" width="104" height="28" rx="5" fill="#17171E" stroke="#5AC8FF"/>
     <text x="130" y="305" fill="#5AC8FF">/proc</text>
     <text x="234" y="305" font-size="9.5" font-weight="400" fill="#5AC8FF">not a disk at all &#183; the kernel, pretending to be files</text>
   </g>
-  <text x="380" y="330" font-size="9.5" fill="#6b7280" text-anchor="middle">A disk is not a letter. It is mounted at a path &#8212; and after that it is just part of the tree.</text>
+  <text x="380" y="330" font-size="9.5" fill="#6B6B78" text-anchor="middle">A disk is not a letter. It is mounted at a path &#8212; and after that it is just part of the tree.</text>
 </svg>
 <figcaption>You do not need to memorise the hierarchy. You need four reflexes: logs are in <code>/var/log</code>, config is in <code>/etc</code>, scratch is <code>/tmp</code> (and it fills up), and data volumes get mounted under <code>/mnt</code>.</figcaption>
 </figure>
@@ -339,15 +353,15 @@
 <svg viewBox="0 0 760 250" width="100%" aria-label="Absolute paths start from root and ignore where you are; relative paths are resolved from your current directory">
   <defs>
     <marker id="l-b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#5AC8FF"/></marker>
-    <marker id="l-c" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#F5BD1F"/></marker>
+    <marker id="l-c" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#9AA0B4"/></marker>
   </defs>
   <text x="380" y="20" font-size="10.5" fill="#9aa0b4" text-anchor="middle" letter-spacing="1.5">YOU ARE HERE: /home/hao/etl</text>
 
   <text x="30" y="58" font-size="10" fill="#5AC8FF" font-weight="700">ABSOLUTE &#183; cd /var/log</text>
-  <text x="30" y="74" font-size="9" fill="#6b7280">starts at the root. does not care where you were.</text>
-  <rect x="30" y="86" width="52" height="30" rx="5" fill="#101018" stroke="#5AC8FF"/>
+  <text x="30" y="74" font-size="9" fill="#6B6B78">starts at the root. does not care where you were.</text>
+  <rect x="30" y="86" width="52" height="30" rx="5" fill="#17171E" stroke="#5AC8FF"/>
   <text x="56" y="106" font-size="11" fill="#5AC8FF" text-anchor="middle" font-weight="700">/</text>
-  <rect x="128" y="86" width="74" height="30" rx="5" fill="#101018" stroke="#5AC8FF"/>
+  <rect x="128" y="86" width="74" height="30" rx="5" fill="#17171E" stroke="#5AC8FF"/>
   <text x="165" y="106" font-size="10" fill="#cdd0dd" text-anchor="middle">var</text>
   <rect x="248" y="86" width="74" height="30" rx="5" fill="#0e2740" stroke="#5AC8FF"/>
   <text x="285" y="106" font-size="10" fill="#5AC8FF" text-anchor="middle" font-weight="700">log</text>
@@ -355,21 +369,21 @@
     <path d="M82 101 H 122" marker-end="url(#l-b)"/>
     <path d="M202 101 H 242" marker-end="url(#l-b)"/>
   </g>
-  <text x="340" y="106" font-size="9.5" fill="#6b7280">one path, same result, from anywhere.</text>
+  <text x="340" y="106" font-size="9.5" fill="#6B6B78">one path, same result, from anywhere.</text>
 
-  <text x="30" y="158" font-size="10" fill="#F5BD1F" font-weight="700">RELATIVE &#183; cd ../data</text>
-  <text x="30" y="174" font-size="9" fill="#6b7280">resolved from where you are standing. .. means "up one".</text>
-  <rect x="30" y="186" width="110" height="30" rx="5" fill="#1a1608" stroke="#F5BD1F"/>
-  <text x="85" y="206" font-size="9.5" fill="#FFD97A" text-anchor="middle" font-weight="700">~/etl (here)</text>
-  <rect x="186" y="186" width="98" height="30" rx="5" fill="#101018" stroke="#3a3320"/>
+  <text x="30" y="158" font-size="10" fill="#9AA0B4" font-weight="700">RELATIVE &#183; cd ../data</text>
+  <text x="30" y="174" font-size="9" fill="#6B6B78">resolved from where you are standing. .. means "up one".</text>
+  <rect x="30" y="186" width="110" height="30" rx="5" fill="#1D1D26" stroke="#9AA0B4"/>
+  <text x="85" y="206" font-size="9.5" fill="#9AA0B4" text-anchor="middle" font-weight="700">~/etl (here)</text>
+  <rect x="186" y="186" width="98" height="30" rx="5" fill="#17171E" stroke="#1D1D26"/>
   <text x="235" y="206" font-size="9.5" fill="#cdd0dd" text-anchor="middle">/home/hao</text>
-  <rect x="330" y="186" width="110" height="30" rx="5" fill="#1a1608" stroke="#F5BD1F"/>
-  <text x="385" y="206" font-size="9.5" fill="#FFD97A" text-anchor="middle" font-weight="700">/home/hao/data</text>
-  <g stroke="#F5BD1F" stroke-width="1.5" fill="none">
+  <rect x="330" y="186" width="110" height="30" rx="5" fill="#1D1D26" stroke="#9AA0B4"/>
+  <text x="385" y="206" font-size="9.5" fill="#9AA0B4" text-anchor="middle" font-weight="700">/home/hao/data</text>
+  <g stroke="#9AA0B4" stroke-width="1.5" fill="none">
     <path d="M140 201 H 180" marker-end="url(#l-c)"/>
     <path d="M284 201 H 324" marker-end="url(#l-c)"/>
   </g>
-  <text x="458" y="206" font-size="9.5" fill="#6b7280">move the script, and this breaks.</text>
+  <text x="458" y="206" font-size="9.5" fill="#6B6B78">move the script, and this breaks.</text>
 
   <text x="380" y="240" font-size="10" fill="#cdd0dd" text-anchor="middle">In anything scheduled, use absolute paths. Cron will not be standing where you were.</text>
 </svg>
@@ -420,54 +434,54 @@
 <svg viewBox="0 0 760 322" width="100%" aria-label="Decoding the permission string rwxr-xr-- into the octal number 754, showing owner, group and others triads">
   <text x="380" y="20" font-size="10.5" fill="#9aa0b4" text-anchor="middle" letter-spacing="1.5">READING -rwxr-xr-- &#183; AND WHY IT IS 754</text>
 
-  <rect x="26" y="72" width="40" height="42" rx="5" fill="#101018" stroke="#4a4a55"/>
+  <rect x="26" y="72" width="40" height="42" rx="5" fill="#17171E" stroke="#4a4a55"/>
   <text x="46" y="99" font-size="16" fill="#9aa0b4" text-anchor="middle" font-family="monospace">-</text>
-  <text x="46" y="62" font-size="8.5" fill="#6b7280" text-anchor="middle">type</text>
-  <text x="46" y="130" font-size="8" fill="#6b7280" text-anchor="middle">- file</text>
-  <text x="46" y="142" font-size="8" fill="#6b7280" text-anchor="middle">d dir</text>
+  <text x="46" y="62" font-size="8.5" fill="#6B6B78" text-anchor="middle">type</text>
+  <text x="46" y="130" font-size="8" fill="#6B6B78" text-anchor="middle">- file</text>
+  <text x="46" y="142" font-size="8" fill="#6B6B78" text-anchor="middle">d dir</text>
 
-  <text x="146" y="62" font-size="10" fill="#F5BD1F" font-weight="700" text-anchor="middle">OWNER</text>
-  <rect x="84" y="72" width="124" height="42" rx="5" fill="#1a1608" stroke="#F5BD1F"/>
-  <text x="146" y="100" font-size="17" fill="#FFD97A" text-anchor="middle" font-family="monospace" letter-spacing="6">rwx</text>
-  <text x="146" y="146" font-size="24" fill="#F5BD1F" text-anchor="middle" font-weight="700">7</text>
-  <text x="146" y="164" font-size="8.5" fill="#6b7280" text-anchor="middle">4+2+1</text>
+  <text x="146" y="62" font-size="10" fill="#9AA0B4" font-weight="700" text-anchor="middle">OWNER</text>
+  <rect x="84" y="72" width="124" height="42" rx="5" fill="#1D1D26" stroke="#9AA0B4"/>
+  <text x="146" y="100" font-size="17" fill="#9AA0B4" text-anchor="middle" font-family="monospace" letter-spacing="6">rwx</text>
+  <text x="146" y="146" font-size="24" fill="#9AA0B4" text-anchor="middle" font-weight="700">7</text>
+  <text x="146" y="164" font-size="8.5" fill="#6B6B78" text-anchor="middle">4+2+1</text>
 
-  <text x="290" y="62" font-size="10" fill="#E8873A" font-weight="700" text-anchor="middle">GROUP</text>
-  <rect x="228" y="72" width="124" height="42" rx="5" fill="#1c1409" stroke="#E8873A"/>
-  <text x="290" y="100" font-size="17" fill="#E8873A" text-anchor="middle" font-family="monospace" letter-spacing="6">r-x</text>
-  <text x="290" y="146" font-size="24" fill="#E8873A" text-anchor="middle" font-weight="700">5</text>
-  <text x="290" y="164" font-size="8.5" fill="#6b7280" text-anchor="middle">4+0+1</text>
+  <text x="290" y="62" font-size="10" fill="#9AA0B4" font-weight="700" text-anchor="middle">GROUP</text>
+  <rect x="228" y="72" width="124" height="42" rx="5" fill="#1c1409" stroke="#9AA0B4"/>
+  <text x="290" y="100" font-size="17" fill="#9AA0B4" text-anchor="middle" font-family="monospace" letter-spacing="6">r-x</text>
+  <text x="290" y="146" font-size="24" fill="#9AA0B4" text-anchor="middle" font-weight="700">5</text>
+  <text x="290" y="164" font-size="8.5" fill="#6B6B78" text-anchor="middle">4+0+1</text>
 
   <text x="434" y="62" font-size="10" fill="#5AC8FF" font-weight="700" text-anchor="middle">OTHERS</text>
   <rect x="372" y="72" width="124" height="42" rx="5" fill="#101a24" stroke="#5AC8FF"/>
   <text x="434" y="100" font-size="17" fill="#5AC8FF" text-anchor="middle" font-family="monospace" letter-spacing="6">r--</text>
   <text x="434" y="146" font-size="24" fill="#5AC8FF" text-anchor="middle" font-weight="700">4</text>
-  <text x="434" y="164" font-size="8.5" fill="#6b7280" text-anchor="middle">4+0+0</text>
+  <text x="434" y="164" font-size="8.5" fill="#6B6B78" text-anchor="middle">4+0+0</text>
 
-  <rect x="540" y="66" width="196" height="104" rx="7" fill="#101018" stroke="#3a3320"/>
+  <rect x="540" y="66" width="196" height="104" rx="7" fill="#17171E" stroke="#1D1D26"/>
   <text x="638" y="86" font-size="9.5" fill="#9aa0b4" text-anchor="middle" letter-spacing="1">EACH BIT HAS A VALUE</text>
-  <text x="560" y="108" font-size="11" fill="#FFD97A" font-family="monospace">r = 4</text>
-  <text x="628" y="108" font-size="9" fill="#6b7280">read</text>
-  <text x="560" y="130" font-size="11" fill="#FFD97A" font-family="monospace">w = 2</text>
-  <text x="628" y="130" font-size="9" fill="#6b7280">write</text>
-  <text x="560" y="152" font-size="11" fill="#FFD97A" font-family="monospace">x = 1</text>
-  <text x="628" y="152" font-size="9" fill="#6b7280">execute</text>
+  <text x="560" y="108" font-size="11" fill="#9AA0B4" font-family="monospace">r = 4</text>
+  <text x="628" y="108" font-size="9" fill="#6B6B78">read</text>
+  <text x="560" y="130" font-size="11" fill="#9AA0B4" font-family="monospace">w = 2</text>
+  <text x="628" y="130" font-size="9" fill="#6B6B78">write</text>
+  <text x="560" y="152" font-size="11" fill="#9AA0B4" font-family="monospace">x = 1</text>
+  <text x="628" y="152" font-size="9" fill="#6B6B78">execute</text>
 
-  <line x1="26" y1="188" x2="734" y2="188" stroke="#2c2c36" stroke-dasharray="4,3"/>
+  <line x1="26" y1="188" x2="734" y2="188" stroke="#34343F" stroke-dasharray="4,3"/>
 
   <text x="26" y="212" font-size="10" fill="#9aa0b4" letter-spacing="1">ON A DIRECTORY THE SAME BITS MEAN SOMETHING ELSE</text>
-  <rect x="26" y="224" width="222" height="52" rx="6" fill="#101018" stroke="#3a3320"/>
-  <text x="40" y="244" font-size="10" fill="#FFD97A" font-family="monospace">r</text>
+  <rect x="26" y="224" width="222" height="52" rx="6" fill="#17171E" stroke="#1D1D26"/>
+  <text x="40" y="244" font-size="10" fill="#9AA0B4" font-family="monospace">r</text>
   <text x="60" y="244" font-size="9.5" fill="#cdd0dd">list the names inside</text>
-  <text x="40" y="264" font-size="10" fill="#FFD97A" font-family="monospace">x</text>
+  <text x="40" y="264" font-size="10" fill="#9AA0B4" font-family="monospace">x</text>
   <text x="60" y="264" font-size="9.5" fill="#cdd0dd">enter it / pass through it</text>
 
-  <rect x="264" y="224" width="248" height="52" rx="6" fill="#101018" stroke="#3a3320"/>
-  <text x="278" y="244" font-size="10" fill="#FFD97A" font-family="monospace">w</text>
+  <rect x="264" y="224" width="248" height="52" rx="6" fill="#17171E" stroke="#1D1D26"/>
+  <text x="278" y="244" font-size="10" fill="#9AA0B4" font-family="monospace">w</text>
   <text x="298" y="244" font-size="9.5" fill="#cdd0dd">create and DELETE files in it</text>
-  <text x="298" y="264" font-size="9" fill="#FF6B8B">&#8212; even files you cannot write</text>
+  <text x="298" y="264" font-size="9" fill="#9AA0B4">&#8212; even files you cannot write</text>
 
-  <rect x="528" y="224" width="208" height="52" rx="6" fill="#101018" stroke="#5AC8FF"/>
+  <rect x="528" y="224" width="208" height="52" rx="6" fill="#17171E" stroke="#5AC8FF"/>
   <text x="632" y="244" font-size="9.5" fill="#5AC8FF" text-anchor="middle">no x on a parent dir</text>
   <text x="632" y="264" font-size="9.5" fill="#5AC8FF" text-anchor="middle">= denied, however open the file is</text>
 
@@ -509,43 +523,43 @@
 <figure class="fig reveal">
 <svg viewBox="0 0 760 296" width="100%" aria-label="A process has three streams: stdin 0, stdout 1 and stderr 2, which can be redirected separately">
   <defs>
-    <marker id="l-d" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#F5BD1F"/></marker>
-    <marker id="l-e" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#FF6B8B"/></marker>
+    <marker id="l-d" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#9AA0B4"/></marker>
+    <marker id="l-e" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#9AA0B4"/></marker>
   </defs>
   <text x="380" y="20" font-size="10.5" fill="#9aa0b4" text-anchor="middle" letter-spacing="1.5">ONE PROCESS &#183; THREE CHANNELS</text>
 
-  <rect x="26" y="112" width="150" height="52" rx="7" fill="#101018" stroke="#3a3320"/>
+  <rect x="26" y="112" width="150" height="52" rx="7" fill="#17171E" stroke="#1D1D26"/>
   <text x="101" y="136" font-size="10" fill="#cdd0dd" text-anchor="middle">a file, or the output</text>
   <text x="101" y="151" font-size="10" fill="#cdd0dd" text-anchor="middle">of the last command</text>
 
-  <rect x="286" y="96" width="170" height="84" rx="8" fill="#1a1608" stroke="#F5BD1F"/>
-  <text x="371" y="128" font-size="13" fill="#FFD97A" text-anchor="middle" font-weight="700">your program</text>
+  <rect x="286" y="96" width="170" height="84" rx="8" fill="#1D1D26" stroke="#9AA0B4"/>
+  <text x="371" y="128" font-size="13" fill="#9AA0B4" text-anchor="middle" font-weight="700">your program</text>
   <text x="371" y="148" font-size="9.5" fill="#cdd0dd" text-anchor="middle">grep &#183; awk &#183; python</text>
 
-  <rect x="566" y="56" width="168" height="46" rx="7" fill="#101018" stroke="#F5BD1F"/>
-  <text x="650" y="75" font-size="9.5" fill="#FFD97A" text-anchor="middle" font-weight="700">the results</text>
-  <text x="650" y="91" font-size="9" fill="#6b7280" text-anchor="middle">screen, file, or next command</text>
+  <rect x="566" y="56" width="168" height="46" rx="7" fill="#17171E" stroke="#9AA0B4"/>
+  <text x="650" y="75" font-size="9.5" fill="#9AA0B4" text-anchor="middle" font-weight="700">the results</text>
+  <text x="650" y="91" font-size="9" fill="#6B6B78" text-anchor="middle">screen, file, or next command</text>
 
-  <rect x="566" y="176" width="168" height="46" rx="7" fill="#241318" stroke="#FF6B8B"/>
-  <text x="650" y="195" font-size="9.5" fill="#FF6B8B" text-anchor="middle" font-weight="700">the complaints</text>
-  <text x="650" y="211" font-size="9" fill="#6b7280" text-anchor="middle">kept separate ON PURPOSE</text>
+  <rect x="566" y="176" width="168" height="46" rx="7" fill="#241318" stroke="#9AA0B4"/>
+  <text x="650" y="195" font-size="9.5" fill="#9AA0B4" text-anchor="middle" font-weight="700">the complaints</text>
+  <text x="650" y="211" font-size="9" fill="#6B6B78" text-anchor="middle">kept separate ON PURPOSE</text>
 
-  <g stroke="#F5BD1F" stroke-width="1.6" fill="none">
+  <g stroke="#9AA0B4" stroke-width="1.6" fill="none">
     <path d="M176 138 H 280" marker-end="url(#l-d)"/>
     <path d="M456 124 C 500 124, 512 79, 560 79" marker-end="url(#l-d)"/>
   </g>
-  <path d="M456 152 C 500 152, 512 199, 560 199" stroke="#FF6B8B" stroke-width="1.6" fill="none" marker-end="url(#l-e)"/>
+  <path d="M456 152 C 500 152, 512 199, 560 199" stroke="#9AA0B4" stroke-width="1.6" fill="none" marker-end="url(#l-e)"/>
 
-  <circle cx="286" cy="138" r="11" fill="#0d0d13" stroke="#F5BD1F"/>
-  <text x="286" y="142" font-size="10" fill="#FFD97A" text-anchor="middle" font-weight="700">0</text>
-  <circle cx="456" cy="124" r="11" fill="#0d0d13" stroke="#F5BD1F"/>
-  <text x="456" y="128" font-size="10" fill="#FFD97A" text-anchor="middle" font-weight="700">1</text>
-  <circle cx="456" cy="152" r="11" fill="#0d0d13" stroke="#FF6B8B"/>
-  <text x="456" y="156" font-size="10" fill="#FF6B8B" text-anchor="middle" font-weight="700">2</text>
+  <circle cx="286" cy="138" r="11" fill="#101017" stroke="#9AA0B4"/>
+  <text x="286" y="142" font-size="10" fill="#9AA0B4" text-anchor="middle" font-weight="700">0</text>
+  <circle cx="456" cy="124" r="11" fill="#101017" stroke="#9AA0B4"/>
+  <text x="456" y="128" font-size="10" fill="#9AA0B4" text-anchor="middle" font-weight="700">1</text>
+  <circle cx="456" cy="152" r="11" fill="#101017" stroke="#9AA0B4"/>
+  <text x="456" y="156" font-size="10" fill="#9AA0B4" text-anchor="middle" font-weight="700">2</text>
 
-  <text x="228" y="120" font-size="9" fill="#6b7280" text-anchor="middle">stdin</text>
-  <text x="512" y="74" font-size="9" fill="#6b7280" text-anchor="middle">stdout</text>
-  <text x="512" y="214" font-size="9" fill="#FF6B8B" text-anchor="middle">stderr</text>
+  <text x="228" y="120" font-size="9" fill="#6B6B78" text-anchor="middle">stdin</text>
+  <text x="512" y="74" font-size="9" fill="#6B6B78" text-anchor="middle">stdout</text>
+  <text x="512" y="214" font-size="9" fill="#9AA0B4" text-anchor="middle">stderr</text>
 
   <text x="380" y="256" font-size="10" fill="#cdd0dd" text-anchor="middle">cmd &gt; out.txt  redirects only channel 1. Errors still reach you &#8212; that is the design, not a bug.</text>
   <text x="380" y="276" font-size="10" fill="#9aa0b4" text-anchor="middle">cmd &gt; out.txt 2&gt;&amp;1  sends 2 to wherever 1 is now pointing. Order matters.</text>
@@ -615,51 +629,51 @@ cmd1 | cmd2 | cmd3       <span class="c"># a pipeline: 1's stdout becomes 2's st
 <figure class="fig reveal">
 <svg viewBox="0 0 760 330" width="100%" aria-label="The awk execution model: BEGIN runs once, the main block runs per line with fields, END runs once at the end">
   <defs>
-    <marker id="l-f" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#F5BD1F"/></marker>
+    <marker id="l-f" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#9AA0B4"/></marker>
   </defs>
   <text x="380" y="20" font-size="10.5" fill="#9aa0b4" text-anchor="middle" letter-spacing="1.5">HOW AWK THINKS &#183; ONE PASS, LINE BY LINE</text>
 
   <text x="96" y="48" font-size="10" fill="#9aa0b4" text-anchor="middle" letter-spacing="1">INPUT</text>
-  <rect x="26" y="58" width="140" height="30" rx="4" fill="#101018" stroke="#3a3320"/>
+  <rect x="26" y="58" width="140" height="30" rx="4" fill="#17171E" stroke="#1D1D26"/>
   <text x="36" y="77" font-size="9" fill="#cdd0dd" font-family="monospace">alice,eu,120</text>
-  <rect x="26" y="94" width="140" height="30" rx="4" fill="#101018" stroke="#3a3320"/>
+  <rect x="26" y="94" width="140" height="30" rx="4" fill="#17171E" stroke="#1D1D26"/>
   <text x="36" y="113" font-size="9" fill="#cdd0dd" font-family="monospace">bob,us,340</text>
-  <rect x="26" y="130" width="140" height="30" rx="4" fill="#101018" stroke="#3a3320"/>
+  <rect x="26" y="130" width="140" height="30" rx="4" fill="#17171E" stroke="#1D1D26"/>
   <text x="36" y="149" font-size="9" fill="#cdd0dd" font-family="monospace">cara,eu,90</text>
-  <text x="96" y="180" font-size="9" fill="#6b7280" text-anchor="middle">streamed &#8212; never</text>
-  <text x="96" y="193" font-size="9" fill="#6b7280" text-anchor="middle">all held in memory</text>
+  <text x="96" y="180" font-size="9" fill="#6B6B78" text-anchor="middle">streamed &#8212; never</text>
+  <text x="96" y="193" font-size="9" fill="#6B6B78" text-anchor="middle">all held in memory</text>
 
   <rect x="226" y="52" width="308" height="42" rx="6" fill="#101a24" stroke="#5AC8FF"/>
   <text x="380" y="70" font-size="11" fill="#5AC8FF" text-anchor="middle" font-weight="700">BEGIN { }</text>
   <text x="380" y="86" font-size="9" fill="#9aa0b4" text-anchor="middle">runs ONCE, before any input. set FS, print a header.</text>
 
-  <rect x="226" y="106" width="308" height="102" rx="6" fill="#1a1608" stroke="#F5BD1F"/>
-  <text x="380" y="126" font-size="11" fill="#FFD97A" text-anchor="middle" font-weight="700">{ per line }</text>
+  <rect x="226" y="106" width="308" height="102" rx="6" fill="#1D1D26" stroke="#9AA0B4"/>
+  <text x="380" y="126" font-size="11" fill="#9AA0B4" text-anchor="middle" font-weight="700">{ per line }</text>
   <text x="380" y="144" font-size="9" fill="#9aa0b4" text-anchor="middle">runs for EVERY record &#8212; the loop you never write.</text>
-  <rect x="274" y="154" width="70" height="24" rx="4" fill="#0d0d13" stroke="#3a3320"/>
-  <text x="309" y="170" font-size="9" fill="#FFD97A" text-anchor="middle" font-family="monospace">$1 alice</text>
-  <rect x="352" y="154" width="60" height="24" rx="4" fill="#0d0d13" stroke="#3a3320"/>
-  <text x="382" y="170" font-size="9" fill="#FFD97A" text-anchor="middle" font-family="monospace">$2 eu</text>
-  <rect x="420" y="154" width="66" height="24" rx="4" fill="#0d0d13" stroke="#3a3320"/>
-  <text x="453" y="170" font-size="9" fill="#FFD97A" text-anchor="middle" font-family="monospace">$3 120</text>
-  <text x="380" y="196" font-size="8.5" fill="#6b7280" text-anchor="middle">$0 = the whole line &#183; NF = 3 fields &#183; NR = line number</text>
+  <rect x="274" y="154" width="70" height="24" rx="4" fill="#101017" stroke="#1D1D26"/>
+  <text x="309" y="170" font-size="9" fill="#9AA0B4" text-anchor="middle" font-family="monospace">$1 alice</text>
+  <rect x="352" y="154" width="60" height="24" rx="4" fill="#101017" stroke="#1D1D26"/>
+  <text x="382" y="170" font-size="9" fill="#9AA0B4" text-anchor="middle" font-family="monospace">$2 eu</text>
+  <rect x="420" y="154" width="66" height="24" rx="4" fill="#101017" stroke="#1D1D26"/>
+  <text x="453" y="170" font-size="9" fill="#9AA0B4" text-anchor="middle" font-family="monospace">$3 120</text>
+  <text x="380" y="196" font-size="8.5" fill="#6B6B78" text-anchor="middle">$0 = the whole line &#183; NF = 3 fields &#183; NR = line number</text>
 
   <rect x="226" y="220" width="308" height="42" rx="6" fill="#101a24" stroke="#5AC8FF"/>
   <text x="380" y="238" font-size="11" fill="#5AC8FF" text-anchor="middle" font-weight="700">END { }</text>
   <text x="380" y="254" font-size="9" fill="#9aa0b4" text-anchor="middle">runs ONCE, after the last line. print totals here.</text>
 
-  <rect x="586" y="106" width="148" height="102" rx="6" fill="#0f1f1d" stroke="#22D3EE"/>
-  <text x="660" y="128" font-size="10" fill="#22D3EE" text-anchor="middle" font-weight="700">OUTPUT</text>
+  <rect x="586" y="106" width="148" height="102" rx="6" fill="#0f1f1d" stroke="#28B9FF"/>
+  <text x="660" y="128" font-size="10" fill="#28B9FF" text-anchor="middle" font-weight="700">OUTPUT</text>
   <text x="660" y="150" font-size="9" fill="#cdd0dd" text-anchor="middle" font-family="monospace">eu  210</text>
   <text x="660" y="168" font-size="9" fill="#cdd0dd" text-anchor="middle" font-family="monospace">us  340</text>
-  <text x="660" y="192" font-size="8.5" fill="#6b7280" text-anchor="middle">a group-by, in one line</text>
+  <text x="660" y="192" font-size="8.5" fill="#6B6B78" text-anchor="middle">a group-by, in one line</text>
 
-  <g stroke="#F5BD1F" stroke-width="1.5" fill="none">
+  <g stroke="#9AA0B4" stroke-width="1.5" fill="none">
     <path d="M166 110 H 220" marker-end="url(#l-f)"/>
     <path d="M534 157 H 580" marker-end="url(#l-f)"/>
   </g>
   <text x="380" y="298" font-size="10" fill="#cdd0dd" text-anchor="middle">awk -F, '{ sum[$2] += $3 } END { for (k in sum) print k, sum[k] }' sales.csv</text>
-  <text x="380" y="318" font-size="9" fill="#6b7280" text-anchor="middle">split on commas &#183; accumulate the third column keyed by the second &#183; print the map at the end</text>
+  <text x="380" y="318" font-size="9" fill="#6B6B78" text-anchor="middle">split on commas &#183; accumulate the third column keyed by the second &#183; print the map at the end</text>
 </svg>
 <figcaption>awk gives you an associative array and a loop over lines, for free. That combination is a streaming GROUP BY — on a file far too big to open in pandas, over SSH, with nothing installed.</figcaption>
 </figure>
@@ -706,41 +720,41 @@ cmd1 | cmd2 | cmd3       <span class="c"># a pipeline: 1's stdout becomes 2's st
 <figure class="fig reveal">
 <svg viewBox="0 0 880 234" width="100%" aria-label="A shell pipeline: a large log is filtered, cut, sorted and counted, shrinking at each stage">
   <defs>
-    <marker id="l-g" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#F5BD1F"/></marker>
+    <marker id="l-g" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#9AA0B4"/></marker>
   </defs>
   <text x="440" y="20" font-size="10.5" fill="#9aa0b4" text-anchor="middle" letter-spacing="1.5">FIVE PROCESSES &#183; ONE LINE &#183; NOTHING EVER FULLY IN MEMORY</text>
 
-  <rect x="20" y="44" width="140" height="66" rx="7" fill="#101018" stroke="#4a4a55"/>
+  <rect x="20" y="44" width="140" height="66" rx="7" fill="#17171E" stroke="#4a4a55"/>
   <text x="90" y="68" font-size="10.5" fill="#cdd0dd" text-anchor="middle" font-weight="700">app.log</text>
-  <text x="90" y="86" font-size="9" fill="#6b7280" text-anchor="middle">the raw file</text>
+  <text x="90" y="86" font-size="9" fill="#6B6B78" text-anchor="middle">the raw file</text>
   <text x="90" y="128" font-size="10" fill="#9aa0b4" text-anchor="middle" font-weight="700">2,000,000</text>
-  <text x="90" y="142" font-size="8.5" fill="#6b7280" text-anchor="middle">lines</text>
+  <text x="90" y="142" font-size="8.5" fill="#6B6B78" text-anchor="middle">lines</text>
 
-  <rect x="190" y="44" width="140" height="66" rx="7" fill="#1a1608" stroke="#F5BD1F"/>
-  <text x="260" y="68" font-size="10.5" fill="#FFD97A" text-anchor="middle" font-weight="700">grep ERROR</text>
-  <text x="260" y="86" font-size="9" fill="#6b7280" text-anchor="middle">keep matching rows</text>
+  <rect x="190" y="44" width="140" height="66" rx="7" fill="#1D1D26" stroke="#9AA0B4"/>
+  <text x="260" y="68" font-size="10.5" fill="#9AA0B4" text-anchor="middle" font-weight="700">grep ERROR</text>
+  <text x="260" y="86" font-size="9" fill="#6B6B78" text-anchor="middle">keep matching rows</text>
   <text x="260" y="128" font-size="10" fill="#9aa0b4" text-anchor="middle" font-weight="700">12,431</text>
-  <text x="260" y="142" font-size="8.5" fill="#6b7280" text-anchor="middle">lines</text>
+  <text x="260" y="142" font-size="8.5" fill="#6B6B78" text-anchor="middle">lines</text>
 
-  <rect x="360" y="44" width="140" height="66" rx="7" fill="#1a1608" stroke="#F5BD1F"/>
-  <text x="430" y="68" font-size="10.5" fill="#FFD97A" text-anchor="middle" font-weight="700">awk '{print $5}'</text>
-  <text x="430" y="86" font-size="9" fill="#6b7280" text-anchor="middle">keep one column</text>
+  <rect x="360" y="44" width="140" height="66" rx="7" fill="#1D1D26" stroke="#9AA0B4"/>
+  <text x="430" y="68" font-size="10.5" fill="#9AA0B4" text-anchor="middle" font-weight="700">awk '{print $5}'</text>
+  <text x="430" y="86" font-size="9" fill="#6B6B78" text-anchor="middle">keep one column</text>
   <text x="430" y="128" font-size="10" fill="#9aa0b4" text-anchor="middle" font-weight="700">12,431</text>
-  <text x="430" y="142" font-size="8.5" fill="#6b7280" text-anchor="middle">error codes</text>
+  <text x="430" y="142" font-size="8.5" fill="#6B6B78" text-anchor="middle">error codes</text>
 
-  <rect x="530" y="44" width="140" height="66" rx="7" fill="#1a1608" stroke="#F5BD1F"/>
-  <text x="600" y="68" font-size="10.5" fill="#FFD97A" text-anchor="middle" font-weight="700">sort</text>
-  <text x="600" y="86" font-size="9" fill="#6b7280" text-anchor="middle">group equals together</text>
+  <rect x="530" y="44" width="140" height="66" rx="7" fill="#1D1D26" stroke="#9AA0B4"/>
+  <text x="600" y="68" font-size="10.5" fill="#9AA0B4" text-anchor="middle" font-weight="700">sort</text>
+  <text x="600" y="86" font-size="9" fill="#6B6B78" text-anchor="middle">group equals together</text>
   <text x="600" y="128" font-size="10" fill="#9aa0b4" text-anchor="middle" font-weight="700">12,431</text>
-  <text x="600" y="142" font-size="8.5" fill="#6b7280" text-anchor="middle">now ordered</text>
+  <text x="600" y="142" font-size="8.5" fill="#6B6B78" text-anchor="middle">now ordered</text>
 
-  <rect x="700" y="44" width="160" height="66" rx="7" fill="#0f1f1d" stroke="#22D3EE"/>
-  <text x="780" y="68" font-size="10.5" fill="#22D3EE" text-anchor="middle" font-weight="700">uniq -c | sort -rn</text>
-  <text x="780" y="86" font-size="9" fill="#6b7280" text-anchor="middle">count, biggest first</text>
-  <text x="780" y="128" font-size="10" fill="#22D3EE" text-anchor="middle" font-weight="700">37</text>
-  <text x="780" y="142" font-size="8.5" fill="#6b7280" text-anchor="middle">distinct errors</text>
+  <rect x="700" y="44" width="160" height="66" rx="7" fill="#0f1f1d" stroke="#28B9FF"/>
+  <text x="780" y="68" font-size="10.5" fill="#28B9FF" text-anchor="middle" font-weight="700">uniq -c | sort -rn</text>
+  <text x="780" y="86" font-size="9" fill="#6B6B78" text-anchor="middle">count, biggest first</text>
+  <text x="780" y="128" font-size="10" fill="#28B9FF" text-anchor="middle" font-weight="700">37</text>
+  <text x="780" y="142" font-size="8.5" fill="#6B6B78" text-anchor="middle">distinct errors</text>
 
-  <g stroke="#F5BD1F" stroke-width="1.5" fill="none">
+  <g stroke="#9AA0B4" stroke-width="1.5" fill="none">
     <path d="M160 77 H 184" marker-end="url(#l-g)"/>
     <path d="M330 77 H 354" marker-end="url(#l-g)"/>
     <path d="M500 77 H 524" marker-end="url(#l-g)"/>
@@ -748,8 +762,8 @@ cmd1 | cmd2 | cmd3       <span class="c"># a pipeline: 1's stdout becomes 2's st
   </g>
 
   <text x="440" y="182" font-size="10.5" fill="#cdd0dd" text-anchor="middle" font-family="monospace">grep ERROR app.log | awk '{print $5}' | sort | uniq -c | sort -rn | head</text>
-  <text x="440" y="206" font-size="9.5" fill="#6b7280" text-anchor="middle">uniq only collapses ADJACENT duplicates &#8212; which is why sort always comes first. Forgetting this is the</text>
-  <text x="440" y="222" font-size="9.5" fill="#6b7280" text-anchor="middle">single most common shell mistake, and it fails quietly: you get counts of 1, and believe them.</text>
+  <text x="440" y="206" font-size="9.5" fill="#6B6B78" text-anchor="middle">uniq only collapses ADJACENT duplicates &#8212; which is why sort always comes first. Forgetting this is the</text>
+  <text x="440" y="222" font-size="9.5" fill="#6B6B78" text-anchor="middle">single most common shell mistake, and it fails quietly: you get counts of 1, and believe them.</text>
 </svg>
 <figcaption>The canonical "what is breaking most?" one-liner. Each stage is a separate process, all five run <em>at once</em>, and data flows through in a trickle — so this works identically on a 2 GB log and a 200 GB one.</figcaption>
 </figure>
@@ -789,41 +803,41 @@ cmd1 | cmd2 | cmd3       <span class="c"># a pipeline: 1's stdout becomes 2's st
 <svg viewBox="0 0 760 268" width="100%" aria-label="Foreground, background and nohup jobs; and the three signals used to stop a process">
   <text x="380" y="20" font-size="10.5" fill="#9aa0b4" text-anchor="middle" letter-spacing="1.5">RUNNING IT &#183; AND STOPPING IT</text>
 
-  <rect x="26" y="40" width="228" height="86" rx="7" fill="#101018" stroke="#3a3320"/>
+  <rect x="26" y="40" width="228" height="86" rx="7" fill="#17171E" stroke="#1D1D26"/>
   <text x="140" y="62" font-size="10.5" fill="#cdd0dd" text-anchor="middle" font-family="monospace">./job.sh</text>
-  <text x="140" y="82" font-size="9.5" fill="#FFD97A" text-anchor="middle" font-weight="700">FOREGROUND</text>
-  <text x="140" y="100" font-size="9" fill="#6b7280" text-anchor="middle">holds your terminal hostage.</text>
-  <text x="140" y="114" font-size="9" fill="#6b7280" text-anchor="middle">close the laptop &#8594; it dies.</text>
+  <text x="140" y="82" font-size="9.5" fill="#9AA0B4" text-anchor="middle" font-weight="700">FOREGROUND</text>
+  <text x="140" y="100" font-size="9" fill="#6B6B78" text-anchor="middle">holds your terminal hostage.</text>
+  <text x="140" y="114" font-size="9" fill="#6B6B78" text-anchor="middle">close the laptop &#8594; it dies.</text>
 
-  <rect x="266" y="40" width="228" height="86" rx="7" fill="#101018" stroke="#3a3320"/>
+  <rect x="266" y="40" width="228" height="86" rx="7" fill="#17171E" stroke="#1D1D26"/>
   <text x="380" y="62" font-size="10.5" fill="#cdd0dd" text-anchor="middle" font-family="monospace">./job.sh &amp;</text>
-  <text x="380" y="82" font-size="9.5" fill="#E8873A" text-anchor="middle" font-weight="700">BACKGROUND</text>
-  <text x="380" y="100" font-size="9" fill="#6b7280" text-anchor="middle">prompt comes back. jobs / fg.</text>
-  <text x="380" y="114" font-size="9" fill="#6b7280" text-anchor="middle">still dies when you log out.</text>
+  <text x="380" y="82" font-size="9.5" fill="#9AA0B4" text-anchor="middle" font-weight="700">BACKGROUND</text>
+  <text x="380" y="100" font-size="9" fill="#6B6B78" text-anchor="middle">prompt comes back. jobs / fg.</text>
+  <text x="380" y="114" font-size="9" fill="#6B6B78" text-anchor="middle">still dies when you log out.</text>
 
-  <rect x="506" y="40" width="228" height="86" rx="7" fill="#0f1f1d" stroke="#22D3EE"/>
+  <rect x="506" y="40" width="228" height="86" rx="7" fill="#0f1f1d" stroke="#28B9FF"/>
   <text x="620" y="62" font-size="10.5" fill="#cdd0dd" text-anchor="middle" font-family="monospace">nohup ./job.sh &amp;</text>
-  <text x="620" y="82" font-size="9.5" fill="#22D3EE" text-anchor="middle" font-weight="700">SURVIVES LOGOUT</text>
-  <text x="620" y="100" font-size="9" fill="#6b7280" text-anchor="middle">ignores the hangup signal.</text>
-  <text x="620" y="114" font-size="9" fill="#6b7280" text-anchor="middle">output &#8594; nohup.out</text>
+  <text x="620" y="82" font-size="9.5" fill="#28B9FF" text-anchor="middle" font-weight="700">SURVIVES LOGOUT</text>
+  <text x="620" y="100" font-size="9" fill="#6B6B78" text-anchor="middle">ignores the hangup signal.</text>
+  <text x="620" y="114" font-size="9" fill="#6B6B78" text-anchor="middle">output &#8594; nohup.out</text>
 
-  <line x1="26" y1="146" x2="734" y2="146" stroke="#2c2c36" stroke-dasharray="4,3"/>
+  <line x1="26" y1="146" x2="734" y2="146" stroke="#34343F" stroke-dasharray="4,3"/>
   <text x="26" y="170" font-size="10" fill="#9aa0b4" letter-spacing="1">THREE WAYS TO STOP IT &#183; IN ESCALATING ORDER OF RUDENESS</text>
 
-  <rect x="26" y="182" width="228" height="62" rx="7" fill="#1a1608" stroke="#F5BD1F"/>
-  <text x="140" y="202" font-size="10" fill="#FFD97A" text-anchor="middle" font-weight="700">Ctrl-C &#183; SIGINT (2)</text>
+  <rect x="26" y="182" width="228" height="62" rx="7" fill="#1D1D26" stroke="#9AA0B4"/>
+  <text x="140" y="202" font-size="10" fill="#9AA0B4" text-anchor="middle" font-weight="700">Ctrl-C &#183; SIGINT (2)</text>
   <text x="140" y="220" font-size="9" fill="#cdd0dd" text-anchor="middle">"please stop, now"</text>
-  <text x="140" y="235" font-size="8.5" fill="#6b7280" text-anchor="middle">the program can catch it and clean up</text>
+  <text x="140" y="235" font-size="8.5" fill="#6B6B78" text-anchor="middle">the program can catch it and clean up</text>
 
-  <rect x="266" y="182" width="228" height="62" rx="7" fill="#1c1409" stroke="#E8873A"/>
-  <text x="380" y="202" font-size="10" fill="#E8873A" text-anchor="middle" font-weight="700">kill PID &#183; SIGTERM (15)</text>
+  <rect x="266" y="182" width="228" height="62" rx="7" fill="#1c1409" stroke="#9AA0B4"/>
+  <text x="380" y="202" font-size="10" fill="#9AA0B4" text-anchor="middle" font-weight="700">kill PID &#183; SIGTERM (15)</text>
   <text x="380" y="220" font-size="9" fill="#cdd0dd" text-anchor="middle">the polite default</text>
-  <text x="380" y="235" font-size="8.5" fill="#6b7280" text-anchor="middle">catchable &#8212; flush buffers, close files</text>
+  <text x="380" y="235" font-size="8.5" fill="#6B6B78" text-anchor="middle">catchable &#8212; flush buffers, close files</text>
 
-  <rect x="506" y="182" width="228" height="62" rx="7" fill="#241318" stroke="#FF6B8B"/>
-  <text x="620" y="202" font-size="10" fill="#FF6B8B" text-anchor="middle" font-weight="700">kill -9 &#183; SIGKILL (9)</text>
+  <rect x="506" y="182" width="228" height="62" rx="7" fill="#241318" stroke="#9AA0B4"/>
+  <text x="620" y="202" font-size="10" fill="#9AA0B4" text-anchor="middle" font-weight="700">kill -9 &#183; SIGKILL (9)</text>
   <text x="620" y="220" font-size="9" fill="#cdd0dd" text-anchor="middle">the kernel executes it</text>
-  <text x="620" y="235" font-size="8.5" fill="#6b7280" text-anchor="middle">CANNOT be caught. half-written files.</text>
+  <text x="620" y="235" font-size="8.5" fill="#6B6B78" text-anchor="middle">CANNOT be caught. half-written files.</text>
 </svg>
 <figcaption><code>kill -9</code> is not "kill harder", it is "kill without letting it clean up". Try <code>kill</code> first and give it a few seconds — a job killed with 9 mid-write leaves a corrupt partial file that your next run will happily treat as real data.</figcaption>
 </figure>
@@ -871,61 +885,61 @@ Ctrl-Z                       <span class="c"># suspend the foreground job</span>
 <figure class="fig reveal">
 <svg viewBox="0 0 760 296" width="100%" aria-label="What the shell does to a line before the command runs: unquoted variables get split into separate words, quoted ones do not">
   <defs>
-    <marker id="l-k" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#FF6B8B"/></marker>
-    <marker id="l-m" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#22D3EE"/></marker>
+    <marker id="l-k" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#9AA0B4"/></marker>
+    <marker id="l-m" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#28B9FF"/></marker>
   </defs>
   <text x="380" y="18" font-size="10.5" fill="#9aa0b4" text-anchor="middle" letter-spacing="1.5">FILE="my report.csv" &#183; WHAT THE SHELL DOES BEFORE rm EVER RUNS</text>
 
-  <text x="26" y="46" font-size="10" fill="#FF6B8B" font-weight="700">UNQUOTED</text>
-  <rect x="26" y="56" width="156" height="52" rx="6" fill="#241318" stroke="#FF6B8B"/>
-  <text x="104" y="78" font-size="10.5" fill="#FF6B8B" text-anchor="middle" font-family="monospace">rm $FILE</text>
-  <text x="104" y="96" font-size="8.5" fill="#6b7280" text-anchor="middle">what you wrote</text>
+  <text x="26" y="46" font-size="10" fill="#9AA0B4" font-weight="700">UNQUOTED</text>
+  <rect x="26" y="56" width="156" height="52" rx="6" fill="#241318" stroke="#9AA0B4"/>
+  <text x="104" y="78" font-size="10.5" fill="#9AA0B4" text-anchor="middle" font-family="monospace">rm $FILE</text>
+  <text x="104" y="96" font-size="8.5" fill="#6B6B78" text-anchor="middle">what you wrote</text>
 
-  <rect x="206" y="56" width="156" height="52" rx="6" fill="#101018" stroke="#3a3320"/>
+  <rect x="206" y="56" width="156" height="52" rx="6" fill="#17171E" stroke="#1D1D26"/>
   <text x="284" y="78" font-size="9.5" fill="#cdd0dd" text-anchor="middle" font-family="monospace">rm my report.csv</text>
-  <text x="284" y="96" font-size="8.5" fill="#6b7280" text-anchor="middle">1 &#183; value substituted</text>
+  <text x="284" y="96" font-size="8.5" fill="#6B6B78" text-anchor="middle">1 &#183; value substituted</text>
 
-  <rect x="386" y="56" width="156" height="52" rx="6" fill="#241318" stroke="#FF6B8B"/>
-  <text x="464" y="78" font-size="9" fill="#FF6B8B" text-anchor="middle" font-family="monospace">[rm][my][report.csv]</text>
-  <text x="464" y="96" font-size="8.5" fill="#FF6B8B" text-anchor="middle">2 &#183; SPLIT on the space</text>
+  <rect x="386" y="56" width="156" height="52" rx="6" fill="#241318" stroke="#9AA0B4"/>
+  <text x="464" y="78" font-size="9" fill="#9AA0B4" text-anchor="middle" font-family="monospace">[rm][my][report.csv]</text>
+  <text x="464" y="96" font-size="8.5" fill="#9AA0B4" text-anchor="middle">2 &#183; SPLIT on the space</text>
 
-  <rect x="566" y="56" width="168" height="52" rx="6" fill="#241318" stroke="#FF6B8B"/>
-  <text x="650" y="78" font-size="9.5" fill="#FF6B8B" text-anchor="middle" font-weight="700">rm gets 2 arguments</text>
+  <rect x="566" y="56" width="168" height="52" rx="6" fill="#241318" stroke="#9AA0B4"/>
+  <text x="650" y="78" font-size="9.5" fill="#9AA0B4" text-anchor="middle" font-weight="700">rm gets 2 arguments</text>
   <text x="650" y="96" font-size="8.5" fill="#cdd0dd" text-anchor="middle">deletes two wrong files</text>
 
-  <g stroke="#FF6B8B" stroke-width="1.5" fill="none">
+  <g stroke="#9AA0B4" stroke-width="1.5" fill="none">
     <path d="M182 82 H 200" marker-end="url(#l-k)"/>
     <path d="M362 82 H 380" marker-end="url(#l-k)"/>
     <path d="M542 82 H 560" marker-end="url(#l-k)"/>
   </g>
 
-  <line x1="26" y1="132" x2="734" y2="132" stroke="#2c2c36" stroke-dasharray="4,3"/>
+  <line x1="26" y1="132" x2="734" y2="132" stroke="#34343F" stroke-dasharray="4,3"/>
 
-  <text x="26" y="158" font-size="10" fill="#22D3EE" font-weight="700">QUOTED</text>
-  <rect x="26" y="168" width="156" height="52" rx="6" fill="#0f1f1d" stroke="#22D3EE"/>
-  <text x="104" y="190" font-size="10.5" fill="#22D3EE" text-anchor="middle" font-family="monospace">rm "$FILE"</text>
-  <text x="104" y="208" font-size="8.5" fill="#6b7280" text-anchor="middle">one extra character</text>
+  <text x="26" y="158" font-size="10" fill="#28B9FF" font-weight="700">QUOTED</text>
+  <rect x="26" y="168" width="156" height="52" rx="6" fill="#0f1f1d" stroke="#28B9FF"/>
+  <text x="104" y="190" font-size="10.5" fill="#28B9FF" text-anchor="middle" font-family="monospace">rm "$FILE"</text>
+  <text x="104" y="208" font-size="8.5" fill="#6B6B78" text-anchor="middle">one extra character</text>
 
-  <rect x="206" y="168" width="156" height="52" rx="6" fill="#101018" stroke="#3a3320"/>
+  <rect x="206" y="168" width="156" height="52" rx="6" fill="#17171E" stroke="#1D1D26"/>
   <text x="284" y="190" font-size="9" fill="#cdd0dd" text-anchor="middle" font-family="monospace">rm "my report.csv"</text>
-  <text x="284" y="208" font-size="8.5" fill="#6b7280" text-anchor="middle">1 &#183; value substituted</text>
+  <text x="284" y="208" font-size="8.5" fill="#6B6B78" text-anchor="middle">1 &#183; value substituted</text>
 
-  <rect x="386" y="168" width="156" height="52" rx="6" fill="#0f1f1d" stroke="#22D3EE"/>
-  <text x="464" y="190" font-size="9" fill="#22D3EE" text-anchor="middle" font-family="monospace">[rm][my report.csv]</text>
-  <text x="464" y="208" font-size="8.5" fill="#22D3EE" text-anchor="middle">2 &#183; NOT split</text>
+  <rect x="386" y="168" width="156" height="52" rx="6" fill="#0f1f1d" stroke="#28B9FF"/>
+  <text x="464" y="190" font-size="9" fill="#28B9FF" text-anchor="middle" font-family="monospace">[rm][my report.csv]</text>
+  <text x="464" y="208" font-size="8.5" fill="#28B9FF" text-anchor="middle">2 &#183; NOT split</text>
 
-  <rect x="566" y="168" width="168" height="52" rx="6" fill="#0f1f1d" stroke="#22D3EE"/>
-  <text x="650" y="190" font-size="9.5" fill="#22D3EE" text-anchor="middle" font-weight="700">rm gets 1 argument</text>
+  <rect x="566" y="168" width="168" height="52" rx="6" fill="#0f1f1d" stroke="#28B9FF"/>
+  <text x="650" y="190" font-size="9.5" fill="#28B9FF" text-anchor="middle" font-weight="700">rm gets 1 argument</text>
   <text x="650" y="208" font-size="8.5" fill="#cdd0dd" text-anchor="middle">deletes the right file</text>
 
-  <g stroke="#22D3EE" stroke-width="1.5" fill="none">
+  <g stroke="#28B9FF" stroke-width="1.5" fill="none">
     <path d="M182 194 H 200" marker-end="url(#l-m)"/>
     <path d="M362 194 H 380" marker-end="url(#l-m)"/>
     <path d="M542 194 H 560" marker-end="url(#l-m)"/>
   </g>
 
   <text x="380" y="252" font-size="10.5" fill="#cdd0dd" text-anchor="middle">The splitting happens in the SHELL, before rm starts. rm never sees what you typed.</text>
-  <text x="380" y="276" font-size="10" fill="#FFD97A" text-anchor="middle">If it has a $, it goes in double quotes. There is no exception worth remembering.</text>
+  <text x="380" y="276" font-size="10" fill="#9AA0B4" text-anchor="middle">If it has a $, it goes in double quotes. There is no exception worth remembering.</text>
 </svg>
 <figcaption>Now the empty-variable disaster makes sense: if <code>DIR</code> is unset, <code>rm -rf $DIR/</code> substitutes nothing, splits to <code>[rm][-rf][/]</code>, and deletes the root filesystem. <code>rm -rf "$DIR/"</code> passes the single argument <code>/</code>… which is why you also want <code>set -u</code> (§12) to abort on the unset variable in the first place.</figcaption>
 </figure>
@@ -1258,20 +1272,20 @@ log <span class="g">"done — compressed $COMPRESSED, pruned $PRUNED, $(df -h "$
 <svg viewBox="0 0 760 300" width="100%" aria-label="The five cron fields decoded: minute, hour, day of month, month, day of week">
   <text x="380" y="20" font-size="10.5" fill="#9aa0b4" text-anchor="middle" letter-spacing="1.5">FIVE FIELDS &#183; THEN THE COMMAND</text>
 
-  <rect x="40" y="42" width="60" height="40" rx="5" fill="#1a1608" stroke="#F5BD1F"/>
-  <text x="70" y="68" font-size="15" fill="#FFD97A" text-anchor="middle" font-family="monospace">30</text>
-  <rect x="112" y="42" width="60" height="40" rx="5" fill="#1a1608" stroke="#F5BD1F"/>
-  <text x="142" y="68" font-size="15" fill="#FFD97A" text-anchor="middle" font-family="monospace">2</text>
-  <rect x="184" y="42" width="60" height="40" rx="5" fill="#1a1608" stroke="#F5BD1F"/>
-  <text x="214" y="68" font-size="15" fill="#FFD97A" text-anchor="middle" font-family="monospace">*</text>
-  <rect x="256" y="42" width="60" height="40" rx="5" fill="#1a1608" stroke="#F5BD1F"/>
-  <text x="286" y="68" font-size="15" fill="#FFD97A" text-anchor="middle" font-family="monospace">*</text>
-  <rect x="328" y="42" width="60" height="40" rx="5" fill="#1a1608" stroke="#F5BD1F"/>
-  <text x="358" y="68" font-size="15" fill="#FFD97A" text-anchor="middle" font-family="monospace">1-5</text>
-  <rect x="400" y="42" width="316" height="40" rx="5" fill="#101018" stroke="#5AC8FF"/>
+  <rect x="40" y="42" width="60" height="40" rx="5" fill="#1D1D26" stroke="#9AA0B4"/>
+  <text x="70" y="68" font-size="15" fill="#9AA0B4" text-anchor="middle" font-family="monospace">30</text>
+  <rect x="112" y="42" width="60" height="40" rx="5" fill="#1D1D26" stroke="#9AA0B4"/>
+  <text x="142" y="68" font-size="15" fill="#9AA0B4" text-anchor="middle" font-family="monospace">2</text>
+  <rect x="184" y="42" width="60" height="40" rx="5" fill="#1D1D26" stroke="#9AA0B4"/>
+  <text x="214" y="68" font-size="15" fill="#9AA0B4" text-anchor="middle" font-family="monospace">*</text>
+  <rect x="256" y="42" width="60" height="40" rx="5" fill="#1D1D26" stroke="#9AA0B4"/>
+  <text x="286" y="68" font-size="15" fill="#9AA0B4" text-anchor="middle" font-family="monospace">*</text>
+  <rect x="328" y="42" width="60" height="40" rx="5" fill="#1D1D26" stroke="#9AA0B4"/>
+  <text x="358" y="68" font-size="15" fill="#9AA0B4" text-anchor="middle" font-family="monospace">1-5</text>
+  <rect x="400" y="42" width="316" height="40" rx="5" fill="#17171E" stroke="#5AC8FF"/>
   <text x="416" y="68" font-size="11" fill="#5AC8FF" font-family="monospace">/opt/etl/ingest.sh</text>
 
-  <g stroke="#3a3320" fill="none" stroke-dasharray="3,2">
+  <g stroke="#1D1D26" fill="none" stroke-dasharray="3,2">
     <path d="M70 82 V 108"/>
     <path d="M142 82 V 128"/>
     <path d="M214 82 V 148"/>
@@ -1284,15 +1298,15 @@ log <span class="g">"done — compressed $COMPRESSED, pruned $PRUNED, $(df -h "$
   <text x="296" y="172" font-size="9.5" fill="#cdd0dd">month &#183; 1&#8211;12 &#183; * = every</text>
   <text x="368" y="192" font-size="9.5" fill="#cdd0dd">day of week &#183; 0&#8211;6 &#183; 0 = SUNDAY &#183; 1-5 = Mon&#8211;Fri</text>
 
-  <rect x="40" y="212" width="330" height="34" rx="6" fill="#0f1f1d" stroke="#22D3EE"/>
-  <text x="205" y="234" font-size="10.5" fill="#22D3EE" text-anchor="middle">reads as: 02:30, Monday to Friday</text>
+  <rect x="40" y="212" width="330" height="34" rx="6" fill="#0f1f1d" stroke="#28B9FF"/>
+  <text x="205" y="234" font-size="10.5" fill="#28B9FF" text-anchor="middle">reads as: 02:30, Monday to Friday</text>
 
-  <rect x="386" y="212" width="330" height="34" rx="6" fill="#101018" stroke="#3a3320"/>
+  <rect x="386" y="212" width="330" height="34" rx="6" fill="#17171E" stroke="#1D1D26"/>
   <text x="551" y="228" font-size="9" fill="#9aa0b4" text-anchor="middle" font-family="monospace">*/15 * * * *  = every 15 min   &#183;   0 3 * * 0 = 03:00 Sunday</text>
-  <text x="551" y="241" font-size="9" fill="#6b7280" text-anchor="middle">shortcuts: @daily  @hourly  @reboot</text>
+  <text x="551" y="241" font-size="9" fill="#6B6B78" text-anchor="middle">shortcuts: @daily  @hourly  @reboot</text>
 
-  <text x="380" y="274" font-size="10" fill="#FF6B8B" text-anchor="middle">The schedule is the easy half. The half that breaks is everything BELOW.</text>
-  <text x="380" y="292" font-size="9.5" fill="#6b7280" text-anchor="middle">cron does not read your .bashrc, does not know your PATH, and is not standing in your directory.</text>
+  <text x="380" y="274" font-size="10" fill="#9AA0B4" text-anchor="middle">The schedule is the easy half. The half that breaks is everything BELOW.</text>
+  <text x="380" y="292" font-size="9.5" fill="#6B6B78" text-anchor="middle">cron does not read your .bashrc, does not know your PATH, and is not standing in your directory.</text>
 </svg>
 <figcaption>Left to right: minute, hour, day-of-month, month, day-of-week. If you only remember one gotcha, remember that day-of-week counts Sunday as <strong>0</strong>, so <code>1-5</code> is Monday to Friday.</figcaption>
 </figure>
@@ -1381,48 +1395,48 @@ log <span class="g">"done — compressed $COMPRESSED, pruned $PRUNED, $(df -h "$
 <figure class="fig reveal">
 <svg viewBox="0 0 760 340" width="100%" aria-label="Anatomy of an HTTP request and response, and which curl flag controls each part">
   <defs>
-    <marker id="l-h" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#F5BD1F"/></marker>
+    <marker id="l-h" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#9AA0B4"/></marker>
   </defs>
   <text x="380" y="20" font-size="10.5" fill="#9aa0b4" text-anchor="middle" letter-spacing="1.5">ONE REQUEST &#183; ONE RESPONSE &#183; AND THE FLAG FOR EACH PART</text>
 
-  <rect x="26" y="40" width="286" height="176" rx="8" fill="#1a1608" stroke="#F5BD1F"/>
-  <text x="169" y="60" font-size="10.5" fill="#FFD97A" text-anchor="middle" font-weight="700" letter-spacing="1">REQUEST</text>
-  <rect x="40" y="70" width="258" height="34" rx="4" fill="#0d0d13" stroke="#3a3320"/>
+  <rect x="26" y="40" width="286" height="176" rx="8" fill="#1D1D26" stroke="#9AA0B4"/>
+  <text x="169" y="60" font-size="10.5" fill="#9AA0B4" text-anchor="middle" font-weight="700" letter-spacing="1">REQUEST</text>
+  <rect x="40" y="70" width="258" height="34" rx="4" fill="#101017" stroke="#1D1D26"/>
   <text x="52" y="91" font-size="9.5" fill="#cdd0dd" font-family="monospace">POST /v1/events?page=2</text>
-  <text x="286" y="91" font-size="8.5" fill="#E8873A" text-anchor="end">-X</text>
+  <text x="286" y="91" font-size="8.5" fill="#9AA0B4" text-anchor="end">-X</text>
 
-  <rect x="40" y="110" width="258" height="52" rx="4" fill="#0d0d13" stroke="#3a3320"/>
+  <rect x="40" y="110" width="258" height="52" rx="4" fill="#101017" stroke="#1D1D26"/>
   <text x="52" y="128" font-size="9" fill="#cdd0dd" font-family="monospace">Authorization: Bearer ...</text>
   <text x="52" y="145" font-size="9" fill="#cdd0dd" font-family="monospace">Content-Type: application/json</text>
-  <text x="286" y="137" font-size="8.5" fill="#E8873A" text-anchor="end">-H</text>
+  <text x="286" y="137" font-size="8.5" fill="#9AA0B4" text-anchor="end">-H</text>
 
-  <rect x="40" y="168" width="258" height="34" rx="4" fill="#0d0d13" stroke="#3a3320"/>
+  <rect x="40" y="168" width="258" height="34" rx="4" fill="#101017" stroke="#1D1D26"/>
   <text x="52" y="189" font-size="9" fill="#cdd0dd" font-family="monospace">{"since": "2026-07-12"}</text>
-  <text x="286" y="189" font-size="8.5" fill="#E8873A" text-anchor="end">-d</text>
+  <text x="286" y="189" font-size="8.5" fill="#9AA0B4" text-anchor="end">-d</text>
 
   <rect x="448" y="40" width="286" height="176" rx="8" fill="#101a24" stroke="#5AC8FF"/>
   <text x="591" y="60" font-size="10.5" fill="#5AC8FF" text-anchor="middle" font-weight="700" letter-spacing="1">RESPONSE</text>
-  <rect x="462" y="70" width="258" height="34" rx="4" fill="#0d0d13" stroke="#3a3320"/>
-  <text x="474" y="91" font-size="9.5" fill="#22D3EE" font-family="monospace">200 OK</text>
+  <rect x="462" y="70" width="258" height="34" rx="4" fill="#101017" stroke="#1D1D26"/>
+  <text x="474" y="91" font-size="9.5" fill="#28B9FF" font-family="monospace">200 OK</text>
   <text x="708" y="91" font-size="8.5" fill="#5AC8FF" text-anchor="end">-w '%{http_code}'</text>
 
-  <rect x="462" y="110" width="258" height="52" rx="4" fill="#0d0d13" stroke="#3a3320"/>
+  <rect x="462" y="110" width="258" height="52" rx="4" fill="#101017" stroke="#1D1D26"/>
   <text x="474" y="128" font-size="9" fill="#cdd0dd" font-family="monospace">Content-Type: application/json</text>
   <text x="474" y="145" font-size="9" fill="#cdd0dd" font-family="monospace">X-RateLimit-Remaining: 42</text>
   <text x="708" y="137" font-size="8.5" fill="#5AC8FF" text-anchor="end">-i  /  -I</text>
 
-  <rect x="462" y="168" width="258" height="34" rx="4" fill="#0d0d13" stroke="#3a3320"/>
+  <rect x="462" y="168" width="258" height="34" rx="4" fill="#101017" stroke="#1D1D26"/>
   <text x="474" y="189" font-size="9" fill="#cdd0dd" font-family="monospace">{"items": [ ... ]}</text>
   <text x="708" y="189" font-size="8.5" fill="#5AC8FF" text-anchor="end">-o file</text>
 
-  <path d="M312 128 H 442" stroke="#F5BD1F" stroke-width="1.6" fill="none" marker-end="url(#l-h)"/>
-  <text x="377" y="120" font-size="8.5" fill="#6b7280" text-anchor="middle">TCP + TLS</text>
+  <path d="M312 128 H 442" stroke="#9AA0B4" stroke-width="1.6" fill="none" marker-end="url(#l-h)"/>
+  <text x="377" y="120" font-size="8.5" fill="#6B6B78" text-anchor="middle">TCP + TLS</text>
 
-  <rect x="26" y="238" width="708" height="80" rx="8" fill="#241318" stroke="#FF6B8B"/>
-  <text x="380" y="260" font-size="10.5" fill="#FF6B8B" text-anchor="middle" font-weight="700">THE TRAP THAT EATS DATA PIPELINES</text>
+  <rect x="26" y="238" width="708" height="80" rx="8" fill="#241318" stroke="#9AA0B4"/>
+  <text x="380" y="260" font-size="10.5" fill="#9AA0B4" text-anchor="middle" font-weight="700">THE TRAP THAT EATS DATA PIPELINES</text>
   <text x="380" y="280" font-size="9.5" fill="#cdd0dd" text-anchor="middle">A 404 or a 500 is still a successful CONVERSATION. curl exits 0 and writes the error page to your file.</text>
   <text x="380" y="298" font-size="9.5" fill="#cdd0dd" text-anchor="middle">Your script sees exit code 0, calls it a win, and loads an HTML error page into the warehouse.</text>
-  <text x="380" y="313" font-size="9.5" fill="#22D3EE" text-anchor="middle" font-family="monospace">the fix: curl -f   (fail on HTTP &#8805; 400)</text>
+  <text x="380" y="313" font-size="9.5" fill="#28B9FF" text-anchor="middle" font-family="monospace">the fix: curl -f   (fail on HTTP &#8805; 400)</text>
 </svg>
 <figcaption>Every HTTP call is: a method and a path, some headers, an optional body — and the same three things coming back. Once you can see that shape, <code>-X</code>, <code>-H</code>, <code>-d</code> and <code>-o</code> are all you need to talk to any REST API.</figcaption>
 </figure>
@@ -1600,36 +1614,36 @@ log <span class="g">"done — compressed $COMPRESSED, pruned $PRUNED, $(df -h "$
 <figure class="fig reveal">
 <svg viewBox="0 0 880 320" width="100%" aria-label="A nightly ingestion job: cron fires, flock guards it, curl pulls with retries, jq converts to CSV, verification, atomic move, and exit codes">
   <defs>
-    <marker id="l-i" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#F5BD1F"/></marker>
-    <marker id="l-j" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#FF6B8B"/></marker>
+    <marker id="l-i" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#9AA0B4"/></marker>
+    <marker id="l-j" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#9AA0B4"/></marker>
   </defs>
   <text x="440" y="20" font-size="10.5" fill="#9aa0b4" text-anchor="middle" letter-spacing="1.5">02:30 &#183; NOBODY IS WATCHING &#183; IT HAS TO FAIL LOUDLY OR NOT AT ALL</text>
 
-  <rect x="20" y="44" width="118" height="58" rx="7" fill="#101018" stroke="#5AC8FF"/>
+  <rect x="20" y="44" width="118" height="58" rx="7" fill="#17171E" stroke="#5AC8FF"/>
   <text x="79" y="68" font-size="10" fill="#5AC8FF" text-anchor="middle" font-weight="700">cron</text>
-  <text x="79" y="85" font-size="8.5" fill="#6b7280" text-anchor="middle">30 2 * * 1-5</text>
+  <text x="79" y="85" font-size="8.5" fill="#6B6B78" text-anchor="middle">30 2 * * 1-5</text>
 
-  <rect x="168" y="44" width="118" height="58" rx="7" fill="#1a1608" stroke="#F5BD1F"/>
-  <text x="227" y="68" font-size="10" fill="#FFD97A" text-anchor="middle" font-weight="700">flock</text>
-  <text x="227" y="85" font-size="8.5" fill="#6b7280" text-anchor="middle">only one me</text>
+  <rect x="168" y="44" width="118" height="58" rx="7" fill="#1D1D26" stroke="#9AA0B4"/>
+  <text x="227" y="68" font-size="10" fill="#9AA0B4" text-anchor="middle" font-weight="700">flock</text>
+  <text x="227" y="85" font-size="8.5" fill="#6B6B78" text-anchor="middle">only one me</text>
 
-  <rect x="316" y="44" width="118" height="58" rx="7" fill="#1a1608" stroke="#F5BD1F"/>
-  <text x="375" y="68" font-size="10" fill="#FFD97A" text-anchor="middle" font-weight="700">curl -f</text>
-  <text x="375" y="85" font-size="8.5" fill="#6b7280" text-anchor="middle">retry &#215;3, timeout</text>
+  <rect x="316" y="44" width="118" height="58" rx="7" fill="#1D1D26" stroke="#9AA0B4"/>
+  <text x="375" y="68" font-size="10" fill="#9AA0B4" text-anchor="middle" font-weight="700">curl -f</text>
+  <text x="375" y="85" font-size="8.5" fill="#6B6B78" text-anchor="middle">retry &#215;3, timeout</text>
 
-  <rect x="464" y="44" width="118" height="58" rx="7" fill="#1a1608" stroke="#F5BD1F"/>
-  <text x="523" y="68" font-size="10" fill="#FFD97A" text-anchor="middle" font-weight="700">jq &#8594; csv</text>
-  <text x="523" y="85" font-size="8.5" fill="#6b7280" text-anchor="middle">to a .tmp file</text>
+  <rect x="464" y="44" width="118" height="58" rx="7" fill="#1D1D26" stroke="#9AA0B4"/>
+  <text x="523" y="68" font-size="10" fill="#9AA0B4" text-anchor="middle" font-weight="700">jq &#8594; csv</text>
+  <text x="523" y="85" font-size="8.5" fill="#6B6B78" text-anchor="middle">to a .tmp file</text>
 
   <rect x="612" y="44" width="118" height="58" rx="7" fill="#101a24" stroke="#5AC8FF"/>
   <text x="671" y="68" font-size="10" fill="#5AC8FF" text-anchor="middle" font-weight="700">verify</text>
-  <text x="671" y="85" font-size="8.5" fill="#6b7280" text-anchor="middle">non-empty? rows?</text>
+  <text x="671" y="85" font-size="8.5" fill="#6B6B78" text-anchor="middle">non-empty? rows?</text>
 
-  <rect x="760" y="44" width="100" height="58" rx="7" fill="#0f1f1d" stroke="#22D3EE"/>
-  <text x="810" y="68" font-size="10" fill="#22D3EE" text-anchor="middle" font-weight="700">mv</text>
-  <text x="810" y="85" font-size="8.5" fill="#6b7280" text-anchor="middle">atomic publish</text>
+  <rect x="760" y="44" width="100" height="58" rx="7" fill="#0f1f1d" stroke="#28B9FF"/>
+  <text x="810" y="68" font-size="10" fill="#28B9FF" text-anchor="middle" font-weight="700">mv</text>
+  <text x="810" y="85" font-size="8.5" fill="#6B6B78" text-anchor="middle">atomic publish</text>
 
-  <g stroke="#F5BD1F" stroke-width="1.5" fill="none">
+  <g stroke="#9AA0B4" stroke-width="1.5" fill="none">
     <path d="M138 73 H 162" marker-end="url(#l-i)"/>
     <path d="M286 73 H 310" marker-end="url(#l-i)"/>
     <path d="M434 73 H 458" marker-end="url(#l-i)"/>
@@ -1637,23 +1651,23 @@ log <span class="g">"done — compressed $COMPRESSED, pruned $PRUNED, $(df -h "$
     <path d="M730 73 H 754" marker-end="url(#l-i)"/>
   </g>
 
-  <rect x="316" y="176" width="414" height="52" rx="7" fill="#241318" stroke="#FF6B8B"/>
-  <text x="523" y="198" font-size="10" fill="#FF6B8B" text-anchor="middle" font-weight="700">ANY failure &#8594; set -e stops &#183; trap cleans up &#183; exit 1</text>
+  <rect x="316" y="176" width="414" height="52" rx="7" fill="#241318" stroke="#9AA0B4"/>
+  <text x="523" y="198" font-size="10" fill="#9AA0B4" text-anchor="middle" font-weight="700">ANY failure &#8594; set -e stops &#183; trap cleans up &#183; exit 1</text>
   <text x="523" y="217" font-size="9" fill="#cdd0dd" text-anchor="middle">the log says why, the exit code is non-zero, and the alert fires</text>
 
-  <g stroke="#FF6B8B" stroke-width="1.4" fill="none" stroke-dasharray="4,3">
+  <g stroke="#9AA0B4" stroke-width="1.4" fill="none" stroke-dasharray="4,3">
     <path d="M375 102 V 170" marker-end="url(#l-j)"/>
     <path d="M523 102 V 170" marker-end="url(#l-j)"/>
     <path d="M671 102 V 170" marker-end="url(#l-j)"/>
   </g>
 
-  <rect x="20" y="176" width="266" height="52" rx="7" fill="#101018" stroke="#3a3320"/>
+  <rect x="20" y="176" width="266" height="52" rx="7" fill="#17171E" stroke="#1D1D26"/>
   <text x="153" y="198" font-size="9.5" fill="#cdd0dd" text-anchor="middle">every line appended to a log</text>
-  <text x="153" y="216" font-size="9" fill="#6b7280" text-anchor="middle" font-family="monospace">&gt;&gt; ingest.log 2&gt;&amp;1</text>
+  <text x="153" y="216" font-size="9" fill="#6B6B78" text-anchor="middle" font-family="monospace">&gt;&gt; ingest.log 2&gt;&amp;1</text>
 
   <text x="440" y="262" font-size="10.5" fill="#cdd0dd" text-anchor="middle">The half-written file NEVER becomes the published file. That single property is what makes a</text>
   <text x="440" y="280" font-size="10.5" fill="#cdd0dd" text-anchor="middle">pipeline safe to re-run &#8212; and re-running is how you fix everything else.</text>
-  <text x="440" y="306" font-size="9.5" fill="#6b7280" text-anchor="middle">A job that can be safely re-run is called idempotent. It is the single most valuable property a data job can have.</text>
+  <text x="440" y="306" font-size="9.5" fill="#6B6B78" text-anchor="middle">A job that can be safely re-run is called idempotent. It is the single most valuable property a data job can have.</text>
 </svg>
 <figcaption>Nothing here is clever. It is the same six habits — fail fast, lock, retry, verify, publish atomically, log everything — wired together. That is what "production-grade" means in practice.</figcaption>
 </figure>

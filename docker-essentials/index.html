@@ -22,8 +22,8 @@
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,500;0,700;0,800;1,400&display=swap" rel="stylesheet">
 <style>
   :root{
-    --bg:#1A1A1A; --bg2:#121212; --ink:#F1F1F1; --muted:#9aa0b4; --dim:#666666;
-    --blue2:#1D63ED; --cyan:#2496ED; --cyan2:#7CC6F7; --purple:#2496ED; --magenta2:#8AA4FF;
+    --bg:#191921; --bg2:#20202A; --ink:#F1F1F1; --muted:#9aa0b4; --dim:#666666;
+    --blue2:#1D63ED; --cyan:#2496ED; --cyan2:#5AC8FF; --purple:#2496ED; --magenta2:#8AA4FF;
     --grad:linear-gradient(90deg,#0B4FD6,#2496ED,#62CFF4);
     --font:"JetBrainsMono Nerd Font","JetBrains Mono","Symbols Nerd Font",ui-monospace,"Cascadia Code",Menlo,Consolas,monospace;
   }
@@ -34,56 +34,56 @@
   .page{max-width:880px;margin:0 auto;padding:0 24px}
   header{padding:30px 0 6px}
   .kicker{font-size:13px;color:var(--dim)}
-  .back{color:var(--cyan2);text-decoration:none;font-size:13px;border-bottom:1px dotted #7CC6F766}
+  .back{color:var(--cyan2);text-decoration:none;font-size:13px;border-bottom:1px dotted #5AC8FF66}
   h1{font-size:clamp(28px,4.6vw,46px);line-height:1.12;margin:12px 0 12px;font-weight:800;
      background:var(--grad);background-size:220% auto;-webkit-background-clip:text;background-clip:text;color:transparent;animation:sheen 9s linear infinite}
   @keyframes sheen{to{background-position:220% center}}
   .dek{color:var(--muted);font-size:17px}
   .byline{margin-top:14px;font-size:13px;color:var(--dim)}
-  h2{font-size:clamp(21px,3.2vw,28px);margin:52px 0 6px;font-weight:800;line-height:1.22;padding-top:14px;border-top:1px solid #23232e;display:flex;align-items:center;gap:10px}
+  h2{font-size:clamp(21px,3.2vw,28px);margin:52px 0 6px;font-weight:800;line-height:1.22;padding-top:14px;border-top:1px solid #34343F;display:flex;align-items:center;gap:10px}
   h2 .n{color:var(--blue2)}
   h3{font-size:18px;margin:28px 0 4px;color:#fff;font-weight:700}
   h4{font-size:15px;margin:20px 0 4px;color:var(--cyan2);font-weight:700}
   p,li{color:#dcdce4}
   .lead{font-size:18px;color:#e7e7ee}
   a{color:var(--cyan2)}
-  hr{border:0;border-top:1px solid #2c2c36;margin:36px 0}
-  code{font-family:var(--font);background:#23232b;color:#7CC6F7;padding:1px 6px;border-radius:5px;font-size:.88em;border:1px solid #2f2f3a}
+  hr{border:0;border-top:1px solid #34343F;margin:36px 0}
+  code{font-family:var(--font);background:#23232b;color:#5AC8FF;padding:1px 6px;border-radius:5px;font-size:.88em;border:1px solid #34343F}
   .cb{margin:16px 0}
-  .cb .lang{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:#9aa0b4;background:#1b1b24;border:1px solid #2c2c36;border-bottom:none;border-radius:9px 9px 0 0;padding:4px 12px}
-  pre{margin:0;background:#0d0d13;border:1px solid #23232e;border-radius:0 10px 10px 10px;padding:14px 16px;overflow-x:auto;
+  .cb .lang{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:#9aa0b4;background:#1b1b24;border:1px solid #34343F;border-bottom:none;border-radius:9px 9px 0 0;padding:4px 12px}
+  pre{margin:0;background:#101017;border:1px solid #34343F;border-radius:0 10px 10px 10px;padding:14px 16px;overflow-x:auto;
       font-family:var(--font);font-size:13px;line-height:1.65;color:#d8dcea;white-space:pre}
-  pre .c{color:#6b7280}
+  pre .c{color:#6B6B78}
   pre .o{color:#9aa0b4}
-  pre .k{color:#7CC6F7}
-  pre .g{color:#34d399}
-  pre .y{color:#f0b429}
-  pre .r{color:#f87171}
+  pre .k{color:#5AC8FF}
+  pre .g{color:#5AC8FF}
+  pre .y{color:#9AA0B4}
+  pre .r{color:#9AA0B4}
   pre .p{color:#8AA4FF}
   .callout{border-left:4px solid var(--blue2);background:#111a2e;border-radius:0 12px 12px 0;padding:14px 18px;margin:22px 0}
   .callout.cy{border-color:var(--cyan);background:#0e2740}
   .callout.mg{border-color:var(--magenta2);background:#161a33}
-  .callout.gd{border-color:#f0b429;background:#241d0f}
-  .callout.gr{border-color:#22D3EE;background:#0A2028}
+  .callout.gd{border-color:#9AA0B4;background:#1D1D26}
+  .callout.gr{border-color:#28B9FF;background:#0A2028}
   .callout .t{color:var(--cyan2);font-weight:800}
-  .callout.gd .t{color:#f0b429}
-  .callout.gr .t{color:#22D3EE}
+  .callout.gd .t{color:#9AA0B4}
+  .callout.gr .t{color:#28B9FF}
   .callout.mg .t{color:var(--magenta2)}
-  .tldr{border:1px solid #2b4a80;background:linear-gradient(180deg,#111a2e,#121212);border-radius:16px;padding:20px 24px;margin:26px 0}
+  .tldr{border:1px solid #2b4a80;background:linear-gradient(180deg,#111a2e,#20202A);border-radius:16px;padding:20px 24px;margin:26px 0}
   .tldr h4{margin:0 0 8px;font-size:13px;letter-spacing:.2em;text-transform:uppercase;color:var(--cyan2)}
-  .gloss{border:1px solid #2c2c36;background:#141419;border-radius:14px;padding:18px 22px;margin:24px 0}
+  .gloss{border:1px solid #34343F;background:#1D1D26;border-radius:14px;padding:18px 22px;margin:24px 0}
   .gloss h4{margin:0 0 6px;color:#fff;font-size:15px}
   .gloss dl{margin:0;font-size:13.5px}
   .gloss dt{color:var(--cyan2);font-weight:700;margin-top:9px}
   .gloss dd{margin:1px 0 0;color:#cdd0dd}
-  .toc{background:#15151b;border:1px solid #2c2c36;border-radius:14px;padding:16px 22px;margin:24px 0;column-count:2;column-gap:28px}
+  .toc{background:#23232C;border:1px solid #34343F;border-radius:14px;padding:16px 22px;margin:24px 0;column-count:2;column-gap:28px}
   .toc a{display:block;color:var(--cyan2);text-decoration:none;font-size:13.5px;line-height:1.9;break-inside:avoid}
   .toc a:hover{color:#fff}
   .toc>strong{column-span:all;display:block;margin-bottom:6px;color:#fff}
   table{border-collapse:collapse;width:100%;font-size:13.5px;margin:16px 0}
-  th,td{border:1px solid #2c2c36;padding:8px 11px;text-align:left;vertical-align:top}
-  th{background:#1d1d27;color:#fff}
-  tr:nth-child(even) td{background:#161620}
+  th,td{border:1px solid #34343F;padding:8px 11px;text-align:left;vertical-align:top}
+  th{background:#17171E;color:#fff}
+  tr:nth-child(even) td{background:#17171E}
   .ico{width:1em;height:1em;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
   .ico.f{fill:currentColor;stroke:none}
   .hico{display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;border-radius:11px;flex:0 0 36px;
@@ -94,24 +94,38 @@
   .tldr h4 .ico,.gloss h4 .ico{width:15px;height:15px;vertical-align:-2px;margin-right:6px}
   .stack{margin-top:14px;display:flex;align-items:center;gap:10px;font-size:12px;color:var(--dim);flex-wrap:wrap}
   .chip{display:inline-flex;align-items:center;gap:7px;padding:5px 12px;border-radius:999px;
-        border:1px solid #2b4a80;background:#0e2740;color:#7CC6F7;font-weight:700;font-size:11.5px}
+        border:1px solid #2b4a80;background:#0e2740;color:#5AC8FF;font-weight:700;font-size:11.5px}
   .chip .ico{width:14px;height:14px}
   figure.fig{margin:26px 0;text-align:center}
-  figure.fig svg{display:block;width:100%;max-width:100%;height:auto;border:1px solid #23232e;border-radius:14px;background:#0d0d13}
+  figure.fig svg{display:block;width:100%;max-width:100%;height:auto;border:1px solid #34343F;border-radius:14px;background:#101017}
   figure.fig figcaption{font-size:12.5px;color:var(--muted);margin-top:9px;font-style:italic;line-height:1.6}
   .step{display:flex;gap:12px;align-items:flex-start;margin:14px 0}
   .step .num-bubble{flex:0 0 28px;height:28px;border-radius:50%;background:var(--grad);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:#fff;margin-top:2px}
   .step .body{flex:1}
-  footer{border-top:1px solid #23232e;margin-top:50px;padding:24px 0 90px;color:var(--dim);font-size:13px}
+  footer{border-top:1px solid #34343F;margin-top:50px;padding:24px 0 90px;color:var(--dim);font-size:13px}
   footer a{color:var(--cyan2)}
   .js .reveal{opacity:0;transform:translateY(16px);transition:opacity .6s ease,transform .6s ease}
   .js .reveal.in{opacity:1;transform:none}
   @media (prefers-reduced-motion:reduce){.js .reveal{opacity:1;transform:none}}
+  /* ---- shared theme: top nav + a11y (appended) ---- */
+  .nav{position:sticky;top:0;z-index:60;background:rgba(25,25,33,.82);backdrop-filter:blur(10px);border-bottom:1px solid #34343f}
+  .nav-inner{max-width:1040px;margin:0 auto;padding:12px 24px;display:flex;align-items:center;gap:18px;flex-wrap:wrap}
+  .nav-brand{font-weight:800;letter-spacing:.16em;font-size:15px;text-decoration:none;border:0;
+             background:linear-gradient(90deg,#5C78FF,#28B9FF,#A52AFF);-webkit-background-clip:text;background-clip:text;color:transparent}
+  .nav-links{display:flex;gap:6px;flex-wrap:wrap;margin-left:auto}
+  .nav-links a{text-decoration:none;border:1px solid transparent;color:#9aa0b4;font-weight:700;font-size:13.5px;padding:6px 14px;border-radius:999px;transition:.2s}
+  .nav-links a:hover{color:#fff;border-color:#34343f;background:#23232c}
+  .nav-links a.active{color:#5AC8FF;border-color:#28B9FF55;background:#28B9FF14}
+  :focus-visible{outline:2px solid #5AC8FF;outline-offset:3px;border-radius:6px}
+  @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{animation:none !important;transition:none !important}.js .reveal{opacity:1 !important;transform:none !important}}
 </style>
+
 <script>document.documentElement.classList.add('js');</script>
 </head>
 <body>
 <div id="bar"></div>
+
+<nav class="nav"><div class="nav-inner"><a class="nav-brand" href="../index.html">HAO TIEU</a><div class="nav-links"><a href="../index.html">Portfolio</a><a href="../blogs.html">Blogs</a><a href="../essentials.html" class="active">Data Engineer Essentials</a></div></div></nav>
 <svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs>
 <symbol id="i-question" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.6 9.4a2.5 2.5 0 1 1 3.3 2.4c-.6.2-.9.8-.9 1.5v.6M12 17h.01"/></symbol>
 <symbol id="i-layers" viewBox="0 0 24 24"><path d="m12 3 9 4.8-9 4.8-9-4.8 9-4.8Z"/><path d="m3 12.6 9 4.8 9-4.8M3 17.2l9 4.8 9-4.8"/></symbol>
@@ -159,7 +173,7 @@
   </div>
 </header>
 
-<figure class="reveal" style="margin:18px 0 6px;background:radial-gradient(130% 150% at 50% 0%,#111a2e 0%,#0d0d13 72%);border:1px solid #23232e;border-radius:16px;padding:10px 10px;overflow:hidden">
+<figure class="reveal" style="margin:18px 0 6px;background:radial-gradient(130% 150% at 50% 0%,#111a2e 0%,#101017 72%);border:1px solid #34343F;border-radius:16px;padding:10px 10px;overflow:hidden">
 <svg viewBox="0 0 880 232" width="100%" style="display:block" font-family="var(--font)" aria-label="A Dockerfile is built into an image made of stacked layers, which is run as three identical containers">
   <defs>
     <marker id="h-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#5b6478"/></marker>
@@ -167,25 +181,25 @@
   </defs>
 
   <!-- Dockerfile -->
-  <rect x="34" y="70" width="146" height="94" rx="11" fill="#0B2029" stroke="#22D3EE" stroke-width="1.6"/>
-  <use href="#i-file" x="48" y="84" width="14" height="14" fill="none" stroke="#22D3EE" stroke-width="2.2"/>
-  <text x="70" y="96" font-size="11.5" fill="#22D3EE">Dockerfile</text>
-  <text x="48" y="120" font-size="9.5" fill="#6b7280">FROM python…</text>
-  <text x="48" y="136" font-size="9.5" fill="#6b7280">RUN pip install…</text>
-  <text x="48" y="152" font-size="9.5" fill="#6b7280">COPY src/</text>
+  <rect x="34" y="70" width="146" height="94" rx="11" fill="#0B2029" stroke="#28B9FF" stroke-width="1.6"/>
+  <use href="#i-file" x="48" y="84" width="14" height="14" fill="none" stroke="#28B9FF" stroke-width="2.2"/>
+  <text x="70" y="96" font-size="11.5" fill="#28B9FF">Dockerfile</text>
+  <text x="48" y="120" font-size="9.5" fill="#6B6B78">FROM python…</text>
+  <text x="48" y="136" font-size="9.5" fill="#6B6B78">RUN pip install…</text>
+  <text x="48" y="152" font-size="9.5" fill="#6B6B78">COPY src/</text>
 
   <line x1="186" y1="117" x2="242" y2="117" stroke="#5b6478" stroke-width="1.6" marker-end="url(#h-a)"/>
   <text x="214" y="106" font-size="10" fill="#9aa0b4" text-anchor="middle">build</text>
 
   <!-- image: an actual stack of layers -->
-  <text x="350" y="58" font-size="11.5" fill="#f0b429" font-weight="700" text-anchor="middle">THE IMAGE</text>
+  <text x="350" y="58" font-size="11.5" fill="#9AA0B4" font-weight="700" text-anchor="middle">THE IMAGE</text>
   <g font-size="9.5">
-    <rect x="250" y="68" width="200" height="24" rx="5" fill="#241d0f" stroke="#f0b429"/><text x="350" y="84" fill="#e3b25c" text-anchor="middle">CMD ["python","-m","etl"]</text>
-    <rect x="250" y="96" width="200" height="24" rx="5" fill="#241d0f" stroke="#f0b429"/><text x="350" y="112" fill="#e3b25c" text-anchor="middle">COPY src/</text>
-    <rect x="250" y="124" width="200" height="24" rx="5" fill="#241d0f" stroke="#f0b429"/><text x="350" y="140" fill="#e3b25c" text-anchor="middle">RUN pip install</text>
-    <rect x="250" y="152" width="200" height="24" rx="5" fill="#241d0f" stroke="#f0b429"/><text x="350" y="168" fill="#e3b25c" text-anchor="middle">FROM python:3.12-slim</text>
+    <rect x="250" y="68" width="200" height="24" rx="5" fill="#1D1D26" stroke="#9AA0B4"/><text x="350" y="84" fill="#9AA0B4" text-anchor="middle">CMD ["python","-m","etl"]</text>
+    <rect x="250" y="96" width="200" height="24" rx="5" fill="#1D1D26" stroke="#9AA0B4"/><text x="350" y="112" fill="#9AA0B4" text-anchor="middle">COPY src/</text>
+    <rect x="250" y="124" width="200" height="24" rx="5" fill="#1D1D26" stroke="#9AA0B4"/><text x="350" y="140" fill="#9AA0B4" text-anchor="middle">RUN pip install</text>
+    <rect x="250" y="152" width="200" height="24" rx="5" fill="#1D1D26" stroke="#9AA0B4"/><text x="350" y="168" fill="#9AA0B4" text-anchor="middle">FROM python:3.12-slim</text>
   </g>
-  <text x="350" y="192" font-size="9.5" fill="#6b7280" text-anchor="middle">read-only layers · built once</text>
+  <text x="350" y="192" font-size="9.5" fill="#6B6B78" text-anchor="middle">read-only layers · built once</text>
 
   <line x1="456" y1="117" x2="520" y2="117" stroke="#5b6478" stroke-width="1.6"/>
   <text x="484" y="106" font-size="10" fill="#9aa0b4" text-anchor="middle">run</text>
@@ -198,23 +212,23 @@
   </g>
   <g font-size="10.5">
     <rect x="576" y="50" width="250" height="44" rx="9" fill="#0e2740" stroke="#2496ED" stroke-width="1.6"/>
-    <use href="#i-whale" x="592" y="64" width="15" height="15" fill="none" stroke="#7CC6F7" stroke-width="1.8"/>
+    <use href="#i-whale" x="592" y="64" width="15" height="15" fill="none" stroke="#5AC8FF" stroke-width="1.8"/>
     <text x="618" y="77" fill="#9fd8fb">container</text>
     <rect x="576" y="140" width="250" height="44" rx="9" fill="#0e2740" stroke="#2496ED" stroke-width="1.6"/>
-    <use href="#i-whale" x="592" y="154" width="15" height="15" fill="none" stroke="#7CC6F7" stroke-width="1.8"/>
+    <use href="#i-whale" x="592" y="154" width="15" height="15" fill="none" stroke="#5AC8FF" stroke-width="1.8"/>
     <text x="618" y="167" fill="#9fd8fb">container</text>
     <rect x="576" y="95" width="250" height="44" rx="9" fill="#0e2740" stroke="#2496ED" stroke-width="1.6"/>
-    <use href="#i-whale" x="592" y="109" width="15" height="15" fill="none" stroke="#7CC6F7" stroke-width="1.8"/>
+    <use href="#i-whale" x="592" y="109" width="15" height="15" fill="none" stroke="#5AC8FF" stroke-width="1.8"/>
     <text x="618" y="122" fill="#9fd8fb">container</text>
   </g>
-  <text x="701" y="204" font-size="9.5" fill="#6b7280" text-anchor="middle">identical · isolated · disposable</text>
+  <text x="701" y="204" font-size="9.5" fill="#6B6B78" text-anchor="middle">identical · isolated · disposable</text>
 
-  <circle r="4" cy="117" fill="#7CC6F7">
+  <circle r="4" cy="117" fill="#5AC8FF">
     <animate attributeName="cx" values="186;242;242" dur="3.4s" repeatCount="indefinite"/>
     <animate attributeName="opacity" values="0;1;1;0" keyTimes="0;.15;.75;1" dur="3.4s" repeatCount="indefinite"/>
   </circle>
 
-  <text x="440" y="222" font-size="12" fill="#6b7280" text-anchor="middle">one recipe → one image → any number of identical containers</text>
+  <text x="440" y="222" font-size="12" fill="#6B6B78" text-anchor="middle">one recipe → one image → any number of identical containers</text>
 </svg>
 </figure>
 
@@ -285,25 +299,25 @@
   <!-- containers -->
   <g>
     <rect x="60" y="64" width="200" height="112" rx="10" fill="#0e2740" stroke="#2496ED" stroke-width="1.6"/>
-    <text x="76" y="90" font-size="11.5" fill="#7CC6F7" font-weight="700">container A</text>
+    <text x="76" y="90" font-size="11.5" fill="#5AC8FF" font-weight="700">container A</text>
     <text x="76" y="110" font-size="9.5" fill="#9aa0b4">PID 1 · own /tmp</text>
     <text x="76" y="126" font-size="9.5" fill="#9aa0b4">own network + env</text>
-    <rect x="72" y="140" width="176" height="24" rx="5" fill="#241d0f" stroke="#f0b429"/>
-    <text x="160" y="156" font-size="9.5" fill="#f0b429" text-anchor="middle">thin writable layer</text>
+    <rect x="72" y="140" width="176" height="24" rx="5" fill="#1D1D26" stroke="#9AA0B4"/>
+    <text x="160" y="156" font-size="9.5" fill="#9AA0B4" text-anchor="middle">thin writable layer</text>
 
     <rect x="280" y="64" width="200" height="112" rx="10" fill="#0e2740" stroke="#2496ED" stroke-width="1.6"/>
-    <text x="296" y="90" font-size="11.5" fill="#7CC6F7" font-weight="700">container B</text>
+    <text x="296" y="90" font-size="11.5" fill="#5AC8FF" font-weight="700">container B</text>
     <text x="296" y="110" font-size="9.5" fill="#9aa0b4">same image</text>
     <text x="296" y="126" font-size="9.5" fill="#9aa0b4">different args + data</text>
-    <rect x="292" y="140" width="176" height="24" rx="5" fill="#241d0f" stroke="#f0b429"/>
-    <text x="380" y="156" font-size="9.5" fill="#f0b429" text-anchor="middle">thin writable layer</text>
+    <rect x="292" y="140" width="176" height="24" rx="5" fill="#1D1D26" stroke="#9AA0B4"/>
+    <text x="380" y="156" font-size="9.5" fill="#9AA0B4" text-anchor="middle">thin writable layer</text>
 
-    <rect x="500" y="64" width="200" height="112" rx="10" fill="#22121A" stroke="#FF6B8B" stroke-width="1.6" stroke-dasharray="5 4"/>
-    <text x="516" y="90" font-size="11.5" fill="#FF6B8B" font-weight="700">container C</text>
-    <text x="516" y="110" font-size="9.5" fill="#FF6B8B">deleted</text>
+    <rect x="500" y="64" width="200" height="112" rx="10" fill="#22121A" stroke="#9AA0B4" stroke-width="1.6" stroke-dasharray="5 4"/>
+    <text x="516" y="90" font-size="11.5" fill="#9AA0B4" font-weight="700">container C</text>
+    <text x="516" y="110" font-size="9.5" fill="#9AA0B4">deleted</text>
     <text x="516" y="126" font-size="9.5" fill="#9aa0b4">whatever it wrote…</text>
-    <rect x="512" y="140" width="176" height="24" rx="5" fill="#22121A" stroke="#FF6B8B" stroke-dasharray="3 3"/>
-    <text x="600" y="156" font-size="9.5" fill="#FF6B8B" text-anchor="middle">…is gone with it</text>
+    <rect x="512" y="140" width="176" height="24" rx="5" fill="#22121A" stroke="#9AA0B4" stroke-dasharray="3 3"/>
+    <text x="600" y="156" font-size="9.5" fill="#9AA0B4" text-anchor="middle">…is gone with it</text>
   </g>
 
   <!-- legs down onto the image -->
@@ -312,26 +326,26 @@
     <line x1="380" y1="176" x2="380" y2="218" marker-end="url(#c-a)"/>
     <line x1="600" y1="176" x2="600" y2="218" marker-end="url(#c-a)"/>
   </g>
-  <rect x="186" y="190" width="388" height="14" fill="#0d0d13"/>
-  <text x="380" y="200" font-size="9" fill="#6b7280" text-anchor="middle">all three read the very same layers below — stored on disk exactly once</text>
+  <rect x="186" y="190" width="388" height="14" fill="#101017"/>
+  <text x="380" y="200" font-size="9" fill="#6B6B78" text-anchor="middle">all three read the very same layers below — stored on disk exactly once</text>
 
   <!-- the image: one shared read-only stack -->
-  <use href="#i-package" x="60" y="228" width="14" height="14" fill="none" stroke="#f0b429" stroke-width="2.2"/>
-  <text x="82" y="240" font-size="11.5" fill="#f0b429" font-weight="700">THE IMAGE</text>
-  <text x="176" y="240" font-size="9.5" fill="#6b7280">read-only · immutable · shared</text>
+  <use href="#i-package" x="60" y="228" width="14" height="14" fill="none" stroke="#9AA0B4" stroke-width="2.2"/>
+  <text x="82" y="240" font-size="11.5" fill="#9AA0B4" font-weight="700">THE IMAGE</text>
+  <text x="176" y="240" font-size="9.5" fill="#6B6B78">read-only · immutable · shared</text>
 
   <g font-size="10">
-    <rect x="60" y="250" width="640" height="26" rx="5" fill="#241d0f" stroke="#f0b429"/><text x="78" y="267" fill="#e3b25c">CMD ["python","-m","etl"]</text>
-    <rect x="60" y="280" width="640" height="26" rx="5" fill="#241d0f" stroke="#f0b429"/><text x="78" y="297" fill="#e3b25c">COPY src/</text>
-    <rect x="60" y="310" width="640" height="26" rx="5" fill="#241d0f" stroke="#f0b429"/><text x="78" y="327" fill="#e3b25c">RUN pip install -r requirements.txt</text>
-    <rect x="60" y="340" width="640" height="26" rx="5" fill="#241d0f" stroke="#f0b429"/><text x="78" y="357" fill="#e3b25c">FROM python:3.12-slim</text>
+    <rect x="60" y="250" width="640" height="26" rx="5" fill="#1D1D26" stroke="#9AA0B4"/><text x="78" y="267" fill="#9AA0B4">CMD ["python","-m","etl"]</text>
+    <rect x="60" y="280" width="640" height="26" rx="5" fill="#1D1D26" stroke="#9AA0B4"/><text x="78" y="297" fill="#9AA0B4">COPY src/</text>
+    <rect x="60" y="310" width="640" height="26" rx="5" fill="#1D1D26" stroke="#9AA0B4"/><text x="78" y="327" fill="#9AA0B4">RUN pip install -r requirements.txt</text>
+    <rect x="60" y="340" width="640" height="26" rx="5" fill="#1D1D26" stroke="#9AA0B4"/><text x="78" y="357" fill="#9AA0B4">FROM python:3.12-slim</text>
   </g>
-  <text x="686" y="267" font-size="9" fill="#6b7280" text-anchor="end">layer 4</text>
-  <text x="686" y="297" font-size="9" fill="#6b7280" text-anchor="end">layer 3</text>
-  <text x="686" y="327" font-size="9" fill="#6b7280" text-anchor="end">layer 2</text>
-  <text x="686" y="357" font-size="9" fill="#6b7280" text-anchor="end">layer 1</text>
+  <text x="686" y="267" font-size="9" fill="#6B6B78" text-anchor="end">layer 4</text>
+  <text x="686" y="297" font-size="9" fill="#6B6B78" text-anchor="end">layer 3</text>
+  <text x="686" y="327" font-size="9" fill="#6B6B78" text-anchor="end">layer 2</text>
+  <text x="686" y="357" font-size="9" fill="#6B6B78" text-anchor="end">layer 1</text>
 
-  <text x="380" y="384" font-size="10.5" fill="#6b7280" text-anchor="middle">the image is the class · the container is the instance · deleting one touches nothing below</text>
+  <text x="380" y="384" font-size="10.5" fill="#6B6B78" text-anchor="middle">the image is the class · the container is the instance · deleting one touches nothing below</text>
 </svg>
 <figcaption>Containers sit <em>on top of</em> the image. They share every read-only layer — so ten containers don't cost ten times the disk — and differ only in a thin writable layer that dies with them.</figcaption>
 </figure>
@@ -351,62 +365,62 @@
 
 <figure class="fig reveal">
 <svg viewBox="0 0 760 344" font-family="var(--font)" aria-label="A virtual machine stack ships a full guest OS per VM; containers drop that entire layer and share one host kernel">
-  <text x="192" y="34" font-size="12.5" fill="#f0b429" font-weight="700" text-anchor="middle">VIRTUAL MACHINES</text>
-  <text x="192" y="52" font-size="9.5" fill="#6b7280" text-anchor="middle">each VM boots its own OS — gigabytes, ~a minute</text>
+  <text x="192" y="34" font-size="12.5" fill="#9AA0B4" font-weight="700" text-anchor="middle">VIRTUAL MACHINES</text>
+  <text x="192" y="52" font-size="9.5" fill="#6B6B78" text-anchor="middle">each VM boots its own OS — gigabytes, ~a minute</text>
 
-  <text x="568" y="34" font-size="12.5" fill="#7CC6F7" font-weight="700" text-anchor="middle">CONTAINERS</text>
-  <text x="568" y="52" font-size="9.5" fill="#6b7280" text-anchor="middle">share the host kernel — megabytes, milliseconds</text>
+  <text x="568" y="34" font-size="12.5" fill="#5AC8FF" font-weight="700" text-anchor="middle">CONTAINERS</text>
+  <text x="568" y="52" font-size="9.5" fill="#6B6B78" text-anchor="middle">share the host kernel — megabytes, milliseconds</text>
 
   <!-- VM columns -->
   <g font-size="9.5">
-    <rect x="24" y="70" width="104" height="34" rx="6" fill="#0e2740" stroke="#2496ED"/><text x="76" y="91" fill="#7CC6F7" text-anchor="middle">App A</text>
-    <rect x="24" y="108" width="104" height="30" rx="6" fill="#1c1c22" stroke="#4a5163"/><text x="76" y="127" fill="#9aa0b4" text-anchor="middle">bins / libs</text>
-    <rect x="24" y="142" width="104" height="52" rx="6" fill="#3a2f16" stroke="#f0b429" stroke-width="1.6"/>
-    <text x="76" y="164" fill="#f0b429" text-anchor="middle">Guest OS</text><text x="76" y="180" fill="#c9922a" text-anchor="middle">~1 GB</text>
+    <rect x="24" y="70" width="104" height="34" rx="6" fill="#0e2740" stroke="#2496ED"/><text x="76" y="91" fill="#5AC8FF" text-anchor="middle">App A</text>
+    <rect x="24" y="108" width="104" height="30" rx="6" fill="#23232C" stroke="#4a5163"/><text x="76" y="127" fill="#9aa0b4" text-anchor="middle">bins / libs</text>
+    <rect x="24" y="142" width="104" height="52" rx="6" fill="#3a2f16" stroke="#9AA0B4" stroke-width="1.6"/>
+    <text x="76" y="164" fill="#9AA0B4" text-anchor="middle">Guest OS</text><text x="76" y="180" fill="#9AA0B4" text-anchor="middle">~1 GB</text>
 
-    <rect x="140" y="70" width="104" height="34" rx="6" fill="#0e2740" stroke="#2496ED"/><text x="192" y="91" fill="#7CC6F7" text-anchor="middle">App B</text>
-    <rect x="140" y="108" width="104" height="30" rx="6" fill="#1c1c22" stroke="#4a5163"/><text x="192" y="127" fill="#9aa0b4" text-anchor="middle">bins / libs</text>
-    <rect x="140" y="142" width="104" height="52" rx="6" fill="#3a2f16" stroke="#f0b429" stroke-width="1.6"/>
-    <text x="192" y="164" fill="#f0b429" text-anchor="middle">Guest OS</text><text x="192" y="180" fill="#c9922a" text-anchor="middle">again</text>
+    <rect x="140" y="70" width="104" height="34" rx="6" fill="#0e2740" stroke="#2496ED"/><text x="192" y="91" fill="#5AC8FF" text-anchor="middle">App B</text>
+    <rect x="140" y="108" width="104" height="30" rx="6" fill="#23232C" stroke="#4a5163"/><text x="192" y="127" fill="#9aa0b4" text-anchor="middle">bins / libs</text>
+    <rect x="140" y="142" width="104" height="52" rx="6" fill="#3a2f16" stroke="#9AA0B4" stroke-width="1.6"/>
+    <text x="192" y="164" fill="#9AA0B4" text-anchor="middle">Guest OS</text><text x="192" y="180" fill="#9AA0B4" text-anchor="middle">again</text>
 
-    <rect x="256" y="70" width="104" height="34" rx="6" fill="#0e2740" stroke="#2496ED"/><text x="308" y="91" fill="#7CC6F7" text-anchor="middle">App C</text>
-    <rect x="256" y="108" width="104" height="30" rx="6" fill="#1c1c22" stroke="#4a5163"/><text x="308" y="127" fill="#9aa0b4" text-anchor="middle">bins / libs</text>
-    <rect x="256" y="142" width="104" height="52" rx="6" fill="#3a2f16" stroke="#f0b429" stroke-width="1.6"/>
-    <text x="308" y="164" fill="#f0b429" text-anchor="middle">Guest OS</text><text x="308" y="180" fill="#c9922a" text-anchor="middle">and again</text>
+    <rect x="256" y="70" width="104" height="34" rx="6" fill="#0e2740" stroke="#2496ED"/><text x="308" y="91" fill="#5AC8FF" text-anchor="middle">App C</text>
+    <rect x="256" y="108" width="104" height="30" rx="6" fill="#23232C" stroke="#4a5163"/><text x="308" y="127" fill="#9aa0b4" text-anchor="middle">bins / libs</text>
+    <rect x="256" y="142" width="104" height="52" rx="6" fill="#3a2f16" stroke="#9AA0B4" stroke-width="1.6"/>
+    <text x="308" y="164" fill="#9AA0B4" text-anchor="middle">Guest OS</text><text x="308" y="180" fill="#9AA0B4" text-anchor="middle">and again</text>
   </g>
-  <rect x="24" y="202" width="336" height="30" rx="6" fill="#1c1c22" stroke="#4a5163"/>
+  <rect x="24" y="202" width="336" height="30" rx="6" fill="#23232C" stroke="#4a5163"/>
   <text x="192" y="222" font-size="10" fill="#cdd0dd" text-anchor="middle">Hypervisor</text>
-  <rect x="24" y="238" width="336" height="30" rx="6" fill="#1c1c22" stroke="#4a5163"/>
+  <rect x="24" y="238" width="336" height="30" rx="6" fill="#23232C" stroke="#4a5163"/>
   <text x="192" y="258" font-size="10" fill="#cdd0dd" text-anchor="middle">Host OS</text>
-  <rect x="24" y="274" width="336" height="30" rx="6" fill="#15151b" stroke="#33333f"/>
+  <rect x="24" y="274" width="336" height="30" rx="6" fill="#23232C" stroke="#33333f"/>
   <text x="192" y="294" font-size="10" fill="#9aa0b4" text-anchor="middle">Hardware</text>
 
-  <line x1="380" y1="26" x2="380" y2="312" stroke="#23232e" stroke-width="1" stroke-dasharray="5 5"/>
+  <line x1="380" y1="26" x2="380" y2="312" stroke="#34343F" stroke-width="1" stroke-dasharray="5 5"/>
 
   <!-- the missing layer -->
-  <rect x="400" y="142" width="336" height="52" rx="6" fill="none" stroke="#22D3EE" stroke-width="1.4" stroke-dasharray="6 4"/>
-  <text x="568" y="166" font-size="10" fill="#22D3EE" text-anchor="middle">no Guest OS at all —</text>
-  <text x="568" y="182" font-size="10" fill="#22D3EE" text-anchor="middle">this entire layer disappears</text>
+  <rect x="400" y="142" width="336" height="52" rx="6" fill="none" stroke="#28B9FF" stroke-width="1.4" stroke-dasharray="6 4"/>
+  <text x="568" y="166" font-size="10" fill="#28B9FF" text-anchor="middle">no Guest OS at all —</text>
+  <text x="568" y="182" font-size="10" fill="#28B9FF" text-anchor="middle">this entire layer disappears</text>
 
   <!-- container columns -->
   <g font-size="9.5">
-    <rect x="400" y="70" width="104" height="34" rx="6" fill="#0e2740" stroke="#2496ED"/><text x="452" y="91" fill="#7CC6F7" text-anchor="middle">App A</text>
-    <rect x="400" y="108" width="104" height="30" rx="6" fill="#1c1c22" stroke="#4a5163"/><text x="452" y="127" fill="#9aa0b4" text-anchor="middle">bins / libs</text>
+    <rect x="400" y="70" width="104" height="34" rx="6" fill="#0e2740" stroke="#2496ED"/><text x="452" y="91" fill="#5AC8FF" text-anchor="middle">App A</text>
+    <rect x="400" y="108" width="104" height="30" rx="6" fill="#23232C" stroke="#4a5163"/><text x="452" y="127" fill="#9aa0b4" text-anchor="middle">bins / libs</text>
 
-    <rect x="516" y="70" width="104" height="34" rx="6" fill="#0e2740" stroke="#2496ED"/><text x="568" y="91" fill="#7CC6F7" text-anchor="middle">App B</text>
-    <rect x="516" y="108" width="104" height="30" rx="6" fill="#1c1c22" stroke="#4a5163"/><text x="568" y="127" fill="#9aa0b4" text-anchor="middle">bins / libs</text>
+    <rect x="516" y="70" width="104" height="34" rx="6" fill="#0e2740" stroke="#2496ED"/><text x="568" y="91" fill="#5AC8FF" text-anchor="middle">App B</text>
+    <rect x="516" y="108" width="104" height="30" rx="6" fill="#23232C" stroke="#4a5163"/><text x="568" y="127" fill="#9aa0b4" text-anchor="middle">bins / libs</text>
 
-    <rect x="632" y="70" width="104" height="34" rx="6" fill="#0e2740" stroke="#2496ED"/><text x="684" y="91" fill="#7CC6F7" text-anchor="middle">App C</text>
-    <rect x="632" y="108" width="104" height="30" rx="6" fill="#1c1c22" stroke="#4a5163"/><text x="684" y="127" fill="#9aa0b4" text-anchor="middle">bins / libs</text>
+    <rect x="632" y="70" width="104" height="34" rx="6" fill="#0e2740" stroke="#2496ED"/><text x="684" y="91" fill="#5AC8FF" text-anchor="middle">App C</text>
+    <rect x="632" y="108" width="104" height="30" rx="6" fill="#23232C" stroke="#4a5163"/><text x="684" y="127" fill="#9aa0b4" text-anchor="middle">bins / libs</text>
   </g>
   <rect x="400" y="202" width="336" height="30" rx="6" fill="#13314f" stroke="#2496ED" stroke-width="1.6"/>
-  <text x="568" y="222" font-size="10" fill="#7CC6F7" text-anchor="middle">Container runtime (Docker Engine)</text>
-  <rect x="400" y="238" width="336" height="30" rx="6" fill="#1c1c22" stroke="#4a5163"/>
+  <text x="568" y="222" font-size="10" fill="#5AC8FF" text-anchor="middle">Container runtime (Docker Engine)</text>
+  <rect x="400" y="238" width="336" height="30" rx="6" fill="#23232C" stroke="#4a5163"/>
   <text x="568" y="258" font-size="10" fill="#cdd0dd" text-anchor="middle">Host OS — ONE shared kernel</text>
-  <rect x="400" y="274" width="336" height="30" rx="6" fill="#15151b" stroke="#33333f"/>
+  <rect x="400" y="274" width="336" height="30" rx="6" fill="#23232C" stroke="#33333f"/>
   <text x="568" y="294" font-size="10" fill="#9aa0b4" text-anchor="middle">Hardware</text>
 
-  <text x="380" y="332" font-size="10.5" fill="#6b7280" text-anchor="middle">a container is just a process on the host, fenced off by the kernel — namespaces + cgroups</text>
+  <text x="380" y="332" font-size="10.5" fill="#6B6B78" text-anchor="middle">a container is just a process on the host, fenced off by the kernel — namespaces + cgroups</text>
 </svg>
 <figcaption>A VM virtualises the <em>hardware</em>, so it must boot its own kernel. A container virtualises the <em>operating system</em> and borrows the host's — which is the whole reason it costs megabytes instead of gigabytes.</figcaption>
 </figure>
@@ -430,64 +444,64 @@
 <svg viewBox="0 0 880 336" width="100%" aria-label="The Docker CLI talks over a socket to the daemon, which delegates to containerd and runc">
   <defs>
     <marker id="da" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#2496ED"/></marker>
-    <marker id="dc" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#22D3EE"/></marker>
-    <marker id="dm" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#6b7280"/></marker>
-    <marker id="dr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#FF6B8B"/></marker>
-    <marker id="dy" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#f0b429"/></marker>
+    <marker id="dc" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#28B9FF"/></marker>
+    <marker id="dm" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#6B6B78"/></marker>
+    <marker id="dr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#9AA0B4"/></marker>
+    <marker id="dy" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#9AA0B4"/></marker>
   </defs>
   <rect x="24" y="60" width="150" height="72" rx="10" fill="#0e2740" stroke="#2496ED" stroke-width="1.8"/>
-  <text x="99" y="88" font-size="12" fill="#7CC6F7" font-weight="700" text-anchor="middle">docker CLI</text>
+  <text x="99" y="88" font-size="12" fill="#5AC8FF" font-weight="700" text-anchor="middle">docker CLI</text>
   <text x="99" y="108" font-size="9" fill="#9aa0b4" text-anchor="middle">just an HTTP client.</text>
   <text x="99" y="120" font-size="9" fill="#9aa0b4" text-anchor="middle">It runs nothing itself.</text>
 
   <line x1="178" y1="96" x2="238" y2="96" stroke="#2496ED" stroke-width="1.8" marker-end="url(#da)"/>
-  <rect x="172" y="40" width="74" height="15" rx="4" fill="#0d0d13"/>
+  <rect x="172" y="40" width="74" height="15" rx="4" fill="#101017"/>
   <text x="209" y="51" font-size="8.5" fill="#2496ED" text-anchor="middle">REST / HTTP</text>
 
-  <rect x="242" y="26" width="26" height="140" rx="4" fill="#241d0f" stroke="#f0b429" stroke-width="1.6"/>
-  <text x="255" y="102" font-size="9" fill="#f0b429" text-anchor="middle" transform="rotate(-90 255 102)">docker.sock</text>
+  <rect x="242" y="26" width="26" height="140" rx="4" fill="#1D1D26" stroke="#9AA0B4" stroke-width="1.6"/>
+  <text x="255" y="102" font-size="9" fill="#9AA0B4" text-anchor="middle" transform="rotate(-90 255 102)">docker.sock</text>
 
   <rect x="292" y="26" width="560" height="140" rx="12" fill="#0d1420" stroke="#2496ED" stroke-width="1.6" stroke-dasharray="6 4"/>
-  <text x="306" y="46" font-size="9.5" fill="#7CC6F7" font-weight="700">the Docker Engine — runs as ROOT on the host</text>
+  <text x="306" y="46" font-size="9.5" fill="#5AC8FF" font-weight="700">the Docker Engine — runs as ROOT on the host</text>
 
   <rect x="312" y="56" width="140" height="88" rx="10" fill="#0e2740" stroke="#2496ED" stroke-width="1.8"/>
-  <text x="382" y="82" font-size="12" fill="#7CC6F7" font-weight="700" text-anchor="middle">dockerd</text>
+  <text x="382" y="82" font-size="12" fill="#5AC8FF" font-weight="700" text-anchor="middle">dockerd</text>
   <text x="382" y="102" font-size="9" fill="#9aa0b4" text-anchor="middle">images · networks</text>
   <text x="382" y="114" font-size="9" fill="#9aa0b4" text-anchor="middle">volumes · builds</text>
-  <text x="382" y="132" font-size="8.5" fill="#6b7280" text-anchor="middle">the Docker-specific bit</text>
+  <text x="382" y="132" font-size="8.5" fill="#6B6B78" text-anchor="middle">the Docker-specific bit</text>
 
   <line x1="456" y1="100" x2="502" y2="100" stroke="#2496ED" stroke-width="1.6" marker-end="url(#da)"/>
 
   <rect x="506" y="56" width="140" height="88" rx="10" fill="#0e2740" stroke="#2496ED" stroke-width="1.8"/>
-  <text x="576" y="82" font-size="12" fill="#7CC6F7" font-weight="700" text-anchor="middle">containerd</text>
+  <text x="576" y="82" font-size="12" fill="#5AC8FF" font-weight="700" text-anchor="middle">containerd</text>
   <text x="576" y="102" font-size="9" fill="#9aa0b4" text-anchor="middle">container lifecycle</text>
   <text x="576" y="114" font-size="9" fill="#9aa0b4" text-anchor="middle">pulls · snapshots</text>
-  <text x="576" y="132" font-size="8.5" fill="#6b7280" text-anchor="middle">an OCI standard</text>
+  <text x="576" y="132" font-size="8.5" fill="#6B6B78" text-anchor="middle">an OCI standard</text>
 
   <line x1="650" y1="100" x2="696" y2="100" stroke="#2496ED" stroke-width="1.6" marker-end="url(#da)"/>
 
   <rect x="700" y="56" width="136" height="88" rx="10" fill="#0e2740" stroke="#2496ED" stroke-width="1.8"/>
-  <text x="768" y="80" font-size="12" fill="#7CC6F7" font-weight="700" text-anchor="middle">shim + runc</text>
+  <text x="768" y="80" font-size="12" fill="#5AC8FF" font-weight="700" text-anchor="middle">shim + runc</text>
   <text x="768" y="100" font-size="9" fill="#9aa0b4" text-anchor="middle">sets the namespaces,</text>
   <text x="768" y="112" font-size="9" fill="#9aa0b4" text-anchor="middle">sets the cgroups,</text>
   <text x="768" y="124" font-size="9" fill="#9aa0b4" text-anchor="middle">then calls exec()</text>
 
-  <line x1="768" y1="170" x2="768" y2="212" stroke="#22D3EE" stroke-width="1.8" marker-end="url(#dc)"/>
+  <line x1="768" y1="170" x2="768" y2="212" stroke="#28B9FF" stroke-width="1.8" marker-end="url(#dc)"/>
 
-  <rect x="640" y="216" width="212" height="66" rx="10" fill="#0b2029" stroke="#22D3EE" stroke-width="2"/>
-  <text x="746" y="242" font-size="12" fill="#22D3EE" font-weight="700" text-anchor="middle">your process</text>
+  <rect x="640" y="216" width="212" height="66" rx="10" fill="#0b2029" stroke="#28B9FF" stroke-width="2"/>
+  <text x="746" y="242" font-size="12" fill="#28B9FF" font-weight="700" text-anchor="middle">your process</text>
   <text x="746" y="262" font-size="9" fill="#9aa0b4" text-anchor="middle">PID 1 · python -m etl</text>
 
-  <rect x="24" y="216" width="150" height="66" rx="10" fill="#241d0f" stroke="#f0b429" stroke-width="1.6"/>
-  <text x="99" y="242" font-size="11" fill="#f0b429" font-weight="700" text-anchor="middle">registry</text>
+  <rect x="24" y="216" width="150" height="66" rx="10" fill="#1D1D26" stroke="#9AA0B4" stroke-width="1.6"/>
+  <text x="99" y="242" font-size="11" fill="#9AA0B4" font-weight="700" text-anchor="middle">registry</text>
   <text x="99" y="262" font-size="9" fill="#9aa0b4" text-anchor="middle">pull / push layers</text>
-  <path d="M174 250 C 260 250 240 130 306 108" fill="none" stroke="#f0b429" stroke-width="1.4" stroke-dasharray="5,3" marker-end="url(#dy)"/>
+  <path d="M174 250 C 260 250 240 130 306 108" fill="none" stroke="#9AA0B4" stroke-width="1.4" stroke-dasharray="5,3" marker-end="url(#dy)"/>
 
   <text x="440" y="242" font-size="10" fill="#cdd0dd" text-anchor="middle">runc does its job and exits.</text>
   <text x="440" y="260" font-size="10" fill="#cdd0dd" text-anchor="middle">The shim stays as the parent — which is why</text>
   <text x="440" y="278" font-size="10" fill="#cdd0dd" text-anchor="middle">restarting dockerd doesn't kill your containers.</text>
 
-  <text x="440" y="316" font-size="10.5" fill="#6b7280" text-anchor="middle">a container is not "run by Docker" — it is run by the kernel, and Docker just does the paperwork</text>
+  <text x="440" y="316" font-size="10.5" fill="#6B6B78" text-anchor="middle">a container is not "run by Docker" — it is run by the kernel, and Docker just does the paperwork</text>
 </svg>
 <figcaption>Four programs, one command. The CLI sends JSON to a socket; the daemon does Docker-specific work; containerd and runc are shared OCI standards — Kubernetes and Podman use the same runc underneath.</figcaption>
 </figure>
@@ -514,46 +528,46 @@
 <svg viewBox="0 0 760 356" width="100%" aria-label="Namespaces limit what a process can see; cgroups limit what it can use">
   <defs>
     <marker id="da" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#2496ED"/></marker>
-    <marker id="dc" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#22D3EE"/></marker>
-    <marker id="dm" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#6b7280"/></marker>
-    <marker id="dr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#FF6B8B"/></marker>
-    <marker id="dy" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#f0b429"/></marker>
+    <marker id="dc" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#28B9FF"/></marker>
+    <marker id="dm" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#6B6B78"/></marker>
+    <marker id="dr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#9AA0B4"/></marker>
+    <marker id="dy" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#9AA0B4"/></marker>
   </defs>
   <rect x="20" y="44" width="350" height="228" rx="12" fill="#0e2740" stroke="#2496ED" stroke-width="1.6"/>
-  <text x="195" y="70" font-size="12" fill="#7CC6F7" font-weight="700" text-anchor="middle">NAMESPACES — what it can SEE</text>
-  <text x="195" y="88" font-size="9" fill="#6b7280" text-anchor="middle">the kernel lies to the process</text>
-  <rect x="44" y="102" width="302" height="22" rx="5" fill="#0d1420" stroke="#2b4a80"/><text x="56" y="117" font-size="9.5" fill="#7CC6F7">pid</text><text x="336" y="117" font-size="9" fill="#9aa0b4" text-anchor="end">its own PID 1 — sees no host process</text><rect x="44" y="129" width="302" height="22" rx="5" fill="#0d1420" stroke="#2b4a80"/><text x="56" y="144" font-size="9.5" fill="#7CC6F7">net</text><text x="336" y="144" font-size="9" fill="#9aa0b4" text-anchor="end">its own eth0, ports, routing table</text><rect x="44" y="156" width="302" height="22" rx="5" fill="#0d1420" stroke="#2b4a80"/><text x="56" y="171" font-size="9.5" fill="#7CC6F7">mnt</text><text x="336" y="171" font-size="9" fill="#9aa0b4" text-anchor="end">its own filesystem tree</text><rect x="44" y="183" width="302" height="22" rx="5" fill="#0d1420" stroke="#2b4a80"/><text x="56" y="198" font-size="9.5" fill="#7CC6F7">uts</text><text x="336" y="198" font-size="9" fill="#9aa0b4" text-anchor="end">its own hostname</text><rect x="44" y="210" width="302" height="22" rx="5" fill="#0d1420" stroke="#2b4a80"/><text x="56" y="225" font-size="9.5" fill="#7CC6F7">ipc</text><text x="336" y="225" font-size="9" fill="#9aa0b4" text-anchor="end">its own shared memory</text><rect x="44" y="237" width="302" height="22" rx="5" fill="#0d1420" stroke="#2b4a80"/><text x="56" y="252" font-size="9.5" fill="#7CC6F7">user</text><text x="336" y="252" font-size="9" fill="#9aa0b4" text-anchor="end">root inside ≠ root outside</text>
+  <text x="195" y="70" font-size="12" fill="#5AC8FF" font-weight="700" text-anchor="middle">NAMESPACES — what it can SEE</text>
+  <text x="195" y="88" font-size="9" fill="#6B6B78" text-anchor="middle">the kernel lies to the process</text>
+  <rect x="44" y="102" width="302" height="22" rx="5" fill="#0d1420" stroke="#2b4a80"/><text x="56" y="117" font-size="9.5" fill="#5AC8FF">pid</text><text x="336" y="117" font-size="9" fill="#9aa0b4" text-anchor="end">its own PID 1 — sees no host process</text><rect x="44" y="129" width="302" height="22" rx="5" fill="#0d1420" stroke="#2b4a80"/><text x="56" y="144" font-size="9.5" fill="#5AC8FF">net</text><text x="336" y="144" font-size="9" fill="#9aa0b4" text-anchor="end">its own eth0, ports, routing table</text><rect x="44" y="156" width="302" height="22" rx="5" fill="#0d1420" stroke="#2b4a80"/><text x="56" y="171" font-size="9.5" fill="#5AC8FF">mnt</text><text x="336" y="171" font-size="9" fill="#9aa0b4" text-anchor="end">its own filesystem tree</text><rect x="44" y="183" width="302" height="22" rx="5" fill="#0d1420" stroke="#2b4a80"/><text x="56" y="198" font-size="9.5" fill="#5AC8FF">uts</text><text x="336" y="198" font-size="9" fill="#9aa0b4" text-anchor="end">its own hostname</text><rect x="44" y="210" width="302" height="22" rx="5" fill="#0d1420" stroke="#2b4a80"/><text x="56" y="225" font-size="9.5" fill="#5AC8FF">ipc</text><text x="336" y="225" font-size="9" fill="#9aa0b4" text-anchor="end">its own shared memory</text><rect x="44" y="237" width="302" height="22" rx="5" fill="#0d1420" stroke="#2b4a80"/><text x="56" y="252" font-size="9.5" fill="#5AC8FF">user</text><text x="336" y="252" font-size="9" fill="#9aa0b4" text-anchor="end">root inside ≠ root outside</text>
 
-  <rect x="390" y="44" width="350" height="228" rx="12" fill="#241d0f" stroke="#f0b429" stroke-width="1.6"/>
-  <text x="565" y="70" font-size="12" fill="#f0b429" font-weight="700" text-anchor="middle">CGROUPS — how much it can USE</text>
-  <text x="565" y="88" font-size="9" fill="#6b7280" text-anchor="middle">the kernel meters the process</text>
+  <rect x="390" y="44" width="350" height="228" rx="12" fill="#1D1D26" stroke="#9AA0B4" stroke-width="1.6"/>
+  <text x="565" y="70" font-size="12" fill="#9AA0B4" font-weight="700" text-anchor="middle">CGROUPS — how much it can USE</text>
+  <text x="565" y="88" font-size="9" fill="#6B6B78" text-anchor="middle">the kernel meters the process</text>
 
-  <text x="414" y="118" font-size="9.5" fill="#f0b429">memory</text>
-  <rect x="486" y="108" width="230" height="13" rx="6" fill="#0d0d13" stroke="#3a2f16"/>
-  <rect x="486" y="108" width="150" height="13" rx="6" fill="#f0b429" opacity=".7"/>
+  <text x="414" y="118" font-size="9.5" fill="#9AA0B4">memory</text>
+  <rect x="486" y="108" width="230" height="13" rx="6" fill="#101017" stroke="#3a2f16"/>
+  <rect x="486" y="108" width="150" height="13" rx="6" fill="#9AA0B4" opacity=".7"/>
   <text x="640" y="118" font-size="8.5" fill="#9aa0b4">--memory=2g</text>
 
-  <text x="414" y="152" font-size="9.5" fill="#f0b429">cpu</text>
-  <rect x="486" y="142" width="230" height="13" rx="6" fill="#0d0d13" stroke="#3a2f16"/>
-  <rect x="486" y="142" width="104" height="13" rx="6" fill="#f0b429" opacity=".7"/>
+  <text x="414" y="152" font-size="9.5" fill="#9AA0B4">cpu</text>
+  <rect x="486" y="142" width="230" height="13" rx="6" fill="#101017" stroke="#3a2f16"/>
+  <rect x="486" y="142" width="104" height="13" rx="6" fill="#9AA0B4" opacity=".7"/>
   <text x="600" y="152" font-size="8.5" fill="#9aa0b4">--cpus=1.5</text>
 
-  <text x="414" y="186" font-size="9.5" fill="#f0b429">pids</text>
-  <rect x="486" y="176" width="230" height="13" rx="6" fill="#0d0d13" stroke="#3a2f16"/>
-  <rect x="486" y="176" width="64" height="13" rx="6" fill="#f0b429" opacity=".7"/>
+  <text x="414" y="186" font-size="9.5" fill="#9AA0B4">pids</text>
+  <rect x="486" y="176" width="230" height="13" rx="6" fill="#101017" stroke="#3a2f16"/>
+  <rect x="486" y="176" width="64" height="13" rx="6" fill="#9AA0B4" opacity=".7"/>
   <text x="560" y="186" font-size="8.5" fill="#9aa0b4">--pids-limit</text>
 
-  <text x="414" y="220" font-size="9.5" fill="#f0b429">io</text>
-  <rect x="486" y="210" width="230" height="13" rx="6" fill="#0d0d13" stroke="#3a2f16"/>
-  <rect x="486" y="210" width="128" height="13" rx="6" fill="#f0b429" opacity=".7"/>
+  <text x="414" y="220" font-size="9.5" fill="#9AA0B4">io</text>
+  <rect x="486" y="210" width="230" height="13" rx="6" fill="#101017" stroke="#3a2f16"/>
+  <rect x="486" y="210" width="128" height="13" rx="6" fill="#9AA0B4" opacity=".7"/>
   <text x="624" y="220" font-size="8.5" fill="#9aa0b4">--device-...</text>
 
-  <rect x="414" y="238" width="302" height="22" rx="5" fill="#331722" stroke="#FF6B8B" stroke-width="1.3"/>
-  <text x="565" y="253" font-size="8" fill="#FF6B8B" text-anchor="middle">over the memory cap → the kernel OOM-kills it → exit 137</text>
+  <rect x="414" y="238" width="302" height="22" rx="5" fill="#331722" stroke="#9AA0B4" stroke-width="1.3"/>
+  <text x="565" y="253" font-size="8" fill="#9AA0B4" text-anchor="middle">over the memory cap → the kernel OOM-kills it → exit 137</text>
 
-  <rect x="20" y="292" width="720" height="46" rx="10" fill="#15151b" stroke="#2c2c36"/>
+  <rect x="20" y="292" width="720" height="46" rx="10" fill="#23232C" stroke="#34343F"/>
   <text x="380" y="312" font-size="10.5" fill="#cdd0dd" text-anchor="middle">ONE shared kernel underneath — the "walls" are just bookkeeping inside it.</text>
-  <text x="380" y="330" font-size="9.5" fill="#6b7280" text-anchor="middle">This is why a container starts in milliseconds, and why a kernel exploit escapes every container on the box.</text>
+  <text x="380" y="330" font-size="9.5" fill="#6B6B78" text-anchor="middle">This is why a container starts in milliseconds, and why a kernel exploit escapes every container on the box.</text>
 </svg>
 <figcaption>Namespaces are the walls; cgroups are the meter. Add capabilities and seccomp — which limit what a process may <em>do</em> — and you have the whole of container isolation.</figcaption>
 </figure>
@@ -646,12 +660,12 @@ docker pull acme/etl:1.4.0   <span class="c"># byte-for-byte the same image</spa
 </div>
 
 <h3 class="reveal">Two rules that separate good Dockerfiles from bad ones</h3>
-<div class="cb reveal"><span class="lang">chain your RUNs — and know why</span><pre><span class="r">✗ BAD — three layers, and the "cleanup" achieves nothing</span>
+<div class="cb reveal"><span class="lang">chain your RUNs — and know why</span><pre><span class="r">− BAD — three layers, and the "cleanup" achieves nothing</span>
 <span class="k">RUN</span> apt-get update
 <span class="k">RUN</span> apt-get install -y gcc
 <span class="k">RUN</span> rm -rf /var/lib/apt/lists/*     <span class="c"># the files are STILL in the layer below!</span>
 
-<span class="g">✓ GOOD — one layer; the deleted files never exist in any layer</span>
+<span class="g">+ GOOD — one layer; the deleted files never exist in any layer</span>
 <span class="k">RUN</span> apt-get update \
     &amp;&amp; apt-get install -y --no-install-recommends gcc \
     &amp;&amp; rm -rf /var/lib/apt/lists/*</pre></div>
@@ -679,71 +693,71 @@ notebooks/
 <figure class="fig reveal">
 <svg viewBox="0 0 760 430" font-family="var(--font)" aria-label="With COPY dot dot first, changing one source file invalidates the pip install layer and everything below; copying requirements first keeps the expensive layer cached">
   <defs>
-    <marker id="k-r" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#FF6B8B"/></marker>
+    <marker id="k-r" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#9AA0B4"/></marker>
   </defs>
 
   <text x="380" y="30" font-size="11" fill="#9aa0b4" text-anchor="middle">you edit one line of Python. What does Docker rebuild?</text>
 
   <!-- PANEL A -->
   <rect x="24" y="44" width="340" height="330" rx="12" fill="#22121A" stroke="#3D2130"/>
-  <text x="44" y="72" font-size="11.5" fill="#FF6B8B" font-weight="700">COPY . .  before  pip install</text>
+  <text x="44" y="72" font-size="11.5" fill="#9AA0B4" font-weight="700">COPY . .  before  pip install</text>
 
   <g font-size="9.5">
-    <rect x="44" y="88" width="220" height="32" rx="6" fill="#0B2029" stroke="#22D3EE"/><text x="58" y="108" fill="#cdd0dd">FROM python:3.12-slim</text>
-    <text x="344" y="108" fill="#22D3EE" text-anchor="end">✓ cached</text>
+    <rect x="44" y="88" width="220" height="32" rx="6" fill="#0B2029" stroke="#28B9FF"/><text x="58" y="108" fill="#cdd0dd">FROM python:3.12-slim</text>
+    <text x="344" y="108" fill="#28B9FF" text-anchor="end">+ cached</text>
 
-    <rect x="44" y="128" width="220" height="32" rx="6" fill="#22121A" stroke="#FF6B8B" stroke-width="1.6"/><text x="58" y="148" fill="#FF6B8B">COPY . .</text>
-    <text x="344" y="148" fill="#FF6B8B" text-anchor="end">✗ changed</text>
+    <rect x="44" y="128" width="220" height="32" rx="6" fill="#22121A" stroke="#9AA0B4" stroke-width="1.6"/><text x="58" y="148" fill="#9AA0B4">COPY . .</text>
+    <text x="344" y="148" fill="#9AA0B4" text-anchor="end">− changed</text>
 
-    <rect x="44" y="168" width="220" height="32" rx="6" fill="#22121A" stroke="#FF6B8B" stroke-width="1.6"/><text x="58" y="188" fill="#FF6B8B">RUN pip install</text>
-    <text x="344" y="188" fill="#FF6B8B" text-anchor="end">✗ re-runs</text>
+    <rect x="44" y="168" width="220" height="32" rx="6" fill="#22121A" stroke="#9AA0B4" stroke-width="1.6"/><text x="58" y="188" fill="#9AA0B4">RUN pip install</text>
+    <text x="344" y="188" fill="#9AA0B4" text-anchor="end">− re-runs</text>
 
-    <rect x="44" y="208" width="220" height="32" rx="6" fill="#22121A" stroke="#FF6B8B" stroke-width="1.6"/><text x="58" y="228" fill="#FF6B8B">COPY src/</text>
-    <text x="344" y="228" fill="#FF6B8B" text-anchor="end">✗ rebuilt</text>
+    <rect x="44" y="208" width="220" height="32" rx="6" fill="#22121A" stroke="#9AA0B4" stroke-width="1.6"/><text x="58" y="228" fill="#9AA0B4">COPY src/</text>
+    <text x="344" y="228" fill="#9AA0B4" text-anchor="end">− rebuilt</text>
 
-    <rect x="44" y="248" width="220" height="32" rx="6" fill="#22121A" stroke="#FF6B8B" stroke-width="1.6"/><text x="58" y="268" fill="#FF6B8B">CMD</text>
-    <text x="344" y="268" fill="#FF6B8B" text-anchor="end">✗ rebuilt</text>
+    <rect x="44" y="248" width="220" height="32" rx="6" fill="#22121A" stroke="#9AA0B4" stroke-width="1.6"/><text x="58" y="268" fill="#9AA0B4">CMD</text>
+    <text x="344" y="268" fill="#9AA0B4" text-anchor="end">− rebuilt</text>
   </g>
-  <line x1="34" y1="132" x2="34" y2="276" stroke="#FF6B8B" stroke-width="1.4" stroke-dasharray="4 3" marker-end="url(#k-r)"/>
-  <text x="194" y="300" font-size="9" fill="#FF6B8B" text-anchor="middle">the cache breaks at the top — everything below falls with it</text>
-  <rect x="94" y="316" width="200" height="36" rx="8" fill="#331722" stroke="#FF6B8B" stroke-width="1.6"/>
-  <text x="194" y="339" font-size="11" fill="#FF6B8B" text-anchor="middle">rebuild: ~2 minutes</text>
+  <line x1="34" y1="132" x2="34" y2="276" stroke="#9AA0B4" stroke-width="1.4" stroke-dasharray="4 3" marker-end="url(#k-r)"/>
+  <text x="194" y="300" font-size="9" fill="#9AA0B4" text-anchor="middle">the cache breaks at the top — everything below falls with it</text>
+  <rect x="94" y="316" width="200" height="36" rx="8" fill="#331722" stroke="#9AA0B4" stroke-width="1.6"/>
+  <text x="194" y="339" font-size="11" fill="#9AA0B4" text-anchor="middle">rebuild: ~2 minutes</text>
 
   <!-- PANEL B -->
   <rect x="396" y="44" width="340" height="330" rx="12" fill="#0A2028" stroke="#14384A"/>
-  <text x="416" y="72" font-size="11.5" fill="#22D3EE" font-weight="700">requirements.txt  first</text>
+  <text x="416" y="72" font-size="11.5" fill="#28B9FF" font-weight="700">requirements.txt  first</text>
 
   <g font-size="9.5">
-    <rect x="416" y="88" width="220" height="32" rx="6" fill="#0B2029" stroke="#22D3EE"/><text x="430" y="108" fill="#cdd0dd">FROM python:3.12-slim</text>
-    <text x="716" y="108" fill="#22D3EE" text-anchor="end">✓ cached</text>
+    <rect x="416" y="88" width="220" height="32" rx="6" fill="#0B2029" stroke="#28B9FF"/><text x="430" y="108" fill="#cdd0dd">FROM python:3.12-slim</text>
+    <text x="716" y="108" fill="#28B9FF" text-anchor="end">+ cached</text>
 
-    <rect x="416" y="128" width="220" height="32" rx="6" fill="#0B2029" stroke="#22D3EE"/><text x="430" y="148" fill="#cdd0dd">COPY requirements.txt</text>
-    <text x="716" y="148" fill="#22D3EE" text-anchor="end">✓ unchanged</text>
+    <rect x="416" y="128" width="220" height="32" rx="6" fill="#0B2029" stroke="#28B9FF"/><text x="430" y="148" fill="#cdd0dd">COPY requirements.txt</text>
+    <text x="716" y="148" fill="#28B9FF" text-anchor="end">+ unchanged</text>
 
-    <rect x="416" y="168" width="220" height="32" rx="6" fill="#0D3040" stroke="#22D3EE" stroke-width="2"/><text x="430" y="188" fill="#8DE8F5">RUN pip install</text>
-    <text x="716" y="188" fill="#22D3EE" text-anchor="end">✓ CACHED · 0 s</text>
+    <rect x="416" y="168" width="220" height="32" rx="6" fill="#0D3040" stroke="#28B9FF" stroke-width="2"/><text x="430" y="188" fill="#8DE8F5">RUN pip install</text>
+    <text x="716" y="188" fill="#28B9FF" text-anchor="end">+ CACHED · 0 s</text>
 
-    <rect x="416" y="208" width="220" height="32" rx="6" fill="#241d0f" stroke="#f0b429" stroke-width="1.6"/><text x="430" y="228" fill="#f0b429">COPY src/</text>
-    <text x="716" y="228" fill="#f0b429" text-anchor="end">✗ rebuilt</text>
+    <rect x="416" y="208" width="220" height="32" rx="6" fill="#1D1D26" stroke="#9AA0B4" stroke-width="1.6"/><text x="430" y="228" fill="#9AA0B4">COPY src/</text>
+    <text x="716" y="228" fill="#9AA0B4" text-anchor="end">− rebuilt</text>
 
-    <rect x="416" y="248" width="220" height="32" rx="6" fill="#241d0f" stroke="#f0b429" stroke-width="1.6"/><text x="430" y="268" fill="#f0b429">CMD</text>
-    <text x="716" y="268" fill="#f0b429" text-anchor="end">✗ rebuilt</text>
+    <rect x="416" y="248" width="220" height="32" rx="6" fill="#1D1D26" stroke="#9AA0B4" stroke-width="1.6"/><text x="430" y="268" fill="#9AA0B4">CMD</text>
+    <text x="716" y="268" fill="#9AA0B4" text-anchor="end">− rebuilt</text>
   </g>
-  <line x1="406" y1="212" x2="406" y2="276" stroke="#f0b429" stroke-width="1.4" stroke-dasharray="4 3"/>
-  <text x="566" y="300" font-size="9" fill="#22D3EE" text-anchor="middle">the break happens LOW — only the two cheap layers rebuild</text>
-  <rect x="466" y="316" width="200" height="36" rx="8" fill="#0D3040" stroke="#22D3EE" stroke-width="1.6"/>
-  <text x="566" y="339" font-size="11" fill="#22D3EE" text-anchor="middle">rebuild: ~2 seconds</text>
+  <line x1="406" y1="212" x2="406" y2="276" stroke="#9AA0B4" stroke-width="1.4" stroke-dasharray="4 3"/>
+  <text x="566" y="300" font-size="9" fill="#28B9FF" text-anchor="middle">the break happens LOW — only the two cheap layers rebuild</text>
+  <rect x="466" y="316" width="200" height="36" rx="8" fill="#0D3040" stroke="#28B9FF" stroke-width="1.6"/>
+  <text x="566" y="339" font-size="11" fill="#28B9FF" text-anchor="middle">rebuild: ~2 seconds</text>
 
   <text x="380" y="404" font-size="11" fill="#9aa0b4" text-anchor="middle">The rule: order instructions from LEAST likely to change (base, deps) → MOST likely (your code).</text>
 </svg>
 <figcaption>The cache is invalidated <em>downward</em> from the first changed instruction. Put the slow <code>pip install</code> above your fast-changing source and it stays cached for weeks.</figcaption>
 </figure>
 
-<div class="cb reveal"><span class="lang">the difference, in code</span><pre><span class="r">✗ SLOW — every code edit reinstalls every package</span>
+<div class="cb reveal"><span class="lang">the difference, in code</span><pre><span class="r">− SLOW — every code edit reinstalls every package</span>
 <span class="k">COPY</span> . .                                    <span class="c"># any file changes → cache busted here</span>
 <span class="k">RUN</span> pip install -r requirements.txt         <span class="c"># …so this re-runs. 2 minutes. Every build.</span>
 
-<span class="g">✓ FAST — the install layer is reused until your dependencies actually change</span>
+<span class="g">+ FAST — the install layer is reused until your dependencies actually change</span>
 <span class="k">COPY</span> requirements.txt .                     <span class="c"># only busts when THIS file changes</span>
 <span class="k">RUN</span> pip install -r requirements.txt         <span class="c"># cached for weeks at a time</span>
 <span class="k">COPY</span> src/ ./src/                            <span class="c"># the fast-changing stuff goes LAST</span></pre></div>
@@ -761,43 +775,43 @@ notebooks/
 <svg viewBox="0 0 760 330" width="100%" aria-label="The legacy builder runs sequentially; BuildKit builds a graph and runs independent stages in parallel">
   <defs>
     <marker id="da" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#2496ED"/></marker>
-    <marker id="dc" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#22D3EE"/></marker>
-    <marker id="dm" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#6b7280"/></marker>
-    <marker id="dr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#FF6B8B"/></marker>
-    <marker id="dy" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#f0b429"/></marker>
+    <marker id="dc" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#28B9FF"/></marker>
+    <marker id="dm" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#6B6B78"/></marker>
+    <marker id="dr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#9AA0B4"/></marker>
+    <marker id="dy" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#9AA0B4"/></marker>
   </defs>
   <rect x="20" y="40" width="330" height="184" rx="12" fill="#22121A" stroke="#3D2130"/>
-  <text x="185" y="64" font-size="11.5" fill="#FF6B8B" font-weight="700" text-anchor="middle">LEGACY — one line at a time</text>
-  <rect x="52" y="80" width="266" height="24" rx="6" fill="#1f1513" stroke="#FF6B8B" stroke-width="1.3"/><text x="66" y="96" font-size="9.5" fill="#cdd0dd">FROM python  · base</text><rect x="52" y="112" width="266" height="24" rx="6" fill="#1f1513" stroke="#FF6B8B" stroke-width="1.3"/><text x="66" y="128" font-size="9.5" fill="#cdd0dd">RUN apt-get  · 40 s</text><rect x="52" y="144" width="266" height="24" rx="6" fill="#1f1513" stroke="#FF6B8B" stroke-width="1.3"/><text x="66" y="160" font-size="9.5" fill="#cdd0dd">RUN pip install · 90 s</text><rect x="52" y="176" width="266" height="24" rx="6" fill="#1f1513" stroke="#FF6B8B" stroke-width="1.3"/><text x="66" y="192" font-size="9.5" fill="#cdd0dd">COPY src/ · 1 s</text>
-  <text x="185" y="214" font-size="10" fill="#FF6B8B" text-anchor="middle">strictly sequential — 131 s</text>
+  <text x="185" y="64" font-size="11.5" fill="#9AA0B4" font-weight="700" text-anchor="middle">LEGACY — one line at a time</text>
+  <rect x="52" y="80" width="266" height="24" rx="6" fill="#1f1513" stroke="#9AA0B4" stroke-width="1.3"/><text x="66" y="96" font-size="9.5" fill="#cdd0dd">FROM python  · base</text><rect x="52" y="112" width="266" height="24" rx="6" fill="#1f1513" stroke="#9AA0B4" stroke-width="1.3"/><text x="66" y="128" font-size="9.5" fill="#cdd0dd">RUN apt-get  · 40 s</text><rect x="52" y="144" width="266" height="24" rx="6" fill="#1f1513" stroke="#9AA0B4" stroke-width="1.3"/><text x="66" y="160" font-size="9.5" fill="#cdd0dd">RUN pip install · 90 s</text><rect x="52" y="176" width="266" height="24" rx="6" fill="#1f1513" stroke="#9AA0B4" stroke-width="1.3"/><text x="66" y="192" font-size="9.5" fill="#cdd0dd">COPY src/ · 1 s</text>
+  <text x="185" y="214" font-size="10" fill="#9AA0B4" text-anchor="middle">strictly sequential — 131 s</text>
 
   <rect x="410" y="40" width="330" height="184" rx="12" fill="#0b2029" stroke="#12414d"/>
-  <text x="575" y="64" font-size="11.5" fill="#22D3EE" font-weight="700" text-anchor="middle">BUILDKIT — a graph</text>
-  <rect x="440" y="80" width="120" height="24" rx="6" fill="#0d1420" stroke="#22D3EE" stroke-width="1.3"/>
+  <text x="575" y="64" font-size="11.5" fill="#28B9FF" font-weight="700" text-anchor="middle">BUILDKIT — a graph</text>
+  <rect x="440" y="80" width="120" height="24" rx="6" fill="#0d1420" stroke="#28B9FF" stroke-width="1.3"/>
   <text x="500" y="96" font-size="9.5" fill="#cdd0dd" text-anchor="middle">base image</text>
-  <line x1="500" y1="106" x2="500" y2="118" stroke="#22D3EE" stroke-width="1.3"/>
-  <line x1="470" y1="118" x2="640" y2="118" stroke="#22D3EE" stroke-width="1.3"/>
-  <line x1="470" y1="118" x2="470" y2="130" stroke="#22D3EE" stroke-width="1.3" marker-end="url(#dc)"/>
-  <line x1="640" y1="118" x2="640" y2="130" stroke="#22D3EE" stroke-width="1.3" marker-end="url(#dc)"/>
-  <rect x="424" y="136" width="98" height="24" rx="6" fill="#0d1420" stroke="#22D3EE" stroke-width="1.3"/>
+  <line x1="500" y1="106" x2="500" y2="118" stroke="#28B9FF" stroke-width="1.3"/>
+  <line x1="470" y1="118" x2="640" y2="118" stroke="#28B9FF" stroke-width="1.3"/>
+  <line x1="470" y1="118" x2="470" y2="130" stroke="#28B9FF" stroke-width="1.3" marker-end="url(#dc)"/>
+  <line x1="640" y1="118" x2="640" y2="130" stroke="#28B9FF" stroke-width="1.3" marker-end="url(#dc)"/>
+  <rect x="424" y="136" width="98" height="24" rx="6" fill="#0d1420" stroke="#28B9FF" stroke-width="1.3"/>
   <text x="473" y="152" font-size="9" fill="#cdd0dd" text-anchor="middle">apt · 40 s</text>
-  <rect x="588" y="136" width="106" height="24" rx="6" fill="#0d1420" stroke="#22D3EE" stroke-width="1.3"/>
+  <rect x="588" y="136" width="106" height="24" rx="6" fill="#0d1420" stroke="#28B9FF" stroke-width="1.3"/>
   <text x="641" y="152" font-size="9" fill="#cdd0dd" text-anchor="middle">pip · 90 s</text>
-  <text x="555" y="150" font-size="8" fill="#22D3EE" text-anchor="middle">in parallel</text>
-  <line x1="473" y1="162" x2="473" y2="176" stroke="#22D3EE" stroke-width="1.3"/>
-  <line x1="641" y1="162" x2="641" y2="176" stroke="#22D3EE" stroke-width="1.3"/>
-  <line x1="473" y1="176" x2="641" y2="176" stroke="#22D3EE" stroke-width="1.3"/>
-  <line x1="557" y1="176" x2="557" y2="186" stroke="#22D3EE" stroke-width="1.3" marker-end="url(#dc)"/>
-  <rect x="497" y="190" width="120" height="24" rx="6" fill="#0d1420" stroke="#22D3EE" stroke-width="1.3"/>
+  <text x="555" y="150" font-size="8" fill="#28B9FF" text-anchor="middle">in parallel</text>
+  <line x1="473" y1="162" x2="473" y2="176" stroke="#28B9FF" stroke-width="1.3"/>
+  <line x1="641" y1="162" x2="641" y2="176" stroke="#28B9FF" stroke-width="1.3"/>
+  <line x1="473" y1="176" x2="641" y2="176" stroke="#28B9FF" stroke-width="1.3"/>
+  <line x1="557" y1="176" x2="557" y2="186" stroke="#28B9FF" stroke-width="1.3" marker-end="url(#dc)"/>
+  <rect x="497" y="190" width="120" height="24" rx="6" fill="#0d1420" stroke="#28B9FF" stroke-width="1.3"/>
   <text x="557" y="206" font-size="9.5" fill="#cdd0dd" text-anchor="middle">COPY src/</text>
-  <text x="575" y="214" font-size="10" fill="#22D3EE" text-anchor="end" opacity="0"> </text>
+  <text x="575" y="214" font-size="10" fill="#28B9FF" text-anchor="end" opacity="0"> </text>
 
-  <rect x="20" y="240" width="720" height="70" rx="10" fill="#15151b" stroke="#2c2c36"/>
+  <rect x="20" y="240" width="720" height="70" rx="10" fill="#23232C" stroke="#34343F"/>
   <text x="380" y="262" font-size="10.5" fill="#cdd0dd" text-anchor="middle">independent steps run at the same time — the slow ones overlap instead of queueing</text>
-  <rect x="196" y="274" width="170" height="24" rx="6" fill="#0b2029" stroke="#22D3EE" stroke-width="1.3"/>
-  <text x="281" y="290" font-size="9.5" fill="#22D3EE" text-anchor="middle">unused stages: skipped</text>
-  <rect x="394" y="274" width="170" height="24" rx="6" fill="#0b2029" stroke="#22D3EE" stroke-width="1.3"/>
-  <text x="479" y="290" font-size="9.5" fill="#22D3EE" text-anchor="middle">cache mounts: persisted</text>
+  <rect x="196" y="274" width="170" height="24" rx="6" fill="#0b2029" stroke="#28B9FF" stroke-width="1.3"/>
+  <text x="281" y="290" font-size="9.5" fill="#28B9FF" text-anchor="middle">unused stages: skipped</text>
+  <rect x="394" y="274" width="170" height="24" rx="6" fill="#0b2029" stroke="#28B9FF" stroke-width="1.3"/>
+  <text x="479" y="290" font-size="9.5" fill="#28B9FF" text-anchor="middle">cache mounts: persisted</text>
 </svg>
 <figcaption>BuildKit resolves the Dockerfile into a DAG. Stages nothing depends on are never built at all, and independent stages run concurrently.</figcaption>
 </figure>
@@ -858,31 +872,31 @@ docker buildx build --platform linux/amd64,linux/arm64 \
     <marker id="s-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#2496ED"/></marker>
   </defs>
 
-  <rect x="30" y="52" width="280" height="152" rx="12" fill="#241d0f" stroke="#f0b429" stroke-width="1.8"/>
-  <text x="170" y="80" font-size="12" fill="#f0b429" font-weight="700" text-anchor="middle">STAGE 1 · builder</text>
+  <rect x="30" y="52" width="280" height="152" rx="12" fill="#1D1D26" stroke="#9AA0B4" stroke-width="1.8"/>
+  <text x="170" y="80" font-size="12" fill="#9AA0B4" font-weight="700" text-anchor="middle">STAGE 1 · builder</text>
   <text x="170" y="106" font-size="10" fill="#9aa0b4" text-anchor="middle">FROM python:3.12  (the full image)</text>
   <text x="170" y="128" font-size="10" fill="#9aa0b4" text-anchor="middle">+ gcc, headers, build tools</text>
   <text x="170" y="150" font-size="10" fill="#9aa0b4" text-anchor="middle">+ pip install → compiled wheels</text>
-  <text x="170" y="182" font-size="11.5" fill="#FF6B8B" text-anchor="middle">1.2 GB — never shipped</text>
+  <text x="170" y="182" font-size="11.5" fill="#9AA0B4" text-anchor="middle">1.2 GB — never shipped</text>
 
   <line x1="318" y1="128" x2="442" y2="128" stroke="#2496ED" stroke-width="1.8" marker-end="url(#s-a)"/>
-  <text x="380" y="116" font-size="10" fill="#7CC6F7" text-anchor="middle">COPY --from=builder</text>
-  <text x="380" y="148" font-size="9.5" fill="#6b7280" text-anchor="middle">only the built packages</text>
+  <text x="380" y="116" font-size="10" fill="#5AC8FF" text-anchor="middle">COPY --from=builder</text>
+  <text x="380" y="148" font-size="9.5" fill="#6B6B78" text-anchor="middle">only the built packages</text>
 
   <rect x="450" y="66" width="280" height="124" rx="12" fill="#0e2740" stroke="#2496ED" stroke-width="1.8"/>
-  <text x="590" y="94" font-size="12" fill="#7CC6F7" font-weight="700" text-anchor="middle">STAGE 2 · runtime</text>
+  <text x="590" y="94" font-size="12" fill="#5AC8FF" font-weight="700" text-anchor="middle">STAGE 2 · runtime</text>
   <text x="590" y="120" font-size="10" fill="#9aa0b4" text-anchor="middle">FROM python:3.12-slim</text>
   <text x="590" y="142" font-size="10" fill="#9aa0b4" text-anchor="middle">+ the packages + your code</text>
-  <text x="590" y="172" font-size="11.5" fill="#22D3EE" text-anchor="middle">180 MB — this is what ships</text>
+  <text x="590" y="172" font-size="11.5" fill="#28B9FF" text-anchor="middle">180 MB — this is what ships</text>
 
   <!-- size bars -->
-  <text x="30" y="248" font-size="10" fill="#6b7280">builder</text>
-  <rect x="96" y="236" width="480" height="16" rx="4" fill="#3a2f16" stroke="#c9922a"/>
-  <text x="588" y="248" font-size="10" fill="#FF6B8B">1.2 GB</text>
+  <text x="30" y="248" font-size="10" fill="#6B6B78">builder</text>
+  <rect x="96" y="236" width="480" height="16" rx="4" fill="#3a2f16" stroke="#9AA0B4"/>
+  <text x="588" y="248" font-size="10" fill="#9AA0B4">1.2 GB</text>
 
-  <text x="30" y="280" font-size="10" fill="#6b7280">shipped</text>
+  <text x="30" y="280" font-size="10" fill="#6B6B78">shipped</text>
   <rect x="96" y="268" width="72" height="16" rx="4" fill="#13314f" stroke="#2496ED"/>
-  <text x="180" y="280" font-size="10" fill="#22D3EE">180 MB — 7× smaller, and no compiler in production</text>
+  <text x="180" y="280" font-size="10" fill="#28B9FF">180 MB — 7× smaller, and no compiler in production</text>
 </svg>
 <figcaption>The compiler never reaches production: smaller pulls, faster cold starts, and a much smaller attack surface — there's no <code>gcc</code> in the image for anyone to use.</figcaption>
 </figure>
@@ -917,50 +931,50 @@ docker buildx build --platform linux/amd64,linux/arm64 \
 <svg viewBox="0 0 760 372" width="100%" aria-label="A manifest list points at per-architecture manifests, which point at a config and layer blobs">
   <defs>
     <marker id="da" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#2496ED"/></marker>
-    <marker id="dc" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#22D3EE"/></marker>
-    <marker id="dm" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#6b7280"/></marker>
-    <marker id="dr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#FF6B8B"/></marker>
-    <marker id="dy" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#f0b429"/></marker>
+    <marker id="dc" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#28B9FF"/></marker>
+    <marker id="dm" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#6B6B78"/></marker>
+    <marker id="dr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#9AA0B4"/></marker>
+    <marker id="dy" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#9AA0B4"/></marker>
   </defs>
-  <rect x="248" y="26" width="264" height="52" rx="10" fill="#241d0f" stroke="#f0b429" stroke-width="1.8"/>
-  <text x="380" y="47" font-size="11.5" fill="#f0b429" font-weight="700" text-anchor="middle">manifest list ("fat manifest")</text>
+  <rect x="248" y="26" width="264" height="52" rx="10" fill="#1D1D26" stroke="#9AA0B4" stroke-width="1.8"/>
+  <text x="380" y="47" font-size="11.5" fill="#9AA0B4" font-weight="700" text-anchor="middle">manifest list ("fat manifest")</text>
   <text x="380" y="66" font-size="9" fill="#9aa0b4" text-anchor="middle">acme/etl:1.4.0 → one tag, many CPUs</text>
 
-  <line x1="330" y1="82" x2="230" y2="112" stroke="#f0b429" stroke-width="1.5" marker-end="url(#dy)"/>
-  <line x1="430" y1="82" x2="530" y2="112" stroke="#f0b429" stroke-width="1.5" marker-end="url(#dy)"/>
+  <line x1="330" y1="82" x2="230" y2="112" stroke="#9AA0B4" stroke-width="1.5" marker-end="url(#dy)"/>
+  <line x1="430" y1="82" x2="530" y2="112" stroke="#9AA0B4" stroke-width="1.5" marker-end="url(#dy)"/>
 
   <rect x="96" y="116" width="240" height="46" rx="9" fill="#0e2740" stroke="#2496ED" stroke-width="1.6"/>
-  <text x="216" y="136" font-size="10.5" fill="#7CC6F7" font-weight="700" text-anchor="middle">manifest · linux/amd64</text>
-  <text x="216" y="152" font-size="8.5" fill="#6b7280" text-anchor="middle">sha256:9f2c1ab…</text>
+  <text x="216" y="136" font-size="10.5" fill="#5AC8FF" font-weight="700" text-anchor="middle">manifest · linux/amd64</text>
+  <text x="216" y="152" font-size="8.5" fill="#6B6B78" text-anchor="middle">sha256:9f2c1ab…</text>
 
   <rect x="424" y="116" width="240" height="46" rx="9" fill="#0e2740" stroke="#2496ED" stroke-width="1.6" stroke-dasharray="5,3"/>
-  <text x="544" y="136" font-size="10.5" fill="#7CC6F7" font-weight="700" text-anchor="middle">manifest · linux/arm64</text>
-  <text x="544" y="152" font-size="8.5" fill="#6b7280" text-anchor="middle">sha256:3ba91cd…</text>
+  <text x="544" y="136" font-size="10.5" fill="#5AC8FF" font-weight="700" text-anchor="middle">manifest · linux/arm64</text>
+  <text x="544" y="152" font-size="8.5" fill="#6B6B78" text-anchor="middle">sha256:3ba91cd…</text>
 
   <line x1="216" y1="166" x2="216" y2="182" stroke="#2496ED" stroke-width="1.5"/>
   <line x1="115" y1="182" x2="338" y2="182" stroke="#2496ED" stroke-width="1.5"/>
   <line x1="115" y1="182" x2="115" y2="196" stroke="#2496ED" stroke-width="1.5" marker-end="url(#da)"/>
   <line x1="338" y1="182" x2="338" y2="196" stroke="#2496ED" stroke-width="1.5" marker-end="url(#da)"/>
 
-  <rect x="40" y="200" width="150" height="52" rx="9" fill="#0b2029" stroke="#22D3EE" stroke-width="1.6"/>
-  <text x="115" y="221" font-size="10" fill="#22D3EE" font-weight="700" text-anchor="middle">config JSON</text>
+  <rect x="40" y="200" width="150" height="52" rx="9" fill="#0b2029" stroke="#28B9FF" stroke-width="1.6"/>
+  <text x="115" y="221" font-size="10" fill="#28B9FF" font-weight="700" text-anchor="middle">config JSON</text>
   <text x="115" y="238" font-size="8.5" fill="#9aa0b4" text-anchor="middle">CMD · ENV · USER</text>
 
-  <rect x="212" y="200" width="252" height="140" rx="9" fill="#0d0d13" stroke="#f0b429" stroke-width="1.4"/>
-  <text x="338" y="220" font-size="10" fill="#f0b429" font-weight="700" text-anchor="middle">layer blobs (tar.gz)</text>
-  <rect x="228" y="230" width="220" height="20" rx="4" fill="#241d0f" stroke="#f0b429" stroke-width="1.1"/><text x="240" y="244" font-size="8.5" fill="#cdd0dd">sha256:a1b2… · debian base</text><text x="440" y="244" font-size="8" fill="#6b7280" text-anchor="end">74 MB</text><rect x="228" y="256" width="220" height="20" rx="4" fill="#241d0f" stroke="#f0b429" stroke-width="1.1"/><text x="240" y="270" font-size="8.5" fill="#cdd0dd">sha256:c3d4… · apt packages</text><text x="440" y="270" font-size="8" fill="#6b7280" text-anchor="end">28 MB</text><rect x="228" y="282" width="220" height="20" rx="4" fill="#241d0f" stroke="#f0b429" stroke-width="1.1"/><text x="240" y="296" font-size="8.5" fill="#cdd0dd">sha256:e5f6… · pip wheels</text><text x="440" y="296" font-size="8" fill="#6b7280" text-anchor="end">61 MB</text><rect x="228" y="308" width="220" height="20" rx="4" fill="#241d0f" stroke="#f0b429" stroke-width="1.1"/><text x="240" y="322" font-size="8.5" fill="#cdd0dd">sha256:0789… · your src/</text><text x="440" y="322" font-size="8" fill="#6b7280" text-anchor="end">2 MB</text>
+  <rect x="212" y="200" width="252" height="140" rx="9" fill="#101017" stroke="#9AA0B4" stroke-width="1.4"/>
+  <text x="338" y="220" font-size="10" fill="#9AA0B4" font-weight="700" text-anchor="middle">layer blobs (tar.gz)</text>
+  <rect x="228" y="230" width="220" height="20" rx="4" fill="#1D1D26" stroke="#9AA0B4" stroke-width="1.1"/><text x="240" y="244" font-size="8.5" fill="#cdd0dd">sha256:a1b2… · debian base</text><text x="440" y="244" font-size="8" fill="#6B6B78" text-anchor="end">74 MB</text><rect x="228" y="256" width="220" height="20" rx="4" fill="#1D1D26" stroke="#9AA0B4" stroke-width="1.1"/><text x="240" y="270" font-size="8.5" fill="#cdd0dd">sha256:c3d4… · apt packages</text><text x="440" y="270" font-size="8" fill="#6B6B78" text-anchor="end">28 MB</text><rect x="228" y="282" width="220" height="20" rx="4" fill="#1D1D26" stroke="#9AA0B4" stroke-width="1.1"/><text x="240" y="296" font-size="8.5" fill="#cdd0dd">sha256:e5f6… · pip wheels</text><text x="440" y="296" font-size="8" fill="#6B6B78" text-anchor="end">61 MB</text><rect x="228" y="308" width="220" height="20" rx="4" fill="#1D1D26" stroke="#9AA0B4" stroke-width="1.1"/><text x="240" y="322" font-size="8.5" fill="#cdd0dd">sha256:0789… · your src/</text><text x="440" y="322" font-size="8" fill="#6B6B78" text-anchor="end">2 MB</text>
 
-  <rect x="486" y="200" width="234" height="90" rx="9" fill="#0b2029" stroke="#22D3EE" stroke-width="1.6"/>
-  <text x="603" y="222" font-size="10" fill="#22D3EE" font-weight="700" text-anchor="middle">content-addressed</text>
+  <rect x="486" y="200" width="234" height="90" rx="9" fill="#0b2029" stroke="#28B9FF" stroke-width="1.6"/>
+  <text x="603" y="222" font-size="10" fill="#28B9FF" font-weight="700" text-anchor="middle">content-addressed</text>
   <text x="603" y="242" font-size="9" fill="#9aa0b4" text-anchor="middle">the hash IS the name</text>
   <text x="603" y="260" font-size="9" fill="#9aa0b4" text-anchor="middle">same layer in 10 images</text>
   <text x="603" y="276" font-size="9" fill="#9aa0b4" text-anchor="middle">= stored + pulled ONCE</text>
 
-  <rect x="486" y="302" width="234" height="38" rx="8" fill="#331722" stroke="#FF6B8B" stroke-width="1.4"/>
-  <text x="603" y="318" font-size="9" fill="#FF6B8B" text-anchor="middle">a TAG can be moved to new bytes</text>
-  <text x="603" y="332" font-size="9" fill="#FF6B8B" text-anchor="middle">a DIGEST cannot — pin it in prod</text>
+  <rect x="486" y="302" width="234" height="38" rx="8" fill="#331722" stroke="#9AA0B4" stroke-width="1.4"/>
+  <text x="603" y="318" font-size="9" fill="#9AA0B4" text-anchor="middle">a TAG can be moved to new bytes</text>
+  <text x="603" y="332" font-size="9" fill="#9AA0B4" text-anchor="middle">a DIGEST cannot — pin it in prod</text>
 
-  <text x="338" y="362" font-size="10" fill="#6b7280" text-anchor="middle">docker pull = fetch manifest → fetch config → fetch only the layer blobs you don't already have</text>
+  <text x="338" y="362" font-size="10" fill="#6B6B78" text-anchor="middle">docker pull = fetch manifest → fetch config → fetch only the layer blobs you don't already have</text>
 </svg>
 <figcaption>One tag can resolve to several images — one per architecture. Docker picks the manifest matching your CPU, then downloads only the layer blobs it is missing.</figcaption>
 </figure>
@@ -986,49 +1000,49 @@ docker pull python:3.12-slim@sha256:1f5b1a2c…        <span class="c"># ← wha
 <svg viewBox="0 0 760 380" width="100%" aria-label="OverlayFS merges read-only image layers with a writable upper layer">
   <defs>
     <marker id="da" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#2496ED"/></marker>
-    <marker id="dc" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#22D3EE"/></marker>
-    <marker id="dm" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#6b7280"/></marker>
-    <marker id="dr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#FF6B8B"/></marker>
-    <marker id="dy" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#f0b429"/></marker>
+    <marker id="dc" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#28B9FF"/></marker>
+    <marker id="dm" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#6B6B78"/></marker>
+    <marker id="dr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#9AA0B4"/></marker>
+    <marker id="dy" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#9AA0B4"/></marker>
   </defs>
-  <rect x="470" y="34" width="270" height="92" rx="10" fill="#0b2029" stroke="#22D3EE" stroke-width="1.8"/>
-  <text x="605" y="56" font-size="11" fill="#22D3EE" font-weight="700" text-anchor="middle">merged — what the container sees</text>
+  <rect x="470" y="34" width="270" height="92" rx="10" fill="#0b2029" stroke="#28B9FF" stroke-width="1.8"/>
+  <text x="605" y="56" font-size="11" fill="#28B9FF" font-weight="700" text-anchor="middle">merged — what the container sees</text>
   <text x="605" y="76" font-size="9" fill="#9aa0b4" text-anchor="middle">one ordinary-looking filesystem:</text>
   <text x="605" y="94" font-size="9.5" fill="#cdd0dd" text-anchor="middle">/app · /usr · /etc · /tmp</text>
-  <text x="605" y="112" font-size="8.5" fill="#6b7280" text-anchor="middle">it has no idea it is a stack</text>
+  <text x="605" y="112" font-size="8.5" fill="#6B6B78" text-anchor="middle">it has no idea it is a stack</text>
 
-  <rect x="30" y="34" width="380" height="46" rx="8" fill="#241d0f" stroke="#f0b429" stroke-width="2"/>
-  <text x="48" y="54" font-size="10" fill="#f0b429" font-weight="700">upperdir</text>
+  <rect x="30" y="34" width="380" height="46" rx="8" fill="#1D1D26" stroke="#9AA0B4" stroke-width="2"/>
+  <text x="48" y="54" font-size="10" fill="#9AA0B4" font-weight="700">upperdir</text>
   <text x="48" y="70" font-size="9" fill="#9aa0b4">the container's thin WRITABLE layer</text>
-  <text x="392" y="62" font-size="9" fill="#f0b429" text-anchor="end">read-write</text>
+  <text x="392" y="62" font-size="9" fill="#9AA0B4" text-anchor="end">read-write</text>
 
-  <text x="220" y="98" font-size="9" fill="#6b7280" text-anchor="middle">▲ everything above is per-container · dies with it</text>
-  <line x1="30" y1="106" x2="410" y2="106" stroke="#2c2c36" stroke-width="1" stroke-dasharray="4,3"/>
-  <text x="220" y="122" font-size="9" fill="#6b7280" text-anchor="middle">▼ everything below is the IMAGE · shared by every container</text>
+  <text x="220" y="98" font-size="9" fill="#6B6B78" text-anchor="middle">▲ everything above is per-container · dies with it</text>
+  <line x1="30" y1="106" x2="410" y2="106" stroke="#34343F" stroke-width="1" stroke-dasharray="4,3"/>
+  <text x="220" y="122" font-size="9" fill="#6B6B78" text-anchor="middle">▼ everything below is the IMAGE · shared by every container</text>
 
-  <rect x="30" y="132" width="380" height="28" rx="6" fill="#0d0d13" stroke="#f0b429" stroke-width="1.2"/><text x="48" y="151" font-size="9.5" fill="#cdd0dd">COPY src/</text><text x="392" y="151" font-size="8.5" fill="#6b7280" text-anchor="end">lowerdir · read-only</text><rect x="30" y="166" width="380" height="28" rx="6" fill="#0d0d13" stroke="#f0b429" stroke-width="1.2"/><text x="48" y="185" font-size="9.5" fill="#cdd0dd">RUN pip install</text><text x="392" y="185" font-size="8.5" fill="#6b7280" text-anchor="end">lowerdir · read-only</text><rect x="30" y="200" width="380" height="28" rx="6" fill="#0d0d13" stroke="#f0b429" stroke-width="1.2"/><text x="48" y="219" font-size="9.5" fill="#cdd0dd">RUN apt-get install</text><text x="392" y="219" font-size="8.5" fill="#6b7280" text-anchor="end">lowerdir · read-only</text><rect x="30" y="234" width="380" height="28" rx="6" fill="#0d0d13" stroke="#f0b429" stroke-width="1.2"/><text x="48" y="253" font-size="9.5" fill="#cdd0dd">FROM python:3.12-slim</text><text x="392" y="253" font-size="8.5" fill="#6b7280" text-anchor="end">lowerdir · read-only</text>
+  <rect x="30" y="132" width="380" height="28" rx="6" fill="#101017" stroke="#9AA0B4" stroke-width="1.2"/><text x="48" y="151" font-size="9.5" fill="#cdd0dd">COPY src/</text><text x="392" y="151" font-size="8.5" fill="#6B6B78" text-anchor="end">lowerdir · read-only</text><rect x="30" y="166" width="380" height="28" rx="6" fill="#101017" stroke="#9AA0B4" stroke-width="1.2"/><text x="48" y="185" font-size="9.5" fill="#cdd0dd">RUN pip install</text><text x="392" y="185" font-size="8.5" fill="#6B6B78" text-anchor="end">lowerdir · read-only</text><rect x="30" y="200" width="380" height="28" rx="6" fill="#101017" stroke="#9AA0B4" stroke-width="1.2"/><text x="48" y="219" font-size="9.5" fill="#cdd0dd">RUN apt-get install</text><text x="392" y="219" font-size="8.5" fill="#6B6B78" text-anchor="end">lowerdir · read-only</text><rect x="30" y="234" width="380" height="28" rx="6" fill="#101017" stroke="#9AA0B4" stroke-width="1.2"/><text x="48" y="253" font-size="9.5" fill="#cdd0dd">FROM python:3.12-slim</text><text x="392" y="253" font-size="8.5" fill="#6B6B78" text-anchor="end">lowerdir · read-only</text>
 
-  <line x1="416" y1="80" x2="462" y2="80" stroke="#22D3EE" stroke-width="1.6" marker-end="url(#dc)"/>
-  <text x="440" y="72" font-size="8" fill="#22D3EE" text-anchor="middle">merge</text>
+  <line x1="416" y1="80" x2="462" y2="80" stroke="#28B9FF" stroke-width="1.6" marker-end="url(#dc)"/>
+  <text x="440" y="72" font-size="8" fill="#28B9FF" text-anchor="middle">merge</text>
 
-  <rect x="470" y="140" width="270" height="106" rx="10" fill="#241d0f" stroke="#f0b429" stroke-width="1.6"/>
-  <text x="605" y="162" font-size="10.5" fill="#f0b429" font-weight="700" text-anchor="middle">COPY-ON-WRITE</text>
+  <rect x="470" y="140" width="270" height="106" rx="10" fill="#1D1D26" stroke="#9AA0B4" stroke-width="1.6"/>
+  <text x="605" y="162" font-size="10.5" fill="#9AA0B4" font-weight="700" text-anchor="middle">COPY-ON-WRITE</text>
   <text x="605" y="182" font-size="9" fill="#cdd0dd" text-anchor="middle">read → served straight from the layer</text>
   <text x="605" y="200" font-size="9" fill="#cdd0dd" text-anchor="middle">write → the WHOLE file is copied up</text>
   <text x="605" y="218" font-size="9" fill="#cdd0dd" text-anchor="middle">first, then modified</text>
-  <text x="605" y="238" font-size="8.5" fill="#FF6B8B" text-anchor="middle">edit 1 byte of a 2 GB file → copy 2 GB</text>
+  <text x="605" y="238" font-size="8.5" fill="#9AA0B4" text-anchor="middle">edit 1 byte of a 2 GB file → copy 2 GB</text>
 
-  <rect x="470" y="258" width="270" height="106" rx="10" fill="#331722" stroke="#FF6B8B" stroke-width="1.6"/>
-  <text x="605" y="280" font-size="10.5" fill="#FF6B8B" font-weight="700" text-anchor="middle">WHITEOUT — deletion is a lie</text>
+  <rect x="470" y="258" width="270" height="106" rx="10" fill="#331722" stroke="#9AA0B4" stroke-width="1.6"/>
+  <text x="605" y="280" font-size="10.5" fill="#9AA0B4" font-weight="700" text-anchor="middle">WHITEOUT — deletion is a lie</text>
   <text x="605" y="300" font-size="9" fill="#cdd0dd" text-anchor="middle">RUN rm secrets.env just writes a</text>
   <text x="605" y="316" font-size="9" fill="#cdd0dd" text-anchor="middle">"this is hidden" marker in the layer above</text>
   <text x="605" y="336" font-size="9" fill="#cdd0dd" text-anchor="middle">The bytes are STILL in the lower layer —</text>
-  <text x="605" y="352" font-size="9" fill="#FF6B8B" text-anchor="middle">and anyone can docker save and read them.</text>
+  <text x="605" y="352" font-size="9" fill="#9AA0B4" text-anchor="middle">and anyone can docker save and read them.</text>
 
   <text x="220" y="298" font-size="10.5" fill="#cdd0dd" text-anchor="middle">This is why heavy write workloads</text>
   <text x="220" y="316" font-size="10.5" fill="#cdd0dd" text-anchor="middle">(a database, a Spark shuffle dir)</text>
-  <text x="220" y="334" font-size="10.5" fill="#22D3EE" text-anchor="middle">must go on a volume, not the writable layer.</text>
-  <text x="220" y="358" font-size="9.5" fill="#6b7280" text-anchor="middle">a volume bypasses OverlayFS entirely</text>
+  <text x="220" y="334" font-size="10.5" fill="#28B9FF" text-anchor="middle">must go on a volume, not the writable layer.</text>
+  <text x="220" y="358" font-size="9.5" fill="#6B6B78" text-anchor="middle">a volume bypasses OverlayFS entirely</text>
 </svg>
 <figcaption>OverlayFS presents a stack of read-only layers plus one writable layer as a single filesystem. Reads fall through the stack; writes copy the file up into the top layer first.</figcaption>
 </figure>
@@ -1083,19 +1097,19 @@ docker system prune -a        <span class="c"># reclaim it. Careful: -a removes 
 <figure class="fig reveal">
 <svg viewBox="0 0 760 366" font-family="var(--font)" aria-label="Inside a container, scratch files go to the writable layer and vanish, while a volume and a bind mount store data on the host and survive">
   <defs>
-    <marker id="v-r" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#FF6B8B"/></marker>
-    <marker id="v-g" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#22D3EE"/></marker>
-    <marker id="v-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#f0b429"/></marker>
+    <marker id="v-r" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#9AA0B4"/></marker>
+    <marker id="v-g" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#28B9FF"/></marker>
+    <marker id="v-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#9AA0B4"/></marker>
   </defs>
 
   <!-- the container -->
   <rect x="120" y="34" width="520" height="130" rx="12" fill="#0e2740" stroke="#2496ED" stroke-width="1.8"/>
-  <use href="#i-whale" x="138" y="48" width="15" height="15" fill="none" stroke="#7CC6F7" stroke-width="1.8"/>
-  <text x="164" y="61" font-size="11.5" fill="#7CC6F7" font-weight="700">inside the container</text>
-  <text x="330" y="61" font-size="9.5" fill="#6b7280">— three paths, three very different fates</text>
+  <use href="#i-whale" x="138" y="48" width="15" height="15" fill="none" stroke="#5AC8FF" stroke-width="1.8"/>
+  <text x="164" y="61" font-size="11.5" fill="#5AC8FF" font-weight="700">inside the container</text>
+  <text x="330" y="61" font-size="9.5" fill="#6B6B78">— three paths, three very different fates</text>
 
-  <rect x="140" y="78" width="150" height="64" rx="8" fill="#22121A" stroke="#FF6B8B" stroke-dasharray="5 4"/>
-  <text x="215" y="102" font-size="10" fill="#FF6B8B" text-anchor="middle">/tmp/scratch</text>
+  <rect x="140" y="78" width="150" height="64" rx="8" fill="#22121A" stroke="#9AA0B4" stroke-dasharray="5 4"/>
+  <text x="215" y="102" font-size="10" fill="#9AA0B4" text-anchor="middle">/tmp/scratch</text>
   <text x="215" y="122" font-size="9" fill="#9aa0b4" text-anchor="middle">the writable layer</text>
 
   <rect x="305" y="78" width="150" height="64" rx="8" fill="#13314f" stroke="#3b7fc4"/>
@@ -1107,28 +1121,28 @@ docker system prune -a        <span class="c"># reclaim it. Careful: -a removes 
   <text x="545" y="122" font-size="9" fill="#9aa0b4" text-anchor="middle">your source code</text>
 
   <!-- fates -->
-  <line x1="215" y1="146" x2="215" y2="196" stroke="#FF6B8B" stroke-width="1.5" stroke-dasharray="4 3" marker-end="url(#v-r)"/>
-  <text x="215" y="216" font-size="10" fill="#FF6B8B" text-anchor="middle">nowhere.</text>
-  <text x="215" y="232" font-size="9.5" fill="#FF6B8B" text-anchor="middle">deleted with the container</text>
+  <line x1="215" y1="146" x2="215" y2="196" stroke="#9AA0B4" stroke-width="1.5" stroke-dasharray="4 3" marker-end="url(#v-r)"/>
+  <text x="215" y="216" font-size="10" fill="#9AA0B4" text-anchor="middle">nowhere.</text>
+  <text x="215" y="232" font-size="9.5" fill="#9AA0B4" text-anchor="middle">deleted with the container</text>
 
-  <line x1="380" y1="146" x2="380" y2="266" stroke="#22D3EE" stroke-width="1.6" marker-end="url(#v-g)"/>
-  <line x1="545" y1="146" x2="545" y2="266" stroke="#f0b429" stroke-width="1.6" marker-end="url(#v-a)"/>
+  <line x1="380" y1="146" x2="380" y2="266" stroke="#28B9FF" stroke-width="1.6" marker-end="url(#v-g)"/>
+  <line x1="545" y1="146" x2="545" y2="266" stroke="#9AA0B4" stroke-width="1.6" marker-end="url(#v-a)"/>
 
   <!-- the host -->
-  <rect x="30" y="272" width="700" height="70" rx="12" fill="#15151b" stroke="#33333f"/>
+  <rect x="30" y="272" width="700" height="70" rx="12" fill="#23232C" stroke="#33333f"/>
   <text x="48" y="296" font-size="10.5" fill="#9aa0b4" font-weight="700">YOUR HOST MACHINE</text>
-  <text x="48" y="316" font-size="9.5" fill="#6b7280">storage that</text>
-  <text x="48" y="330" font-size="9.5" fill="#6b7280">outlives containers →</text>
+  <text x="48" y="316" font-size="9.5" fill="#6B6B78">storage that</text>
+  <text x="48" y="330" font-size="9.5" fill="#6B6B78">outlives containers →</text>
 
-  <rect x="290" y="288" width="180" height="42" rx="8" fill="#0B2029" stroke="#22D3EE" stroke-width="1.6"/>
-  <text x="380" y="306" font-size="10" fill="#22D3EE" text-anchor="middle">named VOLUME</text>
-  <text x="380" y="322" font-size="9" fill="#6b7280" text-anchor="middle">Docker manages it · survives</text>
+  <rect x="290" y="288" width="180" height="42" rx="8" fill="#0B2029" stroke="#28B9FF" stroke-width="1.6"/>
+  <text x="380" y="306" font-size="10" fill="#28B9FF" text-anchor="middle">named VOLUME</text>
+  <text x="380" y="322" font-size="9" fill="#6B6B78" text-anchor="middle">Docker manages it · survives</text>
 
-  <rect x="490" y="288" width="200" height="42" rx="8" fill="#241d0f" stroke="#f0b429" stroke-width="1.6"/>
-  <text x="590" y="306" font-size="10" fill="#f0b429" text-anchor="middle">BIND MOUNT · ./src</text>
-  <text x="590" y="322" font-size="9" fill="#6b7280" text-anchor="middle">your folder · edits appear live</text>
+  <rect x="490" y="288" width="200" height="42" rx="8" fill="#1D1D26" stroke="#9AA0B4" stroke-width="1.6"/>
+  <text x="590" y="306" font-size="10" fill="#9AA0B4" text-anchor="middle">BIND MOUNT · ./src</text>
+  <text x="590" y="322" font-size="9" fill="#6B6B78" text-anchor="middle">your folder · edits appear live</text>
 
-  <text x="380" y="358" font-size="10.5" fill="#6b7280" text-anchor="middle">anything not on a volume or a bind mount is temporary — that is the deal you accepted</text>
+  <text x="380" y="358" font-size="10.5" fill="#6B6B78" text-anchor="middle">anything not on a volume or a bind mount is temporary — that is the deal you accepted</text>
 </svg>
 <figcaption>Volumes are for <em>data</em> you must keep (Docker owns the storage). Bind mounts are for <em>code in development</em> (you own the folder, and your edits appear instantly inside the container).</figcaption>
 </figure>
@@ -1158,51 +1172,51 @@ docker system prune -a        <span class="c"># reclaim it. Careful: -a removes 
 <svg viewBox="0 0 760 336" font-family="var(--font)" aria-label="Three services on one Docker network reach each other by service name; only Airflow publishes a port to the host">
   <defs>
     <marker id="n-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#2496ED"/></marker>
-    <marker id="n-g" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#22D3EE"/></marker>
+    <marker id="n-g" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#28B9FF"/></marker>
   </defs>
 
   <!-- host / browser -->
-  <rect x="12" y="132" width="146" height="76" rx="10" fill="#15151b" stroke="#4a5163"/>
+  <rect x="12" y="132" width="146" height="76" rx="10" fill="#23232C" stroke="#4a5163"/>
   <use href="#i-user" x="28" y="148" width="14" height="14" fill="none" stroke="#9aa0b4" stroke-width="2.2"/>
   <text x="52" y="160" font-size="10.5" fill="#cdd0dd">your browser</text>
-  <text x="28" y="184" font-size="9.5" fill="#6b7280">localhost:8080</text>
+  <text x="28" y="184" font-size="9.5" fill="#6B6B78">localhost:8080</text>
 
   <!-- the network -->
   <rect x="230" y="46" width="506" height="238" rx="12" fill="#0d1a2b" stroke="#2496ED" stroke-width="1.6" stroke-dasharray="6 4"/>
-  <rect x="244" y="38" width="230" height="18" rx="4" fill="#0d0d13"/>
-  <use href="#i-network" x="246" y="40" width="13" height="13" fill="none" stroke="#7CC6F7" stroke-width="2.2"/>
-  <text x="266" y="51" font-size="10" fill="#7CC6F7" font-weight="700">docker network: acme_default</text>
+  <rect x="244" y="38" width="230" height="18" rx="4" fill="#101017"/>
+  <use href="#i-network" x="246" y="40" width="13" height="13" fill="none" stroke="#5AC8FF" stroke-width="2.2"/>
+  <text x="266" y="51" font-size="10" fill="#5AC8FF" font-weight="700">docker network: acme_default</text>
 
   <!-- the one published port: the arrow stops AT the airflow box, not inside it -->
-  <line x1="164" y1="170" x2="248" y2="170" stroke="#22D3EE" stroke-width="1.6" marker-end="url(#n-g)"/>
-  <text x="194" y="161" font-size="8" fill="#22D3EE" text-anchor="middle">-p 8080:8080</text>
+  <line x1="164" y1="170" x2="248" y2="170" stroke="#28B9FF" stroke-width="1.6" marker-end="url(#n-g)"/>
+  <text x="194" y="161" font-size="8" fill="#28B9FF" text-anchor="middle">-p 8080:8080</text>
 
   <!-- airflow -->
   <rect x="252" y="118" width="184" height="104" rx="10" fill="#0e2740" stroke="#2496ED" stroke-width="1.6"/>
-  <text x="344" y="144" font-size="11.5" fill="#7CC6F7" font-weight="700" text-anchor="middle">airflow</text>
+  <text x="344" y="144" font-size="11.5" fill="#5AC8FF" font-weight="700" text-anchor="middle">airflow</text>
   <rect x="266" y="156" width="156" height="24" rx="5" fill="#13314f" stroke="#3b7fc4"/>
   <text x="344" y="172" font-size="9" fill="#9fd8fb" text-anchor="middle">DB_HOST=postgres</text>
   <rect x="266" y="186" width="156" height="24" rx="5" fill="#13314f" stroke="#3b7fc4"/>
   <text x="344" y="202" font-size="9" fill="#9fd8fb" text-anchor="middle">S3_ENDPOINT=minio:9000</text>
 
   <!-- postgres / minio -->
-  <rect x="516" y="86" width="180" height="64" rx="10" fill="#0B2029" stroke="#22D3EE" stroke-width="1.6"/>
-  <text x="606" y="112" font-size="11.5" fill="#22D3EE" text-anchor="middle">postgres</text>
-  <text x="606" y="132" font-size="9.5" fill="#6b7280" text-anchor="middle">:5432</text>
+  <rect x="516" y="86" width="180" height="64" rx="10" fill="#0B2029" stroke="#28B9FF" stroke-width="1.6"/>
+  <text x="606" y="112" font-size="11.5" fill="#28B9FF" text-anchor="middle">postgres</text>
+  <text x="606" y="132" font-size="9.5" fill="#6B6B78" text-anchor="middle">:5432</text>
 
-  <rect x="516" y="196" width="180" height="64" rx="10" fill="#241d0f" stroke="#f0b429" stroke-width="1.6"/>
-  <text x="606" y="222" font-size="11.5" fill="#f0b429" text-anchor="middle">minio</text>
-  <text x="606" y="242" font-size="9.5" fill="#6b7280" text-anchor="middle">:9000</text>
+  <rect x="516" y="196" width="180" height="64" rx="10" fill="#1D1D26" stroke="#9AA0B4" stroke-width="1.6"/>
+  <text x="606" y="222" font-size="11.5" fill="#9AA0B4" text-anchor="middle">minio</text>
+  <text x="606" y="242" font-size="9.5" fill="#6B6B78" text-anchor="middle">:9000</text>
 
   <path d="M442 152 C 480 152, 480 118, 510 118" fill="none" stroke="#2496ED" stroke-width="1.5" marker-end="url(#n-a)"/>
   <path d="M442 198 C 480 198, 480 228, 510 228" fill="none" stroke="#2496ED" stroke-width="1.5" marker-end="url(#n-a)"/>
 
-  <text x="606" y="170" font-size="9" fill="#6b7280" text-anchor="middle">no published port —</text>
-  <text x="606" y="184" font-size="9" fill="#6b7280" text-anchor="middle">unreachable from your laptop</text>
+  <text x="606" y="170" font-size="9" fill="#6B6B78" text-anchor="middle">no published port —</text>
+  <text x="606" y="184" font-size="9" fill="#6B6B78" text-anchor="middle">unreachable from your laptop</text>
 
   <text x="483" y="274" font-size="9.5" fill="#9aa0b4" text-anchor="middle">containers reach each other by SERVICE NAME — never by IP</text>
 
-  <text x="380" y="318" font-size="10.5" fill="#6b7280" text-anchor="middle">inside a container, &quot;localhost&quot; means THAT container — not your laptop, and not the database</text>
+  <text x="380" y="318" font-size="10.5" fill="#6B6B78" text-anchor="middle">inside a container, &quot;localhost&quot; means THAT container — not your laptop, and not the database</text>
 </svg>
 <figcaption>Service-name DNS is the payoff of a user-defined network. Note that only <code>airflow</code> publishes a port — Postgres and MinIO stay private, which is exactly what you want.</figcaption>
 </figure>
@@ -1220,58 +1234,58 @@ docker system prune -a        <span class="c"># reclaim it. Careful: -a removes 
 <svg viewBox="0 0 760 396" width="100%" aria-label="Containers get a veth pair into a bridge; published ports are a DNAT rule">
   <defs>
     <marker id="da" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#2496ED"/></marker>
-    <marker id="dc" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#22D3EE"/></marker>
-    <marker id="dm" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#6b7280"/></marker>
-    <marker id="dr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#FF6B8B"/></marker>
-    <marker id="dy" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#f0b429"/></marker>
+    <marker id="dc" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#28B9FF"/></marker>
+    <marker id="dm" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#6B6B78"/></marker>
+    <marker id="dr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#9AA0B4"/></marker>
+    <marker id="dy" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#9AA0B4"/></marker>
   </defs>
-  <rect x="20" y="30" width="720" height="212" rx="12" fill="#0d1420" stroke="#2c2c36"/>
+  <rect x="20" y="30" width="720" height="212" rx="12" fill="#0d1420" stroke="#34343F"/>
   <text x="40" y="52" font-size="10" fill="#9aa0b4" font-weight="700">THE HOST</text>
 
-  <rect x="52" y="70" width="150" height="54" rx="9" fill="#15151b" stroke="#4a5163"/>
+  <rect x="52" y="70" width="150" height="54" rx="9" fill="#23232C" stroke="#4a5163"/>
   <text x="127" y="92" font-size="10" fill="#cdd0dd" text-anchor="middle">eth0 (real NIC)</text>
-  <text x="127" y="110" font-size="8.5" fill="#6b7280" text-anchor="middle">192.168.1.20</text>
+  <text x="127" y="110" font-size="8.5" fill="#6B6B78" text-anchor="middle">192.168.1.20</text>
 
   <rect x="270" y="70" width="200" height="54" rx="9" fill="#0e2740" stroke="#2496ED" stroke-width="1.8"/>
-  <text x="370" y="92" font-size="11" fill="#7CC6F7" font-weight="700" text-anchor="middle">docker0 / br-xxxx</text>
+  <text x="370" y="92" font-size="11" fill="#5AC8FF" font-weight="700" text-anchor="middle">docker0 / br-xxxx</text>
   <text x="370" y="110" font-size="8.5" fill="#9aa0b4" text-anchor="middle">a virtual switch · 172.17.0.1</text>
 
-  <line x1="206" y1="97" x2="264" y2="97" stroke="#6b7280" stroke-width="1.5"/>
+  <line x1="206" y1="97" x2="264" y2="97" stroke="#6B6B78" stroke-width="1.5"/>
 
-  <rect x="524" y="80" width="206" height="34" rx="7" fill="#241d0f" stroke="#f0b429" stroke-width="1.4"/>
-  <text x="627" y="94" font-size="9" fill="#f0b429" text-anchor="middle">iptables · nat table</text>
+  <rect x="524" y="80" width="206" height="34" rx="7" fill="#1D1D26" stroke="#9AA0B4" stroke-width="1.4"/>
+  <text x="627" y="94" font-size="9" fill="#9AA0B4" text-anchor="middle">iptables · nat table</text>
   <text x="627" y="107" font-size="8" fill="#9aa0b4" text-anchor="middle">MASQUERADE out · DNAT in</text>
-  <line x1="476" y1="97" x2="518" y2="97" stroke="#f0b429" stroke-width="1.5" marker-end="url(#dy)"/>
+  <line x1="476" y1="97" x2="518" y2="97" stroke="#9AA0B4" stroke-width="1.5" marker-end="url(#dy)"/>
 
-  <line x1="300" y1="128" x2="300" y2="164" stroke="#22D3EE" stroke-width="1.6"/>
-  <line x1="460" y1="128" x2="460" y2="164" stroke="#22D3EE" stroke-width="1.6"/>
-  <text x="278" y="150" font-size="8.5" fill="#22D3EE" text-anchor="end">veth</text>
-  <text x="482" y="150" font-size="8.5" fill="#22D3EE">veth</text>
+  <line x1="300" y1="128" x2="300" y2="164" stroke="#28B9FF" stroke-width="1.6"/>
+  <line x1="460" y1="128" x2="460" y2="164" stroke="#28B9FF" stroke-width="1.6"/>
+  <text x="278" y="150" font-size="8.5" fill="#28B9FF" text-anchor="end">veth</text>
+  <text x="482" y="150" font-size="8.5" fill="#28B9FF">veth</text>
 
-  <rect x="225" y="168" width="150" height="60" rx="9" fill="#0b2029" stroke="#22D3EE" stroke-width="1.6"/>
-  <text x="300" y="190" font-size="10" fill="#22D3EE" font-weight="700" text-anchor="middle">airflow</text>
+  <rect x="225" y="168" width="150" height="60" rx="9" fill="#0b2029" stroke="#28B9FF" stroke-width="1.6"/>
+  <text x="300" y="190" font-size="10" fill="#28B9FF" font-weight="700" text-anchor="middle">airflow</text>
   <text x="300" y="207" font-size="8.5" fill="#9aa0b4" text-anchor="middle">eth0 · 172.17.0.2</text>
-  <text x="300" y="221" font-size="8" fill="#6b7280" text-anchor="middle">own net namespace</text>
+  <text x="300" y="221" font-size="8" fill="#6B6B78" text-anchor="middle">own net namespace</text>
 
-  <rect x="385" y="168" width="150" height="60" rx="9" fill="#0b2029" stroke="#22D3EE" stroke-width="1.6"/>
-  <text x="460" y="190" font-size="10" fill="#22D3EE" font-weight="700" text-anchor="middle">postgres</text>
+  <rect x="385" y="168" width="150" height="60" rx="9" fill="#0b2029" stroke="#28B9FF" stroke-width="1.6"/>
+  <text x="460" y="190" font-size="10" fill="#28B9FF" font-weight="700" text-anchor="middle">postgres</text>
   <text x="460" y="207" font-size="8.5" fill="#9aa0b4" text-anchor="middle">eth0 · 172.17.0.3</text>
-  <text x="460" y="221" font-size="8" fill="#6b7280" text-anchor="middle">own net namespace</text>
+  <text x="460" y="221" font-size="8" fill="#6B6B78" text-anchor="middle">own net namespace</text>
 
   <text x="620" y="180" font-size="9" fill="#cdd0dd">a veth pair is a</text>
   <text x="620" y="194" font-size="9" fill="#cdd0dd">virtual cable: one end</text>
   <text x="620" y="208" font-size="9" fill="#cdd0dd">in the container, one</text>
   <text x="620" y="222" font-size="9" fill="#cdd0dd">end in the bridge.</text>
 
-  <rect x="20" y="258" width="720" height="76" rx="10" fill="#241d0f" stroke="#f0b429" stroke-width="1.4"/>
-  <text x="40" y="280" font-size="10" fill="#f0b429" font-weight="700">WHAT -p 8080:80 ACTUALLY DOES</text>
+  <rect x="20" y="258" width="720" height="76" rx="10" fill="#1D1D26" stroke="#9AA0B4" stroke-width="1.4"/>
+  <text x="40" y="280" font-size="10" fill="#9AA0B4" font-weight="700">WHAT -p 8080:80 ACTUALLY DOES</text>
   <text x="40" y="302" font-size="9.5" fill="#cdd0dd">it is not a tunnel — it is one NAT rule:</text>
-  <rect x="290" y="288" width="430" height="26" rx="6" fill="#0d0d13" stroke="#f0b429" stroke-width="1.2"/>
-  <text x="505" y="305" font-size="9.5" fill="#f0b429" text-anchor="middle">DNAT: host:8080 → 172.17.0.2:80</text>
-  <text x="40" y="324" font-size="9" fill="#6b7280">…which is why "port already in use" is a HOST problem, and why two containers can both listen on 80.</text>
+  <rect x="290" y="288" width="430" height="26" rx="6" fill="#101017" stroke="#9AA0B4" stroke-width="1.2"/>
+  <text x="505" y="305" font-size="9.5" fill="#9AA0B4" text-anchor="middle">DNAT: host:8080 → 172.17.0.2:80</text>
+  <text x="40" y="324" font-size="9" fill="#6B6B78">…which is why "port already in use" is a HOST problem, and why two containers can both listen on 80.</text>
 
-  <text x="380" y="360" font-size="10.5" fill="#cdd0dd" text-anchor="middle">Inside the container, <tspan fill="#FF6B8B">localhost</tspan> is its own loopback — not the host, and not the database.</text>
-  <text x="380" y="380" font-size="10.5" fill="#22D3EE" text-anchor="middle">On a user-defined network, reach the others by SERVICE NAME. Docker runs a DNS server at 127.0.0.11.</text>
+  <text x="380" y="360" font-size="10.5" fill="#cdd0dd" text-anchor="middle">Inside the container, <tspan fill="#9AA0B4">localhost</tspan> is its own loopback — not the host, and not the database.</text>
+  <text x="380" y="380" font-size="10.5" fill="#28B9FF" text-anchor="middle">On a user-defined network, reach the others by SERVICE NAME. Docker runs a DNS server at 127.0.0.11.</text>
 </svg>
 <figcaption>Each container gets its own network namespace and a veth pair into a virtual switch. Publishing a port writes a DNAT rule; egress is masqueraded behind the host's IP.</figcaption>
 </figure>
@@ -1431,22 +1445,22 @@ docker compose down -v            <span class="c"># ⚠️ …AND delete the vol
     <marker id="w-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#2496ED"/></marker>
   </defs>
 
-  <rect x="24" y="118" width="160" height="90" rx="10" fill="#0B2029" stroke="#22D3EE" stroke-width="1.6"/>
-  <use href="#i-file" x="40" y="134" width="14" height="14" fill="none" stroke="#22D3EE" stroke-width="2.2"/>
-  <text x="62" y="146" font-size="11" fill="#22D3EE">the repo</text>
-  <text x="40" y="170" font-size="9.5" fill="#6b7280">Dockerfile</text>
-  <text x="40" y="186" font-size="9.5" fill="#6b7280">requirements.txt</text>
-  <text x="40" y="202" font-size="9.5" fill="#6b7280">src/</text>
+  <rect x="24" y="118" width="160" height="90" rx="10" fill="#0B2029" stroke="#28B9FF" stroke-width="1.6"/>
+  <use href="#i-file" x="40" y="134" width="14" height="14" fill="none" stroke="#28B9FF" stroke-width="2.2"/>
+  <text x="62" y="146" font-size="11" fill="#28B9FF">the repo</text>
+  <text x="40" y="170" font-size="9.5" fill="#6B6B78">Dockerfile</text>
+  <text x="40" y="186" font-size="9.5" fill="#6B6B78">requirements.txt</text>
+  <text x="40" y="202" font-size="9.5" fill="#6B6B78">src/</text>
 
   <line x1="190" y1="163" x2="234" y2="163" stroke="#2496ED" stroke-width="1.6" marker-end="url(#w-a)"/>
-  <text x="212" y="152" font-size="9.5" fill="#7CC6F7" text-anchor="middle">build</text>
+  <text x="212" y="152" font-size="9.5" fill="#5AC8FF" text-anchor="middle">build</text>
 
-  <rect x="240" y="106" width="188" height="114" rx="11" fill="#241d0f" stroke="#f0b429" stroke-width="2"/>
-  <use href="#i-package" x="256" y="122" width="15" height="15" fill="none" stroke="#f0b429" stroke-width="2.2"/>
-  <text x="280" y="135" font-size="11.5" fill="#f0b429" font-weight="700">THE IMAGE</text>
-  <text x="256" y="162" font-size="10" fill="#e3b25c">acme/etl:1.4.0</text>
-  <text x="256" y="182" font-size="9" fill="#6b7280">built ONCE · immutable</text>
-  <text x="256" y="198" font-size="9" fill="#6b7280">pushed to the registry</text>
+  <rect x="240" y="106" width="188" height="114" rx="11" fill="#1D1D26" stroke="#9AA0B4" stroke-width="2"/>
+  <use href="#i-package" x="256" y="122" width="15" height="15" fill="none" stroke="#9AA0B4" stroke-width="2.2"/>
+  <text x="280" y="135" font-size="11.5" fill="#9AA0B4" font-weight="700">THE IMAGE</text>
+  <text x="256" y="162" font-size="10" fill="#9AA0B4">acme/etl:1.4.0</text>
+  <text x="256" y="182" font-size="9" fill="#6B6B78">built ONCE · immutable</text>
+  <text x="256" y="198" font-size="9" fill="#6B6B78">pushed to the registry</text>
 
   <!-- fan out: each curve flattens to horizontal well before its arrowhead, so head and line align -->
   <g stroke="#2496ED" stroke-width="1.5" fill="none">
@@ -1456,18 +1470,18 @@ docker compose down -v            <span class="c"># ⚠️ …AND delete the vol
   </g>
 
   <rect x="506" y="44" width="230" height="60" rx="10" fill="#0e2740" stroke="#2496ED" stroke-width="1.6"/>
-  <text x="520" y="68" font-size="10.5" fill="#7CC6F7">LOCAL · compose up</text>
-  <text x="520" y="88" font-size="9" fill="#6b7280">+ postgres + minio · src bind-mounted</text>
+  <text x="520" y="68" font-size="10.5" fill="#5AC8FF">LOCAL · compose up</text>
+  <text x="520" y="88" font-size="9" fill="#6B6B78">+ postgres + minio · src bind-mounted</text>
 
-  <rect x="506" y="133" width="230" height="60" rx="10" fill="#0B2029" stroke="#22D3EE" stroke-width="1.6"/>
-  <text x="520" y="157" font-size="10.5" fill="#22D3EE">CI · pytest INSIDE the image</text>
-  <text x="520" y="177" font-size="9" fill="#6b7280">tests the exact artefact you will deploy</text>
+  <rect x="506" y="133" width="230" height="60" rx="10" fill="#0B2029" stroke="#28B9FF" stroke-width="1.6"/>
+  <text x="520" y="157" font-size="10.5" fill="#28B9FF">CI · pytest INSIDE the image</text>
+  <text x="520" y="177" font-size="9" fill="#6B6B78">tests the exact artefact you will deploy</text>
 
   <rect x="506" y="222" width="230" height="60" rx="10" fill="#0d2a4a" stroke="#62CFF4" stroke-width="1.8"/>
   <text x="520" y="246" font-size="10.5" fill="#9fd8fb">PROD · Airflow / K8s</text>
-  <text x="520" y="266" font-size="9" fill="#6b7280">runs the same bytes CI tested</text>
+  <text x="520" y="266" font-size="9" fill="#6B6B78">runs the same bytes CI tested</text>
 
-  <text x="380" y="308" font-size="10.5" fill="#6b7280" text-anchor="middle">one image, three places — the thing you tested is literally the thing that runs</text>
+  <text x="380" y="308" font-size="10.5" fill="#6B6B78" text-anchor="middle">one image, three places — the thing you tested is literally the thing that runs</text>
 </svg>
 <figcaption>The payoff of containerising: local, CI and production stop being three subtly different environments and become three <em>uses of one artefact</em>.</figcaption>
 </figure>
@@ -1564,7 +1578,7 @@ docker compose down -v            <span class="c"># ⚠️ …AND delete the vol
 
 <h3 class="reveal">The life of a change</h3>
 <div class="step reveal"><div class="num-bubble">1</div><div class="body"><strong>You edit <code>src/pipeline.py</code>.</strong> In local dev, that's it — the file is bind-mounted, so <code>docker compose restart pipeline</code> picks it up instantly. <em>No rebuild at all.</em></div></div>
-<div class="step reveal"><div class="num-bubble">2</div><div class="body"><strong>You rebuild anyway (for CI).</strong> Docker replays the cache: <code>FROM</code> ✓, <code>apt-get</code> ✓, <code>COPY requirements.txt</code> ✓, <code>pip install</code> <strong>✓ CACHED</strong> — the ninety-second layer is untouched, because <code>requirements.txt</code> didn't change. Only <code>COPY src/</code> and below rebuild. <strong>Total: about two seconds.</strong></div></div>
+<div class="step reveal"><div class="num-bubble">2</div><div class="body"><strong>You rebuild anyway (for CI).</strong> Docker replays the cache: <code>FROM</code> +, <code>apt-get</code> +, <code>COPY requirements.txt</code> +, <code>pip install</code> <strong>+ CACHED</strong> — the ninety-second layer is untouched, because <code>requirements.txt</code> didn't change. Only <code>COPY src/</code> and below rebuild. <strong>Total: about two seconds.</strong></div></div>
 <div class="step reveal"><div class="num-bubble">3</div><div class="body"><strong>Now you add <code>polars</code> to <code>requirements.txt</code>.</strong> That file changed, so its <code>COPY</code> layer busts, and <em>everything below it</em> rebuilds — including <code>pip install</code>. This build takes the full ninety seconds. That's correct and unavoidable: the dependencies genuinely changed. The point of the ordering is that this happens <em>only</em> when dependencies change, not on every code edit.</div></div>
 <div class="step reveal"><div class="num-bubble">4</div><div class="body"><strong>CI builds, tests inside the image, pushes it, and production pulls it.</strong> No environment was assembled twice. Nothing was installed on a server by hand. The image that passed the tests is the image that runs.</div></div>
 
