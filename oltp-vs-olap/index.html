@@ -97,7 +97,7 @@
   .step{display:flex;gap:12px;align-items:flex-start;margin:14px 0}
   .step .num-bubble{flex:0 0 28px;height:28px;border-radius:50%;background:var(--grad);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:#fff;margin-top:2px}
   .step .body{flex:1}
-  figure.mm{background:radial-gradient(130% 150% at 50% 0%,#223650 0%,#1C1C2A 72%);border:1px solid #3C4356;border-radius:14px;padding:14px 10px 6px;margin:20px 0;overflow-x:auto}
+  figure.mm{background:#141826;border:1px solid #3C4356;border-radius:14px;padding:14px 10px 6px;margin:20px 0;overflow-x:auto}
   figure.mm figcaption{font-size:12px;color:#555;text-align:center;margin-bottom:.4em;letter-spacing:.06em;text-transform:uppercase}
   .mermaid{display:flex;justify-content:center;font-family:var(--font)!important}
   footer{border-top:1px solid #3C4356;margin-top:50px;padding:24px 0 90px;color:var(--dim);font-size:13px}
@@ -115,6 +115,7 @@
   .nav-links a.active{color:#5AC8FF;border-color:#28B9FF55;background:#28B9FF14}
   :focus-visible{outline:2px solid #5AC8FF;outline-offset:3px;border-radius:6px}
   @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{animation:none !important;transition:none !important}.js .reveal{opacity:1 !important;transform:none !important}}
+  figure[class]{box-shadow:0 0 30px -14px #28B9FF55}
 </style>
 
 <script>document.documentElement.classList.add('js');</script>
@@ -132,7 +133,7 @@
   <div class="byline">~30 min read · Deep dive · Fundamentals</div>
 </header>
 
-<figure class="reveal" style="margin:18px 0 6px;background:radial-gradient(130% 150% at 50% 0%,#223650 0%,#1C1C2A 72%);border:1px solid #3C4356;border-radius:16px;padding:14px 10px;overflow:hidden">
+<figure class="reveal" style="margin:18px 0 6px;background:#141826;border:1px solid #3C4356;border-radius:16px;padding:14px 10px;overflow:hidden">
 <figcaption style="font-size:12px;color:#555;text-align:center;margin-bottom:.6em;letter-spacing:.06em;text-transform:uppercase">The one picture: the same table, stored two ways</figcaption>
 <svg viewBox="0 0 860 250" width="100%" style="display:block;max-width:860px;margin:0 auto" aria-label="Row storage keeps each row's fields together; column storage keeps each column's values together">
   <defs>
