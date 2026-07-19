@@ -239,54 +239,54 @@
   <defs>
     <marker id="o-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#5C78FF"/></marker>
   </defs>
-  <text x="380" y="20" font-size="10.5" fill="#9aa0b4" text-anchor="middle" letter-spacing="1.5">HOW THE ENGINE ACTUALLY RUNS YOUR QUERY</text>
+  <text x="380" y="20" font-size="10.5" fill="#9AA0B4" text-anchor="middle" letter-spacing="1.5">HOW THE ENGINE ACTUALLY RUNS YOUR QUERY</text>
 
-  <circle cx="54" cy="61" r="11" fill="#1D1D26" stroke="#1D1D26"/><text x="54" y="65" font-size="10" fill="#9AA0B4" text-anchor="middle" font-weight="700">1</text>
-  <rect x="76" y="38" width="316" height="46" rx="7" fill="#1D1D26" stroke="#5C78FF"/>
+  <circle cx="54" cy="61" r="11" fill="#191921" stroke="#191921"/><text x="54" y="65" font-size="10" fill="#9AA0B4" text-anchor="middle" font-weight="700">1</text>
+  <rect x="76" y="38" width="316" height="46" rx="7" fill="#191921" stroke="#5C78FF"/>
   <text x="234" y="57" font-size="12" fill="#9AA0B4" font-weight="700" text-anchor="middle">FROM &#183; JOIN</text>
-  <text x="234" y="74" font-size="9.5" fill="#cdd0dd" text-anchor="middle">assemble the working table, matched by ON</text>
+  <text x="234" y="74" font-size="9.5" fill="#CDD0DD" text-anchor="middle">assemble the working table, matched by ON</text>
   <text x="408" y="65" font-size="9" fill="#6B6B78">every later clause only sees these rows</text>
 
-  <circle cx="54" cy="125" r="11" fill="#1D1D26" stroke="#1D1D26"/><text x="54" y="129" font-size="10" fill="#9AA0B4" text-anchor="middle" font-weight="700">2</text>
-  <rect x="76" y="102" width="316" height="46" rx="7" fill="#1D1D26" stroke="#5C78FF"/>
+  <circle cx="54" cy="125" r="11" fill="#191921" stroke="#191921"/><text x="54" y="129" font-size="10" fill="#9AA0B4" text-anchor="middle" font-weight="700">2</text>
+  <rect x="76" y="102" width="316" height="46" rx="7" fill="#191921" stroke="#5C78FF"/>
   <text x="234" y="121" font-size="12" fill="#9AA0B4" font-weight="700" text-anchor="middle">WHERE</text>
-  <text x="234" y="138" font-size="9.5" fill="#cdd0dd" text-anchor="middle">throw away rows, one at a time</text>
+  <text x="234" y="138" font-size="9.5" fill="#CDD0DD" text-anchor="middle">throw away rows, one at a time</text>
   <text x="408" y="129" font-size="9" fill="#6B6B78">runs before grouping, so no COUNT(*) here</text>
 
-  <circle cx="54" cy="189" r="11" fill="#1D1D26" stroke="#1D1D26"/><text x="54" y="193" font-size="10" fill="#9AA0B4" text-anchor="middle" font-weight="700">3</text>
-  <rect x="76" y="166" width="316" height="46" rx="7" fill="#1D1D26" stroke="#5C78FF"/>
+  <circle cx="54" cy="189" r="11" fill="#191921" stroke="#191921"/><text x="54" y="193" font-size="10" fill="#9AA0B4" text-anchor="middle" font-weight="700">3</text>
+  <rect x="76" y="166" width="316" height="46" rx="7" fill="#191921" stroke="#5C78FF"/>
   <text x="234" y="185" font-size="12" fill="#9AA0B4" font-weight="700" text-anchor="middle">GROUP BY</text>
-  <text x="234" y="202" font-size="9.5" fill="#cdd0dd" text-anchor="middle">collapse to one row per group</text>
+  <text x="234" y="202" font-size="9.5" fill="#CDD0DD" text-anchor="middle">collapse to one row per group</text>
   <text x="408" y="193" font-size="9" fill="#6B6B78">individual rows cease to exist here</text>
 
-  <circle cx="54" cy="253" r="11" fill="#1D1D26" stroke="#1D1D26"/><text x="54" y="257" font-size="10" fill="#9AA0B4" text-anchor="middle" font-weight="700">4</text>
-  <rect x="76" y="230" width="316" height="46" rx="7" fill="#1D1D26" stroke="#5C78FF"/>
+  <circle cx="54" cy="253" r="11" fill="#191921" stroke="#191921"/><text x="54" y="257" font-size="10" fill="#9AA0B4" text-anchor="middle" font-weight="700">4</text>
+  <rect x="76" y="230" width="316" height="46" rx="7" fill="#191921" stroke="#5C78FF"/>
   <text x="234" y="249" font-size="12" fill="#9AA0B4" font-weight="700" text-anchor="middle">HAVING</text>
-  <text x="234" y="266" font-size="9.5" fill="#cdd0dd" text-anchor="middle">throw away whole groups</text>
+  <text x="234" y="266" font-size="9.5" fill="#CDD0DD" text-anchor="middle">throw away whole groups</text>
   <text x="408" y="257" font-size="9" fill="#6B6B78">the only place to filter on SUM or COUNT</text>
 
-  <circle cx="54" cy="317" r="11" fill="#1D1D26" stroke="#1D1D26"/><text x="54" y="321" font-size="10" fill="#9AA0B4" text-anchor="middle" font-weight="700">5</text>
-  <rect x="76" y="294" width="316" height="46" rx="7" fill="#1D1D26" stroke="#5C78FF"/>
+  <circle cx="54" cy="317" r="11" fill="#191921" stroke="#191921"/><text x="54" y="321" font-size="10" fill="#9AA0B4" text-anchor="middle" font-weight="700">5</text>
+  <rect x="76" y="294" width="316" height="46" rx="7" fill="#191921" stroke="#5C78FF"/>
   <text x="234" y="313" font-size="12" fill="#9AA0B4" font-weight="700" text-anchor="middle">SELECT</text>
-  <text x="234" y="330" font-size="9.5" fill="#cdd0dd" text-anchor="middle">compute output columns and window fns</text>
+  <text x="234" y="330" font-size="9.5" fill="#CDD0DD" text-anchor="middle">compute output columns and window fns</text>
   <text x="408" y="321" font-size="9" fill="#6B6B78">aliases are born here, not before</text>
 
-  <circle cx="54" cy="381" r="11" fill="#1D1D26" stroke="#1D1D26"/><text x="54" y="385" font-size="10" fill="#9AA0B4" text-anchor="middle" font-weight="700">6</text>
-  <rect x="76" y="358" width="316" height="46" rx="7" fill="#14141c" stroke="#5C78FF"/>
-  <text x="234" y="377" font-size="12" fill="#cdd0dd" font-weight="700" text-anchor="middle">DISTINCT</text>
-  <text x="234" y="394" font-size="9.5" fill="#9aa0b4" text-anchor="middle">drop duplicate output rows</text>
+  <circle cx="54" cy="381" r="11" fill="#191921" stroke="#191921"/><text x="54" y="385" font-size="10" fill="#9AA0B4" text-anchor="middle" font-weight="700">6</text>
+  <rect x="76" y="358" width="316" height="46" rx="7" fill="#14141C" stroke="#5C78FF"/>
+  <text x="234" y="377" font-size="12" fill="#CDD0DD" font-weight="700" text-anchor="middle">DISTINCT</text>
+  <text x="234" y="394" font-size="9.5" fill="#9AA0B4" text-anchor="middle">drop duplicate output rows</text>
   <text x="408" y="385" font-size="9" fill="#6B6B78">applies to the whole row, not one column</text>
 
-  <circle cx="54" cy="445" r="11" fill="#1D1D26" stroke="#1D1D26"/><text x="54" y="449" font-size="10" fill="#9AA0B4" text-anchor="middle" font-weight="700">7</text>
-  <rect x="76" y="422" width="316" height="46" rx="7" fill="#14141c" stroke="#5C78FF"/>
-  <text x="234" y="441" font-size="12" fill="#cdd0dd" font-weight="700" text-anchor="middle">ORDER BY</text>
-  <text x="234" y="458" font-size="9.5" fill="#9aa0b4" text-anchor="middle">sort the rows that survived</text>
+  <circle cx="54" cy="445" r="11" fill="#191921" stroke="#191921"/><text x="54" y="449" font-size="10" fill="#9AA0B4" text-anchor="middle" font-weight="700">7</text>
+  <rect x="76" y="422" width="316" height="46" rx="7" fill="#14141C" stroke="#5C78FF"/>
+  <text x="234" y="441" font-size="12" fill="#CDD0DD" font-weight="700" text-anchor="middle">ORDER BY</text>
+  <text x="234" y="458" font-size="9.5" fill="#9AA0B4" text-anchor="middle">sort the rows that survived</text>
   <text x="408" y="449" font-size="9" fill="#6B6B78">first clause that CAN use a SELECT alias</text>
 
-  <circle cx="54" cy="509" r="11" fill="#1D1D26" stroke="#1D1D26"/><text x="54" y="513" font-size="10" fill="#9AA0B4" text-anchor="middle" font-weight="700">8</text>
-  <rect x="76" y="486" width="316" height="46" rx="7" fill="#14141c" stroke="#5C78FF"/>
-  <text x="234" y="505" font-size="12" fill="#cdd0dd" font-weight="700" text-anchor="middle">LIMIT &#183; OFFSET</text>
-  <text x="234" y="522" font-size="9.5" fill="#9aa0b4" text-anchor="middle">keep only the first N rows</text>
+  <circle cx="54" cy="509" r="11" fill="#191921" stroke="#191921"/><text x="54" y="513" font-size="10" fill="#9AA0B4" text-anchor="middle" font-weight="700">8</text>
+  <rect x="76" y="486" width="316" height="46" rx="7" fill="#14141C" stroke="#5C78FF"/>
+  <text x="234" y="505" font-size="12" fill="#CDD0DD" font-weight="700" text-anchor="middle">LIMIT &#183; OFFSET</text>
+  <text x="234" y="522" font-size="9.5" fill="#9AA0B4" text-anchor="middle">keep only the first N rows</text>
   <text x="408" y="513" font-size="9" fill="#6B6B78">meaningless without an ORDER BY</text>
 
   <g stroke="#9AA0B4" stroke-width="1.5" fill="none">
@@ -299,7 +299,7 @@
     <path d="M234 470 V 480" marker-end="url(#o-a)"/>
   </g>
 
-  <text x="380" y="558" font-size="10" fill="#9aa0b4" text-anchor="middle">You write SELECT first. The engine runs it fifth. That one fact explains most SQL errors.</text>
+  <text x="380" y="558" font-size="10" fill="#9AA0B4" text-anchor="middle">You write SELECT first. The engine runs it fifth. That one fact explains most SQL errors.</text>
 </svg>
 <figcaption>The logical order of operations. Each stage hands a different table to the next. Every "you can't do that here" error is really a statement about which stage you are standing in.</figcaption>
 </figure>
@@ -439,19 +439,19 @@
     <marker id="n-g" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#5AC8FF"/></marker>
     <marker id="n-r" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#5C78FF"/></marker>
   </defs>
-  <text x="380" y="20" font-size="10.5" fill="#9aa0b4" text-anchor="middle" letter-spacing="1.5">THE WHERE GATE KEEPS ONLY TRUE</text>
+  <text x="380" y="20" font-size="10.5" fill="#9AA0B4" text-anchor="middle" letter-spacing="1.5">THE WHERE GATE KEEPS ONLY TRUE</text>
 
-  <rect x="36" y="56" width="164" height="34" rx="6" fill="#1D1D26" stroke="#5AC8FF"/>
+  <rect x="36" y="56" width="164" height="34" rx="6" fill="#191921" stroke="#5AC8FF"/>
   <text x="118" y="78" font-size="12" fill="#5AC8FF" text-anchor="middle" font-weight="700">TRUE</text>
 
-  <rect x="36" y="104" width="164" height="34" rx="6" fill="#241014" stroke="#5C78FF"/>
+  <rect x="36" y="104" width="164" height="34" rx="6" fill="#191921" stroke="#5C78FF"/>
   <text x="118" y="126" font-size="12" fill="#9AA0B4" text-anchor="middle" font-weight="700">FALSE</text>
 
-  <rect x="36" y="152" width="164" height="34" rx="6" fill="#1D1D26" stroke="#5C78FF"/>
+  <rect x="36" y="152" width="164" height="34" rx="6" fill="#191921" stroke="#5C78FF"/>
   <text x="118" y="167" font-size="11" fill="#9AA0B4" text-anchor="middle" font-weight="700">UNKNOWN</text>
-  <text x="118" y="180" font-size="8.5" fill="#9aa0b4" text-anchor="middle">any NULL comparison</text>
+  <text x="118" y="180" font-size="8.5" fill="#9AA0B4" text-anchor="middle">any NULL comparison</text>
 
-  <path d="M365 42 V 206" stroke="#1D1D26" stroke-width="1.5" stroke-dasharray="5,4" fill="none"/>
+  <path d="M365 42 V 206" stroke="#191921" stroke-width="1.5" stroke-dasharray="5,4" fill="none"/>
   <text x="365" y="34" font-size="10" fill="#9AA0B4" text-anchor="middle" font-weight="700">WHERE</text>
   <text x="365" y="222" font-size="8.5" fill="#6B6B78" text-anchor="middle">also ON and HAVING</text>
 
@@ -459,12 +459,12 @@
   <path d="M204 121 L 550 141" stroke="#5C78FF" stroke-width="1.5" fill="none" marker-end="url(#n-r)"/>
   <path d="M204 169 L 550 158" stroke="#5C78FF" stroke-width="1.5" fill="none" marker-end="url(#n-r)"/>
 
-  <rect x="560" y="66" width="164" height="36" rx="6" fill="#1D1D26" stroke="#5AC8FF"/>
+  <rect x="560" y="66" width="164" height="36" rx="6" fill="#191921" stroke="#5AC8FF"/>
   <text x="642" y="89" font-size="11" fill="#5AC8FF" text-anchor="middle" font-weight="700">ROW KEPT</text>
 
-  <rect x="560" y="122" width="164" height="56" rx="6" fill="#241014" stroke="#5C78FF"/>
+  <rect x="560" y="122" width="164" height="56" rx="6" fill="#191921" stroke="#5C78FF"/>
   <text x="642" y="145" font-size="11" fill="#9AA0B4" text-anchor="middle" font-weight="700">ROW DROPPED</text>
-  <text x="642" y="163" font-size="8.5" fill="#9aa0b4" text-anchor="middle">FALSE and UNKNOWN alike</text>
+  <text x="642" y="163" font-size="8.5" fill="#9AA0B4" text-anchor="middle">FALSE and UNKNOWN alike</text>
 </svg>
 <figcaption>UNKNOWN is not a third outcome you get told about — it is thrown out exactly like FALSE. A row with a NULL vanishes from your result set silently, which is what makes NULL bugs so hard to spot.</figcaption>
 </figure>
@@ -540,11 +540,11 @@ revenue / <span class="p">NULLIF</span>(orders, 0)                      <span cl
   <defs>
     <marker id="d-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#5C78FF"/></marker>
   </defs>
-  <text x="380" y="20" font-size="10.5" fill="#9aa0b4" text-anchor="middle" letter-spacing="1.5">THREE THINGS YOU DO TO A DATE</text>
+  <text x="380" y="20" font-size="10.5" fill="#9AA0B4" text-anchor="middle" letter-spacing="1.5">THREE THINGS YOU DO TO A DATE</text>
 
-  <rect x="290" y="44" width="180" height="44" rx="7" fill="#1D1D26" stroke="#5C78FF"/>
+  <rect x="290" y="44" width="180" height="44" rx="7" fill="#191921" stroke="#5C78FF"/>
   <text x="380" y="64" font-size="10.5" fill="#9AA0B4" text-anchor="middle" font-weight="700">2024-03-15 14:30</text>
-  <text x="380" y="79" font-size="8.5" fill="#9aa0b4" text-anchor="middle">a timestamp</text>
+  <text x="380" y="79" font-size="8.5" fill="#9AA0B4" text-anchor="middle">a timestamp</text>
 
   <g stroke="#9AA0B4" stroke-width="1.4" fill="none">
     <path d="M380 92 L 140 144" marker-end="url(#d-a)"/>
@@ -552,25 +552,25 @@ revenue / <span class="p">NULLIF</span>(orders, 0)                      <span cl
     <path d="M380 92 L 620 144" marker-end="url(#d-a)"/>
   </g>
 
-  <rect x="30" y="150" width="220" height="90" rx="8" fill="#1D1D26" stroke="#5AC8FF"/>
+  <rect x="30" y="150" width="220" height="90" rx="8" fill="#191921" stroke="#5AC8FF"/>
   <text x="140" y="172" font-size="11" fill="#5AC8FF" text-anchor="middle" font-weight="700">TRUNCATE</text>
-  <text x="140" y="192" font-size="8.5" fill="#cdd0dd" text-anchor="middle">DATE_TRUNC('month', t)</text>
+  <text x="140" y="192" font-size="8.5" fill="#CDD0DD" text-anchor="middle">DATE_TRUNC('month', t)</text>
   <text x="140" y="211" font-size="9.5" fill="#5AC8FF" text-anchor="middle">→ 2024-03-01</text>
   <text x="140" y="229" font-size="8.5" fill="#6B6B78" text-anchor="middle">to GROUP BY a period</text>
 
-  <rect x="270" y="150" width="220" height="90" rx="8" fill="#0e2028" stroke="#5AC8FF"/>
+  <rect x="270" y="150" width="220" height="90" rx="8" fill="#16202E" stroke="#5AC8FF"/>
   <text x="380" y="172" font-size="11" fill="#5AC8FF" text-anchor="middle" font-weight="700">EXTRACT</text>
-  <text x="380" y="192" font-size="8.5" fill="#cdd0dd" text-anchor="middle">EXTRACT(MONTH FROM t)</text>
+  <text x="380" y="192" font-size="8.5" fill="#CDD0DD" text-anchor="middle">EXTRACT(MONTH FROM t)</text>
   <text x="380" y="211" font-size="9.5" fill="#5AC8FF" text-anchor="middle">→ 3</text>
   <text x="380" y="229" font-size="8.5" fill="#6B6B78" text-anchor="middle">one part, as a number</text>
 
-  <rect x="510" y="150" width="220" height="90" rx="8" fill="#1D1D26" stroke="#5C78FF"/>
+  <rect x="510" y="150" width="220" height="90" rx="8" fill="#191921" stroke="#5C78FF"/>
   <text x="620" y="172" font-size="11" fill="#9AA0B4" text-anchor="middle" font-weight="700">SUBTRACT</text>
-  <text x="620" y="192" font-size="8.5" fill="#cdd0dd" text-anchor="middle">end_date - start_date</text>
+  <text x="620" y="192" font-size="8.5" fill="#CDD0DD" text-anchor="middle">end_date - start_date</text>
   <text x="620" y="211" font-size="9.5" fill="#9AA0B4" text-anchor="middle">→ 74 days</text>
   <text x="620" y="229" font-size="8.5" fill="#6B6B78" text-anchor="middle">elapsed time</text>
 
-  <text x="380" y="264" font-size="10" fill="#9aa0b4" text-anchor="middle">Truncate to BUCKET · extract to LABEL · subtract to MEASURE. That is the whole topic.</text>
+  <text x="380" y="264" font-size="10" fill="#9AA0B4" text-anchor="middle">Truncate to BUCKET · extract to LABEL · subtract to MEASURE. That is the whole topic.</text>
 </svg>
 <figcaption>Bucket, label, measure. If you can name which of the three a question wants, you already know which function to look up.</figcaption>
 </figure>
@@ -726,24 +726,24 @@ revenue / <span class="p">NULLIF</span>(orders, 0)                      <span cl
 
 <figure class="fig reveal">
 <svg viewBox="0 0 760 248" width="100%" aria-label="Two tables with two matching rows and one unmatched row on each side, showing what inner and outer joins keep">
-  <text x="380" y="20" font-size="10.5" fill="#9aa0b4" text-anchor="middle" letter-spacing="1.5">WHICH ROWS MATCH &#183; AND WHAT HAPPENS TO THE REST</text>
+  <text x="380" y="20" font-size="10.5" fill="#9AA0B4" text-anchor="middle" letter-spacing="1.5">WHICH ROWS MATCH &#183; AND WHAT HAPPENS TO THE REST</text>
 
-  <rect x="60" y="42" width="200" height="26" rx="5" fill="#17171E" stroke="#3a3a48"/>
+  <rect x="60" y="42" width="200" height="26" rx="5" fill="#191921" stroke="#6B6B78"/>
   <text x="160" y="60" font-size="11" fill="#fff" text-anchor="middle" font-weight="700">customers c</text>
-  <rect x="60" y="78" width="200" height="30" rx="5" fill="#241014" stroke="#5C78FF"/>
+  <rect x="60" y="78" width="200" height="30" rx="5" fill="#191921" stroke="#5C78FF"/>
   <text x="160" y="97" font-size="10" fill="#9AA0B4" text-anchor="middle">id=1  Ann</text>
-  <rect x="60" y="112" width="200" height="30" rx="5" fill="#1D1D26" stroke="#5AC8FF"/>
+  <rect x="60" y="112" width="200" height="30" rx="5" fill="#191921" stroke="#5AC8FF"/>
   <text x="160" y="131" font-size="10" fill="#5AC8FF" text-anchor="middle">id=2  Bob</text>
-  <rect x="60" y="146" width="200" height="30" rx="5" fill="#1D1D26" stroke="#5AC8FF"/>
+  <rect x="60" y="146" width="200" height="30" rx="5" fill="#191921" stroke="#5AC8FF"/>
   <text x="160" y="165" font-size="10" fill="#5AC8FF" text-anchor="middle">id=3  Cid</text>
 
-  <rect x="500" y="42" width="200" height="26" rx="5" fill="#17171E" stroke="#3a3a48"/>
+  <rect x="500" y="42" width="200" height="26" rx="5" fill="#191921" stroke="#6B6B78"/>
   <text x="600" y="60" font-size="11" fill="#fff" text-anchor="middle" font-weight="700">orders o</text>
-  <rect x="500" y="112" width="200" height="30" rx="5" fill="#1D1D26" stroke="#5AC8FF"/>
+  <rect x="500" y="112" width="200" height="30" rx="5" fill="#191921" stroke="#5AC8FF"/>
   <text x="600" y="131" font-size="10" fill="#5AC8FF" text-anchor="middle">cust_id=2</text>
-  <rect x="500" y="146" width="200" height="30" rx="5" fill="#1D1D26" stroke="#5AC8FF"/>
+  <rect x="500" y="146" width="200" height="30" rx="5" fill="#191921" stroke="#5AC8FF"/>
   <text x="600" y="165" font-size="10" fill="#5AC8FF" text-anchor="middle">cust_id=3</text>
-  <rect x="500" y="180" width="200" height="30" rx="5" fill="#241014" stroke="#5C78FF"/>
+  <rect x="500" y="180" width="200" height="30" rx="5" fill="#191921" stroke="#5C78FF"/>
   <text x="600" y="199" font-size="10" fill="#9AA0B4" text-anchor="middle">cust_id=9</text>
 
   <path d="M264 127 H 496" stroke="#5AC8FF" stroke-width="1.5" fill="none"/>
@@ -756,7 +756,7 @@ revenue / <span class="p">NULLIF</span>(orders, 0)                      <span cl
   <path d="M496 195 H 412" stroke="#5C78FF" stroke-width="1.3" stroke-dasharray="4,3" fill="none"/>
   <text x="406" y="199" font-size="9.5" fill="#9AA0B4" text-anchor="end">− no customer</text>
 
-  <text x="380" y="234" font-size="10" fill="#9aa0b4" text-anchor="middle">The red rows are the whole story: the join TYPE is just a policy for what to do with them.</text>
+  <text x="380" y="234" font-size="10" fill="#9AA0B4" text-anchor="middle">The red rows are the whole story: the join TYPE is just a policy for what to do with them.</text>
 </svg>
 <figcaption>Two rows match on <code>c.id = o.cust_id</code>. Ann has no order; order 9 has no customer. Every join type agrees on the green rows and differs only on the red ones.</figcaption>
 </figure>
@@ -833,31 +833,31 @@ revenue / <span class="p">NULLIF</span>(orders, 0)                      <span cl
   <defs>
     <marker id="f-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#5C78FF"/></marker>
   </defs>
-  <text x="380" y="20" font-size="10.5" fill="#9aa0b4" text-anchor="middle" letter-spacing="1.5">ONE ROW IN, THREE ROWS OUT &#183; THE BUDGET CAME ALONG FOR THE RIDE</text>
+  <text x="380" y="20" font-size="10.5" fill="#9AA0B4" text-anchor="middle" letter-spacing="1.5">ONE ROW IN, THREE ROWS OUT &#183; THE BUDGET CAME ALONG FOR THE RIDE</text>
 
-  <rect x="40" y="44" width="170" height="24" rx="5" fill="#17171E" stroke="#3a3a48"/>
+  <rect x="40" y="44" width="170" height="24" rx="5" fill="#191921" stroke="#6B6B78"/>
   <text x="125" y="61" font-size="10" fill="#fff" text-anchor="middle" font-weight="700">customers</text>
-  <rect x="40" y="68" width="170" height="28" rx="5" fill="#1D1D26" stroke="#5C78FF"/>
+  <rect x="40" y="68" width="170" height="28" rx="5" fill="#191921" stroke="#5C78FF"/>
   <text x="125" y="86" font-size="9.5" fill="#9AA0B4" text-anchor="middle">id=1  budget 100</text>
   <text x="125" y="113" font-size="9" fill="#5AC8FF" text-anchor="middle">1 row</text>
 
-  <rect x="270" y="44" width="170" height="24" rx="5" fill="#17171E" stroke="#3a3a48"/>
+  <rect x="270" y="44" width="170" height="24" rx="5" fill="#191921" stroke="#6B6B78"/>
   <text x="355" y="61" font-size="10" fill="#fff" text-anchor="middle" font-weight="700">orders</text>
-  <rect x="270" y="68" width="170" height="28" rx="5" fill="#17171E" stroke="#5AC8FF"/>
+  <rect x="270" y="68" width="170" height="28" rx="5" fill="#191921" stroke="#5AC8FF"/>
   <text x="355" y="86" font-size="9.5" fill="#5AC8FF" text-anchor="middle">cust=1  amt 30</text>
-  <rect x="270" y="96" width="170" height="28" rx="5" fill="#17171E" stroke="#5AC8FF"/>
+  <rect x="270" y="96" width="170" height="28" rx="5" fill="#191921" stroke="#5AC8FF"/>
   <text x="355" y="114" font-size="9.5" fill="#5AC8FF" text-anchor="middle">cust=1  amt 50</text>
-  <rect x="270" y="124" width="170" height="28" rx="5" fill="#17171E" stroke="#5AC8FF"/>
+  <rect x="270" y="124" width="170" height="28" rx="5" fill="#191921" stroke="#5AC8FF"/>
   <text x="355" y="142" font-size="9.5" fill="#5AC8FF" text-anchor="middle">cust=1  amt 20</text>
   <text x="355" y="166" font-size="9" fill="#5AC8FF" text-anchor="middle">3 rows</text>
 
-  <rect x="520" y="44" width="200" height="24" rx="5" fill="#17171E" stroke="#3a3a48"/>
+  <rect x="520" y="44" width="200" height="24" rx="5" fill="#191921" stroke="#6B6B78"/>
   <text x="620" y="61" font-size="10" fill="#fff" text-anchor="middle" font-weight="700">after the JOIN</text>
-  <rect x="520" y="68" width="200" height="28" rx="5" fill="#241014" stroke="#5C78FF"/>
+  <rect x="520" y="68" width="200" height="28" rx="5" fill="#191921" stroke="#5C78FF"/>
   <text x="620" y="86" font-size="9.5" fill="#9AA0B4" text-anchor="middle">budget 100 · amt 30</text>
-  <rect x="520" y="96" width="200" height="28" rx="5" fill="#241014" stroke="#5C78FF"/>
+  <rect x="520" y="96" width="200" height="28" rx="5" fill="#191921" stroke="#5C78FF"/>
   <text x="620" y="114" font-size="9.5" fill="#9AA0B4" text-anchor="middle">budget 100 · amt 50</text>
-  <rect x="520" y="124" width="200" height="28" rx="5" fill="#241014" stroke="#5C78FF"/>
+  <rect x="520" y="124" width="200" height="28" rx="5" fill="#191921" stroke="#5C78FF"/>
   <text x="620" y="142" font-size="9.5" fill="#9AA0B4" text-anchor="middle">budget 100 · amt 20</text>
   <text x="620" y="166" font-size="9" fill="#9AA0B4" text-anchor="middle">budget is now in there 3 times</text>
 
@@ -870,7 +870,7 @@ revenue / <span class="p">NULLIF</span>(orders, 0)                      <span cl
     <path d="M444 138 H 514" marker-end="url(#f-a)"/>
   </g>
 
-  <rect x="90" y="182" width="580" height="62" rx="8" fill="#241014" stroke="#5C78FF"/>
+  <rect x="90" y="182" width="580" height="62" rx="8" fill="#191921" stroke="#5C78FF"/>
   <text x="380" y="206" font-size="11" fill="#5AC8FF" text-anchor="middle">SUM(o.amount) = 30 + 50 + 20 = 100  + correct</text>
   <text x="380" y="228" font-size="10.5" fill="#9AA0B4" text-anchor="middle">SUM(c.budget) = 100 + 100 + 100 = 300  − counted 3 times</text>
 </svg>
@@ -922,34 +922,34 @@ revenue / <span class="p">NULLIF</span>(orders, 0)                      <span cl
     <marker id="g-b" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0 0L10 5L0 10z" fill="#5AC8FF"/></marker>
     <marker id="g-g" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0 0L10 5L0 10z" fill="#5AC8FF"/></marker>
   </defs>
-  <text x="380" y="20" font-size="10.5" fill="#9aa0b4" text-anchor="middle" letter-spacing="1.5">ROWS GO IN &#183; BUCKETS COME OUT</text>
+  <text x="380" y="20" font-size="10.5" fill="#9AA0B4" text-anchor="middle" letter-spacing="1.5">ROWS GO IN &#183; BUCKETS COME OUT</text>
 
-  <rect x="40" y="36" width="150" height="22" rx="5" fill="#17171E" stroke="#3a3a48"/>
+  <rect x="40" y="36" width="150" height="22" rx="5" fill="#191921" stroke="#6B6B78"/>
   <text x="115" y="52" font-size="9.5" fill="#fff" text-anchor="middle" font-weight="700">input rows</text>
-  <rect x="40" y="62" width="150" height="24" rx="4" fill="#1D1D26" stroke="#5C78FF"/><text x="115" y="78" font-size="9.5" fill="#9AA0B4" text-anchor="middle">A · 10</text>
-  <rect x="40" y="89" width="150" height="24" rx="4" fill="#17171E" stroke="#5AC8FF"/><text x="115" y="105" font-size="9.5" fill="#5AC8FF" text-anchor="middle">B · 5</text>
-  <rect x="40" y="116" width="150" height="24" rx="4" fill="#1D1D26" stroke="#5C78FF"/><text x="115" y="132" font-size="9.5" fill="#9AA0B4" text-anchor="middle">A · 20</text>
-  <rect x="40" y="143" width="150" height="24" rx="4" fill="#1D1D26" stroke="#5AC8FF"/><text x="115" y="159" font-size="9.5" fill="#5AC8FF" text-anchor="middle">C · 7</text>
-  <rect x="40" y="170" width="150" height="24" rx="4" fill="#17171E" stroke="#5AC8FF"/><text x="115" y="186" font-size="9.5" fill="#5AC8FF" text-anchor="middle">B · 15</text>
-  <rect x="40" y="197" width="150" height="24" rx="4" fill="#1D1D26" stroke="#5C78FF"/><text x="115" y="213" font-size="9.5" fill="#9AA0B4" text-anchor="middle">A · 5</text>
+  <rect x="40" y="62" width="150" height="24" rx="4" fill="#191921" stroke="#5C78FF"/><text x="115" y="78" font-size="9.5" fill="#9AA0B4" text-anchor="middle">A · 10</text>
+  <rect x="40" y="89" width="150" height="24" rx="4" fill="#191921" stroke="#5AC8FF"/><text x="115" y="105" font-size="9.5" fill="#5AC8FF" text-anchor="middle">B · 5</text>
+  <rect x="40" y="116" width="150" height="24" rx="4" fill="#191921" stroke="#5C78FF"/><text x="115" y="132" font-size="9.5" fill="#9AA0B4" text-anchor="middle">A · 20</text>
+  <rect x="40" y="143" width="150" height="24" rx="4" fill="#191921" stroke="#5AC8FF"/><text x="115" y="159" font-size="9.5" fill="#5AC8FF" text-anchor="middle">C · 7</text>
+  <rect x="40" y="170" width="150" height="24" rx="4" fill="#191921" stroke="#5AC8FF"/><text x="115" y="186" font-size="9.5" fill="#5AC8FF" text-anchor="middle">B · 15</text>
+  <rect x="40" y="197" width="150" height="24" rx="4" fill="#191921" stroke="#5C78FF"/><text x="115" y="213" font-size="9.5" fill="#9AA0B4" text-anchor="middle">A · 5</text>
 
-  <rect x="270" y="36" width="180" height="22" rx="5" fill="#17171E" stroke="#3a3a48"/>
+  <rect x="270" y="36" width="180" height="22" rx="5" fill="#191921" stroke="#6B6B78"/>
   <text x="360" y="52" font-size="9.5" fill="#fff" text-anchor="middle" font-weight="700">GROUP BY key</text>
-  <rect x="270" y="62" width="180" height="58" rx="6" fill="#1D1D26" stroke="#5C78FF"/>
+  <rect x="270" y="62" width="180" height="58" rx="6" fill="#191921" stroke="#5C78FF"/>
   <text x="360" y="84" font-size="12" fill="#9AA0B4" text-anchor="middle" font-weight="700">A</text>
-  <text x="360" y="103" font-size="9.5" fill="#cdd0dd" text-anchor="middle">10 · 20 · 5</text>
-  <rect x="270" y="128" width="180" height="50" rx="6" fill="#17171E" stroke="#5AC8FF"/>
+  <text x="360" y="103" font-size="9.5" fill="#CDD0DD" text-anchor="middle">10 · 20 · 5</text>
+  <rect x="270" y="128" width="180" height="50" rx="6" fill="#191921" stroke="#5AC8FF"/>
   <text x="360" y="148" font-size="12" fill="#5AC8FF" text-anchor="middle" font-weight="700">B</text>
-  <text x="360" y="166" font-size="9.5" fill="#cdd0dd" text-anchor="middle">5 · 15</text>
-  <rect x="270" y="186" width="180" height="40" rx="6" fill="#1D1D26" stroke="#5AC8FF"/>
+  <text x="360" y="166" font-size="9.5" fill="#CDD0DD" text-anchor="middle">5 · 15</text>
+  <rect x="270" y="186" width="180" height="40" rx="6" fill="#191921" stroke="#5AC8FF"/>
   <text x="360" y="203" font-size="11" fill="#5AC8FF" text-anchor="middle" font-weight="700">C</text>
-  <text x="360" y="218" font-size="9.5" fill="#cdd0dd" text-anchor="middle">7</text>
+  <text x="360" y="218" font-size="9.5" fill="#CDD0DD" text-anchor="middle">7</text>
 
-  <rect x="540" y="36" width="180" height="22" rx="5" fill="#17171E" stroke="#3a3a48"/>
+  <rect x="540" y="36" width="180" height="22" rx="5" fill="#191921" stroke="#6B6B78"/>
   <text x="630" y="52" font-size="9.5" fill="#fff" text-anchor="middle" font-weight="700">SUM(v) per key</text>
-  <rect x="540" y="62" width="180" height="24" rx="4" fill="#1D1D26" stroke="#5C78FF"/><text x="630" y="78" font-size="9.5" fill="#9AA0B4" text-anchor="middle">A · 35</text>
-  <rect x="540" y="89" width="180" height="24" rx="4" fill="#17171E" stroke="#5AC8FF"/><text x="630" y="105" font-size="9.5" fill="#5AC8FF" text-anchor="middle">B · 20</text>
-  <rect x="540" y="116" width="180" height="24" rx="4" fill="#1D1D26" stroke="#5AC8FF"/><text x="630" y="132" font-size="9.5" fill="#5AC8FF" text-anchor="middle">C · 7</text>
+  <rect x="540" y="62" width="180" height="24" rx="4" fill="#191921" stroke="#5C78FF"/><text x="630" y="78" font-size="9.5" fill="#9AA0B4" text-anchor="middle">A · 35</text>
+  <rect x="540" y="89" width="180" height="24" rx="4" fill="#191921" stroke="#5AC8FF"/><text x="630" y="105" font-size="9.5" fill="#5AC8FF" text-anchor="middle">B · 20</text>
+  <rect x="540" y="116" width="180" height="24" rx="4" fill="#191921" stroke="#5AC8FF"/><text x="630" y="132" font-size="9.5" fill="#5AC8FF" text-anchor="middle">C · 7</text>
 
   <g fill="none" stroke-width="1.2">
     <path d="M194 74 L 264 88" stroke="#5C78FF" marker-end="url(#g-y)"/>
@@ -963,7 +963,7 @@ revenue / <span class="p">NULLIF</span>(orders, 0)                      <span cl
     <path d="M454 206 L 534 128" stroke="#5AC8FF" marker-end="url(#g-g)"/>
   </g>
 
-  <text x="380" y="262" font-size="10" fill="#9aa0b4" text-anchor="middle">After GROUP BY the individual rows are gone. SELECT can see the key and aggregates — nothing else.</text>
+  <text x="380" y="262" font-size="10" fill="#9AA0B4" text-anchor="middle">After GROUP BY the individual rows are gone. SELECT can see the key and aggregates — nothing else.</text>
 </svg>
 <figcaption>Three distinct keys, so three buckets, so three output rows. The values 10, 20 and 5 no longer exist as rows — only as ingredients of <code>SUM</code>.</figcaption>
 </figure>
@@ -1104,46 +1104,46 @@ revenue / <span class="p">NULLIF</span>(orders, 0)                      <span cl
   <defs>
     <marker id="c-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0 0L10 5L0 10z" fill="#5C78FF"/></marker>
   </defs>
-  <text x="380" y="20" font-size="10.5" fill="#9aa0b4" text-anchor="middle" letter-spacing="1.5">ROWS BECOME COLUMNS</text>
+  <text x="380" y="20" font-size="10.5" fill="#9AA0B4" text-anchor="middle" letter-spacing="1.5">ROWS BECOME COLUMNS</text>
 
-  <rect x="40" y="44" width="250" height="26" rx="5" fill="#17171E" stroke="#3a3a48"/>
+  <rect x="40" y="44" width="250" height="26" rx="5" fill="#191921" stroke="#6B6B78"/>
   <text x="102" y="62" font-size="9.5" fill="#fff" text-anchor="middle" font-weight="700">region</text>
   <text x="228" y="62" font-size="9.5" fill="#fff" text-anchor="middle" font-weight="700">status</text>
-  <rect x="40" y="70" width="250" height="26" rx="0" fill="#1D1D26" stroke="#2C2C38"/>
-  <text x="102" y="87" font-size="9.5" fill="#cdd0dd" text-anchor="middle">US</text>
+  <rect x="40" y="70" width="250" height="26" rx="0" fill="#191921" stroke="#2C2C38"/>
+  <text x="102" y="87" font-size="9.5" fill="#CDD0DD" text-anchor="middle">US</text>
   <text x="228" y="87" font-size="9.5" fill="#5AC8FF" text-anchor="middle">shipped</text>
-  <rect x="40" y="96" width="250" height="26" rx="0" fill="#101015" stroke="#2C2C38"/>
-  <text x="102" y="113" font-size="9.5" fill="#cdd0dd" text-anchor="middle">US</text>
+  <rect x="40" y="96" width="250" height="26" rx="0" fill="#191921" stroke="#2C2C38"/>
+  <text x="102" y="113" font-size="9.5" fill="#CDD0DD" text-anchor="middle">US</text>
   <text x="228" y="113" font-size="9.5" fill="#9AA0B4" text-anchor="middle">pending</text>
-  <rect x="40" y="122" width="250" height="26" rx="0" fill="#1D1D26" stroke="#2C2C38"/>
-  <text x="102" y="139" font-size="9.5" fill="#cdd0dd" text-anchor="middle">EU</text>
+  <rect x="40" y="122" width="250" height="26" rx="0" fill="#191921" stroke="#2C2C38"/>
+  <text x="102" y="139" font-size="9.5" fill="#CDD0DD" text-anchor="middle">EU</text>
   <text x="228" y="139" font-size="9.5" fill="#5AC8FF" text-anchor="middle">shipped</text>
-  <rect x="40" y="148" width="250" height="26" rx="0" fill="#101015" stroke="#2C2C38"/>
-  <text x="102" y="165" font-size="9.5" fill="#cdd0dd" text-anchor="middle">US</text>
+  <rect x="40" y="148" width="250" height="26" rx="0" fill="#191921" stroke="#2C2C38"/>
+  <text x="102" y="165" font-size="9.5" fill="#CDD0DD" text-anchor="middle">US</text>
   <text x="228" y="165" font-size="9.5" fill="#5AC8FF" text-anchor="middle">shipped</text>
-  <rect x="40" y="174" width="250" height="26" rx="0" fill="#1D1D26" stroke="#2C2C38"/>
-  <text x="102" y="191" font-size="9.5" fill="#cdd0dd" text-anchor="middle">EU</text>
+  <rect x="40" y="174" width="250" height="26" rx="0" fill="#191921" stroke="#2C2C38"/>
+  <text x="102" y="191" font-size="9.5" fill="#CDD0DD" text-anchor="middle">EU</text>
   <text x="228" y="191" font-size="9.5" fill="#9AA0B4" text-anchor="middle">cancelled</text>
 
   <path d="M300 120 H 432" stroke="#5C78FF" stroke-width="2.5" fill="none" marker-end="url(#c-a)"/>
   <text x="364" y="108" font-size="9.5" fill="#9AA0B4" text-anchor="middle">CASE inside SUM()</text>
 
-  <rect x="440" y="44" width="280" height="26" rx="5" fill="#17171E" stroke="#3a3a48"/>
+  <rect x="440" y="44" width="280" height="26" rx="5" fill="#191921" stroke="#6B6B78"/>
   <text x="475" y="62" font-size="8" fill="#fff" text-anchor="middle" font-weight="700">region</text>
   <text x="545" y="62" font-size="8" fill="#5AC8FF" text-anchor="middle" font-weight="700">shipped</text>
   <text x="615" y="62" font-size="8" fill="#9AA0B4" text-anchor="middle" font-weight="700">pending</text>
   <text x="685" y="62" font-size="8" fill="#9AA0B4" text-anchor="middle" font-weight="700">cancelled</text>
-  <rect x="440" y="70" width="280" height="26" rx="0" fill="#1D1D26" stroke="#2C2C38"/>
-  <text x="475" y="87" font-size="9.5" fill="#cdd0dd" text-anchor="middle">US</text>
+  <rect x="440" y="70" width="280" height="26" rx="0" fill="#191921" stroke="#2C2C38"/>
+  <text x="475" y="87" font-size="9.5" fill="#CDD0DD" text-anchor="middle">US</text>
   <text x="545" y="87" font-size="9.5" fill="#5AC8FF" text-anchor="middle">2</text>
   <text x="615" y="87" font-size="9.5" fill="#9AA0B4" text-anchor="middle">1</text>
   <text x="685" y="87" font-size="9.5" fill="#9AA0B4" text-anchor="middle">0</text>
-  <rect x="440" y="96" width="280" height="26" rx="0" fill="#101015" stroke="#2C2C38"/>
-  <text x="475" y="113" font-size="9.5" fill="#cdd0dd" text-anchor="middle">EU</text>
+  <rect x="440" y="96" width="280" height="26" rx="0" fill="#191921" stroke="#2C2C38"/>
+  <text x="475" y="113" font-size="9.5" fill="#CDD0DD" text-anchor="middle">EU</text>
   <text x="545" y="113" font-size="9.5" fill="#5AC8FF" text-anchor="middle">1</text>
   <text x="615" y="113" font-size="9.5" fill="#9AA0B4" text-anchor="middle">0</text>
   <text x="685" y="113" font-size="9.5" fill="#9AA0B4" text-anchor="middle">1</text>
-  <text x="580" y="142" font-size="9" fill="#9aa0b4" text-anchor="middle">one row per region &#183; one column per status</text>
+  <text x="580" y="142" font-size="9" fill="#9AA0B4" text-anchor="middle">one row per region &#183; one column per status</text>
 
   <rect x="100" y="222" width="560" height="34" rx="6" fill="#101017" stroke="#2C2C38"/>
   <text x="380" y="244" font-size="10" fill="#9AA0B4" text-anchor="middle">SUM(CASE WHEN status = 'shipped' THEN 1 ELSE 0 END) AS shipped</text>
@@ -1335,26 +1335,26 @@ revenue / <span class="p">NULLIF</span>(orders, 0)                      <span cl
   <defs>
     <marker id="s-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#5C78FF"/></marker>
   </defs>
-  <text x="380" y="20" font-size="10.5" fill="#9aa0b4" text-anchor="middle" letter-spacing="1.5">ONE EXECUTION OF THE SUBQUERY PER OUTER ROW</text>
+  <text x="380" y="20" font-size="10.5" fill="#9AA0B4" text-anchor="middle" letter-spacing="1.5">ONE EXECUTION OF THE SUBQUERY PER OUTER ROW</text>
 
-  <rect x="40" y="44" width="200" height="176" rx="7" fill="#1D1D26" stroke="#5C78FF"/>
+  <rect x="40" y="44" width="200" height="176" rx="7" fill="#191921" stroke="#5C78FF"/>
   <text x="140" y="64" font-size="10" fill="#9AA0B4" text-anchor="middle" font-weight="700">OUTER · employees e</text>
-  <rect x="52" y="84" width="176" height="32" rx="4" fill="#101017" stroke="#1D1D26"/>
-  <text x="140" y="104" font-size="9.5" fill="#cdd0dd" text-anchor="middle">Ann · Sales</text>
-  <rect x="52" y="122" width="176" height="32" rx="4" fill="#101017" stroke="#1D1D26"/>
-  <text x="140" y="142" font-size="9.5" fill="#cdd0dd" text-anchor="middle">Bob · Sales</text>
-  <rect x="52" y="160" width="176" height="32" rx="4" fill="#101017" stroke="#1D1D26"/>
-  <text x="140" y="180" font-size="9.5" fill="#cdd0dd" text-anchor="middle">Cid · Eng</text>
+  <rect x="52" y="84" width="176" height="32" rx="4" fill="#101017" stroke="#191921"/>
+  <text x="140" y="104" font-size="9.5" fill="#CDD0DD" text-anchor="middle">Ann · Sales</text>
+  <rect x="52" y="122" width="176" height="32" rx="4" fill="#101017" stroke="#191921"/>
+  <text x="140" y="142" font-size="9.5" fill="#CDD0DD" text-anchor="middle">Bob · Sales</text>
+  <rect x="52" y="160" width="176" height="32" rx="4" fill="#101017" stroke="#191921"/>
+  <text x="140" y="180" font-size="9.5" fill="#CDD0DD" text-anchor="middle">Cid · Eng</text>
 
-  <rect x="370" y="76" width="310" height="44" rx="6" fill="#1D1D26" stroke="#5C78FF"/>
+  <rect x="370" y="76" width="310" height="44" rx="6" fill="#191921" stroke="#5C78FF"/>
   <text x="525" y="96" font-size="9.5" fill="#9AA0B4" text-anchor="middle">AVG(salary) WHERE dept = 'Sales'</text>
   <text x="525" y="111" font-size="9" fill="#5AC8FF" text-anchor="middle">→ 60,000</text>
 
-  <rect x="370" y="124" width="310" height="44" rx="6" fill="#1D1D26" stroke="#5C78FF"/>
+  <rect x="370" y="124" width="310" height="44" rx="6" fill="#191921" stroke="#5C78FF"/>
   <text x="525" y="144" font-size="9.5" fill="#9AA0B4" text-anchor="middle">AVG(salary) WHERE dept = 'Sales'</text>
   <text x="525" y="159" font-size="9" fill="#5AC8FF" text-anchor="middle">→ 60,000</text>
 
-  <rect x="370" y="172" width="310" height="44" rx="6" fill="#1D1D26" stroke="#5C78FF"/>
+  <rect x="370" y="172" width="310" height="44" rx="6" fill="#191921" stroke="#5C78FF"/>
   <text x="525" y="192" font-size="9.5" fill="#9AA0B4" text-anchor="middle">AVG(salary) WHERE dept = 'Eng'</text>
   <text x="525" y="207" font-size="9" fill="#5AC8FF" text-anchor="middle">→ 90,000</text>
 
@@ -1364,11 +1364,11 @@ revenue / <span class="p">NULLIF</span>(orders, 0)                      <span cl
     <path d="M232 176 L 364 194" marker-end="url(#s-a)"/>
   </g>
 
-  <path d="M690 76 V 216" stroke="#1D1D26" stroke-width="1.2" fill="none"/>
-  <path d="M686 76 H 690 M686 216 H 690" stroke="#1D1D26" stroke-width="1.2" fill="none"/>
+  <path d="M690 76 V 216" stroke="#191921" stroke-width="1.2" fill="none"/>
+  <path d="M686 76 H 690 M686 216 H 690" stroke="#191921" stroke-width="1.2" fill="none"/>
   <text x="696" y="150" font-size="9" fill="#6B6B78">3 runs</text>
 
-  <text x="380" y="244" font-size="10" fill="#9aa0b4" text-anchor="middle">The subquery re-runs for every outer row. That is what "correlated" means.</text>
+  <text x="380" y="244" font-size="10" fill="#9AA0B4" text-anchor="middle">The subquery re-runs for every outer row. That is what "correlated" means.</text>
 </svg>
 <figcaption>Two of these three executions are identical work. A good optimiser often rewrites the whole thing into a join or a window function — but conceptually, this loop is the semantics, and on a big table a naive engine really will run it a million times.</figcaption>
 </figure>
@@ -1435,24 +1435,24 @@ revenue / <span class="p">NULLIF</span>(orders, 0)                      <span cl
   <defs>
     <marker id="w-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#5C78FF"/></marker>
   </defs>
-  <text x="380" y="20" font-size="10.5" fill="#9aa0b4" text-anchor="middle" letter-spacing="1.5">EACH CTE IS A NAMED STEP IN A PIPELINE</text>
+  <text x="380" y="20" font-size="10.5" fill="#9AA0B4" text-anchor="middle" letter-spacing="1.5">EACH CTE IS A NAMED STEP IN A PIPELINE</text>
 
-  <rect x="40" y="56" width="200" height="94" rx="8" fill="#1D1D26" stroke="#5C78FF"/>
+  <rect x="40" y="56" width="200" height="94" rx="8" fill="#191921" stroke="#5C78FF"/>
   <text x="140" y="80" font-size="12" fill="#9AA0B4" text-anchor="middle" font-weight="700">monthly</text>
-  <text x="140" y="101" font-size="9" fill="#cdd0dd" text-anchor="middle">sum orders per</text>
-  <text x="140" y="115" font-size="9" fill="#cdd0dd" text-anchor="middle">(month, user)</text>
+  <text x="140" y="101" font-size="9" fill="#CDD0DD" text-anchor="middle">sum orders per</text>
+  <text x="140" y="115" font-size="9" fill="#CDD0DD" text-anchor="middle">(month, user)</text>
   <text x="140" y="137" font-size="8.5" fill="#6B6B78" text-anchor="middle">CTE 1</text>
 
-  <rect x="280" y="56" width="200" height="94" rx="8" fill="#1D1D26" stroke="#5C78FF"/>
+  <rect x="280" y="56" width="200" height="94" rx="8" fill="#191921" stroke="#5C78FF"/>
   <text x="380" y="80" font-size="12" fill="#9AA0B4" text-anchor="middle" font-weight="700">ranked</text>
-  <text x="380" y="101" font-size="9" fill="#cdd0dd" text-anchor="middle">ROW_NUMBER over</text>
-  <text x="380" y="115" font-size="9" fill="#cdd0dd" text-anchor="middle">monthly, per month</text>
+  <text x="380" y="101" font-size="9" fill="#CDD0DD" text-anchor="middle">ROW_NUMBER over</text>
+  <text x="380" y="115" font-size="9" fill="#CDD0DD" text-anchor="middle">monthly, per month</text>
   <text x="380" y="137" font-size="8.5" fill="#6B6B78" text-anchor="middle">CTE 2 · reads CTE 1</text>
 
-  <rect x="520" y="56" width="200" height="94" rx="8" fill="#1D1D26" stroke="#5AC8FF"/>
+  <rect x="520" y="56" width="200" height="94" rx="8" fill="#191921" stroke="#5AC8FF"/>
   <text x="620" y="80" font-size="12" fill="#5AC8FF" text-anchor="middle" font-weight="700">final SELECT</text>
-  <text x="620" y="101" font-size="9" fill="#cdd0dd" text-anchor="middle">keep rn = 1</text>
-  <text x="620" y="115" font-size="9" fill="#cdd0dd" text-anchor="middle">top user per month</text>
+  <text x="620" y="101" font-size="9" fill="#CDD0DD" text-anchor="middle">keep rn = 1</text>
+  <text x="620" y="115" font-size="9" fill="#CDD0DD" text-anchor="middle">top user per month</text>
   <text x="620" y="137" font-size="8.5" fill="#6B6B78" text-anchor="middle">the answer</text>
 
   <g stroke="#9AA0B4" stroke-width="1.6" fill="none">
@@ -1460,7 +1460,7 @@ revenue / <span class="p">NULLIF</span>(orders, 0)                      <span cl
     <path d="M484 103 H 514" marker-end="url(#w-a)"/>
   </g>
 
-  <text x="380" y="180" font-size="10" fill="#9aa0b4" text-anchor="middle">Read it top to bottom like a paragraph — not inside-out like a nested subquery.</text>
+  <text x="380" y="180" font-size="10" fill="#9AA0B4" text-anchor="middle">Read it top to bottom like a paragraph — not inside-out like a nested subquery.</text>
 </svg>
 <figcaption>The canonical Hard-problem skeleton: aggregate into a shape, rank that shape, filter the ranking. Three CTEs, three sentences.</figcaption>
 </figure>
@@ -1568,37 +1568,37 @@ ranked <span class="k">AS</span> (
 
 <figure class="fig reveal">
 <svg viewBox="0 0 760 280" width="100%" aria-label="Four ways to name a result compared: CTE, view, materialized view and CTAS table, by lifetime, what they store, freshness and read cost">
-  <text x="380" y="20" font-size="10.5" fill="#9aa0b4" text-anchor="middle" letter-spacing="1.5">ARE YOU STORING THE QUESTION, OR THE ANSWER?</text>
+  <text x="380" y="20" font-size="10.5" fill="#9AA0B4" text-anchor="middle" letter-spacing="1.5">ARE YOU STORING THE QUESTION, OR THE ANSWER?</text>
 
-  <rect x="22" y="50" width="168" height="180" rx="8" fill="#1D1D26" stroke="#5AC8FF"/>
+  <rect x="22" y="50" width="168" height="180" rx="8" fill="#191921" stroke="#5AC8FF"/>
   <text x="106" y="72" font-size="11" fill="#5AC8FF" text-anchor="middle" font-weight="700">CTE</text>
-  <path d="M30 82 H 182" stroke="#2c4c34" stroke-width="1"/>
+  <path d="M30 82 H 182" stroke="#6B6B78" stroke-width="1"/>
   <text x="106" y="102" font-size="7.5" fill="#6B6B78" text-anchor="middle" letter-spacing="1">LIFETIME</text>
-  <text x="106" y="115" font-size="9" fill="#cdd0dd" text-anchor="middle">one query</text>
+  <text x="106" y="115" font-size="9" fill="#CDD0DD" text-anchor="middle">one query</text>
   <text x="106" y="138" font-size="7.5" fill="#6B6B78" text-anchor="middle" letter-spacing="1">STORES</text>
-  <text x="106" y="151" font-size="9" fill="#cdd0dd" text-anchor="middle">nothing</text>
+  <text x="106" y="151" font-size="9" fill="#CDD0DD" text-anchor="middle">nothing</text>
   <text x="106" y="174" font-size="7.5" fill="#6B6B78" text-anchor="middle" letter-spacing="1">FRESHNESS</text>
   <text x="106" y="187" font-size="9" fill="#5AC8FF" text-anchor="middle">always live</text>
   <text x="106" y="210" font-size="7.5" fill="#6B6B78" text-anchor="middle" letter-spacing="1">READ COST</text>
-  <text x="106" y="223" font-size="9" fill="#cdd0dd" text-anchor="middle">recomputed</text>
+  <text x="106" y="223" font-size="9" fill="#CDD0DD" text-anchor="middle">recomputed</text>
 
-  <rect x="208" y="50" width="168" height="180" rx="8" fill="#1D1D26" stroke="#5AC8FF"/>
+  <rect x="208" y="50" width="168" height="180" rx="8" fill="#191921" stroke="#5AC8FF"/>
   <text x="292" y="72" font-size="11" fill="#5AC8FF" text-anchor="middle" font-weight="700">VIEW</text>
-  <path d="M216 82 H 368" stroke="#2c4c34" stroke-width="1"/>
+  <path d="M216 82 H 368" stroke="#6B6B78" stroke-width="1"/>
   <text x="292" y="102" font-size="7.5" fill="#6B6B78" text-anchor="middle" letter-spacing="1">LIFETIME</text>
-  <text x="292" y="115" font-size="9" fill="#cdd0dd" text-anchor="middle">persists</text>
+  <text x="292" y="115" font-size="9" fill="#CDD0DD" text-anchor="middle">persists</text>
   <text x="292" y="138" font-size="7.5" fill="#6B6B78" text-anchor="middle" letter-spacing="1">STORES</text>
   <text x="292" y="151" font-size="9" fill="#9AA0B4" text-anchor="middle">the QUERY</text>
   <text x="292" y="174" font-size="7.5" fill="#6B6B78" text-anchor="middle" letter-spacing="1">FRESHNESS</text>
   <text x="292" y="187" font-size="9" fill="#5AC8FF" text-anchor="middle">always live</text>
   <text x="292" y="210" font-size="7.5" fill="#6B6B78" text-anchor="middle" letter-spacing="1">READ COST</text>
-  <text x="292" y="223" font-size="9" fill="#cdd0dd" text-anchor="middle">recomputed</text>
+  <text x="292" y="223" font-size="9" fill="#CDD0DD" text-anchor="middle">recomputed</text>
 
-  <rect x="394" y="50" width="168" height="180" rx="8" fill="#1D1D26" stroke="#5C78FF"/>
+  <rect x="394" y="50" width="168" height="180" rx="8" fill="#191921" stroke="#5C78FF"/>
   <text x="478" y="72" font-size="10" fill="#9AA0B4" text-anchor="middle" font-weight="700">MATERIALIZED</text>
-  <path d="M402 82 H 554" stroke="#1D1D26" stroke-width="1"/>
+  <path d="M402 82 H 554" stroke="#191921" stroke-width="1"/>
   <text x="478" y="102" font-size="7.5" fill="#6B6B78" text-anchor="middle" letter-spacing="1">LIFETIME</text>
-  <text x="478" y="115" font-size="9" fill="#cdd0dd" text-anchor="middle">persists</text>
+  <text x="478" y="115" font-size="9" fill="#CDD0DD" text-anchor="middle">persists</text>
   <text x="478" y="138" font-size="7.5" fill="#6B6B78" text-anchor="middle" letter-spacing="1">STORES</text>
   <text x="478" y="151" font-size="9" fill="#9AA0B4" text-anchor="middle">the DATA</text>
   <text x="478" y="174" font-size="7.5" fill="#6B6B78" text-anchor="middle" letter-spacing="1">FRESHNESS</text>
@@ -1606,11 +1606,11 @@ ranked <span class="k">AS</span> (
   <text x="478" y="210" font-size="7.5" fill="#6B6B78" text-anchor="middle" letter-spacing="1">READ COST</text>
   <text x="478" y="223" font-size="9" fill="#5AC8FF" text-anchor="middle">instant</text>
 
-  <rect x="580" y="50" width="168" height="180" rx="8" fill="#1D1D26" stroke="#5C78FF"/>
+  <rect x="580" y="50" width="168" height="180" rx="8" fill="#191921" stroke="#5C78FF"/>
   <text x="664" y="72" font-size="11" fill="#9AA0B4" text-anchor="middle" font-weight="700">CTAS TABLE</text>
-  <path d="M588 82 H 740" stroke="#1D1D26" stroke-width="1"/>
+  <path d="M588 82 H 740" stroke="#191921" stroke-width="1"/>
   <text x="664" y="102" font-size="7.5" fill="#6B6B78" text-anchor="middle" letter-spacing="1">LIFETIME</text>
-  <text x="664" y="115" font-size="9" fill="#cdd0dd" text-anchor="middle">persists</text>
+  <text x="664" y="115" font-size="9" fill="#CDD0DD" text-anchor="middle">persists</text>
   <text x="664" y="138" font-size="7.5" fill="#6B6B78" text-anchor="middle" letter-spacing="1">STORES</text>
   <text x="664" y="151" font-size="9" fill="#9AA0B4" text-anchor="middle">the DATA</text>
   <text x="664" y="174" font-size="7.5" fill="#6B6B78" text-anchor="middle" letter-spacing="1">FRESHNESS</text>
@@ -1618,7 +1618,7 @@ ranked <span class="k">AS</span> (
   <text x="664" y="210" font-size="7.5" fill="#6B6B78" text-anchor="middle" letter-spacing="1">READ COST</text>
   <text x="664" y="223" font-size="9" fill="#5AC8FF" text-anchor="middle">instant</text>
 
-  <text x="380" y="262" font-size="10" fill="#9aa0b4" text-anchor="middle">Store the QUERY and you trade speed for freshness. Store the DATA and you trade freshness for speed.</text>
+  <text x="380" y="262" font-size="10" fill="#9AA0B4" text-anchor="middle">Store the QUERY and you trade speed for freshness. Store the DATA and you trade freshness for speed.</text>
 </svg>
 <figcaption>There is no free option. Everything on the left is always correct and always recomputed; everything on the right is instant and can be out of date.</figcaption>
 </figure>
@@ -1843,9 +1843,9 @@ ranked <span class="k">AS</span> (
 
 <figure class="fig reveal">
 <svg viewBox="0 0 760 344" width="100%" aria-label="The OVER clause broken into three parts: PARTITION BY makes the groups, ORDER BY sequences rows inside a group, and the frame chooses which rows are summed">
-  <text x="380" y="20" font-size="10.5" fill="#9aa0b4" text-anchor="middle" letter-spacing="1.5">THE THREE KNOBS OF OVER( )</text>
+  <text x="380" y="20" font-size="10.5" fill="#9AA0B4" text-anchor="middle" letter-spacing="1.5">THE THREE KNOBS OF OVER( )</text>
 
-  <text x="49" y="48" font-size="11.5" fill="#d8dcea">SUM(salary) OVER (PARTITION BY dept ORDER BY hire_date ROWS BETWEEN 1 PRECEDING AND CURRENT ROW)</text>
+  <text x="49" y="48" font-size="11.5" fill="#D8DCEA">SUM(salary) OVER (PARTITION BY dept ORDER BY hire_date ROWS BETWEEN 1 PRECEDING AND CURRENT ROW)</text>
 
   <path d="M49 62 V 68 H 125 V 62" stroke="#5C78FF" stroke-width="1.3" fill="none"/>
   <text x="87" y="82" font-size="8.5" fill="#9AA0B4" text-anchor="middle" font-weight="700">the aggregate</text>
@@ -1863,49 +1863,49 @@ ranked <span class="k">AS</span> (
   <text x="567" y="82" font-size="8.5" fill="#9AA0B4" text-anchor="middle" font-weight="700">FRAME</text>
   <text x="567" y="95" font-size="8.5" fill="#6B6B78" text-anchor="middle">which rows get summed</text>
 
-  <rect x="140" y="118" width="480" height="24" fill="#17171E" stroke="#3a3a48"/>
+  <rect x="140" y="118" width="480" height="24" fill="#191921" stroke="#6B6B78"/>
   <text x="190" y="135" font-size="9" fill="#fff" text-anchor="middle" font-weight="700">name</text>
   <text x="290" y="135" font-size="9" fill="#fff" text-anchor="middle" font-weight="700">dept</text>
   <text x="415" y="135" font-size="9" fill="#fff" text-anchor="middle" font-weight="700">hire_date</text>
   <text x="555" y="135" font-size="9" fill="#fff" text-anchor="middle" font-weight="700">salary</text>
 
-  <rect x="140" y="142" width="480" height="26" fill="#1D1D26" stroke="#2C2C38"/>
-  <text x="190" y="159" font-size="9" fill="#cdd0dd" text-anchor="middle">Ann</text>
+  <rect x="140" y="142" width="480" height="26" fill="#191921" stroke="#2C2C38"/>
+  <text x="190" y="159" font-size="9" fill="#CDD0DD" text-anchor="middle">Ann</text>
   <text x="290" y="159" font-size="9" fill="#5AC8FF" text-anchor="middle">Eng</text>
-  <text x="415" y="159" font-size="9" fill="#cdd0dd" text-anchor="middle">2021-01</text>
-  <text x="555" y="159" font-size="9" fill="#cdd0dd" text-anchor="middle">100</text>
+  <text x="415" y="159" font-size="9" fill="#CDD0DD" text-anchor="middle">2021-01</text>
+  <text x="555" y="159" font-size="9" fill="#CDD0DD" text-anchor="middle">100</text>
 
-  <rect x="140" y="168" width="480" height="26" fill="#101015" stroke="#2C2C38"/>
-  <text x="190" y="185" font-size="9" fill="#cdd0dd" text-anchor="middle">Bob</text>
+  <rect x="140" y="168" width="480" height="26" fill="#191921" stroke="#2C2C38"/>
+  <text x="190" y="185" font-size="9" fill="#CDD0DD" text-anchor="middle">Bob</text>
   <text x="290" y="185" font-size="9" fill="#5AC8FF" text-anchor="middle">Eng</text>
-  <text x="415" y="185" font-size="9" fill="#cdd0dd" text-anchor="middle">2022-03</text>
-  <text x="555" y="185" font-size="9" fill="#cdd0dd" text-anchor="middle">120</text>
+  <text x="415" y="185" font-size="9" fill="#CDD0DD" text-anchor="middle">2022-03</text>
+  <text x="555" y="185" font-size="9" fill="#CDD0DD" text-anchor="middle">120</text>
 
-  <rect x="140" y="194" width="480" height="26" fill="#1D1D26" stroke="#2C2C38"/>
-  <text x="190" y="211" font-size="9" fill="#cdd0dd" text-anchor="middle">Cid</text>
+  <rect x="140" y="194" width="480" height="26" fill="#191921" stroke="#2C2C38"/>
+  <text x="190" y="211" font-size="9" fill="#CDD0DD" text-anchor="middle">Cid</text>
   <text x="290" y="211" font-size="9" fill="#5AC8FF" text-anchor="middle">Eng</text>
-  <text x="415" y="211" font-size="9" fill="#cdd0dd" text-anchor="middle">2023-06</text>
-  <text x="555" y="211" font-size="9" fill="#cdd0dd" text-anchor="middle">110</text>
+  <text x="415" y="211" font-size="9" fill="#CDD0DD" text-anchor="middle">2023-06</text>
+  <text x="555" y="211" font-size="9" fill="#CDD0DD" text-anchor="middle">110</text>
 
-  <rect x="140" y="220" width="480" height="26" fill="#101015" stroke="#2C2C38"/>
-  <text x="190" y="237" font-size="9" fill="#cdd0dd" text-anchor="middle">Dee</text>
+  <rect x="140" y="220" width="480" height="26" fill="#191921" stroke="#2C2C38"/>
+  <text x="190" y="237" font-size="9" fill="#CDD0DD" text-anchor="middle">Dee</text>
   <text x="290" y="237" font-size="9" fill="#5AC8FF" text-anchor="middle">Sales</text>
-  <text x="415" y="237" font-size="9" fill="#cdd0dd" text-anchor="middle">2021-05</text>
-  <text x="555" y="237" font-size="9" fill="#cdd0dd" text-anchor="middle">90</text>
+  <text x="415" y="237" font-size="9" fill="#CDD0DD" text-anchor="middle">2021-05</text>
+  <text x="555" y="237" font-size="9" fill="#CDD0DD" text-anchor="middle">90</text>
 
-  <rect x="140" y="246" width="480" height="26" fill="#1D1D26" stroke="#2C2C38"/>
-  <text x="190" y="263" font-size="9" fill="#cdd0dd" text-anchor="middle">Eve</text>
+  <rect x="140" y="246" width="480" height="26" fill="#191921" stroke="#2C2C38"/>
+  <text x="190" y="263" font-size="9" fill="#CDD0DD" text-anchor="middle">Eve</text>
   <text x="290" y="263" font-size="9" fill="#5AC8FF" text-anchor="middle">Sales</text>
-  <text x="415" y="263" font-size="9" fill="#cdd0dd" text-anchor="middle">2022-08</text>
-  <text x="555" y="263" font-size="9" fill="#cdd0dd" text-anchor="middle">95</text>
+  <text x="415" y="263" font-size="9" fill="#CDD0DD" text-anchor="middle">2022-08</text>
+  <text x="555" y="263" font-size="9" fill="#CDD0DD" text-anchor="middle">95</text>
 
-  <rect x="140" y="272" width="480" height="26" fill="#101015" stroke="#2C2C38"/>
-  <text x="190" y="289" font-size="9" fill="#cdd0dd" text-anchor="middle">Fay</text>
+  <rect x="140" y="272" width="480" height="26" fill="#191921" stroke="#2C2C38"/>
+  <text x="190" y="289" font-size="9" fill="#CDD0DD" text-anchor="middle">Fay</text>
   <text x="290" y="289" font-size="9" fill="#5AC8FF" text-anchor="middle">Sales</text>
-  <text x="415" y="289" font-size="9" fill="#cdd0dd" text-anchor="middle">2023-02</text>
-  <text x="555" y="289" font-size="9" fill="#cdd0dd" text-anchor="middle">105</text>
+  <text x="415" y="289" font-size="9" fill="#CDD0DD" text-anchor="middle">2023-02</text>
+  <text x="555" y="289" font-size="9" fill="#CDD0DD" text-anchor="middle">105</text>
 
-  <path d="M140 220 H 620" stroke="#1D1D26" stroke-width="2" fill="none"/>
+  <path d="M140 220 H 620" stroke="#191921" stroke-width="2" fill="none"/>
   <text x="132" y="185" font-size="9" fill="#5AC8FF" text-anchor="end">Eng</text>
   <text x="132" y="263" font-size="9" fill="#5AC8FF" text-anchor="end">Sales</text>
 
@@ -1913,7 +1913,7 @@ ranked <span class="k">AS</span> (
   <path d="M624 169 V 219 M620 169 H 624 M620 219 H 624" stroke="#5C78FF" stroke-width="1.2" fill="none"/>
   <text x="630" y="197" font-size="9" fill="#9AA0B4">frame for Cid</text>
 
-  <text x="380" y="326" font-size="10" fill="#9aa0b4" text-anchor="middle">PARTITION BY makes the buckets · ORDER BY sequences them · the FRAME picks which rows count</text>
+  <text x="380" y="326" font-size="10" fill="#9AA0B4" text-anchor="middle">PARTITION BY makes the buckets · ORDER BY sequences them · the FRAME picks which rows count</text>
 </svg>
 <figcaption>For Cid, the partition is <em>Eng</em>, the ordering is by hire date, and the frame <code>1 PRECEDING AND CURRENT ROW</code> selects Bob and Cid. So Cid's <code>SUM</code> is 120 + 110 = 230 — not the whole department.</figcaption>
 </figure>
@@ -1935,48 +1935,48 @@ ranked <span class="k">AS</span> (
 
 <figure class="fig reveal">
 <svg viewBox="0 0 760 320" width="100%" aria-label="Three frame specifications shown over the same six-row partition with the current row fourth: unbounded preceding, two preceding, and the whole partition">
-  <text x="380" y="18" font-size="10.5" fill="#9aa0b4" text-anchor="middle" letter-spacing="1.5">THE SAME PARTITION &#183; THREE FRAMES &#183; THREE DIFFERENT ANSWERS</text>
+  <text x="380" y="18" font-size="10.5" fill="#9AA0B4" text-anchor="middle" letter-spacing="1.5">THE SAME PARTITION &#183; THREE FRAMES &#183; THREE DIFFERENT ANSWERS</text>
 
-  <rect x="30" y="28" width="220" height="252" rx="8" fill="#101015" stroke="#2C2C38"/>
+  <rect x="30" y="28" width="220" height="252" rx="8" fill="#191921" stroke="#2C2C38"/>
   <text x="140" y="46" font-size="9.5" fill="#9AA0B4" text-anchor="middle" font-weight="700">UNBOUNDED PRECEDING</text>
   <text x="140" y="60" font-size="9.5" fill="#9AA0B4" text-anchor="middle" font-weight="700">AND CURRENT ROW</text>
-  <rect x="60" y="76" width="160" height="24" rx="4" fill="#1D1D26" stroke="#5C78FF"/><text x="140" y="92" font-size="9.5" fill="#9AA0B4" text-anchor="middle">10</text>
-  <rect x="60" y="102" width="160" height="24" rx="4" fill="#1D1D26" stroke="#5C78FF"/><text x="140" y="118" font-size="9.5" fill="#9AA0B4" text-anchor="middle">20</text>
-  <rect x="60" y="128" width="160" height="24" rx="4" fill="#1D1D26" stroke="#5C78FF"/><text x="140" y="144" font-size="9.5" fill="#9AA0B4" text-anchor="middle">30</text>
-  <rect x="60" y="154" width="160" height="24" rx="4" fill="#1D1D26" stroke="#5C78FF"/><text x="140" y="170" font-size="9.5" fill="#9AA0B4" text-anchor="middle">40</text>
+  <rect x="60" y="76" width="160" height="24" rx="4" fill="#191921" stroke="#5C78FF"/><text x="140" y="92" font-size="9.5" fill="#9AA0B4" text-anchor="middle">10</text>
+  <rect x="60" y="102" width="160" height="24" rx="4" fill="#191921" stroke="#5C78FF"/><text x="140" y="118" font-size="9.5" fill="#9AA0B4" text-anchor="middle">20</text>
+  <rect x="60" y="128" width="160" height="24" rx="4" fill="#191921" stroke="#5C78FF"/><text x="140" y="144" font-size="9.5" fill="#9AA0B4" text-anchor="middle">30</text>
+  <rect x="60" y="154" width="160" height="24" rx="4" fill="#191921" stroke="#5C78FF"/><text x="140" y="170" font-size="9.5" fill="#9AA0B4" text-anchor="middle">40</text>
   <text x="48" y="170" font-size="10" fill="#5AC8FF">▸</text>
-  <rect x="60" y="180" width="160" height="24" rx="4" fill="#101015" stroke="#2C2C38"/><text x="140" y="196" font-size="9.5" fill="#4a4a55" text-anchor="middle">50</text>
-  <rect x="60" y="206" width="160" height="24" rx="4" fill="#101015" stroke="#2C2C38"/><text x="140" y="222" font-size="9.5" fill="#4a4a55" text-anchor="middle">60</text>
+  <rect x="60" y="180" width="160" height="24" rx="4" fill="#191921" stroke="#2C2C38"/><text x="140" y="196" font-size="9.5" fill="#6B6B78" text-anchor="middle">50</text>
+  <rect x="60" y="206" width="160" height="24" rx="4" fill="#191921" stroke="#2C2C38"/><text x="140" y="222" font-size="9.5" fill="#6B6B78" text-anchor="middle">60</text>
   <text x="140" y="252" font-size="10" fill="#9AA0B4" text-anchor="middle" font-weight="700">SUM = 100</text>
   <text x="140" y="270" font-size="8.5" fill="#6B6B78" text-anchor="middle">running total</text>
 
-  <rect x="270" y="28" width="220" height="252" rx="8" fill="#101015" stroke="#2C2C38"/>
+  <rect x="270" y="28" width="220" height="252" rx="8" fill="#191921" stroke="#2C2C38"/>
   <text x="380" y="46" font-size="9.5" fill="#5AC8FF" text-anchor="middle" font-weight="700">2 PRECEDING</text>
   <text x="380" y="60" font-size="9.5" fill="#5AC8FF" text-anchor="middle" font-weight="700">AND CURRENT ROW</text>
-  <rect x="300" y="76" width="160" height="24" rx="4" fill="#101015" stroke="#2C2C38"/><text x="380" y="92" font-size="9.5" fill="#4a4a55" text-anchor="middle">10</text>
-  <rect x="300" y="102" width="160" height="24" rx="4" fill="#0e2028" stroke="#5AC8FF"/><text x="380" y="118" font-size="9.5" fill="#5AC8FF" text-anchor="middle">20</text>
-  <rect x="300" y="128" width="160" height="24" rx="4" fill="#0e2028" stroke="#5AC8FF"/><text x="380" y="144" font-size="9.5" fill="#5AC8FF" text-anchor="middle">30</text>
-  <rect x="300" y="154" width="160" height="24" rx="4" fill="#0e2028" stroke="#5AC8FF"/><text x="380" y="170" font-size="9.5" fill="#5AC8FF" text-anchor="middle">40</text>
+  <rect x="300" y="76" width="160" height="24" rx="4" fill="#191921" stroke="#2C2C38"/><text x="380" y="92" font-size="9.5" fill="#6B6B78" text-anchor="middle">10</text>
+  <rect x="300" y="102" width="160" height="24" rx="4" fill="#16202E" stroke="#5AC8FF"/><text x="380" y="118" font-size="9.5" fill="#5AC8FF" text-anchor="middle">20</text>
+  <rect x="300" y="128" width="160" height="24" rx="4" fill="#16202E" stroke="#5AC8FF"/><text x="380" y="144" font-size="9.5" fill="#5AC8FF" text-anchor="middle">30</text>
+  <rect x="300" y="154" width="160" height="24" rx="4" fill="#16202E" stroke="#5AC8FF"/><text x="380" y="170" font-size="9.5" fill="#5AC8FF" text-anchor="middle">40</text>
   <text x="288" y="170" font-size="10" fill="#5AC8FF">▸</text>
-  <rect x="300" y="180" width="160" height="24" rx="4" fill="#101015" stroke="#2C2C38"/><text x="380" y="196" font-size="9.5" fill="#4a4a55" text-anchor="middle">50</text>
-  <rect x="300" y="206" width="160" height="24" rx="4" fill="#101015" stroke="#2C2C38"/><text x="380" y="222" font-size="9.5" fill="#4a4a55" text-anchor="middle">60</text>
+  <rect x="300" y="180" width="160" height="24" rx="4" fill="#191921" stroke="#2C2C38"/><text x="380" y="196" font-size="9.5" fill="#6B6B78" text-anchor="middle">50</text>
+  <rect x="300" y="206" width="160" height="24" rx="4" fill="#191921" stroke="#2C2C38"/><text x="380" y="222" font-size="9.5" fill="#6B6B78" text-anchor="middle">60</text>
   <text x="380" y="252" font-size="10" fill="#5AC8FF" text-anchor="middle" font-weight="700">SUM = 90</text>
   <text x="380" y="270" font-size="8.5" fill="#6B6B78" text-anchor="middle">moving 3-row window</text>
 
-  <rect x="510" y="28" width="220" height="252" rx="8" fill="#101015" stroke="#2C2C38"/>
+  <rect x="510" y="28" width="220" height="252" rx="8" fill="#191921" stroke="#2C2C38"/>
   <text x="620" y="46" font-size="9.5" fill="#5AC8FF" text-anchor="middle" font-weight="700">UNBOUNDED PRECEDING</text>
   <text x="620" y="60" font-size="9.5" fill="#5AC8FF" text-anchor="middle" font-weight="700">AND UNBOUNDED FOLLOWING</text>
-  <rect x="540" y="76" width="160" height="24" rx="4" fill="#1D1D26" stroke="#5AC8FF"/><text x="620" y="92" font-size="9.5" fill="#5AC8FF" text-anchor="middle">10</text>
-  <rect x="540" y="102" width="160" height="24" rx="4" fill="#1D1D26" stroke="#5AC8FF"/><text x="620" y="118" font-size="9.5" fill="#5AC8FF" text-anchor="middle">20</text>
-  <rect x="540" y="128" width="160" height="24" rx="4" fill="#1D1D26" stroke="#5AC8FF"/><text x="620" y="144" font-size="9.5" fill="#5AC8FF" text-anchor="middle">30</text>
-  <rect x="540" y="154" width="160" height="24" rx="4" fill="#1D1D26" stroke="#5AC8FF"/><text x="620" y="170" font-size="9.5" fill="#5AC8FF" text-anchor="middle">40</text>
+  <rect x="540" y="76" width="160" height="24" rx="4" fill="#191921" stroke="#5AC8FF"/><text x="620" y="92" font-size="9.5" fill="#5AC8FF" text-anchor="middle">10</text>
+  <rect x="540" y="102" width="160" height="24" rx="4" fill="#191921" stroke="#5AC8FF"/><text x="620" y="118" font-size="9.5" fill="#5AC8FF" text-anchor="middle">20</text>
+  <rect x="540" y="128" width="160" height="24" rx="4" fill="#191921" stroke="#5AC8FF"/><text x="620" y="144" font-size="9.5" fill="#5AC8FF" text-anchor="middle">30</text>
+  <rect x="540" y="154" width="160" height="24" rx="4" fill="#191921" stroke="#5AC8FF"/><text x="620" y="170" font-size="9.5" fill="#5AC8FF" text-anchor="middle">40</text>
   <text x="528" y="170" font-size="10" fill="#5AC8FF">▸</text>
-  <rect x="540" y="180" width="160" height="24" rx="4" fill="#1D1D26" stroke="#5AC8FF"/><text x="620" y="196" font-size="9.5" fill="#5AC8FF" text-anchor="middle">50</text>
-  <rect x="540" y="206" width="160" height="24" rx="4" fill="#1D1D26" stroke="#5AC8FF"/><text x="620" y="222" font-size="9.5" fill="#5AC8FF" text-anchor="middle">60</text>
+  <rect x="540" y="180" width="160" height="24" rx="4" fill="#191921" stroke="#5AC8FF"/><text x="620" y="196" font-size="9.5" fill="#5AC8FF" text-anchor="middle">50</text>
+  <rect x="540" y="206" width="160" height="24" rx="4" fill="#191921" stroke="#5AC8FF"/><text x="620" y="222" font-size="9.5" fill="#5AC8FF" text-anchor="middle">60</text>
   <text x="620" y="252" font-size="10" fill="#5AC8FF" text-anchor="middle" font-weight="700">SUM = 210</text>
   <text x="620" y="270" font-size="8.5" fill="#6B6B78" text-anchor="middle">whole partition</text>
 
-  <text x="380" y="306" font-size="10" fill="#9aa0b4" text-anchor="middle">▸ marks the current row. ROWS counts physical rows; RANGE treats ties as one peer group.</text>
+  <text x="380" y="306" font-size="10" fill="#9AA0B4" text-anchor="middle">▸ marks the current row. ROWS counts physical rows; RANGE treats ties as one peer group.</text>
 </svg>
 <figcaption>Same six rows, same current row, same <code>SUM</code> — and three different results, decided entirely by the frame clause.</figcaption>
 </figure>
@@ -2157,36 +2157,36 @@ ranked <span class="k">AS</span> (
 
 <figure class="fig reveal">
 <svg viewBox="0 0 760 290" width="100%" aria-label="Login dates minus their row number produce a constant per consecutive run, which becomes a grouping key for each island">
-  <text x="380" y="22" font-size="10.5" fill="#9aa0b4" text-anchor="middle" letter-spacing="1.5">day − ROW_NUMBER() IS CONSTANT INSIDE A RUN</text>
+  <text x="380" y="22" font-size="10.5" fill="#9AA0B4" text-anchor="middle" letter-spacing="1.5">day − ROW_NUMBER() IS CONSTANT INSIDE A RUN</text>
 
-  <rect x="110" y="50" width="540" height="26" fill="#17171E" stroke="#3a3a48"/>
+  <rect x="110" y="50" width="540" height="26" fill="#191921" stroke="#6B6B78"/>
   <text x="200" y="68" font-size="9" fill="#fff" text-anchor="middle" font-weight="700">login day</text>
   <text x="380" y="68" font-size="9" fill="#fff" text-anchor="middle" font-weight="700">ROW_NUMBER()</text>
   <text x="560" y="68" font-size="9" fill="#fff" text-anchor="middle" font-weight="700">day − rn  (island key)</text>
 
-  <rect x="110" y="76" width="540" height="28" fill="#1D1D26" stroke="#2C2C38"/>
+  <rect x="110" y="76" width="540" height="28" fill="#191921" stroke="#2C2C38"/>
   <text x="200" y="95" font-size="9" fill="#9AA0B4" text-anchor="middle">2024-01-01</text>
-  <text x="380" y="95" font-size="9" fill="#cdd0dd" text-anchor="middle">1</text>
+  <text x="380" y="95" font-size="9" fill="#CDD0DD" text-anchor="middle">1</text>
   <text x="560" y="95" font-size="9" fill="#9AA0B4" text-anchor="middle">2023-12-31</text>
 
-  <rect x="110" y="104" width="540" height="28" fill="#1D1D26" stroke="#2C2C38"/>
+  <rect x="110" y="104" width="540" height="28" fill="#191921" stroke="#2C2C38"/>
   <text x="200" y="123" font-size="9" fill="#9AA0B4" text-anchor="middle">2024-01-02</text>
-  <text x="380" y="123" font-size="9" fill="#cdd0dd" text-anchor="middle">2</text>
+  <text x="380" y="123" font-size="9" fill="#CDD0DD" text-anchor="middle">2</text>
   <text x="560" y="123" font-size="9" fill="#9AA0B4" text-anchor="middle">2023-12-31</text>
 
-  <rect x="110" y="132" width="540" height="28" fill="#1D1D26" stroke="#2C2C38"/>
+  <rect x="110" y="132" width="540" height="28" fill="#191921" stroke="#2C2C38"/>
   <text x="200" y="151" font-size="9" fill="#9AA0B4" text-anchor="middle">2024-01-03</text>
-  <text x="380" y="151" font-size="9" fill="#cdd0dd" text-anchor="middle">3</text>
+  <text x="380" y="151" font-size="9" fill="#CDD0DD" text-anchor="middle">3</text>
   <text x="560" y="151" font-size="9" fill="#9AA0B4" text-anchor="middle">2023-12-31</text>
 
-  <rect x="110" y="160" width="540" height="28" fill="#0e2028" stroke="#2C2C38"/>
+  <rect x="110" y="160" width="540" height="28" fill="#16202E" stroke="#2C2C38"/>
   <text x="200" y="179" font-size="9" fill="#5AC8FF" text-anchor="middle">2024-01-07</text>
-  <text x="380" y="179" font-size="9" fill="#cdd0dd" text-anchor="middle">4</text>
+  <text x="380" y="179" font-size="9" fill="#CDD0DD" text-anchor="middle">4</text>
   <text x="560" y="179" font-size="9" fill="#5AC8FF" text-anchor="middle">2024-01-03</text>
 
-  <rect x="110" y="188" width="540" height="28" fill="#0e2028" stroke="#2C2C38"/>
+  <rect x="110" y="188" width="540" height="28" fill="#16202E" stroke="#2C2C38"/>
   <text x="200" y="207" font-size="9" fill="#5AC8FF" text-anchor="middle">2024-01-08</text>
-  <text x="380" y="207" font-size="9" fill="#cdd0dd" text-anchor="middle">5</text>
+  <text x="380" y="207" font-size="9" fill="#CDD0DD" text-anchor="middle">5</text>
   <text x="560" y="207" font-size="9" fill="#5AC8FF" text-anchor="middle">2024-01-03</text>
 
   <path d="M110 160 H 650" stroke="#5C78FF" stroke-width="2" fill="none"/>
@@ -2195,7 +2195,7 @@ ranked <span class="k">AS</span> (
   <text x="100" y="192" font-size="9" fill="#5AC8FF" text-anchor="end">island 2</text>
   <text x="658" y="164" font-size="9" fill="#9AA0B4">← 3-day gap</text>
 
-  <text x="380" y="248" font-size="10" fill="#9aa0b4" text-anchor="middle">Consecutive days advance day and rn in lockstep, so the difference never moves.</text>
+  <text x="380" y="248" font-size="10" fill="#9AA0B4" text-anchor="middle">Consecutive days advance day and rn in lockstep, so the difference never moves.</text>
   <text x="380" y="268" font-size="9.5" fill="#9AA0B4" text-anchor="middle">A gap breaks the lockstep — so GROUP BY that difference gives one group per run.</text>
 </svg>
 <figcaption>The whole trick in one picture. The island key is not meaningful as a date — it is just a constant that happens to be shared by exactly the rows in one run.</figcaption>

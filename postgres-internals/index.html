@@ -267,36 +267,36 @@ postgres: <span class="g">client backend</span>                  <span class="c"
     <marker id="w-g" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#5AC8FF"/></marker>
     <marker id="w-d" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#5C78FF"/></marker>
   </defs>
-  <text x="380" y="20" font-size="10.5" fill="#9aa0b4" text-anchor="middle" letter-spacing="1.5">WAL FIRST &#183; DATA PAGES LATER</text>
+  <text x="380" y="20" font-size="10.5" fill="#9AA0B4" text-anchor="middle" letter-spacing="1.5">WAL FIRST &#183; DATA PAGES LATER</text>
 
   <text x="475" y="40" font-size="8.5" fill="#5AC8FF" text-anchor="middle" font-weight="700">&#9312; COMMIT PATH &#183; synchronous</text>
 
-  <rect x="30" y="115" width="120" height="56" rx="7" fill="#1D1D26" stroke="#5C78FF"/>
+  <rect x="30" y="115" width="120" height="56" rx="7" fill="#191921" stroke="#5C78FF"/>
   <text x="90" y="139" font-size="10" fill="#9AA0B4" text-anchor="middle" font-weight="700">BACKEND</text>
-  <text x="90" y="157" font-size="8" fill="#9aa0b4" text-anchor="middle">your connection</text>
+  <text x="90" y="157" font-size="8" fill="#9AA0B4" text-anchor="middle">your connection</text>
 
-  <rect x="220" y="50" width="180" height="60" rx="7" fill="#1D1D26" stroke="#5AC8FF"/>
+  <rect x="220" y="50" width="180" height="60" rx="7" fill="#191921" stroke="#5AC8FF"/>
   <text x="310" y="74" font-size="10" fill="#5AC8FF" text-anchor="middle" font-weight="700">WAL BUFFER</text>
-  <text x="310" y="92" font-size="8.5" fill="#cdd0dd" text-anchor="middle">the change record</text>
+  <text x="310" y="92" font-size="8.5" fill="#CDD0DD" text-anchor="middle">the change record</text>
 
-  <rect x="540" y="50" width="190" height="60" rx="7" fill="#1D1D26" stroke="#5AC8FF" stroke-width="2"/>
+  <rect x="540" y="50" width="190" height="60" rx="7" fill="#191921" stroke="#5AC8FF" stroke-width="2"/>
   <text x="635" y="74" font-size="10" fill="#5AC8FF" text-anchor="middle" font-weight="700">WAL FILE &#183; on disk</text>
   <text x="635" y="92" font-size="8.5" fill="#5AC8FF" text-anchor="middle">fsync at COMMIT</text>
 
   <path d="M154 132 L 214 86" stroke="#5AC8FF" stroke-width="1.6" fill="none" marker-end="url(#w-g)"/>
   <path d="M404 80 H 534" stroke="#5AC8FF" stroke-width="2.4" fill="none" marker-end="url(#w-g)"/>
 
-  <rect x="190" y="190" width="155" height="60" rx="7" fill="#1D1D26" stroke="#5C78FF"/>
+  <rect x="190" y="190" width="155" height="60" rx="7" fill="#191921" stroke="#5C78FF"/>
   <text x="267" y="214" font-size="9" fill="#9AA0B4" text-anchor="middle" font-weight="700">SHARED_BUFFERS</text>
-  <text x="267" y="232" font-size="7.5" fill="#cdd0dd" text-anchor="middle">dirty page in RAM</text>
+  <text x="267" y="232" font-size="7.5" fill="#CDD0DD" text-anchor="middle">dirty page in RAM</text>
 
-  <rect x="375" y="190" width="155" height="60" rx="7" fill="#14141c" stroke="#5C78FF"/>
-  <text x="452" y="214" font-size="9" fill="#cdd0dd" text-anchor="middle" font-weight="700">CHECKPOINTER</text>
-  <text x="452" y="232" font-size="7.5" fill="#9aa0b4" text-anchor="middle">flushes dirty pages</text>
+  <rect x="375" y="190" width="155" height="60" rx="7" fill="#14141C" stroke="#5C78FF"/>
+  <text x="452" y="214" font-size="9" fill="#CDD0DD" text-anchor="middle" font-weight="700">CHECKPOINTER</text>
+  <text x="452" y="232" font-size="7.5" fill="#9AA0B4" text-anchor="middle">flushes dirty pages</text>
 
-  <rect x="560" y="190" width="170" height="60" rx="7" fill="#14141c" stroke="#5C78FF"/>
-  <text x="645" y="214" font-size="9" fill="#cdd0dd" text-anchor="middle" font-weight="700">DATA FILE &#183; on disk</text>
-  <text x="645" y="232" font-size="7.5" fill="#9aa0b4" text-anchor="middle">written LATER</text>
+  <rect x="560" y="190" width="170" height="60" rx="7" fill="#14141C" stroke="#5C78FF"/>
+  <text x="645" y="214" font-size="9" fill="#CDD0DD" text-anchor="middle" font-weight="700">DATA FILE &#183; on disk</text>
+  <text x="645" y="232" font-size="7.5" fill="#9AA0B4" text-anchor="middle">written LATER</text>
 
   <path d="M154 154 L 184 206" stroke="#5C78FF" stroke-width="1.6" fill="none" marker-end="url(#w-d)"/>
   <path d="M349 220 H 369" stroke="#5C78FF" stroke-width="1.4" fill="none" stroke-dasharray="5,3" marker-end="url(#w-d)"/>
@@ -348,37 +348,37 @@ postgres: <span class="g">client backend</span>                  <span class="c"
 
 <figure class="fig reveal">
 <svg viewBox="0 0 760 396" width="100%" aria-label="Six nested layers of Postgres storage: cluster, database, tablespace, table, segment file, page, and tuple">
-  <text x="380" y="20" font-size="10.5" fill="#9aa0b4" text-anchor="middle" letter-spacing="1.5">FROM THE SERVER DOWN TO ONE ROW</text>
+  <text x="380" y="20" font-size="10.5" fill="#9AA0B4" text-anchor="middle" letter-spacing="1.5">FROM THE SERVER DOWN TO ONE ROW</text>
 
-  <rect x="30" y="40" width="700" height="38" rx="6" fill="#14141c" stroke="#5C78FF"/>
-  <text x="44" y="57" font-size="11" fill="#cdd0dd" font-weight="700">CLUSTER</text>
+  <rect x="30" y="40" width="700" height="38" rx="6" fill="#14141C" stroke="#5C78FF"/>
+  <text x="44" y="57" font-size="11" fill="#CDD0DD" font-weight="700">CLUSTER</text>
   <text x="44" y="71" font-size="8.5" fill="#6B6B78">one server &#183; one data directory ($PGDATA)</text>
 
-  <rect x="52" y="86" width="656" height="38" rx="6" fill="#14141c" stroke="#5C78FF"/>
-  <text x="66" y="103" font-size="11" fill="#cdd0dd" font-weight="700">DATABASE</text>
+  <rect x="52" y="86" width="656" height="38" rx="6" fill="#14141C" stroke="#5C78FF"/>
+  <text x="66" y="103" font-size="11" fill="#CDD0DD" font-weight="700">DATABASE</text>
   <text x="66" y="117" font-size="8.5" fill="#6B6B78">one subdirectory per database &#183; base/5/</text>
 
-  <rect x="74" y="132" width="612" height="38" rx="6" fill="#1D1D26" stroke="#5C78FF"/>
+  <rect x="74" y="132" width="612" height="38" rx="6" fill="#191921" stroke="#5C78FF"/>
   <text x="88" y="149" font-size="11" fill="#9AA0B4" font-weight="700">TABLESPACE</text>
-  <text x="88" y="163" font-size="8.5" fill="#9aa0b4">a location on disk &#183; SQL Server calls this a FILEGROUP</text>
+  <text x="88" y="163" font-size="8.5" fill="#9AA0B4">a location on disk &#183; SQL Server calls this a FILEGROUP</text>
 
-  <rect x="96" y="178" width="568" height="38" rx="6" fill="#1D1D26" stroke="#5C78FF"/>
+  <rect x="96" y="178" width="568" height="38" rx="6" fill="#191921" stroke="#5C78FF"/>
   <text x="110" y="195" font-size="11" fill="#9AA0B4" font-weight="700">TABLE &#183; the heap</text>
-  <text x="110" y="209" font-size="8.5" fill="#9aa0b4">an unordered pile of pages &#183; base/5/16385</text>
+  <text x="110" y="209" font-size="8.5" fill="#9AA0B4">an unordered pile of pages &#183; base/5/16385</text>
 
-  <rect x="118" y="224" width="524" height="38" rx="6" fill="#1D1D26" stroke="#5C78FF"/>
+  <rect x="118" y="224" width="524" height="38" rx="6" fill="#191921" stroke="#5C78FF"/>
   <text x="132" y="241" font-size="11" fill="#9AA0B4" font-weight="700">SEGMENT FILE</text>
-  <text x="132" y="255" font-size="8.5" fill="#cdd0dd">split every 1 GB: 16385, 16385.1, 16385.2 …</text>
+  <text x="132" y="255" font-size="8.5" fill="#CDD0DD">split every 1 GB: 16385, 16385.1, 16385.2 …</text>
 
-  <rect x="140" y="270" width="480" height="38" rx="6" fill="#1D1D26" stroke="#5C78FF"/>
+  <rect x="140" y="270" width="480" height="38" rx="6" fill="#191921" stroke="#5C78FF"/>
   <text x="154" y="287" font-size="11" fill="#9AA0B4" font-weight="700">PAGE &#183; BLOCK</text>
-  <text x="154" y="301" font-size="8.5" fill="#cdd0dd">8 KB &#183; the unit of I/O &#183; nothing smaller is read</text>
+  <text x="154" y="301" font-size="8.5" fill="#CDD0DD">8 KB &#183; the unit of I/O &#183; nothing smaller is read</text>
 
-  <rect x="162" y="316" width="436" height="38" rx="6" fill="#1D1D26" stroke="#5AC8FF"/>
+  <rect x="162" y="316" width="436" height="38" rx="6" fill="#191921" stroke="#5AC8FF"/>
   <text x="176" y="333" font-size="11" fill="#5AC8FF" font-weight="700">TUPLE</text>
-  <text x="176" y="347" font-size="8.5" fill="#cdd0dd">one row version &#183; addressed by ctid = (page, slot)</text>
+  <text x="176" y="347" font-size="8.5" fill="#CDD0DD">one row version &#183; addressed by ctid = (page, slot)</text>
 
-  <text x="380" y="380" font-size="10" fill="#9aa0b4" text-anchor="middle">Everything above the page is bookkeeping. The 8 KB page is where the database actually lives.</text>
+  <text x="380" y="380" font-size="10" fill="#9AA0B4" text-anchor="middle">Everything above the page is bookkeeping. The 8 KB page is where the database actually lives.</text>
 </svg>
 <figcaption>Read bottom-up: a row version (tuple) lives in a page, pages are grouped into 1 GB segment files, files belong to a table, tables sit in a tablespace.</figcaption>
 </figure>
@@ -403,29 +403,29 @@ postgres: <span class="g">client backend</span>                  <span class="c"
   <defs>
     <marker id="p-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#5C78FF"/></marker>
   </defs>
-  <text x="380" y="20" font-size="10.5" fill="#9aa0b4" text-anchor="middle" letter-spacing="1.5">ONE PAGE &#183; THE UNIT OF EVERYTHING</text>
+  <text x="380" y="20" font-size="10.5" fill="#9AA0B4" text-anchor="middle" letter-spacing="1.5">ONE PAGE &#183; THE UNIT OF EVERYTHING</text>
 
-  <path d="M60 62 V 56 H 700 V 62" stroke="#1D1D26" stroke-width="1.2" fill="none"/>
+  <path d="M60 62 V 56 H 700 V 62" stroke="#191921" stroke-width="1.2" fill="none"/>
   <text x="380" y="50" font-size="9" fill="#9AA0B4" text-anchor="middle">8 KB &#183; 8192 bytes</text>
 
-  <rect x="60" y="70" width="70" height="90" fill="#1D1D26" stroke="#5C78FF"/>
+  <rect x="60" y="70" width="70" height="90" fill="#191921" stroke="#5C78FF"/>
   <text x="95" y="108" font-size="9" fill="#9AA0B4" text-anchor="middle">header</text>
   <text x="95" y="122" font-size="7.5" fill="#6B6B78" text-anchor="middle">24 B</text>
 
-  <rect x="130" y="70" width="130" height="90" fill="#0e2028" stroke="#5AC8FF"/>
+  <rect x="130" y="70" width="130" height="90" fill="#16202E" stroke="#5AC8FF"/>
   <text x="195" y="108" font-size="9" fill="#5AC8FF" text-anchor="middle">line pointers</text>
   <text x="195" y="122" font-size="7.5" fill="#6B6B78" text-anchor="middle">4 B each</text>
 
-  <rect x="260" y="70" width="180" height="90" fill="#101015" stroke="#2C2C38"/>
-  <text x="350" y="108" font-size="9" fill="#4a4a55" text-anchor="middle">free space</text>
-  <text x="350" y="122" font-size="7.5" fill="#4a4a55" text-anchor="middle">shrinks</text>
+  <rect x="260" y="70" width="180" height="90" fill="#191921" stroke="#2C2C38"/>
+  <text x="350" y="108" font-size="9" fill="#6B6B78" text-anchor="middle">free space</text>
+  <text x="350" y="122" font-size="7.5" fill="#6B6B78" text-anchor="middle">shrinks</text>
 
-  <rect x="440" y="70" width="200" height="90" fill="#1D1D26" stroke="#5C78FF"/>
+  <rect x="440" y="70" width="200" height="90" fill="#191921" stroke="#5C78FF"/>
   <text x="540" y="108" font-size="9" fill="#9AA0B4" text-anchor="middle">tuples &#183; the rows</text>
   <text x="540" y="122" font-size="7.5" fill="#6B6B78" text-anchor="middle">variable size</text>
 
-  <rect x="640" y="70" width="60" height="90" fill="#1D1D26" stroke="#5C78FF"/>
-  <text x="670" y="108" font-size="8" fill="#9aa0b4" text-anchor="middle">special</text>
+  <rect x="640" y="70" width="60" height="90" fill="#191921" stroke="#5C78FF"/>
+  <text x="670" y="108" font-size="8" fill="#9AA0B4" text-anchor="middle">special</text>
   <text x="670" y="122" font-size="7.5" fill="#E7E7EE" text-anchor="middle">idx only</text>
 
   <path d="M132 186 H 248" stroke="#5AC8FF" stroke-width="1.4" fill="none" marker-end="url(#p-a)"/>
@@ -436,8 +436,8 @@ postgres: <span class="g">client backend</span>                  <span class="c"
 
   <text x="380" y="216" font-size="9.5" fill="#9AA0B4" text-anchor="middle">when they meet, the page is FULL</text>
 
-  <text x="380" y="248" font-size="10" fill="#cdd0dd" text-anchor="middle">ctid (14285, 51) = page 14285, line pointer 51 — a row's physical address</text>
-  <text x="380" y="270" font-size="9.5" fill="#9aa0b4" text-anchor="middle">An index leaf stores exactly this ctid. That is all an index pointer is.</text>
+  <text x="380" y="248" font-size="10" fill="#CDD0DD" text-anchor="middle">ctid (14285, 51) = page 14285, line pointer 51 — a row's physical address</text>
+  <text x="380" y="270" font-size="9.5" fill="#9AA0B4" text-anchor="middle">An index leaf stores exactly this ctid. That is all an index pointer is.</text>
 </svg>
 <figcaption>Line pointers grow from the left, tuples from the right, and the free space between them is what an <code>INSERT</code> consumes. The <code>ctid</code> — <em>(page, slot)</em> — is the address every index points at.</figcaption>
 </figure>
@@ -472,46 +472,46 @@ postgres: <span class="g">client backend</span>                  <span class="c"
   <defs>
     <marker id="h-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#5C78FF"/></marker>
   </defs>
-  <text x="380" y="20" font-size="10.5" fill="#9aa0b4" text-anchor="middle" letter-spacing="1.5">THE INDEX IS THE TABLE &#183; vs &#183; THE INDEX POINTS AT THE TABLE</text>
+  <text x="380" y="20" font-size="10.5" fill="#9AA0B4" text-anchor="middle" letter-spacing="1.5">THE INDEX IS THE TABLE &#183; vs &#183; THE INDEX POINTS AT THE TABLE</text>
 
   <text x="188" y="46" font-size="10.5" fill="#5AC8FF" text-anchor="middle" font-weight="700">SQL SERVER · clustered index</text>
-  <rect x="88" y="58" width="200" height="30" rx="5" fill="#0e2028" stroke="#5AC8FF"/>
+  <rect x="88" y="58" width="200" height="30" rx="5" fill="#16202E" stroke="#5AC8FF"/>
   <text x="188" y="77" font-size="9" fill="#5AC8FF" text-anchor="middle">B-tree root</text>
-  <rect x="60" y="106" width="118" height="30" rx="5" fill="#0e2028" stroke="#5AC8FF"/>
+  <rect x="60" y="106" width="118" height="30" rx="5" fill="#16202E" stroke="#5AC8FF"/>
   <text x="119" y="125" font-size="8.5" fill="#5AC8FF" text-anchor="middle">internal</text>
-  <rect x="198" y="106" width="118" height="30" rx="5" fill="#0e2028" stroke="#5AC8FF"/>
+  <rect x="198" y="106" width="118" height="30" rx="5" fill="#16202E" stroke="#5AC8FF"/>
   <text x="257" y="125" font-size="8.5" fill="#5AC8FF" text-anchor="middle">internal</text>
-  <rect x="60" y="154" width="256" height="52" rx="5" fill="#1a2a33" stroke="#5AC8FF" stroke-width="1.6"/>
+  <rect x="60" y="154" width="256" height="52" rx="5" fill="#16202E" stroke="#5AC8FF" stroke-width="1.6"/>
   <text x="188" y="174" font-size="9" fill="#fff" text-anchor="middle" font-weight="700">LEAF = THE ACTUAL ROWS</text>
-  <text x="188" y="192" font-size="8.5" fill="#cdd0dd" text-anchor="middle">sorted by the key, on disk</text>
+  <text x="188" y="192" font-size="8.5" fill="#CDD0DD" text-anchor="middle">sorted by the key, on disk</text>
   <text x="188" y="228" font-size="8.5" fill="#5AC8FF" text-anchor="middle">one traversal → you have the data</text>
   <text x="188" y="246" font-size="8.5" fill="#6B6B78" text-anchor="middle">there is no separate table</text>
 
   <path d="M380 56 V 296" stroke="#2C2C38" stroke-width="1" stroke-dasharray="4,4"/>
 
   <text x="572" y="46" font-size="10.5" fill="#9AA0B4" text-anchor="middle" font-weight="700">POSTGRES · always a heap</text>
-  <rect x="446" y="58" width="150" height="28" rx="5" fill="#1D1D26" stroke="#5C78FF"/>
+  <rect x="446" y="58" width="150" height="28" rx="5" fill="#191921" stroke="#5C78FF"/>
   <text x="521" y="76" font-size="8.5" fill="#9AA0B4" text-anchor="middle">B-tree root</text>
-  <rect x="446" y="96" width="150" height="28" rx="5" fill="#1D1D26" stroke="#5C78FF"/>
+  <rect x="446" y="96" width="150" height="28" rx="5" fill="#191921" stroke="#5C78FF"/>
   <text x="521" y="114" font-size="8.5" fill="#9AA0B4" text-anchor="middle">leaf: key → ctid</text>
 
-  <rect x="620" y="58" width="110" height="148" rx="5" fill="#1D1D26" stroke="#5C78FF"/>
+  <rect x="620" y="58" width="110" height="148" rx="5" fill="#191921" stroke="#5C78FF"/>
   <text x="675" y="76" font-size="8.5" fill="#9AA0B4" text-anchor="middle" font-weight="700">HEAP</text>
-  <rect x="630" y="86" width="90" height="22" rx="3" fill="#101017" stroke="#1D1D26"/>
-  <text x="675" y="101" font-size="7.5" fill="#cdd0dd" text-anchor="middle">page 0</text>
-  <rect x="630" y="112" width="90" height="22" rx="3" fill="#101017" stroke="#1D1D26"/>
-  <text x="675" y="127" font-size="7.5" fill="#cdd0dd" text-anchor="middle">page 1</text>
-  <rect x="630" y="138" width="90" height="22" rx="3" fill="#101017" stroke="#1D1D26"/>
-  <text x="675" y="153" font-size="7.5" fill="#cdd0dd" text-anchor="middle">page 2</text>
-  <rect x="630" y="164" width="90" height="22" rx="3" fill="#101017" stroke="#1D1D26"/>
-  <text x="675" y="179" font-size="7.5" fill="#cdd0dd" text-anchor="middle">…unordered</text>
+  <rect x="630" y="86" width="90" height="22" rx="3" fill="#101017" stroke="#191921"/>
+  <text x="675" y="101" font-size="7.5" fill="#CDD0DD" text-anchor="middle">page 0</text>
+  <rect x="630" y="112" width="90" height="22" rx="3" fill="#101017" stroke="#191921"/>
+  <text x="675" y="127" font-size="7.5" fill="#CDD0DD" text-anchor="middle">page 1</text>
+  <rect x="630" y="138" width="90" height="22" rx="3" fill="#101017" stroke="#191921"/>
+  <text x="675" y="153" font-size="7.5" fill="#CDD0DD" text-anchor="middle">page 2</text>
+  <rect x="630" y="164" width="90" height="22" rx="3" fill="#101017" stroke="#191921"/>
+  <text x="675" y="179" font-size="7.5" fill="#CDD0DD" text-anchor="middle">…unordered</text>
 
   <path d="M600 110 H 616" stroke="#5C78FF" stroke-width="1.4" fill="none" marker-end="url(#h-a)"/>
   <text x="521" y="146" font-size="8.5" fill="#9AA0B4" text-anchor="middle">then JUMP to the heap</text>
   <text x="572" y="228" font-size="8.5" fill="#9AA0B4" text-anchor="middle">two steps, always</text>
   <text x="572" y="246" font-size="8.5" fill="#6B6B78" text-anchor="middle">even for the PRIMARY KEY</text>
 
-  <text x="380" y="286" font-size="10" fill="#9aa0b4" text-anchor="middle">Postgres cannot store the table inside an index. The heap is always there, always unordered.</text>
+  <text x="380" y="286" font-size="10" fill="#9AA0B4" text-anchor="middle">Postgres cannot store the table inside an index. The heap is always there, always unordered.</text>
 </svg>
 <figcaption>The consequence: in Postgres an index lookup is <em>always</em> "walk the tree, then fetch from the heap" — which is exactly why index-only scans (§12) matter so much.</figcaption>
 </figure>
@@ -560,25 +560,25 @@ postgres: <span class="g">client backend</span>                  <span class="c"
   <defs>
     <marker id="m-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#5C78FF"/></marker>
   </defs>
-  <text x="380" y="20" font-size="10.5" fill="#9aa0b4" text-anchor="middle" letter-spacing="1.5">UPDATE events SET status = 'x' WHERE id = 1</text>
+  <text x="380" y="20" font-size="10.5" fill="#9AA0B4" text-anchor="middle" letter-spacing="1.5">UPDATE events SET status = 'x' WHERE id = 1</text>
 
-  <text x="150" y="48" font-size="9.5" fill="#9aa0b4" text-anchor="middle">BEFORE</text>
-  <rect x="40" y="58" width="220" height="76" rx="7" fill="#1D1D26" stroke="#5C78FF"/>
-  <text x="150" y="76" font-size="9" fill="#9aa0b4" text-anchor="middle">page 0</text>
-  <rect x="54" y="86" width="192" height="36" rx="4" fill="#1D1D26" stroke="#5AC8FF"/>
+  <text x="150" y="48" font-size="9.5" fill="#9AA0B4" text-anchor="middle">BEFORE</text>
+  <rect x="40" y="58" width="220" height="76" rx="7" fill="#191921" stroke="#5C78FF"/>
+  <text x="150" y="76" font-size="9" fill="#9AA0B4" text-anchor="middle">page 0</text>
+  <rect x="54" y="86" width="192" height="36" rx="4" fill="#191921" stroke="#5AC8FF"/>
   <text x="150" y="102" font-size="8.5" fill="#5AC8FF" text-anchor="middle">(0,1) id=1 status='shipped'</text>
   <text x="150" y="115" font-size="7.5" fill="#6B6B78" text-anchor="middle">xmin 752 · LIVE</text>
 
-  <text x="610" y="48" font-size="9.5" fill="#9aa0b4" text-anchor="middle">AFTER</text>
-  <rect x="500" y="58" width="220" height="76" rx="7" fill="#1D1D26" stroke="#5C78FF"/>
-  <text x="610" y="76" font-size="9" fill="#9aa0b4" text-anchor="middle">page 0</text>
-  <rect x="514" y="86" width="192" height="36" rx="4" fill="#241014" stroke="#5C78FF"/>
+  <text x="610" y="48" font-size="9.5" fill="#9AA0B4" text-anchor="middle">AFTER</text>
+  <rect x="500" y="58" width="220" height="76" rx="7" fill="#191921" stroke="#5C78FF"/>
+  <text x="610" y="76" font-size="9" fill="#9AA0B4" text-anchor="middle">page 0</text>
+  <rect x="514" y="86" width="192" height="36" rx="4" fill="#191921" stroke="#5C78FF"/>
   <text x="610" y="102" font-size="8.5" fill="#9AA0B4" text-anchor="middle">(0,1) id=1 status='shipped'</text>
   <text x="610" y="115" font-size="7.5" fill="#9AA0B4" text-anchor="middle">xmax set · DEAD TUPLE</text>
 
-  <rect x="500" y="146" width="220" height="76" rx="7" fill="#1D1D26" stroke="#5C78FF"/>
-  <text x="610" y="164" font-size="9" fill="#9aa0b4" text-anchor="middle">page 14285</text>
-  <rect x="514" y="174" width="192" height="36" rx="4" fill="#1D1D26" stroke="#5AC8FF"/>
+  <rect x="500" y="146" width="220" height="76" rx="7" fill="#191921" stroke="#5C78FF"/>
+  <text x="610" y="164" font-size="9" fill="#9AA0B4" text-anchor="middle">page 14285</text>
+  <rect x="514" y="174" width="192" height="36" rx="4" fill="#191921" stroke="#5AC8FF"/>
   <text x="610" y="190" font-size="8.5" fill="#5AC8FF" text-anchor="middle">(14285,51) id=1 status='x'</text>
   <text x="610" y="203" font-size="7.5" fill="#6B6B78" text-anchor="middle">xmin 757 · LIVE</text>
 
@@ -588,7 +588,7 @@ postgres: <span class="g">client backend</span>                  <span class="c"
   <path d="M266 108 L 494 186" stroke="#5AC8FF" stroke-width="1.5" fill="none" marker-end="url(#m-a)"/>
   <text x="380" y="150" font-size="8.5" fill="#5AC8FF" text-anchor="middle">new version written elsewhere</text>
 
-  <text x="380" y="244" font-size="10" fill="#9aa0b4" text-anchor="middle">The table grew. Nothing was overwritten. The dead tuple stays until VACUUM reclaims it.</text>
+  <text x="380" y="244" font-size="10" fill="#9AA0B4" text-anchor="middle">The table grew. Nothing was overwritten. The dead tuple stays until VACUUM reclaims it.</text>
 </svg>
 <figcaption>Every <code>UPDATE</code> and <code>DELETE</code> leaves garbage behind. On a heavily-updated table this is <em>the</em> dominant source of wasted space.</figcaption>
 </figure>
@@ -695,25 +695,25 @@ postgres: <span class="g">client backend</span>                  <span class="c"
     <marker id="b-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0 0L10 5L0 10z" fill="#5C78FF"/></marker>
     <marker id="b-r" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0 0L10 5L0 10z" fill="#5C78FF"/></marker>
   </defs>
-  <text x="380" y="20" font-size="10.5" fill="#9aa0b4" text-anchor="middle" letter-spacing="1.5">SORTED TREE &#8594; ctid &#8594; UNSORTED HEAP</text>
+  <text x="380" y="20" font-size="10.5" fill="#9AA0B4" text-anchor="middle" letter-spacing="1.5">SORTED TREE &#8594; ctid &#8594; UNSORTED HEAP</text>
 
-  <rect x="170" y="38" width="150" height="30" rx="5" fill="#1D1D26" stroke="#5C78FF"/>
+  <rect x="170" y="38" width="150" height="30" rx="5" fill="#191921" stroke="#5C78FF"/>
   <text x="245" y="57" font-size="9" fill="#9AA0B4" text-anchor="middle">ROOT &#183; one page</text>
 
-  <rect x="86" y="92" width="120" height="30" rx="5" fill="#1D1D26" stroke="#5C78FF"/>
+  <rect x="86" y="92" width="120" height="30" rx="5" fill="#191921" stroke="#5C78FF"/>
   <text x="146" y="111" font-size="8.5" fill="#9AA0B4" text-anchor="middle">internal</text>
-  <rect x="284" y="92" width="120" height="30" rx="5" fill="#1D1D26" stroke="#5C78FF"/>
+  <rect x="284" y="92" width="120" height="30" rx="5" fill="#191921" stroke="#5C78FF"/>
   <text x="344" y="111" font-size="8.5" fill="#9AA0B4" text-anchor="middle">internal</text>
 
-  <rect x="40" y="146" width="106" height="44" rx="5" fill="#1D1D26" stroke="#5C78FF"/>
+  <rect x="40" y="146" width="106" height="44" rx="5" fill="#191921" stroke="#5C78FF"/>
   <text x="93" y="164" font-size="8" fill="#9AA0B4" text-anchor="middle">leaf</text>
-  <text x="93" y="179" font-size="7.5" fill="#cdd0dd" text-anchor="middle">42 &#8594; (107,3)</text>
-  <rect x="156" y="146" width="106" height="44" rx="5" fill="#1D1D26" stroke="#5C78FF"/>
+  <text x="93" y="179" font-size="7.5" fill="#CDD0DD" text-anchor="middle">42 &#8594; (107,3)</text>
+  <rect x="156" y="146" width="106" height="44" rx="5" fill="#191921" stroke="#5C78FF"/>
   <text x="209" y="164" font-size="8" fill="#9AA0B4" text-anchor="middle">leaf</text>
-  <text x="209" y="179" font-size="7.5" fill="#cdd0dd" text-anchor="middle">57 &#8594; (2,11)</text>
-  <rect x="272" y="146" width="106" height="44" rx="5" fill="#1D1D26" stroke="#5C78FF"/>
+  <text x="209" y="179" font-size="7.5" fill="#CDD0DD" text-anchor="middle">57 &#8594; (2,11)</text>
+  <rect x="272" y="146" width="106" height="44" rx="5" fill="#191921" stroke="#5C78FF"/>
   <text x="325" y="164" font-size="8" fill="#9AA0B4" text-anchor="middle">leaf</text>
-  <text x="325" y="179" font-size="7.5" fill="#cdd0dd" text-anchor="middle">63 &#8594; (901,7)</text>
+  <text x="325" y="179" font-size="7.5" fill="#CDD0DD" text-anchor="middle">63 &#8594; (901,7)</text>
 
   <g stroke="#9AA0B4" stroke-width="1.2" fill="none">
     <path d="M215 70 L 156 86" marker-end="url(#b-a)"/>
@@ -726,14 +726,14 @@ postgres: <span class="g">client backend</span>                  <span class="c"
   <text x="570" y="160" font-size="8" fill="#5AC8FF" text-anchor="middle">leaves are SORTED and linked &#8596;</text>
   <text x="570" y="174" font-size="8" fill="#6B6B78" text-anchor="middle">(that is how range scans work)</text>
 
-  <rect x="470" y="196" width="240" height="130" rx="7" fill="#1D1D26" stroke="#5C78FF"/>
+  <rect x="470" y="196" width="240" height="130" rx="7" fill="#191921" stroke="#5C78FF"/>
   <text x="590" y="216" font-size="9.5" fill="#9AA0B4" text-anchor="middle" font-weight="700">THE HEAP &#183; unordered</text>
-  <rect x="484" y="224" width="212" height="24" rx="3" fill="#101017" stroke="#1D1D26"/>
-  <text x="590" y="240" font-size="7.5" fill="#cdd0dd" text-anchor="middle">page 2 &#8230; slot 11</text>
-  <rect x="484" y="252" width="212" height="24" rx="3" fill="#101017" stroke="#1D1D26"/>
-  <text x="590" y="268" font-size="7.5" fill="#cdd0dd" text-anchor="middle">page 107 &#8230; slot 3</text>
-  <rect x="484" y="280" width="212" height="24" rx="3" fill="#101017" stroke="#1D1D26"/>
-  <text x="590" y="296" font-size="7.5" fill="#cdd0dd" text-anchor="middle">page 901 &#8230; slot 7</text>
+  <rect x="484" y="224" width="212" height="24" rx="3" fill="#101017" stroke="#191921"/>
+  <text x="590" y="240" font-size="7.5" fill="#CDD0DD" text-anchor="middle">page 2 &#8230; slot 11</text>
+  <rect x="484" y="252" width="212" height="24" rx="3" fill="#101017" stroke="#191921"/>
+  <text x="590" y="268" font-size="7.5" fill="#CDD0DD" text-anchor="middle">page 107 &#8230; slot 3</text>
+  <rect x="484" y="280" width="212" height="24" rx="3" fill="#101017" stroke="#191921"/>
+  <text x="590" y="296" font-size="7.5" fill="#CDD0DD" text-anchor="middle">page 901 &#8230; slot 7</text>
   <text x="590" y="318" font-size="7.5" fill="#6B6B78" text-anchor="middle">rows sit wherever there was room</text>
 
   <g stroke="#9AA0B4" stroke-width="1.2" fill="none" stroke-dasharray="4,3">
@@ -743,7 +743,7 @@ postgres: <span class="g">client backend</span>                  <span class="c"
   </g>
 
   <text x="380" y="350" font-size="10" fill="#9AA0B4" text-anchor="middle">The tree is sorted. The heap is not. Every red arrow is a random page read.</text>
-  <text x="380" y="371" font-size="9.5" fill="#9aa0b4" text-anchor="middle">Depth ~4 even for a billion rows: root &#8594; internal &#8594; internal &#8594; leaf. Then one jump.</text>
+  <text x="380" y="371" font-size="9.5" fill="#9AA0B4" text-anchor="middle">Depth ~4 even for a billion rows: root &#8594; internal &#8594; internal &#8594; leaf. Then one jump.</text>
   <text x="380" y="391" font-size="9.5" fill="#5AC8FF" text-anchor="middle">Kill the red arrows and you have an INDEX-ONLY SCAN (&#167;10).</text>
 </svg>
 <figcaption>The B-tree gives you the <code>ctid</code> cheaply. The expensive part is the red arrows — chasing those pointers into a heap where the rows are scattered.</figcaption>
@@ -839,13 +839,13 @@ Index Only Scan using idx_user on events (actual rows=109 loops=1)
 
 <figure class="fig reveal">
 <svg viewBox="0 0 760 290" width="100%" aria-label="The three Postgres join algorithms compared: nested loop, hash join and merge join, with what each is best at and what to watch for">
-  <text x="380" y="20" font-size="10.5" fill="#9aa0b4" text-anchor="middle" letter-spacing="1.5">THREE ALGORITHMS &#183; SAME ROWS &#183; VERY DIFFERENT COSTS</text>
+  <text x="380" y="20" font-size="10.5" fill="#9AA0B4" text-anchor="middle" letter-spacing="1.5">THREE ALGORITHMS &#183; SAME ROWS &#183; VERY DIFFERENT COSTS</text>
 
-  <rect x="20" y="44" width="230" height="204" rx="8" fill="#1D1D26" stroke="#5C78FF"/>
+  <rect x="20" y="44" width="230" height="204" rx="8" fill="#191921" stroke="#5C78FF"/>
   <text x="135" y="68" font-size="11" fill="#9AA0B4" text-anchor="middle" font-weight="700">NESTED LOOP</text>
-  <text x="135" y="94" font-size="8.5" fill="#cdd0dd" text-anchor="middle">for each outer row,</text>
-  <text x="135" y="108" font-size="8.5" fill="#cdd0dd" text-anchor="middle">look up the inner side</text>
-  <path d="M36 124 H 234" stroke="#1D1D26" stroke-width="1"/>
+  <text x="135" y="94" font-size="8.5" fill="#CDD0DD" text-anchor="middle">for each outer row,</text>
+  <text x="135" y="108" font-size="8.5" fill="#CDD0DD" text-anchor="middle">look up the inner side</text>
+  <path d="M36 124 H 234" stroke="#191921" stroke-width="1"/>
   <text x="135" y="144" font-size="7.5" fill="#6B6B78" text-anchor="middle" letter-spacing="1">BEST WHEN</text>
   <text x="135" y="159" font-size="8.5" fill="#5AC8FF" text-anchor="middle">few outer rows, and</text>
   <text x="135" y="172" font-size="8.5" fill="#5AC8FF" text-anchor="middle">an INDEX on the inner</text>
@@ -854,33 +854,33 @@ Index Only Scan using idx_user on events (actual rows=109 loops=1)
   <text x="135" y="224" font-size="8.5" fill="#9AA0B4" text-anchor="middle">shown are PER LOOP</text>
   <text x="135" y="240" font-size="8" fill="#9AA0B4" text-anchor="middle">no index → N × M. Death.</text>
 
-  <rect x="265" y="44" width="230" height="204" rx="8" fill="#0e2028" stroke="#5AC8FF"/>
+  <rect x="265" y="44" width="230" height="204" rx="8" fill="#16202E" stroke="#5AC8FF"/>
   <text x="380" y="68" font-size="11" fill="#5AC8FF" text-anchor="middle" font-weight="700">HASH JOIN</text>
-  <text x="380" y="94" font-size="8.5" fill="#cdd0dd" text-anchor="middle">hash the smaller side,</text>
-  <text x="380" y="108" font-size="8.5" fill="#cdd0dd" text-anchor="middle">then probe it with the big</text>
-  <path d="M281 124 H 479" stroke="#2b4a80" stroke-width="1"/>
+  <text x="380" y="94" font-size="8.5" fill="#CDD0DD" text-anchor="middle">hash the smaller side,</text>
+  <text x="380" y="108" font-size="8.5" fill="#CDD0DD" text-anchor="middle">then probe it with the big</text>
+  <path d="M281 124 H 479" stroke="#5C78FF" stroke-width="1"/>
   <text x="380" y="144" font-size="7.5" fill="#6B6B78" text-anchor="middle" letter-spacing="1">BEST WHEN</text>
   <text x="380" y="159" font-size="8.5" fill="#5AC8FF" text-anchor="middle">big joins, no index —</text>
   <text x="380" y="172" font-size="8.5" fill="#5AC8FF" text-anchor="middle">the workhorse for DE</text>
   <text x="380" y="196" font-size="7.5" fill="#6B6B78" text-anchor="middle" letter-spacing="1">WATCH FOR</text>
   <text x="380" y="211" font-size="8.5" fill="#9AA0B4" text-anchor="middle">Batches &gt; 1 = spilled</text>
   <text x="380" y="224" font-size="8.5" fill="#9AA0B4" text-anchor="middle">to disk. Raise work_mem.</text>
-  <text x="380" y="240" font-size="8" fill="#9aa0b4" text-anchor="middle">equality joins only (=)</text>
+  <text x="380" y="240" font-size="8" fill="#9AA0B4" text-anchor="middle">equality joins only (=)</text>
 
-  <rect x="510" y="44" width="230" height="204" rx="8" fill="#1D1D26" stroke="#5AC8FF"/>
+  <rect x="510" y="44" width="230" height="204" rx="8" fill="#191921" stroke="#5AC8FF"/>
   <text x="625" y="68" font-size="11" fill="#5AC8FF" text-anchor="middle" font-weight="700">MERGE JOIN</text>
-  <text x="625" y="94" font-size="8.5" fill="#cdd0dd" text-anchor="middle">sort BOTH sides, then</text>
-  <text x="625" y="108" font-size="8.5" fill="#cdd0dd" text-anchor="middle">walk them in lockstep</text>
-  <path d="M526 124 H 724" stroke="#2c4c34" stroke-width="1"/>
+  <text x="625" y="94" font-size="8.5" fill="#CDD0DD" text-anchor="middle">sort BOTH sides, then</text>
+  <text x="625" y="108" font-size="8.5" fill="#CDD0DD" text-anchor="middle">walk them in lockstep</text>
+  <path d="M526 124 H 724" stroke="#6B6B78" stroke-width="1"/>
   <text x="625" y="144" font-size="7.5" fill="#6B6B78" text-anchor="middle" letter-spacing="1">BEST WHEN</text>
   <text x="625" y="159" font-size="8.5" fill="#5AC8FF" text-anchor="middle">both sides are ALREADY</text>
   <text x="625" y="172" font-size="8.5" fill="#5AC8FF" text-anchor="middle">sorted (e.g. by an index)</text>
   <text x="625" y="196" font-size="7.5" fill="#6B6B78" text-anchor="middle" letter-spacing="1">WATCH FOR</text>
   <text x="625" y="211" font-size="8.5" fill="#9AA0B4" text-anchor="middle">the Sort IS the cost.</text>
   <text x="625" y="224" font-size="8.5" fill="#9AA0B4" text-anchor="middle">temp read/written = disk</text>
-  <text x="625" y="240" font-size="8" fill="#9aa0b4" text-anchor="middle">handles ranges, not just =</text>
+  <text x="625" y="240" font-size="8" fill="#9AA0B4" text-anchor="middle">handles ranges, not just =</text>
 
-  <text x="380" y="272" font-size="10" fill="#9aa0b4" text-anchor="middle">All three return identical rows. The planner picks on cost — so bad statistics pick the wrong one.</text>
+  <text x="380" y="272" font-size="10" fill="#9AA0B4" text-anchor="middle">All three return identical rows. The planner picks on cost — so bad statistics pick the wrong one.</text>
 </svg>
 <figcaption>The choice is not a preference. Given accurate row estimates the planner is usually right; given stale ones it will happily choose a nested loop over a million rows.</figcaption>
 </figure>
@@ -960,35 +960,35 @@ Hash Join (actual rows=81184 loops=3)
     <marker id="v-g" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#5AC8FF"/></marker>
     <marker id="v-r" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#5C78FF"/></marker>
   </defs>
-  <text x="380" y="20" font-size="10.5" fill="#9aa0b4" text-anchor="middle" letter-spacing="1.5">THE INDEX HAS THE VALUE — BUT IS THE ROW VISIBLE?</text>
+  <text x="380" y="20" font-size="10.5" fill="#9AA0B4" text-anchor="middle" letter-spacing="1.5">THE INDEX HAS THE VALUE — BUT IS THE ROW VISIBLE?</text>
 
-  <rect x="30" y="52" width="150" height="60" rx="7" fill="#1D1D26" stroke="#5C78FF"/>
+  <rect x="30" y="52" width="150" height="60" rx="7" fill="#191921" stroke="#5C78FF"/>
   <text x="105" y="76" font-size="9.5" fill="#9AA0B4" text-anchor="middle" font-weight="700">INDEX LEAF</text>
-  <text x="105" y="94" font-size="8" fill="#cdd0dd" text-anchor="middle">42 → (107,3)</text>
+  <text x="105" y="94" font-size="8" fill="#CDD0DD" text-anchor="middle">42 → (107,3)</text>
 
-  <rect x="256" y="46" width="180" height="72" rx="7" fill="#0e2028" stroke="#5AC8FF"/>
+  <rect x="256" y="46" width="180" height="72" rx="7" fill="#16202E" stroke="#5AC8FF"/>
   <text x="346" y="70" font-size="9.5" fill="#5AC8FF" text-anchor="middle" font-weight="700">VISIBILITY MAP</text>
-  <text x="346" y="88" font-size="8" fill="#cdd0dd" text-anchor="middle">1 bit per heap page</text>
-  <text x="346" y="104" font-size="8" fill="#9aa0b4" text-anchor="middle">"is page 107 all-visible?"</text>
+  <text x="346" y="88" font-size="8" fill="#CDD0DD" text-anchor="middle">1 bit per heap page</text>
+  <text x="346" y="104" font-size="8" fill="#9AA0B4" text-anchor="middle">"is page 107 all-visible?"</text>
 
   <path d="M184 82 H 250" stroke="#5C78FF" stroke-width="1.5" fill="none" marker-end="url(#v-g)"/>
 
-  <rect x="530" y="40" width="200" height="52" rx="7" fill="#1D1D26" stroke="#5AC8FF"/>
+  <rect x="530" y="40" width="200" height="52" rx="7" fill="#191921" stroke="#5AC8FF"/>
   <text x="630" y="60" font-size="9" fill="#5AC8FF" text-anchor="middle" font-weight="700">BIT SET → skip the heap</text>
-  <text x="630" y="78" font-size="8" fill="#cdd0dd" text-anchor="middle">Heap Fetches: 0 · 4 pages</text>
+  <text x="630" y="78" font-size="8" fill="#CDD0DD" text-anchor="middle">Heap Fetches: 0 · 4 pages</text>
 
-  <rect x="530" y="106" width="200" height="52" rx="7" fill="#241014" stroke="#5C78FF"/>
+  <rect x="530" y="106" width="200" height="52" rx="7" fill="#191921" stroke="#5C78FF"/>
   <text x="630" y="126" font-size="9" fill="#9AA0B4" text-anchor="middle" font-weight="700">BIT NOT SET → fetch anyway</text>
-  <text x="630" y="144" font-size="8" fill="#cdd0dd" text-anchor="middle">Heap Fetches: 109 · 110 pages</text>
+  <text x="630" y="144" font-size="8" fill="#CDD0DD" text-anchor="middle">Heap Fetches: 109 · 110 pages</text>
 
   <path d="M440 72 L 524 62" stroke="#5AC8FF" stroke-width="1.5" fill="none" marker-end="url(#v-g)"/>
   <path d="M440 96 L 524 128" stroke="#5C78FF" stroke-width="1.5" fill="none" marker-end="url(#v-r)"/>
 
-  <rect x="80" y="176" width="600" height="52" rx="7" fill="#1D1D26" stroke="#5C78FF"/>
+  <rect x="80" y="176" width="600" height="52" rx="7" fill="#191921" stroke="#5C78FF"/>
   <text x="380" y="198" font-size="9.5" fill="#9AA0B4" text-anchor="middle" font-weight="700">Only VACUUM sets those bits.</text>
-  <text x="380" y="216" font-size="8.5" fill="#cdd0dd" text-anchor="middle">A heavily-written table that autovacuum can't keep up with gets NO index-only scans.</text>
+  <text x="380" y="216" font-size="8.5" fill="#CDD0DD" text-anchor="middle">A heavily-written table that autovacuum can't keep up with gets NO index-only scans.</text>
 
-  <text x="380" y="254" font-size="10" fill="#9aa0b4" text-anchor="middle">Same index, same query — 4 pages or 110, decided entirely by whether VACUUM has run.</text>
+  <text x="380" y="254" font-size="10" fill="#9AA0B4" text-anchor="middle">Same index, same query — 4 pages or 110, decided entirely by whether VACUUM has run.</text>
 </svg>
 <figcaption>Measured on the live server: <code>Heap Fetches: 0</code> and 4 buffers after a vacuum; the same query fell back to 110 buffers when the visibility map wasn't current.</figcaption>
 </figure>
@@ -1037,22 +1037,22 @@ Hash Join (actual rows=81184 loops=3)
 
 <figure class="fig reveal">
 <svg viewBox="0 0 760 262" width="100%" aria-label="On a time-correlated column a B-tree index is 21 MB while a BRIN index over the same column is 24 kB">
-  <text x="380" y="20" font-size="10.5" fill="#9aa0b4" text-anchor="middle" letter-spacing="1.5">SAME COLUMN &#183; SAME TABLE &#183; 1,000,000 ROWS</text>
+  <text x="380" y="20" font-size="10.5" fill="#9AA0B4" text-anchor="middle" letter-spacing="1.5">SAME COLUMN &#183; SAME TABLE &#183; 1,000,000 ROWS</text>
 
-  <rect x="60" y="44" width="290" height="132" rx="8" fill="#241014" stroke="#5C78FF"/>
+  <rect x="60" y="44" width="290" height="132" rx="8" fill="#191921" stroke="#5C78FF"/>
   <text x="205" y="68" font-size="11" fill="#9AA0B4" text-anchor="middle" font-weight="700">B-TREE on created_at</text>
   <rect x="80" y="82" width="250" height="36" rx="4" fill="#5C78FF" fill-opacity="0.25" stroke="#5C78FF"/>
   <text x="205" y="142" font-size="16" fill="#9AA0B4" text-anchor="middle" font-weight="800">21 MB</text>
-  <text x="205" y="163" font-size="8" fill="#9aa0b4" text-anchor="middle">one entry per row &#183; 1,000,000 entries</text>
+  <text x="205" y="163" font-size="8" fill="#9AA0B4" text-anchor="middle">one entry per row &#183; 1,000,000 entries</text>
 
-  <rect x="410" y="44" width="290" height="132" rx="8" fill="#1D1D26" stroke="#5AC8FF"/>
+  <rect x="410" y="44" width="290" height="132" rx="8" fill="#191921" stroke="#5AC8FF"/>
   <text x="555" y="68" font-size="11" fill="#5AC8FF" text-anchor="middle" font-weight="700">BRIN on created_at</text>
   <rect x="543" y="82" width="24" height="36" rx="3" fill="#5AC8FF" fill-opacity="0.35" stroke="#5AC8FF"/>
   <text x="555" y="142" font-size="16" fill="#5AC8FF" text-anchor="middle" font-weight="800">24 kB</text>
-  <text x="555" y="163" font-size="8" fill="#9aa0b4" text-anchor="middle">min/max per 128-page range &#183; ~112 entries</text>
+  <text x="555" y="163" font-size="8" fill="#9AA0B4" text-anchor="middle">min/max per 128-page range &#183; ~112 entries</text>
 
   <text x="380" y="204" font-size="12" fill="#9AA0B4" text-anchor="middle" font-weight="700">&#8776; 900&#215; smaller</text>
-  <text x="380" y="228" font-size="9.5" fill="#9aa0b4" text-anchor="middle">&#8230;but ONLY because created_at correlates with physical order (correlation = 1.00).</text>
+  <text x="380" y="228" font-size="9.5" fill="#9AA0B4" text-anchor="middle">&#8230;but ONLY because created_at correlates with physical order (correlation = 1.00).</text>
   <text x="380" y="248" font-size="9.5" fill="#9AA0B4" text-anchor="middle">On a random column like user_id, BRIN is useless — every range contains every value.</text>
 </svg>
 <figcaption>BRIN trades precision for size. It doesn't tell you <em>which row</em>, only <em>which block ranges could possibly contain it</em> — which on an append-only time-series table is exactly enough.</figcaption>
@@ -1251,26 +1251,26 @@ Aggregate
   <defs>
     <marker id="o-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#5C78FF"/></marker>
   </defs>
-  <text x="380" y="20" font-size="10.5" fill="#9aa0b4" text-anchor="middle" letter-spacing="1.5">MEASURE · DIAGNOSE · CHANGE ONE THING · MEASURE AGAIN</text>
+  <text x="380" y="20" font-size="10.5" fill="#9AA0B4" text-anchor="middle" letter-spacing="1.5">MEASURE · DIAGNOSE · CHANGE ONE THING · MEASURE AGAIN</text>
 
-  <rect x="24" y="52" width="150" height="72" rx="8" fill="#1D1D26" stroke="#5C78FF"/>
+  <rect x="24" y="52" width="150" height="72" rx="8" fill="#191921" stroke="#5C78FF"/>
   <text x="99" y="76" font-size="10" fill="#9AA0B4" text-anchor="middle" font-weight="700">1 · FIND IT</text>
-  <text x="99" y="94" font-size="8" fill="#cdd0dd" text-anchor="middle">pg_stat_statements</text>
+  <text x="99" y="94" font-size="8" fill="#CDD0DD" text-anchor="middle">pg_stat_statements</text>
   <text x="99" y="108" font-size="8" fill="#6B6B78" text-anchor="middle">slowest total time</text>
 
-  <rect x="198" y="52" width="150" height="72" rx="8" fill="#1D1D26" stroke="#5C78FF"/>
+  <rect x="198" y="52" width="150" height="72" rx="8" fill="#191921" stroke="#5C78FF"/>
   <text x="273" y="76" font-size="10" fill="#9AA0B4" text-anchor="middle" font-weight="700">2 · EXPLAIN IT</text>
-  <text x="273" y="94" font-size="8" fill="#cdd0dd" text-anchor="middle">ANALYZE, BUFFERS</text>
+  <text x="273" y="94" font-size="8" fill="#CDD0DD" text-anchor="middle">ANALYZE, BUFFERS</text>
   <text x="273" y="108" font-size="8" fill="#6B6B78" text-anchor="middle">read it bottom-up</text>
 
-  <rect x="372" y="52" width="150" height="72" rx="8" fill="#0e2028" stroke="#5AC8FF"/>
+  <rect x="372" y="52" width="150" height="72" rx="8" fill="#16202E" stroke="#5AC8FF"/>
   <text x="447" y="76" font-size="10" fill="#5AC8FF" text-anchor="middle" font-weight="700">3 · DIAGNOSE</text>
-  <text x="447" y="94" font-size="8" fill="#cdd0dd" text-anchor="middle">est vs actual rows</text>
+  <text x="447" y="94" font-size="8" fill="#CDD0DD" text-anchor="middle">est vs actual rows</text>
   <text x="447" y="108" font-size="8" fill="#6B6B78" text-anchor="middle">rows removed · buffers</text>
 
-  <rect x="546" y="52" width="150" height="72" rx="8" fill="#1D1D26" stroke="#5AC8FF"/>
+  <rect x="546" y="52" width="150" height="72" rx="8" fill="#191921" stroke="#5AC8FF"/>
   <text x="621" y="76" font-size="10" fill="#5AC8FF" text-anchor="middle" font-weight="700">4 · ONE CHANGE</text>
-  <text x="621" y="94" font-size="8" fill="#cdd0dd" text-anchor="middle">index · ANALYZE · rewrite</text>
+  <text x="621" y="94" font-size="8" fill="#CDD0DD" text-anchor="middle">index · ANALYZE · rewrite</text>
   <text x="621" y="108" font-size="8" fill="#6B6B78" text-anchor="middle">then measure again</text>
 
   <g stroke="#9AA0B4" stroke-width="1.5" fill="none">
@@ -1282,7 +1282,7 @@ Aggregate
   <text x="360" y="168" font-size="8.5" fill="#6B6B78" text-anchor="middle">repeat — the next bottleneck is never where you expect</text>
 
   <text x="380" y="204" font-size="10" fill="#9AA0B4" text-anchor="middle">Never add an index without an EXPLAIN that shows you needed it.</text>
-  <text x="380" y="222" font-size="9.5" fill="#9aa0b4" text-anchor="middle">Every index makes every INSERT, UPDATE and DELETE slower, forever.</text>
+  <text x="380" y="222" font-size="9.5" fill="#9AA0B4" text-anchor="middle">Every index makes every INSERT, UPDATE and DELETE slower, forever.</text>
 </svg>
 <figcaption>The loop matters more than any individual trick. One change at a time, or you won't know what worked.</figcaption>
 </figure>

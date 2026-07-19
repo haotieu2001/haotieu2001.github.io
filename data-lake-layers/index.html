@@ -127,11 +127,11 @@
 <svg viewBox="0 0 880 230" width="100%" style="display:block" aria-label="The three layers of a Data Lake: Compute on top, Metadata in the middle, Storage at the bottom">
   <defs>
     <linearGradient id="hero-grad" x1="0" y1="0" x2="1" y2="0">
-      <stop offset="0" stop-color="#5C78FF"/><stop offset=".5" stop-color="#28B9FF"/><stop offset="1" stop-color="#A52AFF"/>
+      <stop offset="0" stop-color="#5C78FF"/><stop offset=".5" stop-color="#28B9FF"/><stop offset="1" stop-color="#A56BFF"/>
     </linearGradient>
     <style>
       .h-title{font-family:'JetBrains Mono',monospace;font-weight:800;}
-      .h-sub{font-family:'JetBrains Mono',monospace;font-size:11px;fill:#8a90a6;}
+      .h-sub{font-family:'JetBrains Mono',monospace;font-size:11px;fill:#8A90A6;}
       .h-tag{font-family:'JetBrains Mono',monospace;font-size:10px;text-anchor:middle;}
     </style>
     <!-- ===== tool / cloud icons ===== -->
@@ -147,7 +147,7 @@
   </defs>
 
   <!-- LAYER 3: COMPUTE -->
-  <rect x="40" y="18" width="800" height="56" rx="10" fill="#0f1f17" stroke="#5AC8FF" stroke-width="1.8">
+  <rect x="40" y="18" width="800" height="56" rx="10" fill="#191921" stroke="#5AC8FF" stroke-width="1.8">
     <animate attributeName="stroke-opacity" values=".5;1;.5" dur="3s" repeatCount="indefinite"/>
   </rect>
   <text x="60" y="42" class="h-title" font-size="15" fill="#5AC8FF">LAYER 3 · COMPUTE</text>
@@ -157,7 +157,7 @@
   <use href="#h-trino" x="752" y="32" width="28" height="28"><animateTransform attributeName="transform" type="translate" values="0 0;0 -3;0 0" dur="2.6s" begin=".8s" repeatCount="indefinite"/></use>
 
   <!-- LAYER 2: METADATA -->
-  <rect x="40" y="86" width="800" height="56" rx="10" fill="#1D1D26" stroke="#5C78FF" stroke-width="1.8">
+  <rect x="40" y="86" width="800" height="56" rx="10" fill="#191921" stroke="#5C78FF" stroke-width="1.8">
     <animate attributeName="stroke-opacity" values=".5;1;.5" dur="3.4s" repeatCount="indefinite" begin=".5s"/>
   </rect>
   <text x="60" y="110" class="h-title" font-size="15" fill="#9AA0B4">LAYER 2 · METADATA</text>
@@ -167,7 +167,7 @@
   <use href="#h-unity" x="752" y="100" width="28" height="28"><animateTransform attributeName="transform" type="translate" values="0 0;0 -3;0 0" dur="2.8s" begin="1s" repeatCount="indefinite"/></use>
 
   <!-- LAYER 1: STORAGE -->
-  <rect x="40" y="154" width="800" height="56" rx="10" fill="#0d1820" stroke="#5AC8FF" stroke-width="1.8">
+  <rect x="40" y="154" width="800" height="56" rx="10" fill="#0D1820" stroke="#5AC8FF" stroke-width="1.8">
     <animate attributeName="stroke-opacity" values=".5;1;.5" dur="2.8s" repeatCount="indefinite" begin="1s"/>
   </rect>
   <text x="60" y="178" class="h-title" font-size="15" fill="#5AC8FF">LAYER 1 · STORAGE</text>
@@ -277,10 +277,10 @@
   </defs>
 
   <!-- ===== flat ===== -->
-  <rect x="14" y="14" width="320" height="222" rx="8" fill="#1c1212" stroke="#3a2020" stroke-width="1.4"/>
+  <rect x="14" y="14" width="320" height="222" rx="8" fill="#191921" stroke="#191921" stroke-width="1.4"/>
   <use href="#l-s3" x="276" y="22" width="22" height="22"/>
   <text x="30" y="38" class="lay" fill="#9AA0B4" font-weight="700"> FLAT — one big prefix</text>
-  <text x="30" y="62" class="lay" fill="#7a8099">orders/</text>
+  <text x="30" y="62" class="lay" fill="#7A8099">orders/</text>
   <!-- a grid of file glyphs being scanned -->
   <g color="#9AA0B4">
     <use href="#l-file" x="44"  y="74" width="15" height="18"/><use href="#l-file" x="66" y="74" width="15" height="18"/><use href="#l-file" x="88" y="74" width="15" height="18"/><use href="#l-file" x="110" y="74" width="15" height="18"/><use href="#l-file" x="132" y="74" width="15" height="18"/>
@@ -298,15 +298,15 @@
   <text x="30" y="210" class="lay" fill="#9AA0B4" font-weight="700">ALL 10,000 files −</text>
 
   <!-- ===== partitioned ===== -->
-  <rect x="366" y="14" width="320" height="222" rx="8" fill="#1D1D26" stroke="#1a3020" stroke-width="1.4"/>
+  <rect x="366" y="14" width="320" height="222" rx="8" fill="#191921" stroke="#191921" stroke-width="1.4"/>
   <use href="#l-s3" x="628" y="22" width="22" height="22"/>
   <text x="382" y="38" class="lay" fill="#5AC8FF" font-weight="700">PARTITIONED by date</text>
-  <text x="382" y="62" class="lay" fill="#7a8099">orders/</text>
+  <text x="382" y="62" class="lay" fill="#7A8099">orders/</text>
   <!-- 06-01 row (read) -->
   <rect x="392" y="72" width="282" height="24" rx="4" fill="#5AC8FF" opacity=".10" stroke="#5AC8FF" stroke-width="1">
     <animate attributeName="opacity" values=".10;.30;.10" dur="1.8s" repeatCount="indefinite"/>
   </rect>
-  <text x="400" y="86" class="lay" font-size="9.5"><tspan fill="#b7c0cc">order_date=2026-06-01/</tspan><tspan dx="14" fill="#5AC8FF" font-weight="700">← read 2 +</tspan></text>
+  <text x="400" y="86" class="lay" font-size="9.5"><tspan fill="#B7C0CC">order_date=2026-06-01/</tspan><tspan dx="14" fill="#5AC8FF" font-weight="700">← read 2 +</tspan></text>
   <!-- 06-02 row (skipped) -->
   <text x="400" y="120" class="lay" font-size="9.5" fill="#555"><tspan>order_date=2026-06-02/</tspan><tspan dx="14">skip ⊘</tspan></text>
   <text x="400" y="146" class="lay" font-size="9.5" fill="#555"><tspan>order_date=2026-06-03/</tspan><tspan dx="14">… skip ⊘</tspan></text>
@@ -401,24 +401,24 @@ Partition values known:
   </defs>
 
   <!-- engine -->
-  <rect x="18" y="76" width="150" height="68" rx="8" fill="#0f1f17" stroke="#5AC8FF" stroke-width="1.6"><animate attributeName="stroke-opacity" values=".55;1;.55" dur="3s" repeatCount="indefinite"/></rect>
+  <rect x="18" y="76" width="150" height="68" rx="8" fill="#191921" stroke="#5AC8FF" stroke-width="1.6"><animate attributeName="stroke-opacity" values=".55;1;.55" dur="3s" repeatCount="indefinite"/></rect>
   <use href="#m-spark" x="30" y="86" width="22" height="22"/>
   <text x="100" y="102" class="m" fill="#5AC8FF" text-anchor="middle" font-weight="700">COMPUTE</text>
-  <text x="93" y="130" class="m" fill="#7a8099" text-anchor="middle">"SELECT … orders"</text>
+  <text x="93" y="130" class="m" fill="#7A8099" text-anchor="middle">"SELECT … orders"</text>
 
   <!-- metastore -->
-  <rect x="270" y="58" width="170" height="104" rx="8" fill="#1D1D26" stroke="#5C78FF" stroke-width="1.6"><animate attributeName="stroke-opacity" values=".55;1;.55" dur="3.2s" begin=".4s" repeatCount="indefinite"/></rect>
+  <rect x="270" y="58" width="170" height="104" rx="8" fill="#191921" stroke="#5C78FF" stroke-width="1.6"><animate attributeName="stroke-opacity" values=".55;1;.55" dur="3.2s" begin=".4s" repeatCount="indefinite"/></rect>
   <use href="#m-unity" x="282" y="70" width="20" height="20"/>
   <text x="360" y="84" class="m" fill="#9AA0B4" text-anchor="middle" font-weight="700">METASTORE</text>
-  <text x="355" y="110" class="m" fill="#7a8099" text-anchor="middle">orders →</text>
-  <text x="355" y="128" class="m" fill="#7a8099" text-anchor="middle">path + schema</text>
-  <text x="355" y="146" class="m" fill="#7a8099" text-anchor="middle">+ partitions</text>
+  <text x="355" y="110" class="m" fill="#7A8099" text-anchor="middle">orders →</text>
+  <text x="355" y="128" class="m" fill="#7A8099" text-anchor="middle">path + schema</text>
+  <text x="355" y="146" class="m" fill="#7A8099" text-anchor="middle">+ partitions</text>
 
   <!-- storage -->
-  <rect x="540" y="76" width="150" height="68" rx="8" fill="#0d1820" stroke="#5AC8FF" stroke-width="1.6"><animate attributeName="stroke-opacity" values=".55;1;.55" dur="2.8s" begin=".8s" repeatCount="indefinite"/></rect>
+  <rect x="540" y="76" width="150" height="68" rx="8" fill="#0D1820" stroke="#5AC8FF" stroke-width="1.6"><animate attributeName="stroke-opacity" values=".55;1;.55" dur="2.8s" begin=".8s" repeatCount="indefinite"/></rect>
   <use href="#m-s3" x="552" y="86" width="22" height="22"/>
   <text x="622" y="102" class="m" fill="#5AC8FF" text-anchor="middle" font-weight="700">STORAGE</text>
-  <text x="615" y="130" class="m" fill="#7a8099" text-anchor="middle">s3://…/orders/</text>
+  <text x="615" y="130" class="m" fill="#7A8099" text-anchor="middle">s3://…/orders/</text>
 
   <!-- arrow 1: request -->
   <line x1="168" y1="96" x2="266" y2="96" stroke="#5C78FF" stroke-width="1.6" stroke-dasharray="4,3"/>
@@ -531,31 +531,31 @@ Partition values known:
   </defs>
 
   <!-- driver -->
-  <rect x="262" y="12" width="176" height="54" rx="8" fill="#16182a" stroke="#5C78FF" stroke-width="1.6"><animate attributeName="stroke-opacity" values=".55;1;.55" dur="3s" repeatCount="indefinite"/></rect>
+  <rect x="262" y="12" width="176" height="54" rx="8" fill="#16202E" stroke="#5C78FF" stroke-width="1.6"><animate attributeName="stroke-opacity" values=".55;1;.55" dur="3s" repeatCount="indefinite"/></rect>
   <use href="#c-databricks" x="274" y="24" width="24" height="24"/>
-  <text x="360" y="34" class="cm" fill="#8aa0ff" text-anchor="middle" font-weight="700">DRIVER (foreman)</text>
-  <text x="360" y="54" class="cm" fill="#7a8099" text-anchor="middle">plans &amp; splits work</text>
+  <text x="360" y="34" class="cm" fill="#8AA0FF" text-anchor="middle" font-weight="700">DRIVER (foreman)</text>
+  <text x="360" y="54" class="cm" fill="#7A8099" text-anchor="middle">plans &amp; splits work</text>
 
   <!-- executors -->
   <g>
-    <rect x="40" y="118" width="180" height="58" rx="8" fill="#0f1f17" stroke="#5AC8FF" stroke-width="1.4"><animate attributeName="stroke-opacity" values=".5;1;.5" dur="2.6s" repeatCount="indefinite"/></rect>
+    <rect x="40" y="118" width="180" height="58" rx="8" fill="#191921" stroke="#5AC8FF" stroke-width="1.4"><animate attributeName="stroke-opacity" values=".5;1;.5" dur="2.6s" repeatCount="indefinite"/></rect>
     <use href="#c-spark" x="52" y="128" width="22" height="22"/>
     <text x="138" y="140" class="cm" fill="#5AC8FF" text-anchor="middle" font-weight="700">EXECUTOR 1</text>
-    <text x="130" y="164" class="cm" fill="#7a8099" text-anchor="middle">reads files A, B</text>
+    <text x="130" y="164" class="cm" fill="#7A8099" text-anchor="middle">reads files A, B</text>
 
-    <rect x="260" y="118" width="180" height="58" rx="8" fill="#0f1f17" stroke="#5AC8FF" stroke-width="1.4"><animate attributeName="stroke-opacity" values=".5;1;.5" dur="2.6s" begin=".4s" repeatCount="indefinite"/></rect>
+    <rect x="260" y="118" width="180" height="58" rx="8" fill="#191921" stroke="#5AC8FF" stroke-width="1.4"><animate attributeName="stroke-opacity" values=".5;1;.5" dur="2.6s" begin=".4s" repeatCount="indefinite"/></rect>
     <use href="#c-spark" x="272" y="128" width="22" height="22"/>
     <text x="358" y="140" class="cm" fill="#5AC8FF" text-anchor="middle" font-weight="700">EXECUTOR 2</text>
-    <text x="350" y="164" class="cm" fill="#7a8099" text-anchor="middle">reads files C, D</text>
+    <text x="350" y="164" class="cm" fill="#7A8099" text-anchor="middle">reads files C, D</text>
 
-    <rect x="480" y="118" width="180" height="58" rx="8" fill="#0f1f17" stroke="#5AC8FF" stroke-width="1.4"><animate attributeName="stroke-opacity" values=".5;1;.5" dur="2.6s" begin=".8s" repeatCount="indefinite"/></rect>
+    <rect x="480" y="118" width="180" height="58" rx="8" fill="#191921" stroke="#5AC8FF" stroke-width="1.4"><animate attributeName="stroke-opacity" values=".5;1;.5" dur="2.6s" begin=".8s" repeatCount="indefinite"/></rect>
     <use href="#c-spark" x="492" y="128" width="22" height="22"/>
     <text x="578" y="140" class="cm" fill="#5AC8FF" text-anchor="middle" font-weight="700">EXECUTOR 3</text>
-    <text x="570" y="164" class="cm" fill="#7a8099" text-anchor="middle">reads files E, F</text>
+    <text x="570" y="164" class="cm" fill="#7A8099" text-anchor="middle">reads files E, F</text>
   </g>
 
   <!-- storage -->
-  <rect x="160" y="222" width="380" height="46" rx="8" fill="#0d1820" stroke="#5AC8FF" stroke-width="1.6"><animate attributeName="stroke-opacity" values=".55;1;.55" dur="2.8s" repeatCount="indefinite"/></rect>
+  <rect x="160" y="222" width="380" height="46" rx="8" fill="#0D1820" stroke="#5AC8FF" stroke-width="1.6"><animate attributeName="stroke-opacity" values=".55;1;.55" dur="2.8s" repeatCount="indefinite"/></rect>
   <use href="#c-s3" x="176" y="234" width="22" height="22"/>
   <text x="360" y="250" class="cm" fill="#5AC8FF" text-anchor="middle" font-weight="700">OBJECT STORAGE — Parquet files A…F</text>
 
@@ -636,26 +636,26 @@ GROUP BY category;</pre></div>
   </defs>
 
   <!-- COMPUTE (cyan) -->
-  <rect x="60" y="34" width="540" height="76" rx="9" fill="#0d1420" stroke="#5AC8FF" stroke-width="1.6"/>
+  <rect x="60" y="34" width="540" height="76" rx="9" fill="#0D1420" stroke="#5AC8FF" stroke-width="1.6"/>
   <rect x="60" y="34" width="5" height="76" rx="2.5" fill="#5AC8FF"/>
   <text x="80" y="56" font-size="12" font-weight="700" fill="#5AC8FF">3 · COMPUTE  (driver + executors)</text>
-  <text x="80" y="76" font-size="11" fill="#cdd0dd">① parse SQL   ② ask the catalogue where 'orders' lives</text>
-  <text x="80" y="96" font-size="11" fill="#cdd0dd">⑥ executors aggregate → SUM(amount) per category → rows</text>
+  <text x="80" y="76" font-size="11" fill="#CDD0DD">① parse SQL   ② ask the catalogue where 'orders' lives</text>
+  <text x="80" y="96" font-size="11" fill="#CDD0DD">⑥ executors aggregate → SUM(amount) per category → rows</text>
 
   <!-- METADATA (blue) -->
-  <rect x="60" y="128" width="540" height="66" rx="9" fill="#0d1420" stroke="#5C78FF" stroke-width="1.6"/>
+  <rect x="60" y="128" width="540" height="66" rx="9" fill="#0D1420" stroke="#5C78FF" stroke-width="1.6"/>
   <rect x="60" y="128" width="5" height="66" rx="2.5" fill="#5C78FF"/>
   <text x="80" y="150" font-size="12" font-weight="700" fill="#8AA0FF">2 · METADATA  (catalogue)</text>
-  <text x="80" y="170" font-size="11" fill="#cdd0dd">③ orders → s3://…/orders/ , schema ok</text>
-  <text x="80" y="187" font-size="11" fill="#cdd0dd">④ partition list → keep only order_date=2026-06-01/</text>
+  <text x="80" y="170" font-size="11" fill="#CDD0DD">③ orders → s3://…/orders/ , schema ok</text>
+  <text x="80" y="187" font-size="11" fill="#CDD0DD">④ partition list → keep only order_date=2026-06-01/</text>
 
   <!-- STORAGE (purple) -->
-  <rect x="60" y="212" width="540" height="92" rx="9" fill="#0d1420" stroke="#A56BFF" stroke-width="1.6"/>
+  <rect x="60" y="212" width="540" height="92" rx="9" fill="#0D1420" stroke="#A56BFF" stroke-width="1.6"/>
   <rect x="60" y="212" width="5" height="92" rx="2.5" fill="#A56BFF"/>
   <text x="80" y="234" font-size="12" font-weight="700" fill="#C69BFF">1 · STORAGE  (object storage)</text>
-  <text x="80" y="254" font-size="11" fill="#cdd0dd">⑤ LIST the prefix → 2 files, then ranged-GET them</text>
-  <text x="80" y="271" font-size="11" fill="#cdd0dd">read each footer → skip row groups where amount.max ≤ 500</text>
-  <text x="80" y="288" font-size="11" fill="#cdd0dd">read only the category + amount column chunks that survive</text>
+  <text x="80" y="254" font-size="11" fill="#CDD0DD">⑤ LIST the prefix → 2 files, then ranged-GET them</text>
+  <text x="80" y="271" font-size="11" fill="#CDD0DD">read each footer → skip row groups where amount.max ≤ 500</text>
+  <text x="80" y="288" font-size="11" fill="#CDD0DD">read only the category + amount column chunks that survive</text>
 
   <!-- right rail: query descending (arrow points DOWN at the bottom) -->
   <line x1="628" y1="58" x2="628" y2="286" stroke="#5C78FF" stroke-width="2" opacity=".5"/>
