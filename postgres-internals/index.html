@@ -1088,7 +1088,7 @@ Hash Join (actual rows=81184 loops=3)
 <span class="c">--  full B-tree on user_id  : 6,960 kB</span>
 <span class="c">--  partial (status=pending): 3,496 kB   ← half the size, and faster to maintain</span>
 
-<span class="c">-- ⚠ The planner only uses it if your WHERE clause PROVABLY implies the index's WHERE.</span>
+<span class="c">-- The planner only uses it if your WHERE clause PROVABLY implies the index's WHERE.</span>
 <span class="k">SELECT</span> … <span class="k">WHERE</span> user_id = 42 <span class="k">AND</span> status = <span class="g">'pending'</span>;   <span class="c">-- + uses it</span>
 <span class="k">SELECT</span> … <span class="k">WHERE</span> user_id = 42;                          <span class="c">-- − cannot use it</span>
 
@@ -1499,12 +1499,12 @@ Bitmap Heap Scan  110 … 11,988   medium match count; sorts ctids first
 <span class="c"># ── THE THREE JOINS ────────────────────────────────────────────────────</span>
 Nested Loop  for each outer row, look up the inner
              + few outer rows + INDEX on inner    − no index → N × M = death
-             <span class="r">⚠ loops=N → the rows shown are PER LOOP. MULTIPLY.</span>
+             <span class="r">loops=N → the rows shown are PER LOOP. MULTIPLY.</span>
 Hash Join    hash the small side, probe with the big one · EQUALITY ONLY
              + big joins, no index — the DE workhorse
-             <span class="r">⚠ Batches &gt; 1 = spilled to disk → raise work_mem</span>
+             <span class="r">Batches &gt; 1 = spilled to disk → raise work_mem</span>
 Merge Join   sort both sides, walk in lockstep · handles ranges
-             + both sides ALREADY sorted          <span class="r">⚠ temp read/written = spilled</span>
+             + both sides ALREADY sorted          <span class="r">temp read/written = spilled</span>
 
 debug order: 1) est vs actual rows off? → ANALYZE
              2) big loops= ? → index the inner side

@@ -1364,7 +1364,7 @@ docker compose ps                 <span class="c"># what's running, and is it he
 docker compose logs -f pipeline   <span class="c"># follow one service's logs</span>
 docker compose exec postgres psql -U dev warehouse   <span class="c"># a psql shell, instantly</span>
 docker compose down               <span class="c"># stop &amp; remove containers + network</span>
-docker compose down -v            <span class="c"># ⚠️ …AND delete the volumes. Your database is gone.</span></pre></div>
+docker compose down -v            <span class="c"># …AND delete the volumes. Your database is gone.</span></pre></div>
 
 <div class="callout cy reveal">
   <p style="margin:.2em 0"><span class="t"><svg class="ico"><use href="#i-key"/></svg> <code>depends_on</code> alone does not wait for readiness</span></p>
@@ -1634,7 +1634,7 @@ docker compose up -d --build               <span class="c"># build + start the w
 docker compose logs -f &lt;svc&gt;               <span class="c"># one service's logs</span>
 docker compose exec &lt;svc&gt; bash             <span class="c"># shell into a service</span>
 docker compose down                        <span class="c"># stop &amp; remove (volumes SURVIVE)</span>
-docker compose down -v                     <span class="c"># ⚠️ …and DELETE the volumes</span>
+docker compose down -v                     <span class="c"># …and DELETE the volumes</span>
 
 <span class="c">── Dockerfile, in the right order ────────────────────</span>
 FROM python:3.12-slim          <span class="c"># slim, pinned. not alpine, not :latest</span>

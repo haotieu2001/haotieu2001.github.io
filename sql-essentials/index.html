@@ -608,7 +608,7 @@ revenue / <span class="p">NULLIF</span>(orders, 0)                      <span cl
 <span class="k">FROM</span> orders <span class="k">GROUP BY</span> 1 <span class="k">ORDER BY</span> 1;                       <span class="c">-- Postgres</span>
 <span class="c">   MySQL: SELECT DATE_FORMAT(order_date,'%Y-%m') AS mth, SUM(amount) ... GROUP BY 1</span>
 
-<span class="c">   ⚠ TRAP: EXTRACT(MONTH FROM d) returns 3 — which merges March 2023 with March 2024.</span>
+<span class="c">   TRAP: EXTRACT(MONTH FROM d) returns 3 — which merges March 2023 with March 2024.</span>
 <span class="c">   Only safe if you also group by the year, or you genuinely want seasonality.</span>
 
 <span class="c">══ 2. CONSECUTIVE DAYS ═══ "today vs yesterday". LeetCode's Rising Temperature is exactly this.</span>
@@ -619,7 +619,7 @@ revenue / <span class="p">NULLIF</span>(orders, 0)                      <span cl
 <span class="k">WHERE</span> a.temperature &gt; b.temperature;
 <span class="c">   MySQL: ON DATEDIFF(a.record_date, b.record_date) = 1</span>
 
-<span class="c">   ⚠ Why not LAG? LAG gives the previous ROW, which is only the previous DAY if there</span>
+<span class="c">   Why not LAG? LAG gives the previous ROW, which is only the previous DAY if there</span>
 <span class="c">   are no gaps. If a day is missing from the table, LAG silently compares across the gap.</span>
 
 <span class="c">══ 3. A ROLLING WINDOW OF DAYS ═══ "active in the last 30 days", "within 7 days of signup".</span>
@@ -2052,7 +2052,7 @@ ranked <span class="k">AS</span> (
 <span class="p">LEAD</span>(login_at)     <span class="k">OVER</span> (<span class="k">PARTITION BY</span> user_id <span class="k">ORDER BY</span> login_at) <span class="c">-- their next login</span>
 
 <span class="c">-- FIRST_VALUE / LAST_VALUE: the extremes of the frame, not of the partition!</span>
-<span class="c">-- ⚠ LAST_VALUE is the classic trap. The default frame ends at CURRENT ROW,</span>
+<span class="c">-- LAST_VALUE is the classic trap. The default frame ends at CURRENT ROW,</span>
 <span class="c">--   so "the last value" is... the current row. You must widen the frame.</span>
 <span class="p">FIRST_VALUE</span>(price) <span class="k">OVER</span> (<span class="k">PARTITION BY</span> product <span class="k">ORDER BY</span> day)   <span class="c">-- + works: first row</span>
 <span class="p">LAST_VALUE</span>(price)  <span class="k">OVER</span> (<span class="k">PARTITION BY</span> product <span class="k">ORDER BY</span> day)   <span class="c">-- − returns the CURRENT row</span>
@@ -2395,7 +2395,7 @@ every SELECT col must be in GROUP BY or inside an aggregate
 <span class="p">DENSE_RANK</span>()  1,2,2,3   ties share, no gap — pick N VALUES
 <span class="p">LAG</span>/<span class="p">LEAD</span>(x, 1, default)      previous / next row
 <span class="p">SUM</span>(x) <span class="k">OVER</span> (<span class="k">PARTITION BY</span> g)              group total (same on every row)
-<span class="p">SUM</span>(x) <span class="k">OVER</span> (<span class="k">PARTITION BY</span> g <span class="k">ORDER BY</span> t)  RUNNING total  ⚠ the ORDER BY did that
+<span class="p">SUM</span>(x) <span class="k">OVER</span> (<span class="k">PARTITION BY</span> g <span class="k">ORDER BY</span> t)  RUNNING total  the ORDER BY did that
 <span class="p">SUM</span>(x) <span class="k">OVER</span> ()                          grand total of everything
 <span class="k">ROWS BETWEEN</span> 6 <span class="k">PRECEDING AND CURRENT ROW</span>     7-row moving window
 <span class="k">ROWS BETWEEN UNBOUNDED PRECEDING AND UNBOUNDED FOLLOWING</span>   whole partition
@@ -2443,7 +2443,7 @@ DML  <span class="k">SELECT</span> · <span class="k">INSERT</span> · <span cla
 
 constraints  <span class="k">PRIMARY KEY</span> · <span class="k">FOREIGN KEY</span> · <span class="k">NOT NULL</span> · <span class="k">UNIQUE</span> · <span class="k">CHECK</span> · <span class="k">DEFAULT</span>
 money        <span class="y">NUMERIC</span>(10,2) — <span class="r">NEVER</span> <span class="y">FLOAT</span> (0.1 + 0.2 ≠ 0.3)
-<span class="r">⚠ UPDATE/DELETE with no WHERE hits EVERY ROW.</span> SELECT it first. BEGIN … ROLLBACK.
+<span class="r">UPDATE/DELETE with no WHERE hits EVERY ROW.</span> SELECT it first. BEGIN … ROLLBACK.
 upsert       <span class="k">ON CONFLICT</span> (id) <span class="k">DO UPDATE</span>   |   <span class="k">ON DUPLICATE KEY UPDATE</span>
 <span class="k">DELETE</span> (rows, WHERE, undo) · <span class="k">TRUNCATE</span> (all rows, fast) · <span class="k">DROP</span> (table itself)
 </pre></div>

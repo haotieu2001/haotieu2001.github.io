@@ -617,7 +617,7 @@ Partitions : year, month, day</pre></div>
 <p class="reveal">The compute layer is what <em>reads</em> the files, transforms them, and produces results. The most important thing about this layer is that it's <strong>separate from storage</strong> — you spin up a cluster only when you need it.</p>
 
 <div class="callout cy reveal">
-  <p style="margin:.2em 0"><span class="t">🖥 What is a "cluster"?</span></p>
+  <p style="margin:.2em 0"><span class="t">What is a "cluster"?</span></p>
   <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">A cluster is a group of virtual machines — rented cloud servers — that work together. When you "spin up a Spark cluster" with 10 machines, you're renting 10 virtual servers from AWS/Azure/GCP. Spark splits your data processing job across all 10 machines so they work in parallel, finishing in roughly 1/10th the time it would take one machine alone. When the job is done, you release the machines and stop paying for them. The separation of compute and storage is the key cost advantage of a Data Lake: you only pay for compute while it's actually running, not 24/7.</p>
 </div>
 
@@ -777,7 +777,7 @@ GROUP BY category;</pre></div>
 <p class="reveal">The footer is a few kilobytes at the very end of every Parquet file. It's tiny but it's the most important part for query speed, because it tells the engine what's <em>inside</em> the file without reading the whole thing.</p>
 
 <div class="callout cy reveal">
-  <p style="margin:.2em 0"><span class="t">📌 Why the very end of the file?</span></p>
+  <p style="margin:.2em 0"><span class="t">Why the very end of the file?</span></p>
   <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">The Parquet format specification requires the last 4 bytes of every file to be a "footer length" — an integer that says exactly how many bytes the footer occupies. When a query engine opens a Parquet file, it always seeks to the end, reads those 4 bytes, then seeks backwards by that many bytes to land at the start of the footer. It's like a book where the very last line tells you "the index starts on page X" — you flip straight to the index without reading the whole book. This is a deliberate design decision baked into the Parquet standard, so every engine knows exactly where to look.</p>
 </div>
 
@@ -800,7 +800,7 @@ GROUP BY category;</pre></div>
 </div>
 
 <div class="callout reveal">
-  <p style="margin:.2em 0"><span class="t">💬 Does this work for text columns like <code>category</code>?</span></p>
+  <p style="margin:.2em 0"><span class="t">Does this work for text columns like <code>category</code>?</span></p>
   <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">Yes. Parquet records min/max/null-count for <em>every</em> column, not just numbers — for text, the min and max are taken in alphabetical order (so a row group holding "clothing", "food", "tech" stores <code>min="clothing"</code>, <code>max="tech"</code>). A query like <code>WHERE category = 'food'</code> can then skip any row group whose range can't contain that value.</p>
   <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd"><strong>But there's a catch:</strong> skipping only helps if similar values are <em>grouped into the same files</em>. If every row group contains a random mix of all categories, then every group has <code>min="clothing"</code>, <code>max="tech"</code> — so "food" falls inside every range and nothing gets skipped. The statistics exist, they're just not useful. This is exactly why sorting/clustering the data by a column (covered later with <code>OPTIMIZE … ZORDER</code>) makes filters on that column fast.</p>
 </div>
@@ -817,105 +817,80 @@ GROUP BY category;</pre></div>
 <p class="reveal">Real-world Data Lakes divide storage into <strong>zones</strong> (also called <em>layers</em>). The most popular pattern is the <strong>Medallion Architecture</strong>:</p>
 
 <figure class="reveal" style="margin:1.4em 0;background:#191921;border:1px solid #34343F;border-radius:10px;padding:1.2em 1em 1em;overflow:hidden">
-<figcaption style="font-size:12px;color:#555;text-align:center;margin-bottom:.8em;letter-spacing:.06em;text-transform:uppercase">Medallion Architecture — Data Flow</figcaption>
-<svg viewBox="0 0 700 160" width="100%" style="display:block;max-width:700px;margin:0 auto" aria-label="Bronze Silver Gold medallion architecture">
+<figcaption style="font-size:12px;color:#8a90a6;text-align:center;margin-bottom:.8em;letter-spacing:.06em;text-transform:uppercase">Medallion Architecture — Data Flow</figcaption>
+<svg viewBox="0 0 880 262" width="100%" style="display:block;max-width:880px;margin:0 auto" aria-label="Data flows from sources into Bronze (raw), then Silver (cleaned), then Gold (business-ready), then out to BI and ML" font-family="'JetBrains Mono',monospace">
   <defs>
-    <style>
-      @keyframes flow-particle { 0%{transform:translateX(0);opacity:0} 10%{opacity:1} 90%{opacity:1} 100%{transform:translateX(185px);opacity:0} }
-      @keyframes hex-glow { 0%,100%{filter:drop-shadow(0 0 4px currentColor)} 50%{filter:drop-shadow(0 0 12px currentColor)} }
-      .medal-label { font-family:'JetBrains Mono',monospace; font-size:13px; font-weight:700; text-anchor:middle; }
-      .medal-sub { font-family:'JetBrains Mono',monospace; font-size:10.5px; text-anchor:middle; fill:#666; }
-      .medal-tag { font-family:'JetBrains Mono',monospace; font-size:11.5px; text-anchor:middle; }
-    </style>
+    <radialGradient id="med-bronze" cx="38%" cy="30%" r="75%">
+      <stop offset="0" stop-color="#F4B978"/><stop offset=".55" stop-color="#C67F38"/><stop offset="1" stop-color="#7A4B20"/>
+    </radialGradient>
+    <radialGradient id="med-silver" cx="38%" cy="30%" r="75%">
+      <stop offset="0" stop-color="#F3F6FB"/><stop offset=".55" stop-color="#B7BFCC"/><stop offset="1" stop-color="#79828F"/>
+    </radialGradient>
+    <radialGradient id="med-gold" cx="38%" cy="30%" r="75%">
+      <stop offset="0" stop-color="#FDE79A"/><stop offset=".52" stop-color="#EFC24A"/><stop offset="1" stop-color="#B0801A"/>
+    </radialGradient>
   </defs>
 
-  <!-- BRONZE hexagon -->
-  <g transform="translate(90,80)">
-    <polygon points="0,-52 45,-26 45,26 0,52 -45,26 -45,-26" fill="#23232C" stroke="#3A3A44" stroke-width="2.5">
-      <animate attributeName="stroke-opacity" values=".6;1;.6" dur="2.5s" repeatCount="indefinite"/>
-    </polygon>
-    <text y="-12" class="medal-label" fill="#3A3A44">BRONZE</text>
-    <text y="8" class="medal-tag" fill="#92400e">Raw Landing</text>
-    <text y="24" class="medal-sub">untouched</text>
-    <!-- inbox / data-landing icon -->
-    <g transform="translate(0,-34)" fill="none" stroke="#3A3A44" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round">
-      <path d="M-7 1 v3 a1 1 0 0 0 1 1 h12 a1 1 0 0 0 1 -1 v-3"/>
-      <path d="M0 -8 v7 M-3 -4 l3 3 l3 -3"/>
-    </g>
-  </g>
+  <!-- SOURCES -->
+  <rect x="14" y="82" width="104" height="60" rx="12" fill="#16202e" stroke="#28B9FF" stroke-opacity=".55" stroke-width="1.6"/>
+  <text x="66" y="108" font-size="12" font-weight="700" fill="#5AC8FF" text-anchor="middle">SOURCES</text>
+  <text x="66" y="126" font-size="9" fill="#8a90a6" text-anchor="middle">apps · files · APIs</text>
 
-  <!-- Arrow 1 with flowing particles -->
-  <g>
-    <line x1="138" y1="80" x2="260" y2="80" stroke="#444" stroke-width="1.5" stroke-dasharray="4,3"/>
-    <polygon points="260,74 272,80 260,86" fill="#3A3A44" opacity=".8"/>
-    <!-- particles -->
-    <circle r="4" fill="#3A3A44" opacity="0" transform="translate(138,80)">
-      <animate attributeName="cx" values="0;130" dur="1.8s" repeatCount="indefinite" begin="0s"/>
-      <animate attributeName="opacity" values="0;1;1;0" dur="1.8s" repeatCount="indefinite" begin="0s"/>
-    </circle>
-    <circle r="4" fill="#9AA0B4" opacity="0" transform="translate(138,80)">
-      <animate attributeName="cx" values="0;130" dur="1.8s" repeatCount="indefinite" begin="0.6s"/>
-      <animate attributeName="opacity" values="0;1;1;0" dur="1.8s" repeatCount="indefinite" begin="0.6s"/>
-    </circle>
-    <circle r="4" fill="#5AC8FF" opacity="0" transform="translate(138,80)">
-      <animate attributeName="cx" values="0;130" dur="1.8s" repeatCount="indefinite" begin="1.2s"/>
-      <animate attributeName="opacity" values="0;1;1;0" dur="1.8s" repeatCount="indefinite" begin="1.2s"/>
-    </circle>
-    <text x="200" y="68" font-family="'JetBrains Mono',monospace" font-size="9" fill="#555" text-anchor="middle">clean+cast</text>
-    <text x="200" y="102" font-family="'JetBrains Mono',monospace" font-size="9" fill="#555" text-anchor="middle">dedupe+join</text>
-  </g>
+  <!-- coins: helper positions cx = 250 / 445 / 640, cy = 112, r = 52 -->
+  <!-- BRONZE -->
+  <circle cx="250" cy="112" r="54" fill="none" stroke="#E0A055" stroke-width="3" opacity="0"><animate attributeName="opacity" values="0;.5;0" dur="2.6s" repeatCount="indefinite"/><animate attributeName="r" values="54;60;54" dur="2.6s" repeatCount="indefinite"/></circle>
+  <circle cx="250" cy="112" r="52" fill="url(#med-bronze)" stroke="#EBB878" stroke-width="2.5"/>
+  <path d="M212 92 A52 52 0 0 1 288 92" fill="none" stroke="#FFE0B8" stroke-width="3" stroke-linecap="round" opacity=".45"/>
+  <text x="250" y="105" font-size="15" font-weight="800" fill="#3A2410" text-anchor="middle">BRONZE</text>
+  <text x="250" y="124" font-size="10" font-weight="700" fill="#5A3A18" text-anchor="middle">RAW</text>
+  <text x="250" y="188" font-size="12" font-weight="700" fill="#D08A44" text-anchor="middle">Raw landing</text>
+  <text x="250" y="205" font-size="10" fill="#8a90a6" text-anchor="middle">append-only · untouched</text>
 
-  <!-- SILVER hexagon -->
-  <g transform="translate(350,80)">
-    <polygon points="0,-52 45,-26 45,26 0,52 -45,26 -45,-26" fill="#191921" stroke="#6B6B78" stroke-width="2.5">
-      <animate attributeName="stroke-opacity" values=".6;1;.6" dur="2.8s" repeatCount="indefinite" begin=".4s"/>
-    </polygon>
-    <text y="-12" class="medal-label" fill="#d1d5db">SILVER</text>
-    <text y="8" class="medal-tag" fill="#6B6B78">Cleaned Zone</text>
-    <text y="24" class="medal-sub">validated</text>
-    <!-- gear / transformation icon -->
-    <g transform="translate(0,-34)" fill="none" stroke="#6B6B78" stroke-width="1.5" stroke-linecap="round">
-      <circle r="3"/>
-      <path d="M0 -6.5 V-4.5 M0 6.5 V4.5 M-6.5 0 H-4.5 M6.5 0 H4.5 M-4.6 -4.6 l1.4 1.4 M4.6 4.6 l-1.4 -1.4 M-4.6 4.6 l1.4 -1.4 M4.6 -4.6 l-1.4 1.4"/>
-    </g>
-  </g>
+  <!-- SILVER -->
+  <circle cx="445" cy="112" r="54" fill="none" stroke="#C8CFDA" stroke-width="3" opacity="0"><animate attributeName="opacity" values="0;.5;0" dur="2.9s" begin=".5s" repeatCount="indefinite"/><animate attributeName="r" values="54;60;54" dur="2.9s" begin=".5s" repeatCount="indefinite"/></circle>
+  <circle cx="445" cy="112" r="52" fill="url(#med-silver)" stroke="#DCE2EA" stroke-width="2.5"/>
+  <path d="M407 92 A52 52 0 0 1 483 92" fill="none" stroke="#FFFFFF" stroke-width="3" stroke-linecap="round" opacity=".5"/>
+  <text x="445" y="105" font-size="15" font-weight="800" fill="#2B3038" text-anchor="middle">SILVER</text>
+  <text x="445" y="124" font-size="10" font-weight="700" fill="#414A56" text-anchor="middle">CLEAN</text>
+  <text x="445" y="188" font-size="12" font-weight="700" fill="#AEB6C4" text-anchor="middle">Cleaned &amp; conformed</text>
+  <text x="445" y="205" font-size="10" fill="#8a90a6" text-anchor="middle">cast · dedupe · join</text>
 
-  <!-- Arrow 2 with flowing particles -->
-  <g>
-    <line x1="398" y1="80" x2="520" y2="80" stroke="#444" stroke-width="1.5" stroke-dasharray="4,3"/>
-    <polygon points="520,74 532,80 520,86" fill="#6B6B78" opacity=".8"/>
-    <!-- particles -->
-    <circle r="4" fill="#6B6B78" opacity="0" transform="translate(398,80)">
-      <animate attributeName="cx" values="0;130" dur="1.8s" repeatCount="indefinite" begin=".3s"/>
-      <animate attributeName="opacity" values="0;1;1;0" dur="1.8s" repeatCount="indefinite" begin=".3s"/>
-    </circle>
-    <circle r="4" fill="#9AA0B4" opacity="0" transform="translate(398,80)">
-      <animate attributeName="cx" values="0;130" dur="1.8s" repeatCount="indefinite" begin=".9s"/>
-      <animate attributeName="opacity" values="0;1;1;0" dur="1.8s" repeatCount="indefinite" begin=".9s"/>
-    </circle>
-    <text x="460" y="68" font-family="'JetBrains Mono',monospace" font-size="9" fill="#555" text-anchor="middle">aggregate</text>
-    <text x="460" y="102" font-family="'JetBrains Mono',monospace" font-size="9" fill="#555" text-anchor="middle">summarize</text>
-  </g>
+  <!-- GOLD -->
+  <circle cx="640" cy="112" r="54" fill="none" stroke="#F2CE62" stroke-width="3" opacity="0"><animate attributeName="opacity" values="0;.55;0" dur="2.3s" begin="1s" repeatCount="indefinite"/><animate attributeName="r" values="54;61;54" dur="2.3s" begin="1s" repeatCount="indefinite"/></circle>
+  <circle cx="640" cy="112" r="52" fill="url(#med-gold)" stroke="#F5D374" stroke-width="2.5"/>
+  <path d="M602 92 A52 52 0 0 1 678 92" fill="none" stroke="#FFF3C8" stroke-width="3" stroke-linecap="round" opacity=".5"/>
+  <text x="640" y="105" font-size="15" font-weight="800" fill="#4A360A" text-anchor="middle">GOLD</text>
+  <text x="640" y="124" font-size="10" font-weight="700" fill="#6A4E0C" text-anchor="middle">SERVE</text>
+  <text x="640" y="188" font-size="12" font-weight="700" fill="#E8B23A" text-anchor="middle">Business-ready</text>
+  <text x="640" y="205" font-size="10" fill="#8a90a6" text-anchor="middle">aggregates · KPIs</text>
 
-  <!-- GOLD hexagon -->
-  <g transform="translate(610,80)">
-    <polygon points="0,-52 45,-26 45,26 0,52 -45,26 -45,-26" fill="#23232C" stroke="#9AA0B4" stroke-width="2.5">
-      <animate attributeName="stroke-opacity" values=".6;1;.6" dur="2.2s" repeatCount="indefinite" begin=".8s"/>
-    </polygon>
-    <text y="-12" class="medal-label" fill="#9AA0B4">GOLD</text>
-    <text y="8" class="medal-tag" fill="#d97706">Business Zone</text>
-    <text y="24" class="medal-sub">KPIs, reports</text>
-    <!-- bar-chart / business metrics icon -->
-    <g transform="translate(0,-34)" fill="#9AA0B4">
-      <rect x="-7" y="-1" width="3.6" height="9" rx="1"/>
-      <rect x="-1.8" y="-5" width="3.6" height="13" rx="1"/>
-      <rect x="3.4" y="-9" width="3.6" height="17" rx="1"/>
-    </g>
-    <!-- gold glow pulse -->
-    <polygon points="0,-52 45,-26 45,26 0,52 -45,26 -45,-26" fill="none" stroke="#9AA0B4" stroke-width="4" opacity=".0">
-      <animate attributeName="opacity" values="0;.3;0" dur="2.2s" repeatCount="indefinite" begin=".8s"/>
-      <animate attributeName="stroke-width" values="4;12;4" dur="2.2s" repeatCount="indefinite" begin=".8s"/>
-    </polygon>
+  <!-- OUTPUT -->
+  <rect x="766" y="82" width="100" height="60" rx="12" fill="#16202e" stroke="#28B9FF" stroke-opacity=".55" stroke-width="1.6"/>
+  <text x="816" y="108" font-size="12" font-weight="700" fill="#5AC8FF" text-anchor="middle">BI &amp; ML</text>
+  <text x="816" y="126" font-size="9" fill="#8a90a6" text-anchor="middle">dashboards</text>
+
+  <!-- flow arrows + animated particles (coloured per source tier) -->
+  <g stroke-linecap="round">
+    <!-- sources -> bronze -->
+    <line x1="120" y1="112" x2="192" y2="112" stroke="#3A3A44" stroke-width="1.6" stroke-dasharray="4,3"/>
+    <polygon points="192,107 202,112 192,117" fill="#C67F38"/>
+    <text x="158" y="102" font-size="8.5" fill="#8a90a6" text-anchor="middle">ingest</text>
+    <circle cy="112" r="3.5" fill="#C67F38"><animate attributeName="cx" values="122;190" dur="1.8s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;1;1;0" dur="1.8s" repeatCount="indefinite"/></circle>
+    <!-- bronze -> silver -->
+    <line x1="304" y1="112" x2="389" y2="112" stroke="#3A3A44" stroke-width="1.6" stroke-dasharray="4,3"/>
+    <polygon points="389,107 399,112 389,117" fill="#AEB6C4"/>
+    <text x="346" y="102" font-size="8.5" fill="#8a90a6" text-anchor="middle">clean · cast</text>
+    <circle cy="112" r="3.5" fill="#C8CFDA"><animate attributeName="cx" values="306;387" dur="1.8s" begin=".4s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;1;1;0" dur="1.8s" begin=".4s" repeatCount="indefinite"/></circle>
+    <!-- silver -> gold -->
+    <line x1="499" y1="112" x2="584" y2="112" stroke="#3A3A44" stroke-width="1.6" stroke-dasharray="4,3"/>
+    <polygon points="584,107 594,112 584,117" fill="#EFC24A"/>
+    <text x="541" y="102" font-size="8.5" fill="#8a90a6" text-anchor="middle">aggregate</text>
+    <circle cy="112" r="3.5" fill="#F2CE62"><animate attributeName="cx" values="501;582" dur="1.8s" begin=".8s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;1;1;0" dur="1.8s" begin=".8s" repeatCount="indefinite"/></circle>
+    <!-- gold -> output -->
+    <line x1="694" y1="112" x2="762" y2="112" stroke="#3A3A44" stroke-width="1.6" stroke-dasharray="4,3"/>
+    <polygon points="762,107 772,112 762,117" fill="#5AC8FF"/>
+    <text x="728" y="102" font-size="8.5" fill="#8a90a6" text-anchor="middle">serve</text>
+    <circle cy="112" r="3.5" fill="#5AC8FF"><animate attributeName="cx" values="696;760" dur="1.8s" begin="1.2s" repeatCount="indefinite"/><animate attributeName="opacity" values="0;1;1;0" dur="1.8s" begin="1.2s" repeatCount="indefinite"/></circle>
   </g>
 </svg>
 </figure>
@@ -935,7 +910,7 @@ GROUP BY category;</pre></div>
 </ul>
 
 <div class="callout reveal">
-  <p style="margin:.2em 0"><span class="t">💡 Why keep Bronze if Silver already cleaned everything?</span></p>
+  <p style="margin:.2em 0"><span class="t">Why keep Bronze if Silver already cleaned everything?</span></p>
   <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">Bronze is your safety net. If a Silver job had a bug that silently dropped valid rows, you can fix the job and re-process from Bronze. If Bronze was overwritten with the same bug, that data is gone forever. Disk space on S3 is cheap enough that keeping the raw copy is almost always worth it.</p>
 </div>
 
@@ -944,37 +919,37 @@ GROUP BY category;</pre></div>
 <p class="reveal lead">A plain Data Lake — just files in S3 with no extra software on top — works fine as cheap storage. But the moment you start using it as your primary, reliable source of truth for business data, you will hit these six problems. Almost every data team discovers them the hard way.</p>
 
 <div class="pain reveal">
-  <h4>❌ Problem 1 — Broken files from crashed jobs (no atomic writes)</h4>
+  <h4>Problem 1 — Broken files from crashed jobs (no atomic writes)</h4>
   <p style="margin:.4em 0;font-size:14.5px;color:#dcdce4">Imagine a Spark job that rewrites the <code>orders</code> table. It needs to write 50 new Parquet files to S3. It writes 30 files successfully, then the cluster runs out of memory and crashes. Now you have 30 new files <em>and</em> 20 old files mixed together. Any query that runs on this table reads a broken mix of new and old data.</p>
   <p style="margin:.4em 0;font-size:14.5px;color:#dcdce4">In a real database, this would never happen because databases use <strong>transactions</strong>: all 50 writes succeed together, or none of them are visible to anyone — the database rolls back automatically on failure. S3 has no such concept. Each file write is an independent operation. There is no rollback, no undo. You have to manually identify which files are broken, delete them, and re-run the job — hoping no downstream pipeline already read the corrupted data.</p>
 </div>
 
 <div class="pain reveal">
-  <h4>❌ Problem 2 — Schema drift (columns change silently)</h4>
+  <h4>Problem 2 — Schema drift (columns change silently)</h4>
   <p style="margin:.4em 0;font-size:14.5px;color:#dcdce4">Your orders API is updated. The old API sent <code>first_name</code> and <code>last_name</code> as separate fields. The new API sends one combined <code>customer_name</code> field. Both old and new Parquet files land in the same S3 folder. Old files have two columns; new files have one. Nobody is notified automatically.</p>
   <p style="margin:.4em 0;font-size:14.5px;color:#dcdce4">Now <code>SELECT first_name FROM orders</code> returns data from old files and NULLs from new ones. Your customer name report is silently half-empty. This problem is discovered three weeks later when a manager notices the data looks wrong. In a database, any write that doesn't match the table's defined schema would have been rejected immediately with a clear error message. In a plain Data Lake, any file with any shape can land without complaint.</p>
 </div>
 
 <div class="pain reveal">
-  <h4>❌ Problem 3 — No row-level updates or deletes</h4>
+  <h4>Problem 3 — No row-level updates or deletes</h4>
   <p style="margin:.4em 0;font-size:14.5px;color:#dcdce4">Parquet files on object storage are <strong>immutable</strong> — once written, they cannot be edited. You cannot open a Parquet file and change a single value, the same way you cannot "edit" a file that's already been zipped and uploaded to S3. The file is fixed.</p>
   <p style="margin:.4em 0;font-size:14.5px;color:#dcdce4">This means: when a customer sends a GDPR deletion request ("delete all my data"), you cannot run <code>DELETE FROM orders WHERE customer_id = 123</code>. Instead, you must: read every Parquet file in the entire table into memory, filter out the rows for customer 123, then write the entire table back to S3 from scratch. On a 5 TB table, that's reading and writing 5 TB of data to change a handful of rows. In a database, this is one sub-millisecond operation.</p>
 </div>
 
 <div class="pain reveal">
-  <h4>❌ Problem 4 — Thousands of tiny files (the "small file problem")</h4>
+  <h4>Problem 4 — Thousands of tiny files (the "small file problem")</h4>
   <p style="margin:.4em 0;font-size:14.5px;color:#dcdce4">Streaming pipelines write data constantly — a new Parquet file every minute, or every few seconds. Each file is tiny: maybe 50 KB. After one week, you have 100,000 tiny files instead of 100 right-sized ones (50 MB each).</p>
   <p style="margin:.4em 0;font-size:14.5px;color:#dcdce4">Every file requires its own overhead: open a network connection to S3, authenticate, seek to the footer, parse the statistics, then close the connection. With 100 files, you do this 100 times. With 100,000 files, you do it 100,000 times — even if each file only has 10 rows that match your query. The majority of query time is spent on this file-opening overhead, not on actually reading data. A query that should take 10 seconds takes 40 minutes.</p>
 </div>
 
 <div class="pain reveal">
-  <h4>❌ Problem 5 — No history or "undo"</h4>
+  <h4>Problem 5 — No history or "undo"</h4>
   <p style="margin:.4em 0;font-size:14.5px;color:#dcdce4">A Silver job has a bug that silently drops 20% of orders during a JOIN operation. The bad data runs through Gold tables and into dashboards. You fix the bug the next morning — but what was the Silver table supposed to look like before the bad run? In a plain Data Lake, once the old Parquet files are overwritten or deleted, they're gone permanently.</p>
   <p style="margin:.4em 0;font-size:14.5px;color:#dcdce4">In a database with transaction history or point-in-time recovery, you would restore to yesterday's state in minutes. In a plain Data Lake, your only option is to re-run the entire pipeline from Bronze — which can take hours or days if there's a lot of data.</p>
 </div>
 
 <div class="pain reveal">
-  <h4>❌ Problem 6 — Two jobs writing at the same time (concurrent writes)</h4>
+  <h4>Problem 6 — Two jobs writing at the same time (concurrent writes)</h4>
   <p style="margin:.4em 0;font-size:14.5px;color:#dcdce4">When would two jobs write to the same table at once? More often than you'd think. A nightly batch job runs at midnight. A data science cleanup job also runs at midnight. Or a streaming job is writing new events while a batch job is updating old ones. Or two engineers trigger re-runs at the same time.</p>
   <p style="margin:.4em 0;font-size:14.5px;color:#dcdce4">Here's exactly what goes wrong. Job A reads the table and sees files [F1, F2]. It processes the data, removes F2, and creates new file F3. Job B also read [F1, F2] at the same time. It removes F1 and creates new file F4. Job A finishes first and writes its result: "F2 is gone, F3 is here." Now Job B finishes and writes its view: "F1 is gone, F4 is here." Job B's write overwrites the record of what Job A did. F3 — all of Job A's work — is no longer referenced anywhere. It's silently lost. The table now appears to have only [F2, F4], which is a mix of states that never existed at the same time.</p>
 </div>

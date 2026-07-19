@@ -200,7 +200,7 @@
 <p class="reveal">Older version-control tools (like SVN) were <strong>centralized</strong>: there was one server holding the history, and you needed a network connection to do almost anything. Git is <strong>distributed</strong> — when you <code>clone</code> a project, you get a <em>complete copy</em> of the entire history on your own machine. You can commit, branch, look at history, and compare versions entirely offline. You only need the network for the moments you deliberately <em>share</em>: pushing your work up, or pulling other people's work down.</p>
 
 <div class="callout cy reveal">
-  <p style="margin:.2em 0"><span class="t">🔑 Git ≠ GitHub</span></p>
+  <p style="margin:.2em 0"><span class="t">Git ≠ GitHub</span></p>
   <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd"><strong>Git</strong> is the version-control tool that runs on your computer — free, open-source, works with no internet. <strong>GitHub</strong> (and GitLab, Bitbucket, Azure Repos) is a <em>website</em> that hosts a shared copy of your Git project in the cloud and adds team features on top: pull requests, code review, issue tracking, and automation. You can use Git with no GitHub at all; GitHub is just the most popular place to put the shared copy. The relationship is like a camera (Git) versus a photo-sharing site (GitHub).</p>
 </div>
 
@@ -306,7 +306,7 @@
 <div class="step reveal"><div class="num-bubble">3</div><div class="body"><strong>Repository</strong> — the <code>.git</code> folder. <code>git commit</code> takes everything in the staging area and writes it into history permanently as a new commit.</div></div>
 
 <div class="callout reveal">
-  <p style="margin:.2em 0"><span class="t">💡 Why a staging area at all?</span></p>
+  <p style="margin:.2em 0"><span class="t">Why a staging area at all?</span></p>
   <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">It seems like an extra step, but it's what lets you craft <em>clean</em> history. Say you fixed a bug <em>and</em> renamed a variable in the same editing session. You can <code>git add</code> just the bug-fix files, commit them with the message "fix null check," then <code>git add</code> the rest and commit "rename for clarity." Two tidy commits instead of one muddled one — much easier for a reviewer (and future-you) to read.</p>
 </div>
 
@@ -342,7 +342,7 @@
 <span class="c"># take the snapshot. -m is the message explaining WHY.</span></pre></div>
 
 <div class="callout cy reveal">
-  <p style="margin:.2em 0"><span class="t">🧭 <code>git status</code> is your best friend</span></p>
+  <p style="margin:.2em 0"><span class="t"><code>git status</code> is your best friend</span></p>
   <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">When you're unsure what state things are in — what's modified, what's staged, what branch you're on, whether you're ahead of the server — run <code>git status</code>. It also <em>suggests the next command</em> for common situations. There's no such thing as running it too often.</p>
 </div>
 
@@ -372,12 +372,12 @@ __pycache__/
 .ipynb_checkpoints/
 .DS_Store</pre></div>
 <div class="callout cy reveal">
-  <p style="margin:.2em 0"><span class="t">⚠️ <code>.gitignore</code> only affects <em>untracked</em> files</span></p>
+  <p style="margin:.2em 0"><span class="t"><code>.gitignore</code> only affects <em>untracked</em> files</span></p>
   <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">A crucial catch: ignoring a file that Git is <em>already tracking</em> does nothing — Git keeps tracking it. So if you accidentally committed a big <code>data.parquet</code> (or a secret) and only added the pattern afterwards, you must stop tracking it explicitly: <code>git rm --cached data.parquet</code>, then commit. (The <code>--cached</code> flag removes it from Git but leaves the file on your disk.)</p>
 </div>
 
 <div class="callout gd reveal">
-  <p style="margin:.2em 0"><span class="t">⚠️ The cardinal sin: committing secrets</span></p>
+  <p style="margin:.2em 0"><span class="t">The cardinal sin: committing secrets</span></p>
   <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">Because Git keeps history <em>forever</em>, a password or API key committed once stays in the history even after you "delete" it in a later commit — anyone who clones the repo can dig it out. Add secrets to <code>.gitignore</code> <em>before</em> your first commit. If one slips through, treat it as leaked: rotate the credential immediately, then scrub history with a tool like <code>git filter-repo</code>.</p>
 </div>
 
@@ -437,7 +437,7 @@ __pycache__/
 <span class="k">git branch</span> -d feature/revenue     <span class="c"># delete the branch once it's merged</span></pre></div>
 
 <div class="callout cy reveal">
-  <p style="margin:.2em 0"><span class="t">🔀 <code>switch</code>/<code>restore</code> vs the old <code>checkout</code></span></p>
+  <p style="margin:.2em 0"><span class="t"><code>switch</code>/<code>restore</code> vs the old <code>checkout</code></span></p>
   <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">For years one overloaded command, <code>git checkout</code>, did two unrelated jobs: switching branches <em>and</em> restoring files. Modern Git split them into <code>git switch</code> (change branch) and <code>git restore</code> (discard file changes) — clearer and safer. You'll still see <code>checkout</code> everywhere in older docs and tutorials; just know it's the same machinery.</p>
 </div>
 
@@ -497,7 +497,7 @@ __pycache__/
 <span class="k">git fetch</span>                           <span class="c"># download them but DON'T merge yet (just look)</span></pre></div>
 
 <div class="callout reveal">
-  <p style="margin:.2em 0"><span class="t">💡 <code>fetch</code> vs <code>pull</code></span></p>
+  <p style="margin:.2em 0"><span class="t"><code>fetch</code> vs <code>pull</code></span></p>
   <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd"><code>git fetch</code> = "show me what's new on the server, but don't change my files yet." <code>git pull</code> = <code>fetch</code> <em>plus</em> immediately merge those changes into your current branch. <code>pull</code> is the convenient default; <code>fetch</code> is the cautious one when you want to inspect incoming changes before letting them touch your work. Fetched commits land in a read-only mirror called <code>origin/main</code> (your local snapshot of the server's branch), kept separate from your own <code>main</code> until you merge.</p>
 </div>
 
@@ -610,12 +610,12 @@ __pycache__/
 </table>
 
 <div class="callout gd reveal">
-  <p style="margin:.2em 0"><span class="t">⚠️ The golden rule of rebase</span></p>
+  <p style="margin:.2em 0"><span class="t">The golden rule of rebase</span></p>
   <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd"><strong>Never rebase commits that other people have already pulled.</strong> Because rebase <em>recreates</em> commits with new IDs, rebasing shared history makes everyone else's copy disagree with the server — a painful mess. Rule of thumb: rebase freely on your <em>own</em> un-pushed branch to clean it up; once work is shared, <strong>merge</strong> instead.</p>
 </div>
 
 <div class="callout reveal">
-  <p style="margin:.2em 0"><span class="t">💡 Rebased a branch you'd already pushed? You'll need to force-push</span></p>
+  <p style="margin:.2em 0"><span class="t">Rebased a branch you'd already pushed? You'll need to force-push</span></p>
   <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">Rebasing or <code>--amend</code>-ing rewrites commit IDs, so a normal <code>git push</code> is rejected as "non-fast-forward." On <em>your own</em> feature/PR branch this is fine and expected — push with <code>git push --force-with-lease</code>. Always prefer <code>--force-with-lease</code> over a bare <code>--force</code>: it refuses to push if someone else has added commits to the branch since you last fetched, so you can't silently clobber a teammate's work.</p>
 </div>
 
@@ -627,7 +627,7 @@ __pycache__/
      A ─ B ─ C ─ <span class="warn">D</span>     <span class="dim">origin/feature   (you don't have D yet)</span>
      A ─ B ─ <span class="ok">C'</span>         <span class="dim">your rebased local branch</span>
 
-  <span class="bad">git push --force</span>            → remote becomes A ─ B ─ C'   <span class="bad">… D is gone 💥</span>
+  <span class="bad">git push --force</span>            → remote becomes A ─ B ─ C'   <span class="bad">… D is gone </span>
   <span class="ok">git push --force-with-lease</span> → "remote moved past C?"     <span class="ok">rejected + — D is safe</span></div>
 
 <h3 class="reveal">Merge conflicts — what they are and how to fix them</h3>
@@ -763,7 +763,7 @@ SELECT revenue, country
 </table>
 
 <div class="callout cy reveal">
-  <p style="margin:.2em 0"><span class="t">🔎 What a <code>release/*</code> branch is really for</span></p>
+  <p style="margin:.2em 0"><span class="t">What a <code>release/*</code> branch is really for</span></p>
   <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">It fills the gap between "all the features for this version are done" and "it's actually shipped." When <code>develop</code> has gathered enough for, say, <strong>v1.4</strong>, you cut a <code>release/1.4</code> branch off it. From that moment the release is <strong>frozen to new features</strong> — only bug-fixes, version-number bumps, and last-minute polish are allowed in. That freeze <em>is</em> the point: testers can stabilise a <em>fixed</em> target instead of chasing a branch that keeps changing, while the rest of the team carries on adding new features to <code>develop</code> for the version <em>after</em> this one. When it's solid, <code>release/1.4</code> is merged into <code>main</code> and tagged <code>v1.4</code> (the shipped version) <em>and</em> merged back into <code>develop</code> so those bug-fixes aren't lost.</p>
   <p style="margin:.6em 0 0;font-size:14.5px;color:#cdd0dd">A <code>hotfix/*</code> branch is the same idea for an emergency: a fix to code that's <em>already live</em>, so it branches off <code>main</code> (not <code>develop</code>), then merges back into both <code>main</code> and <code>develop</code>.</p>
 </div>
@@ -852,7 +852,7 @@ SELECT revenue, country
   <tr><td><strong>GitLab Flow</strong></td><td>1 + environment branches</td><td>You want GitHub Flow but with explicit <code>staging</code>/<code>production</code> branches</td><td>Continuous w/ stages</td></tr>
 </table>
 <div class="callout cy reveal">
-  <p style="margin:.2em 0"><span class="t">🧭 The honest recommendation</span></p>
+  <p style="margin:.2em 0"><span class="t">The honest recommendation</span></p>
   <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">For most <strong>data teams</strong>, start with <strong>GitHub Flow</strong> (or GitLab Flow if you want explicit <code>dev</code>/<code>staging</code>/<code>prod</code> branches that map to your data environments). It's simple and pairs naturally with PR review and CI. Reach for <strong>Gitflow</strong> only if you genuinely ship versioned releases that need parallel maintenance. Aim for <strong>trunk-based</strong> as your team's testing and automation mature — it's where velocity peaks. <em>The biggest mistake is adopting Gitflow's complexity for a project that deploys continuously.</em></p>
 </div>
 
@@ -867,7 +867,7 @@ SELECT revenue, country
 <div class="step reveal"><div class="num-bubble">4</div><div class="body"><strong>Approve &amp; merge.</strong> Once approved and green, the PR is merged into <code>main</code>. The feature branch is then deleted.</div></div>
 
 <div class="callout reveal">
-  <p style="margin:.2em 0"><span class="t">💡 Three merge buttons, briefly</span></p>
+  <p style="margin:.2em 0"><span class="t">Three merge buttons, briefly</span></p>
   <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">GitHub offers three ways to merge a PR: a <strong>merge commit</strong> (keeps every commit + adds a knot), <strong>squash and merge</strong> (collapses the whole branch into one tidy commit on <code>main</code> — very popular for keeping history clean), and <strong>rebase and merge</strong> (replays your commits onto <code>main</code> for a linear history with no merge commit). When unsure, <em>squash and merge</em> is the friendliest default.</p>
 </div>
 
@@ -914,7 +914,7 @@ SELECT revenue, country
   <tr><td><strong>DVC</strong></td><td>ML datasets &amp; models, alongside code</td><td>Stores small pointer files in Git; the actual large files live in object storage, linked by hash</td></tr>
 </table>
 <div class="callout cy reveal">
-  <p style="margin:.2em 0"><span class="t">🔑 The mental split that ties it together</span></p>
+  <p style="margin:.2em 0"><span class="t">The mental split that ties it together</span></p>
   <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd"><strong>Code → Git.</strong> <strong>Data → Delta/lakeFS/DVC.</strong> Your transformation logic lives in Git and flows through branches, PRs, and CI like any software. The <em>data those transforms produce</em> is versioned separately by tools built for big files. Keeping that boundary clear is the core of doing version control right in data engineering — put <code>*.parquet</code> and <code>*.csv</code> in <code>.gitignore</code> and reach for the data tools instead.</p>
 </div>
 

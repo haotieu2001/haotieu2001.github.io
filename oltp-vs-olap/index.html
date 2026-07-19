@@ -233,7 +233,7 @@
 </figure>
 
 <div class="callout cy reveal">
-  <p style="margin:.2em 0"><span class="t">🔑 They usually live side by side</span></p>
+  <p style="margin:.2em 0"><span class="t">They usually live side by side</span></p>
   <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">This isn't "pick one." A real company runs <em>both</em>: the app writes to an OLTP database all day, and a pipeline (<strong>ETL/ELT</strong> — Extract, Transform, Load: software that copies and reshapes data) moves that data into an OLAP system where analysts run heavy reports — <strong>without</strong> slowing down the live app. The rest of this article explains <em>why</em> you can't just point your dashboards at the production database and call it a day.</p>
 </div>
 
@@ -304,7 +304,7 @@
 <div class="step reveal"><div class="num-bubble">3</div><div class="body">Writes modify the page <em>in memory</em> and are made durable by first appending to a <strong>write-ahead log</strong> (WAL) — a sequential journal — so a crash can't lose committed data. The actual page is flushed to disk later, in the background.</div></div>
 
 <div class="callout reveal">
-  <p style="margin:.2em 0"><span class="t">💡 Why the write-ahead log matters</span></p>
+  <p style="margin:.2em 0"><span class="t">Why the write-ahead log matters</span></p>
   <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">Appending one line to the end of a log file is far faster than hunting down and rewriting a random page in the middle of a huge table. The WAL lets the database confirm a transaction as <em>committed</em> the instant the log entry is safely on disk, while the slower page updates happen lazily afterwards. It's the trick that makes durable writes <em>fast</em> — central to OLTP.</p>
 </div>
 
@@ -338,12 +338,12 @@
 <p class="reveal">So a point lookup is: walk root → branch → leaf (a few reads, and the upper levels are almost always cached in the buffer pool), get the row's page address, read that one page. <strong>Four reads to find one row in ten million.</strong> That's the magic that makes OLTP feel instant.</p>
 
 <div class="callout cy reveal">
-  <p style="margin:.2em 0"><span class="t">🔑 An index also serves sorted ranges</span></p>
+  <p style="margin:.2em 0"><span class="t">An index also serves sorted ranges</span></p>
   <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">Because leaves are kept in sorted order and linked to their neighbours, a B-tree is great for <code>WHERE id BETWEEN 8000 AND 8100</code> or <code>ORDER BY created_at LIMIT 10</code> too — find the start, then walk sideways along the leaves. The same structure powers equality, ranges, and sorting.</p>
 </div>
 
 <div class="callout gd reveal">
-  <p style="margin:.2em 0"><span class="t">⚠️ Indexes aren't free</span></p>
+  <p style="margin:.2em 0"><span class="t">Indexes aren't free</span></p>
   <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">Each index is a separate B-tree that must be kept in sync. Every <code>INSERT</code>/<code>UPDATE</code>/<code>DELETE</code> now also has to update every index on the table — so more indexes mean <em>slower writes</em> and more disk used. In a write-heavy OLTP system you index the columns you actually search on, and no more. It's a deliberate read-speed-vs-write-cost trade.</p>
 </div>
 
@@ -379,7 +379,7 @@
 <div class="step reveal"><div class="num-bubble">5</div><div class="body"><strong>Return.</strong> The row travels back to the client. For a point lookup the whole round trip is well under a millisecond once the page is cached.</div></div>
 
 <div class="callout reveal">
-  <p style="margin:.2em 0"><span class="t">💡 The optimizer is a cost estimator</span></p>
+  <p style="margin:.2em 0"><span class="t">The optimizer is a cost estimator</span></p>
   <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">"Plan" sounds abstract but it's concrete: the optimizer assigns an estimated <em>cost</em> (roughly, how many pages it'll have to read) to each candidate strategy and picks the smallest. If its statistics are stale or wrong, it can pick a bad plan — which is why "run <code>ANALYZE</code> to refresh statistics" is a classic fix for a query that suddenly got slow.</p>
 </div>
 
@@ -502,7 +502,7 @@
 </ul>
 
 <div class="callout cy reveal">
-  <p style="margin:.2em 0"><span class="t">🔑 The min/max stats are the secret weapon</span></p>
+  <p style="margin:.2em 0"><span class="t">The min/max stats are the secret weapon</span></p>
   <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">Because the footer records, say, "in row group 7 the <code>created_at</code> column ranges from 2021-03 to 2021-04," a query filtering for <code>created_at &gt;= '2023-01-01'</code> can look at that and <strong>skip the entire row group without reading it</strong>. These per-chunk min/max summaries are sometimes called <em>zone maps</em>, and reading-the-stats-to-skip-the-data is the heart of OLAP speed.</p>
 </div>
 
@@ -594,7 +594,7 @@
 </table>
 
 <div class="callout cy reveal">
-  <p style="margin:.2em 0"><span class="t">🔑 The mirror image of OLTP</span></p>
+  <p style="margin:.2em 0"><span class="t">The mirror image of OLTP</span></p>
   <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">OLTP optimization = "read <em>fewer pages</em> to find a few rows" (indexes, caching). OLAP optimization = "read <em>fewer bytes</em> of a giant scan, then parallelize the rest" (pruning, skipping, columnar compression, MPP). Same goal — do less I/O — but pursued from opposite directions because the workloads are opposite.</p>
 </div>
 
@@ -638,7 +638,7 @@ flowchart TD
 </ul>
 
 <div class="callout reveal">
-  <p style="margin:.2em 0"><span class="t">💡 The line is blurring (HTAP &amp; the lakehouse)</span></p>
+  <p style="margin:.2em 0"><span class="t">The line is blurring (HTAP &amp; the lakehouse)</span></p>
   <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">Newer systems try to do both at once — <strong>HTAP</strong> (Hybrid Transactional/Analytical Processing) databases keep a row store for writes and a column store for reads in sync; <strong>lakehouse</strong> formats like Delta Lake and Iceberg add transactions and updates on top of columnar files. The two worlds are converging — but the underlying trade-off between row and column layout is physics, and it never fully goes away. Knowing which side of it you're on is the whole game.</p>
 </div>
 

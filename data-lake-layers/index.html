@@ -201,7 +201,7 @@
 </div>
 
 <div class="callout cy reveal">
-  <p style="margin:.2em 0"><span class="t">📖 This is a follow-up</span></p>
+  <p style="margin:.2em 0"><span class="t">This is a follow-up</span></p>
   <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">The companion post <a href="../data-lake/">Data Lake &amp; Data Lakehouse, Simply Explained</a> introduces these three layers at a high level. <strong>You don't need to read it first</strong> — this article re-explains everything it relies on — but if a term ever feels rushed here, that post covers the basics more slowly.</p>
 </div>
 
@@ -259,7 +259,7 @@
 <div class="step reveal"><div class="num-bubble">3</div><div class="body"><strong>It's cheap and effectively infinite, but has latency.</strong> Storage is a few cents per GB per month and you never run out of space. But each request has real latency (tens of milliseconds) and a cost per request. So the game is: read <em>fewer, bigger</em> objects rather than many tiny ones.</div></div>
 
 <div class="callout cy reveal">
-  <p style="margin:.2em 0"><span class="t">🧪 Ranged GET, concretely</span></p>
+  <p style="margin:.2em 0"><span class="t">Ranged GET, concretely</span></p>
   <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">First, three terms we'll lean on (all defined in the <a href="#glossary">Glossary</a> too): <strong>Parquet</strong> is the columnar file format almost every lake uses; inside one Parquet file the rows are stored in blocks called <strong>row groups</strong>; and a small index at the very end of the file, the <strong>footer</strong>, lists every row group, where it sits, and the min/max value of each column in it.</p>
   <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">Now the trick: when an engine reads a 512 MB Parquet file, it does <em>not</em> download all 512 MB. It first issues a tiny ranged GET for just the footer. From that index it learns exactly which byte ranges hold the rows it wants, then issues more ranged GETs for only those ranges. A single object gets read in a few small, targeted pieces. Keep this in mind — it's the bridge between the Storage layer and the Compute layer.</p>
 </div>
@@ -331,13 +331,13 @@
 <p class="reveal">Same data, same query — but layout alone turned 10,000 file-opens into 2. Splitting files into sub-folders by a column's value (here, the date) is called <strong>partitioning</strong>; skipping the folders a query doesn't need is <strong>partition pruning</strong>. It's the biggest speed-up you get from storage layout alone. (Strictly, storage only makes pruning <em>possible</em> through how files are arranged; the engine — using the catalogue from <a href="#metadata">Layer 2</a> — is what actually decides which folders to skip.)</p>
 
 <div class="callout cy reveal">
-  <p style="margin:.2em 0"><span class="t">🐝 What "Hive-style partitioning" means</span></p>
+  <p style="margin:.2em 0"><span class="t">What "Hive-style partitioning" means</span></p>
   <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">You'll constantly see partition folders named <code>column=value</code> — like <code>order_date=2026-06-01/</code> instead of plain <code>2026-06-01/</code>. That <code>name=value</code> style is called <strong>Hive-style partitioning</strong> (after <strong>Apache Hive</strong>, the engine that made it standard).</p>
   <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">The point of writing the column name into the folder: an engine can read <code>order_date=2026-06-01</code> and instantly know "every file in here has <code>order_date = 2026-06-01</code>" — without opening a single file. With plain <code>2026-06-01/</code> it would just see anonymous folders and couldn't tell which column the value belongs to. So this naming is what lets engines <em>recognise</em> partitions automatically and prune them.</p>
 </div>
 
 <div class="callout gd reveal">
-  <p style="margin:.2em 0"><span class="t">⚠️ One caution: don't over-partition</span></p>
+  <p style="margin:.2em 0"><span class="t">One caution: don't over-partition</span></p>
   <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">Partitioning on a column with millions of values (like <code>user_id</code>) makes millions of tiny folders, each holding a few rows — and now every query has to wade through millions of tiny files, slower than not partitioning at all. Pick columns that are <em>low-cardinality and commonly filtered</em>, like date or region, so each partition is big enough to hold at least a few sizable files.</p>
 </div>
 
@@ -441,7 +441,7 @@ Partition values known:
 </figure>
 
 <div class="callout reveal">
-  <p style="margin:.2em 0"><span class="t">💡 Why a separate layer at all?</span></p>
+  <p style="margin:.2em 0"><span class="t">Why a separate layer at all?</span></p>
   <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">Because storage is "dumb" by design (just keys and bytes), <em>something</em> has to remember what those bytes mean. Putting that knowledge in one shared catalogue means every engine — Spark, Trino, Athena — agrees on what <code>orders</code> is. Without it, each tool would need its own private notion of your tables, and they'd disagree.</p>
 </div>
 
@@ -466,7 +466,7 @@ Partition values known:
 <p class="reveal">In short: <strong>Hive Metastore</strong> if you want open and self-managed, <strong>Glue</strong> if you're on AWS and want zero servers, <strong>Unity Catalog</strong> if you need real governance (security, lineage, auditing) across an organisation.</p>
 
 <div class="callout cy reveal">
-  <p style="margin:.2em 0"><span class="t">🗂 The three-level name</span></p>
+  <p style="margin:.2em 0"><span class="t">The three-level name</span></p>
   <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">Modern catalogues organise tables as <code>catalog.schema.table</code> (e.g. <code>prod.sales.orders</code>) — three levels, like country → city → street. The first level (catalog) is the newer addition that lets one organisation cleanly separate, say, <code>prod</code> from <code>dev</code> data under a single governed system.</p>
   <p style="margin:.5em 0 0;font-size:13.5px;color:var(--muted)"><strong>Heads-up on a name clash:</strong> "schema" here means a <em>grouping of tables</em> (the "city" level) — a totally different use from the other "schema" in this article (a table's column list). Same word, two meanings; the data world overloads it and you'll see both.</p>
 </div>
@@ -488,7 +488,7 @@ Partition values known:
 </div>
 
 <div class="callout mg reveal">
-  <p style="margin:.2em 0"><span class="t">🧭 Two metadata "sub-layers," don't mix them up</span></p>
+  <p style="margin:.2em 0"><span class="t">Two metadata "sub-layers," don't mix them up</span></p>
   <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">It helps to see metadata as two cooperating things:</p>
   <ul style="font-size:14px;color:#cdd0dd;margin:.4em 0 0">
     <li><strong>The catalogue</strong> (Hive/Glue/Unity) answers "<em>what is the table named <code>orders</code> and where does it start?</em>"</li>
@@ -589,7 +589,7 @@ Partition values known:
 <div class="step reveal"><div class="num-bubble">4</div><div class="body"><strong>Schedule &amp; execute.</strong> Split the surviving files into tasks, send them to executors, and combine their partial results into the final answer.</div></div>
 
 <div class="callout cy reveal">
-  <p style="margin:.2em 0"><span class="t">🎯 The engine skips data twice — coarse, then fine</span></p>
+  <p style="margin:.2em 0"><span class="t">The engine skips data twice — coarse, then fine</span></p>
   <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">The engine reads as little as possible by skipping in two stages: <strong>(a)</strong> using the <em>metadata</em> layer's partition list, it prunes whole partitions (keeps only the <code>order_date=2026-06-01</code> prefix), then <strong>(b)</strong> inside each surviving file, the <em>storage</em> layer's Parquet footers let each executor skip row groups that can't match ("amount max is 200, skip this group"). Coarse filtering up top, fine filtering down below — and in both cases it's the engine doing the skipping, the layers below just hand it the information to do it with.</p>
 </div>
 

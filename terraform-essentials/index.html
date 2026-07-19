@@ -929,7 +929,7 @@ terraform import aws_s3_bucket.raw acme-prod-raw   <span class="c"># old way</sp
 <span class="p">resource</span> <span class="g">"aws_s3_bucket"</span> <span class="g">"data"</span> {
   <span class="k">count</span>  = <span class="o">length</span>(<span class="o">var</span>.bucket_list)              <span class="c"># ["raw","clean","curated"]</span>
   <span class="k">bucket</span> = <span class="g">"acme-${</span><span class="o">var</span>.bucket_list[<span class="o">count</span>.index]<span class="g">}"</span>
-}                                              <span class="c"># remove "clean" → everything shifts 💥</span>
+}                                              <span class="c"># remove "clean" → everything shifts </span>
 
 <span class="c"># ── for_each: keyed by NAME → aws_s3_bucket.data["raw"], ["curated"] ──</span>
 <span class="p">resource</span> <span class="g">"aws_s3_bucket"</span> <span class="g">"data"</span> {
@@ -1266,7 +1266,7 @@ cd envs/prod &amp;&amp; terraform init &amp;&amp; terraform plan</pre></div>
   <span class="k">catalog</span> = <span class="o">databricks_catalog</span>.main.name
   <span class="k">grant</span> {
     <span class="k">principal</span>  = <span class="g">"analysts"</span>
-    <span class="k">privileges</span> = [<span class="g">"USE_CATALOG"</span>, <span class="g">"SELECT"</span>]        <span class="c"># access, reviewed in a PR 🎉</span>
+    <span class="k">privileges</span> = [<span class="g">"USE_CATALOG"</span>, <span class="g">"SELECT"</span>]        <span class="c"># access, reviewed in a PR </span>
   }
 }
 
@@ -1452,7 +1452,7 @@ cd envs/prod &amp;&amp; terraform init &amp;&amp; terraform plan</pre></div>
   <span class="k">tags</span>   = <span class="o">local</span>.tags
 
   <span class="k">lifecycle</span> {
-    <span class="k">prevent_destroy</span> = <span class="o">true</span>                    <span class="c"># ⚠️ see the trap below</span>
+    <span class="k">prevent_destroy</span> = <span class="o">true</span>                    <span class="c"># see the trap below</span>
   }
 }
 
