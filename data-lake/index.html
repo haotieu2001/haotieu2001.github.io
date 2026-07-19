@@ -22,7 +22,7 @@
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,500;0,700;0,800;1,400&display=swap" rel="stylesheet">
 <style>
   :root{
-    --bg:#0b0b0f; --bg2:#121218; --panel:#15151b; --panel2:#16202e; --line:#26262f;
+    --bg:#191921; --bg2:#20202A; --panel:#23232C; --panel2:#16202e; --line:#34343F;
     --ink:#F1F1F1; --soft:#cdd0dd; --muted:#9aa0b4; --dim:#6b6b78;
     --blue:#5C78FF; --blue2:#5C78FF; --cyan:#28B9FF; --cyan2:#5AC8FF;
     --grad:linear-gradient(90deg,#5C78FF,#28B9FF,#A52AFF);
@@ -63,22 +63,22 @@
   .lead{font-size:18px;color:#e7e7ee}
   a{color:var(--cyan2)}
   hr{border:0;border-top:1px solid var(--line);margin:36px 0}
-  code{font-family:var(--font);background:#17171e;color:var(--cyan2);padding:1px 6px;border-radius:5px;font-size:.88em;border:1px solid var(--line)}
+  code{font-family:var(--font);background:#14141C;color:var(--cyan2);padding:1px 6px;border-radius:5px;font-size:.88em;border:1px solid var(--line)}
 
   .cb{margin:16px 0}
-  .cb .lang{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);background:#17171e;border:1px solid var(--line);border-bottom:none;border-radius:9px 9px 0 0;padding:4px 12px}
-  pre{margin:0;background:#0d0d12;border:1px solid var(--line);border-radius:0 10px 10px 10px;padding:14px 16px;overflow-x:auto;
+  .cb .lang{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:var(--muted);background:#14141C;border:1px solid var(--line);border-bottom:none;border-radius:9px 9px 0 0;padding:4px 12px}
+  pre{margin:0;background:#101017;border:1px solid var(--line);border-radius:0 10px 10px 10px;padding:14px 16px;overflow-x:auto;
       font-family:var(--font);font-size:13px;line-height:1.6;color:var(--soft);white-space:pre}
   pre .c{color:var(--dim)}
   pre .k{color:var(--cyan2);font-weight:700}
 
   /* callouts — all share the single cyan accent */
-  .callout{border-left:4px solid var(--cyan);background:#12141b;border-radius:0 12px 12px 0;padding:14px 18px;margin:22px 0}
-  .callout.cy,.callout.mg,.callout.gd,.callout.gr{border-color:var(--cyan);background:#12141b}
+  .callout{border-left:4px solid var(--cyan);background:#1D1D26;border-radius:0 12px 12px 0;padding:14px 18px;margin:22px 0}
+  .callout.cy,.callout.mg,.callout.gd,.callout.gr{border-color:var(--cyan);background:#1D1D26}
   .callout .t{color:var(--cyan2);font-weight:800}
   .callout.gd .t,.callout.gr .t,.callout.mg .t{color:var(--cyan2)}
 
-  .tldr{border:1px solid #28B9FF44;background:linear-gradient(180deg,#12161d,#0d0d12);border-radius:16px;padding:20px 24px;margin:26px 0}
+  .tldr{border:1px solid #28B9FF44;background:linear-gradient(180deg,#12161d,#101017);border-radius:16px;padding:20px 24px;margin:26px 0}
   .tldr h4{margin:0 0 8px;font-size:13px;letter-spacing:.2em;text-transform:uppercase;color:var(--cyan2)}
 
   .gloss{border:1px solid var(--line);background:var(--panel);border-radius:14px;padding:18px 22px;margin:24px 0}
@@ -94,10 +94,10 @@
 
   table{border-collapse:collapse;width:100%;font-size:13.5px;margin:16px 0}
   th,td{border:1px solid var(--line);padding:8px 11px;text-align:left;vertical-align:top}
-  th{background:#17171e;color:#fff}
-  tr:nth-child(even) td{background:#101014}
+  th{background:#14141C;color:#fff}
+  tr:nth-child(even) td{background:#17171E}
 
-  .diagram{background:#0d0d12;border:1px solid var(--line);border-radius:14px;padding:18px;margin:20px 0;overflow-x:auto;font-size:12.5px;line-height:1.7;color:var(--soft);white-space:pre;font-family:var(--font)}
+  .diagram{background:#101017;border:1px solid var(--line);border-radius:14px;padding:18px;margin:20px 0;overflow-x:auto;font-size:12.5px;line-height:1.7;color:var(--soft);white-space:pre;font-family:var(--font)}
   .diagram .hl{color:var(--cyan2)}
   .diagram .dim{color:var(--dim)}
   .diagram .ok{color:var(--cyan2)}
@@ -107,7 +107,7 @@
   /* problem / fix — kept mono: fix uses the cyan accent, problem stays neutral */
   .pain{border:1px solid var(--line);border-left:4px solid var(--dim);background:var(--panel);border-radius:0 14px 14px 0;padding:16px 20px;margin:14px 0}
   .pain h4{margin:0 0 4px;color:var(--muted)}
-  .fix{border:1px solid var(--line);border-left:4px solid var(--cyan);background:#12141b;border-radius:0 14px 14px 0;padding:16px 20px;margin:14px 0}
+  .fix{border:1px solid var(--line);border-left:4px solid var(--cyan);background:#1D1D26;border-radius:0 14px 14px 0;padding:16px 20px;margin:14px 0}
   .fix h4{margin:0 0 4px;color:var(--cyan2)}
 
   .step{display:flex;gap:12px;align-items:flex-start;margin:14px 0}
@@ -146,7 +146,7 @@
   <div class="byline">~28 min read · Data Engineering · Jun 2026</div>
 </header>
 
-<figure class="reveal" style="margin:18px 0 6px;background:radial-gradient(130% 150% at 50% 0%,#16202E 0%,#0B0B0F 72%);border:1px solid #26262F;border-radius:16px;padding:8px 10px;overflow:hidden">
+<figure class="reveal" style="margin:18px 0 6px;background:radial-gradient(130% 150% at 50% 0%,#16202E 0%,#191921 72%);border:1px solid #34343F;border-radius:16px;padding:8px 10px;overflow:hidden">
 <svg viewBox="0 0 880 196" width="100%" style="display:block" aria-label="From raw files to a Data Lake to a Data Lakehouse">
   <defs>
     <linearGradient id="hero-grad" x1="0" y1="0" x2="1" y2="0">
@@ -165,19 +165,19 @@
   <!-- ============ STAGE 1: RAW FILES ============ -->
   <g transform="translate(44,26)">
     <g transform="rotate(-8)">
-      <rect x="0" y="0" width="54" height="64" rx="6" fill="#101014" stroke="#9AA0B4" stroke-width="1.4"/>
+      <rect x="0" y="0" width="54" height="64" rx="6" fill="#17171E" stroke="#9AA0B4" stroke-width="1.4"/>
       <line x1="9" y1="13" x2="45" y2="13" stroke="#9AA0B4" stroke-width="1.3" opacity=".5"/>
       <text x="27" y="40" class="hero-tag" fill="#9AA0B4">CSV</text>
       <line x1="9" y1="52" x2="38" y2="52" stroke="#9AA0B4" stroke-width="1.3" opacity=".5"/>
     </g>
     <g transform="translate(15,-5) rotate(-2)">
-      <rect x="0" y="0" width="54" height="64" rx="6" fill="#101014" stroke="#9AA0B4" stroke-width="1.4"/>
+      <rect x="0" y="0" width="54" height="64" rx="6" fill="#17171E" stroke="#9AA0B4" stroke-width="1.4"/>
       <line x1="9" y1="13" x2="45" y2="13" stroke="#9AA0B4" stroke-width="1.3" opacity=".5"/>
       <text x="27" y="40" class="hero-tag" fill="#9AA0B4">JSON</text>
       <line x1="9" y1="52" x2="38" y2="52" stroke="#9AA0B4" stroke-width="1.3" opacity=".5"/>
     </g>
     <g transform="translate(32,4) rotate(7)">
-      <rect x="0" y="0" width="54" height="64" rx="6" fill="#101014" stroke="#6B6B78" stroke-width="1.4"/>
+      <rect x="0" y="0" width="54" height="64" rx="6" fill="#17171E" stroke="#6B6B78" stroke-width="1.4"/>
       <line x1="9" y1="13" x2="45" y2="13" stroke="#6B6B78" stroke-width="1.3" opacity=".5"/>
       <text x="27" y="40" class="hero-tag" fill="#6B6B78">LOGS</text>
       <line x1="9" y1="52" x2="38" y2="52" stroke="#6B6B78" stroke-width="1.3" opacity=".5"/>
@@ -188,7 +188,7 @@
 
   <!-- flow 1 -->
   <g>
-    <line x1="150" y1="78" x2="298" y2="78" stroke="#26262F" stroke-width="2" stroke-dasharray="5,4"/>
+    <line x1="150" y1="78" x2="298" y2="78" stroke="#34343F" stroke-width="2" stroke-dasharray="5,4"/>
     <polygon points="298,72 310,78 298,84" fill="#28B9FF" opacity=".85"/>
     <circle r="3.5" cy="78" fill="#9AA0B4"><animate attributeName="cx" values="150;306" dur="2s" repeatCount="indefinite" begin="0s"/><animate attributeName="opacity" values="0;1;1;0" dur="2s" repeatCount="indefinite" begin="0s"/></circle>
     <circle r="3.5" cy="78" fill="#9AA0B4"><animate attributeName="cx" values="150;306" dur="2s" repeatCount="indefinite" begin=".7s"/><animate attributeName="opacity" values="0;1;1;0" dur="2s" repeatCount="indefinite" begin=".7s"/></circle>
@@ -198,7 +198,7 @@
   <!-- ============ STAGE 2: DATA LAKE ============ -->
   <g transform="translate(326,12)">
     <!-- cloud (object storage) — wide & flat so the label fits inside -->
-    <path d="M40 54 a16 16 0 0 1 -4 -26 a16 16 0 0 1 26 -13 a20 20 0 0 1 44 0 a16 16 0 0 1 26 13 a16 16 0 0 1 -4 26 z" fill="#0B0B0F" stroke="#5AC8FF" stroke-width="1.6" opacity=".95"/>
+    <path d="M40 54 a16 16 0 0 1 -4 -26 a16 16 0 0 1 26 -13 a20 20 0 0 1 44 0 a16 16 0 0 1 26 13 a16 16 0 0 1 -4 26 z" fill="#191921" stroke="#5AC8FF" stroke-width="1.6" opacity=".95"/>
     <text x="84" y="39" class="hero-tag" fill="#5AC8FF" font-size="9">S3 / ADLS / GCS</text>
     <!-- lake water layers (medallion strata) -->
     <rect x="12" y="62" width="150" height="44" rx="8" fill="url(#lake-water)" opacity=".22"/>
@@ -218,19 +218,19 @@
 
   <!-- flow 2 -->
   <g>
-    <line x1="500" y1="78" x2="648" y2="78" stroke="#26262F" stroke-width="2" stroke-dasharray="5,4"/>
+    <line x1="500" y1="78" x2="648" y2="78" stroke="#34343F" stroke-width="2" stroke-dasharray="5,4"/>
     <polygon points="648,72 660,78 648,84" fill="#5AC8FF" opacity=".85"/>
     <circle r="3.5" cy="78" fill="#5AC8FF"><animate attributeName="cx" values="500;656" dur="2s" repeatCount="indefinite" begin=".3s"/><animate attributeName="opacity" values="0;1;1;0" dur="2s" repeatCount="indefinite" begin=".3s"/></circle>
     <circle r="3.5" cy="78" fill="#5AC8FF"><animate attributeName="cx" values="500;656" dur="2s" repeatCount="indefinite" begin="1.1s"/><animate attributeName="opacity" values="0;1;1;0" dur="2s" repeatCount="indefinite" begin="1.1s"/></circle>
     <!-- delta log chip on the bridge -->
-    <rect x="534" y="56" width="82" height="18" rx="9" fill="#15151B" stroke="#5C78FF" stroke-width="1.2"><animate attributeName="stroke-opacity" values=".5;1;.5" dur="2.4s" repeatCount="indefinite"/></rect>
+    <rect x="534" y="56" width="82" height="18" rx="9" fill="#23232C" stroke="#5C78FF" stroke-width="1.2"><animate attributeName="stroke-opacity" values=".5;1;.5" dur="2.4s" repeatCount="indefinite"/></rect>
     <text x="575" y="69" class="hero-tag" fill="#5C78FF" font-size="9">+ _delta_log</text>
   </g>
 
   <!-- ============ STAGE 3: LAKEHOUSE ============ -->
   <g transform="translate(652,24)">
     <!-- glowing reliable table -->
-    <rect x="0" y="10" width="190" height="92" rx="10" fill="#12141B" stroke="#5AC8FF" stroke-width="2">
+    <rect x="0" y="10" width="190" height="92" rx="10" fill="#1D1D26" stroke="#5AC8FF" stroke-width="2">
       <animate attributeName="stroke-opacity" values=".55;1;.55" dur="2.6s" repeatCount="indefinite"/>
     </rect>
     <!-- table grid -->
@@ -289,7 +289,7 @@
 <p class="reveal">That's a <strong>Data Lake</strong>: cheap cloud storage (specifically <strong>object storage</strong>) where you dump raw data — CSV exports from your database, JSON from your API, log files from your servers, images, audio files, anything — without worrying about structure. You load now, figure out the shape when you read it.</p>
 
 <div class="callout cy reveal">
-  <p style="margin:.2em 0"><span class="t">☁️ What is object storage?</span></p>
+  <p style="margin:.2em 0"><span class="t">What is object storage?</span></p>
   <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">Object storage (Amazon S3, Azure ADLS, Google GCS) is a cloud service that stores files at massive scale for very low cost — roughly <strong>$0.02 per GB per month</strong>. A traditional database server with the same raw storage capacity can cost 50–100× more, because the database server also has to pay for CPU, RAM, and software licences that are always running even when idle.</p>
   <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">The key trade-off: object storage is <strong>immutable by design</strong> — you can write new files and delete old ones, but you cannot edit a file in-place (like changing one row). That limitation is exactly what causes most of the problems we'll discuss in Section 05.</p>
 </div>
@@ -320,7 +320,7 @@
 <h2 id="architecture" class="reveal"><span class="n">02.</span> Data Lake architecture — what it's actually made of</h2>
 <p class="reveal">A Data Lake has three layers stacked on top of each other. Each layer builds on the one below it:</p>
 
-<figure class="reveal" style="margin:1.6em 0;background:#0B0B0F;border:1px solid #26262F;border-radius:10px;padding:1.2em 1em 1em;overflow:hidden">
+<figure class="reveal" style="margin:1.6em 0;background:#191921;border:1px solid #34343F;border-radius:10px;padding:1.2em 1em 1em;overflow:hidden">
 <figcaption style="font-size:12px;color:#555;text-align:center;margin-bottom:.8em;letter-spacing:.06em;text-transform:uppercase">Data Lake — Three-Layer Architecture</figcaption>
 <svg viewBox="0 0 740 440" width="100%" style="display:block;max-width:740px;margin:0 auto" aria-label="Data Lake Three-Layer Architecture">
   <defs>
@@ -383,7 +383,7 @@
   </defs>
 
   <!-- ── LAYER 3: Compute (green) ── -->
-  <rect class="layer-box" x="10" y="10" width="720" height="130" fill="#12141B" stroke="#5AC8FF" stroke-width="1.8">
+  <rect class="layer-box" x="10" y="10" width="720" height="130" fill="#1D1D26" stroke="#5AC8FF" stroke-width="1.8">
     <animate attributeName="stroke-opacity" values=".5;1;.5" dur="3s" repeatCount="indefinite"/>
   </rect>
   <text x="28" y="40" class="layer-title" fill="#5AC8FF">LAYER 3 (top) — Compute Layer</text>
@@ -403,7 +403,7 @@
   <text x="350" y="132" class="icon-label" fill="#5C78FF">Presto</text>
 
   <!-- ── LAYER 2: Metadata (yellow) ── -->
-  <rect class="layer-box" x="10" y="152" width="720" height="130" fill="#15151B" stroke="#9AA0B4" stroke-width="1.8">
+  <rect class="layer-box" x="10" y="152" width="720" height="130" fill="#23232C" stroke="#9AA0B4" stroke-width="1.8">
     <animate attributeName="stroke-opacity" values=".5;1;.5" dur="3.4s" repeatCount="indefinite" begin="0.5s"/>
   </rect>
   <text x="28" y="182" class="layer-title" fill="#9AA0B4">LAYER 2 (middle) — Metadata Layer</text>
@@ -419,7 +419,7 @@
   <text x="267" y="274" class="icon-label" fill="#5AC8FF">Unity Catalog</text>
 
   <!-- ── LAYER 1: Storage (cyan) ── -->
-  <rect class="layer-box" x="10" y="294" width="720" height="130" fill="#0B0B0F" stroke="#5AC8FF" stroke-width="1.8">
+  <rect class="layer-box" x="10" y="294" width="720" height="130" fill="#191921" stroke="#5AC8FF" stroke-width="1.8">
     <animate attributeName="stroke-opacity" values=".5;1;.5" dur="2.8s" repeatCount="indefinite" begin="1s"/>
   </rect>
   <text x="28" y="324" class="layer-title" fill="#5AC8FF">LAYER 1 (bottom) — Storage Layer</text>
@@ -469,7 +469,7 @@
 <h3 class="reveal">Layer 1 — Storage (the files)</h3>
 <p class="reveal">The base layer is a folder structure in cloud object storage. A typical layout looks like this:</p>
 
-<figure class="reveal" style="margin:1.6em 0;background:#0B0B0F;border:1px solid #26262F;border-radius:10px;padding:1.2em 1em 1em;overflow:hidden">
+<figure class="reveal" style="margin:1.6em 0;background:#191921;border:1px solid #34343F;border-radius:10px;padding:1.2em 1em 1em;overflow:hidden">
 <figcaption style="font-size:12px;color:#555;text-align:center;margin-bottom:.8em;letter-spacing:.06em;text-transform:uppercase">S3 Bucket — Typical Data Lake Folder Layout</figcaption>
 <svg viewBox="0 0 700 340" width="100%" style="display:block;max-width:700px;margin:0 auto" aria-label="S3 folder tree">
   <defs>
@@ -521,13 +521,13 @@
     <line x1="86" y1="90" x2="106" y2="90" stroke="#444" stroke-width="1"/>
     <text x="110" y="93" class="tree-text" fill="#7a8099">orders/</text>
   </g>
-  <line x1="108" y1="98" x2="108" y2="165" stroke="#26262F" stroke-width="1" stroke-dasharray="2,3"/>
+  <line x1="108" y1="98" x2="108" y2="165" stroke="#34343F" stroke-width="1" stroke-dasharray="2,3"/>
   <!-- partition day 01 -->
   <g class="row-anim-3">
     <line x1="108" y1="113" x2="128" y2="113" stroke="#444" stroke-width="1"/>
     <text x="132" y="116" class="tree-text" fill="#555">year=2026/month=06/day=01/</text>
   </g>
-  <line x1="130" y1="121" x2="130" y2="150" stroke="#26262F" stroke-width="1" stroke-dasharray="2,3"/>
+  <line x1="130" y1="121" x2="130" y2="150" stroke="#34343F" stroke-width="1" stroke-dasharray="2,3"/>
   <g class="row-anim-4">
     <line x1="130" y1="130" x2="150" y2="130" stroke="#444" stroke-width="1"/>
     <text x="154" y="133" class="tree-text" fill="#5AC8FF">part-00001.parquet</text>
@@ -603,7 +603,7 @@ Partitions : year, month, day</pre></div>
 <p class="reveal">When you run <code>SELECT * FROM orders WHERE order_date = '2026-06-01'</code>, Spark asks the metastore: "where is 'orders'?" The metastore replies with the S3 path and the column definitions. Spark then knows where to look and what the data looks like. <strong>The metastore is what turns a folder of files into a table you can query by name.</strong></p>
 
 <div class="callout reveal">
-  <p style="margin:.2em 0"><span class="t">📋 Hive Metastore vs Unity Catalog vs AWS Glue</span></p>
+  <p style="margin:.2em 0"><span class="t">Hive Metastore vs Unity Catalog vs AWS Glue</span></p>
   <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">These are all versions of the same idea — a catalogue that maps table names to data locations:</p>
   <ul style="font-size:14px;color:#cdd0dd;margin:.4em 0 0">
     <li><strong>Hive Metastore</strong> — the original open-source catalogue, still widely used. You manage it yourself.</li>
@@ -641,7 +641,7 @@ GROUP BY category;</pre></div>
 <h3 class="reveal">The physical layout of a Parquet file</h3>
 <p class="reveal">A single Parquet file is organised in three nested layers — row groups contain column chunks, which contain pages:</p>
 
-<figure class="reveal" style="margin:1.6em 0;background:#0B0B0F;border:1px solid #26262F;border-radius:10px;padding:1.2em 1em 1em;overflow:hidden">
+<figure class="reveal" style="margin:1.6em 0;background:#191921;border:1px solid #34343F;border-radius:10px;padding:1.2em 1em 1em;overflow:hidden">
 <figcaption style="font-size:12px;color:#555;text-align:center;margin-bottom:.8em;letter-spacing:.06em;text-transform:uppercase">Parquet File — Physical Layout</figcaption>
 <svg viewBox="0 0 700 420" width="100%" style="display:block;max-width:700px;margin:0 auto" aria-label="Parquet file internal structure">
   <defs>
@@ -662,7 +662,7 @@ GROUP BY category;</pre></div>
   <text x="160" y="28" class="pq-sub"> (e.g. part-00001.parquet · typically 128–512 MB)</text>
 
   <!-- ROW GROUP 1 -->
-  <rect x="20" y="38" width="660" height="165" rx="6" fill="#0B0B0F" stroke="#9AA0B4" stroke-width="1.2"/>
+  <rect x="20" y="38" width="660" height="165" rx="6" fill="#191921" stroke="#9AA0B4" stroke-width="1.2"/>
   <text x="32" y="56" class="pq-title" fill="#9AA0B4">ROW GROUP 1</text>
   <text x="185" y="56" class="pq-sub"> — a horizontal slice, ~128 MB of rows</text>
 
@@ -704,7 +704,7 @@ GROUP BY category;</pre></div>
   <text x="416" y="160" class="pq-label" fill="#5C78FF" text-anchor="middle">data pg 3</text>
 
   <!-- ROW GROUP 2 (collapsed) -->
-  <rect x="20" y="215" width="660" height="44" rx="6" fill="#0B0B0F" stroke="#9AA0B4" stroke-width="1.2" stroke-dasharray="4,3"/>
+  <rect x="20" y="215" width="660" height="44" rx="6" fill="#191921" stroke="#9AA0B4" stroke-width="1.2" stroke-dasharray="4,3"/>
   <text x="32" y="237" class="pq-title" fill="#9AA0B4">ROW GROUP 2</text>
   <text x="185" y="237" class="pq-sub"> — next 128 MB of rows</text>
   <text x="400" y="237" class="pq-sub">  [same column chunks as RG1…]</text>
@@ -714,28 +714,28 @@ GROUP BY category;</pre></div>
   <circle cx="648" cy="237" r="3" fill="#444"/>
 
   <!-- FOOTER -->
-  <rect x="20" y="270" width="660" height="130" rx="6" fill="#0B0B0F" stroke="#5AC8FF" stroke-width="1.5">
+  <rect x="20" y="270" width="660" height="130" rx="6" fill="#191921" stroke="#5AC8FF" stroke-width="1.5">
     <animate attributeName="stroke-opacity" values=".5;1;.5" dur="2.5s" repeatCount="indefinite"/>
   </rect>
   <text x="32" y="292" class="pq-title" fill="#5AC8FF">FILE FOOTER</text>
   <text x="165" y="292" class="pq-sub"> (a few KB at the very end — read FIRST by any query engine)</text>
 
   <!-- Footer contents -->
-  <rect x="32" y="300" width="200" height="88" rx="4" fill="#0B0B0F" stroke="#5AC8FF" stroke-width=".8"/>
+  <rect x="32" y="300" width="200" height="88" rx="4" fill="#191921" stroke="#5AC8FF" stroke-width=".8"/>
   <text x="132" y="316" class="pq-label" fill="#5AC8FF" text-anchor="middle" font-weight="700">Schema</text>
   <text x="42" y="332" class="pq-label" fill="#555">order_id  → INT64</text>
   <text x="42" y="347" class="pq-label" fill="#555">category  → STRING</text>
   <text x="42" y="362" class="pq-label" fill="#555">amount    → DOUBLE</text>
   <text x="42" y="377" class="pq-label" fill="#555">order_date→ DATE</text>
 
-  <rect x="244" y="300" width="220" height="88" rx="4" fill="#0B0B0F" stroke="#9AA0B4" stroke-width=".8"/>
+  <rect x="244" y="300" width="220" height="88" rx="4" fill="#191921" stroke="#9AA0B4" stroke-width=".8"/>
   <text x="354" y="316" class="pq-label" fill="#9AA0B4" text-anchor="middle" font-weight="700">Row Group Byte Offsets</text>
   <text x="254" y="332" class="pq-label" fill="#555">RG1 starts at offset 0</text>
   <text x="254" y="347" class="pq-label" fill="#555">RG2 starts at offset 67,108,864</text>
   <text x="254" y="362" class="pq-label" fill="#555">RG3 starts at offset 134,217,728</text>
   <text x="254" y="377" class="pq-label" fill="#555">(jump straight — no scanning)</text>
 
-  <rect x="476" y="300" width="196" height="88" rx="4" fill="#0B0B0F" stroke="#5C78FF" stroke-width=".8"/>
+  <rect x="476" y="300" width="196" height="88" rx="4" fill="#191921" stroke="#5C78FF" stroke-width=".8"/>
   <text x="574" y="316" class="pq-label" fill="#5C78FF" text-anchor="middle" font-weight="700">Column Statistics / RG</text>
   <text x="486" y="332" class="pq-label" fill="#555">amount: min=10 max=200 ← skip!</text>
   <text x="486" y="347" class="pq-label" fill="#9AA0B4">amount: min=100 max=9000 ← read</text>
@@ -789,7 +789,7 @@ GROUP BY category;</pre></div>
 </ol>
 
 <div class="callout gr reveal">
-  <p style="margin:.2em 0"><span class="t">✅ How statistics let the engine skip data it doesn't need to read</span></p>
+  <p style="margin:.2em 0"><span class="t">How statistics let the engine skip data it doesn't need to read</span></p>
   <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">Say you query <code>WHERE amount &gt; 500</code>. The engine reads the footer (a few KB) and finds:</p>
   <ul style="font-size:14px;color:#cdd0dd;margin:.4em 0 0">
     <li>Row Group 1: amount min=10, max=200 → <strong>skip entirely</strong> (200 &lt; 500, so no row here can match)</li>
@@ -816,7 +816,7 @@ GROUP BY category;</pre></div>
 <h2 id="medallion" class="reveal"><span class="n">04.</span> Zones in a Data Lake: Bronze, Silver, Gold</h2>
 <p class="reveal">Real-world Data Lakes divide storage into <strong>zones</strong> (also called <em>layers</em>). The most popular pattern is the <strong>Medallion Architecture</strong>:</p>
 
-<figure class="reveal" style="margin:1.4em 0;background:#0B0B0F;border:1px solid #26262F;border-radius:10px;padding:1.2em 1em 1em;overflow:hidden">
+<figure class="reveal" style="margin:1.4em 0;background:#191921;border:1px solid #34343F;border-radius:10px;padding:1.2em 1em 1em;overflow:hidden">
 <figcaption style="font-size:12px;color:#555;text-align:center;margin-bottom:.8em;letter-spacing:.06em;text-transform:uppercase">Medallion Architecture — Data Flow</figcaption>
 <svg viewBox="0 0 700 160" width="100%" style="display:block;max-width:700px;margin:0 auto" aria-label="Bronze Silver Gold medallion architecture">
   <defs>
@@ -831,7 +831,7 @@ GROUP BY category;</pre></div>
 
   <!-- BRONZE hexagon -->
   <g transform="translate(90,80)">
-    <polygon points="0,-52 45,-26 45,26 0,52 -45,26 -45,-26" fill="#15151B" stroke="#3A3A44" stroke-width="2.5">
+    <polygon points="0,-52 45,-26 45,26 0,52 -45,26 -45,-26" fill="#23232C" stroke="#3A3A44" stroke-width="2.5">
       <animate attributeName="stroke-opacity" values=".6;1;.6" dur="2.5s" repeatCount="indefinite"/>
     </polygon>
     <text y="-12" class="medal-label" fill="#3A3A44">BRONZE</text>
@@ -867,7 +867,7 @@ GROUP BY category;</pre></div>
 
   <!-- SILVER hexagon -->
   <g transform="translate(350,80)">
-    <polygon points="0,-52 45,-26 45,26 0,52 -45,26 -45,-26" fill="#0B0B0F" stroke="#6B6B78" stroke-width="2.5">
+    <polygon points="0,-52 45,-26 45,26 0,52 -45,26 -45,-26" fill="#191921" stroke="#6B6B78" stroke-width="2.5">
       <animate attributeName="stroke-opacity" values=".6;1;.6" dur="2.8s" repeatCount="indefinite" begin=".4s"/>
     </polygon>
     <text y="-12" class="medal-label" fill="#d1d5db">SILVER</text>
@@ -899,7 +899,7 @@ GROUP BY category;</pre></div>
 
   <!-- GOLD hexagon -->
   <g transform="translate(610,80)">
-    <polygon points="0,-52 45,-26 45,26 0,52 -45,26 -45,-26" fill="#15151B" stroke="#9AA0B4" stroke-width="2.5">
+    <polygon points="0,-52 45,-26 45,26 0,52 -45,26 -45,-26" fill="#23232C" stroke="#9AA0B4" stroke-width="2.5">
       <animate attributeName="stroke-opacity" values=".6;1;.6" dur="2.2s" repeatCount="indefinite" begin=".8s"/>
     </polygon>
     <text y="-12" class="medal-label" fill="#9AA0B4">GOLD</text>
@@ -984,7 +984,7 @@ GROUP BY category;</pre></div>
 <p class="reveal lead">The Data Lakehouse is the answer to all six problems above. The key idea: keep the cheap cloud storage (S3 / ADLS / GCS) as the foundation, but add a thin software layer on top that gives you database-style reliability.</p>
 <p class="reveal">That software layer is <strong>Delta Lake</strong> (open source, from Databricks, now a Linux Foundation project). It's not a separate database server, a cloud service you pay for, or a different file format. It's an <strong>open-source library</strong> that sits between your query engine (Spark, Databricks, Trino) and your Parquet files, adding a transaction log that makes everything safe.</p>
 
-<figure class="reveal" style="margin:1.6em 0;background:#0B0B0F;border:1px solid #26262F;border-radius:10px;padding:1.2em 1em 1em;overflow:hidden">
+<figure class="reveal" style="margin:1.6em 0;background:#191921;border:1px solid #34343F;border-radius:10px;padding:1.2em 1em 1em;overflow:hidden">
 <figcaption style="font-size:12px;color:#555;text-align:center;margin-bottom:.8em;letter-spacing:.06em;text-transform:uppercase">Data Warehouse vs Plain Data Lake vs Data Lakehouse</figcaption>
 <svg viewBox="0 0 700 310" width="100%" style="display:block;max-width:700px;margin:0 auto" aria-label="Comparison of Data Warehouse, Plain Data Lake, and Data Lakehouse">
   <defs>
@@ -1001,25 +1001,25 @@ GROUP BY category;</pre></div>
 
   <!-- Column headers -->
   <!-- DW card -->
-  <rect x="8" y="8" width="210" height="290" rx="8" fill="#0B0B0F" stroke="#5AC8FF" stroke-width="1.2"/>
+  <rect x="8" y="8" width="210" height="290" rx="8" fill="#191921" stroke="#5AC8FF" stroke-width="1.2"/>
   <text x="113" y="34" class="col-head" fill="#5AC8FF">DATA WAREHOUSE</text>
   <text x="113" y="52" font-family="'JetBrains Mono',monospace" font-size="10" fill="#555" text-anchor="middle">Redshift · BigQuery · Snowflake</text>
-  <line x1="16" y1="60" x2="210" y2="60" stroke="#26262F" stroke-width="1"/>
+  <line x1="16" y1="60" x2="210" y2="60" stroke="#34343F" stroke-width="1"/>
 
   <!-- Lake card -->
-  <rect x="244" y="8" width="210" height="290" rx="8" fill="#0B0B0F" stroke="#9AA0B4" stroke-width="1.2"/>
+  <rect x="244" y="8" width="210" height="290" rx="8" fill="#191921" stroke="#9AA0B4" stroke-width="1.2"/>
   <text x="349" y="34" class="col-head" fill="#9AA0B4">PLAIN DATA LAKE</text>
   <text x="349" y="52" font-family="'JetBrains Mono',monospace" font-size="10" fill="#555" text-anchor="middle">S3 + raw Parquet files</text>
-  <line x1="252" y1="60" x2="446" y2="60" stroke="#26262F" stroke-width="1"/>
+  <line x1="252" y1="60" x2="446" y2="60" stroke="#34343F" stroke-width="1"/>
 
   <!-- Lakehouse card (highlighted) -->
-  <rect x="480" y="4" width="214" height="298" rx="8" fill="#12141B" stroke="#5AC8FF" stroke-width="2">
+  <rect x="480" y="4" width="214" height="298" rx="8" fill="#1D1D26" stroke="#5AC8FF" stroke-width="2">
     <animate attributeName="stroke-opacity" values=".6;1;.6" dur="2.5s" repeatCount="indefinite"/>
   </rect>
   <text x="587" y="30" class="col-head" fill="#5AC8FF">DATA LAKEHOUSE</text>
   <text x="587" y="48" font-family="'JetBrains Mono',monospace" font-size="10" fill="#5AC8FF" text-anchor="middle" opacity=".7">← this one</text>
   <text x="587" y="62" font-family="'JetBrains Mono',monospace" font-size="10" fill="#555" text-anchor="middle">Delta Lake on S3 / ADLS / GCS</text>
-  <line x1="488" y1="70" x2="686" y2="70" stroke="#12141B" stroke-width="1"/>
+  <line x1="488" y1="70" x2="686" y2="70" stroke="#1D1D26" stroke-width="1"/>
 
   <!-- Feature rows -->
   <!-- Row labels (left margin) -->
@@ -1027,54 +1027,54 @@ GROUP BY category;</pre></div>
 
   <!-- Row 1: ACID -->
   <text x="113" y="92" class="col-val" fill="#5AC8FF" font-size="13">
-    ✓ ACID
+    + ACID
     <animate attributeName="opacity" values="0;1" dur=".3s" fill="freeze" begin=".3s"/>
   </text>
   <text x="349" y="92" class="col-val" fill="#9AA0B4" font-size="13">
-    ✗ ACID
+    − ACID
     <animate attributeName="opacity" values="0;1" dur=".3s" fill="freeze" begin=".5s"/>
   </text>
   <text x="587" y="92" class="col-val" fill="#5AC8FF" font-size="13">
-    ✓ ACID
+    + ACID
     <animate attributeName="opacity" values="0;1" dur=".3s" fill="freeze" begin=".7s"/>
   </text>
-  <line x1="8" y1="99" x2="694" y2="99" stroke="#26262F" stroke-width="1"/>
+  <line x1="8" y1="99" x2="694" y2="99" stroke="#34343F" stroke-width="1"/>
 
   <!-- Row 2: UPDATE / DELETE -->
-  <text x="113" y="118" class="col-val" fill="#5AC8FF" font-size="11">✓ UPDATE / DELETE<animate attributeName="opacity" values="0;1" dur=".3s" fill="freeze" begin=".4s"/></text>
-  <text x="349" y="118" class="col-val" fill="#9AA0B4" font-size="11">✗ UPDATE / DELETE<animate attributeName="opacity" values="0;1" dur=".3s" fill="freeze" begin=".6s"/></text>
-  <text x="587" y="118" class="col-val" fill="#5AC8FF" font-size="11">✓ UPDATE / DELETE<animate attributeName="opacity" values="0;1" dur=".3s" fill="freeze" begin=".8s"/></text>
-  <line x1="8" y1="126" x2="694" y2="126" stroke="#26262F" stroke-width="1"/>
+  <text x="113" y="118" class="col-val" fill="#5AC8FF" font-size="11">+ UPDATE / DELETE<animate attributeName="opacity" values="0;1" dur=".3s" fill="freeze" begin=".4s"/></text>
+  <text x="349" y="118" class="col-val" fill="#9AA0B4" font-size="11">− UPDATE / DELETE<animate attributeName="opacity" values="0;1" dur=".3s" fill="freeze" begin=".6s"/></text>
+  <text x="587" y="118" class="col-val" fill="#5AC8FF" font-size="11">+ UPDATE / DELETE<animate attributeName="opacity" values="0;1" dur=".3s" fill="freeze" begin=".8s"/></text>
+  <line x1="8" y1="126" x2="694" y2="126" stroke="#34343F" stroke-width="1"/>
 
   <!-- Row 3: Schema -->
-  <text x="113" y="146" class="col-val" fill="#5AC8FF" font-size="11">✓ Schema enforced<animate attributeName="opacity" values="0;1" dur=".3s" fill="freeze" begin=".5s"/></text>
-  <text x="349" y="146" class="col-val" fill="#9AA0B4" font-size="11">✗ Schema optional<animate attributeName="opacity" values="0;1" dur=".3s" fill="freeze" begin=".7s"/></text>
-  <text x="587" y="146" class="col-val" fill="#5AC8FF" font-size="11">✓ Schema enforced<animate attributeName="opacity" values="0;1" dur=".3s" fill="freeze" begin=".9s"/></text>
-  <line x1="8" y1="154" x2="694" y2="154" stroke="#26262F" stroke-width="1"/>
+  <text x="113" y="146" class="col-val" fill="#5AC8FF" font-size="11">+ Schema enforced<animate attributeName="opacity" values="0;1" dur=".3s" fill="freeze" begin=".5s"/></text>
+  <text x="349" y="146" class="col-val" fill="#9AA0B4" font-size="11">− Schema optional<animate attributeName="opacity" values="0;1" dur=".3s" fill="freeze" begin=".7s"/></text>
+  <text x="587" y="146" class="col-val" fill="#5AC8FF" font-size="11">+ Schema enforced<animate attributeName="opacity" values="0;1" dur=".3s" fill="freeze" begin=".9s"/></text>
+  <line x1="8" y1="154" x2="694" y2="154" stroke="#34343F" stroke-width="1"/>
 
   <!-- Row 4: History -->
-  <text x="113" y="174" class="col-val" fill="#5AC8FF" font-size="11">✓ Time travel / undo<animate attributeName="opacity" values="0;1" dur=".3s" fill="freeze" begin=".6s"/></text>
-  <text x="349" y="174" class="col-val" fill="#9AA0B4" font-size="11">✗ No history<animate attributeName="opacity" values="0;1" dur=".3s" fill="freeze" begin=".8s"/></text>
-  <text x="587" y="174" class="col-val" fill="#5AC8FF" font-size="11">✓ Time travel / undo<animate attributeName="opacity" values="0;1" dur=".3s" fill="freeze" begin="1s"/></text>
-  <line x1="8" y1="182" x2="694" y2="182" stroke="#26262F" stroke-width="1"/>
+  <text x="113" y="174" class="col-val" fill="#5AC8FF" font-size="11">+ Time travel / undo<animate attributeName="opacity" values="0;1" dur=".3s" fill="freeze" begin=".6s"/></text>
+  <text x="349" y="174" class="col-val" fill="#9AA0B4" font-size="11">− No history<animate attributeName="opacity" values="0;1" dur=".3s" fill="freeze" begin=".8s"/></text>
+  <text x="587" y="174" class="col-val" fill="#5AC8FF" font-size="11">+ Time travel / undo<animate attributeName="opacity" values="0;1" dur=".3s" fill="freeze" begin="1s"/></text>
+  <line x1="8" y1="182" x2="694" y2="182" stroke="#34343F" stroke-width="1"/>
 
   <!-- Row 5: Storage cost -->
-  <text x="113" y="202" class="col-val" fill="#9AA0B4" font-size="11">✗ Expensive storage<animate attributeName="opacity" values="0;1" dur=".3s" fill="freeze" begin=".7s"/></text>
-  <text x="349" y="202" class="col-val" fill="#5AC8FF" font-size="11">✓ Cheap storage<animate attributeName="opacity" values="0;1" dur=".3s" fill="freeze" begin=".9s"/></text>
-  <text x="587" y="202" class="col-val" fill="#5AC8FF" font-size="11">✓ Cheap storage<animate attributeName="opacity" values="0;1" dur=".3s" fill="freeze" begin="1.1s"/></text>
-  <line x1="8" y1="210" x2="694" y2="210" stroke="#26262F" stroke-width="1"/>
+  <text x="113" y="202" class="col-val" fill="#9AA0B4" font-size="11">− Expensive storage<animate attributeName="opacity" values="0;1" dur=".3s" fill="freeze" begin=".7s"/></text>
+  <text x="349" y="202" class="col-val" fill="#5AC8FF" font-size="11">+ Cheap storage<animate attributeName="opacity" values="0;1" dur=".3s" fill="freeze" begin=".9s"/></text>
+  <text x="587" y="202" class="col-val" fill="#5AC8FF" font-size="11">+ Cheap storage<animate attributeName="opacity" values="0;1" dur=".3s" fill="freeze" begin="1.1s"/></text>
+  <line x1="8" y1="210" x2="694" y2="210" stroke="#34343F" stroke-width="1"/>
 
   <!-- Row 6: File format -->
-  <text x="113" y="230" class="col-val" fill="#9AA0B4" font-size="11">✗ Proprietary format<animate attributeName="opacity" values="0;1" dur=".3s" fill="freeze" begin=".8s"/></text>
-  <text x="349" y="230" class="col-val" fill="#5AC8FF" font-size="11">✓ Any file type<animate attributeName="opacity" values="0;1" dur=".3s" fill="freeze" begin="1s"/></text>
-  <text x="587" y="230" class="col-val" fill="#5AC8FF" font-size="11">✓ Open Parquet+log<animate attributeName="opacity" values="0;1" dur=".3s" fill="freeze" begin="1.2s"/></text>
-  <line x1="8" y1="238" x2="694" y2="238" stroke="#26262F" stroke-width="1"/>
+  <text x="113" y="230" class="col-val" fill="#9AA0B4" font-size="11">− Proprietary format<animate attributeName="opacity" values="0;1" dur=".3s" fill="freeze" begin=".8s"/></text>
+  <text x="349" y="230" class="col-val" fill="#5AC8FF" font-size="11">+ Any file type<animate attributeName="opacity" values="0;1" dur=".3s" fill="freeze" begin="1s"/></text>
+  <text x="587" y="230" class="col-val" fill="#5AC8FF" font-size="11">+ Open Parquet+log<animate attributeName="opacity" values="0;1" dur=".3s" fill="freeze" begin="1.2s"/></text>
+  <line x1="8" y1="238" x2="694" y2="238" stroke="#34343F" stroke-width="1"/>
 
   <!-- Row 7: Streaming -->
   <text x="113" y="258" class="col-val" fill="#9AA0B4" font-size="11">~ Batch primary<animate attributeName="opacity" values="0;1" dur=".3s" fill="freeze" begin=".9s"/></text>
   <text x="349" y="258" class="col-val" fill="#9AA0B4" font-size="11">~ Manual streaming<animate attributeName="opacity" values="0;1" dur=".3s" fill="freeze" begin="1.1s"/></text>
-  <text x="587" y="258" class="col-val" fill="#5AC8FF" font-size="11">✓ Batch + streaming<animate attributeName="opacity" values="0;1" dur=".3s" fill="freeze" begin="1.3s"/></text>
-  <line x1="8" y1="266" x2="694" y2="266" stroke="#26262F" stroke-width="1"/>
+  <text x="587" y="258" class="col-val" fill="#5AC8FF" font-size="11">+ Batch + streaming<animate attributeName="opacity" values="0;1" dur=".3s" fill="freeze" begin="1.3s"/></text>
+  <line x1="8" y1="266" x2="694" y2="266" stroke="#34343F" stroke-width="1"/>
 
   <!-- Bottom label row -->
   <text x="113" y="290" class="col-val" fill="#5AC8FF" font-size="10" opacity=".7">Redshift · BigQuery</text>
@@ -1088,12 +1088,12 @@ GROUP BY category;</pre></div>
 <p class="reveal">Delta Lake adds one thing to your Parquet files: a <strong>transaction log</strong> stored in a folder called <code>_delta_log/</code>. This folder is automatically created by Delta Lake the first time you write a Delta table — it lives in the same S3 prefix as your Parquet files. Everything else — ACID, time travel, safe deletes, safe concurrent writes — comes from this one idea.</p>
 
 <div class="callout cy reveal">
-  <p style="margin:.2em 0"><span class="t">📋 What is the transaction log?</span></p>
+  <p style="margin:.2em 0"><span class="t">What is the transaction log?</span></p>
   <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">The transaction log is a sequence of numbered JSON files inside <code>_delta_log/</code>. Each JSON file is called a <strong>commit</strong> and records one change to the table: "these Parquet files were added, those Parquet files were removed." To know what the table looks like right now, Delta reads the log commits in order and keeps track of which files are currently "active."</p>
   <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">It's like a bank ledger: your account balance isn't stored as a single number — it's computed from the full history of deposits and withdrawals. The current table state is computed from the full history of commits.</p>
 </div>
 
-<figure class="reveal" style="margin:1.6em 0;background:#0B0B0F;border:1px solid #26262F;border-radius:10px;padding:1.2em 1em 1em;overflow:hidden">
+<figure class="reveal" style="margin:1.6em 0;background:#191921;border:1px solid #34343F;border-radius:10px;padding:1.2em 1em 1em;overflow:hidden">
 <figcaption style="font-size:12px;color:#555;text-align:center;margin-bottom:.8em;letter-spacing:.06em;text-transform:uppercase">Delta Lake — _delta_log/ Transaction Log Structure</figcaption>
 <svg viewBox="0 0 700 360" width="100%" style="display:block;max-width:700px;margin:0 auto" aria-label="Delta Lake transaction log folder structure">
   <defs>
@@ -1114,12 +1114,12 @@ GROUP BY category;</pre></div>
   <text x="62" y="32" class="dl-text" fill="#5AC8FF" font-weight="700">s3://my-lake/orders/</text>
 
   <!-- tree trunk -->
-  <line x1="35" y1="42" x2="35" y2="310" stroke="#26262F" stroke-width="1.5" stroke-dasharray="3,4"/>
+  <line x1="35" y1="42" x2="35" y2="310" stroke="#34343F" stroke-width="1.5" stroke-dasharray="3,4"/>
 
   <!-- _delta_log/ folder -->
   <g style="animation:commit-appear .4s ease both .1s">
     <line x1="35" y1="68" x2="58" y2="68" stroke="#444" stroke-width="1.2"/>
-    <rect x="60" y="58" width="140" height="22" rx="4" fill="#15151B" stroke="#5C78FF" stroke-width="1.5">
+    <rect x="60" y="58" width="140" height="22" rx="4" fill="#23232C" stroke="#5C78FF" stroke-width="1.5">
       <animate attributeName="stroke-opacity" values=".5;1;.5" dur="2.5s" repeatCount="indefinite"/>
     </rect>
     <text x="130" y="73" class="dl-text" fill="#5C78FF" font-weight="700" text-anchor="middle">_delta_log/</text>
@@ -1127,7 +1127,7 @@ GROUP BY category;</pre></div>
   </g>
 
   <!-- log subfolder branch -->
-  <line x1="130" y1="80" x2="130" y2="198" stroke="#15151B" stroke-width="1" stroke-dasharray="2,3"/>
+  <line x1="130" y1="80" x2="130" y2="198" stroke="#23232C" stroke-width="1" stroke-dasharray="2,3"/>
 
   <!-- commit 0 -->
   <g style="animation:commit-appear .4s ease both .4s">
@@ -1182,7 +1182,7 @@ GROUP BY category;</pre></div>
   <!-- part-B (active) -->
   <g style="animation:commit-appear .4s ease both 1.8s">
     <line x1="35" y1="272" x2="58" y2="272" stroke="#444" stroke-width="1.2"/>
-    <rect x="60" y="263" width="120" height="18" rx="3" fill="#12141B" stroke="#5AC8FF" stroke-width="1.2">
+    <rect x="60" y="263" width="120" height="18" rx="3" fill="#1D1D26" stroke="#5AC8FF" stroke-width="1.2">
       <animate attributeName="stroke-opacity" values=".6;1;.6" dur="2.8s" repeatCount="indefinite"/>
     </rect>
     <text x="120" y="276" class="dl-file" fill="#5AC8FF" text-anchor="middle">part-B.parquet</text>
@@ -1192,7 +1192,7 @@ GROUP BY category;</pre></div>
   <!-- part-C (active) -->
   <g style="animation:commit-appear .4s ease both 2.0s">
     <line x1="35" y1="297" x2="58" y2="297" stroke="#444" stroke-width="1.2"/>
-    <rect x="60" y="288" width="120" height="18" rx="3" fill="#12141B" stroke="#5AC8FF" stroke-width="1.2">
+    <rect x="60" y="288" width="120" height="18" rx="3" fill="#1D1D26" stroke="#5AC8FF" stroke-width="1.2">
       <animate attributeName="stroke-opacity" values=".6;1;.6" dur="2.5s" repeatCount="indefinite" begin=".4s"/>
     </rect>
     <text x="120" y="301" class="dl-file" fill="#5AC8FF" text-anchor="middle">part-C.parquet</text>
@@ -1202,7 +1202,7 @@ GROUP BY category;</pre></div>
   <!-- part-D (active) -->
   <g style="animation:commit-appear .4s ease both 2.2s">
     <line x1="35" y1="322" x2="58" y2="322" stroke="#444" stroke-width="1.2"/>
-    <rect x="60" y="313" width="120" height="18" rx="3" fill="#12141B" stroke="#5AC8FF" stroke-width="1.2">
+    <rect x="60" y="313" width="120" height="18" rx="3" fill="#1D1D26" stroke="#5AC8FF" stroke-width="1.2">
       <animate attributeName="stroke-opacity" values=".6;1;.6" dur="3s" repeatCount="indefinite" begin=".8s"/>
     </rect>
     <text x="120" y="326" class="dl-file" fill="#5AC8FF" text-anchor="middle">part-D.parquet</text>
@@ -1216,12 +1216,12 @@ GROUP BY category;</pre></div>
 </figure>
 
 <div class="callout reveal">
-  <p style="margin:.2em 0"><span class="t">⚡ What about 10,000 commits? Does Delta replay all of them every query?</span></p>
+  <p style="margin:.2em 0"><span class="t">What about 10,000 commits? Does Delta replay all of them every query?</span></p>
   <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">No. Every 10 commits, Delta automatically writes a <strong>checkpoint</strong> — a single Parquet file (not JSON) that summarises the current table state: the full list of active files. Reading the table means loading the latest checkpoint (skipping thousands of old JSON commits) and then replaying only the handful of commits that came after the checkpoint. It's like a save point in a video game: you don't replay from the very beginning, you load the most recent save and continue from there.</p>
 </div>
 
 <div class="fix reveal">
-  <h4>✅ Fix 1 — Atomic writes (no more half-written tables)</h4>
+  <h4>Fix 1 — Atomic writes (no more half-written tables)</h4>
   <p style="margin:.4em 0;font-size:14.5px;color:#dcdce4">Delta's write process has two steps:</p>
   <ol style="font-size:14.5px;color:#dcdce4;margin:.4em 0">
     <li>Write the new Parquet files to S3. <em>But don't tell the log about them yet.</em> Delta Lake readers only track files that appear in a commit. Since these new files aren't mentioned in any commit, they're invisible to readers — even though they physically exist on S3. It's not that S3 is hiding them; it's that no reader will look at them until a commit references them.</li>
@@ -1231,7 +1231,7 @@ GROUP BY category;</pre></div>
 </div>
 
 <div class="fix reveal">
-  <h4>✅ Fix 2 — Schema enforcement (no more silent schema drift)</h4>
+  <h4>Fix 2 — Schema enforcement (no more silent schema drift)</h4>
   <p style="margin:.4em 0;font-size:14.5px;color:#dcdce4">Delta stores the table's schema inside the transaction log. When a new batch of data arrives, Delta checks it against the stored schema <em>before</em> writing any files. If the incoming data has a column with the wrong type, or is missing an expected column, the write is rejected immediately with a clear error. The table stays clean. Nothing bad lands silently.</p>
   <div class="cb" style="margin:.8em 0 0"><span class="lang">PySpark · schema enforcement</span><pre><span class="c"># This works — schema matches the Delta table</span>
 df_good = spark.createDataFrame(
@@ -1248,7 +1248,7 @@ df_bad.write.format("delta").mode("append").save("/path/to/orders")
 </div>
 
 <div class="fix reveal">
-  <h4>✅ Fix 3 — Efficient row-level updates and deletes</h4>
+  <h4>Fix 3 — Efficient row-level updates and deletes</h4>
   <p style="margin:.4em 0;font-size:14.5px;color:#dcdce4">Delta supports <code>UPDATE</code>, <code>DELETE</code>, and <code>MERGE</code> (upsert). Under the hood, it first uses the <strong>column statistics recorded in the transaction log</strong> to find which Parquet files actually contain the target rows — it doesn't scan every file blindly. (These statistics — min value, max value, null count per column — are captured from each Parquet file's footer at write time and stored inside the commit JSON. At delete/update time, Delta reads the log to do this lookup, not the Parquet files themselves.) Then it uses one of two strategies to apply the change:</p>
   <ul style="font-size:14.5px;color:#dcdce4">
     <li><strong>Copy-on-Write (CoW) — the default.</strong> Delta reads only the files that contain the target rows, rewrites those files without the deleted/changed rows, and logs the old files as removed and the new files as added. All other files are untouched. Reads remain fast because there's no extra processing needed. Writes are slower if the affected files are large — but they only touch the files that actually contain the target rows, not the whole table.</li>
@@ -1272,7 +1272,7 @@ VACUUM orders RETAIN 168 HOURS;  <span class="c">-- keep 7 days of history, dele
 </div>
 
 <div class="fix reveal">
-  <h4>✅ Fix 4 — Solving the small file problem with OPTIMIZE</h4>
+  <h4>Fix 4 — Solving the small file problem with OPTIMIZE</h4>
   <p style="margin:.4em 0;font-size:14.5px;color:#dcdce4">Delta has a single command — <code>OPTIMIZE</code> — that reads many small Parquet files and combines them into a few right-sized ones (typically 128–256 MB each). The swap is logged atomically: old small files are marked as removed, new large files are added — all in one commit. If OPTIMIZE is interrupted, the table stays consistent.</p>
   <p style="margin:.4em 0;font-size:14.5px;color:#dcdce4">You can add <code>ZORDER BY</code> to sort the data at the same time. Z-Order is a technique that co-locates rows with similar values in multiple columns into the same files. Unlike a simple <code>ORDER BY (date)</code> which sorts only by one column, Z-Order interleaves multiple sort dimensions — so rows close in both <code>order_date</code> and <code>category</code> end up in the same Parquet files. The result: tighter min/max statistics per row group, so more row groups can be skipped when queries filter on both columns. Think of it as "sorting by multiple columns simultaneously rather than one at a time."</p>
   <div class="cb" style="margin:.8em 0 0"><span class="lang">SQL · compact and sort</span><pre><span class="c">-- Combine small files into right-sized ones</span>
@@ -1283,7 +1283,7 @@ OPTIMIZE orders ZORDER BY (order_date, category);</pre></div>
 </div>
 
 <div class="fix reveal">
-  <h4>✅ Fix 5 — Time travel (query any previous version of the table)</h4>
+  <h4>Fix 5 — Time travel (query any previous version of the table)</h4>
   <p style="margin:.4em 0;font-size:14.5px;color:#dcdce4">Because the transaction log records every commit ever made to the table, Delta can reconstruct what the table looked like at any past version — instantly, without restoring from a backup. A Silver job's bug corrupted data? Query the version from before the bug ran. A manager says "show me the numbers from last Tuesday"? Query the table as of that timestamp. Need to roll back? One command.</p>
   <div class="cb" style="margin:.8em 0 0"><span class="lang">SQL · time travel</span><pre><span class="c">-- Read the table as it was at commit version 3</span>
 SELECT * FROM orders VERSION AS OF 3;
@@ -1299,7 +1299,7 @@ DESCRIBE HISTORY orders;</pre></div>
 </div>
 
 <div class="fix reveal">
-  <h4>✅ Fix 6 — Safe concurrent writes (Optimistic Concurrency Control)</h4>
+  <h4>Fix 6 — Safe concurrent writes (Optimistic Concurrency Control)</h4>
   <p style="margin:.4em 0;font-size:14.5px;color:#dcdce4">Delta uses a protocol called <strong>Optimistic Concurrency Control (OCC)</strong>. Here's exactly how it works when two jobs run at the same time:</p>
   <ol style="font-size:14.5px;color:#dcdce4;margin:.4em 0">
     <li>Both jobs read the current log and see the table at version 2.</li>
@@ -1345,7 +1345,7 @@ DESCRIBE HISTORY orders;</pre></div>
 </ol>
 
 <div class="callout gr reveal">
-  <p style="margin:.2em 0"><span class="t">📚 What to read next on this blog</span></p>
+  <p style="margin:.2em 0"><span class="t">What to read next on this blog</span></p>
   <ul style="font-size:14.5px;color:#cdd0dd;margin:.4em 0 0">
     <li><a href="../delta-lake/">Delta Lake, Under the Hood</a> — go deeper: the transaction log in detail, MERGE patterns, OPTIMIZE + Z-Order, liquid clustering, streaming, change data capture, and time travel — with runnable SQL and PySpark code.</li>
     <li><a href="../lakehouse-guide/">Delta Lake vs Iceberg vs Hudi</a> — once you understand the Lakehouse, learn how the three main open table formats compare and which to choose for your stack.</li>

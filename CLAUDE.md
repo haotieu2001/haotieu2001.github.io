@@ -17,8 +17,10 @@ follow the conventions below.
 
 ### Tokens (CSS `:root`)
 ```
---bg:#0b0b0f;  --bg2:#121218;  --panel:#15151b;  --line:#26262f;
+--bg:#191921;  --bg2:#20202a;  --panel:#23232c;  --line:#34343f;
 --ink:#F1F1F1; --soft:#cdd0dd;  --muted:#9aa0b4;  --dim:#6b6b78;
+/* Canvas is a soft near-black (#191921), NOT pure black — keep it this
+   bright or brighter for readability; do not go darker than ~#141419. */
 --blue:#5C78FF; --cyan:#28B9FF; --cyan2:#5AC8FF;
 --grad:linear-gradient(90deg,#5C78FF,#28B9FF,#A52AFF);
 --font:"JetBrains Mono", ui-monospace, monospace;
@@ -44,6 +46,14 @@ follow the conventions below.
   cards = `--panel` bg + `1px var(--line)` + 14–16px radius, hover `translateY(-4px)`
   + cyan border + soft cyan shadow; pill tags (`--line` border, `#101018` bg);
   `.reveal` fade-up on scroll via IntersectionObserver.
+- **No icon glyphs / emoji.** Do NOT use checkmarks, crosses or emoji as
+  icons — ✓ ✗ ✅ ❌ ☑, and pictographs like 📚 📋 ☁ ⚡ ⚙ 🔥 📦. Use plain text
+  or restrained typographic marks instead: `+` / `−` for has/lacks, `~` for
+  partial, `·` or `—` for bullets, and word labels ("Yes"/"No", "Fix 1 —").
+  Card `.strip` labels are plain text (no leading glyph). The only symbols
+  kept are the terminal prompt `❯` in kickers/prompt-lines, the `∎` end mark,
+  and simple arrows (`→ ← ↑ ↓`). Brand logos (AWS/Databricks/etc.) may keep
+  their own colours in diagrams.
 - **Accessibility:** real semantic tags; `:focus-visible{outline:2px solid var(--cyan2)}`;
   `@media (prefers-reduced-motion:reduce)` disables animations + smooth scroll.
 
