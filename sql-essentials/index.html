@@ -172,7 +172,7 @@
 <header>
   <div class="kicker"><a class="back" href="../">❮ Data &amp; AI Engineering, Simply Explained</a></div>
   <h1>SQL for Data Engineers</h1>
-  <p class="dek">Nobody fails a SQL interview because they forgot the syntax for <code>LEFT JOIN</code>. They fail because a join quietly <strong>tripled their SUM</strong>, or a <code>NOT IN</code> returned nothing because one row was <code>NULL</code>, or they reached for a subquery where a window function was the answer. This page is the SQL that <strong>Medium and Hard problems actually test</strong>: the order the engine really runs your clauses in, joins and the fan-out trap, <strong>GROUP BY</strong>, three-valued logic, the string/number/date functions that are actually worth knowing, <strong>CASE WHEN</strong> inside aggregates, subqueries, CTEs, and window functions end to end — then views, DDL and the write side, for the half of the job that isn't a puzzle.</p>
+  <p class="dek">Almost nobody fails a SQL interview on syntax — the <code>LEFT JOIN</code> keyword is the easy part. They fail on the quiet bugs: a join that secretly <strong>triples their SUM</strong>, a <code>NOT IN</code> that returns nothing because one row was <code>NULL</code>, a subquery where a window function was the answer. This page is the SQL that <strong>Medium and Hard problems actually test</strong> — from how the engine really runs your clauses to joins, <strong>GROUP BY</strong>, window functions and CTEs — plus the write side, for the half of the job that isn't a puzzle.</p>
   <div class="stack">
     <span class="chip"><svg class="ico"><use href="#i-database"/></svg> SQL</span>
     <span class="chip"><svg class="ico"><use href="#i-window"/></svg> windows &#183; CTEs &#183; joins</span>
@@ -1574,49 +1574,49 @@ ranked <span class="k">AS</span> (
   <rect x="22" y="50" width="168" height="180" rx="8" fill="#242739" stroke="#5AC8FF"/>
   <text x="106" y="72" font-size="11" fill="#5AC8FF" text-anchor="middle" font-weight="700">CTE</text>
   <path d="M30 82 H 182" stroke="#6B6B78" stroke-width="1"/>
-  <text x="106" y="102" font-size="7.5" fill="#E7E7EE" text-anchor="middle" letter-spacing="1">LIFETIME</text>
+  <text x="106" y="102" font-size="8" fill="#E7E7EE" text-anchor="middle" letter-spacing="1">LIFETIME</text>
   <text x="106" y="115" font-size="9" fill="#E7E7EE" text-anchor="middle">one query</text>
-  <text x="106" y="138" font-size="7.5" fill="#E7E7EE" text-anchor="middle" letter-spacing="1">STORES</text>
+  <text x="106" y="138" font-size="8" fill="#E7E7EE" text-anchor="middle" letter-spacing="1">STORES</text>
   <text x="106" y="151" font-size="9" fill="#E7E7EE" text-anchor="middle">nothing</text>
-  <text x="106" y="174" font-size="7.5" fill="#E7E7EE" text-anchor="middle" letter-spacing="1">FRESHNESS</text>
+  <text x="106" y="174" font-size="8" fill="#E7E7EE" text-anchor="middle" letter-spacing="1">FRESHNESS</text>
   <text x="106" y="187" font-size="9" fill="#5AC8FF" text-anchor="middle">always live</text>
-  <text x="106" y="210" font-size="7.5" fill="#E7E7EE" text-anchor="middle" letter-spacing="1">READ COST</text>
+  <text x="106" y="210" font-size="8" fill="#E7E7EE" text-anchor="middle" letter-spacing="1">READ COST</text>
   <text x="106" y="223" font-size="9" fill="#E7E7EE" text-anchor="middle">recomputed</text>
 
   <rect x="208" y="50" width="168" height="180" rx="8" fill="#242739" stroke="#5AC8FF"/>
   <text x="292" y="72" font-size="11" fill="#5AC8FF" text-anchor="middle" font-weight="700">VIEW</text>
   <path d="M216 82 H 368" stroke="#6B6B78" stroke-width="1"/>
-  <text x="292" y="102" font-size="7.5" fill="#E7E7EE" text-anchor="middle" letter-spacing="1">LIFETIME</text>
+  <text x="292" y="102" font-size="8" fill="#E7E7EE" text-anchor="middle" letter-spacing="1">LIFETIME</text>
   <text x="292" y="115" font-size="9" fill="#E7E7EE" text-anchor="middle">persists</text>
-  <text x="292" y="138" font-size="7.5" fill="#E7E7EE" text-anchor="middle" letter-spacing="1">STORES</text>
+  <text x="292" y="138" font-size="8" fill="#E7E7EE" text-anchor="middle" letter-spacing="1">STORES</text>
   <text x="292" y="151" font-size="9" fill="#E7E7EE" text-anchor="middle">the QUERY</text>
-  <text x="292" y="174" font-size="7.5" fill="#E7E7EE" text-anchor="middle" letter-spacing="1">FRESHNESS</text>
+  <text x="292" y="174" font-size="8" fill="#E7E7EE" text-anchor="middle" letter-spacing="1">FRESHNESS</text>
   <text x="292" y="187" font-size="9" fill="#5AC8FF" text-anchor="middle">always live</text>
-  <text x="292" y="210" font-size="7.5" fill="#E7E7EE" text-anchor="middle" letter-spacing="1">READ COST</text>
+  <text x="292" y="210" font-size="8" fill="#E7E7EE" text-anchor="middle" letter-spacing="1">READ COST</text>
   <text x="292" y="223" font-size="9" fill="#E7E7EE" text-anchor="middle">recomputed</text>
 
   <rect x="394" y="50" width="168" height="180" rx="8" fill="#242739" stroke="#5C78FF"/>
   <text x="478" y="72" font-size="10" fill="#E7E7EE" text-anchor="middle" font-weight="700">MATERIALIZED</text>
   <path d="M402 82 H 554" stroke="#242739" stroke-width="1"/>
-  <text x="478" y="102" font-size="7.5" fill="#E7E7EE" text-anchor="middle" letter-spacing="1">LIFETIME</text>
+  <text x="478" y="102" font-size="8" fill="#E7E7EE" text-anchor="middle" letter-spacing="1">LIFETIME</text>
   <text x="478" y="115" font-size="9" fill="#E7E7EE" text-anchor="middle">persists</text>
-  <text x="478" y="138" font-size="7.5" fill="#E7E7EE" text-anchor="middle" letter-spacing="1">STORES</text>
+  <text x="478" y="138" font-size="8" fill="#E7E7EE" text-anchor="middle" letter-spacing="1">STORES</text>
   <text x="478" y="151" font-size="9" fill="#E7E7EE" text-anchor="middle">the DATA</text>
-  <text x="478" y="174" font-size="7.5" fill="#E7E7EE" text-anchor="middle" letter-spacing="1">FRESHNESS</text>
+  <text x="478" y="174" font-size="8" fill="#E7E7EE" text-anchor="middle" letter-spacing="1">FRESHNESS</text>
   <text x="478" y="187" font-size="9" fill="#E7E7EE" text-anchor="middle">stale · REFRESH</text>
-  <text x="478" y="210" font-size="7.5" fill="#E7E7EE" text-anchor="middle" letter-spacing="1">READ COST</text>
+  <text x="478" y="210" font-size="8" fill="#E7E7EE" text-anchor="middle" letter-spacing="1">READ COST</text>
   <text x="478" y="223" font-size="9" fill="#5AC8FF" text-anchor="middle">instant</text>
 
   <rect x="580" y="50" width="168" height="180" rx="8" fill="#242739" stroke="#5C78FF"/>
   <text x="664" y="72" font-size="11" fill="#E7E7EE" text-anchor="middle" font-weight="700">CTAS TABLE</text>
   <path d="M588 82 H 740" stroke="#242739" stroke-width="1"/>
-  <text x="664" y="102" font-size="7.5" fill="#E7E7EE" text-anchor="middle" letter-spacing="1">LIFETIME</text>
+  <text x="664" y="102" font-size="8" fill="#E7E7EE" text-anchor="middle" letter-spacing="1">LIFETIME</text>
   <text x="664" y="115" font-size="9" fill="#E7E7EE" text-anchor="middle">persists</text>
-  <text x="664" y="138" font-size="7.5" fill="#E7E7EE" text-anchor="middle" letter-spacing="1">STORES</text>
+  <text x="664" y="138" font-size="8" fill="#E7E7EE" text-anchor="middle" letter-spacing="1">STORES</text>
   <text x="664" y="151" font-size="9" fill="#E7E7EE" text-anchor="middle">the DATA</text>
-  <text x="664" y="174" font-size="7.5" fill="#E7E7EE" text-anchor="middle" letter-spacing="1">FRESHNESS</text>
+  <text x="664" y="174" font-size="8" fill="#E7E7EE" text-anchor="middle" letter-spacing="1">FRESHNESS</text>
   <text x="664" y="187" font-size="9" fill="#E7E7EE" text-anchor="middle">frozen forever</text>
-  <text x="664" y="210" font-size="7.5" fill="#E7E7EE" text-anchor="middle" letter-spacing="1">READ COST</text>
+  <text x="664" y="210" font-size="8" fill="#E7E7EE" text-anchor="middle" letter-spacing="1">READ COST</text>
   <text x="664" y="223" font-size="9" fill="#5AC8FF" text-anchor="middle">instant</text>
 
   <text x="380" y="262" font-size="10" fill="#E7E7EE" text-anchor="middle">Store the QUERY and you trade speed for freshness. Store the DATA and you trade freshness for speed.</text>
