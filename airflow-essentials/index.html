@@ -178,8 +178,7 @@
 <li><a href="#s15">15. AWS MWAA: Overview &amp; Architecture</a></li>
 <li><a href="#s16">16. Setting Up &amp; Operating an MWAA Environment</a></li>
 <li><a href="#s17">17. MWAA Integrations with the AWS Ecosystem</a></li>
-<li><a href="#s18">18. Common Pitfalls &amp; Practice Checkpoints</a></li>
-<li><a href="#s19">19. Glossary &amp; Quick Reference</a></li>
+<li><a href="#s18">18. Glossary &amp; Quick Reference</a></li>
 </ol>
 </details>
 </div>
@@ -430,7 +429,7 @@ with DAG(
   <line x1="570" y1="240" x2="600" y2="238" stroke="var(--muted)" stroke-width="1.5"/>
   <polygon points="610,237 600,233 599,243" fill="var(--muted)"/>
 
-  <text x="480" y="195" text-anchor="middle" font-size="11" font-family="var(--font)" fill="#E7E7EE">state read / write</text>
+  <text x="480" y="150" text-anchor="middle" font-size="11" font-family="var(--font)" fill="#E7E7EE">state read / write</text>
 </svg>
 <figcaption>Every arrow into the metadata database is a read or a write of shared state — the scheduler-to-executor handoff is the one direct, non-database connection.</figcaption>
 </figure>
@@ -1205,8 +1204,8 @@ class S3RowCountCheckOperator(BaseOperator):
   <text x="610" y="232" font-size="12" font-family="var(--font)" fill="var(--ink)" text-anchor="middle">Triggerer (asyncio)</text>
   <text x="610" y="250" font-size="12" font-family="var(--font)" fill="#E7E7EE" text-anchor="middle">watching N tasks</text>
 
-  <line x1="610" y1="205" x2="610" y2="182" stroke="var(--trig)"/>
-  <polygon points="610,172 605,182 615,182" fill="var(--trig)"/>
+  <line x1="610" y1="205" x2="610" y2="192" stroke="var(--trig)"/>
+  <polygon points="610,180 605,192 615,192" fill="var(--trig)"/>
 </svg>
 <figcaption><i>Poke-mode sensors tie up a worker for the whole wait; deferrable operators park the same wait in one Triggerer process and only claim a worker once the condition is actually met.</i></figcaption>
 </figure>
@@ -1595,7 +1594,7 @@ billing_pipeline()
 
   <line x1="520" y1="132" x2="530" y2="132" stroke="var(--muted)" stroke-width="1.5"/>
   <polygon points="540,132 530,127 530,137" fill="var(--muted)"/>
-  <text x="545" y="180" text-anchor="middle" font-size="10" font-family="var(--font)" fill="#E7E7EE">internal Amazon SQS queue (AWS-managed)</text>
+  <text x="398" y="178" text-anchor="middle" font-size="10" font-family="var(--font)" fill="#E7E7EE">internal Amazon SQS queue (AWS-managed)</text>
 
   <line x1="520" y1="165" x2="560" y2="215" stroke="var(--dbc)" stroke-width="1.5"/>
   <polygon points="560,215 550,210 558,204" fill="var(--dbc)"/>
@@ -1717,7 +1716,7 @@ boto3==1.34.11
 <text x="845" y="279" text-anchor="middle" font-size="13" font-family="var(--font)" fill="var(--ink)">Amazon EMR</text>
 <line x1="400" y1="130" x2="190" y2="70" stroke="var(--muted)" stroke-width="1.5"/>
 <polygon points="190,70 201,68 198,78" fill="var(--muted)"/>
-<text x="295" y="90" text-anchor="middle" font-size="12" font-family="var(--font)" fill="#E7E7EE">reads/writes</text>
+<text x="302" y="77" text-anchor="middle" font-size="12" font-family="var(--font)" fill="#E7E7EE">reads/writes</text>
 <line x1="540" y1="130" x2="750" y2="70" stroke="var(--muted)" stroke-width="1.5"/>
 <polygon points="750,70 742,78 739,68" fill="var(--muted)"/>
 <text x="645" y="90" text-anchor="middle" font-size="12" font-family="var(--font)" fill="#E7E7EE">loads to</text>
@@ -1729,10 +1728,10 @@ boto3==1.34.11
 <text x="665" y="145" text-anchor="middle" font-size="12" font-family="var(--font)" fill="#E7E7EE">sends logs to</text>
 <line x1="400" y1="190" x2="180" y2="248" stroke="var(--muted)" stroke-width="1.5"/>
 <polygon points="170,250 179,243 182,253" fill="var(--muted)"/>
-<text x="282" y="220" text-anchor="middle" font-size="12" font-family="var(--font)" fill="#E7E7EE">triggers job</text>
+<text x="296" y="242" text-anchor="middle" font-size="12" font-family="var(--font)" fill="#E7E7EE">triggers job</text>
 <line x1="540" y1="190" x2="760" y2="248" stroke="var(--muted)" stroke-width="1.5"/>
 <polygon points="770,250 761,243 758,253" fill="var(--muted)"/>
-<text x="657" y="220" text-anchor="middle" font-size="12" font-family="var(--font)" fill="#E7E7EE">triggers step</text>
+<text x="644" y="242" text-anchor="middle" font-size="12" font-family="var(--font)" fill="#E7E7EE">triggers step</text>
 </svg>
 <figcaption>MWAA fans out to the services that do the real work; it sequences and monitors, it doesn't process data itself.</figcaption>
 </figure>
@@ -1760,99 +1759,7 @@ boto3==1.34.11
 
 <!-- START s18 -->
 <p class="promptline">~/airflow <b>❯</b> airflow dags list-runs -d checkpoint_review --state failed</p>
-<h2 class="reveal" id="s18"><span class="pfx">18.</span> Common Pitfalls &amp; Practice Checkpoints</h2>
-<p class="sectionsub reveal">A study-guide pass over the mistakes that show up again and again, plus six checkpoint questions.</p>
-<div class="prose reveal">
-<p>This section doesn't introduce new material — it consolidates the mistakes that recur most often across both self-hosted Airflow and MWAA, drawn from the concepts covered in <a href="#s01">Sections 1</a> through <a href="#s17">17</a>. Treat the checklist below as a pre-flight review before promoting any DAG to production, and use the six questions after it to confirm the distinctions that matter most actually stuck.</p>
-</div>
-<details class="reveal">
-<summary>Common pitfalls checklist (expand to review)</summary>
-<ul>
-<li>Running <code>SequentialExecutor</code> with SQLite in anything resembling production — no task parallelism, and SQLite doesn't support the concurrent writes a real scheduler needs.</li>
-<li>Leaving <code>catchup=True</code> with an old <code>start_date</code> on a freshly deployed DAG, then unpausing it and triggering a flood of backfilled runs nobody intended.</li>
-<li>Passing large DataFrames or files through XCom instead of writing them to S3 or another durable store and passing only a reference.</li>
-<li>Confusing an SLA miss with a task timeout — an SLA miss only fires an alert/callback, it does not stop or fail the running task.</li>
-<li>Running expensive API or database calls at the top level of a DAG file instead of inside a task — this re-executes on every scheduler parse cycle and silently slows the whole scheduler.</li>
-<li>Leaving many poke-mode sensors running concurrently, exhausting worker/pool slots that other tasks are waiting on.</li>
-<li>Writing non-idempotent tasks that produce duplicate rows or inconsistent state when retried or backfilled.</li>
-<li>Forgetting remote logging for ephemeral workers (KubernetesExecutor pods, etc.) and losing the exact logs needed to debug a failure.</li>
-<li>Storing credentials directly as plaintext-ish Airflow Variables instead of routing them through a secrets backend.</li>
-<li>Assuming MWAA lets you choose an executor or query its metadata database directly — both are fully abstracted away by AWS.</li>
-<li>Deploying a broken or incompatible <code>requirements.txt</code> to an MWAA environment without testing it locally first, degrading the whole environment rather than just one DAG.</li>
-<li>Reaching for Task Groups when the real need was Dynamic Task Mapping (a data-driven, variable fan-out) — or over-mapping a small, fixed set of steps that didn't need it.</li>
-</ul>
-</details>
-<div class="qa reveal">
-<p class="q">Q1. Why is <code>SequentialExecutor</code> unsuitable for a production Airflow deployment?</p>
-<p>A. It cannot execute tasks in parallel and pairs by default with SQLite, which does not safely support concurrent writes<br/>
-B. It requires a Kubernetes cluster and therefore only runs inside EKS<br/>
-C. It cannot retry failed tasks under any circumstances<br/>
-D. It only supports the TaskFlow API, not classic operators</p>
-</div>
-<details>
-<summary>Show answer</summary>
-<p><b>A.</b> SequentialExecutor runs one task at a time and is normally paired with SQLite, which locks on writes — fine for local testing, unworkable once real concurrency or reliability is needed.</p>
-</details>
-<div class="qa reveal">
-<p class="q">Q2. A <code>@daily</code> DAG's run with logical date 2026-07-13 actually kicks off when?</p>
-<p>A. July 13, at midnight, before any data for July 13 exists<br/>
-B. July 14, once the July 13 data interval has fully closed<br/>
-C. July 12, one day early as a safety buffer<br/>
-D. Whenever an upstream sensor happens to succeed, regardless of date</p>
-</div>
-<details>
-<summary>Show answer</summary>
-<p><b>B.</b> The logical date marks the start of the interval a run covers, not when the run executes. Airflow only schedules a run once its data interval has closed, so the run "for July 13" fires after July 13 ends — on July 14.</p>
-</details>
-<div class="qa reveal">
-<p class="q">Q3. What's the recommended pattern for passing a large DataFrame between two tasks?</p>
-<p>A. Serialize it directly into XCom, since the metadata database has no practical size limit<br/>
-B. Write it to durable storage (e.g. S3) in one task, then pass only the path/reference through XCom to the next<br/>
-C. Store it as an Airflow Variable so any task can read it<br/>
-D. Increase the metadata database's connection timeout to accommodate the payload</p>
-</div>
-<details>
-<summary>Show answer</summary>
-<p><b>B.</b> XCom is meant for small values — a path, an ID, a short status. Large payloads belong in object storage, with only a reference passed through XCom.</p>
-</details>
-<div class="qa reveal">
-<p class="q">Q4. How does an SLA miss differ from an <code>execution_timeout</code> being hit?</p>
-<p>A. An SLA miss cancels the task immediately; <code>execution_timeout</code> only sends an alert<br/>
-B. <code>execution_timeout</code> fails the running task once its duration is exceeded; an SLA miss only triggers an alert/callback and does not stop the task<br/>
-C. They are two names for the exact same mechanism<br/>
-D. SLA misses only apply to deferrable operators</p>
-</div>
-<details>
-<summary>Show answer</summary>
-<p><b>B.</b> <code>execution_timeout</code> is enforcement — it kills the task. An SLA miss is observational — it fires a notification if a task is running later than expected, but the task keeps running.</p>
-</details>
-<div class="qa reveal">
-<p class="q">Q5. Which statement correctly describes what MWAA abstracts away versus what you still configure?</p>
-<p>A. You choose the executor and can query the metadata database directly; AWS manages the S3 bucket and IAM role<br/>
-B. AWS abstracts away executor choice and direct metadata database access; you still configure the S3 bucket, execution IAM role, environment class, and networking mode<br/>
-C. You must manually choose CeleryExecutor and stand up your own Redis broker<br/>
-D. MWAA environments have no metadata database at all</p>
-</div>
-<details>
-<summary>Show answer</summary>
-<p><b>B.</b> MWAA hides the executor and the metadata database entirely — you never pick one or connect to the other. What you do configure is the S3 bucket layout, the execution role, environment class/worker bounds, and networking mode.</p>
-</details>
-<div class="qa reveal">
-<p class="q">Q6. What's the real difference between Task Groups and Dynamic Task Mapping?</p>
-<p>A. Task Groups generate a variable number of task instances at runtime based on upstream data; Dynamic Task Mapping only groups a fixed set of tasks visually<br/>
-B. Task Groups are a UI-only grouping of a fixed, statically defined set of tasks; Dynamic Task Mapping generates a variable number of task instances at runtime (e.g. via <code>.expand()</code>) based on upstream data<br/>
-C. They are interchangeable, and either can produce a data-driven number of tasks<br/>
-D. Dynamic Task Mapping requires the KubernetesExecutor specifically</p>
-</div>
-<details>
-<summary>Show answer</summary>
-<p><b>B.</b> Task Groups only organize a known, fixed set of tasks for readability in the UI. Dynamic Task Mapping actually creates a variable number of task instances at run time, sized by upstream data.</p>
-</details>
-<!-- END s18 -->
-
-<!-- START s19 -->
-<p class="promptline">~/airflow <b>❯</b> grep -i "definition" glossary.md | wc -l</p>
-<h2 class="reveal" id="s19"><span class="pfx">19.</span> Glossary &amp; Quick Reference</h2>
+<h2 class="reveal" id="s18"><span class="pfx">18.</span> Glossary &amp; Quick Reference</h2>
 <p class="sectionsub reveal">Every term from this guide, in one scannable table, plus a self-hosted-vs-MWAA cheat sheet.</p>
 <div class="prose reveal">
 <p>Use this section as a lookup, not a read-through — each definition is deliberately terse, matching how the term was used earlier in the guide. The final table maps each core Airflow component to its self-hosted form and its MWAA equivalent, which is often the fastest way to answer "wait, do I still manage that under MWAA?"</p>
