@@ -8,10 +8,10 @@
   :root{
     --bg:#111117; --bg2:#16161D; --panel:#191921; --panel2:#16161d;
     --ink:#F1F1F1; --muted:#9aa0b4; --dim:#6b6b78;
-    --blue:#2B4FFF; --blue2:#5C78FF; --cyan:#28B9FF; --cyan2:#5AC8FF;
-    --purple:#905AFF; --magenta:#A52AFF; --magenta2:#BA5AFF;
-    --warn:#FFB020; --good:#3ddc84;
-    --sched:#5AC8FF; --web:#28B9FF; --dbc:#FFB020; --exec:#BA5AFF; --trig:#3ddc84;
+    --blue:#5C78FF; --blue2:#5C78FF; --cyan:#28B9FF; --cyan2:#5AC8FF;
+    --purple:#A56BFF; --magenta:#FF6B9D; --magenta2:#A56BFF;
+    --warn:#FFB454; --good:#5AC8FF;
+    --sched:#5AC8FF; --web:#28B9FF; --dbc:#FFB454; --exec:#A56BFF; --trig:#FF6B9D;
     --mwaa:#FF9900;
     --grad:linear-gradient(90deg,#28B9FF,#5C78FF);
     --font:"JetBrainsMono Nerd Font","JetBrains Mono","Symbols Nerd Font",ui-monospace,"Cascadia Code",Menlo,Consolas,monospace;
@@ -27,7 +27,7 @@
   a{color:var(--cyan2);text-decoration:none;border-bottom:1px dotted #5AC8FF66}
   a:hover{color:#fff;border-bottom-color:#fff}
   code{font-family:var(--font);background:#23232b;color:#5AC8FF;padding:1px 7px;border-radius:5px;font-size:.9em;border:1px solid #2f2f3a}
-  pre{background:#15151b;border:1px solid #2c2c36;border-radius:12px;padding:16px 20px;margin:20px auto;max-width:820px;overflow-x:auto}
+  pre{background:#1D1D26;border:1px solid #2c2c36;border-radius:12px;padding:16px 20px;margin:20px auto;max-width:820px;overflow-x:auto}
   pre code{background:none;border:none;padding:0;color:#dcdce4;font-size:13px;line-height:1.65;white-space:pre}
   pre .c1{color:var(--muted)}
   header.hero{padding:64px 22px 30px;text-align:center;position:relative;overflow:hidden}
@@ -50,28 +50,28 @@
   .sectionsub{color:var(--muted);margin-top:0}
   figure.fig{margin:30px auto;text-align:center;max-width:960px}
   figure.diagram{margin:30px auto;text-align:center;max-width:960px}
-  figure.diagram svg{width:100%;height:auto;display:block;background:#121212;border:1px solid #2c2c36;border-radius:16px;box-shadow:0 18px 50px rgba(0,0,0,.45)}
+  figure.diagram svg{width:100%;height:auto;display:block;background:#16161D;border:1px solid #2c2c36;border-radius:16px;box-shadow:0 18px 50px rgba(0,0,0,.45)}
   figure.diagram figcaption{font-size:12.5px;color:var(--muted);margin-top:10px;font-style:italic}
-  .tldr{border:1px solid #2f3a66;background:linear-gradient(180deg,#15182a,#121212);border-radius:16px;padding:22px 26px;margin:30px auto;max-width:820px}
+  .tldr{border:1px solid #2C2C38;background:linear-gradient(180deg,#191921,#16161D);border-radius:16px;padding:22px 26px;margin:30px auto;max-width:820px}
   .tldr h4{margin:0 0 8px;font-size:13px;letter-spacing:.2em;text-transform:uppercase;color:var(--cyan2)}
-  .callout{border-left:4px solid var(--blue2);background:#16182a;border-radius:0 12px 12px 0;padding:14px 20px;margin:24px auto;max-width:780px}
+  .callout{border-left:4px solid var(--blue2);background:#191921;border-radius:0 12px 12px 0;padding:14px 20px;margin:24px auto;max-width:780px}
   .callout.cy{border-color:var(--cyan)} .callout.mg{border-color:var(--magenta2)} .callout.gd{border-color:#5AC8FF}
   .callout.wn{border-color:var(--warn);background:#191921}
   .callout.ok{border-color:var(--good);background:#191921}
   .pull{font-size:22px;line-height:1.45;font-weight:700;color:#fff;margin:34px auto;max-width:760px;padding-left:18px;border-left:4px solid transparent;border-image:var(--grad) 1;}
-  .def{border:1px solid #2c2c36;background:#15151b;border-radius:12px;padding:14px 18px;margin:16px auto;max-width:780px}
+  .def{border:1px solid #2c2c36;background:#1D1D26;border-radius:12px;padding:14px 18px;margin:16px auto;max-width:780px}
   .def .t{font-weight:700;color:#fff}
   .def .ex{color:var(--muted);font-size:14px;margin-top:6px}
   .def .ex b{color:#5AC8FF}
   .tag{display:inline-flex;align-items:center;gap:9px;padding:4px 12px;border-radius:999px;font-size:13px;font-weight:700;border:1px solid}
   .tag.sched{color:var(--sched);border-color:#5AC8FF55;background:#5AC8FF14}
   .tag.web{color:var(--web);border-color:#28B9FF55;background:#28B9FF14}
-  .tag.dbc{color:var(--dbc);border-color:#FFB02055;background:#FFB02014}
-  .tag.exec{color:var(--exec);border-color:#BA5AFF55;background:#BA5AFF14}
-  .tag.trig{color:var(--trig);border-color:#3ddc8455;background:#3ddc8414}
+  .tag.dbc{color:var(--dbc);border-color:#FFB45455;background:#FFB45414}
+  .tag.exec{color:var(--exec);border-color:#A56BFF55;background:#A56BFF14}
+  .tag.trig{color:var(--trig);border-color:#FF6B9D55;background:#FF6B9D14}
   .tag.mwaa{color:var(--mwaa);border-color:#FF990055;background:#FF990014}
-  .tag.int{color:#5AC8FF;border-color:#5C78FF55;background:linear-gradient(90deg,#5C78FF14,#BA5AFF14)}
-  .profile{border:1px solid #2c2c36;border-radius:16px;padding:22px 26px;margin:22px auto;max-width:820px;background:#15151b}
+  .tag.int{color:#5AC8FF;border-color:#5C78FF55;background:linear-gradient(90deg,#5C78FF14,#A56BFF14)}
+  .profile{border:1px solid #2c2c36;border-radius:16px;padding:22px 26px;margin:22px auto;max-width:820px;background:#1D1D26}
   .profile.sched{border-top:3px solid var(--sched)} .profile.web{border-top:3px solid var(--web)}
   .profile.dbc{border-top:3px solid var(--dbc)} .profile.exec{border-top:3px solid var(--exec)}
   .profile.trig{border-top:3px solid var(--trig)} .profile.mwaa{border-top:3px solid var(--mwaa)}
@@ -82,8 +82,8 @@
   .tablewrap{overflow-x:auto;margin:22px auto;max-width:900px}
   table{border-collapse:collapse;width:100%;font-size:13.5px;min-width:640px}
   th,td{border:1px solid #2c2c36;padding:10px 12px;text-align:left;vertical-align:top}
-  th{background:#1d1d27;color:#fff;font-weight:700}
-  tr:nth-child(even) td{background:#161620}
+  th{background:#1D1D26;color:#fff;font-weight:700}
+  tr:nth-child(even) td{background:#17171E}
   .cell-sched{color:var(--sched);font-weight:700}.cell-web{color:var(--web);font-weight:700}
   .cell-dbc{color:var(--dbc);font-weight:700}.cell-exec{color:var(--exec);font-weight:700}
   .cell-trig{color:var(--trig);font-weight:700}.cell-mwaa{color:var(--mwaa);font-weight:700}
@@ -92,9 +92,9 @@
   .js .reveal{opacity:0;transform:translateY(22px);transition:opacity .7s ease,transform .7s ease}
   .js .reveal.in{opacity:1;transform:none}
   @media (prefers-reduced-motion: reduce){.js .reveal{opacity:1;transform:none;transition:none}}
-  details{border:1px solid #2c2c36;border-radius:12px;padding:6px 16px;margin:16px auto;max-width:780px;background:#141419}
+  details{border:1px solid #2c2c36;border-radius:12px;padding:6px 16px;margin:16px auto;max-width:780px;background:#191921}
   summary{cursor:pointer;font-weight:700;color:var(--cyan2);padding:8px 0}
-  .toc{border:1px solid #2c2c36;border-radius:16px;padding:8px 24px 18px;margin:30px auto;max-width:820px;background:#15151b}
+  .toc{border:1px solid #2c2c36;border-radius:16px;padding:8px 24px 18px;margin:30px auto;max-width:820px;background:#1D1D26}
   .toc summary{font-size:14px;letter-spacing:.15em;text-transform:uppercase}
   .toc ol{columns:2;gap:28px;padding-left:20px;margin:8px 0 0;list-style:none}
   .toc li{margin:6px 0;font-size:14px}
@@ -104,7 +104,7 @@
   hr{border:0;border-top:1px solid #2c2c36;margin:48px auto;max-width:760px}
   .end{color:var(--muted);font-size:13px;max-width:760px;margin:28px auto}
   .footnav a{margin-right:18px}
-  .qa{border:1px solid #2c2c36;border-radius:12px;padding:16px 20px;margin:18px auto;max-width:780px;background:#141419}
+  .qa{border:1px solid #2c2c36;border-radius:12px;padding:16px 20px;margin:18px auto;max-width:780px;background:#191921}
   .qa .q{font-weight:700;color:#fff;margin-bottom:6px}
 
   .nav{position:sticky;top:0;z-index:60;background:rgba(25,25,33,.82);backdrop-filter:blur(10px);border-bottom:1px solid #3C4356}
@@ -127,8 +127,8 @@
   <h1>Apache Airflow Essentials: Architecture, DAGs &amp; AWS MWAA</h1>
   <p class="dek">A complete, detailed tour of Apache Airflow — DAGs, operators, the scheduler/executor/triggerer architecture, TaskFlow, dynamic task mapping, providers, and production best practices — followed by an in-depth look at Amazon Managed Workflows for Apache Airflow (MWAA): its architecture, setup, networking and security, cost, and how it plugs into the wider AWS ecosystem.</p>
   <div class="logos">
-    <figure><svg viewBox="0 0 100 100" role="img" aria-label="Airflow DAG icon"><circle cx="50" cy="50" r="44" fill="#15151b" stroke="#28B9FF" stroke-width="2"/><circle cx="30" cy="35" r="7" fill="#5AC8FF"/><circle cx="70" cy="35" r="7" fill="#5AC8FF"/><circle cx="50" cy="65" r="7" fill="#BA5AFF"/><line x1="30" y1="35" x2="50" y2="65" stroke="#5AC8FF" stroke-width="2"/><line x1="70" y1="35" x2="50" y2="65" stroke="#5AC8FF" stroke-width="2"/></svg><figcaption>DAG</figcaption></figure>
-    <figure><svg viewBox="0 0 100 100" role="img" aria-label="AWS MWAA icon"><circle cx="50" cy="50" r="44" fill="#15151b" stroke="#FF9900" stroke-width="2"/><rect x="30" y="32" width="40" height="10" rx="3" fill="#FF9900"/><rect x="30" y="46" width="40" height="10" rx="3" fill="#FFA733"/><rect x="30" y="60" width="40" height="10" rx="3" fill="#FFB966"/></svg><figcaption>MWAA</figcaption></figure>
+    <figure><svg viewBox="0 0 100 100" role="img" aria-label="Airflow DAG icon"><circle cx="50" cy="50" r="44" fill="#1D1D26" stroke="#28B9FF" stroke-width="2"/><circle cx="30" cy="35" r="7" fill="#5AC8FF"/><circle cx="70" cy="35" r="7" fill="#5AC8FF"/><circle cx="50" cy="65" r="7" fill="#A56BFF"/><line x1="30" y1="35" x2="50" y2="65" stroke="#5AC8FF" stroke-width="2"/><line x1="70" y1="35" x2="50" y2="65" stroke="#5AC8FF" stroke-width="2"/></svg><figcaption>DAG</figcaption></figure>
+    <figure><svg viewBox="0 0 100 100" role="img" aria-label="AWS MWAA icon"><circle cx="50" cy="50" r="44" fill="#1D1D26" stroke="#FF9900" stroke-width="2"/><rect x="30" y="32" width="40" height="10" rx="3" fill="#FF9900"/><rect x="30" y="46" width="40" height="10" rx="3" fill="#FFA733"/><rect x="30" y="60" width="40" height="10" rx="3" fill="#FFB966"/></svg><figcaption>MWAA</figcaption></figure>
   </div>
   <p class="byline">~100 min read · updated 2026 · a field guide, not official Apache or AWS documentation · no assumed orchestration background</p>
 </header>
