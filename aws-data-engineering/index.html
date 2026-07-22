@@ -1518,8 +1518,9 @@ with DAG(
     wait_for_bronze &gt;&gt; [silver_glue, silver_lambda] &gt;&gt; dq_check &gt;&gt; gold_glue</code></pre>
 
 <figure class="diagram reveal">
-<svg viewBox="0 0 860 210" role="img" aria-label="An Airflow DAG task graph: wait for bronze data, then run two silver transforms in parallel (a Glue job and a Lambda-backed Python task), then a data quality check, then the gold aggregation job">
+<svg viewBox="0 0 860 228" role="img" aria-label="An Airflow DAG task graph: wait for bronze data, then run two silver transforms in parallel (a Glue job and a Lambda-backed Python task), then a data quality check, then the gold aggregation job">
 <text x="430" y="18" text-anchor="middle" font-size="11" fill="#E7E7EE" font-family="var(--font)">Airflow DAG task graph — runs every 6 hours</text>
+<g transform="translate(0,18)">
 <g font-family="var(--font)" font-size="10" fill="var(--ink)">
 <line x1="170" y1="110" x2="225" y2="40" stroke="var(--cyan2)" stroke-width="1.5"/>
 <line x1="170" y1="110" x2="225" y2="160" stroke="var(--cyan2)" stroke-width="1.5"/>
@@ -1538,6 +1539,7 @@ with DAG(
 <text x="755" y="114" text-anchor="middle">gold_aggregate_job</text>
 </g>
 <text x="430" y="200" text-anchor="middle" font-size="10.5" fill="#E7E7EE" font-family="var(--font)">Scheduled, executed, and retried entirely by MWAA's Airflow scheduler + workers</text>
+</g>
 </svg>
 <figcaption>The same pipeline shape as the Step Functions worked example, expressed as Airflow tasks and <code>&gt;&gt;</code> dependencies instead of ASL states.</figcaption>
 </figure>
