@@ -691,14 +691,10 @@ while True:
   <rect x="40" y="40" width="210" height="100" rx="12" fill="#191921" stroke="#FF6B9D" stroke-width="2"/>
   <text x="145" y="70" text-anchor="middle" font-size="12" fill="#FF6B9D" font-family="var(--font)">Broker 1 — DEAD</text>
   <text x="145" y="95" text-anchor="middle" font-size="12" fill="#FF6B9D" font-family="var(--font)">had offset 100</text>
-  <line x1="55" y1="55" x2="235" y2="125" stroke="#FF6B9D" stroke-width="3"/>
-  <line x1="235" y1="55" x2="55" y2="125" stroke="#FF6B9D" stroke-width="3"/>
 
   <rect x="280" y="40" width="210" height="100" rx="12" fill="#191921" stroke="#FF6B9D" stroke-width="2"/>
   <text x="385" y="70" text-anchor="middle" font-size="12" fill="#FF6B9D" font-family="var(--font)">Broker 2 — DEAD</text>
   <text x="385" y="95" text-anchor="middle" font-size="12" fill="#FF6B9D" font-family="var(--font)">had offset 100</text>
-  <line x1="295" y1="55" x2="475" y2="125" stroke="#FF6B9D" stroke-width="3"/>
-  <line x1="475" y1="55" x2="295" y2="125" stroke="#FF6B9D" stroke-width="3"/>
 
   <rect x="520" y="40" width="220" height="100" rx="12" fill="#191921" stroke="var(--good)" stroke-width="2"/>
   <text x="630" y="68" text-anchor="middle" font-size="12" fill="var(--good)" font-family="var(--font)">Broker 3 — survives</text>
@@ -811,8 +807,8 @@ consumer = KafkaConsumer(bootstrap_servers="broker1:9092",
   <text x="560" y="205" text-anchor="middle" font-size="11" fill="#E7E7EE" font-family="var(--font)">(follower)</text>
   <line x1="300" y1="88" x2="170" y2="158" stroke="var(--good)" stroke-width="2"/>
   <line x1="400" y1="88" x2="530" y2="158" stroke="var(--good)" stroke-width="2"/>
-  <text x="235" y="118" text-anchor="middle" font-size="10" fill="var(--good)" font-family="var(--font)">propose + vote</text>
-  <text x="465" y="118" text-anchor="middle" font-size="10" fill="var(--good)" font-family="var(--font)">propose + vote</text>
+  <text x="227" y="104" text-anchor="middle" font-size="10" fill="var(--good)" font-family="var(--font)">propose + vote</text>
+  <text x="473" y="104" text-anchor="middle" font-size="10" fill="var(--good)" font-family="var(--font)">propose + vote</text>
   <text x="350" y="240" text-anchor="middle" font-size="11" fill="#E7E7EE" font-family="var(--font)">A change is official once 2 of the 3 controllers (a majority) confirm it.</text>
 </svg>
 <figcaption>Three controller nodes agree on cluster metadata using Raft: the leader proposes each change, and it only becomes official once a majority of controllers (here, 2 of 3) vote to confirm it.</figcaption>
@@ -1308,9 +1304,9 @@ emit.checkpoints.interval.seconds = 30   # keeps consumer offsets translated</co
     <line x1="180" y1="60" x2="378" y2="165" stroke="var(--cyan)" stroke-width="2" marker-end="url(#arrowKf10c)"/>
     <line x1="180" y1="160" x2="378" y2="178" stroke="var(--cyan)" stroke-width="2" marker-end="url(#arrowKf10c)"/>
     <line x1="180" y1="260" x2="378" y2="195" stroke="var(--cyan)" stroke-width="2" marker-end="url(#arrowKf10c)"/>
-    <text x="270" y="105" font-size="11" fill="#E7E7EE" text-anchor="middle">MM2</text>
+    <text x="272" y="101" font-size="11" fill="#E7E7EE" text-anchor="middle">MM2</text>
     <text x="270" y="185" font-size="11" fill="#E7E7EE" text-anchor="middle">MM2</text>
-    <text x="270" y="240" font-size="11" fill="#E7E7EE" text-anchor="middle">MM2</text>
+    <text x="271" y="244" font-size="11" fill="#E7E7EE" text-anchor="middle">MM2</text>
   </svg>
   <figcaption>Small regional or branch-level clusters each mirror their topics into one central cluster, so analytics teams query a single place instead of many small ones.</figcaption>
 </figure>
@@ -1455,9 +1451,9 @@ while True:
     <line x1="390" y1="92" x2="235" y2="167" stroke="var(--spark)" stroke-width="2" marker-end="url(#arrowKf11a)"/>
     <line x1="390" y1="92" x2="390" y2="167" stroke="var(--spark)" stroke-width="2" marker-end="url(#arrowKf11a)"/>
     <line x1="390" y1="92" x2="545" y2="167" stroke="var(--spark)" stroke-width="2" marker-end="url(#arrowKf11a)"/>
-    <text x="300" y="128" font-size="11" fill="#E7E7EE" text-anchor="middle">recs 1,4</text>
+    <text x="297" y="121" font-size="11" fill="#E7E7EE" text-anchor="middle">recs 1,4</text>
     <text x="415" y="140" font-size="11" fill="#E7E7EE" text-anchor="middle">recs 2,5</text>
-    <text x="480" y="128" font-size="11" fill="#E7E7EE" text-anchor="middle">recs 3,6</text>
+    <text x="483" y="121" font-size="11" fill="#E7E7EE" text-anchor="middle">recs 3,6</text>
 
     <rect x="175" y="170" width="110" height="40" rx="10" fill="#1D1D26" stroke="var(--spark)" stroke-width="1.5"/>
     <text x="230" y="195" font-size="13" fill="var(--ink)" text-anchor="middle">Consumer 1</text>
@@ -1906,7 +1902,7 @@ result = df.selectExpr("CAST(value AS STRING) as json") \
 <line x1="300" y1="65" x2="340" y2="195" stroke="var(--muted)" stroke-width="1.3" stroke-dasharray="3 3"/>
 <line x1="450" y1="65" x2="500" y2="195" stroke="var(--muted)" stroke-width="1.3" stroke-dasharray="3 3"/>
 <line x1="600" y1="65" x2="700" y2="195" stroke="var(--warn)" stroke-width="1.5" stroke-dasharray="3 3"/>
-<text x="600" y="130" text-anchor="middle" font-size="11" fill="var(--warn)">phone was offline, synced later</text>
+<text x="650" y="222" text-anchor="middle" font-size="11" fill="var(--warn)">phone was offline, synced later</text>
 </svg>
 <figcaption>The top line is when events actually happened; the bottom line is when Spark actually saw them. The diagonal lines show the delay (skew) for each event — usually small, but sometimes much larger, like the last pair where a phone buffered data offline.</figcaption>
 </figure>
@@ -2039,7 +2035,7 @@ result = df.selectExpr("CAST(value AS STRING) as json") \
 <rect x="40" y="70" width="150" height="40" rx="10" fill="#1D1D26" stroke="var(--warn)" stroke-width="2.5"/>
 <text x="115" y="94" font-size="13" fill="var(--ink)" text-anchor="middle">W1 (0-10)</text>
 <rect x="115" y="116" width="150" height="40" rx="10" fill="#1D1D26" stroke="var(--warn)" stroke-width="2.5"/>
-<text x="190" y="140" font-size="13" fill="var(--ink)" text-anchor="middle">W2 (5-15)</text>
+<text x="194" y="140" font-size="13" fill="var(--ink)" text-anchor="middle">W2 (5-15)</text>
 <rect x="190" y="162" width="150" height="40" rx="10" fill="#1D1D26" stroke="var(--spark)" stroke-width="1.5"/>
 <text x="265" y="186" font-size="13" fill="var(--ink)" text-anchor="middle">W3 (10-20)</text>
 <rect x="265" y="208" width="150" height="40" rx="10" fill="#1D1D26" stroke="var(--spark)" stroke-width="1.5"/>
@@ -3175,7 +3171,7 @@ def write_alerts(batch_df, batch_id):
 <text x="20" y="24" font-size="11" fill="#E7E7EE" font-family="var(--font)">The shape that repeats across every verified case study above</text>
 <rect x="20" y="90" width="150" height="70" rx="10" fill="#1D1D26" stroke="var(--muted)" stroke-width="1.5"/><text x="95" y="130" text-anchor="middle" font-size="12" fill="var(--ink)" font-family="var(--font)">Producers /<tspan x="95" dy="1.2em">apps</tspan></text>
 <line x1="170" y1="125" x2="200" y2="125" stroke="var(--muted)" stroke-width="1.5"/><polygon points="200,125 190,120 190,130" fill="var(--muted)"/>
-<rect x="205" y="90" width="140" height="70" rx="10" fill="#1D1D26" stroke="var(--kafka)" stroke-width="2"/><text x="275" y="130" text-anchor="middle" font-size="12" fill="var(--kafka)" font-family="var(--font)">Kafka<tspan x="275" dy="1.2em" fill="var(--ink)">(durable transport)</tspan></text>
+<rect x="205" y="90" width="140" height="70" rx="10" fill="#1D1D26" stroke="var(--kafka)" stroke-width="2"/><text x="319" y="133" text-anchor="middle" font-size="12" fill="var(--kafka)" font-family="var(--font)">Kafka<tspan x="275" dy="1.2em" fill="var(--ink)">(durable transport)</tspan></text>
 <line x1="345" y1="125" x2="375" y2="125" stroke="var(--muted)" stroke-width="1.5"/><polygon points="375,125 365,120 365,130" fill="var(--muted)"/>
 <rect x="380" y="80" width="200" height="90" rx="10" fill="#1D1D26" stroke="var(--flink)" stroke-width="2"/>
 <text x="480" y="108" text-anchor="middle" font-size="12" fill="var(--flink)" font-family="var(--font)">Flink job</text>
@@ -3377,7 +3373,7 @@ df.withWatermark("event_time", "24 hours")   # generous default beats "none" eve
 </div>
 <figure class="diagram reveal">
 <svg viewBox="0 0 400 600" role="img" aria-label="Seven-step hands-on learning path from running a local Kafka broker to going deep on official documentation">
-<line x1="50" y1="70" x2="50" y2="550" stroke="var(--dim)" stroke-width="2"/>
+<line x1="50" y1="70" x2="50" y2="550" stroke="var(--dim)" stroke-width="2"/><circle cx="50" cy="71" r="12" fill="#191921" stroke="#3C4356" stroke-width="1.5"/><circle cx="50" cy="151" r="12" fill="#191921" stroke="#3C4356" stroke-width="1.5"/><circle cx="50" cy="231" r="12" fill="#191921" stroke="#3C4356" stroke-width="1.5"/><circle cx="50" cy="311" r="12" fill="#191921" stroke="#3C4356" stroke-width="1.5"/><circle cx="50" cy="391" r="12" fill="#191921" stroke="#3C4356" stroke-width="1.5"/><circle cx="50" cy="471" r="12" fill="#191921" stroke="#3C4356" stroke-width="1.5"/><circle cx="50" cy="551" r="12" fill="#191921" stroke="#3C4356" stroke-width="1.5"/>
 <circle cx="50" cy="70" r="14" fill="#1D1D26" stroke="var(--kafka)" stroke-width="2"/>
 <text x="50" y="75" text-anchor="middle" font-size="13" fill="var(--kafka)">1</text>
 <rect x="80" y="42" width="280" height="56" rx="10" fill="#1D1D26" stroke="var(--kafka)" stroke-width="1.5"/>
