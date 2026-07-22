@@ -1,0 +1,1704 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Databricks Zero-to-Expert — Lakehouse Concepts &amp; End-to-End Project</title>
+<style>
+  :root{
+    --bg:#111117; --bg2:#16161D; --panel:#1D1D26; --panel2:#191921;
+    --ink:#F1F1F1; --muted:#9aa0b4; --dim:#6b6b78; --border:#3C4356;
+    --blue:#5C78FF; --cyan:#28B9FF; --cyan2:#5AC8FF; --purple:#A56BFF;
+    --amber:#FFB454; --green:#5AC8FF;
+    --grad:linear-gradient(90deg,#28B9FF,#5C78FF);
+    --accent:#5AC8FF;
+    --lake:#A56BFF;   /* Lakehouse fundamentals */
+    --delta:#5C78FF;  /* Delta Lake */
+    --spark:#28B9FF;  /* Spark / compute */
+    --flow:#FFB454;   /* Ingestion / Lakeflow */
+    --uc:#FF6B9D;     /* Unity Catalog / governance */
+    --sql:#5AC8FF;    /* Databricks SQL / AI-BI */
+    --wf:#A56BFF;     /* Workflows / orchestration */
+    --ml:#FF6B9D;     /* MLflow / AI */
+    --share:#5AC8FF;  /* Data Sharing / Clean Rooms */
+    --oltp:#FFB454;   /* Lakebase Postgres */
+    --apps:#FFB454;   /* Databricks Apps */
+    --font:"JetBrainsMono Nerd Font","JetBrains Mono","Symbols Nerd Font",ui-monospace,"Cascadia Code",Menlo,Consolas,monospace;
+    --radius:14px;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font);font-size:15.5px;line-height:1.8;-webkit-font-smoothing:antialiased;}
+  a{color:var(--cyan2);text-decoration:none;border-bottom:1px dotted #5AC8FF66;}
+  a:hover{color:#fff;border-bottom-color:#fff;}
+  img,svg{max-width:100%;}
+
+  #bar{position:fixed;top:0;left:0;height:3px;width:0;z-index:50;background:var(--grad);box-shadow:0 0 12px #5C78FF99;transition:width .1s linear;}
+
+  header.hero{padding:60px 22px 30px;text-align:center;position:relative;overflow:hidden;}
+  .kicker{font-size:12px;letter-spacing:.28em;text-transform:uppercase;color:var(--muted);}
+  header.hero h1{
+    font-size:clamp(26px,5vw,44px);line-height:1.2;margin:14px auto 12px;max-width:24ch;font-weight:800;
+    color:#5AC8FF;
+    animation:sheen 9s linear infinite;
+  }
+  @keyframes sheen{to{background-position:220% center;}}
+  .dek{max-width:66ch;margin:0 auto;color:var(--muted);font-size:16px;}
+  .byline{margin-top:16px;font-size:12.5px;color:var(--dim);}
+  .logos{display:flex;gap:20px;justify-content:center;align-items:center;margin:28px 0 6px;flex-wrap:wrap;}
+  .logos figure{margin:0;text-align:center;}
+  .logos svg{width:54px;height:54px;display:block;margin:0 auto;}
+  .logos figcaption{font-size:10.5px;color:var(--muted);margin-top:6px;}
+
+  .wrap{max-width:940px;margin:0 auto;padding:0 22px 100px;}
+
+  details.toc{border:1px solid var(--border);border-radius:16px;padding:6px 24px 18px;margin:30px auto 44px;background:var(--panel);}
+  details.toc summary{cursor:pointer;font-weight:700;color:var(--cyan2);padding:12px 0;font-size:13px;letter-spacing:.12em;text-transform:uppercase;list-style:none;}
+  details.toc summary::-webkit-details-marker{display:none;}
+  details.toc ol{columns:2;gap:26px;padding-left:20px;margin:6px 0 0;}
+  details.toc li{margin:6px 0;font-size:13.5px;color:var(--muted);}
+  details.toc a{color:#dcdce4;border-bottom:none;}
+  details.toc a:hover{color:var(--cyan2);}
+  @media (max-width:640px){details.toc ol{columns:1;}}
+
+  .partbar{
+    display:flex;align-items:center;gap:14px;margin:56px 0 20px;
+    font-size:12px;letter-spacing:.16em;text-transform:uppercase;color:var(--muted);
+  }
+  .partbar::before,.partbar::after{content:"";flex:1;height:1px;background:var(--border);}
+
+  section{margin-bottom:54px;scroll-margin-top:20px;}
+  .section-kicker{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin:0 0 6px 46px;}
+  .section-head{display:flex;align-items:center;gap:12px;margin-bottom:8px;}
+  .section-head .chip{width:34px;height:34px;border-radius:10px;display:flex;align-items:center;justify-content:center;flex:0 0 34px;color:#fff;box-shadow:0 4px 14px rgba(0,0,0,.35);}
+  .section-head h2{font-size:22px;margin:0;font-weight:800;color:#fff;}
+  .lede{font-size:16px;color:#dcdce4;margin-top:12px;}
+
+  h3{font-size:17px;margin:30px 0 10px;font-weight:700;color:#fff;}
+  h4{font-size:14.5px;margin:18px 0 8px;color:#fff;}
+  p{margin:0 0 14px;color:#dcdce4;}
+  ul,ol{margin:0 0 16px;padding-left:22px;color:#dcdce4;}
+  li{margin-bottom:6px;}
+  em{color:#fff;font-style:italic;}
+
+  .callout{border-left:4px solid var(--blue);background:#191921;border-radius:0 12px 12px 0;padding:14px 20px;margin:18px 0;font-size:14px;color:#dcdce4;}
+  .callout.def{border-left-color:var(--purple);background:#191921;}
+  .callout.warn{border-left-color:var(--amber);background:#191921;}
+  .callout.ok{border-left-color:var(--green);background:#191921;}
+  .callout strong.label{display:block;font-size:11px;text-transform:uppercase;letter-spacing:.1em;margin-bottom:5px;color:var(--muted);}
+
+  .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+  .mini-card{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:16px 18px;}
+  .mini-card h4{margin-top:0;font-size:14px;}
+  .mini-card p{font-size:13.5px;color:var(--muted);margin-bottom:0;}
+
+  table{width:100%;border-collapse:collapse;margin:16px 0;font-size:13.5px;}
+  thead th{text-align:left;background:var(--panel2);color:#fff;padding:10px 14px;font-size:12px;text-transform:uppercase;letter-spacing:.04em;border:1px solid var(--border);}
+  tbody td{padding:11px 14px;border:1px solid var(--border);color:#cdd0dd;vertical-align:top;}
+  tbody tr:nth-child(even) td{background:#17171e;}
+  tbody td strong{color:#fff;}
+  .table-wrap{overflow-x:auto;}
+
+  .diagram-wrap{background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:20px 18px 14px;margin:20px 0;box-shadow:0 18px 40px rgba(0,0,0,.4);}
+  .diagram-wrap figcaption{text-align:center;font-size:12px;color:var(--muted);margin-top:10px;font-style:italic;}
+  .diagram-wrap svg{display:block;margin:0 auto;width:100%;height:auto;}
+
+  code{font-family:var(--font);background:#23232b;color:#5AC8FF;padding:1px 7px;border-radius:5px;font-size:.9em;border:1px solid var(--border);}
+  pre{background:#1D1D26;border:1px solid var(--border);border-radius:12px;padding:16px 20px;margin:16px 0;overflow-x:auto;}
+  pre code{background:none;border:none;padding:0;color:#dcdce4;font-size:13px;line-height:1.65;white-space:pre;}
+
+  .step{border:1px solid var(--border);border-radius:16px;background:var(--panel);margin:26px 0;padding:0;overflow:hidden;}
+  .step .step-head{display:flex;align-items:center;gap:14px;padding:16px 20px;background:var(--panel2);border-bottom:1px solid var(--border);}
+  .step .step-num{
+    width:32px;height:32px;border-radius:50%;background:var(--grad);color:#16161D;font-weight:800;
+    display:flex;align-items:center;justify-content:center;flex:0 0 32px;font-size:14px;
+  }
+  .step .step-head h4{margin:0;font-size:15.5px;color:#fff;}
+  .step .step-body{padding:18px 22px 22px;}
+  .step .step-body p:last-child{margin-bottom:0;}
+
+  .glossary dt{font-weight:700;margin-top:14px;color:#fff;}
+  .glossary dd{margin:2px 0 0;color:var(--muted);font-size:14px;}
+
+  hr{border:0;border-top:1px solid var(--border);margin:40px auto;}
+  footer.end{color:var(--muted);font-size:12.5px;}
+
+  .back-top{
+    position:fixed;bottom:24px;right:24px;width:42px;height:42px;border-radius:50%;
+    background:var(--panel2);border:1px solid var(--border);color:var(--cyan2);
+    display:flex;align-items:center;justify-content:center;box-shadow:0 8px 24px rgba(0,0,0,.5);
+    opacity:0;pointer-events:none;transition:opacity .2s;text-decoration:none;font-size:18px;z-index:20;
+  }
+  .back-top.show{opacity:1;pointer-events:auto;}
+
+  .reveal{opacity:0;transform:translateY(18px);transition:opacity .6s ease,transform .6s ease;}
+  .reveal.in{opacity:1;transform:none;}
+  @media (prefers-reduced-motion: reduce){.reveal{opacity:1;transform:none;transition:none;}}
+
+  @media (max-width: 720px){
+    .grid-2{grid-template-columns:1fr;}
+    header.hero{padding:44px 16px 22px;}
+  }
+.nav{position:sticky;top:0;z-index:60;background:rgba(25,25,33,.82);backdrop-filter:blur(10px);border-bottom:1px solid #3C4356}.nav-inner{max-width:1040px;margin:0 auto;padding:12px 24px;display:flex;align-items:center;gap:18px;flex-wrap:wrap}.nav-brand{font-weight:800;letter-spacing:.16em;font-size:15px;text-decoration:none;border:0;color:#5AC8FF}.nav-links{display:flex;gap:6px;flex-wrap:wrap;margin-left:auto}.nav-links a{text-decoration:none;border:1px solid transparent;color:#9aa0b4;font-weight:700;font-size:13.5px;padding:6px 14px;border-radius:999px;transition:.2s}.nav-links a:hover{color:#fff;border-color:#3C4356;background:#242739}.nav-links a.active{color:#5AC8FF;border-color:#28B9FF55;background:#28B9FF14}
+</style>
+</head>
+<body>
+
+<!-- ============ Shared icon sprite (generic, non-trademarked shapes) ============ -->
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+<defs>
+  <symbol id="ic-db" viewBox="0 0 24 24"><ellipse cx="12" cy="5" rx="8" ry="3.2" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M4 5v14c0 1.77 3.58 3.2 8 3.2s8-1.43 8-3.2V5" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M4 11c0 1.77 3.58 3.2 8 3.2s8-1.43 8-3.2" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M4 17c0 1.77 3.58 3.2 8 3.2s8-1.43 8-3.2" fill="none" stroke="currentColor" stroke-width="1.6"/></symbol>
+  <symbol id="ic-cloud" viewBox="0 0 24 24"><path d="M7 18a4.5 4.5 0 0 1-.6-8.96A5.5 5.5 0 0 1 17.2 8.1 4 4 0 0 1 17 16" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><path d="M7 18h10" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></symbol>
+  <symbol id="ic-stream" viewBox="0 0 24 24"><circle cx="5" cy="6" r="2" fill="currentColor"/><circle cx="12" cy="12" r="2" fill="currentColor"/><circle cx="19" cy="18" r="2" fill="currentColor"/><path d="M6.6 7.3 10.4 10.7M13.6 13.3 17.4 16.7" stroke="currentColor" stroke-width="1.4"/></symbol>
+  <symbol id="ic-gear" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3.2" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M12 3.5v2.4M12 18.1v2.4M20.5 12h-2.4M5.9 12H3.5M18 6l-1.7 1.7M7.7 16.3 6 18M18 18l-1.7-1.7M7.7 7.7 6 6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></symbol>
+  <symbol id="ic-dag" viewBox="0 0 24 24"><circle cx="5" cy="6" r="2.1" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="19" cy="6" r="2.1" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="12" cy="13" r="2.1" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="12" cy="20" r="2.1" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M6.6 7.4 10.2 11.8M17.4 7.4 13.8 11.8M12 15.1v2.8" stroke="currentColor" stroke-width="1.4"/></symbol>
+  <symbol id="ic-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.4" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M12 7.5V12l3.4 2" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="ic-bolt" viewBox="0 0 24 24"><path d="M13 3 5 13.5h5.6L10 21l8.5-10.6H12.8z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></symbol>
+  <symbol id="ic-shield" viewBox="0 0 24 24"><path d="M12 3.4 19 6v6.2c0 5-3.3 7.7-7 8.4-3.7-.7-7-3.4-7-8.4V6z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M9 12.2l2.1 2.1 4-4.2" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="ic-chart" viewBox="0 0 24 24"><path d="M4 20V10M10 20V4M16 20v-7M21 20H3" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+  <symbol id="ic-table" viewBox="0 0 24 24"><rect x="3.5" y="4.5" width="17" height="15" rx="1.4" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M3.5 9.5h17M3.5 14.5h17M9.3 4.5v15M15 4.5v15" stroke="currentColor" stroke-width="1.3"/></symbol>
+  <symbol id="ic-cube" viewBox="0 0 24 24"><path d="M12 3 20 7.5V16.5L12 21 4 16.5V7.5Z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M4 7.5 12 12 20 7.5M12 12v9" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></symbol>
+  <symbol id="ic-cpu" viewBox="0 0 24 24"><rect x="6" y="6" width="12" height="12" rx="1.6" fill="none" stroke="currentColor" stroke-width="1.6"/><rect x="9.5" y="9.5" width="5" height="5" rx="1" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M9 3v2.4M15 3v2.4M9 18.6V21M15 18.6V21M3 9h2.4M3 15h2.4M18.6 9H21M18.6 15H21" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></symbol>
+  <symbol id="ic-funnel" viewBox="0 0 24 24"><path d="M4 4h16l-6 8v6l-4 2v-8z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></symbol>
+  <symbol id="ic-notebook" viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="18" rx="1.6" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M8 3v18" stroke="currentColor" stroke-width="1.5"/><path d="M11.5 8h6M11.5 12h6M11.5 16h4" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></symbol>
+  <symbol id="ic-server" viewBox="0 0 24 24"><rect x="4" y="4" width="16" height="6" rx="1.3" fill="none" stroke="currentColor" stroke-width="1.5"/><rect x="4" y="14" width="16" height="6" rx="1.3" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="7.3" cy="7" r=".9" fill="currentColor"/><circle cx="7.3" cy="17" r=".9" fill="currentColor"/></symbol>
+  <symbol id="ic-layers" viewBox="0 0 24 24"><path d="M12 3 21 8l-9 5-9-5z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/><path d="M3 12l9 5 9-5M3 16l9 5 9-5" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></symbol>
+  <symbol id="ic-ai" viewBox="0 0 24 24"><path d="M12 3v3.4M12 17.6V21M3 12h3.4M17.6 12H21M6 6l2.4 2.4M15.6 15.6 18 18M18 6l-2.4 2.4M8.4 15.6 6 18" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/><circle cx="12" cy="12" r="3.2" fill="none" stroke="currentColor" stroke-width="1.6"/></symbol>
+  <symbol id="ic-lock" viewBox="0 0 24 24"><rect x="5" y="11" width="14" height="10" rx="1.6" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M8 11V7.5a4 4 0 0 1 8 0V11" fill="none" stroke="currentColor" stroke-width="1.6"/><circle cx="12" cy="16" r="1.4" fill="currentColor"/></symbol>
+  <symbol id="ic-branch" viewBox="0 0 24 24"><circle cx="6" cy="5" r="2" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="6" cy="19" r="2" fill="none" stroke="currentColor" stroke-width="1.5"/><circle cx="18" cy="12" r="2" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M6 7v10M6 12c0-3.5 3-4.5 3-4.5h7M13.5 7.5 15.9 10" fill="none" stroke="currentColor" stroke-width="1.4"/></symbol>
+  <symbol id="ic-folder" viewBox="0 0 24 24"><path d="M3.5 6.5a1.5 1.5 0 0 1 1.5-1.5h4l2 2.4h8a1.5 1.5 0 0 1 1.5 1.5v9a1.5 1.5 0 0 1-1.5 1.5H5a1.5 1.5 0 0 1-1.5-1.5z" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/></symbol>
+  <symbol id="ic-file" viewBox="0 0 24 24"><path d="M7 3h7l4 4v14H7z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M14 3v4h4" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/><path d="M9.5 13h6M9.5 16.5h6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></symbol>
+</defs>
+</svg>
+
+<div id="bar"></div>
+<nav class="nav"><div class="nav-inner"><a class="nav-brand" href="../index.html">HAO TIEU KIM</a><div class="nav-links"><a href="../index.html">Portfolio</a><a href="../blogs.html">Blogs</a><a href="../essentials.html" class="active">Data Engineer Essentials</a></div></div></nav>
+
+<header class="hero">
+  <div class="kicker">Databricks &middot; Zero-to-Expert Guide</div>
+  <h1>Databricks: Lakehouse Concepts &amp; an End-to-End Project</h1>
+  <p class="dek">Every core Databricks concept explained in plain language &mdash; the Lakehouse, Delta Lake, Spark &amp; Photon, Unity Catalog, Lakeflow Connect &amp; Declarative Pipelines, Delta Sharing &amp; Clean Rooms, Databricks SQL &amp; AI/BI, Mosaic AI &amp; Agent Bricks, Lakebase Postgres, Databricks Apps, and Workflows &mdash; followed by a fully worked, step-by-step Restaurant Analytics Platform project (streaming orders, CDC batch ingestion, and AI-powered sentiment analysis) that wires them all together.</p>
+  <div class="logos">
+    <figure><svg viewBox="0 0 100 100" role="img" aria-label="Lakehouse icon"><circle cx="50" cy="50" r="44" fill="#1D1D26" stroke="#A56BFF" stroke-width="2"/><use href="#ic-cube" x="28" y="28" width="44" height="44" style="color:#A56BFF"/></svg><figcaption>Lakehouse</figcaption></figure>
+    <figure><svg viewBox="0 0 100 100" role="img" aria-label="Delta Lake icon"><circle cx="50" cy="50" r="44" fill="#1D1D26" stroke="#5C78FF" stroke-width="2"/><use href="#ic-layers" x="28" y="28" width="44" height="44" style="color:#5C78FF"/></svg><figcaption>Delta Lake</figcaption></figure>
+    <figure><svg viewBox="0 0 100 100" role="img" aria-label="Spark icon"><circle cx="50" cy="50" r="44" fill="#1D1D26" stroke="#28B9FF" stroke-width="2"/><use href="#ic-bolt" x="28" y="28" width="44" height="44" style="color:#28B9FF"/></svg><figcaption>Spark / Photon</figcaption></figure>
+    <figure><svg viewBox="0 0 100 100" role="img" aria-label="Unity Catalog icon"><circle cx="50" cy="50" r="44" fill="#1D1D26" stroke="#FF6B9D" stroke-width="2"/><use href="#ic-shield" x="28" y="28" width="44" height="44" style="color:#FF6B9D"/></svg><figcaption>Unity Catalog</figcaption></figure>
+    <figure><svg viewBox="0 0 100 100" role="img" aria-label="MLflow icon"><circle cx="50" cy="50" r="44" fill="#1D1D26" stroke="#FF6B9D" stroke-width="2"/><use href="#ic-ai" x="28" y="28" width="44" height="44" style="color:#FF6B9D"/></svg><figcaption>MLflow / AI</figcaption></figure>
+  </div>
+  <div class="byline">reference guide &middot; plain English &middot; includes a full worked project with code</div>
+</header>
+
+<div class="wrap">
+
+<details class="toc" open>
+  <summary>&#10095; Table of Contents</summary>
+  <ol>
+    <li><a href="#intro">What Is Databricks?</a></li>
+    <li><a href="#lakehouse">The Lakehouse Architecture</a></li>
+    <li><a href="#workspace">Workspace &amp; Compute</a></li>
+    <li><a href="#spark">Spark on Databricks</a></li>
+    <li><a href="#delta">Delta Lake</a></li>
+    <li><a href="#medallion">The Medallion Architecture</a></li>
+    <li><a href="#ingestion">Ingestion: Auto Loader &amp; Lakeflow Connect</a></li>
+    <li><a href="#unity-catalog">Unity Catalog</a></li>
+    <li><a href="#data-sharing">Data Sharing: Delta Sharing &amp; Clean Rooms</a></li>
+    <li><a href="#sql-bi">Databricks SQL &amp; AI/BI</a></li>
+    <li><a href="#mlflow">MLflow, Agent Bricks &amp; Generative AI</a></li>
+    <li><a href="#lakebase">Lakebase: Managed Postgres for OLTP</a></li>
+    <li><a href="#apps">Databricks Apps</a></li>
+    <li><a href="#workflows">Workflows &amp; Orchestration</a></li>
+    <li><a href="#security">Security Essentials</a></li>
+    <li><a href="#project">End-to-End Project</a></li>
+    <li><a href="#project-arch">Project Architecture</a></li>
+    <li><a href="#step1">Step 1 &mdash; Unity Catalog Setup</a></li>
+    <li><a href="#step2">Step 2 &mdash; Lakeflow Connect CDC</a></li>
+    <li><a href="#step3">Step 3 &mdash; Streaming from Event Hub</a></li>
+    <li><a href="#step4">Step 4 &mdash; Silver Cleansing</a></li>
+    <li><a href="#step5">Step 5 &mdash; Gold Aggregation</a></li>
+    <li><a href="#step6">Step 6 &mdash; Orchestration</a></li>
+    <li><a href="#step7">Step 7 &mdash; Sentiment with Mosaic AI</a></li>
+    <li><a href="#step8">Step 8 &mdash; Performance &amp; Sentiment Dashboard</a></li>
+    <li><a href="#step9">Step 9 &mdash; Govern &amp; Monitor</a></li>
+    <li><a href="#skills">Skills &amp; Certification Path</a></li>
+    <li><a href="#glossary">Glossary</a></li>
+  </ol>
+</details>
+
+<!-- ================= PART 1: CONCEPTS ================= -->
+
+<!-- ============ 01 INTRO ============ -->
+<section class="reveal" id="intro">
+  <div class="section-kicker">01 &middot; Foundations</div>
+  <div class="section-head">
+    <div class="chip" style="background:var(--lake)"><svg width="18" height="18"><use href="#ic-cube" style="color:#fff"/></svg></div>
+    <h2>What Is Databricks?</h2>
+  </div>
+  <p class="lede">Databricks is a cloud platform built around one idea: you shouldn't need a separate data warehouse for BI and a separate data lake for AI. It unifies both into a single system &mdash; the <strong>Lakehouse</strong> &mdash; running on top of your own cloud storage.</p>
+
+  <p>Under the hood, Databricks runs a managed, optimized version of Apache Spark for large-scale data processing, on top of an open storage format called Delta Lake that adds database-like reliability to plain files in cloud storage. Around that core, Databricks adds a workspace (notebooks, jobs, dashboards), a governance layer (Unity Catalog), and specialized engines for SQL analytics (Databricks SQL) and machine learning (MLflow, and Mosaic AI &mdash; Databricks' suite for building and serving generative-AI and large-language-model applications).</p>
+
+  <div class="callout def">
+    <strong class="label">Definition</strong>
+    A <strong>Lakehouse</strong> is a data architecture that combines the low-cost, flexible storage of a data lake with the reliability, performance, and governance features traditionally found only in a data warehouse.
+  </div>
+
+  <h3>Why It Exists</h3>
+  <p>Before the Lakehouse pattern, most companies ran two separate systems: a data warehouse for clean, structured, SQL-friendly reporting data, and a data lake for cheap, flexible storage of raw and unstructured data used by data scientists. Keeping both in sync meant duplicated data, duplicated pipelines, and data that drifted out of sync between the two. Databricks' core pitch is that one well-governed copy of the data, stored as open files in your own cloud account, can serve BI, data engineering, and AI/ML workloads at once.</p>
+
+  <h3>Databricks vs. a Traditional Data Warehouse</h3>
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th></th><th>Traditional Data Warehouse</th><th>Databricks Lakehouse</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Storage</strong></td><td>Proprietary, inside the warehouse</td><td>Open file formats (Parquet/Delta) in your own cloud storage</td></tr>
+      <tr><td><strong>Data types</strong></td><td>Mostly structured, tabular</td><td>Structured, semi-structured, unstructured, streaming</td></tr>
+      <tr><td><strong>Primary workload</strong></td><td>BI &amp; reporting</td><td>BI, data engineering, streaming, and ML/AI on one copy of data</td></tr>
+      <tr><td><strong>Compute</strong></td><td>Tied to the warehouse engine</td><td>Elastic clusters and serverless SQL/compute, scaled independently of storage</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h3>What You Actually Touch, Day to Day</h3>
+  <p>Even though the platform underneath is deep, day-to-day work happens in a small number of surfaces: a <strong>notebook</strong> or SQL editor for writing code, a <strong>cluster</strong> or SQL warehouse that actually executes it, a <strong>catalog browser</strong> for finding and governing tables, and a <strong>Workflows</strong> screen for scheduling it all. Almost everything you'll do reduces to the same three-line pattern, whatever the specific task:</p>
+  <pre><code># 1. Read a governed table by its three-level name
+df = spark.read.table("restaurant_prod.silver.orders_clean")
+
+# 2. Transform it with the DataFrame API (or an equivalent SQL query)
+daily = df.groupBy("restaurant_id").sum("order_amount")
+
+# 3. Write the result back as a new governed Delta table
+daily.write.mode("overwrite").saveAsTable("restaurant_prod.gold.daily_totals")</code></pre>
+  <p>Every concept in the rest of this guide is really just filling in the details around that pattern: what makes the read/write fast and safe (Delta Lake), where the table lives in the namespace (Unity Catalog), how the transformation runs at scale (Spark), and how the whole thing gets scheduled and monitored (Workflows). Keep this snippet in mind as an anchor &mdash; each new concept below attaches to one specific part of it.</p>
+</section>
+
+<!-- ============ 02 LAKEHOUSE ============ -->
+<section class="reveal" id="lakehouse">
+  <div class="section-kicker">02 &middot; Foundations</div>
+  <div class="section-head">
+    <div class="chip" style="background:var(--lake)"><svg width="18" height="18"><use href="#ic-layers" style="color:#fff"/></svg></div>
+    <h2>The Lakehouse Architecture</h2>
+  </div>
+  <p class="lede">Every Databricks concept in this guide fits into one layered picture. Once this diagram makes sense, the rest of the platform is just detail.</p>
+
+  <figure class="diagram-wrap">
+    <svg viewBox="0 0 960 460" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Databricks Lakehouse architecture diagram">
+      <defs><marker id="dbh1" markerWidth="9" markerHeight="9" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="#9AA0B4"/></marker></defs>
+      <g font-family="sans-serif">
+        <!-- Sources row (icon on top, label below, so they never collide) -->
+        <rect x="20" y="20" width="150" height="55" rx="10" fill="#1D1D26" stroke="#A56BFF" stroke-width="1.3"/>
+        <use href="#ic-db" x="82" y="25" width="26" height="26" style="color:#A56BFF"/>
+        <text x="95" y="68" text-anchor="middle" font-size="12" font-weight="600" fill="#F1F1F1">Databases</text>
+
+        <rect x="190" y="20" width="150" height="55" rx="10" fill="#1D1D26" stroke="#A56BFF" stroke-width="1.3"/>
+        <use href="#ic-stream" x="252" y="25" width="26" height="26" style="color:#A56BFF"/>
+        <text x="265" y="68" text-anchor="middle" font-size="12" font-weight="600" fill="#F1F1F1">Streaming Events</text>
+
+        <rect x="360" y="20" width="150" height="55" rx="10" fill="#1D1D26" stroke="#A56BFF" stroke-width="1.3"/>
+        <use href="#ic-file" x="422" y="25" width="26" height="26" style="color:#A56BFF"/>
+        <text x="435" y="68" text-anchor="middle" font-size="12" font-weight="600" fill="#F1F1F1">Files &amp; APIs</text>
+
+        <text x="600" y="30" font-size="11" fill="#E7E7EE">Sources feed into your own cloud storage &mdash;</text>
+        <text x="600" y="46" font-size="11" fill="#E7E7EE">Databricks never copies data out of it.</text>
+
+        <line x1="105" y1="75" x2="105" y2="108" stroke="#9AA0B4" stroke-width="1.5" marker-end="url(#dbh1)"/>
+        <line x1="275" y1="75" x2="275" y2="108" stroke="#9AA0B4" stroke-width="1.5" marker-end="url(#dbh1)"/>
+        <line x1="445" y1="75" x2="445" y2="108" stroke="#9AA0B4" stroke-width="1.5" marker-end="url(#dbh1)"/>
+
+        <!-- Cloud storage layer -->
+        <rect x="20" y="110" width="490" height="55" rx="10" fill="#1D1D26" stroke="#5C78FF" stroke-width="1.4"/>
+        <use href="#ic-cloud" x="32" y="122" width="30" height="30" style="color:#5C78FF"/>
+        <text x="290" y="143" text-anchor="middle" font-size="13" font-weight="700" fill="#F1F1F1">Your Cloud Object Storage</text>
+
+        <line x1="265" y1="165" x2="265" y2="198" stroke="#9AA0B4" stroke-width="1.5" marker-end="url(#dbh1)"/>
+
+        <!-- Delta Lake layer -->
+        <rect x="20" y="200" width="490" height="55" rx="10" fill="#1D1D26" stroke="#5C78FF" stroke-width="1.4"/>
+        <use href="#ic-layers" x="32" y="212" width="30" height="30" style="color:#5C78FF"/>
+        <text x="290" y="233" text-anchor="middle" font-size="13" font-weight="700" fill="#F1F1F1">Delta Lake (open table format, ACID)</text>
+
+        <line x1="265" y1="255" x2="265" y2="288" stroke="#9AA0B4" stroke-width="1.5" marker-end="url(#dbh1)"/>
+
+        <!-- Runtime / compute layer -->
+        <rect x="20" y="290" width="490" height="55" rx="10" fill="#1D1D26" stroke="#28B9FF" stroke-width="1.4"/>
+        <use href="#ic-bolt" x="32" y="302" width="30" height="30" style="color:#28B9FF"/>
+        <text x="290" y="313" text-anchor="middle" font-size="13" font-weight="700" fill="#F1F1F1">Databricks Runtime</text>
+        <text x="290" y="330" text-anchor="middle" font-size="10.5" fill="#E7E7EE">Apache Spark + Photon execution engine</text>
+
+        <!-- Unity Catalog spanning right column -->
+        <rect x="540" y="110" width="400" height="235" rx="12" fill="#1D1D26" stroke="#FF6B9D" stroke-width="1.5"/>
+        <use href="#ic-shield" x="558" y="126" width="26" height="26" style="color:#FF6B9D"/>
+        <text x="600" y="145" font-size="13" font-weight="700" fill="#F1F1F1">Unity Catalog</text>
+        <text x="558" y="168" font-size="11" fill="#E7E7EE">Governs every layer to its left:</text>
+        <text x="558" y="188" font-size="11" fill="#E7E7EE">&bull; access control &amp; row/column security</text>
+        <text x="558" y="206" font-size="11" fill="#E7E7EE">&bull; data lineage across every table</text>
+        <text x="558" y="224" font-size="11" fill="#E7E7EE">&bull; a shared catalog / schema / table namespace</text>
+        <text x="558" y="242" font-size="11" fill="#E7E7EE">&bull; auditing of every query and job</text>
+        <text x="558" y="260" font-size="11" fill="#E7E7EE">&bull; secure data sharing across workspaces</text>
+
+        <line x1="510" y1="230" x2="538" y2="230" stroke="#9AA0B4" stroke-width="1.3" stroke-dasharray="3,3"/>
+
+        <line x1="265" y1="345" x2="265" y2="378" stroke="#9AA0B4" stroke-width="1.5" marker-end="url(#dbh1)"/>
+
+        <!-- Consumption row -->
+        <rect x="20" y="380" width="150" height="60" rx="10" fill="#1D1D26" stroke="#5AC8FF" stroke-width="1.3"/>
+        <use href="#ic-chart" x="32" y="393" width="26" height="26" style="color:#5AC8FF"/>
+        <text x="105" y="424" text-anchor="middle" font-size="12" font-weight="600" fill="#F1F1F1">BI &amp; AI/BI</text>
+
+        <rect x="190" y="380" width="150" height="60" rx="10" fill="#1D1D26" stroke="#FF6B9D" stroke-width="1.3"/>
+        <use href="#ic-ai" x="202" y="393" width="26" height="26" style="color:#FF6B9D"/>
+        <text x="275" y="424" text-anchor="middle" font-size="12" font-weight="600" fill="#F1F1F1">ML &amp; AI Apps</text>
+
+        <rect x="360" y="380" width="150" height="60" rx="10" fill="#1D1D26" stroke="#A56BFF" stroke-width="1.3"/>
+        <use href="#ic-dag" x="372" y="393" width="26" height="26" style="color:#A56BFF"/>
+        <text x="445" y="424" text-anchor="middle" font-size="12" font-weight="600" fill="#F1F1F1">Workflows</text>
+      </g>
+    </svg>
+    <figcaption>Fig. 1 &mdash; One copy of data in open storage, governed by Unity Catalog, serves BI, ML, and orchestrated pipelines alike.</figcaption>
+  </figure>
+
+  <h3>The Three Layers, in One Sentence Each</h3>
+  <ul>
+    <li><strong>Storage:</strong> data lives as open files (Parquet, wrapped by Delta Lake) in your own cloud account &mdash; the actual bucket is Amazon S3, Azure Data Lake Storage (ADLS), or Google Cloud Storage (GCS) depending on which cloud you use, but Databricks works the same way on top of all three, and never locks data into a proprietary format.</li>
+    <li><strong>Compute:</strong> Spark clusters (or serverless compute) read and process that data, scaling up or down independently of how much data you store.</li>
+    <li><strong>Governance:</strong> Unity Catalog sits across everything, providing one place to control who can see and touch which data, and to trace where every table came from.</li>
+  </ul>
+
+  <h3>One Copy of Data, Read Three Different Ways</h3>
+  <p>Because every layer in Fig. 1 sits on top of the same open Delta table, the exact same <code>restaurant_prod.gold.daily_sales_by_restaurant</code> table can be queried from whichever engine actually fits the task at hand &mdash; with no export step, no sync job, and no second copy that can go stale:</p>
+  <pre><code>-- From the Databricks SQL editor, or a BI tool connected over JDBC/ODBC
+SELECT * FROM restaurant_prod.gold.daily_sales_by_restaurant WHERE sales_date = current_date();
+
+# From a Python notebook, as a distributed Spark DataFrame
+df = spark.table("restaurant_prod.gold.daily_sales_by_restaurant")
+
+# From that same notebook, as a local pandas DataFrame for a quick plot
+pdf = spark.table("restaurant_prod.gold.daily_sales_by_restaurant").toPandas()</code></pre>
+  <p>All three read the same underlying Parquet files, are checked against the same Unity Catalog permissions, and see the same transaction-log state &mdash; only the engine doing the reading changes. This is the concrete payoff of "one Lakehouse": a data scientist's notebook and an executive's dashboard are never looking at two different, slowly-diverging copies of "sales."</p>
+</section>
+
+<!-- ============ 03 WORKSPACE & COMPUTE ============ -->
+<section class="reveal" id="workspace">
+  <div class="section-kicker">03 &middot; Foundations</div>
+  <div class="section-head">
+    <div class="chip" style="background:var(--spark)"><svg width="18" height="18"><use href="#ic-server" style="color:#fff"/></svg></div>
+    <h2>Workspace &amp; Compute</h2>
+  </div>
+  <p class="lede">The workspace is where people work day to day: notebooks, files, and jobs. Compute is what actually runs the code &mdash; and Databricks separates the two so compute can scale up, down, or to zero without losing any work.</p>
+
+  <h3>Control Plane vs. Data Plane</h3>
+  <p>Databricks runs as two separate halves. The <strong>control plane</strong> (managed entirely by Databricks) hosts the web UI, notebooks, job scheduler, and metadata. The <strong>data plane</strong> runs inside <em>your</em> cloud account &mdash; the actual clusters that touch your data never leave your network. This split is what lets Databricks manage the platform without ever hosting your raw data itself.</p>
+
+  <figure class="diagram-wrap">
+    <svg viewBox="0 0 880 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Databricks control plane and data plane diagram">
+      <g font-family="sans-serif">
+        <rect x="30" y="30" width="380" height="240" rx="14" fill="#1D1D26" stroke="#A56BFF" stroke-width="1.4"/>
+        <text x="220" y="58" text-anchor="middle" font-size="13" font-weight="700" fill="#F1F1F1">Control Plane (managed by Databricks)</text>
+        <rect x="55" y="80" width="150" height="50" rx="8" fill="#191921" stroke="#A56BFF" stroke-width="1.1"/>
+        <use href="#ic-notebook" x="65" y="90" width="26" height="26" style="color:#A56BFF"/>
+        <text x="130" y="110" text-anchor="middle" font-size="11.5" fill="#F1F1F1">Notebooks / UI</text>
+
+        <rect x="235" y="80" width="150" height="50" rx="8" fill="#191921" stroke="#A56BFF" stroke-width="1.1"/>
+        <use href="#ic-dag" x="245" y="90" width="26" height="26" style="color:#A56BFF"/>
+        <text x="310" y="110" text-anchor="middle" font-size="11.5" fill="#F1F1F1">Job Scheduler</text>
+
+        <rect x="55" y="150" width="150" height="50" rx="8" fill="#191921" stroke="#A56BFF" stroke-width="1.1"/>
+        <use href="#ic-shield" x="65" y="160" width="26" height="26" style="color:#A56BFF"/>
+        <text x="130" y="180" text-anchor="middle" font-size="11.5" fill="#F1F1F1">Unity Catalog</text>
+
+        <rect x="235" y="150" width="150" height="50" rx="8" fill="#191921" stroke="#A56BFF" stroke-width="1.1"/>
+        <use href="#ic-table" x="245" y="160" width="26" height="26" style="color:#A56BFF"/>
+        <text x="310" y="180" text-anchor="middle" font-size="11.5" fill="#F1F1F1">Metadata &amp; Logs</text>
+
+        <text x="220" y="235" text-anchor="middle" font-size="10.5" fill="#E7E7EE">No customer data is stored here</text>
+
+        <rect x="470" y="30" width="380" height="240" rx="14" fill="#1D1D26" stroke="#28B9FF" stroke-width="1.4"/>
+        <text x="660" y="58" text-anchor="middle" font-size="13" font-weight="700" fill="#F1F1F1">Data Plane (runs inside your cloud account)</text>
+        <rect x="495" y="80" width="330" height="70" rx="8" fill="#191921" stroke="#28B9FF" stroke-width="1.1"/>
+        <use href="#ic-server" x="505" y="98" width="30" height="30" style="color:#28B9FF"/>
+        <text x="660" y="108" text-anchor="middle" font-size="12" font-weight="600" fill="#F1F1F1">Cluster: 1 Driver + N Workers</text>
+        <text x="660" y="126" text-anchor="middle" font-size="10.5" fill="#E7E7EE">runs your Spark code against your data</text>
+
+        <rect x="495" y="165" width="330" height="60" rx="8" fill="#191921" stroke="#28B9FF" stroke-width="1.1"/>
+        <use href="#ic-cloud" x="505" y="180" width="26" height="26" style="color:#28B9FF"/>
+        <text x="660" y="199" text-anchor="middle" font-size="11.5" fill="#F1F1F1">Your cloud storage (S3 / ADLS / GCS)</text>
+
+        <text x="660" y="250" text-anchor="middle" font-size="10.5" fill="#E7E7EE">Your data and compute never leave your account</text>
+
+        <line x1="410" y1="150" x2="468" y2="150" stroke="#9AA0B4" stroke-width="1.4" stroke-dasharray="3,3"/>
+      </g>
+    </svg>
+    <figcaption>Fig. 2 &mdash; Databricks manages the control plane; your own cloud account hosts every cluster and every byte of data.</figcaption>
+  </figure>
+
+  <h3>Cluster Types</h3>
+  <div class="grid-2">
+    <div class="mini-card"><h4>All-Purpose Clusters</h4><p>Interactive clusters attached to notebooks for exploration and development. Billed while running; usually shared by a team.</p></div>
+    <div class="mini-card"><h4>Job Clusters</h4><p>Created automatically when a scheduled job runs, then torn down when it finishes. Cheaper for production pipelines since you only pay while the job executes.</p></div>
+    <div class="mini-card"><h4>SQL Warehouses</h4><p>Compute purpose-built for SQL and BI queries, with fast startup and auto-scaling to handle bursts of dashboard traffic.</p></div>
+    <div class="mini-card"><h4>Serverless Compute</h4><p>Databricks manages the underlying infrastructure entirely &mdash; no cluster sizing decisions, near-instant start, pay only for what you use.</p></div>
+  </div>
+
+  <h3>Configuring Compute</h3>
+  <p>Every cluster &mdash; all-purpose or job &mdash; boils down to a small set of choices: which Databricks Runtime version, what VM type for the driver and workers, and how many workers (a fixed count, or an autoscaling range). The same shape shows up whether you set it by hand in the UI or declare it as code, e.g. as part of a Workflow task:</p>
+  <pre><code>new_cluster:
+  spark_version: "15.4.x-scala2.12"
+  node_type_id: "Standard_DS3_v2"
+  autoscale:
+    min_workers: 1
+    max_workers: 4
+  data_security_mode: "SINGLE_USER"</code></pre>
+  <p><code>autoscale</code> lets Spark add workers mid-job if a stage is running behind due to data volume, then scale back down once it finishes &mdash; useful when a job's input size varies run to run, at the cost of a little scale-up latency versus a fixed-size cluster. A <strong>cluster policy</strong>, set once by an admin, can restrict which of these fields a given user is even allowed to choose &mdash; e.g. capping the maximum node count or pinning a specific runtime version &mdash; so cost and compliance limits are enforced before a cluster ever starts, not caught after the fact.</p>
+
+  <div class="callout">
+    <strong class="label">Photon</strong>
+    Photon is Databricks' native, vectorized query engine, written to execute Spark SQL and DataFrame operations dramatically faster than standard open-source Spark, while remaining fully compatible with existing Spark code. It's a checkbox on a cluster (or the default on SQL warehouses and serverless compute), not a different API to learn &mdash; the same <code>spark.read.table(...)</code> code simply runs faster underneath.
+  </div>
+</section>
+
+<!-- ============ 04 SPARK ============ -->
+<section class="reveal" id="spark">
+  <div class="section-kicker">04 &middot; Foundations</div>
+  <div class="section-head">
+    <div class="chip" style="background:var(--spark)"><svg width="18" height="18"><use href="#ic-bolt" style="color:#fff"/></svg></div>
+    <h2>Apache Spark on Databricks</h2>
+  </div>
+  <p class="lede">Spark is the distributed processing engine underneath almost everything Databricks does. You rarely manage Spark directly &mdash; but understanding its basic model makes every other concept click.</p>
+
+  <ul>
+    <li><strong>Distributed by design:</strong> a dataset is split into <em>partitions</em>, and each partition is processed in parallel across the machines in a cluster.</li>
+    <li><strong>Lazy evaluation:</strong> transformations (<code>filter</code>, <code>select</code>, <code>groupBy</code>) build up a query plan but don't run anything; an <em>action</em> (<code>display</code>, <code>write</code>, <code>count</code>) triggers actual execution.</li>
+    <li><strong>DataFrames:</strong> the primary API &mdash; a table-like structure with named, typed columns, usable from Python, SQL, Scala, or R with the same underlying engine.</li>
+    <li><strong>Driver &amp; executors:</strong> the driver plans the work and coordinates; executors on worker nodes actually run the tasks against their slice of the data.</li>
+  </ul>
+
+  <pre><code># Transformations are lazy - nothing runs yet after these three lines
+orders = spark.read.table("restaurant_prod.silver.orders_clean")
+big_orders = orders.filter("order_amount > 50")
+by_restaurant = big_orders.groupBy("restaurant_id").count()
+
+# .explain() prints the query plan Spark has built, without running it
+by_restaurant.explain()
+
+# An action - .show(), .collect(), .write... - triggers actual execution
+by_restaurant.show()</code></pre>
+  <p>Between <code>filter</code> and <code>groupBy</code>, Spark is free to reorder, combine, or even skip work entirely, because nothing has executed yet &mdash; that flexibility is exactly what "lazy evaluation" buys you. The one operation that's usually the slow part in practice is a <strong>shuffle</strong>: whenever rows need to be regrouped across partitions &mdash; any <code>groupBy</code>, <code>join</code>, or <code>orderBy</code> &mdash; Spark has to physically move data between machines over the network, which costs far more than filtering or mapping a partition in place on one machine.</p>
+
+  <div class="callout">
+    <strong class="label">Why This Matters for Everything Else</strong>
+    Every Delta Lake write, every Lakeflow pipeline, every Databricks SQL query, and every MLflow training run ultimately compiles down to a Spark job running on a cluster. Learning Spark's mental model (partitions, lazy plans, driver/executors, shuffles) explains why certain operations are fast, why some are slow, and why cluster sizing matters.
+  </div>
+</section>
+
+<!-- ============ 05 DELTA LAKE ============ -->
+<section class="reveal" id="delta">
+  <div class="section-kicker">05 &middot; Foundations</div>
+  <div class="section-head">
+    <div class="chip" style="background:var(--delta)"><svg width="18" height="18"><use href="#ic-layers" style="color:#fff"/></svg></div>
+    <h2>Delta Lake</h2>
+  </div>
+  <p class="lede">Delta Lake is what turns a folder of plain Parquet files into something that behaves like a real database table &mdash; with transactions, history, and reliability guarantees.</p>
+
+  <h3>What a Plain Data Lake Is Missing</h3>
+  <p>Raw files in cloud storage have no concept of a transaction. If a job writing a table fails halfway through, readers can see a half-written, corrupted result. There's no way to see what a table looked like yesterday, and two jobs writing to the same table at once can corrupt each other's work. Delta Lake fixes all of this by adding a <strong>transaction log</strong> next to the data files.</p>
+
+  <figure class="diagram-wrap">
+    <svg viewBox="0 0 860 340" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Delta Lake transaction log and time travel diagram">
+      <defs><marker id="dbh2" markerWidth="9" markerHeight="9" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="#9AA0B4"/></marker></defs>
+      <g font-family="sans-serif">
+        <rect x="30" y="30" width="800" height="80" rx="10" fill="#1D1D26" stroke="#5C78FF" stroke-width="1.4"/>
+        <use href="#ic-branch" x="45" y="45" width="30" height="30" style="color:#5C78FF"/>
+        <text x="100" y="65" font-size="13" font-weight="700" fill="#F1F1F1">Delta Transaction Log (_delta_log)</text>
+        <text x="100" y="85" font-size="11" fill="#E7E7EE">An ordered, append-only record of every change ever made to the table</text>
+
+        <line x1="120" y1="110" x2="120" y2="150" stroke="#9AA0B4" stroke-width="1.4" marker-end="url(#dbh2)"/>
+        <line x1="330" y1="110" x2="330" y2="150" stroke="#9AA0B4" stroke-width="1.4" marker-end="url(#dbh2)"/>
+        <line x1="540" y1="110" x2="540" y2="150" stroke="#9AA0B4" stroke-width="1.4" marker-end="url(#dbh2)"/>
+        <line x1="720" y1="110" x2="720" y2="150" stroke="#9AA0B4" stroke-width="1.4" marker-end="url(#dbh2)"/>
+
+        <rect x="40" y="152" width="160" height="55" rx="8" fill="#1D1D26" stroke="#5C78FF" stroke-width="1.2"/>
+        <text x="120" y="177" text-anchor="middle" font-size="11.5" font-weight="600" fill="#F1F1F1">v0: CREATE TABLE</text>
+        <text x="120" y="194" text-anchor="middle" font-size="10" fill="#E7E7EE">initial load</text>
+
+        <rect x="250" y="152" width="160" height="55" rx="8" fill="#1D1D26" stroke="#5C78FF" stroke-width="1.2"/>
+        <text x="330" y="177" text-anchor="middle" font-size="11.5" font-weight="600" fill="#F1F1F1">v1: MERGE (upsert)</text>
+        <text x="330" y="194" text-anchor="middle" font-size="10" fill="#E7E7EE">daily update</text>
+
+        <rect x="460" y="152" width="160" height="55" rx="8" fill="#1D1D26" stroke="#5C78FF" stroke-width="1.2"/>
+        <text x="540" y="177" text-anchor="middle" font-size="11.5" font-weight="600" fill="#F1F1F1">v2: DELETE</text>
+        <text x="540" y="194" text-anchor="middle" font-size="10" fill="#E7E7EE">privacy request</text>
+
+        <rect x="640" y="152" width="160" height="55" rx="8" fill="#1D1D26" stroke="#5AC8FF" stroke-width="1.4"/>
+        <text x="720" y="177" text-anchor="middle" font-size="11.5" font-weight="700" fill="#F1F1F1">v3: OPTIMIZE</text>
+        <text x="720" y="194" text-anchor="middle" font-size="10" fill="#E7E7EE">current version</text>
+
+        <path d="M120 207 C 120 250, 700 250, 720 210" fill="none" stroke="#FFB454" stroke-width="1.6" stroke-dasharray="4,3" marker-end="url(#dbh2)"/>
+        <text x="430" y="275" text-anchor="middle" font-size="11.5" fill="#FFB454">Time travel: query any past version with a single clause</text>
+
+        <text x="430" y="305" text-anchor="middle" font-size="11" fill="#E7E7EE">SELECT * FROM sales VERSION AS OF 1   &middot;   or   &middot;   TIMESTAMP AS OF '2026-01-01'</text>
+      </g>
+    </svg>
+    <figcaption>Fig. 3 &mdash; Every write to a Delta table creates a new numbered version in the transaction log, so any past state can be re-queried on demand.</figcaption>
+  </figure>
+
+  <h3>What Delta Lake Adds</h3>
+  <div class="grid-2">
+    <div class="mini-card"><h4>ACID Transactions</h4><p>Writes either fully succeed or fully fail &mdash; concurrent readers never see a half-written table.</p></div>
+    <div class="mini-card"><h4>Time Travel</h4><p>Every version of a table is queryable by version number or timestamp, enabling audits, rollbacks, and reproducible ML training data.</p></div>
+    <div class="mini-card"><h4>Schema Enforcement &amp; Evolution</h4><p>Bad writes that don't match the expected schema are rejected by default; controlled schema changes (like adding a column) are explicit and safe.</p></div>
+    <div class="mini-card"><h4>Upserts with MERGE</h4><p>The <code>MERGE INTO</code> statement inserts, updates, or deletes rows in one atomic operation &mdash; the backbone of most incremental pipelines.</p></div>
+    <div class="mini-card"><h4>OPTIMIZE &amp; Z-Ordering</h4><p>Compacts many small files into larger ones and physically co-locates related data, so downstream queries scan far less data.</p></div>
+    <div class="mini-card"><h4>VACUUM</h4><p>Permanently removes old, unreferenced data files once they're no longer needed for time travel, controlling storage cost.</p></div>
+  </div>
+
+  <h3>In Practice: the Four Statements You'll Use Most</h3>
+  <pre><code>-- 1. Upsert: update matching rows, insert everything else, in one atomic write
+MERGE INTO restaurant_prod.silver.orders_clean AS target
+USING staged_updates AS source
+ON target.order_id = source.order_id
+WHEN MATCHED THEN UPDATE SET *
+WHEN NOT MATCHED THEN INSERT *;
+
+-- 2. Time travel: query the table exactly as it looked at a past version or moment
+SELECT * FROM restaurant_prod.gold.daily_sales_by_restaurant VERSION AS OF 12;
+SELECT * FROM restaurant_prod.gold.daily_sales_by_restaurant TIMESTAMP AS OF '2026-07-10';
+
+-- 3. OPTIMIZE + Z-ORDER: fewer, bigger files, physically sorted by the columns you filter on most
+OPTIMIZE restaurant_prod.gold.daily_sales_by_restaurant ZORDER BY (restaurant_id);
+
+-- 4. VACUUM: permanently delete files no longer needed once past versions age out
+VACUUM restaurant_prod.gold.daily_sales_by_restaurant RETAIN 168 HOURS;</code></pre>
+  <p>A useful mental model: <code>MERGE</code> is how data <em>gets into</em> a Delta table incrementally; time travel is how you <em>look backward</em> without extra backup tooling; <code>OPTIMIZE</code>/<code>ZORDER</code> and <code>VACUUM</code> are the two routine maintenance jobs that keep a table fast and cheap as it grows &mdash; in production these two are usually scheduled weekly rather than run by hand.</p>
+
+  <div class="callout ok">
+    <strong class="label">Doing This in the UI Instead of SQL</strong>
+    Open any table in <strong>Catalog Explorer</strong> (left sidebar &rarr; Catalog icon &rarr; browse to the table) and its <strong>History</strong> tab lists every version with a timestamp, the operation that created it, and the row counts changed &mdash; the UI's read-only view of the same transaction log. The <strong>Sample Data</strong> tab lets you preview rows without writing a query, and the <strong>Details</strong> tab shows current size and file count, which is the number to watch before deciding a table needs an <code>OPTIMIZE</code> run.
+  </div>
+</section>
+
+<!-- ============ 06 MEDALLION ============ -->
+<section class="reveal" id="medallion">
+  <div class="section-kicker">06 &middot; Foundations</div>
+  <div class="section-head">
+    <div class="chip" style="background:var(--flow)"><svg width="18" height="18"><use href="#ic-layers" style="color:#fff"/></svg></div>
+    <h2>The Medallion Architecture</h2>
+  </div>
+  <p class="lede">Medallion architecture is the standard way to organize Delta tables inside a Lakehouse: data gets progressively cleaner and more trustworthy as it moves through three tiers.</p>
+
+  <figure class="diagram-wrap">
+    <svg viewBox="0 0 880 220" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Bronze Silver Gold medallion architecture diagram">
+      <defs><marker id="dbh3" markerWidth="9" markerHeight="9" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="#9AA0B4"/></marker></defs>
+      <g font-family="sans-serif">
+        <rect x="30" y="40" width="230" height="120" rx="12" fill="#1D1D26" stroke="#FFB454" stroke-width="1.5"/>
+        <text x="145" y="68" text-anchor="middle" font-size="14" font-weight="700" fill="#FFB454">BRONZE</text>
+        <text x="145" y="90" text-anchor="middle" font-size="11" fill="#F1F1F1">Raw, as-is ingestion</text>
+        <text x="145" y="108" text-anchor="middle" font-size="10" fill="#E7E7EE">exact copy of the source,</text>
+        <text x="145" y="122" text-anchor="middle" font-size="10" fill="#E7E7EE">plus load metadata</text>
+        <text x="145" y="144" text-anchor="middle" font-size="10" fill="#E7E7EE">full history, easy to replay</text>
+
+        <line x1="260" y1="100" x2="298" y2="100" stroke="#9AA0B4" stroke-width="1.6" marker-end="url(#dbh3)"/>
+
+        <rect x="300" y="40" width="230" height="120" rx="12" fill="#1D1D26" stroke="#5AC8FF" stroke-width="1.5"/>
+        <text x="415" y="68" text-anchor="middle" font-size="14" font-weight="700" fill="#5AC8FF">SILVER</text>
+        <text x="415" y="90" text-anchor="middle" font-size="11" fill="#F1F1F1">Cleaned &amp; conformed</text>
+        <text x="415" y="108" text-anchor="middle" font-size="10" fill="#E7E7EE">deduped, validated,</text>
+        <text x="415" y="122" text-anchor="middle" font-size="10" fill="#E7E7EE">joined, typed correctly</text>
+        <text x="415" y="144" text-anchor="middle" font-size="10" fill="#E7E7EE">the "single source of truth"</text>
+
+        <line x1="530" y1="100" x2="568" y2="100" stroke="#9AA0B4" stroke-width="1.6" marker-end="url(#dbh3)"/>
+
+        <rect x="570" y="40" width="230" height="120" rx="12" fill="#1D1D26" stroke="#5AC8FF" stroke-width="1.5"/>
+        <text x="685" y="68" text-anchor="middle" font-size="14" font-weight="700" fill="#5AC8FF">GOLD</text>
+        <text x="685" y="90" text-anchor="middle" font-size="11" fill="#F1F1F1">Business-level aggregates</text>
+        <text x="685" y="108" text-anchor="middle" font-size="10" fill="#E7E7EE">metrics, KPIs, feature</text>
+        <text x="685" y="122" text-anchor="middle" font-size="10" fill="#E7E7EE">tables for ML</text>
+        <text x="685" y="144" text-anchor="middle" font-size="10" fill="#E7E7EE">consumed by BI &amp; apps</text>
+
+        <text x="440" y="195" text-anchor="middle" font-size="11" fill="#E7E7EE">Each tier is its own real Delta table &mdash; not a temporary staging area</text>
+      </g>
+    </svg>
+    <figcaption>Fig. 4 &mdash; Data quality and business value increase moving left to right, from raw Bronze to analytics-ready Gold.</figcaption>
+  </figure>
+
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th>Tier</th><th>Contains</th><th>Typical Consumer</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Bronze</strong></td><td>Raw, untouched data plus ingestion metadata (source file, load time)</td><td>Data engineers debugging or replaying a pipeline</td></tr>
+      <tr><td><strong>Silver</strong></td><td>Cleaned, deduplicated, validated, and joined data at a granular level</td><td>Analysts and data scientists exploring the business</td></tr>
+      <tr><td><strong>Gold</strong></td><td>Aggregated, business-level tables (daily sales by region, churn features)</td><td>BI dashboards, executives, production ML models</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h3>A Minimal Bronze &rarr; Silver &rarr; Gold, End to End</h3>
+  <pre><code>-- Bronze: land raw data exactly as it arrived, plus load metadata
+CREATE OR REPLACE TABLE main.demo.bronze_orders AS
+SELECT *, current_timestamp() AS _ingested_at
+FROM read_files('/Volumes/main/demo/landing/orders/', format => 'json');
+
+-- Silver: clean, deduplicate, and enforce basic validity
+CREATE OR REPLACE TABLE main.demo.silver_orders AS
+SELECT DISTINCT order_id, customer_id, amount, order_ts
+FROM main.demo.bronze_orders
+WHERE amount > 0;
+
+-- Gold: aggregate to the exact shape a dashboard or model needs
+CREATE OR REPLACE TABLE main.demo.gold_daily_revenue AS
+SELECT to_date(order_ts) AS sales_date, sum(amount) AS revenue
+FROM main.demo.silver_orders
+GROUP BY to_date(order_ts);</code></pre>
+  <p>Nothing above is specific to any particular framework &mdash; three plain <code>CREATE TABLE ... AS SELECT</code> statements already form a valid, if very manual, medallion pipeline: each one reads the previous tier and writes the next. What Lakeflow Declarative Pipelines add on top, covered next, is turning these three separately-run statements into one declared, dependency-aware, incrementally-processed pipeline, instead of three tables you have to remember to re-run yourself, in the right order, every time.</p>
+</section>
+
+<!-- ============ 07 INGESTION / LAKEFLOW ============ -->
+<section class="reveal" id="ingestion">
+  <div class="section-kicker">07 &middot; Foundations</div>
+  <div class="section-head">
+    <div class="chip" style="background:var(--flow)"><svg width="18" height="18"><use href="#ic-funnel" style="color:#fff"/></svg></div>
+    <h2>Ingestion: Auto Loader &amp; Lakeflow Connect</h2>
+  </div>
+  <p class="lede">Getting data into Bronze reliably, incrementally, and without reprocessing everything every run is its own discipline. "Lakeflow" is Databricks' umbrella name for the whole ingestion-to-orchestration toolset, made of three pieces: <strong>Connect</strong> (ingestion), <strong>Declarative Pipelines</strong> (transformation), and <strong>Jobs</strong> (orchestration &mdash; the Workflows covered later in this guide).</p>
+
+  <h3>Auto Loader</h3>
+  <p>Auto Loader incrementally and efficiently processes new data <em>files</em> as they arrive in cloud storage, without you having to track which files have already been processed. It automatically infers and evolves schema, and scales from a handful of files to billions.</p>
+  <pre><code>(spark.readStream.format("cloudFiles")
+    .option("cloudFiles.format", "json")
+    .option("cloudFiles.schemaLocation", "/Volumes/restaurant_prod/bronze/landing/_schema")
+    .load("/Volumes/restaurant_prod/bronze/landing/incoming/")
+    .writeStream
+    .option("checkpointLocation", "/Volumes/restaurant_prod/bronze/landing/_checkpoints/files")
+    .toTable("restaurant_prod.bronze.menu_photos_metadata")
+)</code></pre>
+  <p>The key is <code>format("cloudFiles")</code> &mdash; that's Auto Loader itself, not a raw file reader. It uses cloud-native file notification services under the hood (rather than repeatedly listing the whole directory) to detect new files cheaply even when a folder holds millions of them; <code>cloudFiles.schemaLocation</code> is where it persists the schema it has inferred so far, so a newly-added column in a later file is handled as a controlled schema evolution instead of a failure. Note this is a different ingestion path from Auto Loader's cousin used elsewhere in this guide's project: Lakeflow Connect (Step 2) is for tables inside a database, Auto Loader is for files landing in storage.</p>
+
+  <h3>Lakeflow Connect (Managed Ingestion, Including CDC)</h3>
+  <p>Auto Loader is great when data already lands as files, but a lot of real source data lives inside operational systems &mdash; a SQL database, Salesforce, ServiceNow &mdash; that were never designed to hand you files at all. Lakeflow Connect is Databricks' library of managed, largely no-code connectors for exactly that case. Point it at a source and it handles authentication, schema discovery, and incremental refresh for you. For databases specifically, Lakeflow Connect can ingest via <strong>Change Data Capture (CDC)</strong>: instead of re-reading an entire table on every run, it reads the source database's own change log and replays only the inserts, updates, and deletes that actually happened since the last sync &mdash; landing an always-up-to-date mirror of that table directly into Bronze.</p>
+  <pre><code>resources:
+  pipelines:
+    salesforce_accounts_cdc:
+      catalog: main
+      target: bronze
+      ingestion_definition:
+        connection_name: salesforce_prod_connection   # a Unity Catalog Connection, not a raw password
+        objects:
+          - table:
+              source_schema: salesforce
+              source_table: Account
+              destination_table: accounts</code></pre>
+  <p>That's the entire pipeline definition &mdash; there's no extract loop or pagination logic to write. <code>connection_name</code> is the one piece of indirection that matters: it points at a governed Connection object (created once, holding real credentials) so this file itself never contains a secret. The project later in this guide uses exactly this pattern against Azure SQL instead of Salesforce.</p>
+
+  <h3>Lakeflow Declarative Pipelines</h3>
+  <p>Lakeflow Declarative Pipelines (the underlying open-source engine is also called Spark Declarative Pipelines, and the product was previously known as Delta Live Tables) let you declare <em>what</em> a table should contain rather than writing the step-by-step logic of <em>how</em> to compute it. You define a chain of tables (Bronze &rarr; Silver &rarr; Gold) as declarative queries, attach data-quality <strong>expectations</strong> to each one, and the engine works out execution order, incremental processing, and retries automatically &mdash; for both batch and streaming data, using the same syntax.</p>
+
+  <figure class="diagram-wrap">
+    <svg viewBox="0 0 880 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Lakeflow declarative pipeline diagram">
+      <defs><marker id="dbh4" markerWidth="9" markerHeight="9" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="#9AA0B4"/></marker></defs>
+      <g font-family="sans-serif">
+        <rect x="20" y="110" width="150" height="60" rx="10" fill="#1D1D26" stroke="#A56BFF" stroke-width="1.3"/>
+        <use href="#ic-cloud" x="32" y="123" width="26" height="26" style="color:#A56BFF"/>
+        <text x="95" y="153" text-anchor="middle" font-size="12" font-weight="600" fill="#F1F1F1">Cloud Files</text>
+
+        <line x1="170" y1="140" x2="208" y2="140" stroke="#9AA0B4" stroke-width="1.6" marker-end="url(#dbh4)"/>
+
+        <rect x="210" y="30" width="180" height="220" rx="12" fill="#1D1D26" stroke="#FFB454" stroke-width="1.5"/>
+        <use href="#ic-funnel" x="222" y="42" width="24" height="24" style="color:#FFB454"/>
+        <text x="300" y="72" text-anchor="middle" font-size="12.5" font-weight="700" fill="#FFB454">Auto Loader</text>
+        <text x="300" y="92" text-anchor="middle" font-size="10" fill="#E7E7EE">tracks new files</text>
+        <text x="300" y="106" text-anchor="middle" font-size="10" fill="#E7E7EE">infers &amp; evolves schema</text>
+        <text x="300" y="120" text-anchor="middle" font-size="10" fill="#E7E7EE">writes to Bronze</text>
+
+        <rect x="230" y="150" width="140" height="80" rx="8" fill="#191921" stroke="#FFB454" stroke-width="1.1"/>
+        <text x="300" y="180" text-anchor="middle" font-size="11" font-weight="600" fill="#F1F1F1">Bronze Table</text>
+        <text x="300" y="200" text-anchor="middle" font-size="9.5" fill="#E7E7EE">raw, append-only</text>
+        <text x="300" y="215" text-anchor="middle" font-size="9.5" fill="#E7E7EE">Delta table</text>
+
+        <line x1="390" y1="140" x2="428" y2="140" stroke="#9AA0B4" stroke-width="1.6" marker-end="url(#dbh4)"/>
+
+        <rect x="430" y="30" width="230" height="220" rx="12" fill="#1D1D26" stroke="#5AC8FF" stroke-width="1.5"/>
+        <use href="#ic-gear" x="442" y="42" width="24" height="24" style="color:#5AC8FF"/>
+        <text x="545" y="72" text-anchor="middle" font-size="12.5" font-weight="700" fill="#5AC8FF">Lakeflow Pipeline</text>
+        <text x="545" y="92" text-anchor="middle" font-size="10" fill="#E7E7EE">declarative table definitions</text>
+
+        <rect x="450" y="105" width="190" height="42" rx="7" fill="#191921" stroke="#5AC8FF" stroke-width="1"/>
+        <text x="545" y="130" text-anchor="middle" font-size="10.5" fill="#F1F1F1">CREATE STREAMING TABLE</text>
+
+        <rect x="450" y="155" width="190" height="42" rx="7" fill="#191921" stroke="#5AC8FF" stroke-width="1"/>
+        <text x="545" y="172" text-anchor="middle" font-size="10.5" fill="#F1F1F1">EXPECT valid_amount &gt; 0</text>
+        <text x="545" y="187" text-anchor="middle" font-size="9.5" fill="#E7E7EE">quality rule, auto-enforced</text>
+
+        <text x="545" y="222" text-anchor="middle" font-size="9.5" fill="#E7E7EE">engine resolves order &amp; incrementality</text>
+
+        <line x1="660" y1="140" x2="698" y2="140" stroke="#9AA0B4" stroke-width="1.6" marker-end="url(#dbh4)"/>
+
+        <rect x="700" y="105" width="160" height="70" rx="10" fill="#1D1D26" stroke="#5AC8FF" stroke-width="1.4"/>
+        <use href="#ic-table" x="712" y="118" width="24" height="24" style="color:#5AC8FF"/>
+        <text x="780" y="155" text-anchor="middle" font-size="12" font-weight="600" fill="#F1F1F1">Silver / Gold</text>
+      </g>
+    </svg>
+    <figcaption>Fig. 5 &mdash; Auto Loader lands new files into Bronze; a Lakeflow Declarative Pipeline declares Silver and Gold tables with built-in quality checks. (Lakeflow Connect follows the same Bronze destination but reads from a database's CDC feed instead of files &mdash; see the project's Step 2.)</figcaption>
+  </figure>
+
+  <pre><code>import dlt
+from pyspark.sql.functions import col
+
+@dlt.table
+def bronze_events():
+    return (spark.readStream.format("cloudFiles")
+                 .option("cloudFiles.format", "json")
+                 .load("/Volumes/main/demo/landing/"))
+
+@dlt.table
+@dlt.expect_or_drop("valid_id", "event_id IS NOT NULL")
+def silver_events():
+    # bronze_events is defined ABOVE, in this same pipeline, so the short
+    # dlt.read_stream("<name>") form resolves it directly - no catalog path needed.
+    return (dlt.read_stream("bronze_events")
+               .select(col("event_id"), col("event_type"), col("event_ts").cast("timestamp")))
+
+@dlt.table
+def gold_event_counts():
+    return dlt.read("silver_events").groupBy("event_type").count()</code></pre>
+  <p>Three <code>@dlt.table</code> functions, one per medallion tier, chained together purely by referencing each other's plain table names &mdash; this is what "the engine resolves execution order" means concretely: nowhere in this file does anything say "run <code>bronze_events</code> before <code>silver_events</code>," yet the pipeline can only run them in that order, because <code>silver_events</code> literally can't produce output until <code>dlt.read_stream("bronze_events")</code> has something to read. Contrast this with the project later in this guide, where Bronze is written by a completely separate job outside the pipeline &mdash; in that case the code has to switch to <code>spark.readStream.table("catalog.schema.table")</code> instead, since <code>dlt.read_stream</code> only ever looks inside its own pipeline's dataset graph.</p>
+
+  <div class="callout ok">
+    <strong class="label">Batch and Streaming, Same Code</strong>
+    A Lakeflow Declarative Pipeline table definition doesn't need to say whether it's batch or streaming &mdash; the same declarative query can run as a one-time backfill or as a continuously updating streaming table, which removes an entire category of duplicated pipeline logic.
+  </div>
+</section>
+
+<!-- ============ 08 UNITY CATALOG ============ -->
+<section class="reveal" id="unity-catalog">
+  <div class="section-kicker">08 &middot; Foundations</div>
+  <div class="section-head">
+    <div class="chip" style="background:var(--uc)"><svg width="18" height="18"><use href="#ic-shield" style="color:#fff"/></svg></div>
+    <h2>Unity Catalog</h2>
+  </div>
+  <p class="lede">Unity Catalog is the governance layer that sits above every table, file, model, and dashboard in a Databricks account, giving one consistent way to organize, secure, and audit all of it.</p>
+
+  <h3>The Namespace Hierarchy</h3>
+  <p>Unity Catalog organizes every asset into four nested levels, from broadest to most specific: a <strong>metastore</strong> (one per region, the top-level container), a <strong>catalog</strong> inside it (typically one per environment or business unit, like "restaurant_prod"), a <strong>schema</strong> inside that catalog (a grouping of related objects, like "gold"), and finally the <strong>objects themselves</strong> &mdash; tables, views, and even registered ML models, all addressed the same way. The diagram below traces that path top to bottom.</p>
+  <figure class="diagram-wrap">
+    <svg viewBox="0 0 860 260" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Unity Catalog hierarchy diagram: metastore, catalog, schema, table">
+      <defs><marker id="dbh5" markerWidth="9" markerHeight="9" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="#9AA0B4"/></marker></defs>
+      <g font-family="sans-serif">
+        <rect x="330" y="20" width="200" height="55" rx="10" fill="#1D1D26" stroke="#FF6B9D" stroke-width="1.5"/>
+        <use href="#ic-cube" x="345" y="32" width="26" height="26" style="color:#FF6B9D"/>
+        <text x="430" y="55" text-anchor="middle" font-size="12.5" font-weight="700" fill="#F1F1F1">Metastore</text>
+
+        <line x1="430" y1="75" x2="430" y2="108" stroke="#9AA0B4" stroke-width="1.4" marker-end="url(#dbh5)"/>
+
+        <rect x="330" y="110" width="200" height="50" rx="10" fill="#1D1D26" stroke="#FF6B9D" stroke-width="1.3"/>
+        <use href="#ic-folder" x="345" y="121" width="24" height="24" style="color:#FF6B9D"/>
+        <text x="430" y="142" text-anchor="middle" font-size="12" font-weight="600" fill="#F1F1F1">Catalog</text>
+        <text x="430" y="156" text-anchor="middle" font-size="9.5" fill="#E7E7EE">e.g. "restaurant_prod"</text>
+
+        <line x1="430" y1="160" x2="430" y2="193" stroke="#9AA0B4" stroke-width="1.4" marker-end="url(#dbh5)"/>
+
+        <rect x="330" y="195" width="200" height="50" rx="10" fill="#1D1D26" stroke="#FF6B9D" stroke-width="1.3"/>
+        <use href="#ic-folder" x="345" y="206" width="24" height="24" style="color:#FF6B9D"/>
+        <text x="430" y="227" text-anchor="middle" font-size="12" font-weight="600" fill="#F1F1F1">Schema</text>
+        <text x="430" y="240" text-anchor="middle" font-size="9.5" fill="#E7E7EE">e.g. "gold"</text>
+
+        <line x1="530" y1="220" x2="600" y2="180" stroke="#9AA0B4" stroke-width="1.3" stroke-dasharray="3,3" marker-end="url(#dbh5)"/>
+        <line x1="530" y1="220" x2="660" y2="220" stroke="#9AA0B4" stroke-width="1.3" stroke-dasharray="3,3" marker-end="url(#dbh5)"/>
+        <line x1="530" y1="220" x2="600" y2="90" stroke="#9AA0B4" stroke-width="1.3" stroke-dasharray="3,3" marker-end="url(#dbh5)"/>
+
+        <rect x="605" y="60" width="150" height="45" rx="8" fill="#191921" stroke="#5AC8FF" stroke-width="1.1"/>
+        <text x="680" y="87" text-anchor="middle" font-size="11" fill="#F1F1F1">Table: daily_sales</text>
+
+        <rect x="605" y="150" width="150" height="45" rx="8" fill="#191921" stroke="#5AC8FF" stroke-width="1.1"/>
+        <text x="680" y="177" text-anchor="middle" font-size="11" fill="#F1F1F1">View: sales_kpis</text>
+
+        <rect x="665" y="198" width="150" height="45" rx="8" fill="#191921" stroke="#FF6B9D" stroke-width="1.1"/>
+        <text x="740" y="225" text-anchor="middle" font-size="11" fill="#F1F1F1">Model: churn_v3</text>
+      </g>
+    </svg>
+    <figcaption>Fig. 6 &mdash; Every asset is addressed the same way: <code>catalog.schema.object</code>, e.g. <code>restaurant_prod.gold.daily_sales</code>.</figcaption>
+  </figure>
+
+  <h3>What Unity Catalog Gives You</h3>
+  <div class="grid-2">
+    <div class="mini-card"><h4>Fine-Grained Access Control</h4><p>Grant SELECT/MODIFY at the catalog, schema, table, row, or even column level with standard SQL <code>GRANT</code> statements.</p></div>
+    <div class="mini-card"><h4>Automatic Data Lineage</h4><p>Every query is tracked, so you can see exactly which upstream tables and columns fed into any downstream table, dashboard, or model.</p></div>
+    <div class="mini-card"><h4>Unified Auditing</h4><p>Every access to every table across every workspace is centrally logged for compliance and security review.</p></div>
+    <div class="mini-card"><h4>Secure Data Sharing</h4><p>Share live tables with other Databricks accounts &mdash; or organizations without Databricks at all &mdash; without copying data.</p></div>
+  </div>
+
+  <h3>In Practice</h3>
+  <pre><code>-- Create the namespace
+CREATE CATALOG IF NOT EXISTS main;
+CREATE SCHEMA IF NOT EXISTS main.demo;
+
+-- Grant access with ordinary SQL - no separate "permissions language" to learn
+GRANT USE CATALOG, USE SCHEMA ON SCHEMA main.demo TO `analysts`;
+GRANT SELECT ON TABLE main.demo.gold_daily_revenue TO `analysts`;
+
+-- Share a live table with another Databricks account, with no copy involved
+CREATE SHARE partner_share;
+ALTER SHARE partner_share ADD TABLE main.demo.gold_daily_revenue;</code></pre>
+  <p>Every one of these is a plain SQL DDL statement &mdash; Unity Catalog doesn't introduce a separate governance language; it makes <code>CATALOG</code> and <code>SHARE</code> first-class objects that the same familiar <code>CREATE</code>/<code>GRANT</code>/<code>ALTER</code> verbs already know how to operate on. The one thing that has no SQL equivalent is the full lineage graph mentioned above &mdash; that's viewed in Catalog Explorer's <strong>Lineage</strong> tab on any table, rendered automatically from every query Databricks has ever run against it, rather than something you query for directly.</p>
+</section>
+
+<!-- ============ 09 DATA SHARING ============ -->
+<section class="reveal" id="data-sharing">
+  <div class="section-kicker">09 &middot; Foundations</div>
+  <div class="section-head">
+    <div class="chip" style="background:var(--share)"><svg width="18" height="18"><use href="#ic-cloud" style="color:#fff"/></svg></div>
+    <h2>Data Sharing: Delta Sharing &amp; Clean Rooms</h2>
+  </div>
+  <p class="lede">Unity Catalog's <code>CREATE SHARE</code> statement from the previous section is the tip of a bigger capability: sharing governed data and AI assets &mdash; live, with no copies &mdash; both across your own Databricks accounts and with organizations that don't run Databricks at all.</p>
+
+  <h3>Delta Sharing: An Open Protocol, Not a Databricks-Only Feature</h3>
+  <p><strong>Delta Sharing</strong> is an open-source protocol (not a proprietary API) for sharing a live view of a Delta table with a recipient. A <strong>provider</strong> (you) creates a <code>SHARE</code> containing one or more tables and adds <strong>recipients</strong>; a recipient reads that share either as another Databricks Unity Catalog metastore (open, governed access with no extra tooling) or, if they run no Databricks at all, via a small open-source Delta Sharing client &mdash; pandas, Spark, Power BI, and several other tools can all read a share directly. Because the recipient's own compute runs the query against the provider's storage, the provider never pays for the recipient's read workload, and the recipient always sees the current data &mdash; there's no export file that goes stale the moment the source table changes.</p>
+
+  <div class="table-wrap">
+  <table>
+    <thead><tr><th></th><th>Ordinary table GRANT</th><th>Delta Sharing</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Recipient</strong></td><td>A user/group inside your own metastore</td><td>Another Databricks account, or an organization with no Databricks at all</td></tr>
+      <tr><td><strong>Access model</strong></td><td>Direct SQL/DataFrame access to the table</td><td>A versioned, revocable <code>SHARE</code> object the recipient reads via Unity Catalog or an open client</td></tr>
+      <tr><td><strong>Data movement</strong></td><td>None &mdash; same metastore</td><td>None &mdash; recipient reads live, no export/copy</td></tr>
+    </tbody>
+  </table>
+  </div>
+
+  <h3>Databricks Marketplace</h3>
+  <p>Built on top of Delta Sharing, the <strong>Databricks Marketplace</strong> is a catalog of datasets, notebooks, and AI models that providers publish for other organizations to discover and subscribe to &mdash; the same share-without-copying mechanics, with a public discovery layer on top so a recipient doesn't need a direct relationship with the provider before requesting access.</p>
+
+  <h3>Clean Rooms: Collaborating Without Exposing Raw Data</h3>
+  <p>Delta Sharing answers "let this other party read my table." <strong>Clean Rooms</strong> answer a stricter question: "let this other party and I compute something <em>together</em>, without either of us ever seeing the other's raw rows." Each participant brings their own governed data into a secure, Unity-Catalog-governed environment; only pre-approved queries or notebooks can run inside it, and only the aggregated result &mdash; not either party's underlying data &mdash; ever leaves. This is the pattern behind joint marketing measurement between a retailer and an ad platform, or cross-institution analysis in healthcare and finance, where the whole point is that neither side can see the other's individual-level records.</p>
+
+  <div class="callout def">
+    <strong class="label">Definition</strong>
+    A <strong>Clean Room</strong> is a governed, multi-party compute environment where each participant's raw data stays inside their own account &mdash; only the outputs of jointly agreed-upon queries are shared, never the underlying rows.
+  </div>
+
+  <div class="callout ok">
+    <strong class="label">Key Idea</strong>
+    Delta Sharing, Marketplace, and Clean Rooms are three points on the same spectrum &mdash; "share a table," "publish a table for anyone to discover," and "compute jointly without sharing the table at all" &mdash; and all three are governed through the same Unity Catalog permissions as everything else in this guide, not a separate security system.
+  </div>
+</section>
+
+<!-- ============ 10 SQL & AI/BI ============ -->
+<section class="reveal" id="sql-bi">
+  <div class="section-kicker">10 &middot; Foundations</div>
+  <div class="section-head">
+    <div class="chip" style="background:var(--sql)"><svg width="18" height="18"><use href="#ic-chart" style="color:#fff"/></svg></div>
+    <h2>Databricks SQL &amp; AI/BI</h2>
+  </div>
+  <p class="lede">Databricks SQL is the platform's data warehouse experience: a SQL editor, dashboards, and alerts, running on the same Gold Delta tables as everything else &mdash; no separate warehouse or copy of data required.</p>
+
+  <ul>
+    <li><strong>SQL Warehouses:</strong> purpose-built, auto-scaling compute for interactive SQL and BI tools (Tableau, Power BI, Looker connect directly).</li>
+    <li><strong>Dashboards:</strong> visualizations built directly on top of SQL queries against Gold tables, shareable across the organization.</li>
+    <li><strong>Alerts:</strong> automatic notifications when a query result crosses a defined threshold.</li>
+    <li><strong>AI/BI Genie:</strong> a natural-language interface that lets business users ask questions about governed data in plain English and get back a chart or number, grounded in the same Unity Catalog metadata and permissions as everything else.</li>
+  </ul>
+
+  <pre><code>-- A query a dashboard panel, or an alert, can be built directly from
+SELECT restaurant_id, sum(total_sales) AS revenue
+FROM restaurant_prod.gold.daily_sales_by_restaurant
+WHERE sales_date >= current_date() - INTERVAL 7 DAYS
+GROUP BY restaurant_id
+ORDER BY revenue DESC;</code></pre>
+  <p>Any BI tool that speaks standard SQL over JDBC/ODBC &mdash; Tableau, Power BI, Looker &mdash; can point straight at a SQL warehouse and run this exact query as-is; there's no Databricks-specific driver logic a report author needs to learn. Save the query above as a named query, then attach an <strong>alert</strong> to it in the UI &mdash; e.g. "notify <code>#ops-channel</code> if any restaurant's revenue drops more than 20% week over week" &mdash; with no extra code: the alert simply re-runs the same saved query on a schedule and compares the result against a threshold you set.</p>
+
+  <div class="callout ok">
+    <strong class="label">Key Idea</strong>
+    Because BI queries run against the exact same Gold Delta tables used by data engineering and ML, there is no separate "reporting copy" of the data to keep in sync &mdash; one governed table, many consumers.
+  </div>
+</section>
+
+<!-- ============ 11 MLFLOW ============ -->
+<section class="reveal" id="mlflow">
+  <div class="section-kicker">11 &middot; Foundations</div>
+  <div class="section-head">
+    <div class="chip" style="background:var(--ml)"><svg width="18" height="18"><use href="#ic-ai" style="color:#fff"/></svg></div>
+    <h2>MLflow, Agent Bricks &amp; Generative AI</h2>
+  </div>
+  <p class="lede">Databricks gives you a spectrum of paths to "add AI to a pipeline," not just one. MLflow is for when you're training your own model. Mosaic AI Functions are for when a general-purpose foundation model can already do the job with zero training. And Agent Bricks, Vector Search, and Genie are for when the task needs a full production agent rather than one model call &mdash; picking the right point on that spectrum matters.</p>
+
+  <h3>MLflow: Track and Register Your Own Models</h3>
+  <div class="grid-2">
+    <div class="mini-card"><h4>Tracking</h4><p>Every training run automatically logs its parameters, metrics, and output files, so experiments are comparable and reproducible.</p></div>
+    <div class="mini-card"><h4>Model Registry</h4><p>A central, versioned store for trained models, with stages (staging, production) that control which version actually serves traffic.</p></div>
+    <div class="mini-card"><h4>Model Serving</h4><p>Registered models can be deployed behind a REST endpoint with a few clicks, including large language models via Mosaic AI.</p></div>
+    <div class="mini-card"><h4>Feature Store</h4><p>Reusable, governed feature tables (stored as Delta tables in Unity Catalog) shared consistently between training and real-time serving.</p></div>
+  </div>
+
+  <pre><code>import mlflow
+
+with mlflow.start_run():
+    model = train_model(X_train, y_train)          # any scikit-learn / XGBoost / PyTorch model
+    mlflow.log_param("max_depth", 6)
+    mlflow.log_metric("accuracy", model.score(X_test, y_test))
+    mlflow.sklearn.log_model(model, artifact_path="model",
+                              registered_model_name="restaurant_prod.ml.demand_forecaster")</code></pre>
+  <p><code>start_run()</code> opens one tracked experiment run; every parameter and metric logged inside it becomes a row you can compare against every other run later, with none of that bookkeeping done by hand. Passing <code>registered_model_name</code> immediately versions the trained model into Unity Catalog's Model Registry &mdash; a governed object addressed the same <code>catalog.schema.name</code> way as a table &mdash; from which promoting a specific version to serve real traffic is a UI action (or one API call), not a redeploy of any code.</p>
+
+  <h3>Mosaic AI Functions: No Training Required</h3>
+  <p>Mosaic AI is Databricks' platform for building on foundation and generative-AI models. Its most immediately useful piece for a data engineer is <strong>AI Functions</strong>: built-in SQL functions that call a foundation model directly inside a query, right next to your data, with no separate model to train, deploy, or manage.</p>
+  <div class="grid-2">
+    <div class="mini-card"><h4><code>ai_analyze_sentiment()</code></h4><p>Classifies a text column as positive, negative, neutral, or mixed &mdash; e.g. scoring customer review text row by row.</p></div>
+    <div class="mini-card"><h4><code>ai_classify()</code></h4><p>Sorts free text into a set of categories you define, with no labeled training data needed.</p></div>
+    <div class="mini-card"><h4><code>ai_summarize()</code></h4><p>Condenses long text (support tickets, reviews, transcripts) into a short summary.</p></div>
+    <div class="mini-card"><h4><code>ai_query()</code></h4><p>Calls any Mosaic AI-served model &mdash; a foundation model or your own custom one &mdash; from plain SQL for cases the other functions don't cover.</p></div>
+  </div>
+
+  <div class="callout def">
+    <strong class="label">Which One Do I Use?</strong>
+    If the task is generic (sentiment, classification, summarization of everyday text), reach for an AI Function first &mdash; it's a single line of SQL with nothing to train or maintain. Reach for MLflow and a custom-trained model only when the task is specific to your business and a general-purpose model genuinely can't do it well enough (e.g. forecasting your specific demand pattern from your own historical data).
+  </div>
+
+  <h3>Agent Bricks: Building Production AI Agents</h3>
+  <p>AI Functions are a single call; a real production assistant usually needs several calls chained together, tool use, and a way to keep quality and cost under control as volume grows. <strong>Agent Bricks</strong> is Databricks' framework for that next step: point it at your own data and a task description, and it automatically generates domain-specific synthetic evaluation data and task-aware benchmarks, then uses them to tune the agent's quality and cost automatically &mdash; rather than you hand-tuning prompts against a handful of examples.</p>
+  <div class="grid-2">
+    <div class="mini-card"><h4>Information Extraction Agent</h4><p>Turns unstructured documents &mdash; emails, PDFs, reports &mdash; into structured fields (names, dates, line items).</p></div>
+    <div class="mini-card"><h4>Knowledge Assistant Agent</h4><p>A grounded Q&amp;A assistant over your own documents, built to reduce the vague or incorrect answers a plain chatbot gives.</p></div>
+    <div class="mini-card"><h4>Multi-Agent Supervisor</h4><p>Coordinates several agents and tools &mdash; including Genie spaces and MCP-connected tools &mdash; as one system for multi-step tasks.</p></div>
+    <div class="mini-card"><h4>Native MCP Support</h4><p>Model Context Protocol lets an agent safely call external APIs, databases, and SaaS tools through a standardized tool interface.</p></div>
+  </div>
+  <p>Every agent, tool, and model Agent Bricks touches is still governed through Unity Catalog &mdash; ownership, permissions, and lineage work the same way for an AI agent as they do for a table.</p>
+
+  <h3>Mosaic AI Vector Search</h3>
+  <p>Grounding an LLM's answers in your own documents &mdash; retrieval-augmented generation, or RAG &mdash; needs a way to find the handful of passages most relevant to a question out of potentially millions. <strong>Vector Search</strong> is a managed vector database, integrated with Unity Catalog, that automatically keeps its index in sync with a source Delta table &mdash; embed a text column once, and new or updated rows flow into the index without a separate pipeline to maintain.</p>
+  <pre><code>CREATE VECTOR SEARCH ENDPOINT restaurant_reviews_endpoint;
+
+CREATE VECTOR SEARCH INDEX restaurant_prod.gold.reviews_index
+  ON TABLE restaurant_prod.gold.customer_reviews
+  USING ENDPOINT restaurant_reviews_endpoint
+  EMBEDDING_SOURCE_COLUMN review_text
+  SYNC MODE TRIGGERED;</code></pre>
+  <p>Once the index exists, an agent (or an <code>ai_query()</code> call) can search it for the reviews most similar to an incoming question, and pass those specific rows to the model as grounding context &mdash; instead of hoping the model already "knows" your data.</p>
+
+  <h3>Genie Spaces as Agent Tools</h3>
+  <p>The AI/BI Genie from the previous section isn't only a chat box for business users &mdash; a Genie space can itself be registered as a callable tool inside a Multi-Agent Supervisor, so an agent can delegate "what were last week's sales by region" to Genie's natural-language-to-SQL engine instead of trying to write that SQL itself. The BI layer and the agent layer share the same underlying governed data and the same permissions, rather than being two disconnected systems.</p>
+
+  <div class="callout def">
+    <strong class="label">The Recommended Path</strong>
+    Databricks' own guidance for adding AI is a progression, not a single tool: start with an <strong>AI Function</strong> for a quick answer; move to <strong>Agent Bricks</strong> once you need consistent quality and cost control at volume; add a <strong>Multi-Agent Supervisor</strong> when one task needs several tools or agents working together; and reach for a fully custom <strong>Agent Framework</strong> build only when a requirement genuinely exceeds what the packaged products above can do.
+  </div>
+</section>
+
+<!-- ============ 12 LAKEBASE ============ -->
+<section class="reveal" id="lakebase">
+  <div class="section-kicker">12 &middot; Foundations</div>
+  <div class="section-head">
+    <div class="chip" style="background:var(--oltp)"><svg width="18" height="18"><use href="#ic-server" style="color:#fff"/></svg></div>
+    <h2>Lakebase: Managed Postgres for OLTP</h2>
+  </div>
+  <p class="lede">Every engine covered so far &mdash; Spark, Delta Lake, Databricks SQL &mdash; is built for scanning and aggregating large volumes of data. None of them is built for what an application needs: reading or writing one specific row, in milliseconds, thousands of times a second. <strong>Lakebase</strong> is Databricks' answer &mdash; a fully managed, Postgres-compatible database for exactly that pattern, living inside the same governed platform instead of a disconnected database service you'd otherwise have to stand up yourself.</p>
+
+  <div class="callout def">
+    <strong class="label">OLTP vs. OLAP, in One Line</strong>
+    OLTP (what Lakebase is for) means many small, fast, single-row transactions &mdash; "update this one order's status." OLAP (what Spark/Delta/Databricks SQL are for) means scanning and aggregating huge volumes of history &mdash; "sum every order from the last year." Lakehouse tables are excellent at the second job and a poor fit for the first.
+  </div>
+
+  <h3>Why It's Not Just "Another Postgres"</h3>
+  <div class="grid-2">
+    <div class="mini-card"><h4>Native Unity Catalog Governance</h4><p>Lakebase tables are governed the same way as Delta tables &mdash; same permissions model, same audit trail, no second security system to maintain.</p></div>
+    <div class="mini-card"><h4>Bidirectional Sync with the Lakehouse</h4><p>Sync a Gold Delta table <em>into</em> Lakebase for low-latency serving, and/or capture Lakebase's own changes back out as Delta tables for downstream analytics and audit.</p></div>
+    <div class="mini-card"><h4>Instant, Git-Like Branching</h4><p>Copy-on-write branching creates an independent copy of a database in seconds &mdash; cheap, because unchanged data is shared with the parent rather than duplicated.</p></div>
+    <div class="mini-card"><h4>Autoscaling to Zero</h4><p>Compute scales with load automatically within limits you set, and scales to zero &mdash; and back &mdash; when idle, so a dev branch sitting unused costs nothing.</p></div>
+  </div>
+
+  <figure class="diagram-wrap">
+    <svg viewBox="0 0 860 230" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Lakebase syncing with a Gold Delta table and serving a Databricks App, with an instant branch shown alongside">
+      <defs><marker id="lbh6" markerWidth="9" markerHeight="9" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="#9AA0B4"/></marker></defs>
+      <g font-family="sans-serif">
+        <rect x="30" y="80" width="170" height="55" rx="10" fill="#1D1D26" stroke="#5AC8FF" stroke-width="1.4"/>
+        <text x="115" y="112" text-anchor="middle" font-size="12" font-weight="600" fill="#F1F1F1">Gold Delta Table</text>
+
+        <line x1="200" y1="98" x2="300" y2="98" stroke="#9AA0B4" stroke-width="1.4" marker-end="url(#lbh6)"/>
+        <text x="250" y="90" text-anchor="middle" font-size="10.5" fill="#E7E7EE">sync</text>
+        <line x1="300" y1="122" x2="200" y2="122" stroke="#9AA0B4" stroke-width="1.4" marker-end="url(#lbh6)"/>
+        <text x="250" y="140" text-anchor="middle" font-size="10.5" fill="#E7E7EE">capture changes</text>
+
+        <rect x="310" y="70" width="190" height="75" rx="10" fill="#1D1D26" stroke="#FFB454" stroke-width="1.6"/>
+        <text x="405" y="102" text-anchor="middle" font-size="12.5" font-weight="700" fill="#F1F1F1">Lakebase</text>
+        <text x="405" y="120" text-anchor="middle" font-size="10.5" fill="#E7E7EE">Postgres, autoscaled</text>
+
+        <line x1="500" y1="107" x2="600" y2="107" stroke="#9AA0B4" stroke-width="1.4" marker-end="url(#lbh6)"/>
+
+        <rect x="610" y="80" width="220" height="55" rx="10" fill="#1D1D26" stroke="#FFB454" stroke-width="1.4"/>
+        <text x="720" y="112" text-anchor="middle" font-size="12" font-weight="600" fill="#F1F1F1">Databricks App / AI Agent</text>
+
+        <line x1="405" y1="145" x2="405" y2="175" stroke="#9AA0B4" stroke-width="1.3" stroke-dasharray="3,3" marker-end="url(#lbh6)"/>
+        <rect x="310" y="180" width="190" height="42" rx="9" fill="#191921" stroke="#9AA0B4" stroke-width="1.2" stroke-dasharray="3,3"/>
+        <text x="405" y="205" text-anchor="middle" font-size="10.5" fill="#E7E7EE">dev branch (seconds, copy-on-write)</text>
+      </g>
+    </svg>
+    <figcaption>Fig. 8 &mdash; Lakebase sits between the lakehouse and a low-latency consumer, syncing both ways, with instant branching for dev/test.</figcaption>
+  </figure>
+
+  <h3>What You'd Use It For</h3>
+  <ul>
+    <li><strong>Backend database for a Databricks App</strong> &mdash; an interactive tool needs fast row lookups a Delta table can't give it.</li>
+    <li><strong>Online feature store</strong> &mdash; serving a specific customer's features to a model in milliseconds at inference time.</li>
+    <li><strong>State/memory store for an AI agent</strong> &mdash; conversation history and tool-call state, read and written constantly during a session.</li>
+    <li><strong>Operational reporting</strong> &mdash; a small, frequently-hit summary table synced from Gold, without adding load to the SQL warehouse.</li>
+  </ul>
+
+  <div class="callout warn">
+    <strong class="label">Know the Boundaries</strong>
+    Lakebase is managed Postgres, not unrestricted Postgres: there's no host/OS access and no Postgres superuser (a <code>databricks_superuser</code> role covers routine administration instead), native Postgres logical replication in or out isn't available, and tablespaces aren't supported. Design around these the same way you'd design around any managed database service's constraints.
+  </div>
+</section>
+
+<!-- ============ 13 APPS ============ -->
+<section class="reveal" id="apps">
+  <div class="section-kicker">13 &middot; Foundations</div>
+  <div class="section-head">
+    <div class="chip" style="background:var(--apps)"><svg width="18" height="18"><use href="#ic-bolt" style="color:#fff"/></svg></div>
+    <h2>Databricks Apps</h2>
+  </div>
+  <p class="lede">Every concept so far produces governed data, models, or agents &mdash; but someone eventually needs a UI to actually use them. <strong>Databricks Apps</strong> lets you build and host a real, interactive web application &mdash; a dashboard, an internal tool, an AI chat interface &mdash; directly inside the workspace, on serverless compute, with no separate hosting infrastructure to provision or patch.</p>
+
+  <h3>What You Get for Free</h3>
+  <div class="grid-2">
+    <div class="mini-card"><h4>Inherited Auth</h4><p>The app runs under Databricks OAuth and the viewer's own workspace identity &mdash; no separate login system to build.</p></div>
+    <div class="mini-card"><h4>Governed Data Access</h4><p>Queries against Unity Catalog tables and SQL warehouses respect the exact same permissions as everywhere else in this guide.</p></div>
+    <div class="mini-card"><h4>Serverless, Managed Compute</h4><p>Databricks provisions and scales the runtime; there's no VM, container host, or Kubernetes cluster for you to operate.</p></div>
+    <div class="mini-card"><h4>Python &amp; Node.js, Together if Needed</h4><p>Ship a Streamlit/Dash/Gradio/Flask Python app, a Node.js frontend, or both &mdash; e.g. a Node UI calling a Python backend.</p></div>
+  </div>
+
+  <h3>Deploying an App</h3>
+  <p>An app is a small folder of source files plus an <code>app.yaml</code> describing how to run it. You deploy it from the Databricks UI, with a single CLI command, or straight from a Git repository (any branch, tag, or commit) &mdash; and for a GitHub-backed app, an optional auto-deploy on every push, so a merge to <code>main</code> updates the live app with no manual step.</p>
+  <pre><code># app.yaml
+command: ["streamlit", "run", "app.py"]
+
+# deploy from the CLI once the source is synced to the workspace
+databricks apps deploy churn-dashboard --source-code-path ./churn_app</code></pre>
+  <pre><code># app.py -- a minimal example querying a governed Gold table
+import streamlit as st
+from databricks import sql
+
+conn = sql.connect(
+    server_hostname=os.getenv("DATABRICKS_HOST"),
+    http_path=os.getenv("DATABRICKS_WAREHOUSE_HTTP_PATH"),
+    credentials_provider=lambda: os.getenv("DATABRICKS_TOKEN"),  # inherited OAuth in production
+)
+with conn.cursor() as cur:
+    cur.execute("SELECT restaurant_id, revenue FROM restaurant_prod.gold.daily_sales_by_restaurant")
+    st.bar_chart(cur.fetchall())</code></pre>
+  <p>Nothing here is Databricks-specific Python &mdash; it's an ordinary Streamlit app that happens to query a SQL warehouse using the workspace's own credentials instead of a hand-rolled connection string and password.</p>
+
+  <div class="callout ok">
+    <strong class="label">Key Idea</strong>
+    A growing number of Databricks Apps are AI agent front-ends &mdash; a chat UI in front of an agent built with LangGraph, a plain <code>pyfunc</code> model, or the OpenAI Agent SDK, deployed the same way as any other app &mdash; often backed by <a href="#lakebase">Lakebase</a> for the agent's conversation state, keeping the entire stack, from data to model to UI, inside one governed platform.
+  </div>
+</section>
+
+<!-- ============ 14 WORKFLOWS ============ -->
+<section class="reveal" id="workflows">
+  <div class="section-kicker">14 &middot; Foundations</div>
+  <div class="section-head">
+    <div class="chip" style="background:var(--wf)"><svg width="18" height="18"><use href="#ic-dag" style="color:#fff"/></svg></div>
+    <h2>Workflows &amp; Orchestration</h2>
+  </div>
+  <p class="lede">Databricks Workflows schedules and orchestrates everything above: notebooks, Lakeflow pipelines, SQL queries, and ML training runs, as a single dependency-aware Job.</p>
+  <p>The diagram below reads left to right, then top to bottom: a schedule fires the Job, which runs a chain of tasks &mdash; Bronze, then Silver, then Gold &mdash; each waiting for the one before it to succeed. Once Gold is ready, two independent tasks (refreshing the dashboard and running a SQL/AI task) run at the same time, since neither depends on the other.</p>
+
+  <figure class="diagram-wrap">
+    <svg viewBox="0 0 860 260" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Databricks Workflows job DAG diagram">
+      <defs><marker id="dbh6" markerWidth="9" markerHeight="9" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="#9AA0B4"/></marker></defs>
+      <g font-family="sans-serif">
+        <rect x="340" y="15" width="180" height="45" rx="10" fill="#1D1D26" stroke="#A56BFF" stroke-width="1.4"/>
+        <use href="#ic-clock" x="420" y="18" width="18" height="18" style="color:#A56BFF"/>
+        <text x="430" y="55" text-anchor="middle" font-size="11" font-weight="600" fill="#F1F1F1">Job Trigger (Schedule)</text>
+
+        <line x1="430" y1="60" x2="130" y2="98" stroke="#9AA0B4" stroke-width="1.3" stroke-dasharray="3,3" marker-end="url(#dbh6)"/>
+
+        <g font-size="12" font-weight="600">
+          <rect x="30" y="100" width="150" height="55" rx="10" fill="#1D1D26" stroke="#A56BFF" stroke-width="1.3"/>
+          <text x="105" y="132" text-anchor="middle" fill="#F1F1F1">Task: Bronze</text>
+
+          <rect x="220" y="100" width="150" height="55" rx="10" fill="#1D1D26" stroke="#A56BFF" stroke-width="1.3"/>
+          <text x="295" y="132" text-anchor="middle" fill="#F1F1F1">Task: Silver</text>
+
+          <rect x="410" y="100" width="150" height="55" rx="10" fill="#1D1D26" stroke="#A56BFF" stroke-width="1.3"/>
+          <text x="485" y="132" text-anchor="middle" fill="#F1F1F1">Task: Gold</text>
+        </g>
+
+        <line x1="180" y1="127" x2="218" y2="127" stroke="#9AA0B4" stroke-width="1.6" marker-end="url(#dbh6)"/>
+        <line x1="370" y1="127" x2="408" y2="127" stroke="#9AA0B4" stroke-width="1.6" marker-end="url(#dbh6)"/>
+
+        <rect x="600" y="65" width="160" height="50" rx="10" fill="#1D1D26" stroke="#5AC8FF" stroke-width="1.3"/>
+        <text x="680" y="95" text-anchor="middle" font-size="11.5" font-weight="600" fill="#F1F1F1">Refresh Dashboard</text>
+
+        <rect x="600" y="140" width="160" height="50" rx="10" fill="#1D1D26" stroke="#FF6B9D" stroke-width="1.3"/>
+        <text x="680" y="170" text-anchor="middle" font-size="11.5" font-weight="600" fill="#F1F1F1">Task: SQL / AI Task</text>
+
+        <line x1="560" y1="120" x2="598" y2="95" stroke="#9AA0B4" stroke-width="1.4" marker-end="url(#dbh6)"/>
+        <line x1="560" y1="135" x2="598" y2="160" stroke="#9AA0B4" stroke-width="1.4" marker-end="url(#dbh6)"/>
+      </g>
+      <text x="430" y="235" text-anchor="middle" font-size="11.5" fill="#E7E7EE">Retries, alerts on failure, run history, and parameter passing between tasks are all built in.</text>
+    </svg>
+    <figcaption>Fig. 7 &mdash; A single Workflow Job can run notebook, Lakeflow, SQL, and ML tasks together as one dependency graph.</figcaption>
+  </figure>
+
+  <h3>Task Types You Can Mix in One Job</h3>
+  <div class="grid-2">
+    <div class="mini-card"><h4>Notebook / Python script</h4><p>Runs a notebook or a plain <code>.py</code> file on a cluster &mdash; a new job cluster per task, or a shared cluster across tasks.</p></div>
+    <div class="mini-card"><h4>Pipeline</h4><p>Triggers a Lakeflow Declarative Pipeline (or a Lakeflow Connect ingestion pipeline) and waits for it to finish.</p></div>
+    <div class="mini-card"><h4>SQL (File / Query / Dashboard / Alert)</h4><p>Runs a saved <code>.sql</code> file or query, or refreshes a dashboard or alert &mdash; always against a SQL warehouse, never a cluster.</p></div>
+    <div class="mini-card"><h4>Run Job / For each / Condition</h4><p>Calls another job as a sub-step, loops a task over a list of inputs, or branches based on a prior task's output &mdash; for building larger orchestration graphs.</p></div>
+  </div>
+  <p>Every <code>depends_on</code> edge is what turns a flat task list into the DAG shown above: a task with no <code>depends_on</code> starts as soon as the job is triggered; a task depending on two others waits for <em>both</em> to succeed (a fan-in, like <code>run_silver_gold_pipeline</code> in the project below); two tasks that depend on the same upstream task but not on each other run in parallel automatically &mdash; no extra configuration needed to get that parallelism.</p>
+
+  <pre><code>resources:
+  jobs:
+    nightly_refresh:
+      schedule:
+        quartz_cron_expression: "0 0 2 * * ?"
+        timezone_id: "UTC"
+      tasks:
+        - task_key: bronze
+          notebook_task: { notebook_path: ./01_bronze.py }
+        - task_key: silver
+          depends_on: [{task_key: bronze}]
+          pipeline_task: { pipeline_id: ${resources.pipelines.silver_gold.id} }
+        - task_key: gold_alert
+          depends_on: [{task_key: silver}]
+          sql_task:
+            alert: { alert_id: ${var.revenue_drop_alert_id} }
+            warehouse_id: ${var.warehouse_id}</code></pre>
+  <p>This is the same shape the restaurant project's own job uses later in this guide, genericized: a top-level <code>schedule</code>, a flat list of <code>tasks</code>, and <code>depends_on</code> edges connecting them into the DAG in Fig. 7. Whether a task is a notebook, a pipeline, or &mdash; as <code>gold_alert</code> shows here &mdash; refreshing a SQL alert instead of a dashboard, the dependency mechanics stay identical: name it with a unique <code>task_key</code>, point <code>depends_on</code> at whichever other <code>task_key</code>s must finish first.</p>
+</section>
+
+<!-- ============ 15 SECURITY ============ -->
+<section class="reveal" id="security">
+  <div class="section-kicker">15 &middot; Foundations</div>
+  <div class="section-head">
+    <div class="chip" style="background:var(--uc)"><svg width="18" height="18"><use href="#ic-lock" style="color:#fff"/></svg></div>
+    <h2>Security Essentials</h2>
+  </div>
+  <p class="lede">Most day-to-day security in Databricks flows through Unity Catalog, plus a handful of platform-level controls.</p>
+  <ul>
+    <li><strong>Identity &amp; access:</strong> users and groups (often synced from an identity provider) are granted privileges on catalogs, schemas, and tables via standard SQL grants.</li>
+    <li><strong>Secrets:</strong> credentials for external systems (API keys, database passwords) are stored in a managed secret scope and referenced in code, never hard-coded.</li>
+    <li><strong>Network isolation:</strong> clusters can be restricted to run entirely inside a private network with no public IP exposure.</li>
+    <li><strong>Row &amp; column-level security:</strong> Unity Catalog can mask columns or filter rows dynamically based on who is querying, from the same table.</li>
+  </ul>
+
+  <pre><code>-- Create a secret scope and store a credential (CLI, since secrets have no dedicated UI page)
+databricks secrets create-scope restaurant-scope
+databricks secrets put-secret restaurant-scope eventhub-connection-string
+
+# Read it back inside a notebook - the value never appears in code or logs
+connection_string = dbutils.secrets.get("restaurant-scope", "eventhub-connection-string")
+
+-- Column masking: analysts see a redacted phone number, engineers see it in full
+CREATE FUNCTION restaurant_prod.gold.mask_phone(phone STRING)
+RETURN CASE WHEN is_account_group_member('data-engineers')
+            THEN phone ELSE '***-***-' || right(phone, 4) END;
+
+ALTER TABLE restaurant_prod.gold.customers
+ALTER COLUMN phone SET MASK restaurant_prod.gold.mask_phone;</code></pre>
+  <p>The masking function above is ordinary SQL and an ordinary Unity Catalog grant &mdash; there is no separate "security product" bolted on top; the same <code>GRANT</code>/<code>MASK</code> mechanism used for a whole table works down to a single column, evaluated per query based on who's actually running it.</p>
+</section>
+
+<!-- ================= PART 2: END-TO-END PROJECT ================= -->
+
+<div class="partbar">Part 2 &middot; Hands-On Project</div>
+
+<section class="reveal" id="project">
+  <div class="section-kicker">16 &middot; Project</div>
+  <div class="section-head">
+    <div class="chip" style="background:var(--flow)"><svg width="18" height="18"><use href="#ic-gear" style="color:#fff"/></svg></div>
+    <h2>End-to-End Project: Restaurant Analytics Platform</h2>
+  </div>
+  <p class="lede">To make every concept above concrete, this project builds one complete Lakehouse: two very different sources &mdash; live streaming orders and a batch operational database &mdash; land side by side in Bronze, flow through Silver and Gold, and come out the other end as a dashboard that shows both sales performance and AI-scored customer sentiment.</p>
+
+  <div class="callout">
+    <strong class="label">What You'll Build</strong>
+    Streaming order events from Azure Event Hub, plus restaurant &amp; menu reference data batch-ingested via Lakeflow Connect CDC from Azure SQL &rarr; a cleaned Silver orders table joined to that reference data &rarr; Gold sales aggregates &rarr; AI-scored review sentiment via Mosaic AI &rarr; a "Performance &amp; Sentiment" AI/BI dashboard &mdash; all governed by Unity Catalog and orchestrated by a single Workflow.
+  </div>
+</section>
+
+<section class="reveal" id="project-arch">
+  <div class="section-kicker">17 &middot; Project</div>
+  <div class="section-head">
+    <div class="chip" style="background:var(--flow)"><svg width="18" height="18"><use href="#ic-cube" style="color:#fff"/></svg></div>
+    <h2>Project Architecture</h2>
+  </div>
+  <p class="lede">Read this left to right: two sources merge into one Bronze layer, flow through Silver and Gold, then branch into a dashboard and a sentiment-scoring step. Every step below maps to one box here &mdash; refer back to it as you work through the steps.</p>
+
+  <figure class="diagram-wrap">
+    <svg viewBox="0 0 1170 400" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Restaurant analytics platform end to end architecture diagram">
+      <defs><marker id="dbh7" markerWidth="9" markerHeight="9" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="#9AA0B4"/></marker></defs>
+      <g font-family="sans-serif">
+        <rect x="400" y="6" width="750" height="26" rx="8" fill="#1D1D26" stroke="#A56BFF" stroke-width="1.3"/>
+        <text x="775" y="23" text-anchor="middle" font-size="10" font-weight="700" fill="#F1F1F1">Databricks Workflow &mdash; orchestrates every task below, on schedule</text>
+
+        <rect x="20" y="40" width="150" height="55" rx="10" fill="#1D1D26" stroke="#A56BFF" stroke-width="1.3"/>
+        <use href="#ic-stream" x="82" y="45" width="26" height="26" style="color:#A56BFF"/>
+        <text x="95" y="88" text-anchor="middle" font-size="10.5" font-weight="600" fill="#F1F1F1">Azure Event Hub</text>
+
+        <line x1="170" y1="67" x2="198" y2="67" stroke="#9AA0B4" stroke-width="1.6" marker-end="url(#dbh7)"/>
+
+        <rect x="200" y="40" width="150" height="55" rx="10" fill="#1D1D26" stroke="#28B9FF" stroke-width="1.3"/>
+        <use href="#ic-bolt" x="262" y="45" width="26" height="26" style="color:#28B9FF"/>
+        <text x="275" y="88" text-anchor="middle" font-size="10.5" font-weight="600" fill="#F1F1F1">Streaming Read</text>
+
+        <rect x="20" y="130" width="150" height="55" rx="10" fill="#1D1D26" stroke="#A56BFF" stroke-width="1.3"/>
+        <use href="#ic-db" x="82" y="135" width="26" height="26" style="color:#A56BFF"/>
+        <text x="95" y="178" text-anchor="middle" font-size="10.5" font-weight="600" fill="#F1F1F1">Azure SQL (batch)</text>
+
+        <line x1="170" y1="157" x2="198" y2="157" stroke="#9AA0B4" stroke-width="1.6" marker-end="url(#dbh7)"/>
+
+        <rect x="200" y="130" width="150" height="55" rx="10" fill="#1D1D26" stroke="#FFB454" stroke-width="1.3"/>
+        <use href="#ic-funnel" x="262" y="135" width="26" height="26" style="color:#FFB454"/>
+        <text x="275" y="178" text-anchor="middle" font-size="10.5" font-weight="600" fill="#F1F1F1">Lakeflow Connect</text>
+
+        <path d="M350 67 C 380 67, 380 95, 400 105" fill="none" stroke="#9AA0B4" stroke-width="1.5" marker-end="url(#dbh7)"/>
+        <path d="M350 157 C 380 157, 380 130, 400 125" fill="none" stroke="#9AA0B4" stroke-width="1.5" marker-end="url(#dbh7)"/>
+
+        <rect x="400" y="70" width="160" height="90" rx="12" fill="#1D1D26" stroke="#FFB454" stroke-width="1.5"/>
+        <use href="#ic-funnel" x="467" y="82" width="26" height="26" style="color:#FFB454"/>
+        <text x="480" y="132" text-anchor="middle" font-size="12" font-weight="700" fill="#F1F1F1">Bronze</text>
+        <text x="480" y="148" text-anchor="middle" font-size="9" fill="#E7E7EE">(2 sources merge here)</text>
+
+        <line x1="560" y1="115" x2="588" y2="115" stroke="#9AA0B4" stroke-width="1.6" marker-end="url(#dbh7)"/>
+
+        <rect x="590" y="70" width="160" height="90" rx="12" fill="#1D1D26" stroke="#5AC8FF" stroke-width="1.5"/>
+        <use href="#ic-gear" x="657" y="82" width="26" height="26" style="color:#5AC8FF"/>
+        <text x="670" y="132" text-anchor="middle" font-size="11" font-weight="700" fill="#F1F1F1">Silver (Lakeflow)</text>
+
+        <line x1="750" y1="115" x2="778" y2="115" stroke="#9AA0B4" stroke-width="1.6" marker-end="url(#dbh7)"/>
+
+        <rect x="780" y="70" width="160" height="90" rx="12" fill="#1D1D26" stroke="#5AC8FF" stroke-width="1.5"/>
+        <use href="#ic-table" x="847" y="82" width="26" height="26" style="color:#5AC8FF"/>
+        <text x="860" y="132" text-anchor="middle" font-size="11" font-weight="700" fill="#F1F1F1">Gold (aggregates)</text>
+
+        <path d="M940 95 C 960 95, 950 55, 968 50" fill="none" stroke="#9AA0B4" stroke-width="1.5" marker-end="url(#dbh7)"/>
+        <path d="M940 135 C 960 135, 950 220, 968 228" fill="none" stroke="#9AA0B4" stroke-width="1.5" marker-end="url(#dbh7)"/>
+
+        <rect x="970" y="15" width="180" height="70" rx="10" fill="#1D1D26" stroke="#5AC8FF" stroke-width="1.3"/>
+        <use href="#ic-chart" x="982" y="27" width="26" height="26" style="color:#5AC8FF"/>
+        <text x="1060" y="68" text-anchor="middle" font-size="11" font-weight="600" fill="#F1F1F1">AI/BI Dashboard</text>
+
+        <rect x="970" y="195" width="180" height="70" rx="10" fill="#1D1D26" stroke="#FF6B9D" stroke-width="1.3"/>
+        <use href="#ic-ai" x="982" y="207" width="26" height="26" style="color:#FF6B9D"/>
+        <text x="1060" y="248" text-anchor="middle" font-size="10.5" font-weight="600" fill="#F1F1F1">Sentiment (Mosaic AI)</text>
+
+        <rect x="20" y="330" width="1130" height="50" rx="10" fill="#1D1D26" stroke="#FF6B9D" stroke-width="1.4"/>
+        <use href="#ic-shield" x="35" y="343" width="26" height="26" style="color:#FF6B9D"/>
+        <text x="585" y="360" text-anchor="middle" font-size="12" font-weight="700" fill="#F1F1F1">Unity Catalog &mdash; governs every table, grant, and lineage edge above</text>
+      </g>
+    </svg>
+    <figcaption>Fig. 8 &mdash; Streaming orders (Event Hub) and batch reference data (Azure SQL via Lakeflow Connect CDC) both land in Bronze, flow through Silver/Gold, then split into a BI dashboard and an AI sentiment-scoring step.</figcaption>
+  </figure>
+</section>
+
+<div class="step reveal" id="step1">
+  <div class="step-head"><div class="step-num">1</div><h4>Set Up Unity Catalog Structure</h4></div>
+  <div class="step-body">
+    <p>Every object in the project needs a home in the Unity Catalog namespace before any data lands. Create one catalog for the project, one schema per medallion tier, and a managed volume for streaming checkpoints (the Unity-Catalog-governed replacement for old-style DBFS mount paths).</p>
+    <pre><code>CREATE CATALOG IF NOT EXISTS restaurant_prod;
+
+CREATE SCHEMA IF NOT EXISTS restaurant_prod.bronze;
+CREATE SCHEMA IF NOT EXISTS restaurant_prod.silver;
+CREATE SCHEMA IF NOT EXISTS restaurant_prod.gold;
+
+CREATE VOLUME IF NOT EXISTS restaurant_prod.bronze.landing;
+
+-- Grant the data engineering group write access to bronze/silver,
+-- and read-only access to gold for the analytics team.
+GRANT USE CATALOG ON CATALOG restaurant_prod TO `data-engineers`;
+GRANT USE SCHEMA, CREATE TABLE, MODIFY, SELECT ON SCHEMA restaurant_prod.bronze TO `data-engineers`;
+GRANT USE SCHEMA, CREATE TABLE, MODIFY, SELECT ON SCHEMA restaurant_prod.silver TO `data-engineers`;
+GRANT USE SCHEMA, SELECT ON SCHEMA restaurant_prod.gold TO `analysts`;</code></pre>
+    <p>This gives every later step a stable three-level name for each table, such as <code>restaurant_prod.gold.daily_sales_by_restaurant</code>, and enforces from day one that analysts can read Gold but never touch Bronze or Silver directly.</p>
+
+    <div class="callout ok">
+      <strong class="label">Implement This in the Databricks UI</strong>
+      <ol>
+        <li>Left sidebar &rarr; <strong>Catalog</strong> icon &rarr; <strong>Create Catalog</strong> &rarr; name <code>restaurant_prod</code>, accept the default storage location &rarr; <strong>Create</strong>.</li>
+        <li>Inside it, click <strong>Create schema</strong> three times for <code>bronze</code>, <code>silver</code>, <code>gold</code>.</li>
+        <li>Open the <code>bronze</code> schema &rarr; <strong>Volumes</strong> tab &rarr; <strong>Create volume</strong> &rarr; name <code>landing</code>, type <em>Managed</em>.</li>
+        <li>On the catalog's <strong>Permissions</strong> tab, click <strong>Grant</strong>, pick principal <code>data-engineers</code>, check <strong>USE CATALOG</strong>. Repeat on the <code>bronze</code> and <code>silver</code> schema Permissions tabs with <strong>USE SCHEMA, CREATE TABLE, MODIFY, SELECT</strong>.</li>
+        <li>On the <code>gold</code> schema's Permissions tab, grant <code>analysts</code> only <strong>USE SCHEMA</strong> and <strong>SELECT</strong>.</li>
+      </ol>
+      Everything above can also be done in one shot by pasting the SQL block into the <strong>SQL Editor</strong> (pick a warehouse, click <strong>Run</strong>) instead of clicking through each screen individually.
+    </div>
+  </div>
+</div>
+
+<div class="step reveal" id="step2">
+  <div class="step-head"><div class="step-num">2</div><h4>Batch-Ingest Reference Data via Lakeflow Connect (CDC)</h4></div>
+  <div class="step-body">
+    <p>Restaurant and menu details live in an operational Azure SQL database, not in files &mdash; exactly the case Lakeflow Connect is built for. Rather than hand-writing extract logic, you declare an ingestion pipeline that points at the source tables; Databricks handles connecting, reading the change log, and keeping Bronze in sync incrementally from then on.</p>
+    <pre><code>resources:
+  pipelines:
+    restaurant_reference_cdc:
+      name: "Restaurant &amp; Menu Reference - CDC Ingestion"
+      catalog: restaurant_prod
+      target: bronze
+      ingestion_definition:
+        connection_name: azure_sql_prod_connection
+        objects:
+          - table:
+              source_catalog: RestaurantDB
+              source_schema: dbo
+              source_table: Restaurants
+              destination_table: restaurants
+          - table:
+              source_catalog: RestaurantDB
+              source_schema: dbo
+              source_table: MenuItems
+              destination_table: menu_items</code></pre>
+    <p>The <code>connection_name</code> points at a Unity-Catalog-governed connection object (created once, holding the Azure SQL credentials via a secret) rather than a password in this file. After the first full sync, every subsequent run reads only what changed in <code>RestaurantDB</code> since last time &mdash; that's the CDC part &mdash; and lands the result as ordinary Bronze Delta tables, <code>restaurant_prod.bronze.restaurants</code> and <code>restaurant_prod.bronze.menu_items</code>.</p>
+
+    <div class="callout ok">
+      <strong class="label">Implement This in the Databricks UI</strong>
+      <ol>
+        <li>Sidebar &rarr; <strong>Data Ingestion</strong> (or <strong>+ New</strong> &rarr; <strong>Add data</strong> &rarr; <strong>Ingestion pipeline</strong>) and pick the <strong>SQL Server / Azure SQL Database</strong> connector.</li>
+        <li>Choose <strong>Create new connection</strong> (or reuse one) and enter the Azure SQL host/port/credentials &mdash; this becomes the governed Connection object <code>connection_name</code> refers to; no password is ever typed into a pipeline file.</li>
+        <li>Browse the source and check <code>Restaurants</code> and <code>MenuItems</code> under <code>RestaurantDB.dbo</code>.</li>
+        <li>Set destination catalog <code>restaurant_prod</code>, schema <code>bronze</code>, and confirm the destination table names.</li>
+        <li>Skip the schedule picker (the Workflow in Step 6 triggers this pipeline) and click <strong>Create</strong> &mdash; the first full sync starts immediately, with every run after that reading only what changed.</li>
+      </ol>
+    </div>
+  </div>
+</div>
+
+<div class="step reveal" id="step3">
+  <div class="step-head"><div class="step-num">3</div><h4>Stream-Ingest Orders from Azure Event Hub</h4></div>
+  <div class="step-body">
+    <p>Order events (including a customer review left after delivery, when one exists) arrive continuously on an Azure Event Hub topic. Event Hub exposes a Kafka-compatible endpoint, so Structured Streaming's built-in Kafka connector reads it directly &mdash; no separate connector needed.</p>
+    <pre><code>from pyspark.sql.functions import current_timestamp, col
+
+connection_string = dbutils.secrets.get("restaurant-scope", "eventhub-connection-string")
+
+kafka_options = {
+    "kafka.bootstrap.servers": "restaurant-orders-eh.servicebus.windows.net:9093",
+    "kafka.sasl.mechanism": "PLAIN",
+    "kafka.security.protocol": "SASL_SSL",
+    "kafka.sasl.jaas.config":
+        "kafkashaded.org.apache.kafka.common.security.plain.PlainLoginModule required "
+        f'username="$ConnectionString" password="{connection_string}";',
+    "subscribe": "orders",
+    "startingOffsets": "earliest",
+}
+
+(spark.readStream.format("kafka").options(**kafka_options).load()
+    .withColumn("_ingested_at", current_timestamp())
+    .withColumn("json_value", col("value").cast("string"))
+    .writeStream
+    .option("checkpointLocation",
+            "/Volumes/restaurant_prod/bronze/landing/_checkpoints/orders")
+    .trigger(processingTime="30 seconds")
+    .toTable("restaurant_prod.bronze.orders_raw")
+)</code></pre>
+    <p>The connection string never appears in the code itself &mdash; <code>dbutils.secrets.get</code> pulls it from a managed secret scope at runtime, exactly the pattern described in the Security Essentials section earlier. Each event's payload lands as a raw JSON string in <code>json_value</code>; it gets parsed into real columns next, in Silver.</p>
+
+    <div class="callout ok">
+      <strong class="label">Implement This in the Databricks UI</strong>
+      <ol>
+        <li>Sidebar &rarr; <strong>Workspace</strong> &rarr; <strong>Import</strong> and upload this <code>.py</code> file with format <strong>Source</strong> &mdash; Databricks recognizes the notebook-cell markers and renders it as a runnable notebook.</li>
+        <li>Secrets have no dedicated workspace page &mdash; create them once via CLI/REST API: <code>databricks secrets create-scope restaurant-scope</code>, then <code>databricks secrets put-secret restaurant-scope eventhub-connection-string</code>.</li>
+        <li><strong>Compute</strong> &rarr; <strong>Create compute</strong> &rarr; single node, latest LTS runtime, <code>Standard_DS3_v2</code>, to test interactively.</li>
+        <li>Attach the notebook, click <strong>Run all</strong>, then check <strong>Catalog Explorer</strong> &rarr; <code>restaurant_prod.bronze.orders_raw</code> for new rows.</li>
+        <li>In production, don't leave this cluster running &mdash; the Workflow task built in Step 6 spins up its own ephemeral job cluster per run instead.</li>
+      </ol>
+    </div>
+  </div>
+</div>
+
+<div class="step reveal" id="step4">
+  <div class="step-head"><div class="step-num">4</div><h4>Clean, Join &amp; Validate into Silver with Lakeflow</h4></div>
+  <div class="step-body">
+    <p>Silver is where the two Bronze sources actually meet: raw order JSON gets parsed and validated, then joined to the restaurant reference data that Lakeflow Connect landed in Step 2.</p>
+    <div class="callout def">
+      <strong class="label">Why the Code Says "dlt"</strong>
+      Lakeflow's declarative pipelines were originally shipped as a product called Delta Live Tables, and its Python library keeps that original name &mdash; every pipeline notebook starts with <code>import dlt</code>. The decorators below (<code>@dlt.table</code>, <code>@dlt.expect_or_drop</code>) are how a Lakeflow Declarative Pipeline is actually written, even though the product itself is now branded Lakeflow.
+    </div>
+    <pre><code>import dlt
+from pyspark.sql.functions import from_json, col
+
+order_schema = ("order_id STRING, restaurant_id STRING, customer_id STRING, "
+                 "quantity INT, order_amount DOUBLE, order_timestamp TIMESTAMP, "
+                 "review_text STRING")
+
+# The pipeline this file belongs to targets catalog "restaurant_prod",
+# schema "silver" - so, as always in Lakeflow, only the plain table
+# name is given to the decorator itself.
+@dlt.table(name="orders_clean")
+@dlt.expect_or_drop("valid_quantity", "quantity > 0")
+@dlt.expect_or_drop("valid_amount", "order_amount > 0")
+@dlt.expect("has_restaurant_id", "restaurant_id IS NOT NULL")
+def orders_clean():
+    orders = (
+        dlt.read_stream("restaurant_prod.bronze.orders_raw")
+           .select(from_json(col("json_value"), order_schema).alias("o"))
+           .select("o.*")
+           .dropDuplicates(["order_id"])
+    )
+    restaurants = dlt.read("restaurant_prod.bronze.restaurants")
+    return orders.join(restaurants, "restaurant_id", "left")</code></pre>
+    <p>The <code>expect_or_drop</code> rules silently remove rows that fail validation and record how many were dropped; <code>expect</code> alone just flags violations for monitoring without dropping the row. Joining against <code>restaurants</code> here &mdash; rather than in every downstream query &mdash; means every consumer of Silver already has restaurant names and details attached, without re-deriving that join themselves.</p>
+
+    <div class="callout ok">
+      <strong class="label">Implement This in the Databricks UI (covers Steps 4 &amp; 5 together)</strong>
+      <p>Both this file and Step 5's file are libraries of one pipeline, so they're created as a single resource:</p>
+      <ol>
+        <li>Sidebar &rarr; <strong>Pipelines</strong> (Data Engineering) &rarr; <strong>Create Pipeline</strong> &rarr; choose <strong>ETL Pipeline</strong> (Lakeflow Declarative Pipelines).</li>
+        <li>Name it, then under <strong>Source code</strong> click <strong>Add source code</strong> twice &mdash; once for this file, once for Step 5's <code>daily_sales_by_restaurant</code> file.</li>
+        <li><strong>Destination</strong>: catalog <code>restaurant_prod</code>, default schema <code>silver</code>.</li>
+        <li><strong>Pipeline mode</strong>: <em>Triggered</em>.</li>
+        <li>Pick a compute policy (or Serverless), <strong>Create</strong>, then <strong>Start</strong> &mdash; the UI shows a live DAG of <code>orders_clean</code> feeding <code>daily_sales_by_restaurant</code>, with per-run row counts and expectation pass/fail rates on each node.</li>
+      </ol>
+    </div>
+  </div>
+</div>
+
+<div class="step reveal" id="step5">
+  <div class="step-head"><div class="step-num">5</div><h4>Aggregate into Gold</h4></div>
+  <div class="step-body">
+    <p>Gold tables answer specific business questions directly, so dashboards never have to re-derive the same aggregation logic. Here, daily sales are rolled up by restaurant.</p>
+    <pre><code>from pyspark.sql.functions import to_date, sum, countDistinct
+
+@dlt.table(name="daily_sales_by_restaurant")
+def daily_sales_by_restaurant():
+    return (
+        dlt.read("restaurant_prod.silver.orders_clean")
+           .groupBy("restaurant_id", "restaurant_name",
+                     to_date("order_timestamp").alias("sales_date"))
+           .agg(
+               sum("order_amount").alias("total_sales"),
+               sum("quantity").alias("total_units"),
+               countDistinct("customer_id").alias("unique_customers")
+           )
+    )</code></pre>
+    <p>Notice this table is defined with <code>dlt.read</code> (a full, materialized read) rather than <code>dlt.read_stream</code> &mdash; Gold aggregates are usually recomputed from all of Silver's history rather than processed incrementally row by row, since the aggregation itself needs the full picture.</p>
+
+    <div class="callout ok">
+      <strong class="label">Implement This in the Databricks UI</strong>
+      This file is added as the second source-code entry in the same pipeline created for Step 4 (see the UI steps there) &mdash; there's no separate pipeline to create. Once the pipeline runs, click the <code>daily_sales_by_restaurant</code> node in the DAG view to see its own row counts, and open <strong>Catalog Explorer</strong> &rarr; <code>restaurant_prod.gold.daily_sales_by_restaurant</code> to preview the aggregated data via the <strong>Sample Data</strong> tab.
+    </div>
+  </div>
+</div>
+
+<div class="step reveal" id="step6">
+  <div class="step-head"><div class="step-num">6</div><h4>Orchestrate with a Databricks Workflow</h4></div>
+  <div class="step-body">
+    <p>CDC ingestion, streaming ingestion, the Lakeflow pipeline, sentiment scoring, and dashboard refresh all need to run in the right order, on a schedule, with alerting if anything fails. A single Workflow Job ties them together, matching the DAG in Fig. 8.</p>
+    <pre><code>resources:
+  jobs:
+    restaurant_analytics_pipeline:
+      name: "Restaurant Analytics Platform - Daily Refresh"
+      schedule:
+        quartz_cron_expression: "0 0 3 * * ?"   # 3 AM daily
+        timezone_id: "UTC"
+      tasks:
+        - task_key: cdc_ingest_reference_data
+          pipeline_task:
+            pipeline_id: ${var.reference_cdc_pipeline_id}
+        - task_key: stream_ingest_orders
+          notebook_task:
+            notebook_path: /Repos/restaurant/01_stream_orders_from_eventhub
+        - task_key: run_lakeflow_pipeline
+          depends_on:
+            - task_key: cdc_ingest_reference_data
+            - task_key: stream_ingest_orders
+          pipeline_task:
+            pipeline_id: ${var.silver_gold_pipeline_id}
+        - task_key: sentiment_analysis
+          depends_on: [{task_key: run_lakeflow_pipeline}]
+          sql_task:
+            file: { path: /Repos/restaurant/05_sentiment_analysis.sql }
+            warehouse_id: ${var.sql_warehouse_id}
+        - task_key: refresh_dashboard
+          depends_on: [{task_key: sentiment_analysis}]
+          dashboard_task:
+            dashboard_id: ${var.performance_dashboard_id}
+      email_notifications:
+        on_failure: ["data-team@company.com"]</code></pre>
+    <p><code>cdc_ingest_reference_data</code> and <code>stream_ingest_orders</code> have no dependency on each other, so Databricks runs them in parallel; both must finish before <code>run_lakeflow_pipeline</code> can join their outputs in Step 4. <code>refresh_dashboard</code> waits on <code>sentiment_analysis</code> specifically, because the dashboard needs the sentiment scores computed in Step 7 to exist first.</p>
+
+    <div class="callout ok">
+      <strong class="label">Implement This in the Databricks UI</strong>
+      <ol>
+        <li>Sidebar &rarr; <strong>Workflows</strong> &rarr; <strong>Create Job</strong>, rename it via the title field at the top.</li>
+        <li>Task 1: name <code>cdc_ingest_reference_data</code>, type <strong>Pipeline</strong>, select the Step 2 pipeline.</li>
+        <li><strong>+ Add task</strong>: name <code>stream_ingest_orders</code>, type <strong>Notebook</strong>, pick the Step 3 notebook; Compute &rarr; <strong>New job cluster</strong> with the same spec shown in the YAML.</li>
+        <li><strong>+ Add task</strong>: name <code>run_lakeflow_pipeline</code>, type <strong>Pipeline</strong>, select the Steps 4&ndash;5 pipeline; under <strong>Depends on</strong>, check both previous tasks.</li>
+        <li><strong>+ Add task</strong>: name <code>sentiment_analysis</code>, type <strong>SQL</strong> &rarr; <strong>File</strong>, point at Step 7's script, pick a SQL warehouse; depends on <code>run_lakeflow_pipeline</code>.</li>
+        <li><strong>+ Add task</strong>: name <code>refresh_dashboard</code>, type <strong>Dashboard</strong>, pick the Step 8 dashboard by name; depends on <code>sentiment_analysis</code>.</li>
+        <li>Right panel &rarr; <strong>Schedule</strong> &rarr; every day at 3:00 AM UTC. <strong>Notifications</strong> tab &rarr; add the failure email.</li>
+        <li>Click <strong>Run now</strong> and watch the <strong>Runs</strong> tab render the same fan-out/fan-in graph live.</li>
+      </ol>
+    </div>
+  </div>
+</div>
+
+<div class="step reveal" id="step7">
+  <div class="step-head"><div class="step-num">7</div><h4>Score Review Sentiment with Mosaic AI</h4></div>
+  <div class="step-body">
+    <p>Some orders in Silver carry a <code>review_text</code> field &mdash; free-text feedback a customer left after delivery. Rather than training a custom classifier, this project scores it with a built-in Mosaic AI Function, directly in SQL.</p>
+    <pre><code>CREATE OR REPLACE TABLE restaurant_prod.gold.review_sentiment AS
+SELECT
+    order_id,
+    restaurant_id,
+    review_text,
+    ai_analyze_sentiment(review_text) AS sentiment
+FROM restaurant_prod.silver.orders_clean
+WHERE review_text IS NOT NULL;</code></pre>
+    <p><code>ai_analyze_sentiment</code> calls a Databricks-hosted foundation model for every row and returns a label (positive, negative, neutral, or mixed) &mdash; no model to train, register, or serve. The result lands as an ordinary governed Gold table, <code>review_sentiment</code>, sitting right next to <code>daily_sales_by_restaurant</code> for the dashboard to query.</p>
+
+    <div class="callout ok">
+      <strong class="label">Implement This in the Databricks UI</strong>
+      <ol>
+        <li>Sidebar &rarr; <strong>SQL Editor</strong>, pick a SQL warehouse, paste the statement above, and click <strong>Run</strong> to test it.</li>
+        <li><strong>File &rarr; Save As</strong> into the Workspace so it has a path the Workflow's SQL task can reference &mdash; or save it as a named <strong>Query</strong> and use task sub-type <strong>Query</strong> instead of <strong>File</strong> in Step 6.</li>
+        <li>Confirm results in <strong>Catalog Explorer</strong> &rarr; <code>restaurant_prod.gold.review_sentiment</code>.</li>
+      </ol>
+    </div>
+  </div>
+</div>
+
+<div class="step reveal" id="step8">
+  <div class="step-head"><div class="step-num">8</div><h4>Build the Performance &amp; Sentiment AI/BI Dashboard</h4></div>
+  <div class="step-body">
+    <p>With both Gold tables populated, a Databricks SQL dashboard is built directly on top of them &mdash; no extraction, no separate reporting database. One panel tracks sales performance, a second tracks sentiment.</p>
+    <pre><code>-- Panel 1: sales performance
+SELECT sales_date, restaurant_id, restaurant_name, total_sales, total_units, unique_customers
+FROM restaurant_prod.gold.daily_sales_by_restaurant
+WHERE sales_date >= current_date() - INTERVAL 30 DAYS
+ORDER BY sales_date DESC;
+
+-- Panel 2: review sentiment mix per restaurant
+SELECT restaurant_id, sentiment, count(*) AS review_count
+FROM restaurant_prod.gold.review_sentiment
+GROUP BY restaurant_id, sentiment;</code></pre>
+    <p>Both panels are refreshed automatically by the <code>refresh_dashboard</code> task in the Workflow. Because both underlying tables are registered in Unity Catalog, an AI/BI Genie space can also be enabled on top of the same schema, letting a restaurant manager type a question like "which restaurant had the most negative reviews last week" and get back a governed, correct answer without writing SQL.</p>
+
+    <div class="callout ok">
+      <strong class="label">Implement This in the Databricks UI</strong>
+      <p>AI/BI dashboards only exist as a UI object &mdash; there's no YAML equivalent, so this is where the clicking matters most:</p>
+      <ol>
+        <li>Sidebar &rarr; <strong>Dashboards</strong> &rarr; <strong>Create Dashboard</strong>.</li>
+        <li>Add a dataset: open the SQL pane, choose a warehouse, paste Panel 1's query, name it <code>daily_sales</code>.</li>
+        <li>Add a second dataset for Panel 2's query, named <code>review_sentiment_mix</code>.</li>
+        <li>Drag a bar/line widget onto the canvas bound to <code>daily_sales</code> (X = <code>sales_date</code>, Y = <code>total_sales</code>, color = <code>restaurant_name</code>).</li>
+        <li>Drag a stacked-bar or pie widget bound to <code>review_sentiment_mix</code> (category = <code>restaurant_id</code>, value = <code>review_count</code>, color = <code>sentiment</code>).</li>
+        <li>Click <strong>Publish</strong>, then copy the dashboard's ID from its URL or the <strong>Share</strong> dialog into the <code>performance_dashboard_id</code> variable used by Step 6 &mdash; or just pick it by name if the Workflow was built in the UI.</li>
+        <li>Optional: sidebar &rarr; <strong>Genie</strong> &rarr; <strong>New Genie space</strong>, point it at the same <code>restaurant_prod.gold</code> schema, to add the natural-language Q&amp;A layer mentioned above.</li>
+      </ol>
+    </div>
+  </div>
+</div>
+
+<div class="step reveal" id="step9">
+  <div class="step-head"><div class="step-num">9</div><h4>Govern, Monitor, and Close the Loop</h4></div>
+  <div class="step-body">
+    <p>With the pipeline running end to end, the last step is making sure it stays trustworthy and cheap to run.</p>
+    <ul>
+      <li><strong>Lineage check:</strong> in Unity Catalog's lineage graph, <code>gold.review_sentiment</code> and <code>gold.daily_sales_by_restaurant</code> should both trace back through <code>silver.orders_clean</code> to both Bronze sources &mdash; <code>bronze.orders_raw</code> (streaming) and <code>bronze.restaurants</code> (CDC) &mdash; confirming the whole chain is connected and auditable.</li>
+      <li><strong>CDC &amp; expectation monitoring:</strong> the Lakeflow Connect pipeline reports rows synced per run, and the Declarative Pipeline's event log reports how many rows were dropped by each <code>expect_or_drop</code> rule; a sudden spike in either signals a broken upstream source.</li>
+      <li><strong>Cost control:</strong> the Workflow uses job clusters that terminate automatically after each run, and <code>OPTIMIZE</code> is scheduled weekly on the Silver and Gold tables to keep query performance stable as they grow.</li>
+      <li><strong>Access review:</strong> Unity Catalog's audit log is periodically reviewed to confirm only the intended groups (<code>data-engineers</code>, <code>analysts</code>) have access to each schema.</li>
+    </ul>
+
+    <div class="callout ok">
+      <strong class="label">Where to Click for Each Check</strong>
+      <ol>
+        <li><strong>Lineage:</strong> Catalog Explorer &rarr; open <code>gold.review_sentiment</code> or <code>gold.daily_sales_by_restaurant</code> &rarr; <strong>Lineage</strong> tab &rarr; the graph traces every upstream table and notebook automatically, with no manual tagging required.</li>
+        <li><strong>CDC &amp; expectations:</strong> the pipeline's own page (Workflows &rarr; Pipelines) shows an <strong>Event log</strong> tab with rows processed/dropped per run and per expectation; the Lakeflow Connect pipeline's page shows rows synced per CDC run the same way.</li>
+        <li><strong>Cost:</strong> Compute &rarr; a job cluster's detail page shows its lifetime (created at run start, terminated at run end); schedule <code>OPTIMIZE</code> as its own weekly Workflow task, same task type as Step 7's SQL task.</li>
+        <li><strong>Access:</strong> Catalog Explorer &rarr; catalog/schema &rarr; <strong>Permissions</strong> tab shows every current grant at a glance; the workspace-level <strong>Audit log</strong> (under admin settings) shows historical query and access history for compliance review.</li>
+      </ol>
+    </div>
+
+    <div class="callout ok">
+      <strong class="label">Project Complete</strong>
+      Streaming orders and batch CDC reference data now flow, unattended, into a governed Gold layer, scored for sentiment by Mosaic AI and visualized on a live Performance &amp; Sentiment dashboard &mdash; on a daily schedule, with quality checks, lineage, and access control enforced at every step.
+    </div>
+  </div>
+</div>
+
+<!-- ============ SKILLS ============ -->
+<section class="reveal" id="skills">
+  <div class="section-kicker">18 &middot; Reference</div>
+  <div class="section-head">
+    <div class="chip" style="background:var(--spark)"><svg width="18" height="18"><use href="#ic-cpu" style="color:#fff"/></svg></div>
+    <h2>Skills &amp; Certification Path</h2>
+  </div>
+  <p class="lede">The concepts in this guide map directly onto Databricks' own certification tracks, which are a useful way to structure further learning.</p>
+  <div class="grid-2">
+    <div class="mini-card"><h4>Data Engineer Associate/Professional</h4><p>Delta Lake, Auto Loader, Lakeflow Connect &amp; Declarative Pipelines, medallion architecture, Workflows.</p></div>
+    <div class="mini-card"><h4>Data Analyst Associate</h4><p>Databricks SQL, dashboards, AI/BI, basic data modeling.</p></div>
+    <div class="mini-card"><h4>Machine Learning Associate/Professional</h4><p>MLflow tracking and registry, feature engineering, model serving.</p></div>
+    <div class="mini-card"><h4>Platform Administrator</h4><p>Unity Catalog governance, cluster policies, cost management, security.</p></div>
+  </div>
+</section>
+
+<!-- ============ GLOSSARY ============ -->
+<section class="reveal" id="glossary">
+  <div class="section-kicker">19 &middot; Reference</div>
+  <div class="section-head">
+    <div class="chip" style="background:var(--dim)"><svg width="18" height="18"><use href="#ic-file" style="color:#fff"/></svg></div>
+    <h2>Glossary</h2>
+  </div>
+  <dl class="glossary">
+    <dt>ACID</dt><dd>Atomicity, Consistency, Isolation, Durability &mdash; the transaction guarantees Delta Lake adds to plain files.</dd>
+    <dt>Agent Bricks</dt><dd>Databricks' framework for building production AI agents, using auto-generated synthetic data and benchmarks to tune an agent's quality and cost automatically.</dd>
+    <dt>AI Functions</dt><dd>Built-in Mosaic AI SQL functions (<code>ai_analyze_sentiment</code>, <code>ai_classify</code>, <code>ai_summarize</code>, <code>ai_query</code>) that call a foundation model directly in a query, with no model training or deployment required.</dd>
+    <dt>Auto Loader</dt><dd>A Databricks feature that incrementally and efficiently ingests new files from cloud storage as they arrive.</dd>
+    <dt>Bronze / Silver / Gold</dt><dd>The three tiers of the medallion architecture: raw, cleaned, and business-aggregated data.</dd>
+    <dt>CDC (Change Data Capture)</dt><dd>Reading a source database's own change log to replay only the inserts, updates, and deletes since the last sync, instead of re-reading the whole table.</dd>
+    <dt>Clean Room</dt><dd>A governed, multi-party compute environment where each participant's raw data stays in their own account &mdash; only jointly agreed-upon query outputs are shared.</dd>
+    <dt>Databricks Apps</dt><dd>A way to build and host interactive web applications directly inside a Databricks workspace on serverless compute, with inherited auth and governed data access.</dd>
+    <dt>Databricks Marketplace</dt><dd>A discovery catalog, built on Delta Sharing, where providers publish datasets, notebooks, and AI models for other organizations to subscribe to.</dd>
+    <dt>Delta Lake</dt><dd>An open table format that adds ACID transactions, time travel, and schema enforcement on top of Parquet files.</dd>
+    <dt>Delta Sharing</dt><dd>An open-source protocol for sharing a live view of a table with a recipient &mdash; another Databricks account or a non-Databricks client &mdash; with no data copy involved.</dd>
+    <dt>Lakebase</dt><dd>A fully managed, Postgres-compatible OLTP database built into Databricks, governed by Unity Catalog and able to sync bidirectionally with Delta tables.</dd>
+    <dt>Lakeflow</dt><dd>Databricks' umbrella name for its ingestion-to-orchestration toolset: Lakeflow Connect (ingestion), Lakeflow Declarative Pipelines (transformation), and Jobs (orchestration).</dd>
+    <dt>Lakeflow Connect</dt><dd>Databricks' managed, largely no-code connectors for ingesting from operational databases and SaaS applications, including via CDC.</dd>
+    <dt>Lakeflow Declarative Pipelines</dt><dd>Databricks' framework (Python module name <code>dlt</code>, formerly branded Delta Live Tables) for defining batch and streaming data pipelines as a chain of tables with built-in quality checks.</dd>
+    <dt>Lakehouse</dt><dd>An architecture combining data lake storage economics with data warehouse-like reliability and performance.</dd>
+    <dt>MCP (Model Context Protocol)</dt><dd>A standardized interface that lets an AI agent safely call external APIs, databases, and SaaS tools through a common tool-calling protocol.</dd>
+    <dt>MLflow</dt><dd>An open-source platform for tracking ML experiments, registering models, and deploying them to production.</dd>
+    <dt>Mosaic AI</dt><dd>Databricks' platform for building on foundation and generative-AI models, including AI Functions, Agent Bricks, Vector Search, and model serving.</dd>
+    <dt>OLTP / OLAP</dt><dd>OLTP (online transaction processing) means many small, fast, single-row operations, as in Lakebase; OLAP (online analytical processing) means scanning and aggregating large volumes of history, as in Spark/Delta/Databricks SQL.</dd>
+    <dt>Photon</dt><dd>Databricks' native, vectorized execution engine for accelerating Spark SQL and DataFrame workloads.</dd>
+    <dt>Time Travel</dt><dd>Querying a Delta table as it existed at a previous version or timestamp, made possible by the transaction log.</dd>
+    <dt>Unity Catalog</dt><dd>Databricks' unified governance layer for access control, lineage, and auditing across all data and AI assets.</dd>
+    <dt>Vector Search</dt><dd>A managed vector database, integrated with Unity Catalog, that keeps a search index synced with a source Delta table for retrieval-augmented generation (RAG).</dd>
+    <dt>Workflow / Job</dt><dd>A scheduled, dependency-aware set of tasks (notebooks, pipelines, SQL, ML) orchestrated by Databricks.</dd>
+    <dt>Z-Ordering</dt><dd>A technique that co-locates related data within Delta files to speed up queries that filter on the ordered columns.</dd>
+  </dl>
+</section>
+
+</div><!-- /.wrap -->
+
+<footer class="end">
+  <hr>
+  <p style="margin-bottom:8px"><a href="../essentials.html">← Back to all articles</a></p>
+  <p>Prepared as a self-contained study reference on the Databricks Lakehouse Platform &mdash; covering core concepts and a fully worked end-to-end project. Diagrams use generic icons to represent platform concepts, not Databricks' trademarked logos.</p>
+  <p style="margin-top:10px;color:#9aa0b4">© 2026 · Hao Tieu Kim · Built with GitHub Pages</p>
+</footer>
+
+<a href="#intro" class="back-top" id="backTop" aria-label="Back to top">&uarr;</a>
+
+<script>
+  var bar=document.getElementById('bar');
+  function prog(){
+    var h=document.documentElement;
+    var s=h.scrollTop||document.body.scrollTop;
+    var max=(h.scrollHeight-h.clientHeight)||1;
+    bar.style.width=(s/max*100)+'%';
+    document.getElementById('backTop').classList.toggle('show', s > 500);
+  }
+  document.addEventListener('scroll',prog,{passive:true});prog();
+  function revealAll(){document.querySelectorAll('.reveal').forEach(function(el){el.classList.add('in');});}
+  try{
+    var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}});},{threshold:.08});
+    document.querySelectorAll('.reveal').forEach(function(el){io.observe(el);});
+    window.addEventListener('load',function(){setTimeout(revealAll,2000);});
+    setTimeout(revealAll,2500);
+  }catch(e){revealAll();}
+</script>
+</body>
+</html>
