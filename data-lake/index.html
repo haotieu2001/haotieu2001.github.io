@@ -120,6 +120,19 @@
   .js .reveal.in{opacity:1;transform:none}
   @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{animation:none !important;transition:none !important}.js .reveal{opacity:1;transform:none}}
   figure[class]{box-shadow:0 0 36px -14px #28B9FF66}
+
+/* docker-standard structure */
+h2{font-size:clamp(21px,3.2vw,28px);margin:52px 0 6px;font-weight:800;line-height:1.22;padding-top:14px;border-top:1px solid #3C4356;display:flex;align-items:center;gap:10px}
+h2 .n{color:var(--blue2,#5C78FF)}
+.toc{background:#242739;border:1px solid #3C4356;border-radius:14px;padding:16px 22px;margin:24px 0;column-count:2;column-gap:28px}
+.toc>strong{column-span:all;display:block;margin-bottom:6px;color:#fff}
+.toc a{display:block;color:#5AC8FF;text-decoration:none;font-size:13.5px;line-height:1.9;break-inside:avoid;border:0}
+.toc a:hover{color:#fff}
+.toc details,.toc summary,.toc ol,.toc li{all:unset;display:block}
+.ico{width:1em;height:1em;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.hico{display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;border-radius:11px;flex:0 0 36px;background:#0e2740;border:1px solid #2b4a80;color:#5AC8FF}
+.hico .ico{width:19px;height:19px}
+.toc a .ico{width:14px;height:14px;margin-right:9px;vertical-align:-2px;opacity:.85}
 </style>
 
 <script>document.documentElement.classList.add('js');</script>
@@ -137,6 +150,39 @@
     </div>
   </div>
 </nav>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs>
+<symbol id="i-question" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.6 9.4a2.5 2.5 0 1 1 3.3 2.4c-.6.2-.9.8-.9 1.5v.6M12 17h.01"/></symbol>
+<symbol id="i-layers" viewBox="0 0 24 24"><path d="m12 3 9 4.8-9 4.8-9-4.8 9-4.8Z"/><path d="m3 12.6 9 4.8 9-4.8M3 17.2l9 4.8 9-4.8"/></symbol>
+<symbol id="i-workflow" viewBox="0 0 24 24"><rect x="3" y="3.5" width="7" height="6" rx="1.5"/><rect x="14" y="14.5" width="7" height="6" rx="1.5"/><path d="M6.5 9.5v5a3 3 0 0 0 3 3H14"/></symbol>
+<symbol id="i-check" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="m8 12.2 2.7 2.7L16.2 9"/></symbol>
+<symbol id="i-rocket" viewBox="0 0 24 24"><path d="M12 2.5c3 2.6 4.8 6.4 4.8 10.6L12 16.4l-4.8-3.3C7.2 8.9 9 5.1 12 2.5Z"/><path d="M7.2 13.1 4.4 15v4.2l3-1.9M16.8 13.1l2.8 1.9v4.2l-3-1.9M12 19.5v2.3"/><circle cx="12" cy="10" r="1.7"/></symbol>
+<symbol id="i-terminal" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2.5"/><path d="m7.5 9.5 3 2.5-3 2.5M13.5 15h3.5"/></symbol>
+<symbol id="i-package" viewBox="0 0 24 24"><path d="m12 2.8 8.2 4.6v9.2L12 21.2l-8.2-4.6V7.4L12 2.8Z"/><path d="m3.8 7.4 8.2 4.6 8.2-4.6M12 12v9.2"/></symbol>
+<symbol id="i-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18"/><path d="M12 3c2.4 2.7 3.6 5.7 3.6 9s-1.2 6.3-3.6 9c-2.4-2.7-3.6-5.7-3.6-9S9.6 5.7 12 3Z"/></symbol>
+<symbol id="i-repeat" viewBox="0 0 24 24"><path d="M16.5 3 20 6.5 16.5 10"/><path d="M4 11.5V9a2.5 2.5 0 0 1 2.5-2.5H20"/><path d="M7.5 21 4 17.5 7.5 14"/><path d="M20 12.5V15a2.5 2.5 0 0 1-2.5 2.5H4"/></symbol>
+<symbol id="i-database" viewBox="0 0 24 24"><ellipse cx="12" cy="6" rx="8" ry="3.2"/><path d="M4 6v12c0 1.8 3.6 3.2 8 3.2s8-1.4 8-3.2V6"/><path d="M20 12c0 1.8-3.6 3.2-8 3.2S4 13.8 4 12"/></symbol>
+<symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 2.8 4.8 5.6v5.2c0 4.4 3 8.4 7.2 9.8 4.2-1.4 7.2-5.4 7.2-9.8V5.6L12 2.8Z"/><path d="m9 12 2.2 2.2L15.4 10"/></symbol>
+<symbol id="i-list" viewBox="0 0 24 24"><path d="M8.5 6h12M8.5 12h12M8.5 18h12M3.7 6h.01M3.7 12h.01M3.7 18h.01"/></symbol>
+<symbol id="i-book" viewBox="0 0 24 24"><path d="M4 5a3 3 0 0 1 3-3h13v18H7a3 3 0 0 0-3 3V5Z"/><path d="M8 2v18"/></symbol>
+<symbol id="i-key" viewBox="0 0 24 24"><circle cx="7.2" cy="16.3" r="3.4"/><path d="m9.7 13.9 9.6-9.6M16.6 6.9l2.3 2.3M14 9.5l2.3 2.3"/></symbol>
+<symbol id="i-bulb" viewBox="0 0 24 24"><path d="M9.2 18h5.6M10.4 21h3.2"/><path d="M12 3a6 6 0 0 0-3.4 10.9c.5.4.8 1 .8 1.7v.4h5.2v-.4c0-.7.3-1.3.8-1.7A6 6 0 0 0 12 3Z"/></symbol>
+<symbol id="i-warn" viewBox="0 0 24 24"><path d="M12 3.2 2.8 19.6h18.4L12 3.2Z"/><path d="M12 9.5v4.2M12 16.8h.01"/></symbol>
+<symbol id="i-alert" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7.2v5.4M12 16.4h.01"/></symbol>
+<symbol id="i-compass" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="m15.6 8.4-2.1 5.1-5.1 2.1 2.1-5.1 5.1-2.1Z"/></symbol>
+<symbol id="i-blocks" viewBox="0 0 24 24"><rect x="3.5" y="3.5" width="7" height="7" rx="1.6"/><rect x="13.5" y="3.5" width="7" height="7" rx="1.6"/><rect x="3.5" y="13.5" width="7" height="7" rx="1.6"/><rect x="13.5" y="13.5" width="7" height="7" rx="1.6"/></symbol>
+<symbol id="i-search" viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m15.2 15.2 4.3 4.3"/></symbol>
+<symbol id="i-code" viewBox="0 0 24 24"><path d="m8 8.5-4 3.5 4 3.5M16 8.5l4 3.5-4 3.5M13.6 5l-3.2 14"/></symbol>
+<symbol id="i-plug" viewBox="0 0 24 24"><path d="M9 3v5.5M15 3v5.5"/><path d="M6.5 8.5h11V12a5.5 5.5 0 0 1-11 0V8.5Z"/><path d="M12 17.5V21"/></symbol>
+<symbol id="i-file" viewBox="0 0 24 24"><path d="M14 3H7.5A2.5 2.5 0 0 0 5 5.5v13A2.5 2.5 0 0 0 7.5 21h9a2.5 2.5 0 0 0 2.5-2.5V8l-5-5Z"/><path d="M14 3v5h5"/></symbol>
+<symbol id="i-network" viewBox="0 0 24 24"><circle cx="5.5" cy="6" r="2.5"/><circle cx="5.5" cy="18" r="2.5"/><circle cx="18.5" cy="12" r="2.5"/><path d="m7.9 7.2 8.2 3.7M7.9 16.8l8.2-3.7"/></symbol>
+<symbol id="i-disk" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2.5"/><path d="M3 12h18"/><path d="M7 16.5h.01M11 16.5h3"/><path d="M7 7.5h6"/></symbol>
+<symbol id="i-lock" viewBox="0 0 24 24"><rect x="4.5" y="10" width="15" height="10.5" rx="2.4"/><path d="M8 10V7.2a4 4 0 0 1 8 0V10"/></symbol>
+<symbol id="i-cloud" viewBox="0 0 24 24"><path d="M6.8 19.2h10.6a3.9 3.9 0 0 0 .4-7.8 6.1 6.1 0 0 0-11.7-1.7 3.8 3.8 0 0 0 .7 9.5Z"/></symbol>
+<symbol id="i-eye" viewBox="0 0 24 24"><path d="M2.6 12S6.2 5.8 12 5.8 21.4 12 21.4 12 17.8 18.2 12 18.2 2.6 12 2.6 12Z"/><circle cx="12" cy="12" r="3.1"/></symbol>
+<symbol id="i-zap" viewBox="0 0 24 24"><path d="M13.2 2.5 4.5 14h6.6l-1.3 7.5L19 10h-6.6l.8-7.5Z"/></symbol>
+<symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="3.6"/><path d="M4.8 20.2a7.2 7.2 0 0 1 14.4 0"/></symbol>
+<symbol id="i-whale" viewBox="0 0 24 24"><path d="M1.5 14h21c0 3.6-2.9 6.5-6.5 6.5H8.5C4.9 20.5 1.5 17.6 1.5 14Z"/><rect x="5.6" y="9.6" width="3.4" height="3.6" rx=".6"/><rect x="10.3" y="9.6" width="3.4" height="3.6" rx=".6"/><rect x="15" y="9.6" width="3.4" height="3.6" rx=".6"/><rect x="10.3" y="5.4" width="3.4" height="3.6" rx=".6"/><path d="M20.5 11.5c1.2-1.2 2.4-.6 2.4-.6"/></symbol>
+</defs></svg>
 <div class="page">
 
 <header>
@@ -262,19 +308,19 @@
 
 <div class="toc reveal">
   <strong>Contents</strong>
-  <a href="#what-is-lake">01 · What is a Data Lake?</a>
-  <a href="#architecture">02 · Data Lake architecture</a>
-  <a href="#parquet">03 · How Parquet works inside</a>
-  <a href="#medallion">04 · Zones: Bronze, Silver, Gold</a>
-  <a href="#problems">05 · The 6 big problems</a>
-  <a href="#lakehouse">06 · Enter the Lakehouse</a>
-  <a href="#delta-fixes">07 · How Delta Lake fixes each problem</a>
-  <a href="#summary">08 · Summary &amp; what to read next</a>
-  <a href="#glossary">＊ · Glossary</a>
+  <a href="#what-is-lake"><svg class="ico"><use href="#i-question"/></svg>01 · What is a Data Lake?</a>
+  <a href="#architecture"><svg class="ico"><use href="#i-blocks"/></svg>02 · Data Lake architecture</a>
+  <a href="#parquet"><svg class="ico"><use href="#i-blocks"/></svg>03 · How Parquet works inside</a>
+  <a href="#medallion"><svg class="ico"><use href="#i-blocks"/></svg>04 · Zones: Bronze, Silver, Gold</a>
+  <a href="#problems"><svg class="ico"><use href="#i-eye"/></svg>05 · The 6 big problems</a>
+  <a href="#lakehouse"><svg class="ico"><use href="#i-database"/></svg>06 · Enter the Lakehouse</a>
+  <a href="#delta-fixes"><svg class="ico"><use href="#i-disk"/></svg>07 · How Delta Lake fixes each problem</a>
+  <a href="#summary"><svg class="ico"><use href="#i-eye"/></svg>08 · Summary &amp;amp; what to read next</a>
+  <a href="#glossary"><svg class="ico"><use href="#i-book"/></svg>09 · ＊ · Glossary</a>
 </div>
 
 <!-- 01 -->
-<h2 id="what-is-lake" class="reveal"><span class="n">01.</span> What is a Data Lake?</h2>
+<h2 id="what-is-lake" class="reveal"><span class="hico"><svg class="ico"><use href="#i-question"/></svg></span><span class="n">01.</span> What is a Data Lake?</h2>
 <p class="reveal lead">Before Data Lakes existed, companies stored all their data in <strong>relational databases</strong> (like MySQL or Oracle). That worked fine when data was small — a few million rows. But by the mid-2000s, companies were generating <em>billions</em> of events every day: web clicks, app logs, sensor readings, payment transactions, ad impressions. Storing all of that in a traditional database became impossibly expensive.</p>
 
 <p class="reveal">For <em>analytics</em> specifically, the answer through the 1990s and 2000s was the <strong>Data Warehouse</strong> — a database purpose-built for reporting (Teradata first, later cloud versions like Amazon Redshift, Google BigQuery, and Snowflake). A warehouse takes your structured business data, stores it in a tightly optimised internal format, and answers complex questions like "revenue by region per quarter" extremely fast. For clean, structured data it is still excellent today, and it's what powers most BI dashboards.</p>
@@ -317,7 +363,7 @@
 </table>
 
 <!-- 02 -->
-<h2 id="architecture" class="reveal"><span class="n">02.</span> Data Lake architecture — what it's actually made of</h2>
+<h2 id="architecture" class="reveal"><span class="hico"><svg class="ico"><use href="#i-blocks"/></svg></span><span class="n">02.</span> Data Lake architecture</h2>
 <p class="reveal">A Data Lake has three layers stacked on top of each other. Each layer builds on the one below it:</p>
 
 <figure class="reveal" style="margin:1.6em 0;background:#141826;border:1px solid #3C4356;border-radius:10px;padding:1.2em 1em 1em;overflow:hidden">
@@ -622,7 +668,7 @@ Partitions : year, month, day</pre></div>
 </div>
 
 <!-- 03 -->
-<h2 id="parquet" class="reveal"><span class="n">03.</span> How Parquet works inside</h2>
+<h2 id="parquet" class="reveal"><span class="hico"><svg class="ico"><use href="#i-blocks"/></svg></span><span class="n">03.</span> How Parquet works inside</h2>
 <p class="reveal lead">Most data in a modern Data Lake is stored as Parquet. Before we look at the structure, it helps to understand <em>why Parquet is designed the way it is</em> — because everything else follows from one simple insight about analytics queries.</p>
 
 <h3 class="reveal">The core insight: analytics queries only need a few columns</h3>
@@ -813,7 +859,7 @@ GROUP BY category;</pre></div>
 <div class="step reveal"><div class="num-bubble">5</div><div class="body"><strong>Decode and decompress</strong> the data (reverse the encoding and compression from write time) and return the values to the query engine.</div></div>
 
 <!-- 04 -->
-<h2 id="medallion" class="reveal"><span class="n">04.</span> Zones in a Data Lake: Bronze, Silver, Gold</h2>
+<h2 id="medallion" class="reveal"><span class="hico"><svg class="ico"><use href="#i-blocks"/></svg></span><span class="n">04.</span> Zones: Bronze, Silver, Gold</h2>
 <p class="reveal">Real-world Data Lakes divide storage into <strong>zones</strong> (also called <em>layers</em>). The most popular pattern is the <strong>Medallion Architecture</strong>:</p>
 
 <figure class="reveal" style="margin:1.4em 0;background:#141826;border:1px solid #2c2c38;border-radius:10px;padding:1.2em 1em 1em;overflow:hidden">
@@ -898,7 +944,7 @@ GROUP BY category;</pre></div>
 </div>
 
 <!-- 05 -->
-<h2 id="problems" class="reveal"><span class="n">05.</span> The 6 big problems with a plain Data Lake</h2>
+<h2 id="problems" class="reveal"><span class="hico"><svg class="ico"><use href="#i-eye"/></svg></span><span class="n">05.</span> The 6 big problems</h2>
 <p class="reveal lead">A plain Data Lake — just files in S3 with no extra software on top — works fine as cheap storage. But the moment you start using it as your primary, reliable source of truth for business data, you will hit these six problems. Almost every data team discovers them the hard way.</p>
 
 <div class="pain reveal">
@@ -938,7 +984,7 @@ GROUP BY category;</pre></div>
 </div>
 
 <!-- 06 -->
-<h2 id="lakehouse" class="reveal"><span class="n">06.</span> Enter the Data Lakehouse</h2>
+<h2 id="lakehouse" class="reveal"><span class="hico"><svg class="ico"><use href="#i-database"/></svg></span><span class="n">06.</span> Enter the Lakehouse</h2>
 <p class="reveal lead">The Data Lakehouse is the answer to all six problems above. The key idea: keep the cheap cloud storage (S3 / ADLS / GCS) as the foundation, but add a thin software layer on top that gives you database-style reliability.</p>
 <p class="reveal">That software layer is <strong>Delta Lake</strong> (open source, from Databricks, now a Linux Foundation project). It's not a separate database server, a cloud service you pay for, or a different file format. It's an <strong>open-source library</strong> that sits between your query engine (Spark, Databricks, Trino) and your Parquet files, adding a transaction log that makes everything safe.</p>
 
@@ -1042,7 +1088,7 @@ GROUP BY category;</pre></div>
 </figure>
 
 <!-- 07 -->
-<h2 id="delta-fixes" class="reveal"><span class="n">07.</span> How Delta Lake fixes each problem</h2>
+<h2 id="delta-fixes" class="reveal"><span class="hico"><svg class="ico"><use href="#i-disk"/></svg></span><span class="n">07.</span> How Delta Lake fixes each problem</h2>
 <p class="reveal">Delta Lake adds one thing to your Parquet files: a <strong>transaction log</strong> stored in a folder called <code>_delta_log/</code>. This folder is automatically created by Delta Lake the first time you write a Delta table — it lives in the same S3 prefix as your Parquet files. Everything else — ACID, time travel, safe deletes, safe concurrent writes — comes from this one idea.</p>
 
 <div class="callout cy reveal">
@@ -1291,7 +1337,7 @@ DESCRIBE HISTORY orders;</pre></div>
 </table>
 
 <!-- 08 -->
-<h2 id="summary" class="reveal"><span class="n">08.</span> Summary &amp; what to read next</h2>
+<h2 id="summary" class="reveal"><span class="hico"><svg class="ico"><use href="#i-eye"/></svg></span><span class="n">08.</span> Summary &amp;amp; what to read next</h2>
 <p class="reveal">Here's what you've learned:</p>
 <ol class="reveal">
   <li>A <strong>Data Lake</strong> was invented to store massive amounts of data cheaply in object storage (S3/ADLS), separated from compute. It works great as a raw archive but breaks as a reliable source of truth.</li>
@@ -1311,7 +1357,7 @@ DESCRIBE HISTORY orders;</pre></div>
 </div>
 
 <!-- Glossary -->
-<h2 id="glossary" class="reveal">Glossary</h2>
+<h2 id="glossary" class="reveal"><span class="hico"><svg class="ico"><use href="#i-book"/></svg></span><span class="n">09.</span> ＊ · Glossary</h2>
 <p class="reveal">Every term used in this article, defined in one place. Skim it first if you're new, or jump back here whenever a word feels rushed.</p>
 <div class="gloss reveal">
   <dl>

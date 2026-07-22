@@ -108,6 +108,19 @@
   :focus-visible{outline:2px solid #5AC8FF;outline-offset:3px;border-radius:6px}
   @media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{animation:none !important;transition:none !important}.js .reveal{opacity:1 !important;transform:none !important}}
   figure[class]{box-shadow:0 0 30px -14px #28B9FF55}
+
+/* docker-standard structure */
+h2{font-size:clamp(21px,3.2vw,28px);margin:52px 0 6px;font-weight:800;line-height:1.22;padding-top:14px;border-top:1px solid #3C4356;display:flex;align-items:center;gap:10px}
+h2 .n{color:var(--blue2,#5C78FF)}
+.toc{background:#242739;border:1px solid #3C4356;border-radius:14px;padding:16px 22px;margin:24px 0;column-count:2;column-gap:28px}
+.toc>strong{column-span:all;display:block;margin-bottom:6px;color:#fff}
+.toc a{display:block;color:#5AC8FF;text-decoration:none;font-size:13.5px;line-height:1.9;break-inside:avoid;border:0}
+.toc a:hover{color:#fff}
+.toc details,.toc summary,.toc ol,.toc li{all:unset;display:block}
+.ico{width:1em;height:1em;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.hico{display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;border-radius:11px;flex:0 0 36px;background:#0e2740;border:1px solid #2b4a80;color:#5AC8FF}
+.hico .ico{width:19px;height:19px}
+.toc a .ico{width:14px;height:14px;margin-right:9px;vertical-align:-2px;opacity:.85}
 </style>
 
 <script>document.documentElement.classList.add('js');</script>
@@ -116,6 +129,39 @@
 <div id="bar"></div>
 
 <nav class="nav"><div class="nav-inner"><a class="nav-brand" href="../index.html">HAO TIEU KIM</a><div class="nav-links"><a href="../index.html">Portfolio</a><a href="../blogs.html">Blogs</a><a href="../essentials.html" class="active">Data Engineer Essentials</a></div></div></nav>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs>
+<symbol id="i-question" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.6 9.4a2.5 2.5 0 1 1 3.3 2.4c-.6.2-.9.8-.9 1.5v.6M12 17h.01"/></symbol>
+<symbol id="i-layers" viewBox="0 0 24 24"><path d="m12 3 9 4.8-9 4.8-9-4.8 9-4.8Z"/><path d="m3 12.6 9 4.8 9-4.8M3 17.2l9 4.8 9-4.8"/></symbol>
+<symbol id="i-workflow" viewBox="0 0 24 24"><rect x="3" y="3.5" width="7" height="6" rx="1.5"/><rect x="14" y="14.5" width="7" height="6" rx="1.5"/><path d="M6.5 9.5v5a3 3 0 0 0 3 3H14"/></symbol>
+<symbol id="i-check" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="m8 12.2 2.7 2.7L16.2 9"/></symbol>
+<symbol id="i-rocket" viewBox="0 0 24 24"><path d="M12 2.5c3 2.6 4.8 6.4 4.8 10.6L12 16.4l-4.8-3.3C7.2 8.9 9 5.1 12 2.5Z"/><path d="M7.2 13.1 4.4 15v4.2l3-1.9M16.8 13.1l2.8 1.9v4.2l-3-1.9M12 19.5v2.3"/><circle cx="12" cy="10" r="1.7"/></symbol>
+<symbol id="i-terminal" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2.5"/><path d="m7.5 9.5 3 2.5-3 2.5M13.5 15h3.5"/></symbol>
+<symbol id="i-package" viewBox="0 0 24 24"><path d="m12 2.8 8.2 4.6v9.2L12 21.2l-8.2-4.6V7.4L12 2.8Z"/><path d="m3.8 7.4 8.2 4.6 8.2-4.6M12 12v9.2"/></symbol>
+<symbol id="i-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18"/><path d="M12 3c2.4 2.7 3.6 5.7 3.6 9s-1.2 6.3-3.6 9c-2.4-2.7-3.6-5.7-3.6-9S9.6 5.7 12 3Z"/></symbol>
+<symbol id="i-repeat" viewBox="0 0 24 24"><path d="M16.5 3 20 6.5 16.5 10"/><path d="M4 11.5V9a2.5 2.5 0 0 1 2.5-2.5H20"/><path d="M7.5 21 4 17.5 7.5 14"/><path d="M20 12.5V15a2.5 2.5 0 0 1-2.5 2.5H4"/></symbol>
+<symbol id="i-database" viewBox="0 0 24 24"><ellipse cx="12" cy="6" rx="8" ry="3.2"/><path d="M4 6v12c0 1.8 3.6 3.2 8 3.2s8-1.4 8-3.2V6"/><path d="M20 12c0 1.8-3.6 3.2-8 3.2S4 13.8 4 12"/></symbol>
+<symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 2.8 4.8 5.6v5.2c0 4.4 3 8.4 7.2 9.8 4.2-1.4 7.2-5.4 7.2-9.8V5.6L12 2.8Z"/><path d="m9 12 2.2 2.2L15.4 10"/></symbol>
+<symbol id="i-list" viewBox="0 0 24 24"><path d="M8.5 6h12M8.5 12h12M8.5 18h12M3.7 6h.01M3.7 12h.01M3.7 18h.01"/></symbol>
+<symbol id="i-book" viewBox="0 0 24 24"><path d="M4 5a3 3 0 0 1 3-3h13v18H7a3 3 0 0 0-3 3V5Z"/><path d="M8 2v18"/></symbol>
+<symbol id="i-key" viewBox="0 0 24 24"><circle cx="7.2" cy="16.3" r="3.4"/><path d="m9.7 13.9 9.6-9.6M16.6 6.9l2.3 2.3M14 9.5l2.3 2.3"/></symbol>
+<symbol id="i-bulb" viewBox="0 0 24 24"><path d="M9.2 18h5.6M10.4 21h3.2"/><path d="M12 3a6 6 0 0 0-3.4 10.9c.5.4.8 1 .8 1.7v.4h5.2v-.4c0-.7.3-1.3.8-1.7A6 6 0 0 0 12 3Z"/></symbol>
+<symbol id="i-warn" viewBox="0 0 24 24"><path d="M12 3.2 2.8 19.6h18.4L12 3.2Z"/><path d="M12 9.5v4.2M12 16.8h.01"/></symbol>
+<symbol id="i-alert" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7.2v5.4M12 16.4h.01"/></symbol>
+<symbol id="i-compass" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="m15.6 8.4-2.1 5.1-5.1 2.1 2.1-5.1 5.1-2.1Z"/></symbol>
+<symbol id="i-blocks" viewBox="0 0 24 24"><rect x="3.5" y="3.5" width="7" height="7" rx="1.6"/><rect x="13.5" y="3.5" width="7" height="7" rx="1.6"/><rect x="3.5" y="13.5" width="7" height="7" rx="1.6"/><rect x="13.5" y="13.5" width="7" height="7" rx="1.6"/></symbol>
+<symbol id="i-search" viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m15.2 15.2 4.3 4.3"/></symbol>
+<symbol id="i-code" viewBox="0 0 24 24"><path d="m8 8.5-4 3.5 4 3.5M16 8.5l4 3.5-4 3.5M13.6 5l-3.2 14"/></symbol>
+<symbol id="i-plug" viewBox="0 0 24 24"><path d="M9 3v5.5M15 3v5.5"/><path d="M6.5 8.5h11V12a5.5 5.5 0 0 1-11 0V8.5Z"/><path d="M12 17.5V21"/></symbol>
+<symbol id="i-file" viewBox="0 0 24 24"><path d="M14 3H7.5A2.5 2.5 0 0 0 5 5.5v13A2.5 2.5 0 0 0 7.5 21h9a2.5 2.5 0 0 0 2.5-2.5V8l-5-5Z"/><path d="M14 3v5h5"/></symbol>
+<symbol id="i-network" viewBox="0 0 24 24"><circle cx="5.5" cy="6" r="2.5"/><circle cx="5.5" cy="18" r="2.5"/><circle cx="18.5" cy="12" r="2.5"/><path d="m7.9 7.2 8.2 3.7M7.9 16.8l8.2-3.7"/></symbol>
+<symbol id="i-disk" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2.5"/><path d="M3 12h18"/><path d="M7 16.5h.01M11 16.5h3"/><path d="M7 7.5h6"/></symbol>
+<symbol id="i-lock" viewBox="0 0 24 24"><rect x="4.5" y="10" width="15" height="10.5" rx="2.4"/><path d="M8 10V7.2a4 4 0 0 1 8 0V10"/></symbol>
+<symbol id="i-cloud" viewBox="0 0 24 24"><path d="M6.8 19.2h10.6a3.9 3.9 0 0 0 .4-7.8 6.1 6.1 0 0 0-11.7-1.7 3.8 3.8 0 0 0 .7 9.5Z"/></symbol>
+<symbol id="i-eye" viewBox="0 0 24 24"><path d="M2.6 12S6.2 5.8 12 5.8 21.4 12 21.4 12 17.8 18.2 12 18.2 2.6 12 2.6 12Z"/><circle cx="12" cy="12" r="3.1"/></symbol>
+<symbol id="i-zap" viewBox="0 0 24 24"><path d="M13.2 2.5 4.5 14h6.6l-1.3 7.5L19 10h-6.6l.8-7.5Z"/></symbol>
+<symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="3.6"/><path d="M4.8 20.2a7.2 7.2 0 0 1 14.4 0"/></symbol>
+<symbol id="i-whale" viewBox="0 0 24 24"><path d="M1.5 14h21c0 3.6-2.9 6.5-6.5 6.5H8.5C4.9 20.5 1.5 17.6 1.5 14Z"/><rect x="5.6" y="9.6" width="3.4" height="3.6" rx=".6"/><rect x="10.3" y="9.6" width="3.4" height="3.6" rx=".6"/><rect x="15" y="9.6" width="3.4" height="3.6" rx=".6"/><rect x="10.3" y="5.4" width="3.4" height="3.6" rx=".6"/><path d="M20.5 11.5c1.2-1.2 2.4-.6 2.4-.6"/></symbol>
+</defs></svg>
 
 <header class="hero">
   <div class="kicker">Data Engineering · Deep Dive</div>
@@ -142,20 +188,18 @@
 
 <!-- TOC -->
 <div class="toc reveal">
-  <h4>❯ What's inside</h4>
-  <ol>
-    <li><a href="#s1">Why Spark exists — the MapReduce pain</a></li>
-    <li><a href="#s2">How Spark fixed it — in-memory + the DAG</a></li>
-    <li><a href="#s3">The mental model — transformations, actions, jobs, stages, tasks</a></li>
-    <li><a href="#s4">Narrow vs wide transformations &amp; the shuffle</a></li>
-    <li><a href="#s5">Spark architecture — every layer in detail</a></li>
-    <li><a href="#s6">Deployment modes — cluster vs client</a></li>
-    <li><a href="#s7">How Spark runs your code — the plan path</a></li>
-    <li><a href="#s8">Using Spark SQL &amp; DataFrames (with PySpark)</a></li>
-    <li><a href="#s9">Executor memory deep dive</a></li>
-    <li><a href="#s10">Monitoring &amp; optimizing a real cluster</a></li>
-    <li><a href="#s11">The 30 concepts — recap &amp; cheat sheet</a></li>
-  </ol>
+  <strong>Contents</strong>
+  <a href="#s1"><svg class="ico"><use href="#i-question"/></svg>01 · Why Spark exists — the MapReduce pain</a>
+  <a href="#s2"><svg class="ico"><use href="#i-workflow"/></svg>02 · How Spark fixed it — in-memory + the DAG</a>
+  <a href="#s3"><svg class="ico"><use href="#i-blocks"/></svg>03 · The mental model — transformations, actions, jobs, stages, tasks</a>
+  <a href="#s4"><svg class="ico"><use href="#i-file"/></svg>04 · Narrow vs wide transformations &amp;amp; the shuffle</a>
+  <a href="#s5"><svg class="ico"><use href="#i-blocks"/></svg>05 · Spark architecture — every layer in detail</a>
+  <a href="#s6"><svg class="ico"><use href="#i-blocks"/></svg>06 · Deployment modes — cluster vs client</a>
+  <a href="#s7"><svg class="ico"><use href="#i-code"/></svg>07 · How Spark runs your code — the plan path</a>
+  <a href="#s8"><svg class="ico"><use href="#i-zap"/></svg>08 · Using Spark SQL &amp;amp; DataFrames (with PySpark)</a>
+  <a href="#s9"><svg class="ico"><use href="#i-zap"/></svg>09 · Executor memory deep dive</a>
+  <a href="#s10"><svg class="ico"><use href="#i-blocks"/></svg>10 · Monitoring &amp;amp; optimizing a real cluster</a>
+  <a href="#s11"><svg class="ico"><use href="#i-blocks"/></svg>11 · The 30 concepts — recap &amp;amp; cheat sheet</a>
 </div>
 
 <!-- HOOK -->
@@ -177,7 +221,7 @@
 
 <!-- 01 -->
 <p class="promptline">~/spark <b>❯</b> the problem spark was born to solve</p>
-<h2 id="s1" class="reveal"><span class="pfx">01.</span> Why Spark exists — the MapReduce pain</h2>
+<h2 id="s1" class="reveal"><span class="hico"><svg class="ico"><use href="#i-question"/></svg></span><span class="n">01.</span> Why Spark exists — the MapReduce pain</h2>
 <p class="sectionsub reveal">Why a 2014 engine replaced a 2004 idea</p>
 <div class="prose reveal">
 <p>In the early 2000s, Google published <strong>MapReduce</strong>, and Hadoop made it open-source. It solved a real problem: process data too big for one machine by splitting it across many. Each machine runs a <em>Map</em> on its slice, the system <em>shuffles and sorts</em> the output by key, then each machine runs a <em>Reduce</em>. It was a revolution — and it was painfully slow for anything iterative.</p>
@@ -262,7 +306,7 @@
 
 <!-- 02 -->
 <p class="promptline">~/spark <b>❯</b> the fix</p>
-<h2 id="s2" class="reveal"><span class="pfx">02.</span> How Spark fixed it — in-memory + the DAG</h2>
+<h2 id="s2" class="reveal"><span class="hico"><svg class="ico"><use href="#i-workflow"/></svg></span><span class="n">02.</span> How Spark fixed it — in-memory + the DAG</h2>
 <p class="sectionsub reveal">Two ideas, and why they change everything</p>
 <div class="prose reveal">
 <p>Spark's 2010 paper (Matei Zaharia, UC Berkeley) had a deceptively simple claim: keep intermediate data in memory, and represent the whole computation as a <strong> DAG</strong> — a directed acyclic graph of operations. The result was order-of-magnitude faster on iterative and multi-step workloads, with one engine instead of a chain of jobs.</p>
@@ -330,7 +374,7 @@
 
 <!-- 03 -->
 <p class="promptline">~/spark <b>❯</b> the mental model</p>
-<h2 id="s3" class="reveal"><span class="pfx">03.</span> The mental model — transformations, actions, jobs, stages, tasks</h2>
+<h2 id="s3" class="reveal"><span class="hico"><svg class="ico"><use href="#i-blocks"/></svg></span><span class="n">03.</span> The mental model — transformations, actions, jobs, stages, tasks</h2>
 <p class="sectionsub reveal">Five words that make every Spark job make sense</p>
 <div class="prose reveal">
 <p>If you only remember one section, remember this one. Five nested concepts explain what happens when you run anything in Spark:</p>
@@ -382,7 +426,7 @@
 
 <!-- 04 -->
 <p class="promptline">~/spark <b>❯</b> where the time goes</p>
-<h2 id="s4" class="reveal"><span class="pfx">04.</span> Narrow vs wide transformations &amp; the shuffle</h2>
+<h2 id="s4" class="reveal"><span class="hico"><svg class="ico"><use href="#i-file"/></svg></span><span class="n">04.</span> Narrow vs wide transformations &amp;amp; the shuffle</h2>
 <p class="sectionsub reveal">The single most important performance distinction in Spark</p>
 <div class="prose reveal">
 <p>Every transformation is either <strong>narrow</strong> or <strong>wide</strong>. This one distinction predicts most Spark performance:</p>
@@ -450,7 +494,7 @@
 
 <!-- 05 ARCHITECTURE -->
 <p class="promptline">~/spark <b>❯</b> under the hood</p>
-<h2 id="s5" class="reveal"><span class="pfx">05.</span> Spark architecture — every layer in detail</h2>
+<h2 id="s5" class="reveal"><span class="hico"><svg class="ico"><use href="#i-blocks"/></svg></span><span class="n">05.</span> Spark architecture — every layer in detail</h2>
 <p class="sectionsub reveal">Driver, cluster manager, executors, tasks, blocks — and what each one actually does</p>
 <div class="prose reveal">
 <p>A Spark application is one <strong>driver</strong> plus a set of <strong>executors</strong>, placed on a cluster by a <strong>cluster manager</strong>. Everything else — jobs, stages, tasks, blocks, shuffle services — is a consequence of those three. Here is the whole picture, then each layer in turn.</p>
@@ -616,7 +660,7 @@
 
 <!-- 06 DEPLOYMENT MODES -->
 <p class="promptline">~/spark <b>❯</b> where does the driver live?</p>
-<h2 id="s6" class="reveal"><span class="pfx">06.</span> Deployment modes — cluster vs client</h2>
+<h2 id="s6" class="reveal"><span class="hico"><svg class="ico"><use href="#i-blocks"/></svg></span><span class="n">06.</span> Deployment modes — cluster vs client</h2>
 <p class="sectionsub reveal">Same engine; the only question is which machine runs the driver</p>
 <div class="prose reveal">
 <p>"Deployment mode" answers one question: <strong>where does the driver JVM run?</strong> Everything else is identical. The choice matters because the driver is the single point of coordination and the host of the Spark UI.</p>
@@ -659,7 +703,7 @@
 
 <!-- 07 PLAN PATH -->
 <p class="promptline">~/spark <b>❯</b> what happens when you hit run</p>
-<h2 id="s7" class="reveal"><span class="pfx">07.</span> How Spark runs your code — the plan path</h2>
+<h2 id="s7" class="reveal"><span class="hico"><svg class="ico"><use href="#i-code"/></svg></span><span class="n">07.</span> How Spark runs your code — the plan path</h2>
 <p class="sectionsub reveal">From a SQL string or PySpark call all the way to tasks on executors</p>
 <div class="prose reveal">
 <p>This is the "black magic" question, made concrete. When you run a SQL query or a PySpark command, Spark walks a fixed pipeline of <em>plans</em>. Each plan is a tree of operators; each phase refines it. Understanding this pipeline is how you read the <code>explain()</code> output and find why a job is slow.</p>
@@ -777,7 +821,7 @@ joined.<span class="f">write</span>.mode(<span class="s">"overwrite"</span>).par
 
 <!-- 08 SPARK SQL + DATAFRAME -->
 <p class="promptline">~/spark <b>❯</b> using it day to day</p>
-<h2 id="s8" class="reveal"><span class="pfx">08.</span> Using Spark SQL &amp; DataFrames (with PySpark)</h2>
+<h2 id="s8" class="reveal"><span class="hico"><svg class="ico"><use href="#i-zap"/></svg></span><span class="n">08.</span> Using Spark SQL &amp;amp; DataFrames (with PySpark)</h2>
 <p class="sectionsub reveal">The high-level APIs you should actually use — and how they map to each other</p>
 <div class="prose reveal">
 <p>Modern Spark has three high-level APIs. You should use <strong>DataFrame / Spark SQL</strong> for almost everything; they share the same Catalyst optimizer. The low-level RDD API is for cases where you truly need raw control (and even then, Datasets usually cover it).</p>
@@ -856,7 +900,7 @@ df.withColumn(<span class="s">"rnk"</span>, F.row_number().over(w)).filter(<span
 
 <!-- 09 MEMORY -->
 <p class="promptline">~/spark <b>❯</b> where the RAM goes</p>
-<h2 id="s9" class="reveal"><span class="pfx">09.</span> Executor memory deep dive</h2>
+<h2 id="s9" class="reveal"><span class="hico"><svg class="ico"><use href="#i-zap"/></svg></span><span class="n">09.</span> Executor memory deep dive</h2>
 <p class="sectionsub reveal">On-heap, off-heap, unified memory — and the sizing math that fixes 80% of OOMs</p>
 <div class="prose reveal">
 <p>Most Spark memory pain is a config mistake, not a data problem. Here is exactly how one executor's memory is carved up, then the sizing example from the video.</p>
@@ -951,7 +995,7 @@ spark.sql.shuffle.partitions  = <span class="n">200</span> <span class="c"># rai
 
 <!-- 10 MONITORING + OPT -->
 <p class="promptline">~/spark <b>❯</b> making it fast &amp; keeping it fast</p>
-<h2 id="s10" class="reveal"><span class="pfx">10.</span> Monitoring &amp; optimizing a real cluster</h2>
+<h2 id="s10" class="reveal"><span class="hico"><svg class="ico"><use href="#i-blocks"/></svg></span><span class="n">10.</span> Monitoring &amp;amp; optimizing a real cluster</h2>
 <p class="sectionsub reveal">A repeatable method: read the UI → find the bottleneck → apply the right lever</p>
 <div class="prose reveal">
 <p>Tuning is not a checklist of flags; it's a diagnostic loop. The Spark UI tells you <em>what</em> is slow; this section maps each symptom to its lever. Learn the UI first — it's the instrument panel.</p>
@@ -1057,7 +1101,7 @@ spark.sql.adaptive.advisoryPartitionSizeInBytes            = <span class="n">64<
 
 <!-- 11 RECAP -->
 <p class="promptline">~/spark <b>❯</b> the whole thing in one screen</p>
-<h2 id="s11" class="reveal"><span class="pfx">11.</span> The 30 concepts — recap &amp; cheat sheet</h2>
+<h2 id="s11" class="reveal"><span class="hico"><svg class="ico"><use href="#i-blocks"/></svg></span><span class="n">11.</span> The 30 concepts — recap &amp;amp; cheat sheet</h2>
 <p class="sectionsub reveal">Everything above, condensed into the 30 ideas the video builds</p>
 <div class="num30 reveal">
   <div><b>1 MapReduce bottleneck</b> — disk I/O between every step.</div>
