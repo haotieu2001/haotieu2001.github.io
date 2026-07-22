@@ -114,6 +114,19 @@
   .nav-links a{text-decoration:none;border:1px solid transparent;color:#9aa0b4;font-weight:700;font-size:13.5px;padding:6px 14px;border-radius:999px;transition:.2s}
   .nav-links a:hover{color:#fff;border-color:#3C4356;background:#242739}
   .nav-links a.active{color:#5AC8FF;border-color:#28B9FF55;background:#28B9FF14}
+
+/* docker-standard structure */
+h2{font-size:clamp(21px,3.2vw,28px);margin:52px 0 6px;font-weight:800;line-height:1.22;padding-top:14px;border-top:1px solid #3C4356;display:flex;align-items:center;gap:10px}
+h2 .n{color:var(--blue2,#5C78FF)}
+.toc{background:#242739;border:1px solid #3C4356;border-radius:14px;padding:16px 22px;margin:24px 0;column-count:2;column-gap:28px}
+.toc>strong{column-span:all;display:block;margin-bottom:6px;color:#fff}
+.toc a{display:block;color:#5AC8FF;text-decoration:none;font-size:13.5px;line-height:1.9;break-inside:avoid;border:0}
+.toc a:hover{color:#fff}
+.toc details,.toc summary,.toc ol,.toc li{all:unset;display:block}
+.ico{width:1em;height:1em;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.hico{display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;border-radius:11px;flex:0 0 36px;background:#0e2740;border:1px solid #2b4a80;color:#5AC8FF}
+.hico .ico{width:19px;height:19px}
+.toc a .ico{width:14px;height:14px;margin-right:9px;vertical-align:-2px;opacity:.85}
 </style>
 <script>document.documentElement.classList.add('js');</script>
 </head>
@@ -121,6 +134,39 @@
 <div id="bar"></div>
 
 <nav class="nav"><div class="nav-inner"><a class="nav-brand" href="../index.html">HAO TIEU KIM</a><div class="nav-links"><a href="../index.html">Portfolio</a><a href="../blogs.html">Blogs</a><a href="../essentials.html" class="active">Data Engineer Essentials</a></div></div></nav>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs>
+<symbol id="i-question" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.6 9.4a2.5 2.5 0 1 1 3.3 2.4c-.6.2-.9.8-.9 1.5v.6M12 17h.01"/></symbol>
+<symbol id="i-layers" viewBox="0 0 24 24"><path d="m12 3 9 4.8-9 4.8-9-4.8 9-4.8Z"/><path d="m3 12.6 9 4.8 9-4.8M3 17.2l9 4.8 9-4.8"/></symbol>
+<symbol id="i-workflow" viewBox="0 0 24 24"><rect x="3" y="3.5" width="7" height="6" rx="1.5"/><rect x="14" y="14.5" width="7" height="6" rx="1.5"/><path d="M6.5 9.5v5a3 3 0 0 0 3 3H14"/></symbol>
+<symbol id="i-check" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="m8 12.2 2.7 2.7L16.2 9"/></symbol>
+<symbol id="i-rocket" viewBox="0 0 24 24"><path d="M12 2.5c3 2.6 4.8 6.4 4.8 10.6L12 16.4l-4.8-3.3C7.2 8.9 9 5.1 12 2.5Z"/><path d="M7.2 13.1 4.4 15v4.2l3-1.9M16.8 13.1l2.8 1.9v4.2l-3-1.9M12 19.5v2.3"/><circle cx="12" cy="10" r="1.7"/></symbol>
+<symbol id="i-terminal" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2.5"/><path d="m7.5 9.5 3 2.5-3 2.5M13.5 15h3.5"/></symbol>
+<symbol id="i-package" viewBox="0 0 24 24"><path d="m12 2.8 8.2 4.6v9.2L12 21.2l-8.2-4.6V7.4L12 2.8Z"/><path d="m3.8 7.4 8.2 4.6 8.2-4.6M12 12v9.2"/></symbol>
+<symbol id="i-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18"/><path d="M12 3c2.4 2.7 3.6 5.7 3.6 9s-1.2 6.3-3.6 9c-2.4-2.7-3.6-5.7-3.6-9S9.6 5.7 12 3Z"/></symbol>
+<symbol id="i-repeat" viewBox="0 0 24 24"><path d="M16.5 3 20 6.5 16.5 10"/><path d="M4 11.5V9a2.5 2.5 0 0 1 2.5-2.5H20"/><path d="M7.5 21 4 17.5 7.5 14"/><path d="M20 12.5V15a2.5 2.5 0 0 1-2.5 2.5H4"/></symbol>
+<symbol id="i-database" viewBox="0 0 24 24"><ellipse cx="12" cy="6" rx="8" ry="3.2"/><path d="M4 6v12c0 1.8 3.6 3.2 8 3.2s8-1.4 8-3.2V6"/><path d="M20 12c0 1.8-3.6 3.2-8 3.2S4 13.8 4 12"/></symbol>
+<symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 2.8 4.8 5.6v5.2c0 4.4 3 8.4 7.2 9.8 4.2-1.4 7.2-5.4 7.2-9.8V5.6L12 2.8Z"/><path d="m9 12 2.2 2.2L15.4 10"/></symbol>
+<symbol id="i-list" viewBox="0 0 24 24"><path d="M8.5 6h12M8.5 12h12M8.5 18h12M3.7 6h.01M3.7 12h.01M3.7 18h.01"/></symbol>
+<symbol id="i-book" viewBox="0 0 24 24"><path d="M4 5a3 3 0 0 1 3-3h13v18H7a3 3 0 0 0-3 3V5Z"/><path d="M8 2v18"/></symbol>
+<symbol id="i-key" viewBox="0 0 24 24"><circle cx="7.2" cy="16.3" r="3.4"/><path d="m9.7 13.9 9.6-9.6M16.6 6.9l2.3 2.3M14 9.5l2.3 2.3"/></symbol>
+<symbol id="i-bulb" viewBox="0 0 24 24"><path d="M9.2 18h5.6M10.4 21h3.2"/><path d="M12 3a6 6 0 0 0-3.4 10.9c.5.4.8 1 .8 1.7v.4h5.2v-.4c0-.7.3-1.3.8-1.7A6 6 0 0 0 12 3Z"/></symbol>
+<symbol id="i-warn" viewBox="0 0 24 24"><path d="M12 3.2 2.8 19.6h18.4L12 3.2Z"/><path d="M12 9.5v4.2M12 16.8h.01"/></symbol>
+<symbol id="i-alert" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7.2v5.4M12 16.4h.01"/></symbol>
+<symbol id="i-compass" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="m15.6 8.4-2.1 5.1-5.1 2.1 2.1-5.1 5.1-2.1Z"/></symbol>
+<symbol id="i-blocks" viewBox="0 0 24 24"><rect x="3.5" y="3.5" width="7" height="7" rx="1.6"/><rect x="13.5" y="3.5" width="7" height="7" rx="1.6"/><rect x="3.5" y="13.5" width="7" height="7" rx="1.6"/><rect x="13.5" y="13.5" width="7" height="7" rx="1.6"/></symbol>
+<symbol id="i-search" viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m15.2 15.2 4.3 4.3"/></symbol>
+<symbol id="i-code" viewBox="0 0 24 24"><path d="m8 8.5-4 3.5 4 3.5M16 8.5l4 3.5-4 3.5M13.6 5l-3.2 14"/></symbol>
+<symbol id="i-plug" viewBox="0 0 24 24"><path d="M9 3v5.5M15 3v5.5"/><path d="M6.5 8.5h11V12a5.5 5.5 0 0 1-11 0V8.5Z"/><path d="M12 17.5V21"/></symbol>
+<symbol id="i-file" viewBox="0 0 24 24"><path d="M14 3H7.5A2.5 2.5 0 0 0 5 5.5v13A2.5 2.5 0 0 0 7.5 21h9a2.5 2.5 0 0 0 2.5-2.5V8l-5-5Z"/><path d="M14 3v5h5"/></symbol>
+<symbol id="i-network" viewBox="0 0 24 24"><circle cx="5.5" cy="6" r="2.5"/><circle cx="5.5" cy="18" r="2.5"/><circle cx="18.5" cy="12" r="2.5"/><path d="m7.9 7.2 8.2 3.7M7.9 16.8l8.2-3.7"/></symbol>
+<symbol id="i-disk" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2.5"/><path d="M3 12h18"/><path d="M7 16.5h.01M11 16.5h3"/><path d="M7 7.5h6"/></symbol>
+<symbol id="i-lock" viewBox="0 0 24 24"><rect x="4.5" y="10" width="15" height="10.5" rx="2.4"/><path d="M8 10V7.2a4 4 0 0 1 8 0V10"/></symbol>
+<symbol id="i-cloud" viewBox="0 0 24 24"><path d="M6.8 19.2h10.6a3.9 3.9 0 0 0 .4-7.8 6.1 6.1 0 0 0-11.7-1.7 3.8 3.8 0 0 0 .7 9.5Z"/></symbol>
+<symbol id="i-eye" viewBox="0 0 24 24"><path d="M2.6 12S6.2 5.8 12 5.8 21.4 12 21.4 12 17.8 18.2 12 18.2 2.6 12 2.6 12Z"/><circle cx="12" cy="12" r="3.1"/></symbol>
+<symbol id="i-zap" viewBox="0 0 24 24"><path d="M13.2 2.5 4.5 14h6.6l-1.3 7.5L19 10h-6.6l.8-7.5Z"/></symbol>
+<symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="3.6"/><path d="M4.8 20.2a7.2 7.2 0 0 1 14.4 0"/></symbol>
+<symbol id="i-whale" viewBox="0 0 24 24"><path d="M1.5 14h21c0 3.6-2.9 6.5-6.5 6.5H8.5C4.9 20.5 1.5 17.6 1.5 14Z"/><rect x="5.6" y="9.6" width="3.4" height="3.6" rx=".6"/><rect x="10.3" y="9.6" width="3.4" height="3.6" rx=".6"/><rect x="15" y="9.6" width="3.4" height="3.6" rx=".6"/><rect x="10.3" y="5.4" width="3.4" height="3.6" rx=".6"/><path d="M20.5 11.5c1.2-1.2 2.4-.6 2.4-.6"/></symbol>
+</defs></svg>
 
 <header class="hero">
   <div class="kicker">Data Orchestration · Field Guide</div>
@@ -158,34 +204,30 @@
 </div>
 
 <div class="toc reveal">
-<details open>
-<summary>❯ Contents (click to collapse)</summary>
-<ol>
-<li><a href="#s01">01. What Is Apache Airflow?</a></li>
-<li><a href="#s02">02. DAGs, Tasks &amp; Operators — Core Concepts</a></li>
-<li><a href="#s03">03. Airflow Architecture: Scheduler, Webserver, Metadata DB, Executor &amp; Triggerer</a></li>
-<li><a href="#s04">04. Executors Compared: Sequential, Local, Celery &amp; Kubernetes</a></li>
-<li><a href="#s05">05. Writing DAGs: TaskFlow API, Classic Operators &amp; Dependencies</a></li>
-<li><a href="#s06">06. XComs: Passing Data Between Tasks</a></li>
-<li><a href="#s07">07. Scheduling: Timetables, start_date, Catchup &amp; Backfill</a></li>
-<li><a href="#s08">08. Task Execution Semantics: Retries, Timeouts, Trigger Rules &amp; SLAs</a></li>
-<li><a href="#s09">09. Dynamic Task Mapping &amp; Task Groups</a></li>
-<li><a href="#s10">10. Connections, Variables, Hooks &amp; Providers</a></li>
-<li><a href="#s11">11. Sensors &amp; Deferrable Operators — the Triggerer</a></li>
-<li><a href="#s12">12. Datasets &amp; Data-Aware Scheduling</a></li>
-<li><a href="#s13">13. Monitoring, Logging, Alerting &amp; the Airflow UI</a></li>
-<li><a href="#s14">14. Security &amp; Production Best Practices</a></li>
-<li><a href="#s15">15. AWS MWAA: Overview &amp; Architecture</a></li>
-<li><a href="#s16">16. Setting Up &amp; Operating an MWAA Environment</a></li>
-<li><a href="#s17">17. MWAA Integrations with the AWS Ecosystem</a></li>
-<li><a href="#s18">18. Glossary &amp; Quick Reference</a></li>
-</ol>
-</details>
+  <strong>Contents</strong>
+  <a href="#s01"><svg class="ico"><use href="#i-question"/></svg>01 · What Is Apache Airflow?</a>
+  <a href="#s02"><svg class="ico"><use href="#i-blocks"/></svg>02 · DAGs, Tasks &amp;amp; Operators — Core Concepts</a>
+  <a href="#s03"><svg class="ico"><use href="#i-blocks"/></svg>03 · Airflow Architecture: Scheduler, Webserver, Metadata DB, Executor &amp;amp; Triggerer</a>
+  <a href="#s04"><svg class="ico"><use href="#i-zap"/></svg>04 · Executors Compared: Sequential, Local, Celery &amp;amp; Kubernetes</a>
+  <a href="#s05"><svg class="ico"><use href="#i-workflow"/></svg>05 · Writing DAGs: TaskFlow API, Classic Operators &amp;amp; Dependencies</a>
+  <a href="#s06"><svg class="ico"><use href="#i-repeat"/></svg>06 · XComs: Passing Data Between Tasks</a>
+  <a href="#s07"><svg class="ico"><use href="#i-repeat"/></svg>07 · Scheduling: Timetables, start_date, Catchup &amp;amp; Backfill</a>
+  <a href="#s08"><svg class="ico"><use href="#i-repeat"/></svg>08 · Task Execution Semantics: Retries, Timeouts, Trigger Rules &amp;amp; SLAs</a>
+  <a href="#s09"><svg class="ico"><use href="#i-blocks"/></svg>09 · Dynamic Task Mapping &amp;amp; Task Groups</a>
+  <a href="#s10"><svg class="ico"><use href="#i-plug"/></svg>10 · Connections, Variables, Hooks &amp;amp; Providers</a>
+  <a href="#s11"><svg class="ico"><use href="#i-eye"/></svg>11 · Sensors &amp;amp; Deferrable Operators — the Triggerer</a>
+  <a href="#s12"><svg class="ico"><use href="#i-repeat"/></svg>12 · Datasets &amp;amp; Data-Aware Scheduling</a>
+  <a href="#s13"><svg class="ico"><use href="#i-workflow"/></svg>13 · Monitoring, Logging, Alerting &amp;amp; the Airflow UI</a>
+  <a href="#s14"><svg class="ico"><use href="#i-check"/></svg>14 · Security &amp;amp; Production Best Practices</a>
+  <a href="#s15"><svg class="ico"><use href="#i-compass"/></svg>15 · AWS MWAA: Overview &amp;amp; Architecture</a>
+  <a href="#s16"><svg class="ico"><use href="#i-rocket"/></svg>16 · Setting Up &amp;amp; Operating an MWAA Environment</a>
+  <a href="#s17"><svg class="ico"><use href="#i-workflow"/></svg>17 · MWAA Integrations with the AWS Ecosystem</a>
+  <a href="#s18"><svg class="ico"><use href="#i-book"/></svg>18 · Glossary &amp;amp; Quick Reference</a>
 </div>
 
 <!-- START s01 -->
 <p class="promptline">~/airflow <b>❯</b> cat README.md | head -n 3</p>
-<h2 class="reveal" id="s01"><span class="pfx">01.</span> What Is Apache Airflow?</h2>
+<h2 id="s01" class="reveal"><span class="hico"><svg class="ico"><use href="#i-question"/></svg></span><span class="n">01.</span> What Is Apache Airflow?</h2>
 <p class="sectionsub reveal">Workflows as code: an orchestrator that schedules, sequences, and watches over the jobs that do the real work.</p>
 
 <div class="prose reveal">
@@ -265,7 +307,7 @@
 
 <!-- START s02 -->
 <p class="promptline">~/airflow <b>❯</b> airflow dags list-runs -d daily_sales_report</p>
-<h2 class="reveal" id="s02"><span class="pfx">02.</span> DAGs, Tasks &amp; Operators — Core Concepts</h2>
+<h2 id="s02" class="reveal"><span class="hico"><svg class="ico"><use href="#i-blocks"/></svg></span><span class="n">02.</span> DAGs, Tasks &amp;amp; Operators — Core Concepts</h2>
 <p class="sectionsub reveal">The three nouns you need before anything else in Airflow makes sense.</p>
 
 <div class="prose reveal">
@@ -368,7 +410,7 @@ with DAG(
 
 <!-- START s03 -->
 <p class="promptline">~/airflow <b>❯</b> airflow scheduler &amp; airflow webserver &amp; airflow triggerer &amp;</p>
-<h2 class="reveal" id="s03"><span class="pfx">03.</span> Airflow Architecture: Scheduler, Webserver, Metadata DB, Executor &amp; Triggerer</h2>
+<h2 id="s03" class="reveal"><span class="hico"><svg class="ico"><use href="#i-blocks"/></svg></span><span class="n">03.</span> Airflow Architecture: Scheduler, Webserver, Metadata DB, Executor &amp;amp; Triggerer</h2>
 <p class="sectionsub reveal">A small set of cooperating processes built around one shared database — how the pieces actually talk to each other.</p>
 
 <div class="prose reveal">
@@ -452,7 +494,7 @@ with DAG(
 
 <!-- START s04 -->
 <p class="promptline">~/airflow <b>❯</b> airflow config get-value core executor</p>
-<h2 class="reveal" id="s04"><span class="pfx">04.</span> Executors Compared: Sequential, Local, Celery &amp; Kubernetes</h2>
+<h2 id="s04" class="reveal"><span class="hico"><svg class="ico"><use href="#i-zap"/></svg></span><span class="n">04.</span> Executors Compared: Sequential, Local, Celery &amp;amp; Kubernetes</h2>
 <p class="sectionsub reveal">One setting that decides whether your DAGs run one at a time on a laptop or across a fleet of machines.</p>
 
 <div class="prose reveal">
@@ -512,7 +554,7 @@ with DAG(
 <!-- END s04 -->
 <!-- START s05 -->
 <p class="promptline">~/airflow <b>❯</b> cat dags/etl_pipeline.py</p>
-<h2 class="reveal" id="s05"><span class="pfx">05.</span> Writing DAGs: TaskFlow API, Classic Operators &amp; Dependencies</h2>
+<h2 id="s05" class="reveal"><span class="hico"><svg class="ico"><use href="#i-workflow"/></svg></span><span class="n">05.</span> Writing DAGs: TaskFlow API, Classic Operators &amp;amp; Dependencies</h2>
 <p class="sectionsub reveal">Two syntaxes, one dependency graph underneath.</p>
 <div class="prose reveal">
 <p>Every DAG, no matter how it is written, ultimately produces the same thing: a graph of task instances connected by upstream/downstream dependencies, stored in Airflow's metadata database and executed by the scheduler and executor described in <a href="#s03">Section 03</a>. What differs is the Python surface you write against. Airflow has historically offered the <b>classic</b> operator style — instantiate an operator class, pass it a <code>task_id</code> and whatever arguments it needs, and wire dependencies explicitly. Airflow 2.0 added the <b>TaskFlow API</b>, a decorator-based layer (<code>@dag</code>, <code>@task</code>) that lets you write plain Python functions and have Airflow turn them into tasks automatically, inferring dependencies from how you call one function's result into another.</p>
@@ -690,7 +732,7 @@ def log_task_instance():
 
 <!-- START s06 -->
 <p class="promptline">~/airflow <b>❯</b> airflow tasks states-for-dag-run etl_pipeline 2026-07-13</p>
-<h2 class="reveal" id="s06"><span class="pfx">06.</span> XComs: Passing Data Between Tasks</h2>
+<h2 id="s06" class="reveal"><span class="hico"><svg class="ico"><use href="#i-repeat"/></svg></span><span class="n">06.</span> XComs: Passing Data Between Tasks</h2>
 <p class="sectionsub reveal">A message-passing shortcut through the metadata database — built for pointers, not payloads.</p>
 <div class="prose reveal">
 <p>XCom (short for "cross-communication") is Airflow's built-in mechanism for one task to hand a small piece of data to another. A task <b>pushes</b> a value — explicitly via <code>ti.xcom_push(key, value)</code>, or implicitly by returning a value from its callable, which Airflow pushes under the default key <code>return_value</code> — and a downstream task <b>pulls</b> it, either explicitly via <code>ti.xcom_pull(task_ids=..., key=...)</code> or implicitly by receiving it as a function argument in the TaskFlow API. Under the hood, every pushed value is serialized (pickled or, more commonly today, JSON-encoded depending on the configured serializer/backend) and stored as a row in the metadata database, keyed by DAG, task, run, and XCom key.</p>
@@ -763,7 +805,7 @@ process(extract())
 
 <!-- START s07 -->
 <p class="promptline">~/airflow <b>❯</b> airflow dags list-runs -d daily_sales --state queued</p>
-<h2 class="reveal" id="s07"><span class="pfx">07.</span> Scheduling: Timetables, start_date, Catchup &amp; Backfill</h2>
+<h2 id="s07" class="reveal"><span class="hico"><svg class="ico"><use href="#i-repeat"/></svg></span><span class="n">07.</span> Scheduling: Timetables, start_date, Catchup &amp;amp; Backfill</h2>
 <p class="sectionsub reveal">The interval ends before the run begins — and that single fact explains most scheduling confusion.</p>
 <div class="prose reveal">
 <p><code>start_date</code> is not "when the DAG starts running" in wall-clock time — it is the earliest <b>logical date</b> Airflow will ever consider scheduling a run for. The scheduler compares it against the DAG's <code>schedule</code> (formerly <code>schedule_interval</code>) — a cron string, a <code>timedelta</code>, a preset like <code>@daily</code>/<code>@hourly</code>, or in recent Airflow versions a custom <b>Timetable</b> object for schedules that don't fit a fixed interval, such as "every weekday except public holidays" — to decide which intervals exist and which have already been satisfied.</p>
@@ -877,7 +919,7 @@ kick_off_report = TriggerDagRunOperator(
 
 <!-- START s08 -->
 <p class="promptline">~/airflow <b>❯</b> airflow tasks test daily_sales cleanup_task 2026-07-13</p>
-<h2 class="reveal" id="s08"><span class="pfx">08.</span> Task Execution Semantics: Retries, Timeouts, Trigger Rules &amp; SLAs</h2>
+<h2 id="s08" class="reveal"><span class="hico"><svg class="ico"><use href="#i-repeat"/></svg></span><span class="n">08.</span> Task Execution Semantics: Retries, Timeouts, Trigger Rules &amp;amp; SLAs</h2>
 <p class="sectionsub reveal">Controlling not just whether a task runs, but how it fails, how long it waits, and what upstream state it demands.</p>
 <div class="prose reveal">
 <p>Beyond the dependency graph itself, Airflow gives each task a set of execution controls that decide its resilience and its relationship to failure. <code>retries</code> sets how many times a failed task instance will be automatically re-attempted, paired with <code>retry_delay</code> (a fixed wait between attempts) and optionally <code>retry_exponential_backoff=True</code> (each retry waits longer than the last). <code>execution_timeout</code> is a hard ceiling — if the task instance runs longer than this duration, it is killed and marked failed, independent of whether it would have eventually succeeded.</p>
@@ -948,7 +990,7 @@ fetch_task &gt;&gt; cleanup_task
 <!-- END s08 -->
 <!-- START s09 -->
 <p class="promptline">~/airflow <b>❯</b> airflow tasks list orders_pipeline --tree</p>
-<h2 class="reveal" id="s09"><span class="pfx">09.</span> Dynamic Task Mapping &amp; Task Groups</h2>
+<h2 id="s09" class="reveal"><span class="hico"><svg class="ico"><use href="#i-blocks"/></svg></span><span class="n">09.</span> Dynamic Task Mapping &amp;amp; Task Groups</h2>
 <p class="sectionsub reveal">Grouping tasks for humans vs. multiplying tasks for data — two different problems that both look like "lots of boxes"</p>
 <div class="prose reveal">
 <p>As DAGs grow, you run into two unrelated needs that beginners often conflate. The first is <b>organizational</b>: a DAG with 40 tasks becomes unreadable in the graph view unless you can collapse related tasks into a single visual node. The second is <b>structural</b>: you frequently don't know how many tasks you need until the DAG is actually running — the number of files in a directory, the number of partitions in a table, the number of rows returned by a query. <a href="#s02">Section 02</a> introduced tasks and operators as fixed, hand-written units; this section covers the two mechanisms Airflow provides once a fixed, hand-written task list stops being enough.</p>
@@ -1039,7 +1081,7 @@ process_incoming_files()
 
 <!-- START s10 -->
 <p class="promptline">~/airflow <b>❯</b> airflow connections get aws_default</p>
-<h2 class="reveal" id="s10"><span class="pfx">10.</span> Connections, Variables, Hooks &amp; Providers</h2>
+<h2 id="s10" class="reveal"><span class="hico"><svg class="ico"><use href="#i-plug"/></svg></span><span class="n">10.</span> Connections, Variables, Hooks &amp;amp; Providers</h2>
 <p class="sectionsub reveal">How Airflow talks to everything that isn't Airflow</p>
 <div class="prose reveal">
 <p>Airflow's core distribution is deliberately thin — it ships the scheduler, webserver, and DAG-authoring primitives, but almost none of the integrations needed to actually talk to S3, Snowflake, Postgres, or Slack. Four concepts work together to bridge that gap: <b>Connections</b> hold credentials, <b>Hooks</b> wrap a system's client library using those credentials, <b>Operators</b> package a hook into a ready-to-use task, and <b>Providers</b> are the installable packages that bundle all three for a given system.</p>
@@ -1158,7 +1200,7 @@ class S3RowCountCheckOperator(BaseOperator):
 
 <!-- START s11 -->
 <p class="promptline">~/airflow <b>❯</b> airflow tasks state orders_pipeline wait_for_upstream 2026-07-13</p>
-<h2 class="reveal" id="s11"><span class="pfx">11.</span> Sensors &amp; Deferrable Operators — the Triggerer</h2>
+<h2 id="s11" class="reveal"><span class="hico"><svg class="ico"><use href="#i-eye"/></svg></span><span class="n">11.</span> Sensors &amp;amp; Deferrable Operators — the Triggerer</h2>
 <p class="sectionsub reveal">Waiting for something to happen without paying for a worker slot the whole time</p>
 <div class="prose reveal">
 <p>A huge share of real pipelines start with "wait until X exists" — a file lands, an upstream DAG finishes, an S3 key appears. Airflow's answer is the <b>Sensor</b>, a special operator subclass whose <code>poke()</code> method returns true once its condition is satisfied. Common examples include <code>FileSensor</code> (waits for a file on disk), <code>ExternalTaskSensor</code> (waits for a task in another DAG to reach a given state), and <code>S3KeySensor</code> (waits for an object to exist in S3). Downstream tasks simply depend on the sensor like any other task.</p>
@@ -1240,7 +1282,7 @@ wait_for_export_deferrable = S3KeySensor(
 
 <!-- START s12 -->
 <p class="promptline">~/airflow <b>❯</b> airflow dags list-jobs --dag-id orders_report --state queued</p>
-<h2 class="reveal" id="s12"><span class="pfx">12.</span> Datasets &amp; Data-Aware Scheduling</h2>
+<h2 id="s12" class="reveal"><span class="hico"><svg class="ico"><use href="#i-repeat"/></svg></span><span class="n">12.</span> Datasets &amp;amp; Data-Aware Scheduling</h2>
 <p class="sectionsub reveal">Triggering a DAG when data is actually ready, not when the clock says it probably is</p>
 <div class="prose reveal">
 <p>Time-based scheduling, covered in <a href="#s07">Section 07</a>, assumes you can predict when upstream data will be ready and pick a safe cron time after it. In practice that safety margin is a guess, and guesses cause two failure modes: run too early and you process incomplete or stale data, or pad the buffer so generously that downstream reports are needlessly delayed by hours. <b>Datasets</b>, introduced in Airflow 2.4, offer a different trigger: schedule a DAG to run when the data it depends on is actually updated, expressed as a first-class object rather than an assumed time offset.</p>
@@ -1336,7 +1378,7 @@ with DAG(
 <!-- END s12 -->
 <!-- START s13 -->
 <p class="promptline">~/airflow <b>❯</b> tail -f logs/*/*.log | grep -i failed</p>
-<h2 class="reveal" id="s13"><span class="pfx">13.</span> Monitoring, Logging, Alerting &amp; the Airflow UI</h2>
+<h2 id="s13" class="reveal"><span class="hico"><svg class="ico"><use href="#i-workflow"/></svg></span><span class="n">13.</span> Monitoring, Logging, Alerting &amp;amp; the Airflow UI</h2>
 <p class="sectionsub reveal">Reading the Grid and Graph views, finding logs when workers are ephemeral, and wiring failures to a pager.</p>
 <div class="prose reveal">
 <p>Airflow's webserver ships with a UI built around two complementary views of the same information. The <b>Grid view</b> (the successor to the old "Tree view" in Airflow 2.x) lays DAG runs out as columns and tasks as rows, so each cell is one task instance's state at one point in run history — it is the fastest way to see "has this task been flaky over the last two weeks" at a glance. The <b>Graph view</b> instead shows the dependency structure of a single specific run, with each node colored by that task instance's current state — it answers "where exactly did today's run stop." Airflow 3.0 reworked the UI's look and navigation substantially, but the underlying concepts — a run-history matrix and a per-run dependency graph — carry over; check the version-specific docs for exact screen names if you're on a newer release.</p>
@@ -1451,7 +1493,7 @@ billing_pipeline()
 
 <!-- START s14 -->
 <p class="promptline">~/airflow <b>❯</b> grep -rn "requests.get" dags/ --include=*.py</p>
-<h2 class="reveal" id="s14"><span class="pfx">14.</span> Security &amp; Production Best Practices</h2>
+<h2 id="s14" class="reveal"><span class="hico"><svg class="ico"><use href="#i-check"/></svg></span><span class="n">14.</span> Security &amp;amp; Production Best Practices</h2>
 <p class="sectionsub reveal">RBAC, secrets backends, and the authoring habits that keep the scheduler fast and retries safe.</p>
 <div class="prose reveal">
 <p>Running Airflow safely in production is two separate problems that get lumped together: securing who can see and do what, and writing DAGs that don't quietly damage the system that runs them. On the access-control side, Airflow's webserver has built-in <b>RBAC</b> (Role-Based Access Control), with default roles — <span class="kv">Admin</span>, <span class="kv">Op</span>, <span class="kv">User</span>, <span class="kv">Viewer</span>, <span class="kv">Public</span> — of increasing restriction, plus the ability to define custom roles scoped to specific DAGs (e.g. a role that can only view and trigger DAGs in one team's namespace). Credentials shouldn't live in the metadata database's Connections/Variables tables in the first place: a <b>secrets backend</b> — AWS Secrets Manager, HashiCorp Vault, GCP Secret Manager — lets Airflow resolve a connection or variable's value at runtime from an external vault instead, as covered in <a href="#s10">Section 10</a>. At the network layer, restrict who can reach the webserver at all, and make sure the metadata database is not reachable from anywhere outside the Airflow components that need it.</p>
@@ -1542,7 +1584,7 @@ billing_pipeline()
 
 <!-- START s15 -->
 <p class="promptline">~/airflow <b>❯</b> aws mwaa get-environment --name prod-airflow</p>
-<h2 class="reveal" id="s15"><span class="pfx">15.</span> AWS MWAA: Overview &amp; Architecture</h2>
+<h2 id="s15" class="reveal"><span class="hico"><svg class="ico"><use href="#i-compass"/></svg></span><span class="n">15.</span> AWS MWAA: Overview &amp;amp; Architecture</h2>
 <p class="sectionsub reveal">Same Airflow you've been reading about, minus the pager for the infrastructure underneath it.</p>
 <div class="prose reveal">
 <p><span class="tag mwaa">MWAA</span> — Amazon Managed Workflows for Apache Airflow — is a fully managed AWS service that runs Apache Airflow on your behalf. Instead of standing up and operating the <a href="#s03">scheduler, webserver, metadata database, and executor</a> yourself, you point MWAA at an S3 bucket containing your DAGs, and AWS provisions, patches, scales, and monitors the Airflow components for you, inside a VPC you designate. The trade you're making is explicit: you give up direct control over — and direct access to — the underlying infrastructure, in exchange for not having to run it.</p>
@@ -1623,7 +1665,7 @@ billing_pipeline()
 <!-- END s15 -->
 <!-- START s16 -->
 <p class="promptline">~/airflow <b>❯</b> aws s3 sync ./dags s3://prod-mwaa-bucket/dags/</p>
-<h2 class="reveal" id="s16"><span class="pfx">16.</span> Setting Up &amp; Operating an MWAA Environment</h2>
+<h2 id="s16" class="reveal"><span class="hico"><svg class="ico"><use href="#i-rocket"/></svg></span><span class="n">16.</span> Setting Up &amp;amp; Operating an MWAA Environment</h2>
 <p class="sectionsub reveal">No servers to SSH into — just an S3 bucket, an IAM role, and a few dials AWS turns for you.</p>
 <div class="prose reveal">
 <p>Running Airflow yourself means owning the scheduler process, the webserver process, the metadata database, and whatever executor and broker sit underneath. Running it on <span class="tag mwaa">MWAA</span> flips that model: AWS owns all of those internals, and what you actually configure is a much smaller, more declarative surface — an S3 bucket layout, an IAM role, a size tier, and a networking choice. Understanding exactly what that surface is (and isn't) is the difference between a smooth MWAA rollout and a confusing week of "why won't my DAG show up."</p>
@@ -1688,7 +1730,7 @@ boto3==1.34.11
 
 <!-- START s17 -->
 <p class="promptline">~/airflow <b>❯</b> airflow tasks test glue_pipeline run_glue_job 2026-07-13</p>
-<h2 class="reveal" id="s17"><span class="pfx">17.</span> MWAA Integrations with the AWS Ecosystem</h2>
+<h2 id="s17" class="reveal"><span class="hico"><svg class="ico"><use href="#i-workflow"/></svg></span><span class="n">17.</span> MWAA Integrations with the AWS Ecosystem</h2>
 <p class="sectionsub reveal">MWAA rarely moves data itself — it tells other AWS services when to move it.</p>
 <div class="prose reveal">
 <p>A useful mental model for MWAA: it is the conductor, not the orchestra. Almost nothing inside a well-designed MWAA DAG does heavy data processing directly — instead, tasks call operators and hooks from <code>apache-airflow-providers-amazon</code> that reach out to purpose-built AWS services which do the actual work, while Airflow handles sequencing, retries, backfills, and alerting around them. This division of labor keeps the scheduler light and lets each service scale independently of the others.</p>
@@ -1759,7 +1801,7 @@ boto3==1.34.11
 
 <!-- START s18 -->
 <p class="promptline">~/airflow <b>❯</b> airflow dags list-runs -d checkpoint_review --state failed</p>
-<h2 class="reveal" id="s18"><span class="pfx">18.</span> Glossary &amp; Quick Reference</h2>
+<h2 id="s18" class="reveal"><span class="hico"><svg class="ico"><use href="#i-book"/></svg></span><span class="n">18.</span> Glossary &amp;amp; Quick Reference</h2>
 <p class="sectionsub reveal">Every term from this guide, in one scannable table, plus a self-hosted-vs-MWAA cheat sheet.</p>
 <div class="prose reveal">
 <p>Use this section as a lookup, not a read-through — each definition is deliberately terse, matching how the term was used earlier in the guide. The final table maps each core Airflow component to its self-hosted form and its MWAA equivalent, which is often the fastest way to answer "wait, do I still manage that under MWAA?"</p>

@@ -96,12 +96,58 @@
   .end{color:var(--muted);font-size:13px;max-width:760px;margin:28px auto}
   .footnav a{margin-right:18px}
 .nav{position:sticky;top:0;z-index:60;background:rgba(25,25,33,.82);backdrop-filter:blur(10px);border-bottom:1px solid #3C4356}.nav-inner{max-width:1040px;margin:0 auto;padding:12px 24px;display:flex;align-items:center;gap:18px;flex-wrap:wrap}.nav-brand{font-weight:800;letter-spacing:.16em;font-size:15px;text-decoration:none;border:0;color:#5AC8FF}.nav-links{display:flex;gap:6px;flex-wrap:wrap;margin-left:auto}.nav-links a{text-decoration:none;border:1px solid transparent;color:#9aa0b4;font-weight:700;font-size:13.5px;padding:6px 14px;border-radius:999px;transition:.2s}.nav-links a:hover{color:#fff;border-color:#3C4356;background:#242739}.nav-links a.active{color:#5AC8FF;border-color:#28B9FF55;background:#28B9FF14}
+
+/* docker-standard structure */
+h2{font-size:clamp(21px,3.2vw,28px);margin:52px 0 6px;font-weight:800;line-height:1.22;padding-top:14px;border-top:1px solid #3C4356;display:flex;align-items:center;gap:10px}
+h2 .n{color:var(--blue2,#5C78FF)}
+.toc{background:#242739;border:1px solid #3C4356;border-radius:14px;padding:16px 22px;margin:24px 0;column-count:2;column-gap:28px}
+.toc>strong{column-span:all;display:block;margin-bottom:6px;color:#fff}
+.toc a{display:block;color:#5AC8FF;text-decoration:none;font-size:13.5px;line-height:1.9;break-inside:avoid;border:0}
+.toc a:hover{color:#fff}
+.toc details,.toc summary,.toc ol,.toc li{all:unset;display:block}
+.ico{width:1em;height:1em;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.hico{display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;border-radius:11px;flex:0 0 36px;background:#0e2740;border:1px solid #2b4a80;color:#5AC8FF}
+.hico .ico{width:19px;height:19px}
+.toc a .ico{width:14px;height:14px;margin-right:9px;vertical-align:-2px;opacity:.85}
 </style>
 <script>document.documentElement.classList.add('js');</script>
 </head>
 <body>
 <div id="bar"></div>
 <nav class="nav"><div class="nav-inner"><a class="nav-brand" href="../index.html">HAO TIEU KIM</a><div class="nav-links"><a href="../index.html">Portfolio</a><a href="../blogs.html">Blogs</a><a href="../essentials.html" class="active">Data Engineer Essentials</a></div></div></nav>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs>
+<symbol id="i-question" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.6 9.4a2.5 2.5 0 1 1 3.3 2.4c-.6.2-.9.8-.9 1.5v.6M12 17h.01"/></symbol>
+<symbol id="i-layers" viewBox="0 0 24 24"><path d="m12 3 9 4.8-9 4.8-9-4.8 9-4.8Z"/><path d="m3 12.6 9 4.8 9-4.8M3 17.2l9 4.8 9-4.8"/></symbol>
+<symbol id="i-workflow" viewBox="0 0 24 24"><rect x="3" y="3.5" width="7" height="6" rx="1.5"/><rect x="14" y="14.5" width="7" height="6" rx="1.5"/><path d="M6.5 9.5v5a3 3 0 0 0 3 3H14"/></symbol>
+<symbol id="i-check" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="m8 12.2 2.7 2.7L16.2 9"/></symbol>
+<symbol id="i-rocket" viewBox="0 0 24 24"><path d="M12 2.5c3 2.6 4.8 6.4 4.8 10.6L12 16.4l-4.8-3.3C7.2 8.9 9 5.1 12 2.5Z"/><path d="M7.2 13.1 4.4 15v4.2l3-1.9M16.8 13.1l2.8 1.9v4.2l-3-1.9M12 19.5v2.3"/><circle cx="12" cy="10" r="1.7"/></symbol>
+<symbol id="i-terminal" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2.5"/><path d="m7.5 9.5 3 2.5-3 2.5M13.5 15h3.5"/></symbol>
+<symbol id="i-package" viewBox="0 0 24 24"><path d="m12 2.8 8.2 4.6v9.2L12 21.2l-8.2-4.6V7.4L12 2.8Z"/><path d="m3.8 7.4 8.2 4.6 8.2-4.6M12 12v9.2"/></symbol>
+<symbol id="i-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18"/><path d="M12 3c2.4 2.7 3.6 5.7 3.6 9s-1.2 6.3-3.6 9c-2.4-2.7-3.6-5.7-3.6-9S9.6 5.7 12 3Z"/></symbol>
+<symbol id="i-repeat" viewBox="0 0 24 24"><path d="M16.5 3 20 6.5 16.5 10"/><path d="M4 11.5V9a2.5 2.5 0 0 1 2.5-2.5H20"/><path d="M7.5 21 4 17.5 7.5 14"/><path d="M20 12.5V15a2.5 2.5 0 0 1-2.5 2.5H4"/></symbol>
+<symbol id="i-database" viewBox="0 0 24 24"><ellipse cx="12" cy="6" rx="8" ry="3.2"/><path d="M4 6v12c0 1.8 3.6 3.2 8 3.2s8-1.4 8-3.2V6"/><path d="M20 12c0 1.8-3.6 3.2-8 3.2S4 13.8 4 12"/></symbol>
+<symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 2.8 4.8 5.6v5.2c0 4.4 3 8.4 7.2 9.8 4.2-1.4 7.2-5.4 7.2-9.8V5.6L12 2.8Z"/><path d="m9 12 2.2 2.2L15.4 10"/></symbol>
+<symbol id="i-list" viewBox="0 0 24 24"><path d="M8.5 6h12M8.5 12h12M8.5 18h12M3.7 6h.01M3.7 12h.01M3.7 18h.01"/></symbol>
+<symbol id="i-book" viewBox="0 0 24 24"><path d="M4 5a3 3 0 0 1 3-3h13v18H7a3 3 0 0 0-3 3V5Z"/><path d="M8 2v18"/></symbol>
+<symbol id="i-key" viewBox="0 0 24 24"><circle cx="7.2" cy="16.3" r="3.4"/><path d="m9.7 13.9 9.6-9.6M16.6 6.9l2.3 2.3M14 9.5l2.3 2.3"/></symbol>
+<symbol id="i-bulb" viewBox="0 0 24 24"><path d="M9.2 18h5.6M10.4 21h3.2"/><path d="M12 3a6 6 0 0 0-3.4 10.9c.5.4.8 1 .8 1.7v.4h5.2v-.4c0-.7.3-1.3.8-1.7A6 6 0 0 0 12 3Z"/></symbol>
+<symbol id="i-warn" viewBox="0 0 24 24"><path d="M12 3.2 2.8 19.6h18.4L12 3.2Z"/><path d="M12 9.5v4.2M12 16.8h.01"/></symbol>
+<symbol id="i-alert" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7.2v5.4M12 16.4h.01"/></symbol>
+<symbol id="i-compass" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="m15.6 8.4-2.1 5.1-5.1 2.1 2.1-5.1 5.1-2.1Z"/></symbol>
+<symbol id="i-blocks" viewBox="0 0 24 24"><rect x="3.5" y="3.5" width="7" height="7" rx="1.6"/><rect x="13.5" y="3.5" width="7" height="7" rx="1.6"/><rect x="3.5" y="13.5" width="7" height="7" rx="1.6"/><rect x="13.5" y="13.5" width="7" height="7" rx="1.6"/></symbol>
+<symbol id="i-search" viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m15.2 15.2 4.3 4.3"/></symbol>
+<symbol id="i-code" viewBox="0 0 24 24"><path d="m8 8.5-4 3.5 4 3.5M16 8.5l4 3.5-4 3.5M13.6 5l-3.2 14"/></symbol>
+<symbol id="i-plug" viewBox="0 0 24 24"><path d="M9 3v5.5M15 3v5.5"/><path d="M6.5 8.5h11V12a5.5 5.5 0 0 1-11 0V8.5Z"/><path d="M12 17.5V21"/></symbol>
+<symbol id="i-file" viewBox="0 0 24 24"><path d="M14 3H7.5A2.5 2.5 0 0 0 5 5.5v13A2.5 2.5 0 0 0 7.5 21h9a2.5 2.5 0 0 0 2.5-2.5V8l-5-5Z"/><path d="M14 3v5h5"/></symbol>
+<symbol id="i-network" viewBox="0 0 24 24"><circle cx="5.5" cy="6" r="2.5"/><circle cx="5.5" cy="18" r="2.5"/><circle cx="18.5" cy="12" r="2.5"/><path d="m7.9 7.2 8.2 3.7M7.9 16.8l8.2-3.7"/></symbol>
+<symbol id="i-disk" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2.5"/><path d="M3 12h18"/><path d="M7 16.5h.01M11 16.5h3"/><path d="M7 7.5h6"/></symbol>
+<symbol id="i-lock" viewBox="0 0 24 24"><rect x="4.5" y="10" width="15" height="10.5" rx="2.4"/><path d="M8 10V7.2a4 4 0 0 1 8 0V10"/></symbol>
+<symbol id="i-cloud" viewBox="0 0 24 24"><path d="M6.8 19.2h10.6a3.9 3.9 0 0 0 .4-7.8 6.1 6.1 0 0 0-11.7-1.7 3.8 3.8 0 0 0 .7 9.5Z"/></symbol>
+<symbol id="i-eye" viewBox="0 0 24 24"><path d="M2.6 12S6.2 5.8 12 5.8 21.4 12 21.4 12 17.8 18.2 12 18.2 2.6 12 2.6 12Z"/><circle cx="12" cy="12" r="3.1"/></symbol>
+<symbol id="i-zap" viewBox="0 0 24 24"><path d="M13.2 2.5 4.5 14h6.6l-1.3 7.5L19 10h-6.6l.8-7.5Z"/></symbol>
+<symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="3.6"/><path d="M4.8 20.2a7.2 7.2 0 0 1 14.4 0"/></symbol>
+<symbol id="i-whale" viewBox="0 0 24 24"><path d="M1.5 14h21c0 3.6-2.9 6.5-6.5 6.5H8.5C4.9 20.5 1.5 17.6 1.5 14Z"/><rect x="5.6" y="9.6" width="3.4" height="3.6" rx=".6"/><rect x="10.3" y="9.6" width="3.4" height="3.6" rx=".6"/><rect x="15" y="9.6" width="3.4" height="3.6" rx=".6"/><rect x="10.3" y="5.4" width="3.4" height="3.6" rx=".6"/><path d="M20.5 11.5c1.2-1.2 2.4-.6 2.4-.6"/></symbol>
+</defs></svg>
 
 <header class="hero">
   <div class="kicker">Data Engineering · AWS Services Guide</div>
@@ -132,62 +178,58 @@
 </div>
 
 <div class="toc reveal">
-<details open>
-<summary>❯ Contents (click to collapse)</summary>
-<ol>
-<li><a href="#s01">01. Why AWS for Data Engineering</a></li>
-<li><a href="#s02">02. AWS Fundamentals for Data Engineers</a></li>
-<li><a href="#s03">03. AWS Networking for Data Engineers</a></li>
-<li><a href="#s04">04. Amazon S3: The Foundation of Every AWS Data Platform</a></li>
-<li><a href="#s05">05. IAM for Data Engineers</a></li>
-<li><a href="#s06">06. AWS Security &amp; Encryption for Data Platforms: KMS, Secrets Manager &amp; Macie</a></li>
-<li><a href="#s07">07. AWS Lambda for Data Engineering</a></li>
-<li><a href="#s08">08. AWS Glue Data Catalog &amp; Crawlers</a></li>
-<li><a href="#s09">09. AWS Glue ETL Jobs</a></li>
-<li><a href="#s10">10. AWS Glue DataBrew &amp; Glue Data Quality</a></li>
-<li><a href="#s11">11. Amazon EMR &amp; EMR Serverless</a></li>
-<li><a href="#s12">12. AWS Batch &amp; Containers for Data Workloads</a></li>
-<li><a href="#s13">13. Amazon Athena</a></li>
-<li><a href="#s14">14. Amazon Redshift &amp; Redshift Spectrum</a></li>
-<li><a href="#s15">15. AWS Lake Formation</a></li>
-<li><a href="#s16">16. Amazon Kinesis Data Streams</a></li>
-<li><a href="#s17">17. Amazon Data Firehose</a></li>
-<li><a href="#s18">18. Amazon MSK (Managed Streaming for Kafka)</a></li>
-<li><a href="#s19">19. Amazon Managed Service for Apache Flink</a></li>
-<li><a href="#s20">20. Amazon OpenSearch Service</a></li>
-<li><a href="#s21">21. Amazon SQS &amp; SNS</a></li>
-<li><a href="#s22">22. Amazon EventBridge</a></li>
-<li><a href="#s23">23. AWS Step Functions</a></li>
-<li><a href="#s24">24. Amazon MWAA (Managed Workflows for Apache Airflow)</a></li>
-<li><a href="#s25">25. AWS Database Migration Service (DMS)</a></li>
-<li><a href="#s26">26. Amazon RDS, Aurora &amp; Purpose-Built Databases</a></li>
-<li><a href="#s27">27. Data Movement Services: AppFlow, Transfer Family, DataSync &amp; Snow Family</a></li>
-<li><a href="#s28">28. Amazon CloudWatch</a></li>
-<li><a href="#s29">29. Governance, Compliance &amp; Cost Management</a></li>
-<li><a href="#s30">30. Amazon DynamoDB</a></li>
-<li><a href="#s31">31. Amazon QuickSight</a></li>
-<li><a href="#s32">32. Machine Learning &amp; AI Services for Data Engineers</a></li>
-<li><a href="#s33">33. Infrastructure as Code &amp; CI/CD for Data Pipelines</a></li>
-<li><a href="#s34">34. What's New: AWS Data Engineering, 2024-2026</a></li>
-<li><a href="#s35">35. Worked Example: A Real YouTube Trending Data Pipeline</a></li>
-<li><a href="#s36">36. Worked Example: The Step Functions Execution, State by State</a></li>
-<li><a href="#s37">37. Worked Example: The Data Quality Gate &amp; SNS Alerting Pattern</a></li>
-<li><a href="#s38">38. End-to-End Lakehouse Project on AWS: Architecture Overview</a></li>
-<li><a href="#s39">39. End-to-End Lakehouse Project: Building It Step by Step</a></li>
-<li><a href="#s40">40. AWS Lakehouse vs. Databricks Lakehouse: A Head-to-Head Comparison</a></li>
-<li><a href="#s41">41. Enterprise Validation: How These Services Are Actually Used</a></li>
-<li><a href="#s42">42. AWS-Native vs. Cross-Cloud Alternatives</a></li>
-<li><a href="#s43">43. Common Pitfalls</a></li>
-<li><a href="#s44">44. Glossary</a></li>
-<li><a href="#s45">45. Exam Tips &amp; Domain Weighting</a></li>
-<li><a href="#s46">46. Learning Path: What to Build Next</a></li>
-</ol>
-</details>
+  <strong>Contents</strong>
+  <a href="#s01"><svg class="ico"><use href="#i-question"/></svg>01 · Why AWS for Data Engineering</a>
+  <a href="#s02"><svg class="ico"><use href="#i-cloud"/></svg>02 · AWS Fundamentals for Data Engineers</a>
+  <a href="#s03"><svg class="ico"><use href="#i-network"/></svg>03 · AWS Networking for Data Engineers</a>
+  <a href="#s04"><svg class="ico"><use href="#i-disk"/></svg>04 · Amazon S3: The Foundation of Every AWS Data Platform</a>
+  <a href="#s05"><svg class="ico"><use href="#i-lock"/></svg>05 · IAM for Data Engineers</a>
+  <a href="#s06"><svg class="ico"><use href="#i-shield"/></svg>06 · AWS Security &amp;amp; Encryption for Data Platforms: KMS, Secrets Manager &amp;amp; Macie</a>
+  <a href="#s07"><svg class="ico"><use href="#i-zap"/></svg>07 · AWS Lambda for Data Engineering</a>
+  <a href="#s08"><svg class="ico"><use href="#i-package"/></svg>08 · AWS Glue Data Catalog &amp;amp; Crawlers</a>
+  <a href="#s09"><svg class="ico"><use href="#i-package"/></svg>09 · AWS Glue ETL Jobs</a>
+  <a href="#s10"><svg class="ico"><use href="#i-check"/></svg>10 · AWS Glue DataBrew &amp;amp; Glue Data Quality</a>
+  <a href="#s11"><svg class="ico"><use href="#i-zap"/></svg>11 · Amazon EMR &amp;amp; EMR Serverless</a>
+  <a href="#s12"><svg class="ico"><use href="#i-package"/></svg>12 · AWS Batch &amp;amp; Containers for Data Workloads</a>
+  <a href="#s13"><svg class="ico"><use href="#i-search"/></svg>13 · Amazon Athena</a>
+  <a href="#s14"><svg class="ico"><use href="#i-database"/></svg>14 · Amazon Redshift &amp;amp; Redshift Spectrum</a>
+  <a href="#s15"><svg class="ico"><use href="#i-file"/></svg>15 · AWS Lake Formation</a>
+  <a href="#s16"><svg class="ico"><use href="#i-network"/></svg>16 · Amazon Kinesis Data Streams</a>
+  <a href="#s17"><svg class="ico"><use href="#i-blocks"/></svg>17 · Amazon Data Firehose</a>
+  <a href="#s18"><svg class="ico"><use href="#i-network"/></svg>18 · Amazon MSK (Managed Streaming for Kafka)</a>
+  <a href="#s19"><svg class="ico"><use href="#i-network"/></svg>19 · Amazon Managed Service for Apache Flink</a>
+  <a href="#s20"><svg class="ico"><use href="#i-network"/></svg>20 · Amazon OpenSearch Service</a>
+  <a href="#s21"><svg class="ico"><use href="#i-blocks"/></svg>21 · Amazon SQS &amp;amp; SNS</a>
+  <a href="#s22"><svg class="ico"><use href="#i-zap"/></svg>22 · Amazon EventBridge</a>
+  <a href="#s23"><svg class="ico"><use href="#i-workflow"/></svg>23 · AWS Step Functions</a>
+  <a href="#s24"><svg class="ico"><use href="#i-workflow"/></svg>24 · Amazon MWAA (Managed Workflows for Apache Airflow)</a>
+  <a href="#s25"><svg class="ico"><use href="#i-network"/></svg>25 · AWS Database Migration Service (DMS)</a>
+  <a href="#s26"><svg class="ico"><use href="#i-database"/></svg>26 · Amazon RDS, Aurora &amp;amp; Purpose-Built Databases</a>
+  <a href="#s27"><svg class="ico"><use href="#i-network"/></svg>27 · Data Movement Services: AppFlow, Transfer Family, DataSync &amp;amp; Snow Family</a>
+  <a href="#s28"><svg class="ico"><use href="#i-cloud"/></svg>28 · Amazon CloudWatch</a>
+  <a href="#s29"><svg class="ico"><use href="#i-shield"/></svg>29 · Governance, Compliance &amp;amp; Cost Management</a>
+  <a href="#s30"><svg class="ico"><use href="#i-blocks"/></svg>30 · Amazon DynamoDB</a>
+  <a href="#s31"><svg class="ico"><use href="#i-blocks"/></svg>31 · Amazon QuickSight</a>
+  <a href="#s32"><svg class="ico"><use href="#i-network"/></svg>32 · Machine Learning &amp;amp; AI Services for Data Engineers</a>
+  <a href="#s33"><svg class="ico"><use href="#i-workflow"/></svg>33 · Infrastructure as Code &amp;amp; CI/CD for Data Pipelines</a>
+  <a href="#s34"><svg class="ico"><use href="#i-cloud"/></svg>34 · What&#x27;s New: AWS Data Engineering, 2024-2026</a>
+  <a href="#s35"><svg class="ico"><use href="#i-workflow"/></svg>35 · Worked Example: A Real YouTube Trending Data Pipeline</a>
+  <a href="#s36"><svg class="ico"><use href="#i-workflow"/></svg>36 · Worked Example: The Step Functions Execution, State by State</a>
+  <a href="#s37"><svg class="ico"><use href="#i-check"/></svg>37 · Worked Example: The Data Quality Gate &amp;amp; SNS Alerting Pattern</a>
+  <a href="#s38"><svg class="ico"><use href="#i-compass"/></svg>38 · End-to-End Lakehouse Project on AWS: Architecture Overview</a>
+  <a href="#s39"><svg class="ico"><use href="#i-file"/></svg>39 · End-to-End Lakehouse Project: Building It Step by Step</a>
+  <a href="#s40"><svg class="ico"><use href="#i-database"/></svg>40 · AWS Lakehouse vs. Databricks Lakehouse: A Head-to-Head Comparison</a>
+  <a href="#s41"><svg class="ico"><use href="#i-check"/></svg>41 · Enterprise Validation: How These Services Are Actually Used</a>
+  <a href="#s42"><svg class="ico"><use href="#i-cloud"/></svg>42 · AWS-Native vs. Cross-Cloud Alternatives</a>
+  <a href="#s43"><svg class="ico"><use href="#i-warn"/></svg>43 · Common Pitfalls</a>
+  <a href="#s44"><svg class="ico"><use href="#i-book"/></svg>44 · Glossary</a>
+  <a href="#s45"><svg class="ico"><use href="#i-blocks"/></svg>45 · Exam Tips &amp;amp; Domain Weighting</a>
+  <a href="#s46"><svg class="ico"><use href="#i-compass"/></svg>46 · Learning Path: What to Build Next</a>
 </div>
 
 <!-- START s01 -->
 <p class="promptline">~/aws-data-eng <b>❯</b> the landscape</p>
-<h2 class="reveal" id="s01"><span class="pfx">01.</span> Why AWS for Data Engineering</h2>
+<h2 id="s01" class="reveal"><span class="hico"><svg class="ico"><use href="#i-question"/></svg></span><span class="n">01.</span> Why AWS for Data Engineering</h2>
 <p class="sectionsub reveal">One cloud, a dozen-plus services, and one question that decides which ones you need</p>
 <div class="prose reveal">
 <p>AWS didn't design one "data engineering product" — it grew a family of separate services (storage, compute, warehousing, streaming, orchestration) that happen to compose well together, because most of them were built to read and write the same underlying storage layer: <strong>Amazon S3</strong>. That's the single fact that makes the rest of AWS data engineering learnable instead of overwhelming: almost every service in this guide either writes data into S3, reads data out of S3, or helps you query/govern/move data that's sitting in S3.</p>
@@ -262,7 +304,7 @@
 
 <!-- START s02 -->
 <p class="promptline">~/aws-data-eng <b>❯</b> before the acronyms</p>
-<h2 class="reveal" id="s02"><span class="pfx">02.</span> AWS Fundamentals for Data Engineers</h2>
+<h2 id="s02" class="reveal"><span class="hico"><svg class="ico"><use href="#i-cloud"/></svg></span><span class="n">02.</span> AWS Fundamentals for Data Engineers</h2>
 <p class="sectionsub reveal">The baseline every other section in this guide quietly assumes you already have</p>
 <div class="prose reveal">
 <p>"The cloud" is not a technology, it's a billing and provisioning model: instead of buying servers, racking them, and running them at whatever utilization you happen to have, you rent compute, storage, and managed services from AWS by the second or by the gigabyte, and you can request more (or release what you have) in minutes instead of months. That single shift — from owned, fixed capacity to rented, elastic capacity — is why almost everything in this guide is "provision nothing, pay for what runs."</p>
@@ -364,7 +406,7 @@ arn:aws:iam::111122223333:role/GlueETLRole                      # IAM: no Region
 
 <!-- START s03 -->
 <p class="promptline">~/aws-data-eng <b>❯</b> how the pipeline talks to the network</p>
-<h2 class="reveal" id="s03"><span class="pfx">03.</span> AWS Networking for Data Engineers</h2>
+<h2 id="s03" class="reveal"><span class="hico"><svg class="ico"><use href="#i-network"/></svg></span><span class="n">03.</span> AWS Networking for Data Engineers</h2>
 <p class="sectionsub reveal">VPCs, endpoints, and the difference between a free path to S3 and a NAT-Gateway-billed one</p>
 <div class="prose reveal">
 <p>Every other section in this guide describes a service that looks "serverless," which tempts you into assuming there's no network to think about. There is: a <strong>Glue job with a VPC connection</strong>, a <strong>Lambda function attached to a VPC</strong>, an <strong>EMR cluster</strong>, and an <strong>Amazon Redshift</strong> cluster all run inside a private network you're responsible for wiring correctly. Get the wiring wrong and the job either fails outright or quietly routes traffic — and cost — through the public internet when it didn't need to.</p>
@@ -493,7 +535,7 @@ arn:aws:iam::111122223333:role/GlueETLRole                      # IAM: no Region
 
 <!-- START s04 -->
 <p class="promptline">~/aws-data-eng <b>❯</b> the foundation</p>
-<h2 class="reveal" id="s04"><span class="pfx">04.</span> Amazon S3: The Foundation of Every AWS Data Platform</h2>
+<h2 id="s04" class="reveal"><span class="hico"><svg class="ico"><use href="#i-disk"/></svg></span><span class="n">04.</span> Amazon S3: The Foundation of Every AWS Data Platform</h2>
 <p class="sectionsub reveal">Object storage, storage classes, and the partitioning scheme that decides how everything downstream performs</p>
 <div class="prose reveal">
 <p><strong>Amazon S3</strong> (Simple Storage Service) stores objects — arbitrary blobs of data, from a 1KB JSON file to a multi-terabyte export — inside <strong>buckets</strong>, addressed by a <strong>key</strong> (the full "path" string, even though S3 has no real folders — the slashes in a key are just characters that tools render as if they were a folder tree). Every object also carries a <strong>storage class</strong>, which is really a cost/retrieval-speed tradeoff dial, not a different product.</p>
@@ -546,7 +588,7 @@ arn:aws:iam::111122223333:role/GlueETLRole                      # IAM: no Region
 
 <!-- START s05 -->
 <p class="promptline">~/aws-data-eng <b>❯</b> who's allowed to touch what</p>
-<h2 class="reveal" id="s05"><span class="pfx">05.</span> IAM for Data Engineers</h2>
+<h2 id="s05" class="reveal"><span class="hico"><svg class="ico"><use href="#i-lock"/></svg></span><span class="n">05.</span> IAM for Data Engineers</h2>
 <p class="sectionsub reveal">The permission model every other service in this guide sits on top of</p>
 <div class="prose reveal">
 <p><strong>IAM (Identity and Access Management)</strong> isn't a data service, but every single other service in this guide checks with it before doing anything — a Glue job can't read from S3, and a Lambda function can't write to a Glue table, without an IAM identity that explicitly allows it. Understanding IAM's two building blocks up front saves hours of "access denied" debugging later.</p>
@@ -611,7 +653,7 @@ arn:aws:iam::111122223333:role/GlueETLRole                      # IAM: no Region
 
 <!-- START s06 -->
 <p class="promptline">~/aws-data-eng <b>❯</b> who's actually allowed to decrypt this</p>
-<h2 class="reveal" id="s06"><span class="pfx">06.</span> AWS Security &amp; Encryption for Data Platforms: KMS, Secrets Manager &amp; Macie</h2>
+<h2 id="s06" class="reveal"><span class="hico"><svg class="ico"><use href="#i-shield"/></svg></span><span class="n">06.</span> AWS Security &amp;amp; Encryption for Data Platforms: KMS, Secrets Manager &amp;amp; Macie</h2>
 <p class="sectionsub reveal">Encryption at rest and in transit, credential management, and finding PII nobody knew was there</p>
 <div class="prose reveal">
 <p>IAM (see the IAM section) answers "who can call which API." Lake Formation (see the Lake Formation section) answers "which columns and rows within a table." This section covers a third, easily-skipped layer: how data is actually protected once it's sitting on disk or moving over a wire, how a job gets credentials without anyone typing a password into a script, and how you'd ever find out a data lake already contains raw PII that nobody manually reviewed.</p>
@@ -736,7 +778,7 @@ conn = psycopg2.connect(host=DB_HOST, user=creds["username"], password=creds["pa
 
 <!-- START s07 -->
 <p class="promptline">~/aws-data-eng <b>❯</b> compute without a server</p>
-<h2 class="reveal" id="s07"><span class="pfx">07.</span> AWS Lambda for Data Engineering</h2>
+<h2 id="s07" class="reveal"><span class="hico"><svg class="ico"><use href="#i-zap"/></svg></span><span class="n">07.</span> AWS Lambda for Data Engineering</h2>
 <p class="sectionsub reveal">The right tool for short, event-driven work — and the wrong one for heavy transforms</p>
 <div class="prose reveal">
 <p><strong>AWS Lambda</strong> runs a function in response to a trigger — an S3 upload, an API call, a Step Functions task, a schedule — without you provisioning or managing any server. You pay per invocation and per millisecond of execution, and it scales from zero to thousands of concurrent invocations automatically. In a data pipeline, Lambda is almost always doing one of three jobs: pulling data from an external API, doing a small, fast transformation, or running a quick validation check.</p>
@@ -791,7 +833,7 @@ def lambda_handler(event, context):
 
 <!-- START s08 -->
 <p class="promptline">~/aws-data-eng <b>❯</b> giving S3 a schema</p>
-<h2 class="reveal" id="s08"><span class="pfx">08.</span> AWS Glue Data Catalog &amp; Crawlers</h2>
+<h2 id="s08" class="reveal"><span class="hico"><svg class="ico"><use href="#i-package"/></svg></span><span class="n">08.</span> AWS Glue Data Catalog &amp;amp; Crawlers</h2>
 <p class="sectionsub reveal">S3 has no schema of its own — the Catalog is what gives your files a table structure SQL engines can use</p>
 <div class="prose reveal">
 <p>S3 stores files; it has no idea those files are "a table." The <strong>Glue Data Catalog</strong> is a persistent, central metadata store — for every table, it holds the schema (column names/types), the S3 location, the file format, and the partition scheme. It is not a AWS-Glue-only detail: Athena, Redshift Spectrum, EMR, and Glue ETL jobs all read the <em>same</em> Catalog, which is exactly why defining a table's metadata once, in one place, makes it usable everywhere.</p>
@@ -863,7 +905,7 @@ def lambda_handler(event, context):
 
 <!-- START s09 -->
 <p class="promptline">~/aws-data-eng <b>❯</b> the actual transform</p>
-<h2 class="reveal" id="s09"><span class="pfx">09.</span> AWS Glue ETL Jobs</h2>
+<h2 id="s09" class="reveal"><span class="hico"><svg class="ico"><use href="#i-package"/></svg></span><span class="n">09.</span> AWS Glue ETL Jobs</h2>
 <p class="sectionsub reveal">Managed Spark, without managing a cluster</p>
 <div class="prose reveal">
 <p>A <strong>Glue ETL job</strong> is a managed Apache Spark (or plain Python) script AWS runs on infrastructure you never provision or patch — you write the transformation logic, pick how much compute to give it, and Glue handles cluster startup, scaling within the job, and teardown. This is the workhorse for medallion-style bronze→silver→gold transforms in an AWS-native data lake.</p>
@@ -925,7 +967,7 @@ silver_df.write.mode("overwrite").partitionBy("region").parquet(
 
 <!-- START s10 -->
 <p class="promptline">~/aws-data-eng <b>❯</b> catching bad data before Gold does</p>
-<h2 class="reveal" id="s10"><span class="pfx">10.</span> AWS Glue DataBrew &amp; Glue Data Quality</h2>
+<h2 id="s10" class="reveal"><span class="hico"><svg class="ico"><use href="#i-check"/></svg></span><span class="n">10.</span> AWS Glue DataBrew &amp;amp; Glue Data Quality</h2>
 <p class="sectionsub reveal">A visual data-prep tool for analysts, and a rules engine for enforcing quality automatically</p>
 <div class="prose reveal">
 <p>Two Glue features solve two different problems that often get confused. <strong>Glue DataBrew</strong> is a visual, no-code tool for exploring and cleaning data — point it at a dataset, and it profiles columns, suggests transformations (trim whitespace, fix types, handle nulls), and lets an analyst build a cleaning recipe by clicking, not coding. <strong>Glue Data Quality</strong> is a rules engine: you declare expectations about a dataset (row counts, null thresholds, value ranges, freshness), and it evaluates them automatically as part of a pipeline, the same job the DQ Lambda plays in the worked example this guide references throughout (section 37).</p>
@@ -954,7 +996,7 @@ Rules = [
 
 <!-- START s11 -->
 <p class="promptline">~/aws-data-eng <b>❯</b> when Glue isn't enough</p>
-<h2 class="reveal" id="s11"><span class="pfx">11.</span> Amazon EMR &amp; EMR Serverless</h2>
+<h2 id="s11" class="reveal"><span class="hico"><svg class="ico"><use href="#i-zap"/></svg></span><span class="n">11.</span> Amazon EMR &amp;amp; EMR Serverless</h2>
 <p class="sectionsub reveal">The same open-source big data engines, with more control than Glue gives you</p>
 <div class="prose reveal">
 <p><strong>Amazon EMR</strong> runs open-source big data frameworks — Spark, Hive, Presto/Trino, Flink — on a cluster you have far more control over than a Glue job gives you: choice of exact instance types, custom bootstrap scripts, long-running clusters instead of per-job ones, and support for frameworks Glue doesn't wrap at all. <strong>EMR Serverless</strong> gives you that same Spark/Hive engine without managing cluster sizing yourself, positioning it as a middle ground between Glue's simplicity and classic EMR's control.</p>
@@ -985,7 +1027,7 @@ Rules = [
 
 <!-- START s12 -->
 <p class="promptline">~/aws-data-eng <b>❯</b> when a job is neither a Lambda nor a Spark transform</p>
-<h2 class="reveal" id="s12"><span class="pfx">12.</span> AWS Batch &amp; Containers for Data Workloads</h2>
+<h2 id="s12" class="reveal"><span class="hico"><svg class="ico"><use href="#i-package"/></svg></span><span class="n">12.</span> AWS Batch &amp;amp; Containers for Data Workloads</h2>
 <p class="sectionsub reveal">Long-running or massively parallel containerized jobs, and the container building blocks underneath them</p>
 <div class="prose reveal">
 <p><strong>AWS Batch</strong> is fully managed batch job scheduling and execution: you submit a <strong>job</strong> — a containerized command — to a <strong>job queue</strong>, and Batch provisions and scales the underlying compute (EC2 or Fargate) to match queue depth, runs the job, and tears the capacity back down when there's nothing left to run. There's no cluster to keep warm and no server to patch; you think in terms of jobs and queues, not instances.</p>
@@ -1025,7 +1067,7 @@ Rules = [
 
 <!-- START s13 -->
 <p class="promptline">~/aws-data-eng <b>❯</b> SQL, straight against S3</p>
-<h2 class="reveal" id="s13"><span class="pfx">13.</span> Amazon Athena</h2>
+<h2 id="s13" class="reveal"><span class="hico"><svg class="ico"><use href="#i-search"/></svg></span><span class="n">13.</span> Amazon Athena</h2>
 <p class="sectionsub reveal">Serverless SQL over the Glue Catalog — no cluster, no loading, pay per query</p>
 <div class="prose reveal">
 <p><strong>Amazon Athena</strong> runs standard SQL (built on Trino/Presto) directly against files sitting in S3, using the Glue Data Catalog for schema and location — there's nothing to provision, nothing to load, and no cluster sitting idle between queries. You pay per query, priced by the amount of data actually scanned, which is exactly why storage format and partitioning (section 04) directly control your Athena bill, not just your query latency.</p>
@@ -1061,7 +1103,7 @@ WHERE trending_date = '2026-04-01' AND region = 'US';</code></pre>
 
 <!-- START s14 -->
 <p class="promptline">~/aws-data-eng <b>❯</b> when a warehouse earns its cost</p>
-<h2 class="reveal" id="s14"><span class="pfx">14.</span> Amazon Redshift &amp; Redshift Spectrum</h2>
+<h2 id="s14" class="reveal"><span class="hico"><svg class="ico"><use href="#i-database"/></svg></span><span class="n">14.</span> Amazon Redshift &amp;amp; Redshift Spectrum</h2>
 <p class="sectionsub reveal">A columnar warehouse for heavy, repeated SQL — plus a bridge back to S3</p>
 <div class="prose reveal">
 <p><strong>Amazon Redshift</strong> is a fully managed, columnar SQL data warehouse: you load data into it (or query in place via Spectrum, below), and it's built specifically for large, repeated aggregations and joins across big tables — the workload Athena is not optimized for. Modern Redshift is usually <strong>Redshift Serverless</strong>, which bills by compute actually used instead of requiring you to size and pay for a fixed cluster around the clock.</p>
@@ -1121,7 +1163,7 @@ WHERE trending_date = '2026-04-01' AND region = 'US';</code></pre>
 
 <!-- START s15 -->
 <p class="promptline">~/aws-data-eng <b>❯</b> who can see which row</p>
-<h2 class="reveal" id="s15"><span class="pfx">15.</span> AWS Lake Formation</h2>
+<h2 id="s15" class="reveal"><span class="hico"><svg class="ico"><use href="#i-file"/></svg></span><span class="n">15.</span> AWS Lake Formation</h2>
 <p class="sectionsub reveal">Fine-grained governance on top of the Glue Catalog — column, row, and cell-level access control</p>
 <div class="prose reveal">
 <p>IAM (section 05) controls access at the level of an S3 bucket, a Glue table, or an API call — it has no concept of "this analyst can see 8 of a table's 12 columns" or "this role can only see rows where <code>region='US'</code>." <strong>AWS Lake Formation</strong> sits on top of the Glue Catalog specifically to add that finer grain: column-level, row-level, and (via data filters) cell-level permissions, defined once centrally and enforced consistently across Athena, Redshift Spectrum, EMR, and QuickSight — instead of every consuming service needing its own separate access-control mechanism.</p>
@@ -1141,7 +1183,7 @@ WHERE trending_date = '2026-04-01' AND region = 'US';</code></pre>
 
 <!-- START s16 -->
 <p class="promptline">~/aws-data-eng <b>❯</b> data that never stops arriving</p>
-<h2 class="reveal" id="s16"><span class="pfx">16.</span> Amazon Kinesis Data Streams</h2>
+<h2 id="s16" class="reveal"><span class="hico"><svg class="ico"><use href="#i-network"/></svg></span><span class="n">16.</span> Amazon Kinesis Data Streams</h2>
 <p class="sectionsub reveal">A durable, ordered, replayable buffer for continuously arriving records</p>
 <div class="prose reveal">
 <p>Everything covered so far assumes data that's already sitting still, in a file. <strong>Kinesis Data Streams</strong> is for data that isn't: clickstreams, IoT telemetry, application logs, change events — records arriving continuously, which one or more consumers need to process, often in near-real-time. A stream is split into <strong>shards</strong>, each an ordered, independently-scalable sequence of records; a <strong>partition key</strong> on each record decides which shard it lands on, and records with the same key always land on the same shard, preserving order for that key.</p>
@@ -1173,7 +1215,7 @@ WHERE trending_date = '2026-04-01' AND region = 'US';</code></pre>
 
 <!-- START s17 -->
 <p class="promptline">~/aws-data-eng <b>❯</b> streaming straight into storage</p>
-<h2 class="reveal" id="s17"><span class="pfx">17.</span> Amazon Data Firehose</h2>
+<h2 id="s17" class="reveal"><span class="hico"><svg class="ico"><use href="#i-blocks"/></svg></span><span class="n">17.</span> Amazon Data Firehose</h2>
 <p class="sectionsub reveal">The managed, no-code way to land a stream in S3, Redshift, or an OpenSearch index</p>
 <div class="prose reveal">
 <p><strong>Amazon Data Firehose</strong> (formerly Kinesis Data Firehose) takes records — from a Kinesis stream, direct API calls, or several other AWS sources — and delivers them into a destination like S3, Redshift, or OpenSearch, batching, compressing, optionally transforming (via an attached Lambda), and handling retries automatically. It's the managed answer to "I don't want to write and operate a consumer application just to get streaming data into a bucket."</p>
@@ -1217,7 +1259,7 @@ WHERE trending_date = '2026-04-01' AND region = 'US';</code></pre>
 
 <!-- START s18 -->
 <p class="promptline">~/aws-data-eng <b>❯</b> Kafka, without running Kafka yourself</p>
-<h2 class="reveal" id="s18"><span class="pfx">18.</span> Amazon MSK (Managed Streaming for Kafka)</h2>
+<h2 id="s18" class="reveal"><span class="hico"><svg class="ico"><use href="#i-network"/></svg></span><span class="n">18.</span> Amazon MSK (Managed Streaming for Kafka)</h2>
 <p class="sectionsub reveal">Real Apache Kafka, with AWS operating the brokers</p>
 <div class="prose reveal">
 <p><strong>Amazon MSK</strong> runs real, open-source Apache Kafka brokers, managed by AWS — broker provisioning, patching, and (optionally, via MSK Serverless) capacity scaling are handled for you, but the wire protocol, topic/partition model, and consumer-group semantics are exactly standard Kafka. If your team already knows Kafka, or needs a Kafka-specific feature Kinesis doesn't offer (Kafka Connect, Kafka Streams, an existing Kafka-based application being lifted into AWS), MSK is the natural choice over Kinesis.</p>
@@ -1248,7 +1290,7 @@ WHERE trending_date = '2026-04-01' AND region = 'US';</code></pre>
 
 <!-- START s19 -->
 <p class="promptline">~/aws-data-eng <b>❯</b> state that remembers the last 5 minutes</p>
-<h2 class="reveal" id="s19"><span class="pfx">19.</span> Amazon Managed Service for Apache Flink</h2>
+<h2 id="s19" class="reveal"><span class="hico"><svg class="ico"><use href="#i-network"/></svg></span><span class="n">19.</span> Amazon Managed Service for Apache Flink</h2>
 <p class="sectionsub reveal">Continuous, stateful computation over a stream — the piece Kinesis Data Streams and Firehose don't do</p>
 <div class="prose reveal">
 <p><strong>Apache Flink</strong> is an open-source <strong>stateful stream-processing engine</strong>: it doesn't just move records (that's Kinesis Data Streams, see that section) or land them somewhere (that's Firehose, see that section) — it runs a continuous computation that keeps state across many events, such as a running count, a session window, or a join between two streams. <strong>Amazon Managed Service for Apache Flink</strong> (renamed from Kinesis Data Analytics, as this guide notes elsewhere) runs Flink applications without handing you a cluster to size or patch: AWS runs the underlying compute, automatically checkpoints application state to a durable store so a failed task resumes from where it left off instead of from zero, and scales the application's parallelism with load.</p>
@@ -1327,7 +1369,7 @@ WHERE trending_date = '2026-04-01' AND region = 'US';</code></pre>
 
 <!-- START s20 -->
 <p class="promptline">~/aws-data-eng <b>❯</b> when "search" means actual full-text search</p>
-<h2 class="reveal" id="s20"><span class="pfx">20.</span> Amazon OpenSearch Service</h2>
+<h2 id="s20" class="reveal"><span class="hico"><svg class="ico"><use href="#i-network"/></svg></span><span class="n">20.</span> Amazon OpenSearch Service</h2>
 <p class="sectionsub reveal">A managed search-and-analytics engine — the destination when a dashboard needs to search text, not just aggregate columns</p>
 <div class="prose reveal">
 <p><strong>Amazon OpenSearch Service</strong> is a managed, distributed <strong>search-and-analytics engine</strong>, forked from the Elasticsearch/Kibana lineage: it indexes documents in near-real-time and supports both full-text search (ranking, fuzzy matching, relevance scoring over free text) and log/metric analytics with interactive dashboards (<strong>OpenSearch Dashboards</strong>, the Kibana-lineage UI). It answers a different question than a data warehouse — "find the documents that match this text" rather than "aggregate these structured columns."</p>
@@ -1366,7 +1408,7 @@ WHERE trending_date = '2026-04-01' AND region = 'US';</code></pre>
 
 <!-- START s21 -->
 <p class="promptline">~/aws-data-eng <b>❯</b> decoupling producers from consumers</p>
-<h2 class="reveal" id="s21"><span class="pfx">21.</span> Amazon SQS &amp; SNS</h2>
+<h2 id="s21" class="reveal"><span class="hico"><svg class="ico"><use href="#i-blocks"/></svg></span><span class="n">21.</span> Amazon SQS &amp;amp; SNS</h2>
 <p class="sectionsub reveal">A queue for one consumer to work through at its own pace, and a topic for fanning out to many</p>
 <div class="prose reveal">
 <p><strong>Amazon SQS</strong> is a message queue: a producer sends a message, and exactly one consumer (out of however many are polling) picks it up and processes it, deleting it when done — a natural fit for "a backlog of work items to get through," decoupling how fast producers send from how fast consumers can process. <strong>Amazon SNS</strong> is a pub/sub topic: a message published to a topic is delivered to <i>every</i> subscriber (which can itself be an SQS queue, a Lambda function, an email address, and more) — a natural fit for "several independent systems all need to react to this same event."</p>
@@ -1396,7 +1438,7 @@ WHERE trending_date = '2026-04-01' AND region = 'US';</code></pre>
 
 <!-- START s22 -->
 <p class="promptline">~/aws-data-eng <b>❯</b> the clock, and the event bus</p>
-<h2 class="reveal" id="s22"><span class="pfx">22.</span> Amazon EventBridge</h2>
+<h2 id="s22" class="reveal"><span class="hico"><svg class="ico"><use href="#i-zap"/></svg></span><span class="n">22.</span> Amazon EventBridge</h2>
 <p class="sectionsub reveal">Scheduling a pipeline, and routing events between services, without hand-wiring either</p>
 <div class="prose reveal">
 <p><strong>Amazon EventBridge</strong> does two related jobs. As a <strong>scheduler</strong>, a cron or rate expression triggers a target (a Lambda, a Step Functions execution) on a fixed cadence — the most common way a batch pipeline actually starts, replacing what used to be a literal cron job on a server nobody wants to maintain. As an <strong>event bus</strong>, it routes events from AWS services (an S3 upload, a Glue job state change) or custom application events to one or more targets, based on rules that match on the event's content — a more flexible alternative to wiring services directly together.</p>
@@ -1416,7 +1458,7 @@ WHERE trending_date = '2026-04-01' AND region = 'US';</code></pre>
 
 <!-- START s23 -->
 <p class="promptline">~/aws-data-eng <b>❯</b> the conductor</p>
-<h2 class="reveal" id="s23"><span class="pfx">23.</span> AWS Step Functions</h2>
+<h2 id="s23" class="reveal"><span class="hico"><svg class="ico"><use href="#i-workflow"/></svg></span><span class="n">23.</span> AWS Step Functions</h2>
 <p class="sectionsub reveal">A visual state machine for stitching many services into one reliable, observable pipeline</p>
 <div class="prose reveal">
 <p><strong>AWS Step Functions</strong> defines a pipeline as a <strong>state machine</strong> — a sequence (and branching structure) of states, each usually a <strong>Task</strong> that invokes another AWS service (a Lambda, a Glue job, an ECS task) — with built-in, declarative handling for retries, error branching, parallel execution, and waiting, instead of every one of those concerns being hand-coded inside a monolithic script. It is the piece that turns "several separate AWS services" into "one pipeline with one execution history you can look at."</p>
@@ -1467,7 +1509,7 @@ WHERE trending_date = '2026-04-01' AND region = 'US';</code></pre>
 
 <!-- START s24 -->
 <p class="promptline">~/aws-data-eng <b>❯</b> dags, not state machines</p>
-<h2 class="reveal" id="s24"><span class="pfx">24.</span> Amazon MWAA (Managed Workflows for Apache Airflow)</h2>
+<h2 id="s24" class="reveal"><span class="hico"><svg class="ico"><use href="#i-workflow"/></svg></span><span class="n">24.</span> Amazon MWAA (Managed Workflows for Apache Airflow)</h2>
 <p class="sectionsub reveal">Orchestration as version-controlled Python DAGs — the choice for teams who already think that way</p>
 <div class="prose reveal">
 <p><strong>Amazon MWAA</strong> (Managed Workflows for Apache Airflow) is a managed <strong>Apache Airflow</strong> environment: AWS runs the webserver, scheduler, and worker infrastructure, and handles patching and version upgrades on a schedule you control. You author pipelines as <strong>DAGs</strong> (Directed Acyclic Graphs) — plain Python files — and upload them to an S3 bucket that MWAA continuously watches; drop a new or changed DAG file in, and the scheduler picks it up automatically, no redeploy step involved.</p>
@@ -1574,7 +1616,7 @@ with DAG(
 
 <!-- START s25 -->
 <p class="promptline">~/aws-data-eng <b>❯</b> getting data out of a live database</p>
-<h2 class="reveal" id="s25"><span class="pfx">25.</span> AWS Database Migration Service (DMS)</h2>
+<h2 id="s25" class="reveal"><span class="hico"><svg class="ico"><use href="#i-network"/></svg></span><span class="n">25.</span> AWS Database Migration Service (DMS)</h2>
 <p class="sectionsub reveal">One-time migration, and ongoing CDC replication, out of operational databases</p>
 <div class="prose reveal">
 <p><strong>AWS DMS</strong> replicates data from a source database (on-premises, RDS, or another cloud) to a target — often S3, for landing operational data into a data lake. It supports a one-time <strong>full load</strong> of existing data, and, separately, <strong>ongoing CDC (change data capture)</strong> replication that reads a database's transaction log and streams every subsequent insert/update/delete to the target continuously, without querying or impacting the source database with repeated polling queries.</p>
@@ -1594,7 +1636,7 @@ with DAG(
 
 <!-- START s26 -->
 <p class="promptline">~/aws-data-eng <b>❯</b> the databases everything else reads from</p>
-<h2 class="reveal" id="s26"><span class="pfx">26.</span> Amazon RDS, Aurora &amp; Purpose-Built Databases</h2>
+<h2 id="s26" class="reveal"><span class="hico"><svg class="ico"><use href="#i-database"/></svg></span><span class="n">26.</span> Amazon RDS, Aurora &amp;amp; Purpose-Built Databases</h2>
 <p class="sectionsub reveal">The operational relational stores a pipeline pulls from via DMS, plus four purpose-built engines for shapes SQL doesn't fit well</p>
 <div class="prose reveal">
 <p><strong>Amazon RDS</strong> and <strong>Amazon Aurora</strong> are the two managed relational database services you'll actually find running production workloads, and — together with <strong>Amazon DynamoDB</strong> (see that section) — they're the databases a real data pipeline most often needs to get data <i>out of</i>, not build analytics on top of directly. Everything else in this guide (S3, Glue, Athena, Redshift) assumes data has already arrived from somewhere; RDS and Aurora, reached via <strong>AWS DMS</strong> (see the DMS section), are frequently that somewhere. This section also briefly covers four narrower, purpose-built databases — DocumentDB, Neptune, Keyspaces, and MemoryDB for Redis — that the exam expects you to recognize by the specific access pattern each is built for, not by deep operational detail.</p>
@@ -1696,7 +1738,7 @@ mycluster.cluster-ro-xxxxxx.us-east-1.rds.amazonaws.com    # reader endpoint: po
 
 <!-- START s27 -->
 <p class="promptline">~/aws-data-eng <b>❯</b> getting bytes from there to here</p>
-<h2 class="reveal" id="s27"><span class="pfx">27.</span> Data Movement Services: AppFlow, Transfer Family, DataSync &amp; Snow Family</h2>
+<h2 id="s27" class="reveal"><span class="hico"><svg class="ico"><use href="#i-network"/></svg></span><span class="n">27.</span> Data Movement Services: AppFlow, Transfer Family, DataSync &amp;amp; Snow Family</h2>
 <p class="sectionsub reveal">Four services, four different sources — match the scenario's origin to the one built for it</p>
 <div class="prose reveal">
 <p>AWS DMS (see that section) covers one specific data-movement problem: replicating out of a live database. These four services each cover a different one — the exam (and real production decisions) hinge on matching a scenario's data source to the service built for exactly that source, rather than any of the others that also, technically, "move data."</p>
@@ -1735,7 +1777,7 @@ mycluster.cluster-ro-xxxxxx.us-east-1.rds.amazonaws.com    # reader endpoint: po
 
 <!-- START s28 -->
 <p class="promptline">~/aws-data-eng <b>❯</b> knowing when something breaks</p>
-<h2 class="reveal" id="s28"><span class="pfx">28.</span> Amazon CloudWatch</h2>
+<h2 id="s28" class="reveal"><span class="hico"><svg class="ico"><use href="#i-cloud"/></svg></span><span class="n">28.</span> Amazon CloudWatch</h2>
 <p class="sectionsub reveal">Logs, metrics, and alarms — the observability layer underneath every service in this guide</p>
 <div class="prose reveal">
 <p><strong>Amazon CloudWatch</strong> collects logs and metrics from nearly every AWS service automatically — a Lambda's print statements, a Glue job's Spark logs, a Step Functions execution's state transitions — and lets you build <strong>alarms</strong> that fire when a metric crosses a threshold (error count, duration, a custom business metric a pipeline emits itself). For a data pipeline specifically, CloudWatch is usually where you'd notice a job silently stopped running, started taking much longer than usual, or started failing at a higher rate — none of which a pipeline's own success/failure return value necessarily surfaces on its own.</p>
@@ -1755,7 +1797,7 @@ mycluster.cluster-ro-xxxxxx.us-east-1.rds.amazonaws.com    # reader endpoint: po
 
 <!-- START s29 -->
 <p class="promptline">~/aws-data-eng <b>❯</b> who did what, is it compliant, what's it costing</p>
-<h2 class="reveal" id="s29"><span class="pfx">29.</span> Governance, Compliance &amp; Cost Management</h2>
+<h2 id="s29" class="reveal"><span class="hico"><svg class="ico"><use href="#i-shield"/></svg></span><span class="n">29.</span> Governance, Compliance &amp;amp; Cost Management</h2>
 <p class="sectionsub reveal">Audit trails, configuration guardrails, and catching a runaway bill before it arrives</p>
 <div class="prose reveal">
 <p>Encryption and access control (see the AWS Security &amp; Encryption section, the IAM section, and the Lake Formation section) answer "can this happen." This section covers the layer above that: proving what already happened, continuously checking that resources stay configured the way they're supposed to, and noticing — ideally before the bill arrives — that a query or a cluster is quietly costing more than intended.</p>
@@ -1829,7 +1871,7 @@ aws athena create-work-group \
 
 <!-- START s30 -->
 <p class="promptline">~/aws-data-eng <b>❯</b> the NoSQL neighbor every pipeline touches</p>
-<h2 class="reveal" id="s30"><span class="pfx">30.</span> Amazon DynamoDB</h2>
+<h2 id="s30" class="reveal"><span class="hico"><svg class="ico"><use href="#i-blocks"/></svg></span><span class="n">30.</span> Amazon DynamoDB</h2>
 <p class="sectionsub reveal">Not a data-lake service itself — but the operational database most CDC pipelines pull from</p>
 <div class="prose reveal">
 <p><strong>Amazon DynamoDB</strong> is a fully managed, serverless NoSQL key-value/document database, built for single-digit-millisecond lookups by a known key at massive scale. It shows up in this guide not as an analytics engine — it isn't one — but because a huge share of real-world data pipelines exist specifically to move data <i>out of</i> an operational store like DynamoDB (an application's live order table, a user-profile table) and into the analytics stack this guide otherwise covers.</p>
@@ -1849,7 +1891,7 @@ aws athena create-work-group \
 
 <!-- START s31 -->
 <p class="promptline">~/aws-data-eng <b>❯</b> the last mile</p>
-<h2 class="reveal" id="s31"><span class="pfx">31.</span> Amazon QuickSight</h2>
+<h2 id="s31" class="reveal"><span class="hico"><svg class="ico"><use href="#i-blocks"/></svg></span><span class="n">31.</span> Amazon QuickSight</h2>
 <p class="sectionsub reveal">Where the pipeline's output finally becomes a chart someone in the business actually looks at</p>
 <div class="prose reveal">
 <p><strong>Amazon QuickSight</strong> is AWS's managed BI tool — dashboards, visuals, and (via its <strong>SPICE</strong> in-memory engine) fast interactive exploration over data pulled from Athena, Redshift, S3, or a growing set of other sources. Everything else in this guide exists to get data clean, modeled, and queryable; QuickSight is usually the last hop, the layer a non-engineer in the business actually opens.</p>
@@ -1873,7 +1915,7 @@ aws athena create-work-group \
 
 <!-- START s32 -->
 <p class="promptline">~/aws-data-eng <b>❯</b> where the pipeline hands off to the model</p>
-<h2 class="reveal" id="s32"><span class="pfx">32.</span> Machine Learning &amp; AI Services for Data Engineers</h2>
+<h2 id="s32" class="reveal"><span class="hico"><svg class="ico"><use href="#i-network"/></svg></span><span class="n">32.</span> Machine Learning &amp;amp; AI Services for Data Engineers</h2>
 <p class="sectionsub reveal">SageMaker, Bedrock, Kendra, and API Gateway — recognized well enough for the exam, not operated deeply</p>
 <div class="prose reveal">
 <p>The DEA exam includes a handful of ML/AI services, but it tests them from one angle: does the data engineer understand that these services are usually <strong>downstream consumers</strong> of the pipeline, not something the data engineer builds or tunes? A model is only as good as the data feeding it, and preparing that data — cleaned, joined, correctly typed, on a predictable refresh schedule — is squarely a data engineering job. Training the model, choosing hyperparameters, and serving predictions at scale usually is not.</p>
@@ -1921,7 +1963,7 @@ aws athena create-work-group \
 
 <!-- START s33 -->
 <p class="promptline">~/aws-data-eng <b>❯</b> click less, commit more</p>
-<h2 class="reveal" id="s33"><span class="pfx">33.</span> Infrastructure as Code &amp; CI/CD for Data Pipelines</h2>
+<h2 id="s33" class="reveal"><span class="hico"><svg class="ico"><use href="#i-workflow"/></svg></span><span class="n">33.</span> Infrastructure as Code &amp;amp; CI/CD for Data Pipelines</h2>
 <p class="sectionsub reveal">Why production pipeline infrastructure gets defined in code instead of clicked together by hand</p>
 <div class="prose reveal">
 <p>Hand-clicking through the AWS console to create an S3 bucket, a Glue job, an IAM role, and a Step Functions state machine works fine for a first prototype. It falls apart the moment there's a second environment: nothing guarantees <code>staging</code> matches <code>prod</code>, there's no code review for an infrastructure change the way there is for application code, and recreating an environment from scratch after deleting it means remembering — and re-clicking — every setting by hand. <strong>Infrastructure as Code (IaC)</strong> fixes this by defining infrastructure as a versioned, reviewable artifact that gets deployed the same way every time.</p>
@@ -1988,7 +2030,7 @@ glue_job = glue.CfnJob(self, "SilverToGoldJob",
 
 <!-- START s34 -->
 <p class="promptline">~/aws-data-eng <b>❯</b> what changed while you were learning the basics</p>
-<h2 class="reveal" id="s34"><span class="pfx">34.</span> What's New: AWS Data Engineering, 2024-2026</h2>
+<h2 id="s34" class="reveal"><span class="hico"><svg class="ico"><use href="#i-cloud"/></svg></span><span class="n">34.</span> What&#x27;s New: AWS Data Engineering, 2024-2026</h2>
 <p class="sectionsub reveal">Research-verified — every claim below is sourced to an official AWS "What's New" post or AWS blog</p>
 <div class="prose reveal">
 <p>Everything in sections 01-31 is durable, foundational knowledge that won't go stale next quarter. This section covers what's actually <i>changed</i> since — the direction AWS is visibly pushing the data platform, verified against primary AWS sources rather than summarized from memory.</p>
@@ -2028,7 +2070,7 @@ glue_job = glue.CfnJob(self, "SilverToGoldJob",
 
 <!-- START s35 -->
 <p class="promptline">~/aws-data-eng <b>❯</b> putting it all together</p>
-<h2 class="reveal" id="s35"><span class="pfx">35.</span> Worked Example: A Real YouTube Trending Data Pipeline</h2>
+<h2 id="s35" class="reveal"><span class="hico"><svg class="ico"><use href="#i-workflow"/></svg></span><span class="n">35.</span> Worked Example: A Real YouTube Trending Data Pipeline</h2>
 <p class="sectionsub reveal">Every service in this guide, wired into one production-shaped architecture</p>
 <div class="prose reveal">
 <p>Sections 01-31 covered each AWS service in isolation. This section and the next two walk through how a real, working pipeline combines a subset of them: a system that pulls trending-video data from the YouTube Data API across 10 regions, runs it through a medallion bronze→silver→gold flow, gates promotion to gold behind an automated data-quality check, and produces analytics tables a BI tool queries — architecturally representative of a large share of real AWS data platforms, regardless of the specific source data.</p>
@@ -2077,7 +2119,7 @@ glue_job = glue.CfnJob(self, "SilverToGoldJob",
 
 <!-- START s36 -->
 <p class="promptline">~/aws-data-eng <b>❯</b> reading a state machine like an engineer, not a diagram</p>
-<h2 class="reveal" id="s36"><span class="pfx">36.</span> Worked Example: The Step Functions Execution, State by State</h2>
+<h2 id="s36" class="reveal"><span class="hico"><svg class="ico"><use href="#i-workflow"/></svg></span><span class="n">36.</span> Worked Example: The Step Functions Execution, State by State</h2>
 <p class="sectionsub reveal">Every Retry, Catch, and Choice in the real state machine, and why each one is there</p>
 <div class="prose reveal">
 <p>This is the actual shape of the Step Functions state machine that runs the pipeline from section 35 — the same structure introduced abstractly in section 23's diagram, now traced state by state with the real reasoning behind each retry and branch.</p>
@@ -2137,7 +2179,7 @@ glue_job = glue.CfnJob(self, "SilverToGoldJob",
 
 <!-- START s37 -->
 <p class="promptline">~/aws-data-eng <b>❯</b> the gate that decides whether Gold runs at all</p>
-<h2 class="reveal" id="s37"><span class="pfx">37.</span> Worked Example: The Data Quality Gate &amp; SNS Alerting Pattern</h2>
+<h2 id="s37" class="reveal"><span class="hico"><svg class="ico"><use href="#i-check"/></svg></span><span class="n">37.</span> Worked Example: The Data Quality Gate &amp;amp; SNS Alerting Pattern</h2>
 <p class="sectionsub reveal">A DQ Lambda producing one boolean, and four distinct failure paths, each telling a human something different</p>
 <div class="prose reveal">
 <p>Section 36 showed the <code>Choice</code> state reading <code>$.dq_result.Payload.quality_passed</code>. This section covers what actually produces that boolean, and why the pipeline has <i>four</i> separate SNS notification states instead of one generic "something failed" alert.</p>
@@ -2185,7 +2227,7 @@ glue_job = glue.CfnJob(self, "SilverToGoldJob",
 
 <!-- START s38 -->
 <p class="promptline">~/aws-data-eng <b>❯</b> one copy of data, every engine reads it</p>
-<h2 class="reveal" id="s38"><span class="pfx">38.</span> End-to-End Lakehouse Project on AWS: Architecture Overview</h2>
+<h2 id="s38" class="reveal"><span class="hico"><svg class="ico"><use href="#i-compass"/></svg></span><span class="n">38.</span> End-to-End Lakehouse Project on AWS: Architecture Overview</h2>
 <p class="sectionsub reveal">The modern shape: one Iceberg-backed copy of the data, queried by both the lake side and the warehouse side</p>
 <div class="prose reveal">
 <p>A <strong>lakehouse</strong> is a specific architectural claim, not a marketing word: a single storage layer — here, Amazon S3 — holding data in an <strong>open table format</strong> (<strong>Apache Iceberg</strong>, either as an <strong>S3 Tables</strong> bucket or as ordinary S3 objects registered as Iceberg tables in the Glue Data Catalog) that both lake-style engines (Spark on EMR or Glue, Athena) <i>and</i> a warehouse engine (Redshift, via Spectrum or native Iceberg support) can read <i>and write</i>. That last part is the whole point: a classic two-tier "lake plus warehouse" architecture keeps two physical copies of the same data — one in S3 for the lake, one loaded into the warehouse's own storage — synced by a scheduled ETL job that can drift, lag, or simply fail one night. A lakehouse deletes that second copy and that sync job entirely. The worked pipeline in the <strong>Worked Example: A Real YouTube Trending Data Pipeline</strong> section is the other, simpler shape — plain Parquet on S3, no table format, no cross-engine write path — and is worth keeping in mind as the contrast point throughout this section and the next.</p>
@@ -2286,7 +2328,7 @@ glue_job = glue.CfnJob(self, "SilverToGoldJob",
 
 <!-- START s39 -->
 <p class="promptline">~/aws-data-eng <b>❯</b> building the lakehouse, step by step</p>
-<h2 class="reveal" id="s39"><span class="pfx">39.</span> End-to-End Lakehouse Project: Building It Step by Step</h2>
+<h2 id="s39" class="reveal"><span class="hico"><svg class="ico"><use href="#i-file"/></svg></span><span class="n">39.</span> End-to-End Lakehouse Project: Building It Step by Step</h2>
 <p class="sectionsub reveal">Turning the architecture from the previous section into an actual build order, with the reasoning behind each step</p>
 <div class="prose reveal">
 <p>The previous section laid out the shape. This one walks it in the order a real project would actually build it — not source code order, but decision order: what has to exist before the next thing can safely land on top of it. Each step below leans on a full section elsewhere in this guide for the mechanics and only explains what's specific to building it <i>this</i> way, as a lakehouse, rather than the plain-Parquet way the earlier worked example used.</p>
@@ -2362,7 +2404,7 @@ df.writeTo("glue_catalog.gold.channel_analytics") \
 
 <!-- START s40 -->
 <p class="promptline">~/aws-data-eng <b>❯</b> same lakehouse, different platform boundary</p>
-<h2 class="reveal" id="s40"><span class="pfx">40.</span> AWS Lakehouse vs. Databricks Lakehouse: A Head-to-Head Comparison</h2>
+<h2 id="s40" class="reveal"><span class="hico"><svg class="ico"><use href="#i-database"/></svg></span><span class="n">40.</span> AWS Lakehouse vs. Databricks Lakehouse: A Head-to-Head Comparison</h2>
 <p class="sectionsub reveal">Building the same lakehouse a second way — and a fair look at where each platform genuinely wins</p>
 <div class="prose reveal">
 <p>The lakehouse architecture sections you just read solve one problem: keep <strong>one physical copy</strong> of the data, wrapped in a table format that gives every engine ACID transactions, schema evolution, and time travel over that same copy, instead of syncing separate copies into a lake and a warehouse. <strong>Databricks</strong> solves the exact same problem, with the same underlying ideas — but it draws the platform boundary in a different place. AWS composes many separate, best-of-breed services (S3, Glue Catalog, Lake Formation, Glue/EMR, Athena, Redshift) around a shared storage-and-catalog foundation, each independently priced and independently swappable. Databricks is one unified product — notebooks, job scheduling, a metastore, SQL warehouses, and ML tooling all under one roof — that itself <i>runs on top of</i> a cloud (AWS, Azure, or GCP) rather than being one. Neither is "the lakehouse" — they're two different ways of assembling the same idea, and the AWS-Native vs. Cross-Cloud Alternatives section already flagged Databricks briefly as one such alternative; this section is the dedicated deep-dive on exactly that question.</p>
@@ -2463,7 +2505,7 @@ df.writeTo("glue_catalog.gold.channel_analytics") \
 
 <!-- START s41 -->
 <p class="promptline">~/aws-data-eng <b>❯</b> not a toy — what this actually looks like at scale</p>
-<h2 class="reveal" id="s41"><span class="pfx">41.</span> Enterprise Validation: How These Services Are Actually Used</h2>
+<h2 id="s41" class="reveal"><span class="hico"><svg class="ico"><use href="#i-check"/></svg></span><span class="n">41.</span> Enterprise Validation: How These Services Are Actually Used</h2>
 <p class="sectionsub reveal">Named-company architectures, sourced to each company's own engineering writing — with an honest note on what's less certain</p>
 <div class="callout wn reveal">
 <p><b>A note on sourcing, stated plainly.</b> Every claim below is drawn from a company's own primary technical writing (their engineering blog, or a co-authored post on the AWS Big Data Blog) — not from marketing pages. These claims come from a research pass that fetched and extracted them from primary sources; they were not additionally run through independent cross-source adversarial verification the way section 34's AWS "what's new" claims were. Treat them as "this is what the company itself has publicly said about its own architecture," which is strong evidence, but hold performance figures (latency reductions, cost savings) as company-reported rather than independently audited.</p>
@@ -2498,7 +2540,7 @@ df.writeTo("glue_catalog.gold.channel_analytics") \
 
 <!-- START s42 -->
 <p class="promptline">~/aws-data-eng <b>❯</b> AWS vs. the alternatives</p>
-<h2 class="reveal" id="s42"><span class="pfx">42.</span> AWS-Native vs. Cross-Cloud Alternatives</h2>
+<h2 id="s42" class="reveal"><span class="hico"><svg class="ico"><use href="#i-cloud"/></svg></span><span class="n">42.</span> AWS-Native vs. Cross-Cloud Alternatives</h2>
 <p class="sectionsub reveal">Where an AWS-native choice is the obvious default, and where it's a genuine trade-off</p>
 <div class="prose reveal">
 <p>Every service in this guide has at least one popular alternative — some AWS-native competitors, some genuinely cross-cloud. Knowing where AWS-native is simply the path of least resistance, versus where teams make a deliberate trade-off, is part of using these services well rather than by default.</p>
@@ -2530,7 +2572,7 @@ df.writeTo("glue_catalog.gold.channel_analytics") \
 
 <!-- START s43 -->
 <p class="promptline">~/aws-data-eng <b>❯</b> mistakes worth avoiding on the first try</p>
-<h2 class="reveal" id="s43"><span class="pfx">43.</span> Common Pitfalls</h2>
+<h2 id="s43" class="reveal"><span class="hico"><svg class="ico"><use href="#i-warn"/></svg></span><span class="n">43.</span> Common Pitfalls</h2>
 <p class="sectionsub reveal">The recurring early mistakes this guide's sections have each flagged, collected in one place</p>
 <div class="prose reveal">
 <p>Each section flagged one specific pitfall as it came up. Collected together, they form a pattern: almost every one of these is a case of reaching for the wrong tool's default behavior, not a deep technical error.</p>
@@ -2559,7 +2601,7 @@ df.writeTo("glue_catalog.gold.channel_analytics") \
 
 <!-- START s44 -->
 <p class="promptline">~/aws-data-eng <b>❯</b> the vocabulary, in one place</p>
-<h2 class="reveal" id="s44"><span class="pfx">44.</span> Glossary</h2>
+<h2 id="s44" class="reveal"><span class="hico"><svg class="ico"><use href="#i-book"/></svg></span><span class="n">44.</span> Glossary</h2>
 <p class="sectionsub reveal">Every term this guide used, defined once, for later reference</p>
 <div class="prose reveal">
 <p>Use this as a lookup, not required reading — if you've read the rest of the guide, most of these will already feel familiar.</p>
@@ -2606,7 +2648,7 @@ df.writeTo("glue_catalog.gold.channel_analytics") \
 
 <!-- START s45 -->
 <p class="promptline">~/aws-data-eng <b>❯</b> how the exam actually weighs what you just read</p>
-<h2 class="reveal" id="s45"><span class="pfx">45.</span> Exam Tips &amp; Domain Weighting</h2>
+<h2 id="s45" class="reveal"><span class="hico"><svg class="ico"><use href="#i-blocks"/></svg></span><span class="n">45.</span> Exam Tips &amp;amp; Domain Weighting</h2>
 <p class="sectionsub reveal">The official DEA-C01 domain breakdown, mapped onto this guide's sections, plus how to actually sit the exam</p>
 <div class="prose reveal">
 <p>The AWS Certified Data Engineer - Associate (DEA-C01) exam guide splits every question into four named domains, each with a fixed percentage weight — and AWS names specific in-scope services directly inside several task statements, not just in the separate services list this guide has been working through section by section. Knowing the weighting isn't trivia: it's the most direct signal available for how to split remaining study time, especially in the final week before sitting the exam.</p>
@@ -2675,7 +2717,7 @@ df.writeTo("glue_catalog.gold.channel_analytics") \
 
 <!-- START s46 -->
 <p class="promptline">~/aws-data-eng <b>❯</b> where to go from here</p>
-<h2 class="reveal" id="s46"><span class="pfx">46.</span> Learning Path: What to Build Next</h2>
+<h2 id="s46" class="reveal"><span class="hico"><svg class="ico"><use href="#i-compass"/></svg></span><span class="n">46.</span> Learning Path: What to Build Next</h2>
 <p class="sectionsub reveal">This guide is the map — the services only become real once you've built something with them</p>
 <div class="prose reveal">
 <p>Reading this guide gives the vocabulary and the mental model; it doesn't yet give the muscle memory. The fastest way to close that gap is to build a small, complete pipeline — end to end, not one service in isolation — and hit the real friction points (an IAM permission that's subtly wrong, a Glue job that's slow because of a partitioning mistake, a Step Functions execution that fails in a way the console's visual debugger makes obvious in seconds) firsthand.</p>

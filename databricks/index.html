@@ -140,6 +140,13 @@
     header.hero{padding:44px 16px 22px;}
   }
 .nav{position:sticky;top:0;z-index:60;background:rgba(25,25,33,.82);backdrop-filter:blur(10px);border-bottom:1px solid #3C4356}.nav-inner{max-width:1040px;margin:0 auto;padding:12px 24px;display:flex;align-items:center;gap:18px;flex-wrap:wrap}.nav-brand{font-weight:800;letter-spacing:.16em;font-size:15px;text-decoration:none;border:0;color:#5AC8FF}.nav-links{display:flex;gap:6px;flex-wrap:wrap;margin-left:auto}.nav-links a{text-decoration:none;border:1px solid transparent;color:#9aa0b4;font-weight:700;font-size:13.5px;padding:6px 14px;border-radius:999px;transition:.2s}.nav-links a:hover{color:#fff;border-color:#3C4356;background:#242739}.nav-links a.active{color:#5AC8FF;border-color:#28B9FF55;background:#28B9FF14}
+
+/* docker-standard Contents box */
+.toc{background:#242739;border:1px solid #3C4356;border-radius:14px;padding:16px 22px;margin:24px 0;column-count:2;column-gap:28px}
+.toc>strong{column-span:all;display:block;margin-bottom:6px;color:#fff;font-size:14px;letter-spacing:.04em}
+.toc a{display:block;color:#5AC8FF;text-decoration:none;font-size:13.5px;line-height:1.95;break-inside:avoid;border:0}
+.toc a:hover{color:#fff}
+.toc a svg{width:14px;height:14px;margin-right:9px;vertical-align:-2px;opacity:.9}
 </style>
 </head>
 <body>
@@ -190,39 +197,37 @@
 
 <div class="wrap">
 
-<details class="toc" open>
-  <summary>&#10095; Table of Contents</summary>
-  <ol>
-    <li><a href="#intro">What Is Databricks?</a></li>
-    <li><a href="#lakehouse">The Lakehouse Architecture</a></li>
-    <li><a href="#workspace">Workspace &amp; Compute</a></li>
-    <li><a href="#spark">Spark on Databricks</a></li>
-    <li><a href="#delta">Delta Lake</a></li>
-    <li><a href="#medallion">The Medallion Architecture</a></li>
-    <li><a href="#ingestion">Ingestion: Auto Loader &amp; Lakeflow Connect</a></li>
-    <li><a href="#unity-catalog">Unity Catalog</a></li>
-    <li><a href="#data-sharing">Data Sharing: Delta Sharing &amp; Clean Rooms</a></li>
-    <li><a href="#sql-bi">Databricks SQL &amp; AI/BI</a></li>
-    <li><a href="#mlflow">MLflow, Agent Bricks &amp; Generative AI</a></li>
-    <li><a href="#lakebase">Lakebase: Managed Postgres for OLTP</a></li>
-    <li><a href="#apps">Databricks Apps</a></li>
-    <li><a href="#workflows">Workflows &amp; Orchestration</a></li>
-    <li><a href="#security">Security Essentials</a></li>
-    <li><a href="#project">End-to-End Project</a></li>
-    <li><a href="#project-arch">Project Architecture</a></li>
-    <li><a href="#step1">Step 1 &mdash; Unity Catalog Setup</a></li>
-    <li><a href="#step2">Step 2 &mdash; Lakeflow Connect CDC</a></li>
-    <li><a href="#step3">Step 3 &mdash; Streaming from Event Hub</a></li>
-    <li><a href="#step4">Step 4 &mdash; Silver Cleansing</a></li>
-    <li><a href="#step5">Step 5 &mdash; Gold Aggregation</a></li>
-    <li><a href="#step6">Step 6 &mdash; Orchestration</a></li>
-    <li><a href="#step7">Step 7 &mdash; Sentiment with Mosaic AI</a></li>
-    <li><a href="#step8">Step 8 &mdash; Performance &amp; Sentiment Dashboard</a></li>
-    <li><a href="#step9">Step 9 &mdash; Govern &amp; Monitor</a></li>
-    <li><a href="#skills">Skills &amp; Certification Path</a></li>
-    <li><a href="#glossary">Glossary</a></li>
-  </ol>
-</details>
+<div class="toc reveal">
+  <strong>Contents</strong>
+  <a href="#intro"><svg><use href="#ic-cube"/></svg>01 · What Is Databricks?</a>
+  <a href="#lakehouse"><svg><use href="#ic-layers"/></svg>02 · The Lakehouse Architecture</a>
+  <a href="#workspace"><svg><use href="#ic-server"/></svg>03 · Workspace &amp;amp; Compute</a>
+  <a href="#spark"><svg><use href="#ic-bolt"/></svg>04 · Spark on Databricks</a>
+  <a href="#delta"><svg><use href="#ic-layers"/></svg>05 · Delta Lake</a>
+  <a href="#medallion"><svg><use href="#ic-layers"/></svg>06 · The Medallion Architecture</a>
+  <a href="#ingestion"><svg><use href="#ic-funnel"/></svg>07 · Ingestion: Auto Loader &amp;amp; Lakeflow Connect</a>
+  <a href="#unity-catalog"><svg><use href="#ic-shield"/></svg>08 · Unity Catalog</a>
+  <a href="#data-sharing"><svg><use href="#ic-cloud"/></svg>09 · Data Sharing: Delta Sharing &amp;amp; Clean Rooms</a>
+  <a href="#sql-bi"><svg><use href="#ic-chart"/></svg>10 · Databricks SQL &amp;amp; AI/BI</a>
+  <a href="#mlflow"><svg><use href="#ic-ai"/></svg>11 · MLflow, Agent Bricks &amp;amp; Generative AI</a>
+  <a href="#lakebase"><svg><use href="#ic-server"/></svg>12 · Lakebase: Managed Postgres for OLTP</a>
+  <a href="#apps"><svg><use href="#ic-bolt"/></svg>13 · Databricks Apps</a>
+  <a href="#workflows"><svg><use href="#ic-dag"/></svg>14 · Workflows &amp;amp; Orchestration</a>
+  <a href="#security"><svg><use href="#ic-lock"/></svg>15 · Security Essentials</a>
+  <a href="#project"><svg><use href="#ic-gear"/></svg>16 · End-to-End Project</a>
+  <a href="#project-arch"><svg><use href="#ic-cube"/></svg>17 · Project Architecture</a>
+  <a href="#step1"><svg><use href="#ic-shield"/></svg>18 · Step 1 &amp;mdash; Unity Catalog Setup</a>
+  <a href="#step2"><svg><use href="#ic-cube"/></svg>19 · Step 2 &amp;mdash; Lakeflow Connect CDC</a>
+  <a href="#step3"><svg><use href="#ic-stream"/></svg>20 · Step 3 &amp;mdash; Streaming from Event Hub</a>
+  <a href="#step4"><svg><use href="#ic-cube"/></svg>21 · Step 4 &amp;mdash; Silver Cleansing</a>
+  <a href="#step5"><svg><use href="#ic-cube"/></svg>22 · Step 5 &amp;mdash; Gold Aggregation</a>
+  <a href="#step6"><svg><use href="#ic-dag"/></svg>23 · Step 6 &amp;mdash; Orchestration</a>
+  <a href="#step7"><svg><use href="#ic-cube"/></svg>24 · Step 7 &amp;mdash; Sentiment with Mosaic AI</a>
+  <a href="#step8"><svg><use href="#ic-bolt"/></svg>25 · Step 8 &amp;mdash; Performance &amp;amp; Sentiment Dashboard</a>
+  <a href="#step9"><svg><use href="#ic-cube"/></svg>26 · Step 9 &amp;mdash; Govern &amp;amp; Monitor</a>
+  <a href="#skills"><svg><use href="#ic-cpu"/></svg>27 · Skills &amp;amp; Certification Path</a>
+  <a href="#glossary"><svg><use href="#ic-file"/></svg>28 · Glossary</a>
+</div>
 
 <!-- ================= PART 1: CONCEPTS ================= -->
 
