@@ -1,0 +1,1572 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Data Engineering Fundamentals — The Complete Field Guide | Based on "Fundamentals of Data Engineering"</title>
+<style>
+  :root{
+    --bg:#111117; --bg2:#16161d; --panel:#191921; --panel2:#16161d;
+    --ink:#F1F1F1; --muted:#9aa0b4; --dim:#6b6b78;
+    --blue:#5C78FF; --blue2:#5C78FF; --cyan:#28B9FF; --cyan2:#5AC8FF;
+    --purple:#A56BFF; --magenta:#A56BFF; --magenta2:#A56BFF;
+    --warn:#FFB454; --good:#5AC8FF;
+    --gen:#5AC8FF; --store:#28B9FF; --ingest:#FFB454; --xform:#A56BFF; --serve:#FF6B9D;
+    --grad:linear-gradient(90deg,#28B9FF,#5C78FF);
+    --font:"JetBrainsMono Nerd Font","JetBrains Mono","Symbols Nerd Font",ui-monospace,"Cascadia Code",Menlo,Consolas,monospace;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font);font-size:16px;line-height:1.85;-webkit-font-smoothing:antialiased}
+  #bar{position:fixed;top:0;left:0;height:3px;width:0;z-index:50;background:var(--grad);box-shadow:0 0 12px #5C78FF99;transition:width .1s linear}
+  .wrap{max-width:820px;margin:0 auto;padding:0 22px 120px}
+  .wrap > *{max-width:none !important;margin-left:0 !important;margin-right:0 !important}
+  .prose{max-width:760px;margin-left:auto;margin-right:auto}
+  p,li{color:#dcdce4}
+  a{color:var(--cyan2);text-decoration:none;border-bottom:1px dotted #5AC8FF66}
+  a:hover{color:#fff;border-bottom-color:#fff}
+  code{font-family:var(--font);background:#1D1D26;color:#5AC8FF;padding:1px 7px;border-radius:5px;font-size:.9em;border:1px solid #2c2c38}
+  pre{background:#1D1D26;border:1px solid #2c2c38;border-radius:12px;padding:16px 20px;margin:20px auto;max-width:820px;overflow-x:auto}
+  pre code{background:none;border:none;padding:0;color:#dcdce4;font-size:13px;line-height:1.65;white-space:pre}
+  pre .c1{color:var(--muted)}
+  header.hero{padding:64px 22px 30px;text-align:center;position:relative;overflow:hidden}
+  .kicker{font-size:12.5px;letter-spacing:.32em;text-transform:uppercase;color:var(--muted)}
+  h1{font-size:clamp(28px,5vw,50px);line-height:1.15;margin:14px auto 12px;max-width:24ch;font-weight:800;
+     color:#5AC8FF}
+  @keyframes sheen{to{background-position:220% center}}
+  .dek{max-width:66ch;margin:0 auto;color:var(--muted);font-size:17px}
+  .byline{margin-top:18px;font-size:13px;color:var(--dim)}
+  .logos{display:flex;gap:26px;justify-content:center;align-items:center;margin:30px 0 8px;flex-wrap:wrap}
+  .logos figure{margin:0;text-align:center}
+  .logos svg{width:64px;height:64px;display:block;margin:0 auto}
+  .logos figcaption{font-size:11.5px;color:var(--muted);margin-top:6px}
+  .chapternav{text-align:center;font-size:13px;margin:20px auto 0;max-width:760px}
+  .chapternav a{margin:0 12px}
+  h2{font-size:clamp(22px,3.2vw,30px);margin:64px 0 6px;font-weight:800;line-height:1.25}
+  h2 .pfx{color:var(--blue2)}
+  h3{font-size:19px;margin:32px 0 8px;font-weight:700;color:#fff}
+  .lead{font-size:18px;color:#e7e7ee}
+  .sectionsub{color:var(--muted);margin-top:0}
+  figure.fig{margin:30px auto;text-align:center;max-width:960px}
+  figure.diagram{margin:30px auto;text-align:center;max-width:960px}
+  figure.diagram svg{width:100%;height:auto;display:block;background:#16161d;border:1px solid #2c2c38;border-radius:16px;box-shadow:0 18px 50px rgba(0,0,0,.45)}
+  figure.diagram figcaption{font-size:12.5px;color:var(--muted);margin-top:10px;font-style:italic}
+  .tldr{border:1px solid #2c2c38;background:linear-gradient(180deg,#191921,#16161d);border-radius:16px;padding:22px 26px;margin:30px auto;max-width:820px}
+  .tldr h4{margin:0 0 8px;font-size:13px;letter-spacing:.2em;text-transform:uppercase;color:var(--cyan2)}
+  .callout{border-left:4px solid var(--blue2);background:#191921;border-radius:0 12px 12px 0;padding:14px 20px;margin:24px auto;max-width:780px}
+  .callout.cy{border-color:var(--cyan)} .callout.mg{border-color:var(--magenta2)} .callout.gd{border-color:#5AC8FF}
+  .callout.wn{border-color:var(--warn);background:#191921}
+  .callout.ok{border-color:var(--good);background:#191921}
+  .pull{font-size:22px;line-height:1.45;font-weight:700;color:#fff;margin:34px auto;max-width:760px;padding-left:18px;border-left:4px solid transparent;border-image:var(--grad) 1;}
+  .def{border:1px solid #2c2c38;background:#1D1D26;border-radius:12px;padding:14px 18px;margin:16px auto;max-width:780px}
+  .def .t{font-weight:700;color:#fff}
+  .def .ex{color:var(--muted);font-size:14px;margin-top:6px}
+  .def .ex b{color:#5AC8FF}
+  .tag{display:inline-flex;align-items:center;gap:9px;padding:4px 12px;border-radius:999px;font-size:13px;font-weight:700;border:1px solid}
+  .tag.gen{color:var(--gen);border-color:#5AC8FF55;background:#5AC8FF14}
+  .tag.store{color:var(--store);border-color:#28B9FF55;background:#28B9FF14}
+  .tag.ingest{color:var(--ingest);border-color:#FFB45455;background:#FFB45414}
+  .tag.xform{color:var(--xform);border-color:#A56BFF55;background:#A56BFF14}
+  .tag.serve{color:var(--serve);border-color:#5AC8FF55;background:#5AC8FF14}
+  .tag.int{color:#5AC8FF;border-color:#5C78FF55;background:linear-gradient(90deg,#5C78FF14,#A56BFF14)}
+  .profile{border:1px solid #2c2c38;border-radius:16px;padding:22px 26px;margin:22px auto;max-width:820px;background:#1D1D26}
+  .profile.gen{border-top:3px solid var(--gen)} .profile.store{border-top:3px solid var(--store)}
+  .profile.ingest{border-top:3px solid var(--ingest)} .profile.xform{border-top:3px solid var(--xform)}
+  .profile.serve{border-top:3px solid var(--serve)}
+  .profile.int{border-top:3px solid transparent;border-image:var(--grad) 1}
+  .profile .one{font-size:17px;color:#fff;font-weight:700;margin:10px 0 12px}
+  .kv{font-size:14.5px;color:#cdd0dd;margin:5px 0}
+  .kv b{color:#fff}
+  .tablewrap{overflow-x:auto;margin:22px auto;max-width:900px}
+  table{border-collapse:collapse;width:100%;font-size:13.5px;min-width:640px}
+  th,td{border:1px solid #2c2c38;padding:10px 12px;text-align:left;vertical-align:top}
+  th{background:#1d1d27;color:#fff;font-weight:700}
+  tr:nth-child(even) td{background:#161620}
+  .cell-gen{color:var(--gen);font-weight:700}.cell-store{color:var(--store);font-weight:700}
+  .cell-ingest{color:var(--ingest);font-weight:700}.cell-xform{color:var(--xform);font-weight:700}
+  .cell-serve{color:var(--serve);font-weight:700}
+  .promptline{color:var(--dim);font-size:13px;margin:54px 0 -6px}
+  .promptline b{color:var(--cyan2)}
+  .js .reveal{opacity:0;transform:translateY(22px);transition:opacity .7s ease,transform .7s ease}
+  .js .reveal.in{opacity:1;transform:none}
+  @media (prefers-reduced-motion: reduce){.js .reveal{opacity:1;transform:none;transition:none}}
+  details{border:1px solid #2c2c38;border-radius:12px;padding:6px 16px;margin:16px auto;max-width:780px;background:#141419}
+  summary{cursor:pointer;font-weight:700;color:var(--cyan2);padding:8px 0}
+  .toc{border:1px solid #2c2c38;border-radius:16px;padding:8px 24px 18px;margin:30px auto;max-width:820px;background:#1D1D26}
+  .toc summary{font-size:14px;letter-spacing:.15em;text-transform:uppercase}
+  .toc ol{columns:2;gap:28px;padding-left:20px;margin:8px 0 0;list-style:none}
+  .toc li{margin:6px 0;font-size:14px}
+  .toc a{color:#dcdce4;border-bottom:none}
+  .toc a:hover{color:var(--cyan2)}
+  @media (max-width:640px){.toc ol{columns:1}}
+  hr{border:0;border-top:1px solid #2c2c38;margin:48px auto;max-width:760px}
+  .end{color:var(--muted);font-size:13px;max-width:760px;margin:28px auto}
+  .footnav a{margin-right:18px}
+  .qa{border:1px solid #2c2c38;border-radius:12px;padding:16px 20px;margin:18px auto;max-width:780px;background:#141419}
+  .qa .q{font-weight:700;color:#fff;margin-bottom:6px}
+.nav{position:sticky;top:0;z-index:60;background:rgba(25,25,33,.82);backdrop-filter:blur(10px);border-bottom:1px solid #2c2c38}.nav-inner{max-width:1040px;margin:0 auto;padding:12px 24px;display:flex;align-items:center;gap:18px;flex-wrap:wrap}.nav-brand{font-weight:800;letter-spacing:.16em;font-size:15px;text-decoration:none;border:0;color:#5AC8FF}.nav-links{display:flex;gap:6px;flex-wrap:wrap;margin-left:auto}.nav-links a{text-decoration:none;border:1px solid transparent;color:#9aa0b4;font-weight:700;font-size:13.5px;padding:6px 14px;border-radius:999px;transition:.2s}.nav-links a:hover{color:#fff;border-color:#2c2c38;background:#242739}.nav-links a.active{color:#5AC8FF;border-color:#28B9FF55;background:#28B9FF14}
+
+/* docker-standard structure */
+h2{font-size:clamp(21px,3.2vw,28px);margin:52px 0 6px;font-weight:800;line-height:1.22;padding-top:14px;border-top:1px solid #3C4356;display:flex;align-items:center;gap:10px}
+h2 .n{color:var(--blue2,#5C78FF)}
+.toc{background:#242739;border:1px solid #3C4356;border-radius:14px;padding:16px 22px;margin:24px 0;column-count:2;column-gap:28px}
+.toc>strong{column-span:all;display:block;margin-bottom:6px;color:#fff}
+.toc a{display:block;color:#5AC8FF;text-decoration:none;font-size:13.5px;line-height:1.9;break-inside:avoid;border:0}
+.toc a:hover{color:#fff}
+.toc details,.toc summary,.toc ol,.toc li{all:unset;display:block}
+.ico{width:1em;height:1em;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.hico{display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;border-radius:11px;flex:0 0 36px;background:#0e2740;border:1px solid #2b4a80;color:#5AC8FF}
+.hico .ico{width:19px;height:19px}
+.toc a .ico{width:14px;height:14px;margin-right:9px;vertical-align:-2px;opacity:.85}
+</style>
+<script>document.documentElement.classList.add('js');</script>
+</head>
+<body>
+<div id="bar"></div>
+<nav class="nav"><div class="nav-inner"><a class="nav-brand" href="../index.html">HAO TIEU KIM</a><div class="nav-links"><a href="../index.html">Portfolio</a><a href="../blogs.html">Blogs</a><a href="../essentials.html" class="active">Data Engineer Essentials</a></div></div></nav>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs>
+<symbol id="i-question" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.6 9.4a2.5 2.5 0 1 1 3.3 2.4c-.6.2-.9.8-.9 1.5v.6M12 17h.01"/></symbol>
+<symbol id="i-layers" viewBox="0 0 24 24"><path d="m12 3 9 4.8-9 4.8-9-4.8 9-4.8Z"/><path d="m3 12.6 9 4.8 9-4.8M3 17.2l9 4.8 9-4.8"/></symbol>
+<symbol id="i-workflow" viewBox="0 0 24 24"><rect x="3" y="3.5" width="7" height="6" rx="1.5"/><rect x="14" y="14.5" width="7" height="6" rx="1.5"/><path d="M6.5 9.5v5a3 3 0 0 0 3 3H14"/></symbol>
+<symbol id="i-check" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="m8 12.2 2.7 2.7L16.2 9"/></symbol>
+<symbol id="i-rocket" viewBox="0 0 24 24"><path d="M12 2.5c3 2.6 4.8 6.4 4.8 10.6L12 16.4l-4.8-3.3C7.2 8.9 9 5.1 12 2.5Z"/><path d="M7.2 13.1 4.4 15v4.2l3-1.9M16.8 13.1l2.8 1.9v4.2l-3-1.9M12 19.5v2.3"/><circle cx="12" cy="10" r="1.7"/></symbol>
+<symbol id="i-terminal" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2.5"/><path d="m7.5 9.5 3 2.5-3 2.5M13.5 15h3.5"/></symbol>
+<symbol id="i-package" viewBox="0 0 24 24"><path d="m12 2.8 8.2 4.6v9.2L12 21.2l-8.2-4.6V7.4L12 2.8Z"/><path d="m3.8 7.4 8.2 4.6 8.2-4.6M12 12v9.2"/></symbol>
+<symbol id="i-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18"/><path d="M12 3c2.4 2.7 3.6 5.7 3.6 9s-1.2 6.3-3.6 9c-2.4-2.7-3.6-5.7-3.6-9S9.6 5.7 12 3Z"/></symbol>
+<symbol id="i-repeat" viewBox="0 0 24 24"><path d="M16.5 3 20 6.5 16.5 10"/><path d="M4 11.5V9a2.5 2.5 0 0 1 2.5-2.5H20"/><path d="M7.5 21 4 17.5 7.5 14"/><path d="M20 12.5V15a2.5 2.5 0 0 1-2.5 2.5H4"/></symbol>
+<symbol id="i-database" viewBox="0 0 24 24"><ellipse cx="12" cy="6" rx="8" ry="3.2"/><path d="M4 6v12c0 1.8 3.6 3.2 8 3.2s8-1.4 8-3.2V6"/><path d="M20 12c0 1.8-3.6 3.2-8 3.2S4 13.8 4 12"/></symbol>
+<symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 2.8 4.8 5.6v5.2c0 4.4 3 8.4 7.2 9.8 4.2-1.4 7.2-5.4 7.2-9.8V5.6L12 2.8Z"/><path d="m9 12 2.2 2.2L15.4 10"/></symbol>
+<symbol id="i-list" viewBox="0 0 24 24"><path d="M8.5 6h12M8.5 12h12M8.5 18h12M3.7 6h.01M3.7 12h.01M3.7 18h.01"/></symbol>
+<symbol id="i-book" viewBox="0 0 24 24"><path d="M4 5a3 3 0 0 1 3-3h13v18H7a3 3 0 0 0-3 3V5Z"/><path d="M8 2v18"/></symbol>
+<symbol id="i-key" viewBox="0 0 24 24"><circle cx="7.2" cy="16.3" r="3.4"/><path d="m9.7 13.9 9.6-9.6M16.6 6.9l2.3 2.3M14 9.5l2.3 2.3"/></symbol>
+<symbol id="i-bulb" viewBox="0 0 24 24"><path d="M9.2 18h5.6M10.4 21h3.2"/><path d="M12 3a6 6 0 0 0-3.4 10.9c.5.4.8 1 .8 1.7v.4h5.2v-.4c0-.7.3-1.3.8-1.7A6 6 0 0 0 12 3Z"/></symbol>
+<symbol id="i-warn" viewBox="0 0 24 24"><path d="M12 3.2 2.8 19.6h18.4L12 3.2Z"/><path d="M12 9.5v4.2M12 16.8h.01"/></symbol>
+<symbol id="i-alert" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7.2v5.4M12 16.4h.01"/></symbol>
+<symbol id="i-compass" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="m15.6 8.4-2.1 5.1-5.1 2.1 2.1-5.1 5.1-2.1Z"/></symbol>
+<symbol id="i-blocks" viewBox="0 0 24 24"><rect x="3.5" y="3.5" width="7" height="7" rx="1.6"/><rect x="13.5" y="3.5" width="7" height="7" rx="1.6"/><rect x="3.5" y="13.5" width="7" height="7" rx="1.6"/><rect x="13.5" y="13.5" width="7" height="7" rx="1.6"/></symbol>
+<symbol id="i-search" viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m15.2 15.2 4.3 4.3"/></symbol>
+<symbol id="i-code" viewBox="0 0 24 24"><path d="m8 8.5-4 3.5 4 3.5M16 8.5l4 3.5-4 3.5M13.6 5l-3.2 14"/></symbol>
+<symbol id="i-plug" viewBox="0 0 24 24"><path d="M9 3v5.5M15 3v5.5"/><path d="M6.5 8.5h11V12a5.5 5.5 0 0 1-11 0V8.5Z"/><path d="M12 17.5V21"/></symbol>
+<symbol id="i-file" viewBox="0 0 24 24"><path d="M14 3H7.5A2.5 2.5 0 0 0 5 5.5v13A2.5 2.5 0 0 0 7.5 21h9a2.5 2.5 0 0 0 2.5-2.5V8l-5-5Z"/><path d="M14 3v5h5"/></symbol>
+<symbol id="i-network" viewBox="0 0 24 24"><circle cx="5.5" cy="6" r="2.5"/><circle cx="5.5" cy="18" r="2.5"/><circle cx="18.5" cy="12" r="2.5"/><path d="m7.9 7.2 8.2 3.7M7.9 16.8l8.2-3.7"/></symbol>
+<symbol id="i-disk" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2.5"/><path d="M3 12h18"/><path d="M7 16.5h.01M11 16.5h3"/><path d="M7 7.5h6"/></symbol>
+<symbol id="i-lock" viewBox="0 0 24 24"><rect x="4.5" y="10" width="15" height="10.5" rx="2.4"/><path d="M8 10V7.2a4 4 0 0 1 8 0V10"/></symbol>
+<symbol id="i-cloud" viewBox="0 0 24 24"><path d="M6.8 19.2h10.6a3.9 3.9 0 0 0 .4-7.8 6.1 6.1 0 0 0-11.7-1.7 3.8 3.8 0 0 0 .7 9.5Z"/></symbol>
+<symbol id="i-eye" viewBox="0 0 24 24"><path d="M2.6 12S6.2 5.8 12 5.8 21.4 12 21.4 12 17.8 18.2 12 18.2 2.6 12 2.6 12Z"/><circle cx="12" cy="12" r="3.1"/></symbol>
+<symbol id="i-zap" viewBox="0 0 24 24"><path d="M13.2 2.5 4.5 14h6.6l-1.3 7.5L19 10h-6.6l.8-7.5Z"/></symbol>
+<symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="3.6"/><path d="M4.8 20.2a7.2 7.2 0 0 1 14.4 0"/></symbol>
+<symbol id="i-whale" viewBox="0 0 24 24"><path d="M1.5 14h21c0 3.6-2.9 6.5-6.5 6.5H8.5C4.9 20.5 1.5 17.6 1.5 14Z"/><rect x="5.6" y="9.6" width="3.4" height="3.6" rx=".6"/><rect x="10.3" y="9.6" width="3.4" height="3.6" rx=".6"/><rect x="15" y="9.6" width="3.4" height="3.6" rx=".6"/><rect x="10.3" y="5.4" width="3.4" height="3.6" rx=".6"/><path d="M20.5 11.5c1.2-1.2 2.4-.6 2.4-.6"/></symbol>
+</defs></svg>
+
+<header class="hero">
+  <div class="kicker">Data Engineering · Field Guide</div>
+  <h1>Data Engineering Fundamentals: The Complete Field Guide</h1>
+  <p class="dek">A complete, practitioner-oriented tour of data engineering distilled from <em>Fundamentals of Data Engineering</em> (Joe Reis &amp; Matt Housley, O'Reilly) — the data engineering lifecycle, the undercurrents that run through every decision, architecture patterns, storage and table formats, ingestion, modeling and transformation, serving, orchestration, governance, and security — updated with 2025–2026 developments in the lakehouse, streaming, and AI-driven data stack.</p>
+  <div class="logos">
+    <figure><svg viewBox="0 0 100 100" role="img" aria-label="Data lifecycle icon"><circle cx="50" cy="50" r="44" fill="#1D1D26" stroke="#28B9FF" stroke-width="2"/><path d="M50 20 A30 30 0 1 1 24 65" fill="none" stroke="#28B9FF" stroke-width="3"/><polygon points="24,65 33.8,72 25.2,77" fill="#28B9FF"/><circle cx="50" cy="50" r="7" fill="#5AC8FF"/></svg><figcaption>Lifecycle</figcaption></figure>
+    <figure><svg viewBox="0 0 100 100" role="img" aria-label="Data architecture icon"><circle cx="50" cy="50" r="44" fill="#1D1D26" stroke="#A56BFF" stroke-width="2"/><rect x="28" y="30" width="44" height="10" rx="3" fill="#A56BFF"/><rect x="28" y="45" width="44" height="10" rx="3" fill="#A56BFF"/><rect x="28" y="60" width="44" height="10" rx="3" fill="#A56BFF"/></svg><figcaption>Architecture</figcaption></figure>
+  </div>
+  <p class="byline">~71 min read · updated 2026 · a field guide, not a replacement for the book · no assumed data background</p>
+</header>
+
+<div class="wrap">
+
+<!-- HOOK -->
+<div class="prose reveal">
+<p class="lead">Every dashboard, every fraud model, every regulatory report a bank files with the State Bank of Vietnam (SBV) starts the same way: as a raw row of data sitting in some source system, with no idea yet that anyone needs it. <strong>Data engineering</strong> is the entire discipline of getting that row — reliably, securely, and at whatever scale the business needs — from where it is generated to where it is useful, without losing it, corrupting it, exposing it, or arriving too late to matter. It is unglamorous compared to machine learning or analytics, and it is also the thing that determines whether either of those is possible at all.</p>
+<p>This guide is a complete, detailed walk through the ideas in <em>Fundamentals of Data Engineering</em> by Joe Reis and Matt Housley — the closest thing the field has to a shared vocabulary — reorganized as a single reference: the data engineering lifecycle and its five stages, the six "undercurrents" that cut across every one of them, how to design and choose architecture, and a deep pass through source systems, storage, ingestion, modeling, transformation, serving, orchestration, governance, and security. Code and configuration examples are illustrative (Python, SQL, YAML) rather than tied to one vendor, because the book itself is deliberately technology-agnostic — it teaches you how to evaluate any tool, not which specific tool to buy.</p>
+</div>
+
+<!-- TL;DR -->
+<div class="tldr reveal">
+  <h4>❯ Short version (read this first)</h4>
+  <p style="margin:.2em 0"><strong>The data engineering lifecycle</strong> has five stages — <b>Generation → Storage → Ingestion → Transformation → Serving</b> — with storage underlying every other stage rather than sitting in a strict sequence.</p>
+  <p style="margin:.2em 0"><strong>Six undercurrents</strong> — security, data management, DataOps, data architecture, orchestration, and software engineering — run through all five stages simultaneously and are what separate a fragile pipeline from a professional one.</p>
+  <p style="margin:.2em 0"><strong>Architecture and tool choice</strong> are decisions made under real constraints (team size, cost, time-to-market, reversibility) — the book's stance is deliberately "it depends," not "always use X."</p>
+  <p class="kv">• <span class="cell-store">Good architecture</span> — flexible, loosely coupled, reversible, and built to fail gracefully, not a single "best" diagram you copy from a vendor's slide.</p>
+  <p class="kv">• <span class="cell-xform">Good pipelines</span> — move data with the right latency (batch vs. streaming), transform it into a model people can trust (star schema, Data Vault, or a wide table), and serve it without ever letting training-time and production-time views of the same fact disagree.</p>
+  <p style="margin:.5em 0 0"><b>Together:</b> data engineering is the practice of building the boring, reliable plumbing — governed, secure, and cost-aware — that every dashboard, report, and machine learning model quietly depends on and almost never gets credit for.</p>
+  <p class="kv" style="margin-top:.7em;color:var(--muted)"><em>New to the words?</em> A <b>pipeline</b> is the set of processes that move and transform data from a source to a destination. A <b>data pipeline's latency</b> is how long it takes data to become usable after it is generated. <b>Idempotent</b> means running an operation twice produces the same result as running it once — a property every reliable pipeline needs. Every other term is defined the first time it appears below, and again in the glossary.</p>
+</div>
+
+<div class="callout cy reveal">
+<p><b>Why this matters for a bank.</b> Core banking, card, and payment systems generate transactional data continuously; regulatory reporting to the SBV, AML/fraud monitoring, credit scoring, and customer analytics all sit downstream of the exact lifecycle stages covered here. The security and governance sections later in this guide connect directly to Vietnam's PDPL (personal data protection legal framework) and SBV data-handling expectations — get the plumbing wrong and it is a compliance problem, not just an engineering one. (Illustrative framing throughout this guide — always confirm current obligations with legal/compliance.)</p>
+</div>
+
+<div class="toc reveal">
+  <strong>Contents</strong>
+  <a href="#s01"><svg class="ico"><use href="#i-question"/></svg>01 · What Is Data Engineering?</a>
+  <a href="#s02"><svg class="ico"><use href="#i-blocks"/></svg>02 · The Data Engineering Lifecycle</a>
+  <a href="#s03"><svg class="ico"><use href="#i-blocks"/></svg>03 · The Six Undercurrents</a>
+  <a href="#s04"><svg class="ico"><use href="#i-user"/></svg>04 · Data Maturity &amp; the Data Engineer&#x27;s Place on a Team</a>
+  <a href="#s05"><svg class="ico"><use href="#i-blocks"/></svg>05 · Designing Good Data Architecture — Principles</a>
+  <a href="#s06"><svg class="ico"><use href="#i-blocks"/></svg>06 · Major Architecture Patterns: Warehouse, Lake, Lakehouse &amp; Mesh</a>
+  <a href="#s07"><svg class="ico"><use href="#i-blocks"/></svg>07 · Choosing Technologies Across the Lifecycle</a>
+  <a href="#s08"><svg class="ico"><use href="#i-database"/></svg>08 · Data Generation in Source Systems</a>
+  <a href="#s09"><svg class="ico"><use href="#i-file"/></svg>09 · Storage: Raw Ingredients, Files &amp; Table Formats</a>
+  <a href="#s10"><svg class="ico"><use href="#i-network"/></svg>10 · Ingestion: Batch, Streaming, CDC &amp; ETL vs ELT</a>
+  <a href="#s11"><svg class="ico"><use href="#i-file"/></svg>11 · Queries, Modeling &amp; Transformation</a>
+  <a href="#s12"><svg class="ico"><use href="#i-blocks"/></svg>12 · Serving Data: Analytics, ML &amp; Reverse ETL</a>
+  <a href="#s13"><svg class="ico"><use href="#i-workflow"/></svg>13 · Orchestration &amp; DataOps</a>
+  <a href="#s14"><svg class="ico"><use href="#i-shield"/></svg>14 · Data Governance, Quality &amp; Master Data Management</a>
+  <a href="#s15"><svg class="ico"><use href="#i-shield"/></svg>15 · Security, Privacy &amp; Data Ethics</a>
+  <a href="#s16"><svg class="ico"><use href="#i-blocks"/></svg>16 · The Future of Data Engineering</a>
+  <a href="#sbig"><svg class="ico"><use href="#i-cloud"/></svg>17 · Big Data &amp; the Cloud</a>
+  <a href="#scloud"><svg class="ico"><use href="#i-cloud"/></svg>18 · Cloud Platforms: AWS, GCP &amp; Azure</a>
+  <a href="#sstack"><svg class="ico"><use href="#i-blocks"/></svg>19 · The Modern Data Stack</a>
+  <a href="#sskills"><svg class="ico"><use href="#i-user"/></svg>20 · Skills &amp; Career Path</a>
+  <a href="#s18"><svg class="ico"><use href="#i-book"/></svg>21 · Glossary &amp; Quick Reference</a>
+</div>
+
+<!-- START s01 -->
+<p class="promptline">~/data-eng <b>❯</b> laying pipe before anyone can build on top of it</p>
+<h2 id="s01" class="reveal"><span class="hico"><svg class="ico"><use href="#i-question"/></svg></span><span class="n">01.</span> What Is Data Engineering?</h2>
+<p class="sectionsub reveal">The discipline that turns scattered, unreliable raw data into something trustworthy enough to build on.</p>
+
+<div class="prose reveal">
+<p>Data engineering is the discipline of designing, building, and maintaining the systems that collect, move, store, and prepare data so that other people and other systems can use it. It is infrastructure work in service of information: a data engineer's job is to make sure that by the time a dataset reaches an analyst's dashboard, a data scientist's notebook, or a machine learning model's feature pipeline, it is complete, correctly shaped, reasonably fresh, and something people can actually trust.</p>
+<p>That framing matters because it draws a clean line between data engineering and the roles that sit downstream of it. Data scientists and analysts are primarily <i>consumers</i> of what data engineering produces — they ask questions of the data, build models on it, and turn it into decisions. Data engineers build and operate the plumbing that makes those questions answerable in the first place. A brilliant model trained on inconsistent, late, or silently corrupted data will produce brilliant-looking nonsense; the reliability of everything downstream is bounded by the quality of the engineering underneath it.</p>
+<p>The role itself has moved through a few distinct eras. In the 1990s and 2000s it was largely the province of database administrators and ETL developers, hand-writing scripts to move data between operational systems and a single relational data warehouse. The 2010s brought the "big data" era — Hadoop, MapReduce, and a wave of engineers who spent most of their time managing distributed clusters just to keep the lights on. The current era, often called the modern data stack, is SQL- and cloud-centric: managed warehouses and lakehouses, pay-as-you-go ingestion tools, and transformation frameworks that let a much smaller team do what used to require a large infrastructure org. The tools changed; the underlying job — making data usable — did not.</p>
+</div>
+
+<div class="def reveal">
+<p class="t">Data Engineering</p>
+<p>The engineering discipline focused on the full lifecycle of data — its generation, storage, movement, transformation, and delivery — with an emphasis on reliability, security, scalability, and cost, rather than on the analysis performed with the data itself.</p>
+<p class="ex"><b>Example:</b> An online retailer's checkout service writes order events to an application database. A data engineer builds the pipeline that captures those events, lands them in a warehouse, models them into a clean <code>orders</code> table, and keeps that table updating hourly — so that a financial analyst can trust the number on tomorrow's revenue dashboard without ever touching a line of pipeline code.</p>
+</div>
+
+<figure class="diagram reveal">
+<svg viewBox="0 0 900 300" role="img" aria-label="Pyramid diagram showing five layers of the AI and data hierarchy of needs, from Collect/Generate at the base to Learn/AI-ML at the peak, each layer depending on the one below it.">
+  <rect x="100" y="228" width="700" height="42" rx="6" fill="var(--gen)" fill-opacity="0.28" stroke="var(--gen)" stroke-width="1.5"/>
+  <text x="450" y="253" text-anchor="middle" font-size="13" font-family="var(--font)" fill="var(--ink)">Collect / Generate</text>
+
+  <rect x="160" y="180" width="580" height="42" rx="6" fill="var(--store)" fill-opacity="0.28" stroke="var(--store)" stroke-width="1.5"/>
+  <text x="450" y="205" text-anchor="middle" font-size="13" font-family="var(--font)" fill="var(--ink)">Move / Store</text>
+
+  <rect x="220" y="132" width="460" height="42" rx="6" fill="var(--xform)" fill-opacity="0.28" stroke="var(--xform)" stroke-width="1.5"/>
+  <text x="450" y="157" text-anchor="middle" font-size="13" font-family="var(--font)" fill="var(--ink)">Explore / Transform</text>
+
+  <rect x="280" y="84" width="340" height="42" rx="6" fill="var(--serve)" fill-opacity="0.28" stroke="var(--serve)" stroke-width="1.5"/>
+  <text x="450" y="109" text-anchor="middle" font-size="13" font-family="var(--font)" fill="var(--ink)">Aggregate / Feature</text>
+
+  <rect x="340" y="36" width="220" height="42" rx="6" fill="var(--magenta2)" fill-opacity="0.3" stroke="var(--magenta2)" stroke-width="1.5"/>
+  <text x="450" y="61" text-anchor="middle" font-size="13" font-family="var(--font)" fill="var(--ink)">Learn / AI-ML</text>
+</svg>
+<figcaption>AI and ML sit at the peak of the pyramid, but they are only as reliable as the collection, storage, and transformation layers that data engineering builds underneath them.</figcaption>
+</figure>
+
+<div class="prose reveal">
+<h3 class="reveal">Related Roles</h3>
+<p>"Data engineer" is often used loosely to cover several adjacent jobs. The table below is a rough field guide — in practice, especially at smaller companies, one person may wear two or three of these hats at once.</p>
+</div>
+
+<div class="tablewrap reveal">
+<table>
+<tr><th>Role</th><th>Primary Focus</th><th>Typical Tools</th><th>Output</th></tr>
+<tr><td><b>Data Engineer</b></td><td>Building and operating pipelines across the whole lifecycle</td><td>Python/SQL, Spark, Airflow/Dagster, dbt, cloud warehouses</td><td>Reliable, query-ready datasets and pipelines</td></tr>
+<tr><td><b>Data Architect</b></td><td>High-level system design and technology trade-offs</td><td>Reference architectures, diagramming, platform standards</td><td>Blueprints and platform-level design decisions</td></tr>
+<tr><td><b>Data Scientist</b></td><td>Statistical modeling, experimentation, causal analysis</td><td>Python/R, Jupyter, scikit-learn, statsmodels</td><td>Models, experiment results, insights</td></tr>
+<tr><td><b>Analytics Engineer</b></td><td>Modeling clean, tested, documented datasets for BI</td><td>dbt, SQL, git</td><td>Curated marts and a semantic layer for self-serve analytics</td></tr>
+<tr><td><b>ML Engineer</b></td><td>Productionizing and serving ML models at scale</td><td>MLflow, Kubernetes, feature stores, CI/CD (continuous integration/continuous delivery)</td><td>Deployed, monitored ML services</td></tr>
+</table>
+</div>
+
+<div class="callout cy reveal">
+<p><b>Common misconception:</b> "Data engineering is just writing ETL scripts." Moving data is one visible piece of the job, but the discipline also covers schema design, storage trade-offs, cost control, reliability, security, and increasingly the plumbing that feeds AI/ML systems — the six undercurrents covered in <a href="#s03">Section 03</a> run through all of it, not just the "T" in ETL.</p>
+</div>
+<!-- END s01 -->
+
+<!-- START s02 -->
+<p class="promptline">~/data-eng <b>❯</b> generate, store, ingest, transform, serve — repeat</p>
+<h2 id="s02" class="reveal"><span class="hico"><svg class="ico"><use href="#i-blocks"/></svg></span><span class="n">02.</span> The Data Engineering Lifecycle</h2>
+<p class="sectionsub reveal">Five stages, one of which never really stops running underneath the other four.</p>
+
+<div class="prose reveal">
+<p>Reis and Housley frame the whole discipline around a single mental model: the <b>data engineering lifecycle</b>. Data is <b>generated</b> by some source system, <b>ingested</b> into environments you control, <b>transformed</b> into a usable shape, and <b>served</b> to whoever or whatever needs it next — a dashboard, a report, a model, an operational application. <b>Storage</b> is the fifth stage, but it behaves differently from the other four: rather than sitting at one point in the sequence, it underlies every stage at once. Raw events sit in storage before ingestion even starts; ingestion pipelines stage data in storage mid-flight; transformation jobs read from and write back to storage repeatedly; serving layers cache results in yet more storage. Treating storage as "the box between ingestion and transformation" badly undersells how central it is.</p>
+<p>The lifecycle is a useful lens precisely because it forces a question at every stage: what does this data actually need right now, and what does the next stage need from me? A pipeline that ingests data perfectly but transforms it into a form nobody can query is a failure of the lifecycle just as much as one that never lands the data at all. Good data engineers think about all five stages together, because a decision made during ingestion (say, flattening a nested JSON payload) can quietly determine how expensive or awkward transformation becomes three stages later.</p>
+<p>It's also worth being explicit about what the lifecycle is <i>not</i>: a one-way pipe. Real systems loop back on themselves constantly — transformed data gets re-ingested as a source for another pipeline, served outputs get stored again as inputs to a model, and quality issues discovered at the serving stage send engineers back to fix generation-side assumptions. The stages are a way of organizing the work, not a strict order of operations.</p>
+</div>
+
+<div class="tablewrap reveal">
+<table>
+<tr><th>Stage</th><th>Key Question</th><th>Illustrative Technologies</th><th>Key Consideration</th></tr>
+<tr><td class="cell-gen">Generation</td><td>What does the source system actually produce, and how stable is its schema?</td><td>Application databases, IoT sensors, SaaS APIs, event logs</td><td>You rarely control the source — design for change, not stability</td></tr>
+<tr><td class="cell-store">Storage</td><td>Where does this data need to live at each point, and what access pattern does that require?</td><td>Object storage, warehouses, lakehouse table formats, OLTP databases</td><td>One storage choice rarely fits every downstream need — see <a href="#s09">Section 09</a></td></tr>
+<tr><td class="cell-ingest">Ingestion</td><td>Batch or streaming, and how much latency can the business actually tolerate?</td><td>Kafka, Kinesis, Fivetran/Airbyte, CDC connectors</td><td>Ingestion is the most common point of pipeline failure — see <a href="#s10">Section 10</a></td></tr>
+<tr><td class="cell-xform">Transformation</td><td>What shape does this data need to be in for the people who'll use it?</td><td>dbt, Spark, warehouse-native SQL</td><td>Keep an immutable raw copy; build transformed views on top of it — see <a href="#s11">Section 11</a></td></tr>
+<tr><td class="cell-serve">Serving</td><td>Who or what consumes this, and in what form?</td><td>BI (business intelligence) tools, reverse ETL, feature stores, ML serving endpoints</td><td>Serving requirements should shape upstream design, not be an afterthought — see <a href="#s12">Section 12</a></td></tr>
+</table>
+</div>
+
+<figure class="diagram reveal">
+<svg viewBox="0 0 900 260" role="img" aria-label="Diagram of the data engineering lifecycle: Generation, Ingestion, Transformation, and Serving arranged left to right, with a Storage bar spanning beneath all four and short connectors running up into each stage above it.">
+  <rect x="100" y="40" width="160" height="60" rx="8" fill="var(--gen)" fill-opacity="0.18" stroke="var(--gen)" stroke-width="2"/>
+  <text x="180" y="74" text-anchor="middle" font-size="13" font-family="var(--font)" fill="var(--ink)">Generation</text>
+
+  <rect x="280" y="40" width="160" height="60" rx="8" fill="var(--ingest)" fill-opacity="0.18" stroke="var(--ingest)" stroke-width="2"/>
+  <text x="360" y="74" text-anchor="middle" font-size="13" font-family="var(--font)" fill="var(--ink)">Ingestion</text>
+
+  <rect x="460" y="40" width="160" height="60" rx="8" fill="var(--xform)" fill-opacity="0.18" stroke="var(--xform)" stroke-width="2"/>
+  <text x="540" y="74" text-anchor="middle" font-size="13" font-family="var(--font)" fill="var(--ink)">Transformation</text>
+
+  <rect x="640" y="40" width="160" height="60" rx="8" fill="var(--serve)" fill-opacity="0.18" stroke="var(--serve)" stroke-width="2"/>
+  <text x="720" y="74" text-anchor="middle" font-size="13" font-family="var(--font)" fill="var(--ink)">Serving</text>
+
+  <line x1="260" y1="70" x2="270" y2="70" stroke="var(--muted)" stroke-width="2"/>
+  <polygon points="270,65 270,75 280,70" fill="var(--muted)"/>
+  <line x1="440" y1="70" x2="450" y2="70" stroke="var(--muted)" stroke-width="2"/>
+  <polygon points="450,65 450,75 460,70" fill="var(--muted)"/>
+  <line x1="620" y1="70" x2="630" y2="70" stroke="var(--muted)" stroke-width="2"/>
+  <polygon points="630,65 630,75 640,70" fill="var(--muted)"/>
+
+  <rect x="100" y="170" width="700" height="50" rx="8" fill="var(--store)" fill-opacity="0.16" stroke="var(--store)" stroke-width="2"/>
+  <text x="450" y="199" text-anchor="middle" font-size="13" font-family="var(--font)" fill="var(--ink)">Storage (foundation beneath every stage)</text>
+
+  <line x1="180" y1="170" x2="180" y2="110" stroke="var(--store)" stroke-width="1.5"/>
+  <polygon points="175,110 185,110 180,100" fill="var(--store)"/>
+  <line x1="360" y1="170" x2="360" y2="110" stroke="var(--store)" stroke-width="1.5"/>
+  <polygon points="355,110 365,110 360,100" fill="var(--store)"/>
+  <line x1="540" y1="170" x2="540" y2="110" stroke="var(--store)" stroke-width="1.5"/>
+  <polygon points="535,110 545,110 540,100" fill="var(--store)"/>
+  <line x1="720" y1="170" x2="720" y2="110" stroke="var(--store)" stroke-width="1.5"/>
+  <polygon points="715,110 725,110 720,100" fill="var(--store)"/>
+</svg>
+<figcaption>Storage isn't a single step between ingestion and transformation — it's a foundation that every other stage reads from and writes back to continuously.</figcaption>
+</figure>
+
+<div class="callout wn reveal">
+<p><b>Watch out for:</b> treating the lifecycle as a strict waterfall — generate, then ingest, then transform, then serve, done. In practice the process is iterative and often cyclical: transformed data frequently gets re-ingested as a source for another pipeline, quality problems discovered at the serving stage send you back to fix transformation logic (or even generation-side assumptions), and "final" tables get reprocessed as business definitions change. Design your systems assuming data will flow back through storage and transformation more than once.</p>
+</div>
+<!-- END s02 -->
+
+<!-- START s03 -->
+<p class="promptline">~/data-eng <b>❯</b> the stuff running quietly beneath every stage</p>
+<h2 id="s03" class="reveal"><span class="hico"><svg class="ico"><use href="#i-blocks"/></svg></span><span class="n">03.</span> The Six Undercurrents</h2>
+<p class="sectionsub reveal">Concerns you never "finish" — they run underneath and across the whole lifecycle, continuously.</p>
+
+<div class="prose reveal">
+<p>If the lifecycle (<a href="#s02">Section 02</a>) describes the stages data moves through, the six undercurrents describe the concerns that never go away once a stage is "done." Security, data management, DataOps, data architecture, orchestration, and software engineering all apply to generation, storage, ingestion, transformation, and serving simultaneously — they're not boxes you check off once and move past.</p>
+<p>This is where a lot of early-career data engineering effort goes wrong: it's easy to focus entirely on getting data from point A to point B and treat security, testing, documentation, and monitoring as things to bolt on "later, once the pipeline works." The undercurrents are the reason that approach breaks down as systems grow — a pipeline that works today but has no tests, no access controls, and no observability will eventually fail in a way nobody notices until a stakeholder complains.</p>
+</div>
+
+<div class="def reveal">
+<p class="t">Undercurrent</p>
+<p>A cross-cutting concern that applies continuously across every stage of the data engineering lifecycle, rather than a stage you move through and complete. The metaphor: a river's current runs beneath the surface the entire length of the river, not just at one bend — undercurrents run beneath generation, storage, ingestion, transformation, and serving the entire time a system is alive.</p>
+</div>
+
+<div class="tablewrap reveal">
+<table>
+<tr><th>Undercurrent</th><th>One-Line Definition</th><th>Red Flag When Missing</th></tr>
+<tr><td><b>Security</b></td><td>Least-privilege access and protection of data at every stage (<a href="#s15">Section 15</a>)</td><td>Everyone on the team has admin/production access "to move faster"</td></tr>
+<tr><td><b>Data Management</b></td><td>Governance, quality, discoverability, and metadata (<a href="#s14">Section 14</a>)</td><td>Nobody can say confidently which table is the source of truth</td></tr>
+<tr><td><b>DataOps</b></td><td>Automation, testing, monitoring, and incident response for pipelines (<a href="#s13">Section 13</a>)</td><td>A broken pipeline is discovered by an angry stakeholder, not an alert</td></tr>
+<tr><td><b>Data Architecture</b></td><td>Deliberate trade-offs among cost, complexity, and flexibility (<a href="#s05">Section 05</a>)</td><td>Every new requirement means bolting on yet another one-off system</td></tr>
+<tr><td><b>Orchestration</b></td><td>Coordinating dependencies between tasks and jobs (<a href="#s13">Section 13</a>)</td><td>Pipelines are triggered by disconnected cron jobs with no shared dependency view</td></tr>
+<tr><td><b>Software Engineering</b></td><td>Version control, testing, code review, and CI/CD applied to pipeline code</td><td>Pipeline logic lives only in untested notebooks or one-off scripts</td></tr>
+</table>
+</div>
+
+<figure class="diagram reveal">
+<svg viewBox="0 0 900 396" role="img" aria-label="Two-zone diagram: the five lifecycle stages (Generation, Storage, Ingestion, Transformation, Serving) flow left to right across the top; beneath them, all six undercurrents (Security, Data Management, DataOps, Data Architecture, Orchestration, Software Engineering) are drawn as full-width horizontal bands, each spanning the entire lifecycle to show it runs continuously beneath every stage.">
+<text x="56" y="20" font-size="11" font-family="var(--font)" fill="#5AC8FF" letter-spacing="2" font-weight="700">THE LIFECYCLE — five stages, left to right</text>
+<rect x="56" y="30" width="140" height="44" rx="8" fill="#5C78FF" fill-opacity="0.10" stroke="#5C78FF" stroke-width="1.6"/>
+<text x="126" y="57" text-anchor="middle" font-size="12" font-family="var(--font)" fill="#fff">Generation</text>
+<rect x="218" y="30" width="140" height="44" rx="8" fill="#5C78FF" fill-opacity="0.10" stroke="#5C78FF" stroke-width="1.6"/>
+<text x="288" y="57" text-anchor="middle" font-size="12" font-family="var(--font)" fill="#fff">Storage</text>
+<rect x="380" y="30" width="140" height="44" rx="8" fill="#5C78FF" fill-opacity="0.10" stroke="#5C78FF" stroke-width="1.6"/>
+<text x="450" y="57" text-anchor="middle" font-size="12" font-family="var(--font)" fill="#fff">Ingestion</text>
+<rect x="542" y="30" width="140" height="44" rx="8" fill="#5C78FF" fill-opacity="0.10" stroke="#5C78FF" stroke-width="1.6"/>
+<text x="612" y="57" text-anchor="middle" font-size="12" font-family="var(--font)" fill="#fff">Transformation</text>
+<rect x="704" y="30" width="140" height="44" rx="8" fill="#5C78FF" fill-opacity="0.10" stroke="#5C78FF" stroke-width="1.6"/>
+<text x="774" y="57" text-anchor="middle" font-size="12" font-family="var(--font)" fill="#fff">Serving</text>
+<line x1="196" y1="52" x2="212" y2="52" stroke="#5C78FF" stroke-width="1.6"/>
+<polygon points="218,52 210,47 210,57" fill="#5C78FF"/>
+<line x1="358" y1="52" x2="374" y2="52" stroke="#5C78FF" stroke-width="1.6"/>
+<polygon points="380,52 372,47 372,57" fill="#5C78FF"/>
+<line x1="520" y1="52" x2="536" y2="52" stroke="#5C78FF" stroke-width="1.6"/>
+<polygon points="542,52 534,47 534,57" fill="#5C78FF"/>
+<line x1="682" y1="52" x2="698" y2="52" stroke="#5C78FF" stroke-width="1.6"/>
+<polygon points="704,52 696,47 696,57" fill="#5C78FF"/>
+<line x1="207" y1="80" x2="207" y2="100" stroke="#5AC8FF" stroke-width="1" stroke-dasharray="2 5" opacity="0.30"/><line x1="207" y1="140" x2="207" y2="374" stroke="#5AC8FF" stroke-width="1" stroke-dasharray="2 5" opacity="0.30"/>
+<line x1="369" y1="80" x2="369" y2="100" stroke="#5AC8FF" stroke-width="1" stroke-dasharray="2 5" opacity="0.30"/><line x1="369" y1="140" x2="369" y2="374" stroke="#5AC8FF" stroke-width="1" stroke-dasharray="2 5" opacity="0.30"/>
+<line x1="531" y1="80" x2="531" y2="100" stroke="#5AC8FF" stroke-width="1" stroke-dasharray="2 5" opacity="0.30"/><line x1="531" y1="140" x2="531" y2="374" stroke="#5AC8FF" stroke-width="1" stroke-dasharray="2 5" opacity="0.30"/>
+<line x1="693" y1="80" x2="693" y2="100" stroke="#5AC8FF" stroke-width="1" stroke-dasharray="2 5" opacity="0.30"/><line x1="693" y1="140" x2="693" y2="374" stroke="#5AC8FF" stroke-width="1" stroke-dasharray="2 5" opacity="0.30"/>
+<line x1="56" y1="104" x2="844" y2="104" stroke="#5AC8FF" stroke-width="1.2" stroke-dasharray="7 5" opacity="0.55"/>
+<text x="56" y="126" font-size="11" font-family="var(--font)" fill="#5AC8FF" letter-spacing="2" font-weight="700">THE SIX UNDERCURRENTS — each runs continuously beneath every stage</text>
+<rect x="56" y="140" width="788" height="34" rx="8" fill="#5AC8FF" fill-opacity="0.08" stroke="#5AC8FF" stroke-width="1.4"/>
+<text x="74" y="162" text-anchor="start" font-size="12.5" font-family="var(--font)" fill="#E7E7EE" font-weight="700">Security</text>
+<rect x="56" y="180" width="788" height="34" rx="8" fill="#5AC8FF" fill-opacity="0.08" stroke="#5AC8FF" stroke-width="1.4"/>
+<text x="74" y="202" text-anchor="start" font-size="12.5" font-family="var(--font)" fill="#E7E7EE" font-weight="700">Data Mgmt</text>
+<rect x="56" y="220" width="788" height="34" rx="8" fill="#5AC8FF" fill-opacity="0.08" stroke="#5AC8FF" stroke-width="1.4"/>
+<text x="74" y="242" text-anchor="start" font-size="12.5" font-family="var(--font)" fill="#E7E7EE" font-weight="700">DataOps</text>
+<rect x="56" y="260" width="788" height="34" rx="8" fill="#5AC8FF" fill-opacity="0.08" stroke="#5AC8FF" stroke-width="1.4"/>
+<text x="74" y="282" text-anchor="start" font-size="12.5" font-family="var(--font)" fill="#E7E7EE" font-weight="700">Data Arch</text>
+<rect x="56" y="300" width="788" height="34" rx="8" fill="#5AC8FF" fill-opacity="0.08" stroke="#5AC8FF" stroke-width="1.4"/>
+<text x="74" y="322" text-anchor="start" font-size="12.5" font-family="var(--font)" fill="#E7E7EE" font-weight="700">Orchestration</text>
+<rect x="56" y="340" width="788" height="34" rx="8" fill="#5AC8FF" fill-opacity="0.08" stroke="#5AC8FF" stroke-width="1.4"/>
+<text x="74" y="362" text-anchor="start" font-size="12.5" font-family="var(--font)" fill="#E7E7EE" font-weight="700">Software Eng</text>
+</svg>
+<figcaption>The lifecycle runs left-to-right along the top; each of the six undercurrents is a full-width band beneath it — a reminder they cut across generation, storage, ingestion, transformation and serving all at once, continuously.</figcaption>
+</figure>
+
+<div class="callout gd reveal">
+<p><b>Why this matters more as you scale:</b> at a two-person data team, weak undercurrents are annoying but survivable — everyone knows where the bodies are buried. As a team grows and the maturity model in <a href="#s04">Section 04</a> moves from "Starting with Data" toward "Leading with Data," the cost of ignoring undercurrents compounds: untested pipelines multiply, undocumented tables become landmines, and access sprawl becomes a genuine security incident waiting to happen. Mature data organizations are distinguished less by fancier tools and more by how seriously they treat these six concerns.</p>
+</div>
+<!-- END s03 -->
+
+<!-- START s04 -->
+<p class="promptline">~/data-eng <b>❯</b> from firefighting to a genuine data-driven flywheel</p>
+<h2 id="s04" class="reveal"><span class="hico"><svg class="ico"><use href="#i-user"/></svg></span><span class="n">04.</span> Data Maturity &amp; the Data Engineer&#x27;s Place on a Team</h2>
+<p class="sectionsub reveal">Where a team sits on the maturity curve shapes what a data engineer is actually asked to do.</p>
+
+<div class="prose reveal">
+<p>Not every organization needs — or can support — the same kind of data engineering. Reis and Housley describe a three-stage data maturity model that maps roughly to how much an organization has invested in, and benefited from, its data capabilities. Recognizing which stage your own organization sits in is one of the more useful diagnostic exercises a data engineer can run, because the "right" architecture and the "right" undercurrent investment (<a href="#s03">Section 03</a>) look very different at each stage.</p>
+<p><b>Stage 1, Starting with Data,</b> is ad hoc and reactive: reporting is manual, pipelines are fragile one-off scripts, and there's often no single person or team formally responsible for data. <b>Stage 2, Scaling with Data,</b> is where a formal data team and real tooling appear — but the team is still frequently firefighting, and technical debt accumulates almost as fast as new capability. <b>Stage 3, Leading with Data,</b> is where data becomes a genuine competitive advantage: automation is the default, self-service analytics actually works, and the organization's culture treats data-informed decisions as normal rather than exceptional.</p>
+</div>
+
+<div class="tablewrap reveal">
+<table>
+<tr><th>Dimension</th><th>Stage 1 — Starting</th><th>Stage 2 — Scaling</th><th>Stage 3 — Leading</th></tr>
+<tr><td><b>Team structure</b></td><td>No dedicated data team; whoever's available reports numbers</td><td>Formal data team exists, often centralized and overloaded</td><td>Federated or platform-plus-embedded model; clear ownership</td></tr>
+<tr><td><b>Typical tooling</b></td><td>Spreadsheets, manual exports, one-off scripts</td><td>A warehouse, some orchestration, growing tool sprawl</td><td>Standardized modern data stack, strong self-service layer</td></tr>
+<tr><td><b>Process maturity</b></td><td>Reactive, no testing, no documented ownership</td><td>Some automation and DataOps, but mostly reactive</td><td>Proactive DataOps, tested and monitored pipelines</td></tr>
+<tr><td><b>Data culture</b></td><td>Data is an afterthought or a compliance chore</td><td>Data is valued but often bottlenecked on one team</td><td>Data-informed decisions are the norm across the business</td></tr>
+</table>
+</div>
+
+<div class="prose reveal">
+<h3 class="reveal">Where the Data Engineer Sits</h3>
+<p>A data engineer typically reports into a Head of Data, a Chief Data Officer, or a VP of Engineering, depending on how the organization has decided to structure its data function. Day to day, though, the role is defined less by the reporting line and more by its collaborations: data scientists depend on the engineer for reliable, feature-ready data; analytics engineers depend on well-organized raw sources to model into marts; software engineers need the data engineer to respect production system boundaries when ingesting from operational databases; ML engineers need consistent, low-latency feature delivery; and business stakeholders need someone who can translate a vague ask ("can we see which customers are at risk of churning") into a concrete data product.</p>
+<p>The book is direct about one failure mode here: the <b>ivory-tower anti-pattern</b>, where data engineers build technically impressive pipelines in isolation from the people who actually need the data, guided only by their own assumptions about what "good" looks like. The fix isn't more engineering — it's more conversation. Understanding what a stakeholder actually needs, and why, before writing a line of pipeline code is one of the highest-leverage habits a data engineer can build.</p>
+</div>
+
+<figure class="diagram reveal">
+<svg viewBox="0 0 900 320" role="img" aria-label="Hub-and-spoke diagram with Data Engineer at the center, connected to Business Stakeholder above, Data Scientist and Analytics Engineer on the left, and Software Engineer and ML Engineer on the right, each connection labeled with the relationship.">
+  <rect x="370" y="155" width="160" height="50" rx="8" fill="var(--cyan2)" fill-opacity="0.2" stroke="var(--cyan2)" stroke-width="2"/>
+  <text x="450" y="184" text-anchor="middle" font-size="13" font-family="var(--font)" fill="var(--ink)">Data Engineer</text>
+
+  <rect x="350" y="25" width="200" height="50" rx="8" fill="none" stroke="var(--muted)" stroke-width="1.5"/>
+  <text x="450" y="54" text-anchor="middle" font-size="13" font-family="var(--font)" fill="#E7E7EE">Business Stakeholder</text>
+
+  <rect x="20" y="105" width="200" height="50" rx="8" fill="none" stroke="var(--muted)" stroke-width="1.5"/>
+  <text x="120" y="134" text-anchor="middle" font-size="13" font-family="var(--font)" fill="#E7E7EE">Data Scientist</text>
+
+  <rect x="20" y="245" width="200" height="50" rx="8" fill="none" stroke="var(--muted)" stroke-width="1.5"/>
+  <text x="120" y="274" text-anchor="middle" font-size="13" font-family="var(--font)" fill="#E7E7EE">Analytics Engineer</text>
+
+  <rect x="680" y="105" width="200" height="50" rx="8" fill="none" stroke="var(--muted)" stroke-width="1.5"/>
+  <text x="780" y="134" text-anchor="middle" font-size="13" font-family="var(--font)" fill="#E7E7EE">Software Engineer</text>
+
+  <rect x="680" y="245" width="200" height="50" rx="8" fill="none" stroke="var(--muted)" stroke-width="1.5"/>
+  <text x="780" y="274" text-anchor="middle" font-size="13" font-family="var(--font)" fill="#E7E7EE">ML Engineer</text>
+
+  <line x1="450" y1="155" x2="450" y2="75" stroke="var(--dim)" stroke-width="1.5"/>
+  <text x="462" y="109" text-anchor="start" font-size="11" font-family="var(--font)" fill="#E7E7EE">aligns on needs</text>
+
+  <line x1="370" y1="165" x2="220" y2="130" stroke="var(--dim)" stroke-width="1.5"/>
+  <text x="295" y="136" text-anchor="middle" font-size="11" font-family="var(--font)" fill="#E7E7EE">curates data</text>
+
+  <line x1="370" y1="195" x2="220" y2="270" stroke="var(--dim)" stroke-width="1.5"/>
+  <text x="295" y="199" text-anchor="middle" font-size="11" font-family="var(--font)" fill="#E7E7EE">hands off data</text>
+
+  <line x1="530" y1="165" x2="680" y2="130" stroke="var(--dim)" stroke-width="1.5"/>
+  <text x="605" y="136" text-anchor="middle" font-size="11" font-family="var(--font)" fill="#E7E7EE">shares schemas</text>
+
+  <line x1="530" y1="195" x2="680" y2="270" stroke="var(--dim)" stroke-width="1.5"/>
+  <text x="605" y="199" text-anchor="middle" font-size="11" font-family="var(--font)" fill="#E7E7EE">feeds features</text>
+</svg>
+<figcaption>The data engineer sits at the center of a web of stakeholders — the job requires translating what each of them needs, not just moving data in isolation.</figcaption>
+</figure>
+
+<div class="tablewrap reveal">
+<table>
+<tr><th>Technical Skills</th><th>Business / Soft Skills</th></tr>
+<tr><td>SQL and at least one general-purpose language (usually Python)</td><td>Stakeholder communication — translating vague asks into concrete requirements</td></tr>
+<tr><td>Distributed systems fundamentals (partitioning, consistency, fault tolerance)</td><td>Cost awareness — understanding what a query or pipeline actually costs to run</td></tr>
+<tr><td>Cloud platform proficiency (storage, compute, networking, identity and access management / IAM)</td><td>Domain knowledge — enough context about the business to spot a wrong number</td></tr>
+<tr><td>Orchestration and workflow tooling (Airflow, Dagster, or equivalent)</td><td>Prioritization — knowing which pipeline actually matters this sprint</td></tr>
+</table>
+</div>
+
+<div class="callout mg reveal">
+<p><b>Anti-pattern to avoid:</b> building "for the architecture" instead of for the business. A pipeline that is technically elegant but answers a question nobody asked is worse than a scrappy one that ships the number a stakeholder actually needs this week. Maturity (per the table above) is ultimately measured by outcomes, not by how sophisticated the stack looks.</p>
+</div>
+<!-- END s04 -->
+<!-- START s05 -->
+<p class="promptline">~/data-eng <b>❯</b> architecture is a verb, not a diagram</p>
+<h2 id="s05" class="reveal"><span class="hico"><svg class="ico"><use href="#i-blocks"/></svg></span><span class="n">05.</span> Designing Good Data Architecture — Principles</h2>
+<p class="sectionsub reveal">Architecture as a series of trade-off decisions, not a picture you draw once and frame on the wall</p>
+<div class="prose reveal">
+<p>In Reis and Housley's framing, <b>data architecture</b> is the design of systems that support an organization's current and evolving data needs — a synthesis of the business's requirements with the practical realities of the tools, teams, and time available to build with. It is not a fixed blueprint copied from a vendor's reference diagram, and it is not something a single senior architect hands down from on high. It is the accumulated result of many decisions, most of which should be made deliberately, evaluated against real trade-offs, and revisited as circumstances change.</p>
+<p>Because almost every architecture decision trades one property for another — cost for latency, simplicity for flexibility, speed for durability — the book proposes nine principles as a shared vocabulary for making those trade-offs well. They are not a checklist to satisfy once; they are lenses to keep reapplying as the lifecycle (<a href="#s02">Section 02</a>) and the undercurrents (<a href="#s03">Section 03</a>) evolve underneath the architecture.</p>
+</div>
+<div class="tablewrap reveal">
+<table>
+<tr><th>Principle</th><th>What it means in practice</th><th>Concrete example</th></tr>
+<tr><td>1. Choose common components wisely</td><td>Standardize shared, reusable infrastructure — storage, orchestration, monitoring — that any team with a valid need can adopt, instead of every team quietly building its own one-off stack</td><td>Standardizing on one orchestrator and one object-storage convention company-wide instead of five teams each picking a different scheduler</td></tr>
+<tr><td>2. Plan for failure</td><td>Assume networks, disks, APIs, and jobs will fail, and design for graceful degradation and recovery instead of hoping for uninterrupted uptime</td><td>Writing ingestion jobs to be idempotent and retryable so a mid-run crash can simply be re-run without duplicating records</td></tr>
+<tr><td>3. Architect for scalability</td><td>Design systems that scale elastically up and down with real demand, avoiding both under-provisioning and paying for permanently idle capacity</td><td>Using auto-scaling compute for a month-end close job that briefly needs ten times the normal processing power</td></tr>
+<tr><td>4. Architecture is leadership</td><td>The architect's real job is communication, mentorship, and negotiating trade-offs among stakeholders — not solitary diagram-drawing</td><td>Running a cross-team workshop to agree on a shared event schema, rather than dictating one unilaterally</td></tr>
+<tr><td>5. Always be architecting</td><td>Treat architecture as a continuous, iterative practice that adapts with the business — never a one-time deliverable frozen at kickoff</td><td>Revisiting the ingestion layer's design every quarter as new source systems and data volumes come online</td></tr>
+<tr><td>6. Build loosely coupled systems</td><td>Minimize hard dependencies between components so teams can change, replace, or scale one part without a coordinated rewrite of everything else</td><td>See the <span class="tag xform">def</span> block below</td></tr>
+<tr><td>7. Make reversible decisions</td><td>Prefer choices that are cheap to undo over choices that lock the organization in, since most technology decisions will eventually need to change</td><td>Storing data in an open, standard format so it can be read by whichever query engine turns out to be best in two years</td></tr>
+<tr><td>8. Prioritize security</td><td>Apply least-privilege access, encryption, and security review at every lifecycle stage by default, not as a reaction after an incident</td><td>Giving pipeline owners direct responsibility for access scoping instead of treating security as purely a separate team's job</td></tr>
+<tr><td>9. Embrace FinOps</td><td>Track and forecast cloud spend the same way engineering tracks latency or uptime, making cost a first-class, ongoing engineering metric</td><td>Tagging every pipeline by team and project so a sudden compute-cost spike can be traced to its owner within minutes</td></tr>
+</table>
+</div>
+<div class="def reveal">
+<p class="t">Loosely coupled systems</p>
+<p>A system is loosely coupled when its components interact only through well-defined, stable interfaces — and know as little as possible about each other's internals. Changing, redeploying, or even replacing one component should not require a synchronized change to the others, as long as everyone still honors the shared contract.</p>
+<p class="ex"><b>Example:</b> if the orders service and the analytics pipeline communicate only through a versioned event schema on a message bus, the orders team can rewrite their entire service internals next quarter and the analytics team never has to know, as long as the events keep the same shape.</p>
+</div>
+<figure class="diagram reveal">
+<svg viewBox="0 0 900 300" role="img" aria-label="Comparison of a tightly coupled system with many crossing point-to-point dependencies versus a loosely coupled system where services connect through one shared interface">
+<text x="147" y="30" font-size="13" font-family="var(--font)" fill="var(--ink)" text-anchor="middle">Tightly coupled</text>
+<text x="680" y="30" font-size="13" font-family="var(--font)" fill="var(--ink)" text-anchor="middle">Loosely coupled</text>
+<line x1="460" y1="40" x2="460" y2="270" stroke="var(--dim)" stroke-width="1.5"/>
+<rect x="25" y="50" width="100" height="45" rx="8" fill="none" stroke="var(--warn)" stroke-width="1.5"/>
+<text x="75" y="77" font-size="12" font-family="var(--font)" fill="#E7E7EE" text-anchor="middle">Service A</text>
+<rect x="170" y="50" width="100" height="45" rx="8" fill="none" stroke="var(--warn)" stroke-width="1.5"/>
+<text x="220" y="77" font-size="12" font-family="var(--font)" fill="#E7E7EE" text-anchor="middle">Service B</text>
+<rect x="25" y="180" width="100" height="45" rx="8" fill="none" stroke="var(--warn)" stroke-width="1.5"/>
+<text x="75" y="207" font-size="12" font-family="var(--font)" fill="#E7E7EE" text-anchor="middle">Service C</text>
+<rect x="170" y="180" width="100" height="45" rx="8" fill="none" stroke="var(--warn)" stroke-width="1.5"/>
+<text x="220" y="207" font-size="12" font-family="var(--font)" fill="#E7E7EE" text-anchor="middle">Service D</text>
+<line x1="125" y1="72" x2="170" y2="72" stroke="var(--warn)" stroke-width="1.3" opacity="0.75"/>
+<line x1="75" y1="95" x2="220" y2="180" stroke="var(--warn)" stroke-width="1.3" opacity="0.75"/>
+<line x1="220" y1="95" x2="75" y2="180" stroke="var(--warn)" stroke-width="1.3" opacity="0.75"/>
+<line x1="125" y1="202.5" x2="170" y2="202.5" stroke="var(--warn)" stroke-width="1.3" opacity="0.75"/>
+<line x1="125" y1="85" x2="125" y2="190" stroke="var(--warn)" stroke-width="1.3" opacity="0.75"/>
+<rect x="500" y="45" width="100" height="45" rx="8" fill="none" stroke="var(--good)" stroke-width="1.5"/>
+<text x="550" y="72" font-size="12" font-family="var(--font)" fill="#E7E7EE" text-anchor="middle">Service X</text>
+<rect x="500" y="190" width="100" height="45" rx="8" fill="none" stroke="var(--good)" stroke-width="1.5"/>
+<text x="550" y="217" font-size="12" font-family="var(--font)" fill="#E7E7EE" text-anchor="middle">Service Y</text>
+<rect x="760" y="117" width="100" height="45" rx="8" fill="none" stroke="var(--good)" stroke-width="1.5"/>
+<text x="810" y="144" font-size="12" font-family="var(--font)" fill="#E7E7EE" text-anchor="middle">Service Z</text>
+<rect x="630" y="117" width="100" height="45" rx="8" fill="none" stroke="var(--cyan2)" stroke-width="1.5"/>
+<text x="680" y="144" font-size="12" font-family="var(--font)" fill="var(--ink)" text-anchor="middle">Event bus</text>
+<line x1="600" y1="67.5" x2="630" y2="130" stroke="var(--good)" stroke-width="1.4"/>
+<line x1="600" y1="212.5" x2="630" y2="150" stroke="var(--good)" stroke-width="1.4"/>
+<line x1="760" y1="139.5" x2="730" y2="139.5" stroke="var(--good)" stroke-width="1.4"/>
+</svg>
+<figcaption>Fewer, cleaner dependency paths through a shared interface are easier to change than a tangle of direct point-to-point links.</figcaption>
+</figure>
+<div class="callout wn reveal">
+<h4>The over-architecting trap</h4>
+<p>Principle 7 cuts both ways. It is just as expensive to build in flexibility or scale the business does not yet need as it is to lock yourself into a rigid system — both are decisions that are costly to unwind. A team that spends months building a multi-region, infinitely-scalable event mesh for a product with a few hundred daily users has made an "irreversible" investment of a different kind: sunk engineering time, and often a more complex system that is now harder to change than a plain, boring one would have been. Architect for the scale and flexibility you can reasonably foresee, not for a hypothetical future.</p>
+</div>
+<div class="callout gd reveal">
+<h4>A concrete reversible decision</h4>
+<p>Storing raw and modeled data in an open table format with standard SQL as the primary interface (rather than a proprietary storage engine with its own export-limited format) is a textbook reversible decision. If a better or cheaper query engine appears in three years, the data can simply be pointed at it. Compare that to a proprietary format with no straightforward export path: switching later means a costly migration project, not a config change — see <a href="#s06">Section 06</a> for how open table formats put this into practice.</p>
+</div>
+<!-- END s05 -->
+
+<!-- START s06 -->
+<p class="promptline">~/data-eng <b>❯</b> warehouse, lake, lakehouse, mesh — pick your battles</p>
+<h2 id="s06" class="reveal"><span class="hico"><svg class="ico"><use href="#i-blocks"/></svg></span><span class="n">06.</span> Major Architecture Patterns: Warehouse, Lake, Lakehouse &amp; Mesh</h2>
+<p class="sectionsub reveal">Four recurring shapes for organizing data at scale, each with its own failure modes</p>
+<div class="prose reveal">
+<p>Most real-world data platforms are variations on a small number of recurring architecture patterns. None of them is universally "correct" — each represents a different set of trade-offs among structure, governance, flexibility, and organizational scale, echoing the trade-off mindset from <a href="#s05">Section 05</a>. Understanding where each pattern came from and where it tends to break down is more useful than memorizing a single "modern" answer.</p>
+</div>
+<h3 class="reveal">The data warehouse: Inmon vs. Kimball</h3>
+<div class="prose reveal">
+<p>The data warehouse emerged to serve analytical (OLAP) workloads — aggregations and scans across large volumes of history — separately from the operational (OLTP) systems tuned for fast, small, transactional reads and writes. Two competing philosophies shaped how warehouses got built. <b>Bill Inmon's</b> top-down approach starts with a single normalized enterprise data warehouse modeling the whole business, from which downstream, denormalized data marts are later derived for specific teams. <b>Ralph Kimball's</b> bottom-up approach instead builds dimensional data marts first — fast, pragmatic, tied to specific business processes — and conforms their shared dimensions over time into a de facto enterprise view. In practice, most real warehouses borrow from both: some centrally modeled core tables, plus pragmatic marts layered on top.</p>
+</div>
+<h3 class="reveal">The data lake and the "data swamp" risk</h3>
+<div class="prose reveal">
+<p>The data lake pattern stores raw data cheaply and at scale in object storage, deferring schema decisions to read time (schema-on-read) rather than enforcing structure at write time. This gives enormous flexibility — any data, any format, any volume — but that same flexibility is the pattern's biggest risk: without deliberate organization, a lake accumulates undocumented, untrustworthy files and becomes a <b>data swamp</b>. A widely used convention (not a rule from the book itself, but a common industry pattern) organizes lake storage into zones — often called <b>raw/bronze</b> (unmodified source data), <b>cleaned/silver</b> (validated, deduplicated, typed), and <b>curated/gold</b> (business-ready, aggregated) — to keep the lake navigable as it grows.</p>
+</div>
+<h3 class="reveal">The data lakehouse</h3>
+<div class="prose reveal">
+<p>The lakehouse pattern layers <b>open table formats</b> — Apache Iceberg, Delta Lake, and Apache Hudi are the three dominant implementations — on top of plain object storage. These formats add transaction logs that provide ACID (atomicity, consistency, isolation, durability) guarantees, enforced (and evolvable) schemas, and time travel to prior table states, all features previously exclusive to warehouses. The practical payoff is that one copy of data, sitting in cheap object storage, can serve both BI/SQL workloads and ML/feature-engineering workloads, instead of duplicating data into a separate warehouse for one audience and a lake for the other (details on file and table formats in <a href="#s09">Section 09</a>). Through 2025–2026 the industry trend has continued toward reducing lock-in between engines: Iceberg's REST catalog standard and Delta Lake's UniForm interoperability layer both aim to let multiple query engines read the same physical tables without conversion, pushing the ecosystem closer to genuinely engine-agnostic storage.</p>
+</div>
+<h3 class="reveal">Data mesh</h3>
+<div class="prose reveal">
+<p>Data mesh, as articulated by Zhamak Dehghani, addresses an organizational bottleneck rather than a storage-technology problem: a single central data team struggling to serve an entire large organization. It rests on four principles: <b>domain-oriented ownership</b> (the teams closest to a data source own its data products), <b>data as a product</b> (data is published with the same rigor as a customer-facing product — documented, discoverable, with quality SLAs, or service-level agreements, defining what "reliable" means), <b>self-serve data platform</b> (central platform teams provide infrastructure so domains don't each reinvent pipelines), and <b>federated computational governance</b> (global standards enforced through automation, not a central approval queue). Mesh can run on top of a warehouse, a lake, or a lakehouse — it is a socio-technical operating model layered over whichever storage pattern an organization already has.</p>
+</div>
+<h3 class="reveal">Lambda vs. Kappa: reconciling batch and real time</h3>
+<div class="prose reveal">
+<p>Two architectural answers exist for systems that must serve both historical and real-time views. <b>Lambda architecture</b> runs a batch layer and a separate speed (streaming) layer in parallel, later reconciling their outputs into a merged serving layer — powerful but operationally heavy, since the same logic often has to be implemented and kept consistent twice. <b>Kappa architecture</b> simplifies this by treating batch as a special case of streaming: a single streaming pipeline (with replay from a durable log) handles both real-time and historical processing, at the cost of requiring a stream-processing engine capable of efficient large-scale reprocessing.</p>
+</div>
+<div class="tablewrap reveal">
+<table>
+<tr><th>Pattern</th><th>Data structure</th><th>Typical governance model</th><th>Best-fit use case</th><th>Main risk if done poorly</th></tr>
+<tr><td class="cell-store">Warehouse</td><td>Structured, schema-on-write, modeled</td><td>Centralized, strong schema control</td><td>Stable BI reporting and dashboards</td><td>Slow to adapt; expensive at very large or unstructured scale</td></tr>
+<tr><td class="cell-store">Lake</td><td>Any format, schema-on-read</td><td>Loose, often ad hoc</td><td>ML feature stores, exploratory analytics, archival</td><td>Becomes an unusable "data swamp" without zone discipline</td></tr>
+<tr><td class="cell-xform">Lakehouse</td><td>Structured tables over open files, ACID</td><td>Centralized catalog, evolvable schema</td><td>Unified BI + ML on one copy of data</td><td>Table-format sprawl or catalog fragmentation across teams</td></tr>
+<tr><td class="cell-serve">Mesh</td><td>Varies per domain, standardized contracts</td><td>Federated, automated global policy</td><td>Large orgs where one central team can't scale</td><td>Domains ignore shared standards; governance becomes chaos</td></tr>
+</table>
+</div>
+<figure class="diagram reveal">
+<svg viewBox="0 0 900 300" role="img" aria-label="Three stacked layers of a data lakehouse: object storage at the bottom, an open table format in the middle adding ACID transactions, schema, and time travel, and query engines on top">
+<rect x="60" y="60" width="650" height="50" rx="8" fill="none" stroke="var(--serve)" stroke-width="1.6"/>
+<text x="385" y="89" font-size="13" font-family="var(--font)" fill="var(--ink)" text-anchor="middle">Query engines — SQL, BI, ML</text>
+<rect x="60" y="140" width="650" height="50" rx="8" fill="none" stroke="var(--xform)" stroke-width="1.6"/>
+<text x="385" y="158" font-size="13" font-family="var(--font)" fill="var(--ink)" text-anchor="middle">Open table format</text>
+<text x="385" y="176" font-size="13" font-family="var(--font)" fill="var(--ink)" text-anchor="middle">Iceberg · Delta · Hudi</text>
+<rect x="60" y="220" width="650" height="50" rx="8" fill="none" stroke="var(--store)" stroke-width="1.6"/>
+<text x="385" y="249" font-size="13" font-family="var(--font)" fill="var(--ink)" text-anchor="middle">Object storage (files)</text>
+<line x1="150" y1="220" x2="150" y2="200" stroke="var(--cyan2)" stroke-width="1.6"/>
+<polygon points="150,190 145,200 155,200" fill="var(--cyan2)"/>
+<line x1="150" y1="140" x2="150" y2="120" stroke="var(--cyan2)" stroke-width="1.6"/>
+<polygon points="150,110 145,120 155,120" fill="var(--cyan2)"/>
+<line x1="723" y1="163" x2="712" y2="163" stroke="var(--xform)" stroke-width="1.4"/>
+<polygon points="710,163 718,159 718,167" fill="var(--xform)"/>
+<text x="725" y="150" font-size="12" font-family="var(--font)" fill="#E7E7EE" text-anchor="start">ACID + schema</text>
+<text x="725" y="165" font-size="12" font-family="var(--font)" fill="#E7E7EE" text-anchor="start">+ time travel</text>
+<text x="725" y="180" font-size="12" font-family="var(--font)" fill="#E7E7EE" text-anchor="start">added here</text>
+</svg>
+<figcaption>The open table format is the thin layer that turns plain files into transactional tables, letting one storage copy serve both BI and ML.</figcaption>
+</figure>
+<div class="callout mg reveal">
+<h4>Data mesh is not a product</h4>
+<p>No vendor sells "a data mesh" the way one sells a warehouse engine or a table format. Mesh is fundamentally an organizational and cultural shift — about who owns data, how it's published, and how governance is enforced across domains. Any team that buys a platform and declares "we did data mesh" without changing ownership structures and incentives has bought infrastructure, not adopted the pattern.</p>
+</div>
+<!-- END s06 -->
+
+<!-- START s07 -->
+<p class="promptline">~/data-eng <b>❯</b> choose technology like you'll have to live with it</p>
+<h2 id="s07" class="reveal"><span class="hico"><svg class="ico"><use href="#i-blocks"/></svg></span><span class="n">07.</span> Choosing Technologies Across the Lifecycle</h2>
+<p class="sectionsub reveal">A tool-agnostic framework for deciding what to adopt, and when to say no</p>
+<div class="prose reveal">
+<p>The data engineering landscape reinvents its tooling every few years, which makes any specific product recommendation a poor long-term investment. What holds up instead is a repeatable framework for evaluating technology choices at every lifecycle stage (<a href="#s02">Section 02</a>): a small set of questions that apply whether the decision is a database, an orchestrator, or a BI tool, and whether the year is 2022 or 2030.</p>
+<p>The framework is deliberately not a scorecard that spits out one right answer — it is a way of surfacing trade-offs explicitly so a team makes them on purpose instead of by default. It also ties directly back to <a href="#s05">Section 05</a>'s reversibility principle: the technology decision itself should be evaluated for how expensive it will be to unwind later, not just how well it performs today.</p>
+</div>
+<div class="tablewrap reveal">
+<table>
+<tr><th>Decision factor</th><th>Question to ask</th><th>Example trade-off</th></tr>
+<tr><td>Team size &amp; skill set</td><td>Do we have — or can we realistically hire — people who can operate this well long-term?</td><td>A two-person data team adopting a complex self-hosted streaming platform may spend more time on operations than on delivering value</td></tr>
+<tr><td>Speed to market</td><td>How fast do we need this live, and what does waiting cost the business?</td><td>A managed service can be live in weeks; an equivalent custom build might take one or two quarters</td></tr>
+<tr><td>Interoperability</td><td>Does this integrate cleanly with our existing storage, catalog, and orchestration tools?</td><td>A tool with only proprietary connectors can strand data from the rest of the stack</td></tr>
+<tr><td>Total cost of ownership</td><td>What is the full cost — licensing, infrastructure, and the engineering time to run it?</td><td>A "free" self-hosted open-source tool can cost more in maintenance hours than a paid managed alternative</td></tr>
+<tr><td>Build vs. buy</td><td>Is this capability a genuine competitive differentiator, or a problem others have already solved well?</td><td>Building a custom orchestrator rarely beats adopting a mature one; building a proprietary risk model might be worth the investment</td></tr>
+<tr><td>Location (on-prem / cloud / hybrid / multi-cloud)</td><td>Where do data residency, latency, or existing infrastructure commitments push us?</td><td>Regulatory data-residency requirements may force on-premises or in-country cloud regions regardless of preference</td></tr>
+<tr><td>Durable vs. transitory primitives</td><td>Will this still be relevant in five years, or is it this year's trend?</td><td>Standard SQL and open file/table formats tend to outlive most proprietary query engines built on top of them</td></tr>
+</table>
+</div>
+<figure class="diagram reveal">
+<svg viewBox="0 0 900 320" role="img" aria-label="Decision flow for adopting a new data technology: a new capability need branches on whether it is a core business differentiator into build in-house or buy a managed service, both converging into periodic re-evaluation">
+<rect x="340" y="30" width="220" height="45" rx="8" fill="none" stroke="var(--muted)" stroke-width="1.6"/>
+<text x="450" y="57" font-size="13" font-family="var(--font)" fill="var(--ink)" text-anchor="middle">New capability needed</text>
+<line x1="400" y1="75" x2="250" y2="150" stroke="var(--muted)" stroke-width="1.4"/>
+<polygon points="250,150 259,142 261,150" fill="var(--muted)"/>
+<line x1="500" y1="75" x2="650" y2="150" stroke="var(--muted)" stroke-width="1.4"/>
+<polygon points="650,150 641,142 639,150" fill="var(--muted)"/>
+<text x="330" y="105" font-size="12" font-family="var(--font)" fill="#E7E7EE" text-anchor="end">Yes — differentiator</text>
+<text x="570" y="105" font-size="12" font-family="var(--font)" fill="#E7E7EE" text-anchor="start">No — commodity</text>
+<rect x="120" y="150" width="260" height="50" rx="8" fill="none" stroke="var(--blue)" stroke-width="1.6"/>
+<text x="250" y="180" font-size="12" font-family="var(--font)" fill="var(--ink)" text-anchor="middle">Build / customize in-house</text>
+<rect x="520" y="150" width="260" height="50" rx="8" fill="none" stroke="var(--cyan)" stroke-width="1.6"/>
+<text x="650" y="180" font-size="12" font-family="var(--font)" fill="var(--ink)" text-anchor="middle">Buy / use managed service</text>
+<line x1="250" y1="200" x2="400" y2="245" stroke="var(--muted)" stroke-width="1.4"/>
+<polygon points="400,245 389,247 392,237" fill="var(--muted)"/>
+<line x1="650" y1="200" x2="500" y2="245" stroke="var(--muted)" stroke-width="1.4"/>
+<polygon points="500,245 511,247 508,237" fill="var(--muted)"/>
+<rect x="300" y="245" width="300" height="55" rx="8" fill="none" stroke="var(--good)" stroke-width="1.6"/>
+<text x="450" y="270" font-size="12" font-family="var(--font)" fill="var(--ink)" text-anchor="middle">Re-evaluate periodically</text>
+<text x="450" y="286" font-size="12" font-family="var(--font)" fill="#E7E7EE" text-anchor="middle">(always be architecting)</text>
+</svg>
+<figcaption>Whichever path is chosen, the loop closes back into periodic re-evaluation — the decision is never really final.</figcaption>
+</figure>
+<div class="callout wn reveal">
+<h4>Vendor lock-in via speed to market</h4>
+<p>Optimizing purely for speed to market often means accepting a vendor's proprietary formats, APIs, or query dialect to get moving fast. That is a legitimate trade-off if made consciously — but teams frequently make it by default, without weighing the migration cost against the time saved. A fast decision that is expensive to reverse violates the spirit of <a href="#s05">Section 05</a>'s reversibility principle even if it never appears on a risk register.</p>
+</div>
+<div class="callout gd reveal">
+<h4>Favor boring technology</h4>
+<p>The "boring technology" principle: reserve genuinely novel, unproven technology for the small number of areas that are an actual competitive differentiator, and default to mature, well-understood, widely supported tools for everything else. A team has a limited budget of organizational attention and operational risk it can spend on the unfamiliar — spend it where it earns the business something distinctive, not on reinventing a message queue or a scheduler.</p>
+</div>
+<!-- END s07 -->
+<!-- START s08 -->
+<p class="promptline">~/data-eng <b>❯</b> mapping the systems that create your data</p>
+<h2 id="s08" class="reveal"><span class="hico"><svg class="ico"><use href="#i-database"/></svg></span><span class="n">08.</span> Data Generation in Source Systems</h2>
+<p class="sectionsub reveal">You don't design the source system — you inherit whatever schema, volume, and reliability it gives you.</p>
+<p class="reveal"><span class="tag gen">Lifecycle stage: Generation</span></p>
+<div class="prose reveal">
+<p>Every data pipeline starts somewhere it doesn't control. Before a single row reaches a warehouse or lakehouse, it was created by a source system — an application database recording a purchase, a mobile app emitting a tap event, a sensor reporting a temperature, a SaaS vendor exposing an API. Those systems were almost never designed with analytics in mind. They were designed by application engineers to do one job well: serve a product, process a transaction, keep a service running. Data engineers are, in the book's framing, consumers of someone else's system — and the first real skill of the job is evaluating that system honestly before deciding how to ingest from it.</p>
+<p>That evaluation has to look past "what tables exist" and into how the system actually behaves. Is the schema fixed and enforced, or does it change without warning because a document store lets application engineers add fields at will? Is data mostly appended once and left alone, or are rows updated and deleted constantly, which changes what "capturing the data" even means? What volume and velocity does it produce on an ordinary day versus a peak day? What latency does the business genuinely need — not what sounds impressive — and what consistency guarantees does the source actually offer once you start reading from replicas instead of the primary?</p>
+<p>The variety of source systems a data platform touches is wide: relational OLTP databases behind core applications, NoSQL stores behind newer or higher-throughput services, third-party APIs and SaaS platforms whose schemas you don't control at all, application and clickstream logs generated at high volume with little structure, IoT and sensor devices streaming continuously over unreliable networks, and flat files handed over by partners on whatever schedule suits them. Each shows up at the ingestion boundary (see <a href="#s10">Section 10</a>) looking nothing like the others.</p>
+</div>
+<div class="def reveal">
+<p class="t">OLTP vs. OLAP</p>
+<p>OLTP (Online Transaction Processing) systems are built to record many small transactions quickly and reliably — a core banking system posting one debit and one credit per transfer, over and over, correctly and fast. OLAP (Online Analytical Processing) systems are built for the opposite workload: scanning and aggregating large volumes of historical data to answer broad questions.</p>
+<p class="ex"><b>Example —</b> a core banking database is OLTP: it optimizes for "update this one account balance correctly, right now." A data warehouse built from years of that same ledger data is OLAP: it optimizes for "sum every transaction across every account for the last five years." Most of data engineering is the safe, repeatable movement of data from the OLTP world into the OLAP world.</p>
+</div>
+<h3 class="reveal">What to evaluate before you ingest anything</h3>
+<div class="kv reveal">
+<p><b>Schema</b> — fixed and enforced (relational), or flexible/schemaless (document, key-value)?</p>
+<p><b>Creation pattern</b> — mostly append-only inserts, or frequent updates and deletes to existing rows?</p>
+<p><b>Volume &amp; velocity</b> — megabytes a day, or terabytes an hour?</p>
+<p><b>Latency requirement</b> — does the business genuinely need this in seconds, or is daily/hourly actually fine?</p>
+<p><b>Consistency guarantees</b> — strongly consistent reads, or eventually-consistent replicas that can lag?</p>
+</div>
+<div class="tablewrap reveal">
+<table>
+<tr><th>Source system type</th><th>Typical / illustrative technology</th><th>Data characteristics</th><th>Main ingestion challenge</th></tr>
+<tr><td class="cell-gen">OLTP application database</td><td>PostgreSQL, MySQL, SQL Server-style</td><td>Fixed relational schema; frequent row-level updates and deletes</td><td>Capturing changes without degrading production performance</td></tr>
+<tr><td class="cell-gen">NoSQL / document store</td><td>MongoDB, DynamoDB, Cassandra-style</td><td>Flexible/schemaless documents, nested structures, high write throughput</td><td>Schema drift; nested data needs flattening before it's queryable</td></tr>
+<tr><td class="cell-gen">Third-party API / SaaS platform</td><td>CRM, payments, HR-style REST APIs</td><td>Vendor-defined schema, paginated, rate-limited</td><td>Rate limits and schema changes entirely outside your control</td></tr>
+<tr><td class="cell-gen">App / clickstream logs</td><td>Web and mobile event tracking</td><td>High volume, append-only, semi-structured (JSON)</td><td>Volume plus inconsistent event schemas across app releases</td></tr>
+<tr><td class="cell-gen">IoT / sensor devices</td><td>Sensors and edge gateways connected via MQTT (a lightweight machine-to-machine messaging protocol)</td><td>Continuous small messages, time-series, variable connectivity</td><td>Out-of-order delivery, dropped connections, clock skew</td></tr>
+<tr><td class="cell-gen">Partner flat files</td><td>CSV / Excel via SFTP (secure file transfer) or email</td><td>Irregular delivery, manual formatting, no schema contract</td><td>No enforced schema; late, missing, or malformed files</td></tr>
+</table>
+</div>
+<figure class="diagram reveal">
+<svg viewBox="0 0 900 300" role="img" aria-label="Five different source systems — app database, SaaS or API, IoT sensors, partner files, and an event stream — each with an arrow converging into a single ingestion boundary box, arriving at staggered heights matching each source.">
+  <rect x="20" y="20" width="170" height="36" rx="4" fill="none" stroke="var(--gen)" stroke-width="1.5"/>
+  <text x="105" y="43" text-anchor="middle" font-size="12" font-family="var(--font)" fill="var(--ink)">App Database</text>
+
+  <rect x="20" y="76" width="170" height="36" rx="4" fill="none" stroke="var(--gen)" stroke-width="1.5"/>
+  <text x="105" y="99" text-anchor="middle" font-size="12" font-family="var(--font)" fill="var(--ink)">SaaS / API</text>
+
+  <rect x="20" y="132" width="170" height="36" rx="4" fill="none" stroke="var(--gen)" stroke-width="1.5"/>
+  <text x="105" y="155" text-anchor="middle" font-size="12" font-family="var(--font)" fill="var(--ink)">IoT Sensors</text>
+
+  <rect x="20" y="188" width="170" height="36" rx="4" fill="none" stroke="var(--gen)" stroke-width="1.5"/>
+  <text x="105" y="211" text-anchor="middle" font-size="12" font-family="var(--font)" fill="var(--ink)">Partner Files</text>
+
+  <rect x="20" y="244" width="170" height="36" rx="4" fill="none" stroke="var(--gen)" stroke-width="1.5"/>
+  <text x="105" y="267" text-anchor="middle" font-size="12" font-family="var(--font)" fill="var(--ink)">Event Stream</text>
+
+  <rect x="650" y="20" width="200" height="260" rx="4" fill="none" stroke="var(--ingest)" stroke-width="1.5"/>
+  <text x="750" y="141" text-anchor="middle" font-size="13" font-family="var(--font)" fill="var(--ink)">Ingestion</text>
+  <text x="750" y="159" text-anchor="middle" font-size="13" font-family="var(--font)" fill="var(--ink)">boundary</text>
+  <text x="750" y="181" text-anchor="middle" font-size="11" font-family="var(--font)" fill="#E7E7EE">(see Section 10)</text>
+
+  <line x1="190" y1="38" x2="640" y2="38" stroke="var(--muted)" stroke-width="1.5"/>
+  <polygon points="650,38 640,33 640,43" fill="var(--muted)"/>
+
+  <line x1="190" y1="94" x2="640" y2="94" stroke="var(--muted)" stroke-width="1.5"/>
+  <polygon points="650,94 640,89 640,99" fill="var(--muted)"/>
+
+  <line x1="190" y1="150" x2="640" y2="150" stroke="var(--muted)" stroke-width="1.5"/>
+  <polygon points="650,150 640,145 640,155" fill="var(--muted)"/>
+
+  <line x1="190" y1="206" x2="640" y2="206" stroke="var(--muted)" stroke-width="1.5"/>
+  <polygon points="650,206 640,201 640,211" fill="var(--muted)"/>
+
+  <line x1="190" y1="262" x2="640" y2="262" stroke="var(--muted)" stroke-width="1.5"/>
+  <polygon points="650,262 640,257 640,267" fill="var(--muted)"/>
+</svg>
+<figcaption>Data engineers ingest from systems they rarely control — each source carries its own schema, update pattern, and reliability profile before it ever crosses the ingestion boundary.</figcaption>
+</figure>
+<div class="callout cy reveal">
+<p><b>Illustrative example —</b> picture a retail bank's data platform team ingesting from four very different source systems in the same week: a core banking ledger database (strict relational schema, append-heavy but with occasional reversals, near-zero tolerance for a missed transaction), a card-switch transaction feed (high-velocity, near-real-time, semi-structured messages arriving from a payment network), a mobile banking app's clickstream events (bursty, a schema that shifts with every app release, more useful for product analytics than finance), and scanned KYC documents from branch onboarding (unstructured files, irregular arrival, unreadable until OCR — optical character recognition — runs). None of these was designed with the data platform in mind — each was built by a different team to solve a different problem, and the data engineer inherits whatever schema, volume, and reliability profile results. This is a generic illustrative scenario, not a description of any specific institution's actual systems.</p>
+</div>
+<!-- END s08 -->
+
+<!-- START s09 -->
+<p class="promptline">~/data-eng <b>❯</b> from spinning disks to open table formats</p>
+<h2 id="s09" class="reveal"><span class="hico"><svg class="ico"><use href="#i-file"/></svg></span><span class="n">09.</span> Storage: Raw Ingredients, Files &amp; Table Formats</h2>
+<p class="sectionsub reveal">Storage is not one thing — it's a stack of layers, and each layer adds a different capability.</p>
+<p class="reveal"><span class="tag store">Lifecycle stage: Storage</span></p>
+<div class="prose reveal">
+<p>Storage sits underneath nearly every other stage of the data engineering lifecycle, which is why the book treats it as a foundation rather than a single technology choice. At the bottom is physical media — disk, SSD, memory — with real trade-offs in cost, speed, and durability. On top of that sits a file format, which decides how bytes are laid out on that media. On top of the file format sits a table format, a metadata layer that turns a pile of files into something that behaves like an actual database table. And on top of all of that sit the query engines that read and write through the whole stack.</p>
+<p>Object storage has become the default base layer for analytical data over the last decade, and for good reason: it is durable (data is typically replicated across multiple zones), cheap relative to block storage, scales to enormous volumes without capacity planning, and — critically — decouples storage from compute, so you can scale the two independently instead of buying bigger servers just to hold more data.</p>
+</div>
+<div class="tablewrap reveal">
+<table>
+<tr><th>Storage medium</th><th>Cost</th><th>Speed</th><th>Durability</th><th>Typical use</th></tr>
+<tr><td class="cell-store">Magnetic disk (HDD)</td><td>Lowest per GB</td><td>Slowest (mechanical seek)</td><td>Good while powered; wears under heavy use</td><td>Cold storage, backups, bulk archives</td></tr>
+<tr><td class="cell-store">SSD</td><td>Moderate-to-high per GB</td><td>Fast, no moving parts</td><td>Good; finite write cycles</td><td>Databases, hot data, indexes</td></tr>
+<tr><td class="cell-store">Memory (RAM)</td><td>Highest per GB</td><td>Fastest</td><td>Volatile — lost on power loss</td><td>Caches, in-memory processing, stream buffers</td></tr>
+<tr><td class="cell-store">Object storage (S3-style)</td><td>Low, pay-for-what-you-use</td><td>Slower per request, scales horizontally</td><td>Very high — replicated across zones</td><td>Data lakes, lakehouse tables, the default analytical store</td></tr>
+</table>
+</div>
+<div class="def reveal">
+<p class="t">Row-based vs. columnar storage</p>
+<p>Row-based formats (CSV, JSON, Avro) store every field of one record together, which suits workloads that read or write a whole record at a time — exactly what an OLTP application does. Columnar formats (Parquet, ORC) store every value of one column together across all records, which suits analytical queries that touch only a handful of columns across a huge number of rows.</p>
+<p class="ex"><b>Example —</b> a table has a billion rows and 40 columns, and an analyst asks for the average transaction amount by month. A row-based file forces a scan that reads all 40 columns for all billion rows just to reach the one column it needs. A columnar file lets the engine read only the amount and date columns, skipping the other 38 entirely — often an order-of-magnitude reduction in bytes read.</p>
+</div>
+<h3 class="reveal">Table formats: metadata that turns files into a table</h3>
+<div class="prose reveal">
+<p>A file format alone doesn't give you a table — it gives you a folder full of Parquet files. A table format is the metadata layer on top that adds the things a database traditionally provided: ACID transactions (so a writer failing halfway through doesn't leave the table half-updated), schema enforcement and evolution (so adding a column doesn't break every existing reader), time travel (querying the table as it looked at a previous point), and safe concurrent access from multiple engines reading and writing the same underlying files.</p>
+<p>Three open table formats dominate current practice, and the book's own preference is to stay format-neutral rather than pick a winner — the right choice depends on existing tooling and engine mix. Apache Iceberg originated at Netflix and is now developed as an Apache project with broad backing across many query engines; it's generally recognized for a well-specified, engine-agnostic metadata layer and mature support for large-scale schema and partition evolution. Delta Lake originated at Databricks and is open-sourced under the Linux Foundation; it's generally recognized for its tight integration with Spark-based pipelines and its mature transaction log. Apache Hudi originated at Uber and is also an Apache project; it's generally recognized for strong support of incremental upserts and streaming or CDC-style ingestion directly into the lake.</p>
+<p>Through 2025 and into 2026, the practical cost of choosing among the three has been dropping: REST-based catalogs and cross-format conversion layers increasingly let a table written in one format be read by engines built around another, reducing the lock-in risk that made this choice feel so consequential a few years earlier. Sitting alongside all of this is the data catalog — the metadata layer that makes stored tables discoverable, documented, and governed, covered in more depth in <a href="#s14">Section 14</a>.</p>
+</div>
+<div class="tablewrap reveal">
+<table>
+<tr><th>Table format</th><th>Origin / community</th><th>Notable strength</th><th>Good fit for</th></tr>
+<tr><td class="cell-xform">Apache Iceberg</td><td>Netflix; now a broad multi-vendor Apache project</td><td>Engine-agnostic spec; strong schema/partition evolution</td><td>Lakehouses read and written by several different engines</td></tr>
+<tr><td class="cell-xform">Delta Lake</td><td>Databricks; open-sourced via the Linux Foundation</td><td>Deep, mature integration with Spark-based pipelines</td><td>Teams standardized on a Spark-centric stack</td></tr>
+<tr><td class="cell-xform">Apache Hudi</td><td>Uber; Apache project</td><td>Efficient incremental upserts, streaming/CDC ingestion</td><td>Near-real-time ingestion with frequent row-level updates</td></tr>
+</table>
+</div>
+<figure class="diagram reveal">
+<svg viewBox="0 0 900 300" role="img" aria-label="A four-layer storage stack from bottom to top: object storage, file format, table format, and query engines, each annotated with the capability it adds.">
+  <rect x="150" y="230" width="460" height="50" rx="4" fill="none" stroke="var(--store)" stroke-width="1.5"/>
+  <text x="380" y="259" text-anchor="middle" font-size="12" font-family="var(--font)" fill="var(--ink)">Object storage (S3-style)</text>
+  <text x="630" y="259" font-size="11" font-family="var(--font)" fill="#E7E7EE">+ durable, cheap bytes</text>
+
+  <rect x="150" y="160" width="460" height="50" rx="4" fill="none" stroke="var(--cyan2)" stroke-width="1.5"/>
+  <text x="380" y="189" text-anchor="middle" font-size="12" font-family="var(--font)" fill="var(--ink)">File format — Parquet / ORC</text>
+  <text x="630" y="189" font-size="11" font-family="var(--font)" fill="#E7E7EE">+ columnar compression</text>
+
+  <rect x="150" y="90" width="460" height="50" rx="4" fill="none" stroke="var(--xform)" stroke-width="1.5"/>
+  <text x="380" y="119" text-anchor="middle" font-size="12" font-family="var(--font)" fill="var(--ink)">Table format — Iceberg / Delta / Hudi</text>
+  <text x="630" y="119" font-size="11" font-family="var(--font)" fill="#E7E7EE">+ ACID, time travel</text>
+
+  <rect x="150" y="20" width="460" height="50" rx="4" fill="none" stroke="var(--serve)" stroke-width="1.5"/>
+  <text x="380" y="49" text-anchor="middle" font-size="12" font-family="var(--font)" fill="var(--ink)">Query engines</text>
+  <text x="630" y="49" font-size="11" font-family="var(--font)" fill="#E7E7EE">+ SQL and compute</text>
+</svg>
+<figcaption>Object storage, file format, table format, and query engine are separable layers of the storage stack — you can often swap one without disturbing the others.</figcaption>
+</figure>
+<div class="callout gd reveal">
+<p><b>Why time travel matters —</b> because table formats keep a versioned history of every commit to a table, you can query it exactly as it looked at a past point in time. That matters far beyond curiosity: when a downstream number looks wrong, time travel lets you compare today's table state against yesterday's to isolate exactly what changed, and auditors or regulators can be shown precisely what a table contained on a given date — reproducibility that a plain folder of files can't offer.</p>
+</div>
+<!-- END s09 -->
+
+<!-- START s10 -->
+<p class="promptline">~/data-eng <b>❯</b> getting data across the boundary, reliably</p>
+<h2 id="s10" class="reveal"><span class="hico"><svg class="ico"><use href="#i-network"/></svg></span><span class="n">10.</span> Ingestion: Batch, Streaming, CDC &amp; ETL vs ELT</h2>
+<p class="sectionsub reveal">The real question isn't "batch or streaming" — it's "how fast does this actually need to be?"</p>
+<p class="reveal"><span class="tag ingest">Lifecycle stage: Ingestion</span></p>
+<div class="prose reveal">
+<p>Ingestion is the stage that physically moves data across the boundary from a source system (<a href="#s08">Section 08</a>) into storage (<a href="#s09">Section 09</a>) that the data platform controls. The most visible design choice is batch versus streaming: batch ingestion collects bounded chunks of data — an hour's worth, a day's worth — and moves them on a schedule; streaming ingestion treats data as an unbounded, continuous flow and moves each event (or small micro-batch of events) with much lower latency. Batch is simpler to build, cheaper to run, and easier to debug; streaming is more operationally complex — more moving parts, more ways to fail — but delivers data with far less delay. The book's advice is blunt: don't default to streaming because it sounds more impressive. Most analytical use cases tolerate minutes or hours of latency just fine, and the added complexity of streaming should be justified by an actual business requirement.</p>
+<p>Ingestion also has a direction: push systems have the source actively send data to you (a webhook firing on an event, an application publishing to a queue), while pull systems have the ingestion layer reach out and request data on its own schedule (an API poller, a scheduled query against a source database). Most real pipelines use a mix, depending on what each source system supports.</p>
+<p>Before picking any specific tool, the book frames ingestion as a set of questions worth answering explicitly: is the data bounded or unbounded? What frequency does the business genuinely require, versus what sounds impressive? Is the interaction synchronous or asynchronous? What serialization format is the data in, and does it need to change along the way? What throughput and scalability does the pipeline need to sustain, including at peak? And what reliability and durability guarantees exist if a network call fails or a consumer crashes mid-read?</p>
+</div>
+<h3 class="reveal">Change Data Capture</h3>
+<div class="def reveal">
+<p class="t">Change Data Capture (CDC)</p>
+<p>CDC is a family of techniques for capturing only the rows that changed in a source system — inserts, updates, and deletes — instead of repeatedly copying an entire table. It turns "what does this table look like right now?" into a continuous stream of "what just changed?", which is both cheaper and far more timely for large, frequently updated tables.</p>
+<p class="ex"><b>Example —</b> instead of re-exporting a 200-million-row accounts table every night just to catch the handful of accounts that changed, a CDC connector emits a small, continuous stream of only those changed rows, which downstream systems apply as updates.</p>
+</div>
+<div class="prose reveal">
+<p>There are three common ways to implement CDC, and they differ mainly in where they get their signal from. Log-based CDC reads a database's own transaction (write-ahead) log — the same log the database uses internally for replication and crash recovery — which makes it the lowest-overhead and most reliable approach, since it doesn't touch live tables at all; tools like Debezium work this way. Trigger-based CDC attaches database triggers to fire on every insert, update, and delete, writing the change to a separate change table; it's straightforward to reason about but adds real overhead to every write on the source database. Diff or query-based CDC periodically queries a table filtered by an <code>updated_at</code> or version column; it's the simplest to build with no special database features required, but it can miss deletes entirely (a deleted row leaves nothing to query for) and adds recurring load from repeated polling.</p>
+</div>
+<div class="tablewrap reveal">
+<table>
+<tr><th>CDC approach</th><th>How it works</th><th>Overhead on source</th><th>Catches deletes?</th></tr>
+<tr><td class="cell-ingest">Log-based</td><td>Reads the database's transaction/write-ahead log</td><td>Very low — doesn't query live tables</td><td>Yes</td></tr>
+<tr><td class="cell-ingest">Trigger-based</td><td>Triggers fire on write and record changes to a change table</td><td>High — every write pays the trigger's cost</td><td>Yes</td></tr>
+<tr><td class="cell-ingest">Diff / query-based</td><td>Polls rows filtered by an updated-at or version column</td><td>Low build cost, but adds recurring query load</td><td>No — a deleted row leaves nothing to find</td></tr>
+</table>
+</div>
+<pre class="reveal"><code><span class="c1"># Illustrative log-based CDC connector configuration</span>
+connector.class: io.debezium.connector.postgresql.PostgresConnector
+database.hostname: core-banking-db.internal
+database.dbname: ledger
+table.include.list: public.accounts, public.transactions
+plugin.name: pgoutput
+<span class="c1"># Emits one change event per row-level insert, update, or delete</span>
+topic.prefix: ledger.cdc
+</code></pre>
+<figure class="diagram reveal">
+<svg viewBox="0 0 940 260" role="img" aria-label="Log-based CDC flow: source database writes to its transaction log, a CDC connector reads that log, and publishes changes to a message queue or target table.">
+  <rect x="20" y="100" width="180" height="60" rx="4" fill="none" stroke="var(--gen)" stroke-width="1.5"/>
+  <text x="110" y="134" text-anchor="middle" font-size="12" font-family="var(--font)" fill="var(--ink)">Source database</text>
+
+  <rect x="240" y="100" width="180" height="60" rx="4" fill="none" stroke="var(--muted)" stroke-width="1.5"/>
+  <text x="330" y="134" text-anchor="middle" font-size="12" font-family="var(--font)" fill="var(--ink)">Transaction log</text>
+
+  <rect x="460" y="100" width="170" height="60" rx="4" fill="none" stroke="var(--ingest)" stroke-width="1.5"/>
+  <text x="545" y="134" text-anchor="middle" font-size="12" font-family="var(--font)" fill="var(--ink)">CDC connector</text>
+
+  <rect x="670" y="100" width="260" height="60" rx="4" fill="none" stroke="var(--ingest)" stroke-width="1.5"/>
+  <text x="800" y="134" text-anchor="middle" font-size="12" font-family="var(--font)" fill="var(--ink)">Message queue / target table</text>
+
+  <line x1="200" y1="130" x2="232" y2="130" stroke="var(--muted)" stroke-width="1.5"/>
+  <polygon points="240,130 232,125 232,135" fill="var(--muted)"/>
+
+  <line x1="420" y1="130" x2="452" y2="130" stroke="var(--muted)" stroke-width="1.5"/>
+  <polygon points="460,130 452,125 452,135" fill="var(--muted)"/>
+
+  <line x1="630" y1="130" x2="662" y2="130" stroke="var(--muted)" stroke-width="1.5"/>
+  <polygon points="670,130 662,125 662,135" fill="var(--muted)"/>
+</svg>
+<figcaption>Log-based CDC reads the database's own transaction log, so it captures every insert, update, and delete without adding load to live queries.</figcaption>
+</figure>
+<h3 class="reveal">Message queues and the publish/subscribe pattern</h3>
+<div class="prose reveal">
+<p>Streaming ingestion is usually backed by a message queue or event-streaming platform — Kafka, Kinesis, Pub/Sub-style systems, described generically here since the book stays tool-neutral. These systems implement a publish/subscribe pattern: producers publish events to a named topic without knowing who will read them, and consumers subscribe to the topics they care about, each processing events independently and at their own pace. This decoupling is what lets one stream of events feed several different downstream systems — a real-time fraud check, an analytics pipeline, and an archival job — without the producer knowing any of them exist.</p>
+</div>
+<h3 class="reveal">ETL, ELT, and EtLT</h3>
+<div class="prose reveal">
+<p>The other major ingestion-adjacent decision is where transformation happens relative to loading. In ETL (Extract, Transform, Load), data is transformed in a separate processing layer before it ever lands in the target system — common when storage was expensive and warehouses had limited compute. In ELT (Extract, Load, Transform), raw data is loaded first and transformed afterward, inside the warehouse or lakehouse itself, using its own elastic compute. ELT became the dominant pattern as cloud object storage made holding raw data cheap and cloud warehouses made on-demand transformation compute abundant — there was no longer a strong reason to transform before you could afford to store the raw version. EtLT is a hybrid: a light transformation happens before load — commonly PII (personally identifiable information) masking, deduplication, or basic type conformance — with the heavier business-logic transformation still happening after load, closer to where analysts and modeling tools (<a href="#s11">Section 11</a>) work.</p>
+</div>
+<div class="tablewrap reveal">
+<table>
+<tr><th>Pattern</th><th>Where transformation happens</th><th>Typical tooling</th><th>Best fit</th><th>Main trade-off</th></tr>
+<tr><td class="cell-xform">ETL</td><td>Before loading, in a separate layer</td><td>Hand-coded pipelines, traditional ETL tools</td><td>Strict schema control before data lands; regulated data</td><td>Slower to change; harder to version and rerun</td></tr>
+<tr><td class="cell-xform">ELT</td><td>After loading, inside the warehouse/lakehouse</td><td>dbt-style SQL transformations on warehouse compute</td><td>Cloud warehouses/lakehouses with elastic compute</td><td>Raw, possibly sensitive data lands before it's cleaned</td></tr>
+<tr><td class="cell-xform">EtLT</td><td>Light transform before load, heavier transform after</td><td>Ingestion tool masks/standardizes, then a transform layer runs</td><td>Needing PII masking or conformance before data is visible</td><td>Adds a second transformation stage to design and maintain</td></tr>
+</table>
+</div>
+<div class="callout wn reveal">
+<p><b>The trigger-based CDC trap —</b> trigger-based CDC is tempting because it needs no special database configuration, but every insert, update, and delete on the source table now also pays the cost of firing a trigger and writing to a change table. On a busy production OLTP database — a core banking system processing thousands of transactions a second, for instance — that overhead compounds, and it's not unusual for trigger-based CDC to visibly slow down the very application it was meant to observe. Log-based CDC avoids this because it reads a log the database already maintains for its own purposes.</p>
+</div>
+<div class="callout gd reveal">
+<p><b>Idempotent ingestion —</b> at-least-once delivery means a message might be delivered more than once after a retry; exactly-once delivery means it's delivered precisely once, but is much harder to guarantee end-to-end and often comes with a performance cost. Most real pipelines build on at-least-once delivery and make the ingestion step idempotent instead — writing changes so that applying the same event twice produces the same result as applying it once (for example, an upsert keyed on a stable event ID, rather than a blind append). That way, when a pipeline retries after a crash or a network failure, it doesn't silently double-count data.</p>
+</div>
+<!-- END s10 -->
+<!-- START s11 -->
+<p class="promptline">~/data-eng <b>❯</b> model the warehouse before you query it</p>
+<h2 id="s11" class="reveal"><span class="hico"><svg class="ico"><use href="#i-file"/></svg></span><span class="n">11.</span> Queries, Modeling &amp; Transformation</h2>
+<p class="sectionsub reveal">Shaping data so it can be queried fast, and so five people who ask the same question get the same answer.</p>
+<div class="prose reveal">
+<p>Once data has landed in a warehouse or lakehouse (see <a href="#s10">Section 10</a>), two questions follow immediately: how do we query it efficiently, and how do we structure it so that "revenue last quarter" means the same thing to every analyst who asks? The first question is about <b>query performance</b>; the second is about <b>data modeling</b>. Neither is glamorous, but together they determine whether a data platform is fast, trustworthy, and maintainable — or a slow, contradictory mess that people quietly route around with their own spreadsheets.</p>
+<p>Query optimization is worth a light pass. Modern query engines lean on <b>predicate pushdown</b> (filtering rows as close to storage as possible, before they are pulled into memory), <b>partition pruning</b> (skipping entire files or partitions that cannot match a filter, e.g. querying <code>WHERE order_date = '2026-07-01'</code> against data partitioned by date), and <b>column pruning</b> in columnar formats (reading only the columns a query actually references instead of full rows). Reading an execution plan — even at a glance — tells you whether the engine is doing a targeted scan or a brute-force full-table scan, which is usually the single biggest lever on cost and latency. But performance tuning is secondary to a harder problem: deciding <i>how tables relate to each other</i> in the first place. That is what data modeling solves, and the field has produced several durable, competing answers.</p>
+</div>
+<h3 class="reveal">From Normalization to Dimensional Modeling</h3>
+<div class="prose reveal">
+<p>Operational (OLTP) systems normalize their schemas — organizing tables so each fact lives in exactly one place, formalized through 1NF (atomic column values, no repeating groups), 2NF (no attribute depends on only part of a composite key), and 3NF (no attribute depends on a non-key attribute). Normalization exists to prevent <b>update anomalies</b>: if a customer's address is stored in twenty rows, an update has to hit all twenty consistently or the data drifts. That discipline is exactly right for a system processing thousands of small transactional writes per second. It is often exactly wrong for a system whose job is to answer analytical questions over billions of rows, because every normalized join adds cost. Analytical modeling therefore branched into several distinct schools of thought, each still actively used today.</p>
+</div>
+<div class="tablewrap reveal">
+<table>
+<tr><th>Approach</th><th>Core philosophy</th><th>Best fit</th><th>Main trade-off</th></tr>
+<tr><td><span class="cell-store">Inmon (EDW)</span></td><td>Top-down: one normalized enterprise data warehouse as the single source of truth; dependent marts are derived from it</td><td>Large, governance-heavy organizations wanting one authoritative model</td><td>Slow to build; requires enterprise-wide agreement before value is delivered</td></tr>
+<tr><td><span class="cell-xform">Kimball (dimensional)</span></td><td>Bottom-up: denormalized star schemas built incrementally per business process, joined through conformed dimensions</td><td>BI and reporting workloads that need fast, intuitive, self-service queries</td><td>Some redundancy; conforming dimensions across processes takes discipline</td></tr>
+<tr><td><span class="cell-ingest">Data Vault</span></td><td>Hubs, links, and satellites capture business keys, relationships, and history separately, insulated from source-system change</td><td>Fast-changing source systems; regulated environments needing full auditability</td><td>Highly normalized; needs a further modeling layer (often Kimball-style) before it's analyst-friendly</td></tr>
+<tr><td><span class="cell-serve">One Big Table (OBT)</span></td><td>A pattern popularized by the modern columnar-warehouse era rather than a book-named school: bottom-up denormalization into a single wide table per business entity or event, minimizing joins at query time</td><td>Columnar cloud warehouses and BI tools where storage is cheap and joins are relatively expensive</td><td>Redundant storage; every consumer inherits one team's grain and definitions</td></tr>
+</table>
+</div>
+<div class="def reveal">
+<p class="t">Star Schema</p>
+<p>The signature output of dimensional modeling: a central <b>fact table</b> holding numeric measurements or events at a defined <b>grain</b> — grain means what one row represents, e.g. one row per line item rather than one row per order — surrounded by <b>dimension tables</b> holding the descriptive context needed to slice and filter those facts. The fact table is typically long and narrow with foreign keys plus measures; dimensions are wide and relatively short, full of readable attributes analysts filter and group by.</p>
+<p class="ex"><b>Example:</b> a <code>fact_sales</code> table with one row per line item (date key, product key, store key, customer key, quantity, revenue) joined to <code>dim_date</code>, <code>dim_product</code>, <code>dim_store</code>, and <code>dim_customer</code> — so "revenue by product category last month" is a single join against <code>dim_product</code>, instead of chasing the same answer through several normalized source tables.</p>
+</div>
+<figure class="diagram reveal">
+<svg viewBox="0 0 900 300" role="img" aria-label="Star schema diagram showing a central sales fact table connected to four surrounding dimension tables: date, customer, product, and store">
+<rect x="370" y="115" width="160" height="70" rx="6" fill="none" stroke="var(--xform)" stroke-width="2"/>
+<text x="450" y="148" text-anchor="middle" font-size="13" font-family="var(--font)" fill="var(--ink)">Sales Fact Table</text>
+<text x="450" y="168" text-anchor="middle" font-size="12" font-family="var(--font)" fill="#E7E7EE">qty • revenue</text>
+
+<rect x="370" y="25" width="160" height="50" rx="6" fill="none" stroke="var(--cyan2)" stroke-width="2"/>
+<text x="450" y="55" text-anchor="middle" font-size="13" font-family="var(--font)" fill="var(--ink)">Dim: Date</text>
+
+<rect x="370" y="225" width="160" height="50" rx="6" fill="none" stroke="var(--cyan2)" stroke-width="2"/>
+<text x="450" y="255" text-anchor="middle" font-size="13" font-family="var(--font)" fill="var(--ink)">Dim: Customer</text>
+
+<rect x="70" y="115" width="160" height="70" rx="6" fill="none" stroke="var(--cyan2)" stroke-width="2"/>
+<text x="150" y="155" text-anchor="middle" font-size="13" font-family="var(--font)" fill="var(--ink)">Dim: Product</text>
+
+<rect x="670" y="115" width="160" height="70" rx="6" fill="none" stroke="var(--cyan2)" stroke-width="2"/>
+<text x="750" y="155" text-anchor="middle" font-size="13" font-family="var(--font)" fill="var(--ink)">Dim: Store</text>
+
+<line x1="450" y1="115" x2="450" y2="75" stroke="var(--muted)" stroke-width="1.5"/>
+<line x1="450" y1="185" x2="450" y2="225" stroke="var(--muted)" stroke-width="1.5"/>
+<line x1="370" y1="150" x2="230" y2="150" stroke="var(--muted)" stroke-width="1.5"/>
+<line x1="530" y1="150" x2="670" y2="150" stroke="var(--muted)" stroke-width="1.5"/>
+</svg>
+<figcaption>A star schema keeps one lean fact table at the center and pushes all descriptive context into surrounding dimensions, so most analytical questions resolve in a single join.</figcaption>
+</figure>
+<div class="prose reveal">
+<p>Two mechanics come up constantly in dimensional models. <b>Slowly Changing Dimensions (SCD)</b> handle the fact that descriptive attributes change over time: <b>SCD Type 1</b> simply overwrites the old value (you lose history, but the model stays simple — fine for correcting a typo in a customer's name); <b>SCD Type 2</b> inserts a new row with new effective-date bounds and keeps the old row intact (you preserve history — necessary when "what did this customer's tier look like at the time of the order" actually matters). Data Vault, by contrast, separates the stable business key (hub) from its relationships (links) and from every version of its descriptive attributes (satellites), which makes it resilient to upstream schema churn and easy to audit, at the cost of needing a Kimball- or OBT-style layer on top before it's pleasant for analysts to query directly.</p>
+</div>
+<h3 class="reveal">Batch, Streaming, and the Semantic Layer</h3>
+<div class="prose reveal">
+<p>The "T" in ELT is most often executed today as SQL-based batch transformation: a tool reads raw or lightly-modeled tables, applies a chain of SQL models, runs automated tests against the results, and generates a <b>lineage</b> graph — a map of which tables and columns a given dataset was derived from, and everything downstream that depends on it — a pattern popularized by <span class="tag xform">dbt</span>-style tooling but not unique to any single product. Streaming transformation solves a related but distinct problem: computing aggregates over data that never stops arriving, using <b>windowing</b> — grouping continuous events into fixed chunks for aggregation, e.g. non-overlapping "tumbling" windows, overlapping "sliding" windows, or activity-bounded "session" windows — and <b>watermarks</b> (a heuristic for how long to wait for late-arriving events before considering a window "closed") — see <a href="#s10">Section 10</a> for the ingestion side of that story.</p>
+<p>A newer layer sits above both: the <b>semantic (metrics) layer</b>, a pattern seen in dbt's Semantic Layer, LookML, and Cube. It defines a metric like "active customer" or "net revenue" exactly once — including its filters, joins, and time grain — and lets every downstream BI tool query that single definition instead of re-implementing it in SQL five separate times.</p>
+</div>
+<pre class="reveal"><code><span class="c1">-- illustrative dbt-style transformation model: models/marts/fct_daily_revenue.sql</span>
+<span class="c1">-- reads a cleaned orders table and rolls it up to one row per store per day</span>
+with orders as (
+    select * from {{ ref('stg_orders') }}
+    where order_status = 'completed'
+)
+
+select
+    order_date,
+    store_id,
+    count(distinct order_id)      as order_count,
+    sum(net_amount)               as net_revenue,
+    sum(net_amount) / count(distinct order_id) as avg_order_value
+from orders
+group by 1, 2
+</code></pre>
+<div class="callout wn reveal">
+<p><b>The five-dashboards trap.</b> Without a shared metric definition, "monthly active users" ends up computed slightly differently in five dashboards — one excludes trial accounts, one uses UTC and another local time, one counts logins and another counts any event. Every number is individually defensible and collectively useless the moment two of them appear in the same meeting. A semantic layer doesn't add a new feature so much as it removes five silent, competing implementations of the same idea.</p>
+</div>
+<!-- END s11 -->
+
+<!-- START s12 -->
+<p class="promptline">~/data-eng <b>❯</b> ship the answer to where the decision actually happens</p>
+<h2 id="s12" class="reveal"><span class="hico"><svg class="ico"><use href="#i-blocks"/></svg></span><span class="n">12.</span> Serving Data: Analytics, ML &amp; Reverse ETL</h2>
+<p class="sectionsub reveal">The last-mile stage of the lifecycle — where curated data finally becomes someone's dashboard, model, or CRM field.</p>
+<div class="prose reveal">
+<p><span class="tag serve">Serving</span> is the payoff stage of the data engineering lifecycle: everything upstream — generation, storage, ingestion, transformation — exists to produce data that is trustworthy enough to hand to a human decision-maker, a customer-facing product, or a machine learning model. It is also the stage where requirements diverge most sharply, because "serving data" covers everything from a monthly board report to a fraud check that must resolve in milliseconds. Getting the architecture right means matching each consumer to a serving pattern with the right latency, freshness, and access characteristics — not defaulting every use case to "put it in the warehouse and let people query it."</p>
+<p>The most familiar pattern is <b>BI and self-service analytics</b>: dashboards and ad hoc query tools sitting on top of curated marts or an OBT layer, used by analysts and business stakeholders for retrospective and strategic questions. <b>Embedded analytics</b> takes the same underlying data and surfaces it inside a customer-facing product itself — a usage-statistics panel inside a SaaS app, for instance — which raises different concerns around multi-tenant isolation and query cost per end user. <b>Operational analytics</b> is a third, easily confused category: near-real-time dashboards used to run the business minute-to-minute (queue depth, current fraud-alert volume, live inventory) rather than to reflect on last quarter.</p>
+<p><b>ML serving</b>, from a data engineering vantage point, mostly comes down to one responsibility: producing feature data that is reliable, correctly modeled, and consistent between training and serving. What happens after that splits into two very different worlds. <b>Batch inference</b> scores a model against a stored dataset on a schedule (e.g., nightly churn scores for every customer) and tolerates the same latency as any other batch job. <b>Online inference</b> serves a prediction synchronously against a live request — a fraud check during checkout, a recommendation on page load — and demands single-digit-to-double-digit millisecond response times, which usually means a dedicated low-latency feature store or cache rather than a query against the warehouse itself.</p>
+</div>
+<div class="def reveal">
+<p class="t">Reverse ETL</p>
+<p>The practice of syncing curated, computed data <i>out of</i> the warehouse or lakehouse and back <i>into</i> the operational SaaS tools that business teams already live in — inverting the usual ELT direction of flow. It exists because the warehouse is a great place to compute an insight but a terrible place for a salesperson or support agent to go looking for it.</p>
+<p class="ex"><b>Example:</b> a churn-risk model runs in the warehouse, and a reverse ETL job pushes the resulting score into a custom field on each account record in the CRM — so a salesperson sees "churn risk: high" right next to the account they're already working, without ever opening a BI tool.</p>
+</div>
+<div class="tablewrap reveal">
+<table>
+<tr><th>Serving pattern</th><th>Typical consumer</th><th>Typical latency</th><th>Typical technology pattern</th></tr>
+<tr><td><span class="cell-serve">BI dashboards</span></td><td>Analysts, executives</td><td>Minutes to hours (refresh cycle)</td><td>Warehouse/lakehouse mart + BI tool query cache</td></tr>
+<tr><td><span class="cell-serve">Embedded analytics</span></td><td>End customers, inside a product</td><td>Seconds</td><td>Pre-aggregated tables or a serving API in front of the warehouse</td></tr>
+<tr><td><span class="cell-serve">Operational analytics</span></td><td>Ops teams, frontline staff</td><td>Seconds to a few minutes</td><td>Streaming aggregates or frequently-refreshed materialized views (a query result precomputed and stored as if it were a table)</td></tr>
+<tr><td><span class="cell-xform">ML — batch inference</span></td><td>Downstream batch jobs, reports</td><td>Hours (scheduled runs)</td><td>Scheduled scoring job writing predictions back to a table</td></tr>
+<tr><td><span class="cell-xform">ML — online inference</span></td><td>Live application requests</td><td>Milliseconds</td><td>Low-latency feature store + model-serving endpoint</td></tr>
+<tr><td><span class="cell-ingest">Reverse ETL</span></td><td>CRM, marketing, support tools</td><td>Minutes to hours</td><td>Sync connector reading warehouse tables into SaaS APIs</td></tr>
+</table>
+</div>
+<figure class="diagram reveal">
+<svg viewBox="0 0 900 320" role="img" aria-label="Diagram showing curated served data as a central hub with four arrows fanning out to BI dashboards, ML inference, reverse ETL to SaaS tools, and data sharing with partners">
+<rect x="40" y="110" width="200" height="100" rx="6" fill="none" stroke="var(--serve)" stroke-width="2"/>
+<text x="140" y="155" text-anchor="middle" font-size="13" font-family="var(--font)" fill="var(--ink)">Curated /</text>
+<text x="140" y="175" text-anchor="middle" font-size="13" font-family="var(--font)" fill="var(--ink)">Served Data</text>
+
+<rect x="620" y="15" width="240" height="50" rx="6" fill="none" stroke="var(--cyan2)" stroke-width="2"/>
+<text x="740" y="45" text-anchor="middle" font-size="13" font-family="var(--font)" fill="var(--ink)">BI Dashboards</text>
+
+<rect x="620" y="95" width="240" height="50" rx="6" fill="none" stroke="var(--cyan2)" stroke-width="2"/>
+<text x="740" y="125" text-anchor="middle" font-size="13" font-family="var(--font)" fill="var(--ink)">ML Inference</text>
+
+<rect x="620" y="175" width="240" height="50" rx="6" fill="none" stroke="var(--cyan2)" stroke-width="2"/>
+<text x="740" y="205" text-anchor="middle" font-size="13" font-family="var(--font)" fill="var(--ink)">Reverse ETL &#8594; SaaS Tools</text>
+
+<rect x="620" y="255" width="240" height="50" rx="6" fill="none" stroke="var(--cyan2)" stroke-width="2"/>
+<text x="740" y="285" text-anchor="middle" font-size="13" font-family="var(--font)" fill="var(--ink)">Data Sharing / Partners</text>
+
+<line x1="240" y1="130" x2="608" y2="40" stroke="var(--serve)" stroke-width="1.5"/>
+<polygon points="620,37 609,45 607,35" fill="var(--serve)"/>
+
+<line x1="240" y1="155" x2="608" y2="120" stroke="var(--serve)" stroke-width="1.5"/>
+<polygon points="620,120 608,115 608,125" fill="var(--serve)"/>
+
+<line x1="240" y1="175" x2="608" y2="200" stroke="var(--serve)" stroke-width="1.5"/>
+<polygon points="620,200 608,195 608,205" fill="var(--serve)"/>
+
+<line x1="240" y1="195" x2="608" y2="280" stroke="var(--serve)" stroke-width="1.5"/>
+<polygon points="620,283 607,285 609,275" fill="var(--serve)"/>
+</svg>
+<figcaption>One curated dataset fans out to very different consumers, each with its own latency and access requirements — the modeling and quality work happens once, upstream of all four.</figcaption>
+</figure>
+<div class="prose reveal">
+<p>The last pattern, <b>data sharing</b>, is worth calling out separately because it's a quiet architectural shift: instead of exporting a file or running a nightly export job to a partner organization, the provider exposes a live, read-only view of a dataset that the consumer queries directly against the provider's platform. Both sides avoid the staleness and duplication of file-based exchange, at the cost of a tighter platform dependency between the two organizations.</p>
+</div>
+<div class="callout cy reveal">
+<p><b>Same platform, wildly different clocks (illustrative example).</b> Picture a bank running both a real-time authorization risk score and a monthly regulatory report off the same underlying transaction data. The risk score has to reach the payment-authorization system in single-digit milliseconds, or the transaction times out. The regulatory report has a latency budget measured in days, but must be exactly reconcilable to the ledger. Same data platform, same underlying facts — but one path needs a low-latency serving layer and the other needs an auditable batch pipeline. This is a generic illustration of the trade-off, not a description of any specific institution's actual systems.</p>
+</div>
+<!-- END s12 -->
+
+<!-- START s13 -->
+<p class="promptline">~/data-eng <b>❯</b> coordinate everything, trust nothing blindly</p>
+<h2 id="s13" class="reveal"><span class="hico"><svg class="ico"><use href="#i-workflow"/></svg></span><span class="n">13.</span> Orchestration &amp; DataOps</h2>
+<p class="sectionsub reveal">The scheduling backbone and the operational discipline that keep a multi-stage pipeline from silently rotting.</p>
+<div class="prose reveal">
+<p><span class="tag int">Orchestration</span> is the practice of coordinating dependent tasks across the data engineering lifecycle — triggering an extract only after a source is ready, running a transform only after every input table has loaded, and notifying someone the moment any of that breaks. The standard mental model is a <b>Directed Acyclic Graph (DAG)</b>: nodes are tasks, edges are dependencies, "directed" means each edge has a direction (task A must finish before task B starts), and "acyclic" means no chain of dependencies ever loops back on itself — a task can never transitively depend on its own output.</p>
+<p>It's tempting to reach for cron instead of a dedicated orchestrator, and for a single isolated script, that's fine. The trouble starts the moment a pipeline has more than one step. Cron can trigger a script at a fixed time, full stop — it has no native concept of "wait until the upstream job actually succeeded," no built-in retry-with-backoff, no structured alerting when a run fails, and no visual record of which jobs depend on which. Dedicated orchestrators — illustrative examples include Airflow, Dagster, and Prefect — exist specifically to express those dependencies as data (the DAG itself), handle retries and backfills, and make the whole dependency graph inspectable instead of tribal knowledge scattered across shell scripts.</p>
+</div>
+<div class="def reveal">
+<p class="t">DAG (Directed Acyclic Graph)</p>
+<p>A graph where every edge points in one direction and following any chain of edges can never lead back to the starting node. In orchestration, nodes represent tasks and edges represent "must finish before" dependencies; the acyclic property guarantees the scheduler can always find a valid order to run every task.</p>
+<p class="ex"><b>Example:</b> "extract orders" and "extract customers" must both finish before "join &amp; transform" can start; "join &amp; transform" must finish before "load to warehouse"; nothing in that chain ever points back to "extract orders," so the graph is valid and schedulable.</p>
+</div>
+<figure class="diagram reveal">
+<svg viewBox="0 0 900 320" role="img" aria-label="Directed acyclic graph diagram with extract orders and extract customers tasks flowing into a join and transform task, then into load to warehouse, then into notify and refresh dashboard">
+<rect x="150" y="20" width="200" height="50" rx="6" fill="none" stroke="var(--cyan2)" stroke-width="2"/>
+<text x="250" y="50" text-anchor="middle" font-size="13" font-family="var(--font)" fill="var(--ink)">Extract Orders</text>
+
+<rect x="550" y="20" width="200" height="50" rx="6" fill="none" stroke="var(--cyan2)" stroke-width="2"/>
+<text x="650" y="50" text-anchor="middle" font-size="13" font-family="var(--font)" fill="var(--ink)">Extract Customers</text>
+
+<rect x="350" y="100" width="200" height="50" rx="6" fill="none" stroke="var(--xform)" stroke-width="2"/>
+<text x="450" y="130" text-anchor="middle" font-size="13" font-family="var(--font)" fill="var(--ink)">Join &amp; Transform</text>
+
+<rect x="350" y="180" width="200" height="50" rx="6" fill="none" stroke="var(--store)" stroke-width="2"/>
+<text x="450" y="210" text-anchor="middle" font-size="13" font-family="var(--font)" fill="var(--ink)">Load to Warehouse</text>
+
+<rect x="320" y="260" width="260" height="50" rx="6" fill="none" stroke="var(--serve)" stroke-width="2"/>
+<text x="450" y="290" text-anchor="middle" font-size="13" font-family="var(--font)" fill="var(--ink)">Notify / Refresh Dashboard</text>
+
+<line x1="250" y1="70" x2="392" y2="100" stroke="var(--muted)" stroke-width="1.5"/>
+<polygon points="392,100 381,103 383,93" fill="var(--muted)"/>
+
+<line x1="650" y1="70" x2="508" y2="100" stroke="var(--muted)" stroke-width="1.5"/>
+<polygon points="508,100 519,103 517,93" fill="var(--muted)"/>
+
+<line x1="450" y1="150" x2="450" y2="180" stroke="var(--muted)" stroke-width="1.5"/>
+<polygon points="450,180 445,169 455,169" fill="var(--muted)"/>
+
+<line x1="450" y1="230" x2="450" y2="260" stroke="var(--muted)" stroke-width="1.5"/>
+<polygon points="450,260 445,249 455,249" fill="var(--muted)"/>
+</svg>
+<figcaption>A valid DAG: two independent extracts converge into one transform, then a single linear chain carries the result through load and notification — no edge ever loops back upstream.</figcaption>
+</figure>
+<pre class="reveal"><code><span class="c1"># illustrative Airflow-style DAG matching the diagram above</span>
+from airflow.decorators import dag, task
+from datetime import datetime
+
+@dag(schedule="@daily", start_date=datetime(2026, 1, 1), catchup=False)
+def daily_orders_pipeline():
+
+    @task(retries=3, retry_delay=300)  <span class="c1"># retry with backoff, not just re-run</span>
+    def extract_orders():
+        ...  <span class="c1"># pull raw orders from the source system</span>
+
+    @task(retries=3, retry_delay=300)
+    def extract_customers():
+        ...  <span class="c1"># pull raw customer records</span>
+
+    @task
+    def join_and_transform(orders, customers):
+        ...  <span class="c1"># join, clean, and shape the combined dataset</span>
+
+    @task
+    def load_to_warehouse(transformed):
+        ...  <span class="c1"># write the result into the warehouse table</span>
+
+    @task(on_failure_callback="notify_slack_channel")
+    def notify_and_refresh():
+        ...  <span class="c1"># ping the team and trigger a dashboard refresh</span>
+
+    orders = extract_orders()
+    customers = extract_customers()
+    transformed = join_and_transform(orders, customers)
+    loaded = load_to_warehouse(transformed)
+    notify_and_refresh() &gt;&gt; loaded  <span class="c1"># dependency direction, not execution order shown here</span>
+</code></pre>
+<div class="prose reveal">
+<p><b>DataOps</b> takes the same lesson DevOps taught application teams and applies it to pipelines: reliability is a practice, not a property you get by picking the right tool. It rests on three pillars.</p>
+</div>
+<div class="tablewrap reveal">
+<table>
+<tr><th>Pillar</th><th>What it covers</th><th>Example practice</th></tr>
+<tr><td><span class="cell-xform">Automation</span></td><td>Treating pipeline code like any other software: versioned, tested, and deployed through CI/CD rather than edited by hand in production</td><td>A pull request runs schema and data tests before a transformation model can merge</td></tr>
+<tr><td><span class="cell-store">Observability &amp; monitoring</span></td><td>Continuously tracking data freshness, volume, schema drift, and lineage so anomalies surface before a stakeholder does</td><td>An automated alert fires when a daily load arrives 3 hours late or row counts drop 40%</td></tr>
+<tr><td><span class="cell-serve">Incident response</span></td><td>Handling a broken pipeline with the same seriousness as a broken production service</td><td>An on-call rotation, a severity classification, and a blameless postmortem after a bad load reaches a dashboard</td></tr>
+</table>
+</div>
+<div class="callout wn reveal">
+<p><b>"Cron is not an orchestrator."</b> Teams that lean on cron alone for anything beyond a single standalone script tend to discover the gap the hard way: a job fails silently at 3 a.m. with no retry and no alert, a downstream script starts reading a table before the upstream job finished writing it, and the only documentation of "script B depends on script A" is a comment someone wrote two years ago and never updated. None of that is a tooling failure exactly — cron does what it was built to do. It's a mismatch between what cron offers (fire at a fixed time) and what a real pipeline needs (fire after dependencies are actually satisfied, retry intelligently, and tell someone when it can't).</p>
+</div>
+<h3 class="reveal">Software Engineering: the sixth undercurrent, in its own right</h3>
+<div class="prose reveal">
+<p>DataOps' automation pillar covers <i>how</i> pipeline changes ship; the <b>software engineering</b> undercurrent from <a href="#s03">Section 03</a> is the broader discipline underneath that — treating pipeline code with the same rigor as any other production codebase. In practice that means: version control for every transformation and pipeline definition, not just ad hoc notebooks; automated tests at multiple levels (unit tests for individual transformation logic, integration tests for a full pipeline run, data tests for the output's shape and values); code review before a change reaches production; and <b>infrastructure as code</b> — defining warehouses, clusters, and permissions in versioned configuration files instead of clicking through a console, so an environment can be recreated, audited, or torn down exactly the same way twice. The book frames this as a genuine engineering discipline a data team has to build deliberately, not a byproduct that shows up automatically once a team adopts an orchestrator.</p>
+</div>
+<!-- END s13 -->
+<!-- START s14 -->
+<p class="promptline">~/data-eng <b>❯</b> can anyone find this table, and do they trust it</p>
+<h2 id="s14" class="reveal"><span class="hico"><svg class="ico"><use href="#i-shield"/></svg></span><span class="n">14.</span> Data Governance, Quality &amp; Master Data Management</h2>
+<p class="sectionsub reveal">Discoverability, quality, and accountability — the practices that keep a growing data estate trustworthy</p>
+<div class="prose reveal">
+<p>Everything covered from <a href="#s08">Section 08</a> through <a href="#s13">Section 13</a> assumes someone can find the data, understands what it means, and trusts the numbers in it. That trust does not appear on its own. As an organization's data footprint grows past a handful of tables, informal tribal knowledge — "ask the person who built it" — stops scaling, and the absence of formal governance starts showing up as duplicate metrics, silent breakage, and datasets nobody wants to own. Reis and Housley frame governance around three practical pillars: discoverability, security, and accountability — with data quality treated as a constantly-monitored companion to all three, and covered in its own depth below.</p>
+<p><b>Discoverability</b> asks whether people can find out that a dataset exists at all, and understand what it represents without interrogating its creator. This is the job of a data catalog and its underlying metadata — schema definitions, ownership, freshness, lineage, and business-friendly descriptions that translate a column name like <code>acct_stat_cd</code> into "account status code." Good metadata management turns tribal knowledge into something searchable, and it is a precondition for almost everything else in this section: you cannot govern, secure, or assess the quality of a dataset that governance tooling does not know exists.</p>
+<p><b>Data quality</b> asks a narrower question about a dataset that has already been found: is it accurate, complete, and fit for the purpose someone is about to use it for? Quality is not a single yes/no property — it is usually broken into distinct dimensions, each of which fails in its own characteristic way. <b>Accountability</b>, the third pillar, asks who is responsible when quality slips or a definition changes. Without a named steward, a data quality incident becomes everyone's problem and therefore no one's problem.</p>
+</div>
+<h3 class="reveal">The dimensions of data quality</h3>
+<div class="tablewrap reveal">
+<table>
+<tr><th>Dimension</th><th>What it means</th><th>Example failure</th></tr>
+<tr><td class="cell-store">Accuracy</td><td>Values correctly reflect the real-world fact they represent.</td><td>A customer's recorded date of birth is off by one day due to a timezone conversion bug.</td></tr>
+<tr><td class="cell-store">Completeness</td><td>All the records and fields that should be present are present.</td><td>A batch load silently drops the last partition of the day because a job timed out.</td></tr>
+<tr><td class="cell-store">Consistency</td><td>The same fact agrees across tables, systems, or time.</td><td>A customer's account status is "active" in core banking but "closed" in the CRM extract.</td></tr>
+<tr><td class="cell-store">Timeliness</td><td>Data is available within the window a consumer needs it.</td><td>A risk dashboard refreshes on yesterday's transactions, but the desk needs same-day exposure.</td></tr>
+<tr><td class="cell-store">Uniqueness</td><td>Each real-world entity appears once, not duplicated.</td><td>A retry in the ingestion job inserts the same payment event twice, doubling the total.</td></tr>
+<tr><td class="cell-store">Validity</td><td>Values conform to an expected format, range, or domain.</td><td>An interest rate field contains a negative value that passed no schema constraint.</td></tr>
+</table>
+</div>
+<div class="callout cy reveal">
+<p>Because none of these dimensions is checked "once and done," modern practice increasingly favors <b>data observability</b>: automated, continuous monitoring of a pipeline's freshness, volume, schema, and value distributions, so an anomaly triggers an alert before a stakeholder notices a wrong number on a report. The industry shorthand for the failure mode this prevents is <b>data downtime</b> — the period a dataset is missing, wrong, or otherwise unusable, and nobody yet knows it.</p>
+</div>
+<h3 class="reveal">Master Data Management and the golden record</h3>
+<div class="prose reveal">
+<p>Large organizations rarely have one system of record for a core entity like "customer," "account," or "product." Core banking, CRM, card processing, and digital channels each accumulate their own version of the same customer, often with different spellings, different identifiers, and different update timestamps. <b>Master Data Management (MDM)</b> is the discipline of reconciling those competing records into a single, trusted representation — matching records that likely refer to the same entity, resolving conflicts between them, and publishing one authoritative version for the rest of the organization to consume.</p>
+</div>
+<div class="def reveal">
+<p class="t">Golden record</p>
+<p>The single, reconciled version of a real-world entity's data that an organization treats as authoritative, produced by matching and merging records from multiple source systems.</p>
+<p class="ex"><b>Example:</b> Core banking spells a customer's name "NGUYEN VAN A" with an old mailing address; the CRM has the correct current address but a slightly different name format; the card system has a verified phone number the other two lack. MDM matches these three records as the same person and produces one golden record with the correct name, current address, and verified phone number — which downstream reporting, marketing, and risk systems then reference instead of picking a source at random.</p>
+</div>
+<figure class="diagram reveal">
+<svg viewBox="0 0 900 300" role="img" aria-label="Three source systems each holding their own Customer record converge into a Match and Reconcile step, which produces a single Golden Record.">
+<rect x="20" y="15" width="220" height="50" rx="6" fill="none" stroke="var(--gen)"/>
+<text x="130" y="45" text-anchor="middle" font-size="12" font-family="var(--font)" fill="var(--ink)">Core Banking &#8212; Customer</text>
+<rect x="20" y="125" width="220" height="50" rx="6" fill="none" stroke="var(--gen)"/>
+<text x="130" y="155" text-anchor="middle" font-size="12" font-family="var(--font)" fill="var(--ink)">CRM &#8212; Customer</text>
+<rect x="20" y="235" width="220" height="50" rx="6" fill="none" stroke="var(--gen)"/>
+<text x="130" y="265" text-anchor="middle" font-size="12" font-family="var(--font)" fill="var(--ink)">Card System &#8212; Customer</text>
+<rect x="380" y="120" width="180" height="60" rx="6" fill="none" stroke="var(--xform)"/>
+<text x="470" y="154" text-anchor="middle" font-size="13" font-family="var(--font)" fill="var(--ink)">Match &amp; Reconcile</text>
+<rect x="650" y="120" width="170" height="60" rx="6" fill="none" stroke="var(--serve)"/>
+<text x="735" y="154" text-anchor="middle" font-size="13" font-family="var(--font)" fill="var(--ink)">Golden Record</text>
+<line x1="240" y1="40" x2="380" y2="150" stroke="var(--muted)"/>
+<polygon points="380,150 372,147 375,142" fill="var(--muted)"/>
+<line x1="240" y1="150" x2="380" y2="150" stroke="var(--muted)"/>
+<polygon points="380,150 372,147 372,153" fill="var(--muted)"/>
+<line x1="240" y1="260" x2="380" y2="150" stroke="var(--muted)"/>
+<polygon points="380,150 375,158 372,153" fill="var(--muted)"/>
+<line x1="560" y1="150" x2="650" y2="150" stroke="var(--muted)"/>
+<polygon points="650,150 642,147 642,153" fill="var(--muted)"/>
+</svg>
+<figcaption>Reconciling three systems' views of the same customer into a single, trusted golden record used across the bank.</figcaption>
+</figure>
+<div class="callout cy reveal">
+<p>For a bank, this is not an abstract data-modeling exercise. A single, accurate view of a customer across core banking, cards, and digital channels is an operational necessity — it underpins credit decisions, fraud checks, and service quality — and it is also the kind of control that regulators and internal risk or compliance functions generally expect to see maintained accurately and kept demonstrably reconciled, rather than assembled ad hoc when someone asks for it. As elsewhere in this guide, this is a generic illustration of why MDM matters for a bank, not a claim about any specific institution's actual controls.</p>
+</div>
+<!-- END s14 -->
+
+<!-- START s15 -->
+<p class="promptline">~/data-eng <b>❯</b> assume the perimeter will fail, then design anyway</p>
+<h2 id="s15" class="reveal"><span class="hico"><svg class="ico"><use href="#i-shield"/></svg></span><span class="n">15.</span> Security, Privacy &amp; Data Ethics</h2>
+<p class="sectionsub reveal">Least privilege, layered controls, and the difference between compliant and actually secure</p>
+<div class="prose reveal">
+<p>Security is one of the six undercurrents from <a href="#s03">Section 03</a> precisely because it cannot be bolted onto a finished pipeline — it has to shape every decision from schema design to who gets a warehouse login. The book anchors its treatment of security in two foundational principles. <b>Least privilege</b> means every person, service account, and pipeline job gets the minimum access required to do its job, nothing more, for no longer than necessary. <b>Defense in depth</b> means no single control is trusted to hold on its own; if one layer fails, another layer should still catch the problem.</p>
+<p>On top of those principles sit concrete technical controls. <b>Encryption at rest and in transit</b> protects data from anyone who gains access to storage media or network traffic without the right keys. <b>Row-level and column-level security</b> let a single table serve different audiences different slices of the same data — a loan officer sees their branch's applications, a regional manager sees the region, and a salary column stays hidden from everyone except HR and payroll. <b>Access control models</b> formalize who gets what: role-based access control (RBAC) grants permissions by job role, which scales well and is easy to audit, while attribute-based access control (ABAC) grants permissions dynamically based on attributes of the user, resource, and context — useful when access rules are too fine-grained for a fixed set of roles. Finally, <b>masking and tokenization</b> replace sensitive values with realistic-looking substitutes or opaque tokens so that most systems and most people never need to see the real value at all.</p>
+</div>
+<div class="def reveal">
+<p class="t">Anonymization vs. pseudonymization</p>
+<p><b>Anonymization</b> irreversibly strips or transforms identifying information so the record can no longer be linked back to a specific individual, by anyone, under any circumstances — done properly, it takes the data outside the scope of most personal-data rules. <b>Pseudonymization</b> replaces identifying fields with a token or key, but the original identity remains recoverable by whoever holds the separate mapping — it reduces exposure but does not remove the data from the scope of personal-data protection, because re-identification is still possible in principle.</p>
+<p class="ex"><b>Example:</b> Replacing a customer ID with a random token stored in a separate lookup table is pseudonymization — someone with access to that lookup table can still identify the customer. Aggregating transaction data into "average spend per age band per province" with no way to trace a row back to an individual is closer to true anonymization.</p>
+</div>
+<h3 class="reveal">Defense in depth, layer by layer</h3>
+<figure class="diagram reveal">
+<svg viewBox="0 0 900 300" role="img" aria-label="Five stacked layers of security controls from network perimeter down to audit logging, illustrating defense in depth.">
+<rect x="60" y="20" width="590" height="40" rx="5" fill="none" stroke="var(--cyan2)"/>
+<text x="355" y="45" text-anchor="middle" font-size="13" font-family="var(--font)" fill="var(--ink)">Network perimeter</text>
+<rect x="60" y="70" width="590" height="40" rx="5" fill="none" stroke="var(--cyan2)"/>
+<text x="355" y="95" text-anchor="middle" font-size="13" font-family="var(--font)" fill="var(--ink)">Access control (RBAC)</text>
+<rect x="60" y="120" width="590" height="40" rx="5" fill="none" stroke="var(--cyan2)"/>
+<text x="355" y="145" text-anchor="middle" font-size="13" font-family="var(--font)" fill="var(--ink)">Encryption (at rest / in transit)</text>
+<rect x="60" y="170" width="590" height="40" rx="5" fill="none" stroke="var(--cyan2)"/>
+<text x="355" y="195" text-anchor="middle" font-size="13" font-family="var(--font)" fill="var(--ink)">Data masking / tokenization</text>
+<rect x="60" y="220" width="590" height="40" rx="5" fill="none" stroke="var(--cyan2)"/>
+<text x="355" y="245" text-anchor="middle" font-size="13" font-family="var(--font)" fill="var(--ink)">Audit logging &amp; monitoring</text>
+<text x="670" y="130" font-size="12" font-family="var(--font)" fill="#E7E7EE">Each layer assumes</text>
+<text x="670" y="146" font-size="12" font-family="var(--font)" fill="#E7E7EE">the one above it can fail.</text>
+</svg>
+<figcaption>No single layer is assumed trustworthy on its own — each exists to catch what the layer above it misses.</figcaption>
+</figure>
+<h3 class="reveal">Regulatory landscape and privacy by design</h3>
+<div class="prose reveal">
+<p>Globally, GDPR (EU) and CCPA (California) are the best-known reference points for personal data protection principles: informed consent, purpose limitation (collect data for a stated reason and don't quietly reuse it for something else), a set of data subject rights (access, correction, deletion), and breach notification obligations. These frameworks have shaped how most data platforms think about personal data handling even outside their direct jurisdiction, because global vendors build to their baseline.</p>
+<p>Vietnam's own personal data protection legal framework (PDPL) has been developing along a broadly similar direction — generally requiring lawful grounds and a degree of transparency for processing personal data, and giving individuals certain rights over their own data. For banks specifically, the State Bank of Vietnam's supervisory expectations commonly extend beyond privacy law generally into more specific banking-sector concerns: customer information confidentiality, careful handling of cross-border data transfers, and data localization considerations for certain categories of banking data. Because the specific legal instruments and their requirements evolve, a data engineering team should treat this section as a conceptual map, not a compliance checklist — the current, authoritative text should always come from legal and compliance colleagues, not from a summary of a 2022 book.</p>
+<p>Beyond compliance, the book raises data ethics as a distinct concern: pipelines that feed machine learning models can encode and amplify bias present in historical data, producing unfair outcomes at scale even when no individual step was intentionally discriminatory. Privacy-enhancing techniques like <b>k-anonymity</b> (ensuring any individual record is indistinguishable from at least k−1 others on key attributes) and <b>differential privacy</b> (adding calibrated statistical noise so aggregate results are useful but no individual record can be reliably inferred) offer conceptual tools for reducing this risk. The umbrella idea the book advocates is <b>privacy by design</b>: treating privacy protection as an architectural requirement decided at design time, rather than a control retrofitted onto a pipeline after a stakeholder asks about it.</p>
+</div>
+<div class="tablewrap reveal">
+<table>
+<tr><th>Technique</th><th>Protects against</th><th>Example</th></tr>
+<tr><td class="cell-serve">Encryption</td><td>Data theft from stolen media or intercepted network traffic.</td><td>A stolen backup drive is unreadable without the decryption key.</td></tr>
+<tr><td class="cell-serve">Masking / tokenization</td><td>Exposure of raw sensitive values to systems or staff that don't need them.</td><td>A support dashboard shows "**** **** **** 1234" instead of a full card number.</td></tr>
+<tr><td class="cell-serve">RBAC</td><td>Over-broad access from a shared or default permission set.</td><td>A junior analyst's role grants read access to marketing tables but not payroll tables.</td></tr>
+<tr><td class="cell-serve">Anonymization</td><td>Re-identification of individuals from a released or shared dataset.</td><td>A research dataset reports branch-level averages with no customer-level rows at all.</td></tr>
+<tr><td class="cell-serve">Differential privacy</td><td>Inference of an individual's data from aggregate query results.</td><td>A published statistic has small random noise added so no single customer's record can be isolated.</td></tr>
+</table>
+</div>
+<div class="callout wn reveal">
+<p>The book warns explicitly against <b>security theater</b>: a program that satisfies every item on a compliance checklist — encryption enabled, RBAC documented, an audit trail somewhere — while genuine risk remains unaddressed because the controls were designed to pass an audit rather than to stop a realistic attacker. Checklists are useful evidence of diligence, but they are not a substitute for asking "what would actually happen if this specific control failed," and a checkbox-driven program can create dangerous false confidence in exactly the moment it is tested.</p>
+</div>
+<!-- END s15 -->
+
+<!-- START s16 -->
+<p class="promptline">~/data-eng <b>❯</b> the tools will change again; the trade-offs will not</p>
+<h2 id="s16" class="reveal"><span class="hico"><svg class="ico"><use href="#i-blocks"/></svg></span><span class="n">16.</span> The Future of Data Engineering</h2>
+<p class="sectionsub reveal">Where the field is heading, and why the fundamentals in this guide should outlast the current tool cycle</p>
+<div class="prose reveal">
+<p>Reis and Housley end their book with deliberately modest predictions, and the years since publication have largely vindicated that caution: the specific product names have shifted, but the directional trends they and the surrounding industry pointed to have mostly held up. What follows blends the book's own forward-looking themes with developments that have become clear through 2025 and into 2026.</p>
+<p>The most visible shift is a partial retreat from the "modern data stack" era's tool sprawl — a period in which a mid-size team might have run a dozen best-of-breed point solutions stitched together with custom glue code. Maintaining that many integration points turned out to be its own operational burden, and many teams are now consolidating onto fewer, more tightly integrated platforms, even at some cost to per-function best-in-class capability. Related to this is the continued rise of managed and serverless infrastructure: warehouses, streaming platforms, and orchestrators that used to require dedicated operational staff increasingly run as a managed service, shifting a data engineer's time away from keeping infrastructure alive and toward modeling, governance, and stakeholder-facing work — the higher-leverage activities the book argues engineers should be doing anyway.</p>
+<p>Streaming is finishing its transition from specialized exception to default architectural option, as the operational maturity discussed in <a href="#s10">Section 10</a> continues to improve; teams increasingly reach for a streaming-capable pattern by default and fall back to batch only when latency truly does not matter. At the same time, data platforms are undergoing what might be called "enterprise-ization": governance, data quality monitoring, and FinOps — treating cloud cost as an accountable, forecastable line item rather than a surprise on the monthly bill — are maturing from afterthoughts bolted on late into standard practice built in from the start. Table format interoperability efforts between the Iceberg and Delta Lake ecosystems (see <a href="#s09">Section 09</a>) are also lowering the cost of a wrong or outgrown table-format bet, softening one of the more consequential architecture decisions covered in <a href="#s06">Section 06</a>.</p>
+<p>Two more shifts deserve particular attention. First, the boundaries between data engineering, platform engineering, and ML engineering are blurring, as pipelines increasingly need to serve both BI dashboards and production ML features from shared infrastructure. Second, generative AI and large language models are becoming tools data engineers use, not only technologies they support: text-to-SQL interfaces extend self-service analytics to less technical stakeholders, LLM-assisted code generation speeds up writing and reviewing pipeline transformations, and automated documentation and lineage generation reduce the metadata burden discussed in <a href="#s14">Section 14</a>. None of this replaces the engineering judgment this guide has covered — deciding what to build, what trade-off to accept, and what "correct" means for a given dataset remains a human responsibility that a code-generating assistant does not resolve on its own.</p>
+</div>
+<h3 class="reveal">Data contracts</h3>
+<div class="prose reveal">
+<p>One structural response to the "silent upstream breakage" problem raised throughout this guide is the rise of <b>data contracts</b>: formal, versioned agreements between a data-producing team and its downstream consumers that specify a dataset's schema, semantics, and change-management process. A data contract turns an implicit, undocumented expectation — "please don't rename that column" — into an explicit, testable one, often enforced automatically in CI so that a breaking schema change fails a build rather than a downstream dashboard.</p>
+</div>
+<div class="tablewrap reveal">
+<table>
+<tr><th>Trend</th><th>What's driving it</th><th>What it means day to day</th></tr>
+<tr><td>Stack consolidation</td><td>Integration and maintenance cost of many point tools outweighing best-of-breed gains.</td><td>Fewer vendor integrations to babysit; more depth expected within a chosen platform.</td></tr>
+<tr><td>Managed / serverless infra</td><td>Cloud providers absorbing more undifferentiated operational work.</td><td>Less time on uptime and patching; more time on modeling and stakeholder needs.</td></tr>
+<tr><td>Streaming as default</td><td>Maturing, easier-to-operate streaming platforms and frameworks.</td><td>Default architecture discussions start from streaming, not bolt it on later.</td></tr>
+<tr><td>Enterprise-ization</td><td>Data platforms scaling past the point informal practice can cover.</td><td>Governance and FinOps become named responsibilities, not side projects.</td></tr>
+<tr><td>Role convergence</td><td>Shared infrastructure serving both BI and ML workloads.</td><td>Data engineers need working fluency in feature pipelines and platform concerns.</td></tr>
+<tr><td>Table format interoperability</td><td>Iceberg/Delta ecosystem bridges reducing lock-in cost.</td><td>Table-format choice becomes a lower-stakes, more reversible decision.</td></tr>
+<tr><td>LLMs in the pipeline</td><td>Maturing code-generation and text-to-SQL tooling.</td><td>Faster drafting of transforms and docs; judgment and review still required.</td></tr>
+<tr><td>Data contracts</td><td>Repeated pain from silent upstream schema changes.</td><td>Producer/consumer schema agreements become explicit and CI-enforced.</td></tr>
+</table>
+</div>
+<div class="callout gd reveal">
+<p>None of these trends changes the underlying calculus laid out in <a href="#s05">Section 05</a>: trade-off awareness, a bias toward reversible decisions, and a preference for durable primitives over trendy specifics. A data engineer who internalizes those principles can evaluate the next tool cycle — whatever it turns out to be — on its merits, instead of relearning data engineering from scratch every time the vendor landscape reshuffles.</p>
+</div>
+<!-- END s16 -->
+
+<!-- START sbig -->
+<p class="promptline">~/data-eng <b>❯</b> why "big data" and "the cloud" arrived together</p>
+<h2 id="sbig" class="reveal"><span class="hico"><svg class="ico"><use href="#i-cloud"/></svg></span><span class="n">17.</span> Big Data &amp; the Cloud</h2>
+<p class="sectionsub reveal">What actually makes data "big", and why elastic infrastructure changed the job</p>
+<div class="prose reveal">
+<p>"Big data" and "the cloud" showed up in the same decade for a reason that is easy to miss once you are used to both: the moment a dataset outgrows a single machine, <em>renting</em> elastic, on-demand infrastructure becomes far more practical than <em>buying</em> and running your own data center. Nearly every architecture pattern in <a href="#s06">Section 06</a> and every technology-choice trade-off in <a href="#s07">Section 07</a> assumes this backdrop — so it is worth making explicit rather than leaving it as folklore.</p>
+<p>The phrase "big data" has been diluted by marketing to the point of near-uselessness, but the underlying idea is precise: data earns the label when it stresses at least one dimension past what a single traditional system — one relational database on one server — can comfortably handle. The classic framing is the <strong>five V's</strong>.</p>
+</div>
+<div class="tablewrap reveal">
+<table>
+<tr><th>Dimension</th><th>What it means</th><th>When it becomes the constraint</th></tr>
+<tr><td>Volume</td><td>The sheer amount of data — terabytes to petabytes and beyond.</td><td>The dataset no longer fits, or no longer processes in acceptable time, on one machine's disk and memory.</td></tr>
+<tr><td>Velocity</td><td>How fast data arrives and needs to be processed — real-time streams, not just nightly batches.</td><td>Events arrive faster than a batch window can absorb them, forcing the streaming approaches in <a href="#s10">Section 10</a>.</td></tr>
+<tr><td>Variety</td><td>Structured, semi-structured, and unstructured data all mixed together.</td><td>A fixed relational schema can no longer describe every source, pushing you toward lake-style storage (<a href="#s09">Section 09</a>).</td></tr>
+<tr><td>Veracity</td><td>How trustworthy and accurate the data actually is once it arrives.</td><td>Volume amplifies bad data — quality and governance (<a href="#s14">Section 14</a>) stop being optional.</td></tr>
+<tr><td>Value</td><td>Whether all that volume, velocity, and variety actually translates into a usable business outcome.</td><td>Always. Data with no path to value is cost, not an asset — the first question, not the last.</td></tr>
+</table>
+</div>
+<div class="callout cy reveal">
+<h4>"Big" is relative — and shrinking</h4>
+<p>What counted as "big data" requiring a cluster in 2012 often fits comfortably in a single modern cloud warehouse or even on one large machine today. The useful question is never "is this big data?" in the abstract — it is "does <em>this</em> dataset, at <em>our</em> velocity, still fit the simplest tool we already run?" Reach for distributed systems when the data forces you to, not because the term sounds impressive.</p>
+</div>
+<div class="prose reveal">
+<h3>Why cloud computing changed data engineering</h3>
+<p>Before the cloud, handling big data meant buying physical servers years in advance, guessing at future capacity, and running your own data centers — capacity planning as a permanent, high-stakes bet. Cloud computing replaced that with <strong>elastic, pay-as-you-go</strong> infrastructure rented from a provider: compute and storage that scale up in minutes and scale back down just as fast. For data engineering specifically, that turned "provision a cluster" from a procurement project into an API call, and turned the separation of storage and compute (<a href="#s09">Section 09</a>) from a theory into the default.</p>
+<p>Providers package that infrastructure at three levels of abstraction — the difference is simply <em>how much the provider manages for you</em>.</p>
+</div>
+<div class="tablewrap reveal">
+<table>
+<tr><th>Model</th><th>What the provider runs</th><th>What you still own</th></tr>
+<tr><td>IaaS — Infrastructure as a Service</td><td>Raw virtual machines, storage, and networking.</td><td>The operating system and everything above it — you patch, configure, and operate.</td></tr>
+<tr><td>PaaS — Platform as a Service</td><td>A managed runtime: a managed database, a managed Spark cluster, a managed orchestrator.</td><td>Configuration, scheduling, and the pipelines themselves — but not the OS or patching.</td></tr>
+<tr><td>SaaS — Software as a Service</td><td>A complete, ready-to-use application.</td><td>Nothing operationally — you log in and use it.</td></tr>
+</table>
+</div>
+<div class="callout gd reveal">
+<h4>Where data engineering lives</h4>
+<p>Most modern data platforms — cloud data warehouses, managed Spark, managed orchestrators — are <strong>PaaS</strong>. You do not manage servers, but you very much configure, schedule, and monitor how they process your data. That PaaS layer is exactly where a data engineer operates day to day: high enough to not babysit hardware, low enough to control cost, performance, and correctness.</p>
+</div>
+<!-- END sbig -->
+
+<!-- START scloud -->
+<p class="promptline">~/data-eng <b>❯</b> the same services, three sets of names</p>
+<h2 id="scloud" class="reveal"><span class="hico"><svg class="ico"><use href="#i-cloud"/></svg></span><span class="n">18.</span> Cloud Platforms: AWS, GCP &amp; Azure</h2>
+<p class="sectionsub reveal">Learn the category first — product names change faster than the concepts do</p>
+<div class="prose reveal">
+<p>The three major cloud providers — Amazon Web Services (AWS), Google Cloud (GCP), and Microsoft Azure — offer <em>near-identical categories</em> of data engineering services under completely different names. This is the single most common source of confusion for engineers moving between clouds, and the single easiest thing to de-risk: learn what each <strong>category</strong> does, and the specific product is just a label you look up. Categories have been stable for over a decade; product names are repositioned every couple of years.</p>
+</div>
+<div class="tablewrap reveal">
+<table>
+<tr><th>Category</th><th>AWS</th><th>Google Cloud (GCP)</th><th>Azure</th></tr>
+<tr><td>Object storage</td><td>S3</td><td>Cloud Storage</td><td>Blob Storage / ADLS</td></tr>
+<tr><td>Data warehouse</td><td>Redshift</td><td>BigQuery</td><td>Synapse Analytics</td></tr>
+<tr><td>Managed Spark / big-data processing</td><td>EMR</td><td>Dataproc</td><td>Synapse / HDInsight</td></tr>
+<tr><td>Serverless ETL</td><td>Glue</td><td>Dataflow</td><td>Data Factory (Mapping Data Flows)</td></tr>
+<tr><td>Streaming ingestion</td><td>Kinesis</td><td>Pub/Sub</td><td>Event Hubs</td></tr>
+<tr><td>Orchestration</td><td>Managed Airflow (MWAA)</td><td>Cloud Composer</td><td>Data Factory pipelines</td></tr>
+<tr><td>Serverless SQL query engine</td><td>Athena</td><td>BigQuery (native)</td><td>Synapse Serverless SQL</td></tr>
+</table>
+</div>
+<div class="prose reveal">
+<p>Reading a provider's stack as a pipeline makes the pattern concrete. The shape is the same everywhere — land raw data in object storage, catalog and transform it, then serve it through a warehouse and/or a query-in-place engine — only the product names differ. Each maps directly onto the lifecycle stages in <a href="#s02">Section 02</a>.</p>
+<h3>AWS: a typical pipeline</h3>
+<p>Raw data lands in <b>S3</b>; <b>Glue</b> crawls and catalogs it and runs serverless Spark jobs to transform it; the result loads into <b>Redshift</b> for BI, or stays queryable in place via <b>Athena</b>. Streaming sources feed through <b>Kinesis</b> before landing in the same S3-based lake.</p>
+<h3>GCP: a typical pipeline</h3>
+<p>Data lands in <b>Cloud Storage</b>; <b>Dataflow</b> (built on Apache Beam) runs unified batch/streaming pipelines; <b>BigQuery</b> serves as both the warehouse and a serverless query engine over the same data, with <b>Pub/Sub</b> handling event streaming.</p>
+<h3>Azure: a typical pipeline</h3>
+<p>Data lands in <b>Azure Data Lake Storage (ADLS)</b>; <b>Data Factory</b> orchestrates ingestion and transformation pipelines; <b>Synapse Analytics</b> unifies warehousing and big-data processing over the same lake, with <b>Event Hubs</b> handling streaming ingestion.</p>
+</div>
+<div class="callout wn reveal">
+<h4>Multi-cloud is usually not a technical decision</h4>
+<p>Very few organizations pick a cloud purely on technical merit — existing vendor relationships, compliance and data-residency requirements (for a Vietnamese bank, SBV expectations and PDPL obligations are often the deciding factor, not benchmarks), and team familiarity usually matter more. The good news: the data engineering concepts in this guide transfer directly regardless of whose product names you happen to be learning today. Confirm current regulatory obligations with legal/compliance before committing to a provider or region.</p>
+</div>
+<!-- END scloud -->
+
+<!-- START sstack -->
+<p class="promptline">~/data-eng <b>❯</b> assemble specialized tools, don't buy one monolith</p>
+<h2 id="sstack" class="reveal"><span class="hico"><svg class="ico"><use href="#i-blocks"/></svg></span><span class="n">19.</span> The Modern Data Stack</h2>
+<p class="sectionsub reveal">One tool per category, mapped onto the lifecycle — not one tool for everything</p>
+<div class="prose reveal">
+<p>Instead of one monolithic platform, modern pipelines are usually assembled from specialized, best-of-breed tools — one per lifecycle stage — that interoperate through open storage and shared catalogs. This is the "modern data stack": less a fixed product list than a way of composing the lifecycle from <a href="#s02">Section 02</a> out of interchangeable parts. The categories map directly onto the lifecycle stages, which is exactly why the mental model in this guide keeps paying off no matter which vendors your team has standardized on.</p>
+</div>
+<figure class="diagram reveal">
+<svg viewBox="0 0 900 250" role="img" aria-label="The modern data stack as a left-to-right pipeline of six categories: sources, ingestion, storage, transformation, orchestration, and serving, each populated by interchangeable specialized tools">
+<rect x="14" y="70" width="122" height="96" rx="10" fill="none" stroke="#5AC8FF" stroke-width="1.6"/>
+<text x="75" y="60" font-size="13" font-family="var(--font)" fill="#5AC8FF" text-anchor="middle" font-weight="700">Sources</text>
+<text x="75" y="96" font-size="11" font-family="var(--font)" fill="#E7E7EE" text-anchor="middle">App DBs</text>
+<text x="75" y="116" font-size="11" font-family="var(--font)" fill="#E7E7EE" text-anchor="middle">SaaS APIs</text>
+<text x="75" y="136" font-size="11" font-family="var(--font)" fill="#E7E7EE" text-anchor="middle">Event streams</text>
+<line x1="136" y1="118" x2="160" y2="118" stroke="#6b6b78" stroke-width="1.6"/>
+<polygon points="160,118 151,113 151,123" fill="#6b6b78"/>
+<rect x="160" y="70" width="122" height="96" rx="10" fill="none" stroke="#5C78FF" stroke-width="1.6"/>
+<text x="221" y="60" font-size="13" font-family="var(--font)" fill="#5C78FF" text-anchor="middle" font-weight="700">Ingestion</text>
+<text x="221" y="96" font-size="11" font-family="var(--font)" fill="#E7E7EE" text-anchor="middle">Managed EL</text>
+<text x="221" y="116" font-size="11" font-family="var(--font)" fill="#E7E7EE" text-anchor="middle">CDC connectors</text>
+<text x="221" y="136" font-size="11" font-family="var(--font)" fill="#E7E7EE" text-anchor="middle">Message queues</text>
+<line x1="282" y1="118" x2="306" y2="118" stroke="#6b6b78" stroke-width="1.6"/>
+<polygon points="306,118 297,113 297,123" fill="#6b6b78"/>
+<rect x="306" y="70" width="122" height="96" rx="10" fill="none" stroke="#A56BFF" stroke-width="1.6"/>
+<text x="367" y="60" font-size="13" font-family="var(--font)" fill="#A56BFF" text-anchor="middle" font-weight="700">Storage</text>
+<text x="367" y="96" font-size="11" font-family="var(--font)" fill="#E7E7EE" text-anchor="middle">Cloud warehouse</text>
+<text x="367" y="116" font-size="11" font-family="var(--font)" fill="#E7E7EE" text-anchor="middle">Object storage</text>
+<text x="367" y="136" font-size="11" font-family="var(--font)" fill="#E7E7EE" text-anchor="middle">Lakehouse formats</text>
+<line x1="428" y1="118" x2="452" y2="118" stroke="#6b6b78" stroke-width="1.6"/>
+<polygon points="452,118 443,113 443,123" fill="#6b6b78"/>
+<rect x="452" y="70" width="122" height="96" rx="10" fill="none" stroke="#FFB454" stroke-width="1.6"/>
+<text x="513" y="60" font-size="13" font-family="var(--font)" fill="#FFB454" text-anchor="middle" font-weight="700">Transformation</text>
+<text x="513" y="96" font-size="11" font-family="var(--font)" fill="#E7E7EE" text-anchor="middle">SQL transforms</text>
+<text x="513" y="116" font-size="11" font-family="var(--font)" fill="#E7E7EE" text-anchor="middle">Compute engines</text>
+<text x="513" y="136" font-size="11" font-family="var(--font)" fill="#E7E7EE" text-anchor="middle">Python / SQL</text>
+<line x1="574" y1="118" x2="598" y2="118" stroke="#6b6b78" stroke-width="1.6"/>
+<polygon points="598,118 589,113 589,123" fill="#6b6b78"/>
+<rect x="598" y="70" width="122" height="96" rx="10" fill="none" stroke="#FF6B9D" stroke-width="1.6"/>
+<text x="659" y="60" font-size="13" font-family="var(--font)" fill="#FF6B9D" text-anchor="middle" font-weight="700">Orchestration</text>
+<text x="659" y="96" font-size="11" font-family="var(--font)" fill="#E7E7EE" text-anchor="middle">DAG schedulers</text>
+<text x="659" y="116" font-size="11" font-family="var(--font)" fill="#E7E7EE" text-anchor="middle">Workflow-as-code</text>
+<text x="659" y="136" font-size="11" font-family="var(--font)" fill="#E7E7EE" text-anchor="middle">Managed cron</text>
+<line x1="720" y1="118" x2="744" y2="118" stroke="#6b6b78" stroke-width="1.6"/>
+<polygon points="744,118 735,113 735,123" fill="#6b6b78"/>
+<rect x="744" y="70" width="142" height="96" rx="10" fill="none" stroke="#5AC8FF" stroke-width="1.6"/>
+<text x="815" y="60" font-size="13" font-family="var(--font)" fill="#5AC8FF" text-anchor="middle" font-weight="700">BI &amp; ML Serving</text>
+<text x="815" y="96" font-size="11" font-family="var(--font)" fill="#E7E7EE" text-anchor="middle">BI dashboards</text>
+<text x="815" y="116" font-size="11" font-family="var(--font)" fill="#E7E7EE" text-anchor="middle">Feature stores</text>
+<text x="815" y="136" font-size="11" font-family="var(--font)" fill="#E7E7EE" text-anchor="middle">Reverse ETL</text>
+<text x="450" y="210" font-size="12" font-family="var(--font)" fill="#E7E7EE" text-anchor="middle">Pick one tool per category — the six categories are stable even as the specific products change.</text>
+</svg>
+<figcaption>A typical "modern data stack" assembles specialized tools by category rather than one all-in-one platform. The categories are the lifecycle stages; the tools inside them are interchangeable.</figcaption>
+</figure>
+<div class="callout cy reveal">
+<h4>Tool names change — categories don't</h4>
+<p>Specific vendors rise and fall, but the six categories above — sources, ingestion, storage, transformation, orchestration, serving — have stayed stable for over a decade. Learn each category's <em>job</em> first, then pick up whatever tool your team actually runs. This is the same durable-vs-transitory-primitives idea from <a href="#s07">Section 07</a>, applied to the stack as a whole.</p>
+</div>
+<div class="prose reveal">
+<p>Naming a few real, widely-used tools per category makes the abstract picture concrete — treat this as a snapshot, not an endorsement, since market leaders shift over time.</p>
+</div>
+<div class="tablewrap reveal">
+<table>
+<tr><th>Category</th><th>Well-known tools (illustrative snapshot)</th></tr>
+<tr><td>Data warehouses</td><td>Snowflake, Google BigQuery, Amazon Redshift, Azure Synapse Analytics</td></tr>
+<tr><td>Data processing / compute engines</td><td>Apache Spark, Databricks, Apache Flink, Google Dataflow</td></tr>
+<tr><td>Orchestration</td><td>Apache Airflow, Dagster, Prefect, Azure Data Factory</td></tr>
+<tr><td>Ingestion / EL tools</td><td>Fivetran, Airbyte, Kafka Connect, AWS Glue</td></tr>
+</table>
+</div>
+<!-- END sstack -->
+
+<!-- START sskills -->
+<p class="promptline">~/data-eng <b>❯</b> what to learn, and where the role goes next</p>
+<h2 id="sskills" class="reveal"><span class="hico"><svg class="ico"><use href="#i-user"/></svg></span><span class="n">20.</span> Skills &amp; Career Path</h2>
+<p class="sectionsub reveal">Software-engineering rigor plus data-specific depth — and how the role grows</p>
+<div class="prose reveal">
+<p>Data engineering blends software-engineering rigor with data-specific knowledge. No single skill defines the role; it is the combination — and the discipline to apply engineering practices (<a href="#s13">Section 13</a>'s DataOps) to data work — that separates a durable data platform from a pile of brittle scripts. The core skills below show up in almost every data engineering job, whatever the tool stack.</p>
+</div>
+<div class="tablewrap reveal">
+<table>
+<tr><th>Skill</th><th>Why it matters</th></tr>
+<tr><td>SQL</td><td>The single most-used skill — querying, windowing, and modeling data (<a href="#s11">Section 11</a>). It is the lingua franca of the warehouse and rarely goes out of style.</td></tr>
+<tr><td>Python (or a similar language)</td><td>Scripting pipelines, calling APIs, writing transformation and glue logic that SQL alone cannot express.</td></tr>
+<tr><td>Distributed-systems basics</td><td>Understanding how work is parallelized across machines and where bottlenecks and failures appear — the foundation under Spark, streaming, and the cloud.</td></tr>
+<tr><td>Cloud platforms</td><td>Provisioning and operating storage, compute, and networking in a cloud environment (<a href="#scloud">Section 18</a>).</td></tr>
+<tr><td>Data modeling</td><td>Designing schemas that are both efficient to compute and intuitive to query (<a href="#s11">Section 11</a>).</td></tr>
+<tr><td>Software-engineering practices</td><td>Version control, testing, code review, and CI/CD applied to pipelines — the difference between "it ran on my laptop" and "it runs every night, unattended, for years."</td></tr>
+</table>
+</div>
+<div class="prose reveal">
+<h3>A typical growth path</h3>
+<p>Titles vary by company, but the arc of responsibility is consistent: you start by keeping existing pipelines healthy, grow into designing them, and eventually shape the architecture and the platform others build on.</p>
+<ol>
+<li><strong>Junior Data Engineer</strong> — builds and maintains existing pipelines, writes SQL transformations, learns the stack.</li>
+<li><strong>Data Engineer</strong> — designs new pipelines end-to-end and owns data quality for a domain.</li>
+<li><strong>Senior / Staff Data Engineer</strong> — sets architecture direction, mentors, and solves cross-team platform problems.</li>
+<li><strong>Data Platform Engineer / Data Architect</strong> — owns the overall data architecture strategy across the organization.</li>
+</ol>
+</div>
+<div class="callout gd reveal">
+<h4>The through-line</h4>
+<p>Notice that every rung leans harder on the <em>undercurrents</em> from <a href="#s03">Section 03</a> — architecture, DataOps, security, governance — and less on any one tool. Careers in this field compound on judgment about trade-offs (<a href="#s07">Section 07</a>), not on memorizing the current market leader's product names.</p>
+</div>
+<!-- END sskills -->
+
+<!-- START s18 -->
+<p class="promptline">~/data-eng <b>❯</b> grep this page instead of grepping your memory</p>
+<h2 id="s18" class="reveal"><span class="hico"><svg class="ico"><use href="#i-book"/></svg></span><span class="n">21.</span> Glossary &amp; Quick Reference</h2>
+<p class="sectionsub reveal">Every core term from this guide, in one searchable table</p>
+<div class="prose reveal">
+<p>A single reference table spanning the whole guide, for when you need a precise one-line definition rather than the surrounding argument. Terms are listed roughly in the order they first became relevant across the guide.</p>
+</div>
+<div class="tablewrap reveal">
+<table>
+<tr><th>Term</th><th>Definition</th></tr>
+<tr><td>Data engineering</td><td>The discipline of designing, building, and operating the systems that move and shape data so it is usable for analytics and machine learning.</td></tr>
+<tr><td>Data engineering lifecycle</td><td>The end-to-end model of stages data passes through: generation, storage, ingestion, transformation, and serving.</td></tr>
+<tr><td>Undercurrent</td><td>A cross-cutting concern — security, data management, DataOps, data architecture, orchestration, software engineering — that must be applied across every lifecycle stage rather than handled in one place.</td></tr>
+<tr><td>Data architecture</td><td>The overall design of how data systems are structured and connected to meet current and future business requirements.</td></tr>
+<tr><td>Data warehouse</td><td>A centralized store optimized for structured, modeled analytical data, typically queried via SQL for BI and reporting.</td></tr>
+<tr><td>Data lake</td><td>A centralized store for raw data of any structure, typically on cheap object storage, that applies schema at read time rather than write time.</td></tr>
+<tr><td>Data lakehouse</td><td>An architecture that adds warehouse-like transactional and schema guarantees on top of lake-style object storage, via open table formats.</td></tr>
+<tr><td>Data mesh</td><td>A decentralized architecture and organizational pattern where domain teams own their own data products under shared federated governance standards.</td></tr>
+<tr><td>Lambda architecture</td><td>A pattern running separate batch and streaming pipelines side by side to balance completeness and latency, later reconciling their outputs.</td></tr>
+<tr><td>Kappa architecture</td><td>A pattern treating streaming as the single processing path for both real-time and historical (replayed) data, avoiding a separate batch pipeline.</td></tr>
+<tr><td>OLTP</td><td>Online Transaction Processing — systems optimized for many small, fast read/write transactions, typical of operational source systems.</td></tr>
+<tr><td>OLAP</td><td>Online Analytical Processing — systems optimized for large aggregations and scans over historical data, typical of warehouses.</td></tr>
+<tr><td>Change Data Capture (CDC)</td><td>Capturing and propagating row-level changes (inserts, updates, deletes) from a source system as they happen, via log-based, trigger-based, or diff-based methods.</td></tr>
+<tr><td>ETL</td><td>Extract, Transform, Load — transforming data before it is loaded into its destination store.</td></tr>
+<tr><td>ELT</td><td>Extract, Load, Transform — loading raw data first and transforming it later, inside the destination store.</td></tr>
+<tr><td>EtLT</td><td>Extract, lightly transform, Load, Transform — a hybrid that standardizes or validates data immediately after extraction before deferring heavier transformation.</td></tr>
+<tr><td>Idempotent</td><td>A property of an operation that produces the same end result no matter how many times it is safely re-run, critical for reliable retries.</td></tr>
+<tr><td>Object storage</td><td>Storage that holds data as immutable, addressable objects (e.g., cloud blob storage) rather than a hierarchical filesystem or block device.</td></tr>
+<tr><td>File format</td><td>The byte-level layout of data within a single file, e.g. CSV, JSON, Parquet, Avro — determines compression, splittability, and schema handling.</td></tr>
+<tr><td>Table format</td><td>A metadata layer over a set of files that adds table-like semantics — schema evolution, transactions, time travel — on top of object storage.</td></tr>
+<tr><td>Apache Iceberg</td><td>An open table format providing ACID transactions, schema evolution, and time travel over files stored in a data lake.</td></tr>
+<tr><td>Delta Lake</td><td>An open table format, originating in the Spark ecosystem, providing ACID transactions and versioning over Parquet files.</td></tr>
+<tr><td>Apache Hudi</td><td>An open table format emphasizing efficient incremental upserts and near-real-time ingestion on top of a data lake.</td></tr>
+<tr><td>Star schema</td><td>A dimensional model with a central fact table connected to surrounding dimension tables, associated with Kimball-style modeling.</td></tr>
+<tr><td>Fact table</td><td>A table holding measurable, numeric events (transactions, sales) at a defined grain, linked to dimension tables via keys.</td></tr>
+<tr><td>Dimension table</td><td>A table holding descriptive attributes (customer, product, time) that give context to the numeric values in a fact table.</td></tr>
+<tr><td>Slowly Changing Dimension (SCD)</td><td>A technique for handling changes to dimension attributes over time, e.g. preserving history (Type 2) versus overwriting in place (Type 1).</td></tr>
+<tr><td>Data Vault</td><td>A modeling methodology using hubs, links, and satellites, designed for full historical traceability and auditability of source changes.</td></tr>
+<tr><td>One Big Table (OBT)</td><td>A wide, heavily denormalized single table combining facts and dimensional attributes, favored for simplicity in some modern self-service setups.</td></tr>
+<tr><td>Semantic layer</td><td>A shared layer defining business metrics and terms once (e.g. "revenue") so every downstream query or dashboard uses the same definition.</td></tr>
+<tr><td>DAG (Directed Acyclic Graph)</td><td>A graph of tasks with directional dependencies and no cycles, used by orchestrators to represent a pipeline's execution order.</td></tr>
+<tr><td>Orchestration</td><td>Scheduling, sequencing, and managing dependencies, retries, and failures across the tasks that make up a pipeline.</td></tr>
+<tr><td>DataOps</td><td>The application of DevOps-style practices — automation, monitoring, continuous improvement — to data pipeline development and operations.</td></tr>
+<tr><td>Infrastructure as code (IaC)</td><td>Defining infrastructure (clusters, warehouses, permissions) in versioned configuration files rather than manual console changes, so environments are reproducible and auditable.</td></tr>
+<tr><td>Data lineage</td><td>The tracked history of a dataset — which upstream tables and columns it was derived from, and everything downstream that depends on it — used for impact analysis, debugging, and audit.</td></tr>
+<tr><td>Data observability</td><td>Automated monitoring of a pipeline's freshness, volume, schema, and distribution to catch anomalies before they reach a stakeholder.</td></tr>
+<tr><td>Data governance</td><td>The set of practices ensuring data is discoverable, high quality, secure, and clearly owned across an organization.</td></tr>
+<tr><td>Golden record / MDM</td><td>Master Data Management is the practice of reconciling multiple systems' records of one entity into a single trusted golden record.</td></tr>
+<tr><td>Data quality</td><td>The degree to which data is accurate, complete, consistent, timely, unique, and valid for its intended use.</td></tr>
+<tr><td>Data contract</td><td>A formal, versioned agreement between a data producer and its consumers specifying a dataset's schema, semantics, and change process.</td></tr>
+<tr><td>Least privilege</td><td>The security principle of granting the minimum access necessary to perform a task, for the shortest time necessary.</td></tr>
+<tr><td>Anonymization</td><td>Irreversibly removing identifying information so a record can never be re-linked to a specific individual.</td></tr>
+<tr><td>Pseudonymization</td><td>Replacing identifiers with a token that could, in principle, be reversed using a separately held key or mapping.</td></tr>
+<tr><td>Reverse ETL</td><td>Moving modeled data from a warehouse back into operational tools (CRM, ad platforms) so business systems can act on it.</td></tr>
+<tr><td>Data sharing</td><td>Providing controlled, often live, access to a dataset across organizational or company boundaries without copying it wholesale.</td></tr>
+<tr><td>FinOps</td><td>The practice of treating cloud and data-platform cost as an accountable, forecastable, and continuously optimized responsibility.</td></tr>
+<tr><td>Big data (the five V’s)</td><td>Data that stresses Volume, Velocity, Variety, Veracity, and/or Value past what a single traditional system handles comfortably.</td></tr>
+<tr><td>IaaS / PaaS / SaaS</td><td>Infrastructure / Platform / Software as a Service — increasing levels of what a cloud provider manages for you, from raw VMs up to a ready-to-use application. Most data platforms are PaaS.</td></tr>
+<tr><td>DBMS</td><td>Database Management System — the software layer that stores, retrieves, and manages data while enforcing structure and concurrent access.</td></tr>
+<tr><td>NoSQL</td><td>Non-relational databases (document, key-value, wide-column, or graph) that trade some relational consistency or rigidity for scale or schema flexibility.</td></tr>
+<tr><td>Data mart</td><td>A subject-specific subset of a data warehouse, scoped to one team or business function.</td></tr>
+<tr><td>Partitioning</td><td>Splitting a large dataset into smaller chunks (often by date) to speed up queries and reduce cost.</td></tr>
+<tr><td>Schema-on-read vs. schema-on-write</td><td>Whether structure is enforced when data is stored (write) or only when it is queried (read).</td></tr>
+<tr><td>Data masking</td><td>Hiding the real value of a sensitive field — via static masking, dynamic masking, tokenization, or hashing — without breaking the pipeline that processes it.</td></tr>
+</table>
+</div>
+<h3 class="reveal">Lifecycle stage quick reference</h3>
+<div class="tablewrap reveal">
+<table>
+<tr><th>Lifecycle stage</th><th>Primary undercurrent concerns</th><th>One thing to get right</th></tr>
+<tr><td class="cell-gen">Generation</td><td>Data architecture (understanding source system behavior), security (access to sources)</td><td>Understand the source system's update patterns before designing anything downstream of it.</td></tr>
+<tr><td class="cell-store">Storage</td><td>Data management, security, cost/FinOps</td><td>Choose file and table formats for reversibility, not just today's convenience.</td></tr>
+<tr><td class="cell-ingest">Ingestion</td><td>Orchestration, DataOps, reliability</td><td>Make ingestion idempotent so retries never produce duplicate or corrupted data.</td></tr>
+<tr><td class="cell-xform">Transformation</td><td>Data management (modeling, quality), software engineering (testable logic)</td><td>Define business metrics once, in a semantic layer, not once per dashboard.</td></tr>
+<tr><td class="cell-serve">Serving</td><td>Security (row/column-level access), data governance (stewardship)</td><td>Know who consumes the data and in what form before optimizing how it's stored.</td></tr>
+</table>
+</div>
+<!-- END s18 -->
+<hr/>
+<div class="prose reveal">
+<h2 style="margin-top:10px"><span class="pfx">∎</span> The takeaway</h2>
+<p>Data engineering is not the plumbing you tolerate on the way to "the real work" of analytics or machine learning — it is the discipline that decides whether the real work is even trustworthy. The <strong>lifecycle</strong> (generation, storage, ingestion, transformation, serving) gives you a map of what has to happen to data. The <strong>undercurrents</strong> (security, data management, DataOps, architecture, orchestration, software engineering) are what separate a pipeline a team can sleep soundly on from one that pages someone every night. And the recurring theme across every chapter of the source book — architecture, tool choice, modeling, even ethics — is that data engineering is a series of trade-offs made under real constraints, not a search for one universally correct answer.</p>
+<p>If you take one habit from this guide into daily work: before building anything, ask what stage of the lifecycle you are in, which undercurrents you are about to neglect, and whether the decision you are making is reversible. Most expensive data engineering mistakes are the ones nobody asked those three questions about.</p>
+</div>
+
+<footer class="end" style="text-align:center;padding:34px 0 8px;border-top:1px solid #2c2c38;margin-top:44px"><p style="margin-bottom:8px"><a href="../essentials.html">← Back to all articles</a></p><p style="color:#9aa0b4">© 2026 · Hao Tieu Kim · Built with GitHub Pages</p></footer>
+
+</div><!-- /wrap -->
+
+<script>
+  var bar=document.getElementById('bar');
+  function prog(){var h=document.documentElement;var s=h.scrollTop||document.body.scrollTop;var max=(h.scrollHeight-h.clientHeight)||1;bar.style.width=(s/max*100)+'%';}
+  document.addEventListener('scroll',prog,{passive:true});prog();
+  function revealAll(){document.querySelectorAll('.reveal').forEach(function(el){el.classList.add('in');});}
+  try{
+    var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}});},{threshold:.08});
+    document.querySelectorAll('.reveal').forEach(function(el){io.observe(el);});
+    window.addEventListener('load',function(){setTimeout(revealAll,2000);});
+    setTimeout(revealAll,2500);
+  }catch(e){revealAll();}
+</script>
+</body>
+</html>
