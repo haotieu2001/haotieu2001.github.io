@@ -173,14 +173,14 @@ h2 .n{color:var(--blue2,#5C78FF)}
 
 <!-- HOOK -->
 <div class="prose reveal">
-<p class="lead">Every dashboard, every fraud model, every regulatory report a bank files with the State Bank of Vietnam (SBV) starts the same way: as a raw row of data sitting in some source system, with no idea yet that anyone needs it. <strong>Data engineering</strong> is the entire discipline of getting that row — reliably, securely, and at whatever scale the business needs — from where it is generated to where it is useful, without losing it, corrupting it, exposing it, or arriving too late to matter. It is unglamorous compared to machine learning or analytics, and it is also the thing that determines whether either of those is possible at all.</p>
+<p class="lead">Every dashboard, every ML model, every regulatory report a company files starts the same way: as a raw row of data sitting in some source system, with no idea yet that anyone needs it. <strong>Data engineering</strong> is the entire discipline of getting that row — reliably, securely, and at whatever scale the business needs — from where it is generated to where it is useful, without losing it, corrupting it, exposing it, or arriving too late to matter. It is unglamorous compared to machine learning or analytics, and it is also the thing that determines whether either of those is possible at all.</p>
 <p>This guide is a complete, detailed walk through the ideas in <em>Fundamentals of Data Engineering</em> by Joe Reis and Matt Housley — the closest thing the field has to a shared vocabulary — reorganized as a single reference: the data engineering lifecycle and its five stages, the six "undercurrents" that cut across every one of them, how to design and choose architecture, and a deep pass through source systems, storage, ingestion, modeling, transformation, serving, orchestration, governance, and security. Code and configuration examples are illustrative (Python, SQL, YAML) rather than tied to one vendor, because the book itself is deliberately technology-agnostic — it teaches you how to evaluate any tool, not which specific tool to buy.</p>
 </div>
 
 <!-- TL;DR -->
 
 <div class="callout cy reveal">
-<p><b>Why this matters for a bank.</b> Core banking, card, and payment systems generate transactional data continuously; regulatory reporting to the SBV, AML/fraud monitoring, credit scoring, and customer analytics all sit downstream of the exact lifecycle stages covered here. The security and governance sections later in this guide connect directly to Vietnam's PDPL (personal data protection legal framework) and SBV data-handling expectations — get the plumbing wrong and it is a compliance problem, not just an engineering one. (Illustrative framing throughout this guide — always confirm current obligations with legal/compliance.)</p>
+<p><b>Why the plumbing matters.</b> Application, transaction, and event systems generate data continuously; regulatory reporting, fraud monitoring, risk scoring, and customer analytics all sit downstream of the exact lifecycle stages covered here. The security and governance sections later in this guide (<a href="#s14">Section 14</a>, <a href="#s15">Section 15</a>) connect directly to how that data has to be protected and governed — get the plumbing wrong and it becomes a compliance problem, not just an engineering one. (Illustrative framing throughout this guide — always confirm current obligations with legal/compliance for any specific organization.)</p>
 </div>
 
 <div class="toc reveal">
@@ -679,8 +679,8 @@ h2 .n{color:var(--blue2,#5C78FF)}
 </div>
 <div class="def reveal">
 <p class="t">OLTP vs. OLAP</p>
-<p>OLTP (Online Transaction Processing) systems are built to record many small transactions quickly and reliably — a core banking system posting one debit and one credit per transfer, over and over, correctly and fast. OLAP (Online Analytical Processing) systems are built for the opposite workload: scanning and aggregating large volumes of historical data to answer broad questions.</p>
-<p class="ex"><b>Example —</b> a core banking database is OLTP: it optimizes for "update this one account balance correctly, right now." A data warehouse built from years of that same ledger data is OLAP: it optimizes for "sum every transaction across every account for the last five years." Most of data engineering is the safe, repeatable movement of data from the OLTP world into the OLAP world.</p>
+<p>OLTP (Online Transaction Processing) systems are built to record many small transactions quickly and reliably — an e-commerce order system posting one order and one payment record per checkout, over and over, correctly and fast. OLAP (Online Analytical Processing) systems are built for the opposite workload: scanning and aggregating large volumes of historical data to answer broad questions.</p>
+<p class="ex"><b>Example —</b> an e-commerce order database is OLTP: it optimizes for "update this one order's status correctly, right now." A data warehouse built from years of that same order data is OLAP: it optimizes for "sum every order across every customer for the last five years." Most of data engineering is the safe, repeatable movement of data from the OLTP world into the OLAP world.</p>
 </div>
 <h3 class="reveal">What to evaluate before you ingest anything</h3>
 <div class="kv reveal">
@@ -741,7 +741,7 @@ h2 .n{color:var(--blue2,#5C78FF)}
 <figcaption>Data engineers ingest from systems they rarely control — each source carries its own schema, update pattern, and reliability profile before it ever crosses the ingestion boundary.</figcaption>
 </figure>
 <div class="callout cy reveal">
-<p><b>Illustrative example —</b> picture a retail bank's data platform team ingesting from four very different source systems in the same week: a core banking ledger database (strict relational schema, append-heavy but with occasional reversals, near-zero tolerance for a missed transaction), a card-switch transaction feed (high-velocity, near-real-time, semi-structured messages arriving from a payment network), a mobile banking app's clickstream events (bursty, a schema that shifts with every app release, more useful for product analytics than finance), and scanned KYC documents from branch onboarding (unstructured files, irregular arrival, unreadable until OCR — optical character recognition — runs). None of these was designed with the data platform in mind — each was built by a different team to solve a different problem, and the data engineer inherits whatever schema, volume, and reliability profile results. This is a generic illustrative scenario, not a description of any specific institution's actual systems.</p>
+<p><b>Illustrative example —</b> picture a retail company's data platform team ingesting from four very different source systems in the same week: an order-management database (strict relational schema, append-heavy but with occasional refunds and reversals, near-zero tolerance for a missed order), a payment-processor transaction feed (high-velocity, near-real-time, semi-structured messages arriving from a third-party payment network), a mobile app's clickstream events (bursty, a schema that shifts with every app release, more useful for product analytics than finance), and scanned identity documents from customer onboarding (unstructured files, irregular arrival, unreadable until OCR — optical character recognition — runs). None of these was designed with the data platform in mind — each was built by a different team to solve a different problem, and the data engineer inherits whatever schema, volume, and reliability profile results. This is a generic illustrative scenario, not a description of any specific company's actual systems.</p>
 </div>
 <!-- END s08 -->
 
@@ -836,12 +836,12 @@ h2 .n{color:var(--blue2,#5C78FF)}
 </div>
 <pre class="reveal"><code><span class="c1"># Illustrative log-based CDC connector configuration</span>
 connector.class: io.debezium.connector.postgresql.PostgresConnector
-database.hostname: core-banking-db.internal
-database.dbname: ledger
-table.include.list: public.accounts, public.transactions
+database.hostname: orders-db.internal
+database.dbname: orders
+table.include.list: public.orders, public.payments
 plugin.name: pgoutput
 <span class="c1"># Emits one change event per row-level insert, update, or delete</span>
-topic.prefix: ledger.cdc
+topic.prefix: orders.cdc
 </code></pre>
 <figure class="diagram reveal">
 <svg viewBox="0 0 940 260" role="img" aria-label="Log-based CDC flow: source database writes to its transaction log, a CDC connector reads that log, and publishes changes to a message queue or target table.">
@@ -885,7 +885,7 @@ topic.prefix: ledger.cdc
 </table>
 </div>
 <div class="callout wn reveal">
-<p><b>The trigger-based CDC trap —</b> trigger-based CDC is tempting because it needs no special database configuration, but every insert, update, and delete on the source table now also pays the cost of firing a trigger and writing to a change table. On a busy production OLTP database — a core banking system processing thousands of transactions a second, for instance — that overhead compounds, and it's not unusual for trigger-based CDC to visibly slow down the very application it was meant to observe. Log-based CDC avoids this because it reads a log the database already maintains for its own purposes.</p>
+<p><b>The trigger-based CDC trap —</b> trigger-based CDC is tempting because it needs no special database configuration, but every insert, update, and delete on the source table now also pays the cost of firing a trigger and writing to a change table. On a busy production OLTP database — a high-traffic e-commerce order system processing thousands of transactions a second, for instance — that overhead compounds, and it's not unusual for trigger-based CDC to visibly slow down the very application it was meant to observe. Log-based CDC avoids this because it reads a log the database already maintains for its own purposes.</p>
 </div>
 <div class="callout gd reveal">
 <p><b>Idempotent ingestion —</b> at-least-once delivery means a message might be delivered more than once after a retry; exactly-once delivery means it's delivered precisely once, but is much harder to guarantee end-to-end and often comes with a performance cost. Most real pipelines build on at-least-once delivery and make the ingestion step idempotent instead — writing changes so that applying the same event twice produces the same result as applying it once (for example, an upsert keyed on a stable event ID, rather than a blind append). That way, when a pipeline retries after a crash or a network failure, it doesn't silently double-count data.</p>
@@ -1032,7 +1032,7 @@ group by 1, 2
 <p>The last pattern, <b>data sharing</b>, is worth calling out separately because it's a quiet architectural shift: instead of exporting a file or running a nightly export job to a partner organization, the provider exposes a live, read-only view of a dataset that the consumer queries directly against the provider's platform. Both sides avoid the staleness and duplication of file-based exchange, at the cost of a tighter platform dependency between the two organizations.</p>
 </div>
 <div class="callout cy reveal">
-<p><b>Same platform, wildly different clocks (illustrative example).</b> Picture a bank running both a real-time authorization risk score and a monthly regulatory report off the same underlying transaction data. The risk score has to reach the payment-authorization system in single-digit milliseconds, or the transaction times out. The regulatory report has a latency budget measured in days, but must be exactly reconcilable to the ledger. Same data platform, same underlying facts — but one path needs a low-latency serving layer and the other needs an auditable batch pipeline. This is a generic illustration of the trade-off, not a description of any specific institution's actual systems.</p>
+<p><b>Same platform, wildly different clocks (illustrative example).</b> Picture a company running both a real-time fraud score and a monthly financial close report off the same underlying transaction data. The fraud score has to reach the checkout system in single-digit milliseconds, or the transaction times out. The financial close report has a latency budget measured in days, but must be exactly reconcilable to the ledger. Same data platform, same underlying facts — but one path needs a low-latency serving layer and the other needs an auditable batch pipeline. This is a generic illustration of the trade-off, not a description of any specific company's actual systems.</p>
 </div>
 <!-- END s12 -->
 
@@ -1147,10 +1147,10 @@ def daily_orders_pipeline():
 <tr><th>Dimension</th><th>What it means</th><th>Example failure</th></tr>
 <tr><td class="cell-store">Accuracy</td><td>Values correctly reflect the real-world fact they represent.</td><td>A customer's recorded date of birth is off by one day due to a timezone conversion bug.</td></tr>
 <tr><td class="cell-store">Completeness</td><td>All the records and fields that should be present are present.</td><td>A batch load silently drops the last partition of the day because a job timed out.</td></tr>
-<tr><td class="cell-store">Consistency</td><td>The same fact agrees across tables, systems, or time.</td><td>A customer's account status is "active" in core banking but "closed" in the CRM extract.</td></tr>
-<tr><td class="cell-store">Timeliness</td><td>Data is available within the window a consumer needs it.</td><td>A risk dashboard refreshes on yesterday's transactions, but the desk needs same-day exposure.</td></tr>
+<tr><td class="cell-store">Consistency</td><td>The same fact agrees across tables, systems, or time.</td><td>A customer's account status is "active" in the billing system but "closed" in the CRM extract.</td></tr>
+<tr><td class="cell-store">Timeliness</td><td>Data is available within the window a consumer needs it.</td><td>An inventory dashboard refreshes on yesterday's orders, but the warehouse team needs same-day stock levels.</td></tr>
 <tr><td class="cell-store">Uniqueness</td><td>Each real-world entity appears once, not duplicated.</td><td>A retry in the ingestion job inserts the same payment event twice, doubling the total.</td></tr>
-<tr><td class="cell-store">Validity</td><td>Values conform to an expected format, range, or domain.</td><td>An interest rate field contains a negative value that passed no schema constraint.</td></tr>
+<tr><td class="cell-store">Validity</td><td>Values conform to an expected format, range, or domain.</td><td>A discount-percentage field contains a negative value that passed no schema constraint.</td></tr>
 </table>
 </div>
 <div class="callout cy reveal">
@@ -1158,21 +1158,21 @@ def daily_orders_pipeline():
 </div>
 <h3 class="reveal">Master Data Management and the golden record</h3>
 <div class="prose reveal">
-<p>Large organizations rarely have one system of record for a core entity like "customer," "account," or "product." Core banking, CRM, card processing, and digital channels each accumulate their own version of the same customer, often with different spellings, different identifiers, and different update timestamps. <b>Master Data Management (MDM)</b> is the discipline of reconciling those competing records into a single, trusted representation — matching records that likely refer to the same entity, resolving conflicts between them, and publishing one authoritative version for the rest of the organization to consume.</p>
+<p>Large organizations rarely have one system of record for a core entity like "customer," "account," or "product." Billing, CRM, order management, and support systems each accumulate their own version of the same customer, often with different spellings, different identifiers, and different update timestamps. <b>Master Data Management (MDM)</b> is the discipline of reconciling those competing records into a single, trusted representation — matching records that likely refer to the same entity, resolving conflicts between them, and publishing one authoritative version for the rest of the organization to consume.</p>
 </div>
 <div class="def reveal">
 <p class="t">Golden record</p>
 <p>The single, reconciled version of a real-world entity's data that an organization treats as authoritative, produced by matching and merging records from multiple source systems.</p>
-<p class="ex"><b>Example:</b> Core banking spells a customer's name "NGUYEN VAN A" with an old mailing address; the CRM has the correct current address but a slightly different name format; the card system has a verified phone number the other two lack. MDM matches these three records as the same person and produces one golden record with the correct name, current address, and verified phone number — which downstream reporting, marketing, and risk systems then reference instead of picking a source at random.</p>
+<p class="ex"><b>Example:</b> The billing system spells a customer's name "JANE A SMITH" with an old mailing address; the CRM has the correct current address but a slightly different name format; the support system has a verified phone number the other two lack. MDM matches these three records as the same person and produces one golden record with the correct name, current address, and verified phone number — which downstream reporting, marketing, and risk systems then reference instead of picking a source at random.</p>
 </div>
 <figure class="diagram reveal">
 <svg viewBox="0 0 900 300" role="img" aria-label="Three source systems each holding their own Customer record converge into a Match and Reconcile step, which produces a single Golden Record.">
 <rect x="20" y="15" width="220" height="50" rx="6" fill="none" stroke="var(--gen)"/>
-<text x="130" y="45" text-anchor="middle" font-size="12" font-family="var(--font)" fill="var(--ink)">Core Banking &#8212; Customer</text>
+<text x="130" y="45" text-anchor="middle" font-size="12" font-family="var(--font)" fill="var(--ink)">Billing &#8212; Customer</text>
 <rect x="20" y="125" width="220" height="50" rx="6" fill="none" stroke="var(--gen)"/>
 <text x="130" y="155" text-anchor="middle" font-size="12" font-family="var(--font)" fill="var(--ink)">CRM &#8212; Customer</text>
 <rect x="20" y="235" width="220" height="50" rx="6" fill="none" stroke="var(--gen)"/>
-<text x="130" y="265" text-anchor="middle" font-size="12" font-family="var(--font)" fill="var(--ink)">Card System &#8212; Customer</text>
+<text x="130" y="265" text-anchor="middle" font-size="12" font-family="var(--font)" fill="var(--ink)">Support System &#8212; Customer</text>
 <rect x="380" y="120" width="180" height="60" rx="6" fill="none" stroke="var(--xform)"/>
 <text x="470" y="154" text-anchor="middle" font-size="13" font-family="var(--font)" fill="var(--ink)">Match &amp; Reconcile</text>
 <rect x="650" y="120" width="170" height="60" rx="6" fill="none" stroke="var(--serve)"/>
@@ -1186,10 +1186,10 @@ def daily_orders_pipeline():
 <line x1="560" y1="150" x2="650" y2="150" stroke="var(--muted)"/>
 <polygon points="650,150 642,147 642,153" fill="var(--muted)"/>
 </svg>
-<figcaption>Reconciling three systems' views of the same customer into a single, trusted golden record used across the bank.</figcaption>
+<figcaption>Reconciling three systems' views of the same customer into a single, trusted golden record used across the organization.</figcaption>
 </figure>
 <div class="callout cy reveal">
-<p>For a bank, this is not an abstract data-modeling exercise. A single, accurate view of a customer across core banking, cards, and digital channels is an operational necessity — it underpins credit decisions, fraud checks, and service quality — and it is also the kind of control that regulators and internal risk or compliance functions generally expect to see maintained accurately and kept demonstrably reconciled, rather than assembled ad hoc when someone asks for it. As elsewhere in this guide, this is a generic illustration of why MDM matters for a bank, not a claim about any specific institution's actual controls.</p>
+<p>For most organizations, this is not an abstract data-modeling exercise. A single, accurate view of a customer across billing, support, and digital channels is an operational necessity — it underpins service quality, marketing spend, and fraud checks — and it is also the kind of control that internal risk or compliance functions generally expect to see maintained accurately and kept demonstrably reconciled, rather than assembled ad hoc when someone asks for it. As elsewhere in this guide, this is a generic illustration of why MDM matters, not a claim about any specific organization's actual controls.</p>
 </div>
 <!-- END s14 -->
 
@@ -1199,7 +1199,7 @@ def daily_orders_pipeline():
 <p class="sectionsub reveal">Least privilege, layered controls, and the difference between compliant and actually secure</p>
 <div class="prose reveal">
 <p>Security is one of the six undercurrents from <a href="#s03">Section 03</a> precisely because it cannot be bolted onto a finished pipeline — it has to shape every decision from schema design to who gets a warehouse login. The book anchors its treatment of security in two foundational principles. <b>Least privilege</b> means every person, service account, and pipeline job gets the minimum access required to do its job, nothing more, for no longer than necessary. <b>Defense in depth</b> means no single control is trusted to hold on its own; if one layer fails, another layer should still catch the problem.</p>
-<p>On top of those principles sit concrete technical controls. <b>Encryption at rest and in transit</b> protects data from anyone who gains access to storage media or network traffic without the right keys. <b>Row-level and column-level security</b> let a single table serve different audiences different slices of the same data — a loan officer sees their branch's applications, a regional manager sees the region, and a salary column stays hidden from everyone except HR and payroll. <b>Access control models</b> formalize who gets what: role-based access control (RBAC) grants permissions by job role, which scales well and is easy to audit, while attribute-based access control (ABAC) grants permissions dynamically based on attributes of the user, resource, and context — useful when access rules are too fine-grained for a fixed set of roles. Finally, <b>masking and tokenization</b> replace sensitive values with realistic-looking substitutes or opaque tokens so that most systems and most people never need to see the real value at all.</p>
+<p>On top of those principles sit concrete technical controls. <b>Encryption at rest and in transit</b> protects data from anyone who gains access to storage media or network traffic without the right keys. <b>Row-level and column-level security</b> let a single table serve different audiences different slices of the same data — a support agent sees their team's tickets, a regional manager sees the region, and a salary column stays hidden from everyone except HR and payroll. <b>Access control models</b> formalize who gets what: role-based access control (RBAC) grants permissions by job role, which scales well and is easy to audit, while attribute-based access control (ABAC) grants permissions dynamically based on attributes of the user, resource, and context — useful when access rules are too fine-grained for a fixed set of roles. Finally, <b>masking and tokenization</b> replace sensitive values with realistic-looking substitutes or opaque tokens so that most systems and most people never need to see the real value at all.</p>
 </div>
 <div class="def reveal">
 <p class="t">Anonymization vs. pseudonymization</p>
@@ -1227,7 +1227,7 @@ def daily_orders_pipeline():
 <h3 class="reveal">Regulatory landscape and privacy by design</h3>
 <div class="prose reveal">
 <p>Globally, GDPR (EU) and CCPA (California) are the best-known reference points for personal data protection principles: informed consent, purpose limitation (collect data for a stated reason and don't quietly reuse it for something else), a set of data subject rights (access, correction, deletion), and breach notification obligations. These frameworks have shaped how most data platforms think about personal data handling even outside their direct jurisdiction, because global vendors build to their baseline.</p>
-<p>Vietnam's own personal data protection legal framework (PDPL) has been developing along a broadly similar direction — generally requiring lawful grounds and a degree of transparency for processing personal data, and giving individuals certain rights over their own data. For banks specifically, the State Bank of Vietnam's supervisory expectations commonly extend beyond privacy law generally into more specific banking-sector concerns: customer information confidentiality, careful handling of cross-border data transfers, and data localization considerations for certain categories of banking data. Because the specific legal instruments and their requirements evolve, a data engineering team should treat this section as a conceptual map, not a compliance checklist — the current, authoritative text should always come from legal and compliance colleagues, not from a summary of a 2022 book.</p>
+<p>Many other jurisdictions have developed their own personal data protection frameworks along a broadly similar direction — generally requiring lawful grounds and a degree of transparency for processing personal data, and giving individuals certain rights over their own data. Regulated industries (finance, healthcare, and others) commonly face sector-specific rules on top of general privacy law: confidentiality obligations, careful handling of cross-border data transfers, and data-localization requirements for certain categories of data. Because the specific legal instruments and their requirements evolve constantly and vary by jurisdiction, a data engineering team should treat this section as a conceptual map, not a compliance checklist — the current, authoritative text should always come from legal and compliance colleagues, not from a summary of a book.</p>
 <p>Beyond compliance, the book raises data ethics as a distinct concern: pipelines that feed machine learning models can encode and amplify bias present in historical data, producing unfair outcomes at scale even when no individual step was intentionally discriminatory. Privacy-enhancing techniques like <b>k-anonymity</b> (ensuring any individual record is indistinguishable from at least k−1 others on key attributes) and <b>differential privacy</b> (adding calibrated statistical noise so aggregate results are useful but no individual record can be reliably inferred) offer conceptual tools for reducing this risk. The umbrella idea the book advocates is <b>privacy by design</b>: treating privacy protection as an architectural requirement decided at design time, rather than a control retrofitted onto a pipeline after a stakeholder asks about it.</p>
 </div>
 <div class="tablewrap reveal">
@@ -1236,7 +1236,7 @@ def daily_orders_pipeline():
 <tr><td class="cell-serve">Encryption</td><td>Data theft from stolen media or intercepted network traffic.</td><td>A stolen backup drive is unreadable without the decryption key.</td></tr>
 <tr><td class="cell-serve">Masking / tokenization</td><td>Exposure of raw sensitive values to systems or staff that don't need them.</td><td>A support dashboard shows "**** **** **** 1234" instead of a full card number.</td></tr>
 <tr><td class="cell-serve">RBAC</td><td>Over-broad access from a shared or default permission set.</td><td>A junior analyst's role grants read access to marketing tables but not payroll tables.</td></tr>
-<tr><td class="cell-serve">Anonymization</td><td>Re-identification of individuals from a released or shared dataset.</td><td>A research dataset reports branch-level averages with no customer-level rows at all.</td></tr>
+<tr><td class="cell-serve">Anonymization</td><td>Re-identification of individuals from a released or shared dataset.</td><td>A research dataset reports region-level averages with no customer-level rows at all.</td></tr>
 <tr><td class="cell-serve">Differential privacy</td><td>Inference of an individual's data from aggregate query results.</td><td>A published statistic has small random noise added so no single customer's record can be isolated.</td></tr>
 </table>
 </div>
@@ -1348,7 +1348,7 @@ def daily_orders_pipeline():
 </div>
 <div class="callout wn reveal">
 <h4>Multi-cloud is usually not a technical decision</h4>
-<p>Very few organizations pick a cloud purely on technical merit — existing vendor relationships, compliance and data-residency requirements (for a Vietnamese bank, SBV expectations and PDPL obligations are often the deciding factor, not benchmarks), and team familiarity usually matter more. The good news: the data engineering concepts in this guide transfer directly regardless of whose product names you happen to be learning today. Confirm current regulatory obligations with legal/compliance before committing to a provider or region.</p>
+<p>Very few organizations pick a cloud purely on technical merit — existing vendor relationships, compliance and data-residency requirements (for a regulated industry, these are often the deciding factor, not benchmarks), and team familiarity usually matter more. The good news: the data engineering concepts in this guide transfer directly regardless of whose product names you happen to be learning today. Confirm current regulatory obligations with legal/compliance before committing to a provider or region.</p>
 </div>
 <!-- END scloud -->
 
