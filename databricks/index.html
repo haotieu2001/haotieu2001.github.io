@@ -756,7 +756,7 @@ def bronze_events():
 @dlt.expect_or_drop("valid_id", "event_id IS NOT NULL")
 def silver_events():
     # bronze_events is defined ABOVE, in this same pipeline, so the short
-    # dlt.read_stream("<name>") form resolves it directly - no catalog path needed.
+    # dlt.read_stream("&lt;name&gt;") form resolves it directly - no catalog path needed.
     return (dlt.read_stream("bronze_events")
                .select(col("event_id"), col("event_type"), col("event_ts").cast("timestamp")))
 
@@ -828,6 +828,9 @@ def gold_event_counts():
     <div class="mini-card"><h4>Unified Auditing</h4><p>Every access to every table across every workspace is centrally logged for compliance and security review.</p></div>
     <div class="mini-card"><h4>Secure Data Sharing</h4><p>Share live tables with other Databricks accounts &mdash; or organizations without Databricks at all &mdash; without copying data.</p></div>
   </div>
+
+  <h3>Extending to Agents: Unity Catalog Metrics &amp; MCP</h3>
+  <p>Governance in 2026 covers more than tables. <strong>Unity Catalog Metrics</strong> lets you define a KPI once &mdash; e.g. "weekly revenue," with its exact filter and grouping logic &mdash; and reuse that single governed definition across dashboards, Genie spaces, and AI agents, instead of every consumer re-deriving its own slightly different SQL. And because Unity Catalog now speaks <strong>MCP</strong> (Model Context Protocol), it governs an agent's connections to external SaaS tools &mdash; Slack, Jira, GitHub, Google Drive &mdash; the same <code>GRANT</code>-based way it governs a table: one permission model for your data <em>and</em> for everywhere an agent is allowed to reach outside it (see <a href="#mlflow">Agent Bricks</a>).</p>
 
   <h3>In Practice</h3>
   <pre><code>-- Create the namespace
@@ -965,6 +968,14 @@ with mlflow.start_run():
   </div>
   <p>Every agent, tool, and model Agent Bricks touches is still governed through Unity Catalog &mdash; ownership, permissions, and lineage work the same way for an AI agent as they do for a table.</p>
 
+  <div class="callout ok">
+    <strong class="label">New in 2026: Any Model, Any Harness</strong>
+    Agent Bricks stopped being tied to one model or one framework. It now runs OpenAI, Anthropic, Gemini, and Qwen models alongside Kimi and &mdash; through a 2026 partnership with SpaceX &mdash; Grok, so swapping the model behind an agent is a config change, not a rewrite. It also runs agent code you already have: LangGraph, CrewAI, and Agno graphs, or agents built on the Claude Code SDK or OpenAI's Agent SDK, all deployed and autoscaled on the same Databricks Apps compute instead of separate hosting. And a new <strong>Managed Agent Memory</strong> service, backed by <a href="#lakebase">Lakebase</a>, gives every agent durable, millisecond-latency conversation and tool-call state without you standing up your own database for it.
+  </div>
+
+  <h3>Genie Code: An AI Assistant Built Into the Workspace</h3>
+  <p>Separate from anything you build, Databricks ships its own AI pair programmer directly in the workspace &mdash; originally called Databricks Assistant, generally available in 2026 as <strong>Genie Code</strong>. Ask it to write or fix a query, explain an error, or turn a plain-English description into a PySpark transformation, right inside a notebook or the SQL editor. Its <strong>Agent mode</strong> goes further: give it a multi-step task and it plans, edits, and runs code across several files or query threads in parallel until the task is done &mdash; and it can even import an existing Tableau or Power BI workbook and rebuild it as a native AI/BI dashboard. It's a tool for the person writing the pipeline, not something the pipeline calls at runtime the way an AI Function or an Agent Bricks agent is.</p>
+
   <h3>Mosaic AI Vector Search</h3>
   <p>Grounding an LLM's answers in your own documents &mdash; retrieval-augmented generation, or RAG &mdash; needs a way to find the handful of passages most relevant to a question out of potentially millions. <strong>Vector Search</strong> is a managed vector database, integrated with Unity Catalog, that automatically keeps its index in sync with a source Delta table &mdash; embed a text column once, and new or updated rows flow into the index without a separate pipeline to maintain.</p>
   <pre><code>CREATE VECTOR SEARCH ENDPOINT restaurant_reviews_endpoint;
@@ -999,12 +1010,19 @@ CREATE VECTOR SEARCH INDEX restaurant_prod.gold.reviews_index
     OLTP (what Lakebase is for) means many small, fast, single-row transactions &mdash; "update this one order's status." OLAP (what Spark/Delta/Databricks SQL are for) means scanning and aggregating huge volumes of history &mdash; "sum every order from the last year." Lakehouse tables are excellent at the second job and a poor fit for the first.
   </div>
 
+  <div class="callout ok">
+    <strong class="label">Now Generally Available</strong>
+    Lakebase reached GA on AWS on February&nbsp;9, 2026 (Azure followed March&nbsp;2; GCP is in Beta). It runs Postgres&nbsp;17 with <code>pgvector</code> built in, scales up to 8&nbsp;TB per instance, and adds point-in-time and disaster recovery on top of the branching below. Databricks reports 12M+ Lakebase instance launches a day across customers &mdash; it's the default operational-database backend for agents and apps built on the platform, not a side project.
+  </div>
+
   <h3>Why It's Not Just "Another Postgres"</h3>
   <div class="grid-2">
     <div class="mini-card"><h4>Native Unity Catalog Governance</h4><p>Lakebase tables are governed the same way as Delta tables &mdash; same permissions model, same audit trail, no second security system to maintain.</p></div>
     <div class="mini-card"><h4>Bidirectional Sync with the Lakehouse</h4><p>Sync a Gold Delta table <em>into</em> Lakebase for low-latency serving, and/or capture Lakebase's own changes back out as Delta tables for downstream analytics and audit.</p></div>
     <div class="mini-card"><h4>Instant, Git-Like Branching</h4><p>Copy-on-write branching creates an independent copy of a database in seconds &mdash; cheap, because unchanged data is shared with the parent rather than duplicated.</p></div>
     <div class="mini-card"><h4>Autoscaling to Zero</h4><p>Compute scales with load automatically within limits you set, and scales to zero &mdash; and back &mdash; when idle, so a dev branch sitting unused costs nothing.</p></div>
+    <div class="mini-card"><h4>Lakebase Search <em>(Beta)</em></h4><p>Full-text and <code>pgvector</code> similarity search run inside Lakebase itself &mdash; an agent's RAG lookup and its transactional reads and writes can hit the same low-latency database instead of two separate systems.</p></div>
+    <div class="mini-card"><h4>Managed Agent Memory</h4><p>Agent Bricks agents can persist conversation and tool-call state straight into Lakebase through a built-in service &mdash; see <a href="#mlflow">Agent Bricks</a> &mdash; with no memory store to provision yourself.</p></div>
   </div>
 
   <figure class="diagram-wrap">
@@ -1040,8 +1058,9 @@ CREATE VECTOR SEARCH INDEX restaurant_prod.gold.reviews_index
   <ul>
     <li><strong>Backend database for a Databricks App</strong> &mdash; an interactive tool needs fast row lookups a Delta table can't give it.</li>
     <li><strong>Online feature store</strong> &mdash; serving a specific customer's features to a model in milliseconds at inference time.</li>
-    <li><strong>State/memory store for an AI agent</strong> &mdash; conversation history and tool-call state, read and written constantly during a session.</li>
+    <li><strong>State/memory store for an AI agent</strong> &mdash; conversation history and tool-call state, read and written constantly during a session, via Managed Agent Memory.</li>
     <li><strong>Operational reporting</strong> &mdash; a small, frequently-hit summary table synced from Gold, without adding load to the SQL warehouse.</li>
+    <li><strong>RAG retrieval on live operational data</strong> &mdash; Lakebase Search lets an agent vector-search rows it can also transact against, in one database.</li>
   </ul>
 
   <div class="callout warn">
