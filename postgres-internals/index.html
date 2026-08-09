@@ -662,7 +662,7 @@ postgres: <span class="g">client backend</span>                  <span class="c"
 <svg viewBox="0 0 760 400" width="100%" aria-label="A B-tree with a root, internal nodes and leaves whose entries hold ctid pointers into the unordered heap">
   <defs>
     <marker id="b-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0 0L10 5L0 10z" fill="#5C78FF"/></marker>
-    <marker id="b-r" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0 0L10 5L0 10z" fill="#5C78FF"/></marker>
+    <marker id="b-r" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="5" markerHeight="5" orient="auto"><path d="M0 0L10 5L0 10z" fill="#FF5C8A"/></marker>
   </defs>
   <text x="380" y="20" font-size="10.5" fill="#E7E7EE" text-anchor="middle" letter-spacing="1.5">SORTED TREE &#8594; ctid &#8594; UNSORTED HEAP</text>
 
@@ -705,15 +705,15 @@ postgres: <span class="g">client backend</span>                  <span class="c"
   <text x="590" y="296" font-size="7.5" fill="#E7E7EE" text-anchor="middle">page 901 &#8230; slot 7</text>
   <text x="590" y="318" font-size="7.5" fill="#E7E7EE" text-anchor="middle">rows sit wherever there was room</text>
 
-  <g stroke="#9AA0B4" stroke-width="1.2" fill="none" stroke-dasharray="4,3">
+  <g stroke="#FF5C8A" stroke-width="1.4" fill="none" stroke-dasharray="4,3">
     <path d="M93 192 V 212 L 464 236" marker-end="url(#b-r)"/>
     <path d="M209 192 V 212 L 464 264" marker-end="url(#b-r)"/>
     <path d="M325 192 V 212 L 464 292" marker-end="url(#b-r)"/>
   </g>
 
-  <text x="380" y="350" font-size="10" fill="#E7E7EE" text-anchor="middle">The tree is sorted. The heap is not. Every red arrow is a random page read.</text>
+  <text x="380" y="350" font-size="10" fill="#FF8FB0" text-anchor="middle">The tree is sorted. The heap is not. Every red arrow is a random page read.</text>
   <text x="380" y="371" font-size="9.5" fill="#E7E7EE" text-anchor="middle">Depth ~4 even for a billion rows: root &#8594; internal &#8594; internal &#8594; leaf. Then one jump.</text>
-  <text x="380" y="391" font-size="9.5" fill="#5AC8FF" text-anchor="middle">Kill the red arrows and you have an INDEX-ONLY SCAN (&#167;10).</text>
+  <text x="380" y="391" font-size="9.5" fill="#FF8FB0" text-anchor="middle">Kill the red arrows and you have an INDEX-ONLY SCAN (&#167;10).</text>
 </svg>
 <figcaption>The B-tree gives you the <code>ctid</code> cheaply. The expensive part is the red arrows — chasing those pointers into a heap where the rows are scattered.</figcaption>
 </figure>
