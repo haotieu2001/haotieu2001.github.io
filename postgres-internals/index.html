@@ -188,7 +188,7 @@
 
 <div class="toc reveal">
   <strong>Contents</strong>
-  <a href="#names"><svg class="ico"><use href="#i-alert"/></svg>01 · First: half these words mean something else here</a>
+  <a href="#names"><svg class="ico"><use href="#i-alert"/></svg>01 · Five facts about Postgres storage</a>
   <a href="#arch"><svg class="ico"><use href="#i-workflow"/></svg>02 · Architecture: processes, memory, WAL</a>
   <a href="#hierarchy"><svg class="ico"><use href="#i-layers"/></svg>03 · The storage hierarchy: cluster to tuple</a>
   <a href="#page"><svg class="ico"><use href="#i-disk"/></svg>04 · Inside an 8 KB page</a>
@@ -212,26 +212,21 @@
   <a href="#glossary"><svg class="ico"><use href="#i-book"/></svg>＊ · Glossary</a>
 </div>
 
-<h2 id="names" class="reveal"><span class="hico"><svg class="ico"><use href="#i-alert"/></svg></span><span class="n">01.</span> First: half these words mean something else here</h2>
-<p class="reveal lead">Most SQL-internals material online is written about <strong>SQL Server</strong>. Bring its vocabulary to Postgres and you will ask for things that <em>do not exist</em>.</p>
-
-<p class="reveal">This is not a pedantic point. I ran every one of these against a live PostgreSQL 18 server, and <code>CREATE CLUSTERED INDEX</code>, <code>CREATE NONCLUSTERED INDEX</code>, <code>CREATE COLUMNSTORE INDEX</code>, <code>CREATE FILTERED INDEX</code> and <code>CREATE FILEGROUP</code> each came back with a flat <strong>syntax error</strong>. Some of these concepts have a Postgres equivalent under a different name; one of them has <em>no equivalent at all</em>. Start here, and the rest of the page will make sense.</p>
+<h2 id="names" class="reveal"><span class="hico"><svg class="ico"><use href="#i-alert"/></svg></span><span class="n">01.</span> Five facts about Postgres storage, stated plainly</h2>
+<p class="reveal lead">Everything in this page builds on five facts. Get these straight first — they're each easy to assume wrong — and the rest of the page will make sense.</p>
 
 <div class="tw reveal"><table>
-<tr><th>SQL Server term</th><th>In PostgreSQL</th><th>What's really going on</th></tr>
-<tr><td><strong>Data page</strong> (8 KB)</td><td class="ok">Same — <code>block_size</code> = 8192</td><td>Identical idea, identical size. The unit of I/O</td></tr>
-<tr><td><strong>Heap</strong></td><td class="ok">Same — but <em>everything</em> is one</td><td><strong>Every Postgres table is a heap.</strong> There is no other option</td></tr>
-<tr><td><strong>Clustered index</strong></td><td class="no">Does not exist</td><td>Postgres never stores the table <em>in</em> an index. <code>CLUSTER</code> is a one-off physical sort that is <strong>not maintained</strong> (§05)</td></tr>
-<tr><td><strong>Non-clustered index</strong></td><td>Just "an index"</td><td>All Postgres indexes are secondary structures pointing back at the heap. The word is unnecessary</td></tr>
-<tr><td><strong>Filtered index</strong></td><td class="ok"><strong>Partial index</strong></td><td>Same concept, different name: <code>CREATE INDEX … WHERE …</code> (§14)</td></tr>
-<tr><td><strong>File group</strong></td><td class="ok"><strong>Tablespace</strong></td><td>A named location on disk you can place tables and partitions into (§03)</td></tr>
-<tr><td><strong>Rowstore index</strong></td><td>Just "an index"</td><td>Postgres is row-oriented throughout. The word only exists to contrast with columnstore</td></tr>
-<tr><td><strong>Columnstore index</strong></td><td class="no">Does not exist in core</td><td>The one genuine gap. What to use instead — and why it points at your lakehouse — is §15</td></tr>
+<tr><th>Fact</th><th>What it means</th></tr>
+<tr><td><strong>Every table is a heap</strong></td><td>An unordered pile of pages. There is no other way to store a table in Postgres — that's true even for a table with a primary key</td></tr>
+<tr><td><strong>There is no "clustered index"</strong></td><td>Every index — including the one behind your <code>PRIMARY KEY</code> — is a separate structure that points back into the heap. The table itself is never sorted (§05)</td></tr>
+<tr><td><strong>The page is 8 KB, fixed</strong></td><td>The smallest unit Postgres ever reads or writes. <code>block_size</code> = 8192, set at compile time — you can't change it per table (§04)</td></tr>
+<tr><td><strong>A <code>WHERE</code> clause can restrict an index</strong></td><td>Called a <strong>partial index</strong>: <code>CREATE INDEX … WHERE …</code> indexes only the rows you actually query (§14)</td></tr>
+<tr><td><strong>There's no columnstore in core Postgres</strong></td><td>The one real gap for analytics. What to use instead — and why it points straight at your lakehouse — is §15</td></tr>
 </table></div>
 
 <div class="callout cy reveal">
-  <p style="margin:.2em 0"><span class="t"><svg class="ico"><use href="#i-key"/></svg> The single most important line in that table</span></p>
-  <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd"><strong>PostgreSQL has no clustered index.</strong> In SQL Server, a clustered index <em>is</em> the table — the rows live in the index's leaf pages, physically sorted by the key. In Postgres that is simply not a thing that can happen. The table is always an unordered heap, and every index is always a separate structure holding pointers back into it. If you have been reasoning about Postgres performance using a mental model where "the primary key sorts the table on disk" — <strong>it doesn't</strong>, and §05 explains what that changes.</p>
+  <p style="margin:.2em 0"><span class="t"><svg class="ico"><use href="#i-key"/></svg> The one that trips people up most</span></p>
+  <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">It's easy to assume a table with a primary key is physically sorted by that key on disk — plenty of databases work that way. <strong>Postgres never does.</strong> The table is always an unordered heap, and the index is always a separate structure off to the side, holding pointers back into it. If you've been reasoning about Postgres performance assuming "the primary key sorts the table" — <strong>it doesn't</strong>, and §05 walks through what that changes.</p>
 </div>
 
 <h2 id="arch" class="reveal"><span class="hico"><svg class="ico"><use href="#i-workflow"/></svg></span><span class="n">02.</span> The architecture: processes, memory, and the WAL</h2>
@@ -330,8 +325,8 @@ postgres: <span class="g">client backend</span>                  <span class="c"
 
 <div class="callout gr reveal">
   <p style="margin:.2em 0"><span class="t"><svg class="ico"><use href="#i-zap"/></svg> New in PostgreSQL 18: asynchronous I/O</span></p>
-  <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">Those <code>io worker</code> processes in the list above did not exist before PG 18. Historically a backend that needed a page from disk <em>blocked</em> while the kernel fetched it — one page at a time, idling. PG 18 adds a real <strong>async I/O subsystem</strong> (<code>io_method</code>, defaulting to <code>worker</code> with three helper processes; on modern Linux kernels you can set <code>io_uring</code> instead). Backends now <em>queue</em> read requests and keep working while the I/O happens in parallel underneath.</p>
-  <p style="margin:.7em 0 0;font-size:14.5px;color:#cdd0dd">It benefits exactly the operations a data engineer cares about — <strong>sequential scans, bitmap heap scans and vacuum</strong> — and reported gains on <code>io_uring</code> reach 2–3× on read-heavy scans. It also explains why <code>effective_io_concurrency</code> now defaults to 16 instead of 1. If you are on PG 17 or older, none of this exists and every disk read is a stall.</p>
+  <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">Those <code>io worker</code> processes in the list above did not exist before PG 18. Historically a backend that needed a page from disk <em>blocked</em> while the kernel fetched it — one page at a time, idling. PG 18 lets backends <em>queue</em> several read requests and keep working while the I/O happens in parallel underneath, instead of stalling on each page.</p>
+  <p style="margin:.7em 0 0;font-size:14.5px;color:#cdd0dd">It speeds up exactly the operations a data engineer cares about — <strong>sequential scans, bitmap heap scans and vacuum</strong> — with reported gains up to 2–3× on read-heavy scans. It's on by default; you don't need to configure anything to benefit. If you're on PG 17 or older, none of this exists and every disk read is a stall.</p>
 </div>
 
 <h3 class="reveal">And the read path, in one paragraph</h3>
@@ -355,7 +350,7 @@ postgres: <span class="g">client backend</span>                  <span class="c"
 
   <rect x="74" y="132" width="612" height="38" rx="6" fill="#242739" stroke="#5C78FF"/>
   <text x="88" y="149" font-size="11" fill="#E7E7EE" font-weight="700">TABLESPACE</text>
-  <text x="88" y="163" font-size="8.5" fill="#E7E7EE">a location on disk &#183; SQL Server calls this a FILEGROUP</text>
+  <text x="88" y="163" font-size="8.5" fill="#E7E7EE">a named location on disk you can place tables into</text>
 
   <rect x="96" y="178" width="568" height="38" rx="6" fill="#242739" stroke="#5C78FF"/>
   <text x="110" y="195" font-size="11" fill="#E7E7EE" font-weight="700">TABLE &#183; the heap</text>
@@ -378,7 +373,7 @@ postgres: <span class="g">client backend</span>                  <span class="c"
 <figcaption>Read bottom-up: a row version (tuple) lives in a page, pages are grouped into 1 GB segment files, files belong to a table, tables sit in a tablespace.</figcaption>
 </figure>
 
-<p class="reveal">Two of these deserve a moment. A <strong>tablespace</strong> is Postgres's answer to SQL Server's file group: a named directory you can put relations into, which is how you put hot partitions on NVMe and cold ones on cheap disk. And the <strong>1 GB segmentation</strong> is worth knowing because it surprises people: a 50 GB table is not one enormous file, it is fifty files called <code>16385</code>, <code>16385.1</code>, <code>16385.2</code> and so on.</p>
+<p class="reveal">Two of these deserve a moment. A <strong>tablespace</strong> is a named directory you can put relations into — it's how you put hot partitions on NVMe and cold ones on cheap disk. And the <strong>1 GB segmentation</strong> is worth knowing because it surprises people: a 50 GB table is not one enormous file, it is fifty files called <code>16385</code>, <code>16385.1</code>, <code>16385.2</code> and so on.</p>
 
 <div class="cb reveal"><span class="lang">sql</span><pre><span class="c">-- Where does a table physically live? Ask Postgres.</span>
 <span class="k">SELECT</span> pg_relation_filepath(<span class="g">'events'</span>);      <span class="c">--  base/5/16385</span>
@@ -457,63 +452,42 @@ postgres: <span class="g">client backend</span>                  <span class="c"
   <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">A million rows at ~70 per page is <strong>14,286 pages</strong>. A sequential scan must read all 14,286 — that is the cost of the table. An index lookup that finds 109 matching rows must read a handful of index pages plus, in the worst case, <em>107 heap pages</em>, because those 109 rows are scattered across the heap in insertion order, roughly one per page. That ratio — <em>how many pages do I touch to get the rows I want</em> — is the only thing the planner is really thinking about, and it's why an index that matches 30% of the table is worse than no index at all.</p>
 </div>
 
-<h2 id="heap" class="reveal"><span class="hico"><svg class="ico"><use href="#i-database"/></svg></span><span class="n">05.</span> The heap — and the clustered index that isn't</h2>
-<p class="reveal lead">In Postgres, <strong>every table is a heap</strong>: an unordered pile of pages. Rows go wherever there is room. There is no second option.</p>
+<h2 id="heap" class="reveal"><span class="hico"><svg class="ico"><use href="#i-database"/></svg></span><span class="n">05.</span> The heap, and why a lookup is always two steps</h2>
+<p class="reveal lead">In Postgres, <strong>every table is a heap</strong>: an unordered pile of pages. Rows go wherever there is room. There is no second option — not even for a table with a primary key.</p>
 
-<p class="reveal">This is the deepest structural difference from SQL Server, and it changes how you reason. In SQL Server, a clustered index <em>is</em> the table — the rows are stored inside the index's leaf pages, physically sorted by the key, and a lookup by that key lands you directly on the data. In Postgres the table is always a heap, and every index — including the one behind your <code>PRIMARY KEY</code> — is a <strong>separate structure off to the side</strong> whose leaves hold <code>ctid</code> pointers back into it. Finding a row by primary key means walking the B-tree <em>and then</em> jumping into the heap.</p>
+<p class="reveal">That has a direct consequence for indexes. Every index — including the one behind your <code>PRIMARY KEY</code> — is a <strong>separate structure off to the side</strong>, whose leaves hold <code>ctid</code> pointers back into the heap, not the rows themselves. So finding a row is always <em>two</em> steps: walk the B-tree to get a <code>ctid</code>, then jump to the heap page it points at. There's no shortcut where "it's the primary key" skips the second step.</p>
 
 <figure class="fig reveal">
-<svg viewBox="0 0 760 320" width="100%" aria-label="SQL Server's clustered index stores rows inside the index leaves; Postgres always keeps a separate heap that indexes point into">
+<svg viewBox="0 0 760 220" width="100%" aria-label="A Postgres index lookup: walk the B-tree to get a ctid, then jump to an unordered heap page — two steps, always, even for the primary key">
   <defs>
     <marker id="h-a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto"><path d="M0 0L10 5L0 10z" fill="#5C78FF"/></marker>
   </defs>
-  <text x="380" y="20" font-size="10.5" fill="#E7E7EE" text-anchor="middle" letter-spacing="1.5">THE INDEX IS THE TABLE &#183; vs &#183; THE INDEX POINTS AT THE TABLE</text>
+  <text x="380" y="20" font-size="10.5" fill="#E7E7EE" text-anchor="middle" letter-spacing="1.5">AN INDEX LOOKUP IN POSTGRES &#183; ALWAYS TWO STEPS</text>
 
-  <text x="188" y="46" font-size="10.5" fill="#5AC8FF" text-anchor="middle" font-weight="700">SQL SERVER · clustered index</text>
-  <rect x="88" y="58" width="200" height="30" rx="5" fill="#223650" stroke="#5AC8FF"/>
-  <text x="188" y="77" font-size="9" fill="#5AC8FF" text-anchor="middle">B-tree root</text>
-  <rect x="60" y="106" width="118" height="30" rx="5" fill="#223650" stroke="#5AC8FF"/>
-  <text x="119" y="125" font-size="8.5" fill="#5AC8FF" text-anchor="middle">internal</text>
-  <rect x="198" y="106" width="118" height="30" rx="5" fill="#223650" stroke="#5AC8FF"/>
-  <text x="257" y="125" font-size="8.5" fill="#5AC8FF" text-anchor="middle">internal</text>
-  <rect x="60" y="154" width="256" height="52" rx="5" fill="#223650" stroke="#5AC8FF" stroke-width="1.6"/>
-  <text x="188" y="174" font-size="9" fill="#fff" text-anchor="middle" font-weight="700">LEAF = THE ACTUAL ROWS</text>
-  <text x="188" y="192" font-size="8.5" fill="#E7E7EE" text-anchor="middle">sorted by the key, on disk</text>
-  <text x="188" y="228" font-size="8.5" fill="#5AC8FF" text-anchor="middle">one traversal → you have the data</text>
-  <text x="188" y="246" font-size="8.5" fill="#E7E7EE" text-anchor="middle">there is no separate table</text>
+  <rect x="60" y="52" width="220" height="72" rx="6" fill="#242739" stroke="#5C78FF"/>
+  <text x="170" y="78" font-size="10" fill="#E7E7EE" text-anchor="middle" font-weight="700">1 &#183; INDEX B-TREE</text>
+  <text x="170" y="98" font-size="8.5" fill="#E7E7EE" text-anchor="middle">leaf: key &#8594; ctid (page, slot)</text>
 
-  <path d="M380 56 V 296" stroke="#3C4356" stroke-width="1" stroke-dasharray="4,4"/>
+  <path d="M284 88 H 436" stroke="#5C78FF" stroke-width="1.6" fill="none" marker-end="url(#h-a)"/>
+  <text x="360" y="78" font-size="8.5" fill="#E7E7EE" text-anchor="middle">jump to the heap</text>
 
-  <text x="572" y="46" font-size="10.5" fill="#E7E7EE" text-anchor="middle" font-weight="700">POSTGRES · always a heap</text>
-  <rect x="446" y="58" width="150" height="28" rx="5" fill="#242739" stroke="#5C78FF"/>
-  <text x="521" y="76" font-size="8.5" fill="#E7E7EE" text-anchor="middle">B-tree root</text>
-  <rect x="446" y="96" width="150" height="28" rx="5" fill="#242739" stroke="#5C78FF"/>
-  <text x="521" y="114" font-size="8.5" fill="#E7E7EE" text-anchor="middle">leaf: key → ctid</text>
+  <rect x="440" y="40" width="260" height="148" rx="6" fill="#242739" stroke="#5C78FF"/>
+  <text x="570" y="64" font-size="10" fill="#E7E7EE" text-anchor="middle" font-weight="700">2 &#183; THE HEAP &#183; unordered</text>
+  <rect x="456" y="76" width="228" height="24" rx="3" fill="#1C1C2A" stroke="#242739"/>
+  <text x="570" y="92" font-size="8" fill="#E7E7EE" text-anchor="middle">page 0</text>
+  <rect x="456" y="104" width="228" height="24" rx="3" fill="#1C1C2A" stroke="#242739"/>
+  <text x="570" y="120" font-size="8" fill="#E7E7EE" text-anchor="middle">page 1</text>
+  <rect x="456" y="132" width="228" height="24" rx="3" fill="#1C1C2A" stroke="#242739"/>
+  <text x="570" y="148" font-size="8" fill="#E7E7EE" text-anchor="middle">page 2 &#8230; rows sit wherever there was room</text>
 
-  <rect x="620" y="58" width="110" height="148" rx="5" fill="#242739" stroke="#5C78FF"/>
-  <text x="675" y="76" font-size="8.5" fill="#E7E7EE" text-anchor="middle" font-weight="700">HEAP</text>
-  <rect x="630" y="86" width="90" height="22" rx="3" fill="#1C1C2A" stroke="#242739"/>
-  <text x="675" y="101" font-size="7.5" fill="#E7E7EE" text-anchor="middle">page 0</text>
-  <rect x="630" y="112" width="90" height="22" rx="3" fill="#1C1C2A" stroke="#242739"/>
-  <text x="675" y="127" font-size="7.5" fill="#E7E7EE" text-anchor="middle">page 1</text>
-  <rect x="630" y="138" width="90" height="22" rx="3" fill="#1C1C2A" stroke="#242739"/>
-  <text x="675" y="153" font-size="7.5" fill="#E7E7EE" text-anchor="middle">page 2</text>
-  <rect x="630" y="164" width="90" height="22" rx="3" fill="#1C1C2A" stroke="#242739"/>
-  <text x="675" y="179" font-size="7.5" fill="#E7E7EE" text-anchor="middle">…unordered</text>
-
-  <path d="M600 110 H 616" stroke="#5C78FF" stroke-width="1.4" fill="none" marker-end="url(#h-a)"/>
-  <text x="521" y="146" font-size="8.5" fill="#E7E7EE" text-anchor="middle">then JUMP to the heap</text>
-  <text x="572" y="228" font-size="8.5" fill="#E7E7EE" text-anchor="middle">two steps, always</text>
-  <text x="572" y="246" font-size="8.5" fill="#E7E7EE" text-anchor="middle">even for the PRIMARY KEY</text>
-
-  <text x="380" y="286" font-size="10" fill="#E7E7EE" text-anchor="middle">Postgres cannot store the table inside an index. The heap is always there, always unordered.</text>
+  <text x="380" y="204" font-size="10" fill="#E7E7EE" text-anchor="middle">Postgres cannot store the table inside an index. The heap is always there, always unordered — even for the primary key.</text>
 </svg>
 <figcaption>The consequence: in Postgres an index lookup is <em>always</em> "walk the tree, then fetch from the heap" — which is exactly why index-only scans (§12) matter so much.</figcaption>
 </figure>
 
 <h3 class="reveal">What about CLUSTER?</h3>
 
-<p class="reveal">Postgres does have a <code>CLUSTER</code> command, and it is a trap for anyone arriving from SQL Server. It physically <strong>rewrites the table once</strong>, sorted in an index's order. It does not create a clustered index, and — this is the crucial part — <strong>Postgres does not maintain that order.</strong> The very next <code>INSERT</code> goes wherever there is free space, and the table drifts back out of order. It also takes an <code>ACCESS EXCLUSIVE</code> lock, so the table is unreadable while it runs.</p>
+<p class="reveal">Postgres does have a <code>CLUSTER</code> command, and it's easy to misread as "make this a clustered index." It physically <strong>rewrites the table once</strong>, sorted in an index's order. It does not create a clustered index, and — this is the crucial part — <strong>Postgres does not maintain that order.</strong> The very next <code>INSERT</code> goes wherever there is free space, and the table drifts back out of order. It also takes an <code>ACCESS EXCLUSIVE</code> lock, so the table is unreadable while it runs.</p>
 
 <div class="cb reveal"><span class="lang">sql</span><pre><span class="k">CLUSTER</span> events <span class="k">USING</span> idx_created_at;   <span class="c">-- one-off physical sort. NOT maintained.</span>
                                        <span class="c">-- locks the table completely while it runs.</span>
@@ -1074,9 +1048,9 @@ Hash Join (actual rows=81184 loops=3)
 <span class="c">-- A PRIMARY KEY is exactly this + NOT NULL. The uniqueness IS enforced by the B-tree.</span>
 </pre></div>
 
-<h3 class="reveal">Partial — SQL Server calls this a "filtered index"</h3>
+<h3 class="reveal">Partial — index only the rows you actually query</h3>
 
-<p class="reveal">Index only the rows you actually query. If 90% of your orders are <code>completed</code> and every query hunts for the <code>pending</code> ones, indexing all of them is waste. Measured on our table, a partial index was <strong>half the size</strong> of the full one:</p>
+<p class="reveal">Add a <code>WHERE</code> clause to <code>CREATE INDEX</code> and only matching rows get indexed. If 90% of your orders are <code>completed</code> and every query hunts for the <code>pending</code> ones, indexing all of them is waste. Measured on our table, a partial index was <strong>half the size</strong> of the full one:</p>
 
 <div class="cb reveal"><span class="lang">sql</span><pre><span class="k">CREATE INDEX</span> idx_pending <span class="k">ON</span> events(user_id) <span class="k">WHERE</span> status = <span class="g">'pending'</span>;
 <span class="c">--  full B-tree on user_id  : 6,960 kB</span>
@@ -1468,13 +1442,13 @@ MEMORY       shared_buffers        ~25% RAM   shared, global (the page cache)
              effective_cache_size  ~75% RAM   planner HINT — allocates nothing
 
 BACKGROUND   checkpointer · background writer · walwriter · autovacuum launcher
-PG 18        async I/O (io_method = worker | io_uring) → faster seq scans,
-             bitmap heap scans and vacuum. Did not exist before PG 18.
+PG 18        async I/O → faster seq scans, bitmap heap scans and vacuum.
+             On by default. Did not exist before PG 18.
 
-<span class="c"># ── SQL SERVER → POSTGRES ──────────────────────────────────────────────</span>
-clustered index    → <span class="r">does not exist</span>       filtered index → PARTIAL index
-non-clustered idx  → just "an index"        file group     → TABLESPACE
-columnstore index  → <span class="r">does not exist</span>       (use Parquet / Delta instead)
+<span class="c"># ── FIVE CORE FACTS (§01) ───────────────────────────────────────────────</span>
+every table = a heap. no other option.       no clustered index. ever.
+page = 8 KB, fixed, the unit of I/O          partial index = CREATE INDEX … WHERE …
+no columnstore in core → that's what Parquet / Delta / the lakehouse are for
 
 <span class="c"># ── THE FOUR SCANS (measured on 1M rows / 14,286 pages) ────────────────</span>
 Seq Scan          14,286 pages   no index, or you want most of the table
@@ -1572,7 +1546,7 @@ blocking         pg_stat_activity       <span class="p">pg_blocking_pids</span>(
     <dt>B-tree</dt><dd>The default index: a sorted, balanced tree of pages. Every leaf is the same depth, so every lookup costs the same few page reads. Leaves hold key → ctid.</dd>
     <dt>BRIN</dt><dd>Block Range INdex. Stores only min/max per 128-page range, so it is tiny (24 kB where a B-tree was 21 MB). Brilliant on append-only time-ordered data; <strong>worthless</strong> if the column doesn't correlate with physical order.</dd>
     <dt>Correlation</dt><dd>A <code>pg_stats</code> figure from −1 to 1: how closely a column's logical order matches its physical order on disk. Near 1 → BRIN and range scans excel. Near 0 → only a B-tree helps.</dd>
-    <dt>Partial index</dt><dd><code>CREATE INDEX … WHERE …</code> — indexes only a subset of rows. SQL Server calls this a <em>filtered index</em>. Only usable when the query's <code>WHERE</code> provably implies the index's.</dd>
+    <dt>Partial index</dt><dd><code>CREATE INDEX … WHERE …</code> — indexes only a subset of rows. Only usable when the query's <code>WHERE</code> provably implies the index's.</dd>
     <dt>Covering index</dt><dd>An index carrying extra columns via <code>INCLUDE</code>, so a query can be answered from the index alone. The columns ride in the leaf pages only.</dd>
     <dt>Index-only scan</dt><dd>Answering a query from the index without touching the heap. Requires the index to hold every needed column <em>and</em> the visibility map to be current. Check <code>Heap Fetches: 0</code>.</dd>
     <dt>Nested Loop</dt><dd>For each outer row, look up matches on the inner side. The best join when there are few outer rows <em>and</em> the inner side is indexed; a catastrophe (<code>N × M</code>) when it isn't.</dd>
@@ -1581,7 +1555,7 @@ blocking         pg_stat_activity       <span class="p">pg_blocking_pids</span>(
     <dt>loops=</dt><dd>How many times a plan node ran. <strong>The <code>actual rows</code> beside it is the average per loop</strong>, so the true total is <code>rows × loops</code>. The most misread number in <code>EXPLAIN</code>.</dd>
     <dt>Bitmap heap scan</dt><dd>Collects all matching ctids, sorts them by page, then reads each heap page once — turning random I/O into sequential. Chosen when there are too many matches for a plain index scan.</dd>
     <dt>Skip scan</dt><dd><strong>New in PostgreSQL 18.</strong> Lets a multicolumn index be used even when the query omits the leading column, by hopping through each distinct prefix. Only viable when that leading column has few distinct values.</dd>
-    <dt>Tablespace</dt><dd>A named location on disk you can place tables, indexes and partitions into. Postgres's equivalent of SQL Server's <em>file group</em>. How you put hot data on NVMe and cold data on cheap disk.</dd>
+    <dt>Tablespace</dt><dd>A named location on disk you can place tables, indexes and partitions into. How you put hot data on NVMe and cold data on cheap disk.</dd>
     <dt>Declarative partitioning</dt><dd>Splitting a table into child tables by RANGE, LIST or HASH. The win is <em>pruning</em> (skipping partitions entirely) and instant <code>DROP</code> of old data — not smaller tables per se.</dd>
     <dt>Partition pruning</dt><dd>The planner discarding whole partitions it can prove cannot match. <strong>Requires the partition key in the <code>WHERE</code> clause.</strong> Without it, partitioning makes things slower, not faster.</dd>
     <dt>Sargable</dt><dd>A predicate an index can be used for — which requires the column to stand bare on one side. <code>WHERE date_trunc('day', d) = …</code> is not sargable; a half-open range is.</dd>
