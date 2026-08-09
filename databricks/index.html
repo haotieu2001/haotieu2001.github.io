@@ -201,31 +201,31 @@
   <strong>Contents</strong>
   <a href="#intro"><svg><use href="#ic-cube"/></svg>01 · What Is Databricks?</a>
   <a href="#lakehouse"><svg><use href="#ic-layers"/></svg>02 · The Lakehouse Architecture</a>
-  <a href="#workspace"><svg><use href="#ic-server"/></svg>03 · Workspace &amp;amp; Compute</a>
+  <a href="#workspace"><svg><use href="#ic-server"/></svg>03 · Workspace &amp; Compute</a>
   <a href="#spark"><svg><use href="#ic-bolt"/></svg>04 · Spark on Databricks</a>
   <a href="#delta"><svg><use href="#ic-layers"/></svg>05 · Delta Lake</a>
   <a href="#medallion"><svg><use href="#ic-layers"/></svg>06 · The Medallion Architecture</a>
-  <a href="#ingestion"><svg><use href="#ic-funnel"/></svg>07 · Ingestion: Auto Loader &amp;amp; Lakeflow Connect</a>
+  <a href="#ingestion"><svg><use href="#ic-funnel"/></svg>07 · Ingestion: Auto Loader &amp; Lakeflow Connect</a>
   <a href="#unity-catalog"><svg><use href="#ic-shield"/></svg>08 · Unity Catalog</a>
-  <a href="#data-sharing"><svg><use href="#ic-cloud"/></svg>09 · Data Sharing: Delta Sharing &amp;amp; Clean Rooms</a>
-  <a href="#sql-bi"><svg><use href="#ic-chart"/></svg>10 · Databricks SQL &amp;amp; AI/BI</a>
-  <a href="#mlflow"><svg><use href="#ic-ai"/></svg>11 · MLflow, Agent Bricks &amp;amp; Generative AI</a>
+  <a href="#data-sharing"><svg><use href="#ic-cloud"/></svg>09 · Data Sharing: Delta Sharing &amp; Clean Rooms</a>
+  <a href="#sql-bi"><svg><use href="#ic-chart"/></svg>10 · Databricks SQL &amp; AI/BI</a>
+  <a href="#mlflow"><svg><use href="#ic-ai"/></svg>11 · MLflow, Agent Bricks &amp; Generative AI</a>
   <a href="#lakebase"><svg><use href="#ic-server"/></svg>12 · Lakebase: Managed Postgres for OLTP</a>
   <a href="#apps"><svg><use href="#ic-bolt"/></svg>13 · Databricks Apps</a>
-  <a href="#workflows"><svg><use href="#ic-dag"/></svg>14 · Workflows &amp;amp; Orchestration</a>
+  <a href="#workflows"><svg><use href="#ic-dag"/></svg>14 · Workflows &amp; Orchestration</a>
   <a href="#security"><svg><use href="#ic-lock"/></svg>15 · Security Essentials</a>
   <a href="#project"><svg><use href="#ic-gear"/></svg>16 · End-to-End Project</a>
   <a href="#project-arch"><svg><use href="#ic-cube"/></svg>17 · Project Architecture</a>
-  <a href="#step1"><svg><use href="#ic-shield"/></svg>18 · Step 1 &amp;mdash; Unity Catalog Setup</a>
-  <a href="#step2"><svg><use href="#ic-cube"/></svg>19 · Step 2 &amp;mdash; Lakeflow Connect CDC</a>
-  <a href="#step3"><svg><use href="#ic-stream"/></svg>20 · Step 3 &amp;mdash; Streaming from Event Hub</a>
-  <a href="#step4"><svg><use href="#ic-cube"/></svg>21 · Step 4 &amp;mdash; Silver Cleansing</a>
-  <a href="#step5"><svg><use href="#ic-cube"/></svg>22 · Step 5 &amp;mdash; Gold Aggregation</a>
-  <a href="#step6"><svg><use href="#ic-dag"/></svg>23 · Step 6 &amp;mdash; Orchestration</a>
-  <a href="#step7"><svg><use href="#ic-cube"/></svg>24 · Step 7 &amp;mdash; Sentiment with Mosaic AI</a>
-  <a href="#step8"><svg><use href="#ic-bolt"/></svg>25 · Step 8 &amp;mdash; Performance &amp;amp; Sentiment Dashboard</a>
-  <a href="#step9"><svg><use href="#ic-cube"/></svg>26 · Step 9 &amp;mdash; Govern &amp;amp; Monitor</a>
-  <a href="#skills"><svg><use href="#ic-cpu"/></svg>27 · Skills &amp;amp; Certification Path</a>
+  <a href="#step1"><svg><use href="#ic-shield"/></svg>18 · Step 1 &mdash; Unity Catalog Setup</a>
+  <a href="#step2"><svg><use href="#ic-cube"/></svg>19 · Step 2 &mdash; Lakeflow Connect CDC</a>
+  <a href="#step3"><svg><use href="#ic-stream"/></svg>20 · Step 3 &mdash; Streaming from Event Hub</a>
+  <a href="#step4"><svg><use href="#ic-cube"/></svg>21 · Step 4 &mdash; Silver Cleansing</a>
+  <a href="#step5"><svg><use href="#ic-cube"/></svg>22 · Step 5 &mdash; Gold Aggregation</a>
+  <a href="#step6"><svg><use href="#ic-dag"/></svg>23 · Step 6 &mdash; Orchestration</a>
+  <a href="#step7"><svg><use href="#ic-cube"/></svg>24 · Step 7 &mdash; Sentiment with Mosaic AI</a>
+  <a href="#step8"><svg><use href="#ic-bolt"/></svg>25 · Step 8 &mdash; Performance &amp; Sentiment Dashboard</a>
+  <a href="#step9"><svg><use href="#ic-cube"/></svg>26 · Step 9 &mdash; Govern &amp; Monitor</a>
+  <a href="#skills"><svg><use href="#ic-cpu"/></svg>27 · Skills &amp; Certification Path</a>
   <a href="#glossary"><svg><use href="#ic-file"/></svg>28 · Glossary</a>
 </div>
 
@@ -1033,7 +1033,7 @@ CREATE VECTOR SEARCH INDEX restaurant_prod.gold.reviews_index
         <text x="405" y="205" text-anchor="middle" font-size="10.5" fill="#E7E7EE">dev branch (seconds, copy-on-write)</text>
       </g>
     </svg>
-    <figcaption>Fig. 8 &mdash; Lakebase sits between the lakehouse and a low-latency consumer, syncing both ways, with instant branching for dev/test.</figcaption>
+    <figcaption>Fig. 7 &mdash; Lakebase sits between the lakehouse and a low-latency consumer, syncing both ways, with instant branching for dev/test.</figcaption>
   </figure>
 
   <h3>What You'd Use It For</h3>
@@ -1139,7 +1139,7 @@ with conn.cursor() as cur:
       </g>
       <text x="430" y="235" text-anchor="middle" font-size="11.5" fill="#E7E7EE">Retries, alerts on failure, run history, and parameter passing between tasks are all built in.</text>
     </svg>
-    <figcaption>Fig. 7 &mdash; A single Workflow Job can run notebook, Lakeflow, SQL, and ML tasks together as one dependency graph.</figcaption>
+    <figcaption>Fig. 8 &mdash; A single Workflow Job can run notebook, Lakeflow, SQL, and ML tasks together as one dependency graph.</figcaption>
   </figure>
 
   <h3>Task Types You Can Mix in One Job</h3>
@@ -1292,7 +1292,7 @@ ALTER COLUMN phone SET MASK restaurant_prod.gold.mask_phone;</code></pre>
         <text x="585" y="360" text-anchor="middle" font-size="12" font-weight="700" fill="#F1F1F1">Unity Catalog &mdash; governs every table, grant, and lineage edge above</text>
       </g>
     </svg>
-    <figcaption>Fig. 8 &mdash; Streaming orders (Event Hub) and batch reference data (Azure SQL via Lakeflow Connect CDC) both land in Bronze, flow through Silver/Gold, then split into a BI dashboard and an AI sentiment-scoring step.</figcaption>
+    <figcaption>Fig. 9 &mdash; Streaming orders (Event Hub) and batch reference data (Azure SQL via Lakeflow Connect CDC) both land in Bronze, flow through Silver/Gold, then split into a BI dashboard and an AI sentiment-scoring step.</figcaption>
   </figure>
 </section>
 
