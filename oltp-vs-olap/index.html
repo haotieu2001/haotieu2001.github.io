@@ -212,11 +212,6 @@ h2 .n{color:var(--blue2,#5C78FF)}
 </svg>
 </figure>
 
-<div class="tldr reveal">
-  <h4>❯ The one idea (read this first)</h4>
-  <p style="margin:.2em 0">A database can lay out a table on disk in one of two ways, and the choice decides everything. <strong>Row stores</strong> (OLTP — Online <em>Transaction</em> Processing) keep every field of a row glued together, so reading or changing <em>one whole record</em> is a single cheap operation — perfect for apps that constantly touch individual rows. <strong>Column stores</strong> (OLAP — Online <em>Analytical</em> Processing) keep every value of one <em>column</em> together, so scanning one column across millions of rows is cheap — perfect for reports and aggregations. Each layout makes its own job fast and the other job slow. <em>That single physical decision — group by row, or group by column — is the root of every other difference in this article.</em></p>
-</div>
-
 <div class="toc reveal">
   <strong>Contents</strong>
   <a href="#split"><svg class="ico"><use href="#i-list"/></svg>01 · The split: transactions vs analytics</a>
@@ -310,7 +305,7 @@ h2 .n{color:var(--blue2,#5C78FF)}
 <p class="reveal lead">To make "read or write one whole row" cheap, an OLTP database stores all of a row's columns <strong>physically next to each other</strong>. This is called <strong>row-oriented storage</strong>, or a <em>row store</em>. But it doesn't drop loose rows onto the disk — it packs them into fixed-size containers called <strong>pages</strong>.</p>
 
 <h3 class="reveal">The page: the unit of everything</h3>
-<p class="reveal">Disks (and the operating system) move data in blocks, not bytes. So databases adopt a fixed <strong>page</strong> size — typically <strong>8&nbsp;KB</strong> (PostgreSQL) or <strong>16&nbsp;KB</strong> (MySQL/InnoDB) — as the smallest unit they ever read from or write to disk. A table is, on disk, just a long sequence of these pages. Each page holds a small header, a slot directory (pointers to where each row lives inside the page), and then the rows themselves packed in.</p>
+<p class="reveal">Disks (and the operating system) move data in blocks, not bytes. So databases adopt a fixed <strong>page</strong> size — commonly somewhere around <strong>8–16&nbsp;KB</strong>, depending on the database — as the smallest unit they ever read from or write to disk. A table is, on disk, just a long sequence of these pages. Each page holds a small header, a slot directory (pointers to where each row lives inside the page), and then the rows themselves packed in.</p>
 
 <figure class="reveal" style="margin:1.4em 0;background:#1C1C2A;border:1px solid #3C4356;border-radius:10px;padding:1.2em 1em 1em;overflow:hidden">
 <figcaption style="font-size:12px;color:#E7E7EE;text-align:center;margin-bottom:.8em;letter-spacing:.06em;text-transform:uppercase">One 8&nbsp;KB page — rows of all columns, packed together</figcaption>
@@ -339,8 +334,8 @@ h2 .n{color:var(--blue2,#5C78FF)}
 <h3 class="reveal">Heap vs clustered: how pages are ordered</h3>
 <p class="reveal">There are two common ways the pages of a table are organised:</p>
 <ul class="reveal">
-  <li><strong>Heap</strong> — pages are unordered; new rows go wherever there's free space. Fast to insert, but to find a specific row you'd have to scan every page… unless you have an <em>index</em> (next section). PostgreSQL tables are heaps.</li>
-  <li><strong>Clustered index (index-organised table)</strong> — the rows themselves are stored <em>in primary-key order</em>, inside the leaves of a <strong>B-tree</strong> (the sorted tree structure we unpack in the very next section — for now, just "a structure that keeps rows findable in sorted order"). Looking up by primary key lands you directly on the row. MySQL/InnoDB stores tables this way.</li>
+  <li><strong>Heap</strong> — pages are unordered; new rows go wherever there's free space. Fast to insert, but to find a specific row you'd have to scan every page… unless you have an <em>index</em> (next section).</li>
+  <li><strong>Clustered index (index-organised table)</strong> — the rows themselves are stored <em>in primary-key order</em>, inside the leaves of a <strong>B-tree</strong> (the sorted tree structure we unpack in the very next section — for now, just "a structure that keeps rows findable in sorted order"). Looking up by primary key lands you directly on the row.</li>
 </ul>
 
 <h3 class="reveal">The buffer pool: RAM is where the work happens</h3>
@@ -502,7 +497,7 @@ h2 .n{color:var(--blue2,#5C78FF)}
 </div>
 <div class="pain reveal">
   <h4>− It fights the live app for resources</h4>
-  <p style="margin:.3em 0 0;font-size:14.5px;color:#cdd0dd">A scan of 500M rows floods the buffer pool with cold analytical pages, evicting the hot rows your <em>customers'</em> requests need. One heavy report can make the whole app slow. And a <em>traditional single-node</em> OLTP database scales mainly by scaling <em>up</em> (a bigger machine) plus read replicas — not by spreading one query across many machines — so there's a hard ceiling on CPU and RAM for that giant scan. (Distributed SQL systems like Spanner and CockroachDB do scale transactions out, but they trade away some of the simplicity that makes a single-node row store so fast.)</p>
+  <p style="margin:.3em 0 0;font-size:14.5px;color:#cdd0dd">A scan of 500M rows floods the buffer pool with cold analytical pages, evicting the hot rows your <em>customers'</em> requests need. One heavy report can make the whole app slow. And an OLTP database scales mainly by scaling <em>up</em> (a bigger machine) plus read replicas — not by spreading one query across many machines — so there's a hard ceiling on CPU and RAM for that giant scan.</p>
 </div>
 
 <p class="reveal">None of these are bugs. They're the direct, unavoidable consequence of a layout optimised for the opposite job. <strong>Row storage makes whole-row access cheap by making whole-column access expensive</strong> — and analytics is <em>all</em> whole-column access. That's the wall. The fix isn't to tune the row store harder; it's to flip the layout 90 degrees.</p>
@@ -762,6 +757,15 @@ h2 .n{color:var(--blue2,#5C78FF)}
 
 <hr/>
 <p class="reveal" style="color:#9aa0b4;font-size:14.5px">That's both worlds, end to end: how a row store packs whole rows into pages and finds them with B-trees; how to tune it, and why it hits a wall under analytics; then how a column store splits data into Parquet files it can skip, read column-by-column, and crunch across many nodes. The through-line worth remembering: <em>row layout makes record access cheap, column layout makes scan access cheap — and that one physical choice decides everything else.</em></p>
+
+<div class="gloss reveal">
+  <h4>❯ A note on specific databases</h4>
+  <p style="margin:0 0 10px;font-size:13.5px;color:#cdd0dd">This article stayed general on purpose — "a row store," "an OLTP database" — because the concepts apply everywhere. For the curious, here's how a couple of real engines differ on the details above:</p>
+  <dl>
+    <dt>Page size</dt><dd>PostgreSQL and SQL Server both default to 8&nbsp;KB pages; MySQL/InnoDB uses a larger 16&nbsp;KB page.</dd>
+    <dt>Heap vs. clustered</dt><dd>PostgreSQL tables are always heaps — every index, including the primary key, is a separate structure pointing back into the heap. MySQL/InnoDB always clusters a table on its primary key. SQL Server lets you choose either, per table.</dd>
+  </dl>
+</div>
 
 <!-- glossary -->
 <h2 id="glossary" class="reveal"><span class="hico"><svg class="ico"><use href="#i-book"/></svg></span><span class="n">13.</span> ＊ · Glossary</h2>

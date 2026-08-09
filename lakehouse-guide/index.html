@@ -214,15 +214,6 @@ h2 .n{color:var(--blue2,#5C78FF)}
 </div>
 
 <!-- TL;DR -->
-<div class="tldr reveal">
-  <h4>❯ Short version (read this first)</h4>
-  <p style="margin:.2em 0">All three take cheap files and add a <strong>"logbook"</strong> on top that writes down every change. That logbook is what makes the files behave like a safe table. They mostly differ in <em>how</em> they keep that logbook — and that gives each one a personality:</p>
-  <p class="kv">• <span class="cell-d">Delta Lake</span> — the easy choice if you work on <b>Databricks or Spark</b>. Best for everyday reports and dashboards.</p>
-  <p class="kv">• <span class="cell-i">Apache Iceberg</span> — the <b>open standard</b> that works with almost any tool. Best when many tools must read the same data.</p>
-  <p class="kv">• <span class="cell-h">Apache Hudi</span> — the <b>fast-update specialist</b>. Best when data changes all the time (live, second by second).</p>
-  <p style="margin:.5em 0 0"><b>Fast picker:</b> On Databricks? → Delta. Many tools need one copy? → Iceberg. Constant live updates? → Hudi. <a href="#pick">See the full guide below ↓</a></p>
-  <p class="kv" style="margin-top:.7em;color:var(--muted)"><em>New to the words?</em> <b>Spark, Flink, Trino, Snowflake, BigQuery</b> are "engines" — programs that read and write the data. <b>Databricks</b> is a popular data platform built on Spark. <b>S3</b> is Amazon's cloud file storage. <b>Parquet</b> is the common file type used here. <b>Streaming</b> means data that keeps arriving, live, all the time. <b>JSON</b> is a common text format for flexible data.</p>
-</div>
 
 <!-- 01 -->
 <p class="promptline">~/lakehouse <b>❯</b> the backstory</p>

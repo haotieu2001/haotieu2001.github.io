@@ -167,16 +167,6 @@ h2 .n{color:var(--blue2,#5C78FF)}
 <p class="lead">AWS has well over a dozen services with some claim on "data engineering," and the hardest part of learning AWS for data work isn't any single service — it's knowing which ones actually belong together, and why. This guide organizes them the way a real project does: storage first, then compute/ETL, then warehousing and query, then streaming and messaging, then orchestration and governance — and ties every concept back to one real, runnable project built entirely on the AWS console, so nothing here stays abstract for long.</p>
 </div>
 
-<div class="tldr reveal">
-<h4>❯ Short version (read this first)</h4>
-<p style="margin:.2em 0"><strong>Amazon S3</strong> is the center of gravity for almost everything else in this guide — it's where a data lake's bronze/silver/gold layers actually live. <strong>AWS Glue</strong> is the ETL and metadata layer (Data Catalog, Crawlers, Spark jobs) that sits on top of S3. <strong>Amazon Athena</strong> and <strong>Amazon Redshift</strong> are two different ways to query that data with SQL. <strong>AWS Lambda</strong>, <strong>AWS Step Functions</strong>, and <strong>Amazon MWAA</strong> are the glue (no pun intended) that triggers and orchestrates all of it — and <strong>IAM, KMS, Secrets Manager, and Lake Formation</strong> decide who can touch what.</p>
-<p class="kv">• <span class="cell-aws">Foundations &amp; storage</span> — AWS/networking fundamentals, S3, Glue Data Catalog/Crawlers, Glue ETL jobs, EMR, Batch.</p>
-<p class="kv">• <span class="cell-blue">Query, warehouse &amp; databases</span> — Athena, Redshift, Lake Formation, DynamoDB, RDS/Aurora, OpenSearch.</p>
-<p class="kv">• <span class="cell-orc">Streaming, messaging &amp; orchestration</span> — Kinesis, Firehose, MSK, Managed Flink, SQS/SNS, EventBridge, Step Functions, MWAA.</p>
-<p class="kv">• Security &amp; governance — KMS, Secrets Manager, Macie, CloudTrail, Config, Cost Explorer/Budgets.</p>
-<p style="margin:.5em 0 0"><b>Two running examples:</b> a pipeline that pulls YouTube trending data every 6 hours, lands it in S3, transforms it through Glue (bronze → silver → gold), gates it on data quality, and alerts via SNS, all wired together by Step Functions (sections 35-37) — and a full Iceberg-based lakehouse build, queried by both Athena and Redshift from one physical copy, compared head-to-head against building the same thing on Databricks (sections 38-40).</p>
-</div>
-
 <div class="toc reveal">
   <strong>Contents</strong>
   <a href="#s01"><svg class="ico"><use href="#i-question"/></svg>01 · Why AWS for Data Engineering</a>

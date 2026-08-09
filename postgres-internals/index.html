@@ -181,12 +181,6 @@
   <div class="byline">~38 min read · Reference · Internals</div>
 </header>
 
-<div class="tldr reveal">
-  <h4><svg class="ico"><use href="#i-key"/></svg> The one idea (read this first)</h4>
-  <p style="margin:0;color:#dcdce4">A Postgres table is <strong>a pile of 8 KB pages, in no particular order</strong>. That pile is called the <strong>heap</strong>, and the database can only ever read whole pages — never a single row. So every performance question in this document reduces to one question: <em>how many pages did we have to touch?</em> A sequential scan touches all of them. An index touches a handful and then jumps to the exact pages holding the rows it wants. A partition lets the planner discard whole files without looking. And because Postgres uses <strong>MVCC</strong> — an <code>UPDATE</code> never overwrites a row, it writes a new version and leaves the old one behind as garbage — that pile of pages keeps accumulating dead rows, which is why <code>VACUUM</code> exists and why bloat is the most common self-inflicted wound in a Postgres database.</p>
-  <p style="margin:.8em 0 0;color:#dcdce4">Two facts about the <em>running</em> system sit underneath all of that. Postgres forks <strong>a whole OS process for every connection</strong>, so connections are expensive and a pooler is not optional. And it never writes your change to the data file when you ask — it writes it to a sequential log, the <strong>WAL</strong>, and returns. Durability comes from the log; the data pages catch up later.</p>
-</div>
-
 <div class="callout gr reveal">
   <p style="margin:.2em 0"><span class="t"><svg class="ico"><use href="#i-check"/></svg> How this page was checked</span></p>
   <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">Every number, plan and behaviour below was produced by running it on a live <strong>PostgreSQL 18.4</strong> server against a one-million-row table. The <code>EXPLAIN</code> output is real output, not a sketch. Where a claim is version-specific — and <a href="#variants">skip scan</a> is brand new in PG 18 — that's called out.</p>

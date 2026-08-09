@@ -188,16 +188,6 @@ h2 .n{color:var(--blue2,#5C78FF)}
 </div>
 
 <!-- TL;DR -->
-<div class="tldr reveal">
-  <h4>❯ Short version (read this first)</h4>
-  <p style="margin:.2em 0"><strong>A DAG</strong> (Directed Acyclic Graph) is a Python-defined workflow: a set of <strong>tasks</strong> and the dependencies between them, with no cycles — Airflow's scheduler figures out what can run, when, and in what order.</p>
-  <p style="margin:.2em 0"><strong>Four components</strong> make Airflow work together: the <strong>scheduler</strong> decides what should run now, the <strong>executor</strong> and its <strong>workers</strong> actually run it, the <strong>webserver</strong> renders the UI, and the <strong>metadata database</strong> is the shared source of truth all of them read and write.</p>
-  <p style="margin:.2em 0"><strong>MWAA</strong> takes that whole stack — scheduler, workers, webserver, metadata database, message queue — and runs it for you on managed AWS infrastructure inside your own VPC, so you write DAGs and manage an S3 bucket instead of patching servers.</p>
-  <p class="kv">• <span class="cell-exec">Executor</span> — the component that decides <em>how</em> and <em>where</em> a task actually runs (in-process, on local workers, on a Celery cluster, on Kubernetes pods, or — in MWAA — on managed Fargate workers).</p>
-  <p class="kv">• <span class="cell-mwaa">MWAA environment</span> — one fully-managed Airflow deployment: a scheduler, an auto-scaling worker fleet, a webserver, and an Aurora PostgreSQL metadata database, all provisioned from an S3 bucket holding your DAGs.</p>
-  <p style="margin:.5em 0 0"><b>Together:</b> Airflow gives you a way to express "run this, then that, retry on failure, alert on SLA miss" as ordinary Python; MWAA removes the operational burden of keeping that platform itself alive, patched, and scaled.</p>
-  <p class="kv" style="margin-top:.7em;color:var(--muted)"><em>New to the words?</em> A <b>task</b> is one unit of work in a DAG (e.g. "run this SQL query"). An <b>operator</b> is a reusable template for a task (e.g. <code>PythonOperator</code>, <code>BashOperator</code>). A <b>task instance</b> is one specific run of one task, for one scheduled date. Every other term is defined the first time it appears below, and again in the glossary.</p>
-</div>
 
 <div class="callout cy reveal">
 <p><b>Why this matters for a bank's data platform.</b> Nightly regulatory reports, batch risk scoring, core-banking-to-warehouse ETL, and ML feature refresh jobs all depend on the same thing: something has to run these jobs in the right order, retry them safely, and tell someone the moment they fail. Airflow (self-hosted or via MWAA) is one of the most common answers to that "something" across the industry — the architecture and operational patterns in this guide apply directly to how a bank's data engineering team would run its own batch estate.</p>

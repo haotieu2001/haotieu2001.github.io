@@ -181,11 +181,6 @@
   <div class="byline">~50 min read · Reference · Fundamentals</div>
 </header>
 
-<div class="tldr reveal">
-  <h4><svg class="ico"><use href="#i-key"/></svg> The one idea (read this first)</h4>
-  <p style="margin:0;color:#dcdce4">SQL is <strong>declarative</strong>: you describe the shape of the answer, and the engine picks the algorithm. That is why it feels slippery — the order you <em>write</em> the clauses is not the order it <em>runs</em> them. Learn the real running order once (<strong>FROM → WHERE → GROUP BY → HAVING → SELECT → ORDER BY → LIMIT</strong>) and the whole language snaps into place: you'll know why <code>WHERE</code> can't see a column alias, why <code>COUNT(*)</code> belongs in <code>HAVING</code> and not <code>WHERE</code>, and why a window function can never appear in a <code>WHERE</code> clause. Almost every Medium and Hard problem is then one of five moves: <strong>reshape with a join</strong>, <strong>collapse with GROUP BY</strong>, <strong>count conditionally with CASE inside an aggregate</strong>, <strong>rank or look sideways with a window function</strong>, or <strong>name the steps with a CTE</strong>.</p>
-</div>
-
 <div class="toc reveal">
   <strong>Contents</strong>
   <a href="#why"><svg class="ico"><use href="#i-rocket"/></svg>01 · Declarative: you describe, it decides</a>

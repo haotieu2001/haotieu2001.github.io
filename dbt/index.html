@@ -162,15 +162,6 @@
 </div>
 
 <!-- TL;DR -->
-<div class="tldr reveal">
-  <h4>❯ Short version (read this first)</h4>
-  <p style="margin:.2em 0"><strong>dbt</strong> lets you write your data transformations as <code>SELECT</code> statements in <code>.sql</code> files. Each file is a <strong>model</strong>. Models can reference each other with <code>ref()</code> instead of hardcoding table names, and dbt uses those references to build a <strong>DAG</strong> (dependency graph) automatically, so it always runs things in the right order.</p>
-  <p style="margin:.2em 0"><strong>dbt does not move data and does not execute anything itself</strong> — it compiles your Jinja-templated SQL into plain SQL and pushes it to your warehouse (Snowflake, BigQuery, Databricks, Postgres, Redshift, and others) to actually run. dbt is the organizing layer on top of SQL your warehouse already understands.</p>
-  <p class="kv">• <span class="cell-dbt">dbt Core</span> — the free, open-source CLI that compiles and runs your project. <span class="cell-orc">Orchestration</span> (dbt Cloud, Airflow, Dagster, or a simple cron job) is what actually triggers <code>dbt run</code> on a schedule in production.</p>
-  <p class="kv">• <span class="cell-sf">The warehouse</span> — Snowflake, BigQuery, etc. — does 100% of the actual computation. dbt just tells it what SQL to run and in what order.</p>
-  <p style="margin:.5em 0 0"><b>In production:</b> raw data lands in the warehouse (via Fivetran, Airbyte, or a native loader) → dbt models transform it in layers (staging → intermediate → marts) → a scheduled job runs <code>dbt build</code> → tests run automatically → BI tools and analysts query the resulting marts.</p>
-  <p class="kv" style="margin-top:.7em;color:var(--muted)"><em>New to the words?</em> A <b>model</b> is one <code>.sql</code> file dbt turns into a view or table. The <b>DAG</b> is the graph of which models depend on which. A <b>materialization</b> is how a model gets physically built (view, table, incremental, etc). <code>ref()</code> is how one model points to another <em>by name</em>, not by hardcoded database/schema. A <b>source</b> is a pointer to a raw table dbt didn't create.</p>
-</div>
 
 <div class="toc reveal">
   <strong>Contents</strong>

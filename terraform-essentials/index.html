@@ -225,11 +225,6 @@
 </svg>
 </figure>
 
-<div class="tldr reveal">
-  <h4><svg class="ico"><use href="#i-zap"/></svg> The one idea (read this first)</h4>
-  <p style="margin:.2em 0">Terraform is <strong>infrastructure as code</strong>. Instead of clicking "Create bucket" in a web console, you write a text file that says <em>"a bucket named <code>raw-data</code> should exist"</em>, and Terraform makes reality match. It is <strong>declarative</strong>: you describe the <em>destination</em>, not the driving directions. To pull that off, Terraform keeps a <strong>state file</strong> — its private notebook recording which real cloud resource belongs to which line of your code. Every run, it compares three things: <strong>your config</strong> (what you want), <strong>the state</strong> (what it thinks it built) and <strong>the real cloud</strong> (what's actually there). The difference is called a <strong>plan</strong> — a preview you read before anything changes — and <code>apply</code> executes it. Master state and you've mastered Terraform; almost every horror story is really a state story.</p>
-</div>
-
 <div class="toc reveal">
   <strong>Contents</strong>
   <a href="#why"><svg class="ico"><use href="#i-question"/></svg>01 · What Terraform is &amp; why IaC exists</a>

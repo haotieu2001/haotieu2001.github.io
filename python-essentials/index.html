@@ -180,11 +180,6 @@
   <div class="byline">~55 min read · Reference · Fundamentals</div>
 </header>
 
-<div class="tldr reveal">
-  <h4><svg class="ico"><use href="#i-key"/></svg> The one idea (read this first)</h4>
-  <p style="margin:0;color:#DCDCE4">In data engineering, Python is an <strong>orchestration and glue language</strong>, not a number-cruncher — it was never designed for joins and group-bys, and anything it holds in a <code>list</code> is capped by your machine's RAM. The real crunching is pushed down to engines built for it (Spark, DuckDB, Snowflake, BigQuery, Polars); Python's job is to <em>drive</em> them and move data <strong>reliably</strong>. That reframes what "good" Python looks like here: <strong>stream, don't accumulate</strong> (generators over lists), <strong>wrap the messy parts</strong> (decorators for retry/logging, context managers for connections), and <strong>model your pipeline as objects</strong> (a <code>Connector</code> base class, a <code>@dataclass</code> config) so it stays testable and maintainable. Get that mindset and the interview splits cleanly in two: the <strong>engineering half</strong> (§01–17) is "can you write clean, safe, memory-aware code?", and the <strong>DSA half</strong> (§18–31) is a small, learnable set of patterns — most Mediums are just <em>a hashmap, two pointers, a sort, or a BFS</em>.</p>
-</div>
-
 <div class="toc reveal">
   <strong>Contents</strong>
   <a href="#why"><svg class="ico"><use href="#i-rocket"/></svg>01 · Why Python runs data engineering</a>

@@ -192,11 +192,6 @@ h2 .n{color:var(--blue2,#5C78FF)}
   <p style="margin:.5em 0 0;font-size:13.5px;color:var(--muted)">When a feature only exists on Databricks (not in open-source Delta), I point it out in the text.</p>
 </div>
 
-<div class="tldr reveal">
-  <h4>❯ The one idea (read this first)</h4>
-  <p style="margin:.2em 0">Delta Lake = <strong>Parquet data files + a transaction log</strong> (a folder called <code>_delta_log/</code>). The log is an ordered list of "add this file / remove that file" notes. To read the table, Delta replays the log to work out which files count <em>right now</em>. That one idea gives you safe writes (ACID), time travel, safe writing by many jobs at once, and cheap updates and deletes. Almost every feature below comes back to it.</p>
-</div>
-
 <div class="toc reveal">
   <strong>Contents</strong>
   <a href="#setup"><svg class="ico"><use href="#i-terminal"/></svg>01 · Setup (run the examples)</a>

@@ -178,16 +178,6 @@ h2 .n{color:var(--blue2,#5C78FF)}
 </div>
 
 <!-- TL;DR -->
-<div class="tldr reveal">
-  <h4>❯ Short version (read this first)</h4>
-  <p style="margin:.2em 0"><strong>The data engineering lifecycle</strong> has five stages — <b>Generation → Storage → Ingestion → Transformation → Serving</b> — with storage underlying every other stage rather than sitting in a strict sequence.</p>
-  <p style="margin:.2em 0"><strong>Six undercurrents</strong> — security, data management, DataOps, data architecture, orchestration, and software engineering — run through all five stages simultaneously and are what separate a fragile pipeline from a professional one.</p>
-  <p style="margin:.2em 0"><strong>Architecture and tool choice</strong> are decisions made under real constraints (team size, cost, time-to-market, reversibility) — the book's stance is deliberately "it depends," not "always use X."</p>
-  <p class="kv">• <span class="cell-store">Good architecture</span> — flexible, loosely coupled, reversible, and built to fail gracefully, not a single "best" diagram you copy from a vendor's slide.</p>
-  <p class="kv">• <span class="cell-xform">Good pipelines</span> — move data with the right latency (batch vs. streaming), transform it into a model people can trust (star schema, Data Vault, or a wide table), and serve it without ever letting training-time and production-time views of the same fact disagree.</p>
-  <p style="margin:.5em 0 0"><b>Together:</b> data engineering is the practice of building the boring, reliable plumbing — governed, secure, and cost-aware — that every dashboard, report, and machine learning model quietly depends on and almost never gets credit for.</p>
-  <p class="kv" style="margin-top:.7em;color:var(--muted)"><em>New to the words?</em> A <b>pipeline</b> is the set of processes that move and transform data from a source to a destination. A <b>data pipeline's latency</b> is how long it takes data to become usable after it is generated. <b>Idempotent</b> means running an operation twice produces the same result as running it once — a property every reliable pipeline needs. Every other term is defined the first time it appears below, and again in the glossary.</p>
-</div>
 
 <div class="callout cy reveal">
 <p><b>Why this matters for a bank.</b> Core banking, card, and payment systems generate transactional data continuously; regulatory reporting to the SBV, AML/fraud monitoring, credit scoring, and customer analytics all sit downstream of the exact lifecycle stages covered here. The security and governance sections later in this guide connect directly to Vietnam's PDPL (personal data protection legal framework) and SBV data-handling expectations — get the plumbing wrong and it is a compliance problem, not just an engineering one. (Illustrative framing throughout this guide — always confirm current obligations with legal/compliance.)</p>

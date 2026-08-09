@@ -168,16 +168,6 @@ h2 .n{color:var(--blue2,#5C78FF)}
 </div>
 
 <!-- TL;DR -->
-<div class="tldr reveal">
-  <h4>❯ Short version (read this first)</h4>
-  <p style="margin:.2em 0"><strong>Kafka</strong> is a distributed, append-only log. Producers write events to it, it stores them safely and in order, and consumers read them — possibly hours or days later. It is the plumbing: durable, ordered, replayable.</p>
-  <p style="margin:.2em 0"><strong>Spark Structured Streaming</strong> is a processing engine. It treats the incoming stream as a table that keeps growing one row at a time, and lets you write normal-looking queries (filters, joins, aggregations) that keep producing new results as new rows arrive.</p>
-  <p class="kv">• <span class="cell-kf">Kafka</span> — durable, ordered, replayable event storage. Think: the postal system that never loses a letter and keeps every letter it ever delivered, in order, for as long as you ask it to.</p>
-  <p class="kv">• <span class="cell-sp">Spark Structured Streaming</span> — turns a live stream into continuously-updated query results. Think: a spreadsheet formula that recalculates itself every time a new row is typed in, forever.</p>
-  <p class="kv">• <span class="cell-fl">Apache Flink</span> — a true event-at-a-time engine built from the ground up for streaming (batch is the special case, not the other way around). Think: a factory line that reacts to each part the instant it arrives, instead of waiting to collect a tray of parts first.</p>
-  <p style="margin:.5em 0 0"><b>Together:</b> apps and services write events into Kafka topics → Spark Structured Streaming or Flink reads those topics, computes something useful, and writes the result to a database, dashboard, or data lake table. Real companies (see section 29) often run more than one of these at once, for different jobs.</p>
-  <p class="kv" style="margin-top:.7em;color:var(--muted)"><em>New to the words?</em> A <b>topic</b> is a named stream of events in Kafka (like a folder). A <b>partition</b> is one ordered slice of a topic (like one lane on a highway). A <b>broker</b> is one Kafka server. A <b>producer</b> writes events; a <b>consumer</b> reads them. A <b>DataFrame</b> is Spark's table-like data structure. A <b>micro-batch</b> is a small chunk of new data Spark processes every few hundred milliseconds to a few seconds.</p>
-</div>
 
 <div class="toc reveal">
   <strong>Contents</strong>
