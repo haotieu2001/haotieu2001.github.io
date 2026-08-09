@@ -719,9 +719,27 @@ postgres: <span class="g">client backend</span>                  <span class="c"
 </figure>
 
 <h2 id="scans" class="reveal"><span class="hico"><svg class="ico"><use href="#i-search"/></svg></span><span class="n">10.</span> The scan types, and reading EXPLAIN</h2>
-<p class="reveal lead">There are four ways Postgres can get rows out of a table. Knowing which one you got — and <em>why</em> — is most of query tuning.</p>
+<p class="reveal lead">Ask Postgres <code>EXPLAIN</code> and it shows you exactly how it plans to answer your query. There are four fundamentally different ways it can get rows out of a table, and knowing which one you got — and <em>why</em> — is most of what "tuning a query" means in practice.</p>
 
-<p class="reveal">All four outputs below are real, from <code>EXPLAIN (ANALYZE, BUFFERS)</code> on the same one-million-row table. Watch the <code>Buffers</code> line: <strong>that is the page count, and the page count is the cost.</strong></p>
+<h3 class="reveal">First, how to read the output at all</h3>
+
+<p class="reveal">Before looking at real examples, three things about the shape of <code>EXPLAIN</code> output that nobody explains up front:</p>
+
+<div class="cb reveal"><span class="lang">sql</span><pre><span class="k">EXPLAIN</span>                          <span class="c">-- shows the plan and the planner's GUESSES. Doesn't run the query.</span>
+<span class="k">EXPLAIN</span> (<span class="k">ANALYZE</span>)                <span class="c">-- actually RUNS it. Now you get real rows and real time.</span>
+<span class="k">EXPLAIN</span> (<span class="k">ANALYZE</span>, <span class="k">BUFFERS</span>)       <span class="c">-- ← use this one. Adds how many pages it actually touched.</span>
+</pre></div>
+
+<div class="callout cy reveal">
+  <p style="margin:.2em 0"><span class="t"><svg class="ico"><use href="#i-key"/></svg> Three things to know before you read one</span></p>
+  <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd"><strong>1. It's a tree, read bottom-up.</strong> Each line is a step called a <em>node</em>. A more-indented node runs first and hands its result up to the line above it — so the deepest, most-indented line is where the work actually starts.<br/>
+  <strong>2. <code>Buffers</code> is the real cost.</strong> It's the count of 8&nbsp;KB pages touched — and page count <em>is</em> the cost, as §04 explained. Ignore <code>cost=…</code> if you see it elsewhere; that's an arbitrary planning number, not a time or a page count.<br/>
+  <strong>3. <code>loops=N</code> means "per loop."</strong> If a node says <code>actual rows=36 loops=3</code>, it didn't return 36 rows — it ran 3 times and returned about 36 rows <em>each</em> time, ~108 total. Always multiply before you react to a number.</p>
+</div>
+
+<p class="reveal">One more thing you'll see in the very first example below and might not expect: <strong><code>Gather</code></strong> and <strong><code>Workers Launched</code></strong>. Postgres sometimes splits a big scan across a few background helper processes to run it in parallel, then <code>Gather</code>s their results back together. It's a performance detail, not a new concept — for now just keep adding up the <code>Buffers</code> numbers as usual.</p>
+
+<p class="reveal">With that, here are all four scan types, each one real output from <code>EXPLAIN (ANALYZE, BUFFERS)</code> run on the same one-million-row table.</p>
 
 <h3 class="reveal">1 · Seq Scan — read every page</h3>
 
@@ -736,7 +754,7 @@ Gather (actual rows=109 loops=1)
        <span class="r">Rows Removed by Filter: 333297</span>            <span class="c">← threw away 99.99% of what it read</span>
 </pre></div>
 
-<p class="reveal"><strong>Rows Removed by Filter</strong> is the tell. Reading 333,297 rows to keep 36 is the definition of a missing index. (Note it wasn't <em>slow</em> — Postgres parallelised it across 3 workers. Seq scans are fine when you actually want most of the table.)</p>
+<p class="reveal">A <strong>Seq(uential) Scan</strong> just reads the whole table, page by page, checking every row against the filter. <strong>Rows Removed by Filter</strong> is the tell: it read 333,297 rows just to keep 36 of them. That ratio — almost everything read, almost nothing kept — is the definition of "this table needs an index." (It wasn't <em>slow</em> here, because Postgres split the work across 3 parallel workers. A seq scan is perfectly fine when you actually want most of the table.)</p>
 
 <h3 class="reveal">2 · Index Scan / Bitmap Heap Scan — walk the tree, then fetch</h3>
 
@@ -750,9 +768,13 @@ Bitmap Heap Scan on events (actual rows=109 loops=1)
        Buffers: shared read=3                       <span class="c">← the index itself cost 3 pages</span>
 </pre></div>
 
-<p class="reveal">From 14,286 pages to 110. But look at <code>Heap Blocks: exact=107</code> — <strong>107 pages to fetch 109 rows</strong>, nearly one page per row. That's the red arrows from the B-tree diagram: those users are scattered randomly across the heap, so almost every row lives on its own page. This is exactly the cost that an index-only scan eliminates.</p>
+<p class="reveal">Add an index and the same query drops from 14,286 pages to 110 — a huge win. But look closer at <code>Heap Blocks: exact=107</code>: it still took <strong>107 heap pages to fetch 109 rows</strong>, nearly one page per row. This is the "red arrows" cost from the B-tree diagram in §09 — those 109 matching rows are scattered randomly across the heap, one per page, so the index gets you to the right rows but each one still costs a separate page read.</p>
 
-<p class="reveal">The difference between an <strong>Index Scan</strong> and a <strong>Bitmap Heap Scan</strong> is worth a sentence, because both appear constantly. An Index Scan walks the tree and fetches heap rows <em>one at a time, in index order</em> — great when you want a handful of rows. A Bitmap Heap Scan first collects <em>all</em> the matching ctids into an in-memory bitmap, sorts them by page number, and then reads each heap page <strong>once, in physical order</strong> — which turns random I/O into sequential I/O. Postgres chooses it when there are too many matches for one-at-a-time fetching to be worth it.</p>
+<p class="reveal">There are two flavors of this, and it's worth knowing the difference since both show up constantly in real plans:</p>
+<ul class="reveal">
+  <li><strong>Index Scan</strong> — walks the tree and fetches heap rows one at a time, in index order. Best for a handful of rows.</li>
+  <li><strong>Bitmap Heap Scan</strong> (what's shown above) — first collects <em>all</em> the matching row addresses into an in-memory list, sorts that list by page number, then reads each heap page <strong>once</strong>, in physical order. That turns scattered random reads into orderly sequential ones. Postgres switches to this once there are too many matches for the one-at-a-time approach to be worth it.</li>
+</ul>
 
 <h3 class="reveal">3 · Bitmap Heap Scan on a range — the middle ground</h3>
 
@@ -763,7 +785,7 @@ Bitmap Heap Scan on events (actual rows=25921 loops=1)
   Buffers: shared hit=11780 read=234
 </pre></div>
 
-<p class="reveal">This is the lesson that surprises people. Matching only <strong>2.6% of the rows</strong> still required reading <strong>84% of the pages</strong> — because 26,000 randomly-scattered rows land on almost every page in the table. At this point the index has bought you almost nothing, and a little further along the planner will correctly abandon it and seq-scan instead. <em>An index is only useful when the rows it finds are few, or physically clustered together.</em></p>
+<p class="reveal">This is the example that surprises people. Matching only <strong>2.6% of the rows</strong> still required reading <strong>84% of the pages</strong> — because 26,000 randomly-scattered rows land on almost every page in a 14,286-page table. Past this point the index isn't buying you much, and the planner will soon correctly give up on it and just seq-scan instead. The lesson: <em>an index only pays off when the rows it finds are few, or physically clustered together</em> — not just "a small percentage" of the table.</p>
 
 <h3 class="reveal">4 · Index-Only Scan — never touch the heap at all</h3>
 
@@ -775,7 +797,9 @@ Index Only Scan using idx_user on events (actual rows=109 loops=1)
   <span class="g">Buffers: shared hit=4</span>                           <span class="c">← FOUR pages. Down from 14,286.</span>
 </pre></div>
 
-<p class="reveal">Four pages. The index contained every column the query asked for, so Postgres answered entirely from the tree. This is the best outcome available, and §12 explains the one condition it depends on — a condition that quietly fails more often than you'd think.</p>
+<p class="reveal">Four pages, down from 14,286. The index already held every column the query asked for (just <code>user_id</code>), so Postgres answered straight from the tree and never opened the heap at all. This is the best outcome available — and §12 explains the one condition it silently depends on, a condition that fails more often than you'd think.</p>
+
+<p class="reveal">Here's all four side by side:</p>
 
 <div class="tw reveal"><table>
 <tr><th>Plan node</th><th>Pages read (measured)</th><th>Postgres picks it when…</th></tr>
@@ -785,78 +809,19 @@ Index Only Scan using idx_user on events (actual rows=109 loops=1)
 <tr><td><code>Index Only Scan</code></td><td class="ok">4 — the index alone</td><td>The index holds <em>every</em> column the query needs <strong>and</strong> the pages are marked all-visible</td></tr>
 </table></div>
 
-<h3 class="reveal">How to actually read an EXPLAIN</h3>
-
-<div class="cb reveal"><span class="lang">sql</span><pre><span class="k">EXPLAIN</span>                          <span class="c">-- the plan and the planner's GUESSES. Doesn't run.</span>
-<span class="k">EXPLAIN</span> (<span class="k">ANALYZE</span>)                <span class="c">-- RUNS it. Now you get actual rows and actual time.</span>
-<span class="k">EXPLAIN</span> (<span class="k">ANALYZE</span>, <span class="k">BUFFERS</span>)       <span class="c">-- ← always use this. Buffers = pages = the real cost.</span>
-</pre></div>
-
-<div class="callout cy reveal">
-  <p style="margin:.2em 0"><span class="t"><svg class="ico"><use href="#i-key"/></svg> The three numbers that matter, in order</span></p>
-  <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd"><strong>1. <code>Buffers</code>.</strong> Pages read. This is the actual work. Ignore <code>cost=…</code> — it's an arbitrary unit for comparing plans, not a time.<br/>
-  <strong>2. Estimated rows vs actual rows.</strong> If the planner guessed 10 and got 500,000, it chose the wrong plan for a reason: <strong>its statistics are stale.</strong> Run <code>ANALYZE</code>. This is the single most common cause of a "suddenly slow" query.<br/>
-  <strong>3. <code>Rows Removed by Filter</code>.</strong> Rows read and then thrown away. A big number here is an index that doesn't exist or isn't being used.</p>
+<div class="callout gd reveal">
+  <p style="margin:.2em 0"><span class="t"><svg class="ico"><use href="#i-bulb"/></svg> If you only remember two things when a query is slow</span></p>
+  <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">Look at <strong><code>Buffers</code></strong> first — that's the actual work done, in pages. Then compare <strong>estimated rows vs actual rows</strong> on the slow node: if the planner guessed 10 and got 500,000, it picked its plan on bad information, and the fix is almost always <code>ANALYZE tablename;</code> to refresh its statistics. That single check resolves more "why is this suddenly slow" questions than anything else in this article.</p>
 </div>
 
-<p class="reveal">And read the plan <strong>inside-out, bottom-up</strong>: the most indented node runs first and feeds its parent. <code>loops=3</code> means that node ran three times, and the <code>actual rows</code> shown is the average <em>per loop</em> — so multiply before you panic.</p>
-
 <h2 id="joins" class="reveal"><span class="hico"><svg class="ico"><use href="#i-merge"/></svg></span><span class="n">11.</span> How Postgres joins tables</h2>
-<p class="reveal lead">The last section covered how rows come <em>out of one table</em>. Real plans are mostly about <strong>combining two</strong> — and there are exactly three algorithms for it.</p>
+<p class="reveal lead">The last section covered how rows come <em>out of one table</em>. Most real queries combine two, and Postgres has exactly <strong>three</strong> different mechanical ways to do that combining.</p>
 
-<p class="reveal">Every join node in every <code>EXPLAIN</code> you will ever read is a <strong>Nested Loop</strong>, a <strong>Hash Join</strong>, or a <strong>Merge Join</strong>. They all produce identical rows. They differ enormously in what they cost, and the planner chooses between them from its statistics — which is why a bad row estimate so often shows up as "it picked the wrong join".</p>
-
-<figure class="fig reveal">
-<svg viewBox="0 0 760 290" width="100%" aria-label="The three Postgres join algorithms compared: nested loop, hash join and merge join, with what each is best at and what to watch for">
-  <text x="380" y="20" font-size="10.5" fill="#E7E7EE" text-anchor="middle" letter-spacing="1.5">THREE ALGORITHMS &#183; SAME ROWS &#183; VERY DIFFERENT COSTS</text>
-
-  <rect x="20" y="44" width="230" height="204" rx="8" fill="#242739" stroke="#5C78FF"/>
-  <text x="135" y="68" font-size="11" fill="#E7E7EE" text-anchor="middle" font-weight="700">NESTED LOOP</text>
-  <text x="135" y="94" font-size="8.5" fill="#E7E7EE" text-anchor="middle">for each outer row,</text>
-  <text x="135" y="108" font-size="8.5" fill="#E7E7EE" text-anchor="middle">look up the inner side</text>
-  <path d="M36 124 H 234" stroke="#242739" stroke-width="1"/>
-  <text x="135" y="144" font-size="7.5" fill="#E7E7EE" text-anchor="middle" letter-spacing="1">BEST WHEN</text>
-  <text x="135" y="159" font-size="8.5" fill="#5AC8FF" text-anchor="middle">few outer rows, and</text>
-  <text x="135" y="172" font-size="8.5" fill="#5AC8FF" text-anchor="middle">an INDEX on the inner</text>
-  <text x="135" y="196" font-size="7.5" fill="#E7E7EE" text-anchor="middle" letter-spacing="1">WATCH FOR</text>
-  <text x="135" y="211" font-size="8.5" fill="#E7E7EE" text-anchor="middle">loops=N — the rows</text>
-  <text x="135" y="224" font-size="8.5" fill="#E7E7EE" text-anchor="middle">shown are PER LOOP</text>
-  <text x="135" y="240" font-size="8" fill="#E7E7EE" text-anchor="middle">no index → N × M. Death.</text>
-
-  <rect x="265" y="44" width="230" height="204" rx="8" fill="#223650" stroke="#5AC8FF"/>
-  <text x="380" y="68" font-size="11" fill="#5AC8FF" text-anchor="middle" font-weight="700">HASH JOIN</text>
-  <text x="380" y="94" font-size="8.5" fill="#E7E7EE" text-anchor="middle">hash the smaller side,</text>
-  <text x="380" y="108" font-size="8.5" fill="#E7E7EE" text-anchor="middle">then probe it with the big</text>
-  <path d="M281 124 H 479" stroke="#5C78FF" stroke-width="1"/>
-  <text x="380" y="144" font-size="7.5" fill="#E7E7EE" text-anchor="middle" letter-spacing="1">BEST WHEN</text>
-  <text x="380" y="159" font-size="8.5" fill="#5AC8FF" text-anchor="middle">big joins, no index —</text>
-  <text x="380" y="172" font-size="8.5" fill="#5AC8FF" text-anchor="middle">the workhorse for DE</text>
-  <text x="380" y="196" font-size="7.5" fill="#E7E7EE" text-anchor="middle" letter-spacing="1">WATCH FOR</text>
-  <text x="380" y="211" font-size="8.5" fill="#E7E7EE" text-anchor="middle">Batches &gt; 1 = spilled</text>
-  <text x="380" y="224" font-size="8.5" fill="#E7E7EE" text-anchor="middle">to disk. Raise work_mem.</text>
-  <text x="380" y="240" font-size="8" fill="#E7E7EE" text-anchor="middle">equality joins only (=)</text>
-
-  <rect x="510" y="44" width="230" height="204" rx="8" fill="#242739" stroke="#5AC8FF"/>
-  <text x="625" y="68" font-size="11" fill="#5AC8FF" text-anchor="middle" font-weight="700">MERGE JOIN</text>
-  <text x="625" y="94" font-size="8.5" fill="#E7E7EE" text-anchor="middle">sort BOTH sides, then</text>
-  <text x="625" y="108" font-size="8.5" fill="#E7E7EE" text-anchor="middle">walk them in lockstep</text>
-  <path d="M526 124 H 724" stroke="#6B6B78" stroke-width="1"/>
-  <text x="625" y="144" font-size="7.5" fill="#E7E7EE" text-anchor="middle" letter-spacing="1">BEST WHEN</text>
-  <text x="625" y="159" font-size="8.5" fill="#5AC8FF" text-anchor="middle">both sides are ALREADY</text>
-  <text x="625" y="172" font-size="8.5" fill="#5AC8FF" text-anchor="middle">sorted (e.g. by an index)</text>
-  <text x="625" y="196" font-size="7.5" fill="#E7E7EE" text-anchor="middle" letter-spacing="1">WATCH FOR</text>
-  <text x="625" y="211" font-size="8.5" fill="#E7E7EE" text-anchor="middle">the Sort IS the cost.</text>
-  <text x="625" y="224" font-size="8.5" fill="#E7E7EE" text-anchor="middle">temp read/written = disk</text>
-  <text x="625" y="240" font-size="8" fill="#E7E7EE" text-anchor="middle">handles ranges, not just =</text>
-
-  <text x="380" y="272" font-size="10" fill="#E7E7EE" text-anchor="middle">All three return identical rows. The planner picks on cost — so bad statistics pick the wrong one.</text>
-</svg>
-<figcaption>The choice is not a preference. Given accurate row estimates the planner is usually right; given stale ones it will happily choose a nested loop over a million rows.</figcaption>
-</figure>
+<p class="reveal">Every join you will ever see in an <code>EXPLAIN</code> plan is one of three algorithms: <strong>Nested Loop</strong>, <strong>Hash Join</strong>, or <strong>Merge Join</strong>. All three produce exactly the same rows — they're just different strategies for doing the matching, and each one is cheap in some situations and disastrous in others. The planner picks between them using its row-count statistics, which is exactly why a bad row estimate so often shows up as "it picked a terrible join."</p>
 
 <h3 class="reveal">1 · Nested Loop — and the <code>loops=</code> number everyone misreads</h3>
 
-<p class="reveal">For each row on the outer side, go and find the matching rows on the inner side. If the inner side has an index, that inner lookup is cheap and this is the <strong>best possible join</strong> for a small number of outer rows. Real output:</p>
+<p class="reveal">The simplest strategy: for each row on the "outer" side, go look up the matching rows on the "inner" side, one at a time. If the inner side has an index, that lookup is cheap, and this is the <strong>best possible join</strong> — but only for a small number of outer rows. Real output:</p>
 
 <div class="cb reveal"><span class="lang">text</span><pre><span class="k">SELECT</span> u.name, e.amount <span class="k">FROM</span> users u <span class="k">JOIN</span> events e <span class="k">ON</span> e.user_id = u.id <span class="k">WHERE</span> u.id = 42;
 
@@ -1077,7 +1042,7 @@ Hash Join (actual rows=81184 loops=3)
 
 <h3 class="reveal">Expression — index the computed thing, not the column</h3>
 
-<p class="reveal">This is the fix for the sargability problem: if you must filter on <code>LOWER(email)</code>, then <em>index</em> <code>LOWER(email)</code>. The index and the query now match exactly.</p>
+<p class="reveal">A B-tree index on <code>email</code> can't help <code>WHERE LOWER(email) = 'a@b.com'</code> — the index is sorted by the raw column, but the query is filtering on something computed <em>from</em> it, so the two don't line up. (A predicate an index <em>can</em> be used for is called <strong>sargable</strong>; wrapping the column in a function like this makes it non-sargable.) The fix is direct: if you always filter on <code>LOWER(email)</code>, <em>index</em> <code>LOWER(email)</code> instead of the bare column, so the index and the query match exactly.</p>
 
 <div class="cb reveal"><span class="lang">sql</span><pre><span class="k">CREATE INDEX</span> idx_lower_email <span class="k">ON</span> users(<span class="p">LOWER</span>(email));
 <span class="k">SELECT</span> * <span class="k">FROM</span> users <span class="k">WHERE</span> <span class="p">LOWER</span>(email) = <span class="g">'a@b.com'</span>;    <span class="c">-- + now uses the index</span>
@@ -1211,6 +1176,11 @@ Aggregate
 </pre></div>
 
 <p class="reveal">That last constraint catches people out and is worth internalising: <strong>you cannot have a globally-unique <code>id</code> on a partitioned table</strong> unless the partition key is part of the key. It is a direct consequence of there being no global index — and it is the same trade-off, for the same reason, that you meet when partitioning tables in a lakehouse.</p>
+
+<div class="callout reveal">
+  <p style="margin:.2em 0"><span class="t">You've now covered every concept in this page</span></p>
+  <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">Everything from here on (§18–21, plus the glossary) is a <strong>reference toolkit</strong>, not more new ideas — a playbook, a set of copy-pasteable monitoring queries, a checklist of gotchas, and a one-page cheat sheet, all built from what §01–17 already explained. There's no need to read it start to finish: skim it once so you know it's here, then come back to the specific query or table you need when you actually hit that situation.</p>
+</div>
 
 <h2 id="optimize" class="reveal"><span class="hico"><svg class="ico"><use href="#i-zap"/></svg></span><span class="n">18.</span> The optimization playbook</h2>
 <p class="reveal lead">A loop, not a checklist. <strong>Measure, find the worst node, change one thing, measure again.</strong> Guessing at indexes is how you end up with forty of them and a slow database.</p>
