@@ -172,7 +172,7 @@
 <header>
   <div class="kicker"><a class="back" href="../">❮ Data &amp; AI Engineering, Simply Explained</a></div>
   <h1>How Postgres Stores Your Data</h1>
-  <p class="dek">Every query you write eventually becomes the same physical act: <strong>read some 8 KB pages off a disk</strong>. An index is a device for reading fewer of them. A partition is a device for skipping them entirely. <code>VACUUM</code> exists because Postgres never overwrites a row in place. This page opens up the engine — <strong>the process model (why you need a connection pooler), the WAL, pages, tuples, the heap, MVCC, TOAST, B-trees, BRIN, partitioning</strong> — and then shows you how to read <code>EXPLAIN</code> and which monitoring queries actually tell you something.</p>
+  <p class="dek">Every query you write eventually becomes the same physical act: <strong>read some 8 KB pages off a disk</strong>. An index is a device for reading fewer of them. A partition is a device for skipping them entirely. <code>VACUUM</code> exists because Postgres never overwrites a row in place. This page opens up the engine behind those four sentences, then shows you how to read <code>EXPLAIN</code> and which monitoring queries actually tell you something.</p>
   <div class="stack">
     <span class="chip"><svg class="ico"><use href="#i-database"/></svg> PostgreSQL 18</span>
     <span class="chip"><svg class="ico"><use href="#i-disk"/></svg> storage &#183; indexes &#183; partitions</span>
@@ -224,15 +224,10 @@
 <tr><td><strong>There's no columnstore in core Postgres</strong></td><td>The one real gap for analytics. What to use instead — and why it points straight at your lakehouse — is §15</td></tr>
 </table></div>
 
-<div class="callout cy reveal">
-  <p style="margin:.2em 0"><span class="t"><svg class="ico"><use href="#i-key"/></svg> The one that trips people up most</span></p>
-  <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">It's easy to assume a table with a primary key is physically sorted by that key on disk — plenty of databases work that way. <strong>Postgres never does.</strong> The table is always an unordered heap, and the index is always a separate structure off to the side, holding pointers back into it. If you've been reasoning about Postgres performance assuming "the primary key sorts the table" — <strong>it doesn't</strong>, and §05 walks through what that changes.</p>
-</div>
-
 <h2 id="arch" class="reveal"><span class="hico"><svg class="ico"><use href="#i-workflow"/></svg></span><span class="n">02.</span> The architecture: processes, memory, and the WAL</h2>
 <p class="reveal lead">Before the storage layout, the shape of the running system. Postgres is <strong>a family of cooperating OS processes sharing one block of memory</strong> — and it forks <em>a whole new process for every connection</em>.</p>
 
-<p class="reveal">That last fact is not a detail. Postgres is <strong>process-based, not thread-based</strong>. Connect, and the postmaster <code>fork()</code>s a dedicated backend process that lives until you disconnect. It has its own memory, its own file descriptors, and costs several megabytes. This is the single most consequential architectural fact for anyone running Postgres at scale, and we come back to what it means in a moment.</p>
+<p class="reveal">That last fact is not a detail. Postgres is <strong>process-based, not thread-based</strong>: the postmaster <code>fork()</code>s a dedicated backend that lives until you disconnect, with its own memory, its own file descriptors, and a cost of several megabytes. Everything below about pooling and memory follows from it.</p>
 
 <p class="reveal">Here is what was actually running on the live server:</p>
 
@@ -299,7 +294,7 @@ postgres: <span class="g">client backend</span>                  <span class="c"
 <figcaption>Durability comes from the WAL, not from the data file. If the server dies after the commit but before the checkpoint, the WAL is replayed on restart and the change is recovered.</figcaption>
 </figure>
 
-<p class="reveal">Why do it this way? Because <strong>the WAL is sequential and the data pages are scattered.</strong> Writing one 200-byte record to the end of a log file is enormously cheaper than fsyncing a dozen random 8 KB pages across the disk. So Postgres buys durability at sequential-write prices and defers the expensive random writes to a background process that can batch them. If the server is killed, the WAL is replayed on restart and every committed change comes back. That is <strong>crash recovery</strong>, and it is the same log that gets shipped to replicas.</p>
+<p class="reveal">Why do it this way? Because <strong>the WAL is sequential and the data pages are scattered.</strong> Writing one 200-byte record to the end of a log file is enormously cheaper than fsyncing a dozen random 8 KB pages across the disk. So Postgres buys durability at sequential-write prices and defers the expensive random writes to a background process that can batch them. That replay-on-restart behaviour is <strong>crash recovery</strong> — and it's the same log stream that gets shipped to replicas.</p>
 
 <h3 class="reveal">Memory: the one setting that will OOM your server</h3>
 
@@ -314,24 +309,24 @@ postgres: <span class="g">client backend</span>                  <span class="c"
 
 <div class="callout rd reveal">
   <p style="margin:.2em 0"><span class="t"><svg class="ico"><use href="#i-warn"/></svg> <code>work_mem</code> is not a total. It multiplies.</span></p>
-  <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">This is the classic way to take a Postgres server down. <code>work_mem</code> is the limit for <strong>a single sort or hash node</strong> — and one query can easily have five of them, and you can have a hundred connections. So <code>work_mem = 256MB</code> does not mean "256 MB". It means <strong>256 MB × 5 nodes × 100 connections = 128 GB</strong>, and your server dies. Keep <code>work_mem</code> modest globally (4–32 MB), and raise it <em>per session</em> for the one big reporting query that genuinely needs it: <code>SET work_mem = '512MB';</code> before it, and only for it.</p>
+  <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">The classic way to take a Postgres server down. <code>work_mem</code> is the limit for <strong>one sort or hash node</strong> — and a query can easily have five, across a hundred connections. So <code>work_mem = 256MB</code> means <strong>256 MB × 5 nodes × 100 connections = 128 GB</strong>, and your server dies. Keep it modest globally (4–32 MB) and raise it <em>per session</em> for the one report that needs it: <code>SET work_mem = '512MB';</code> before that query, and only that query.</p>
 </div>
 
 <h3 class="reveal">Why you need a connection pooler</h3>
 
-<p class="reveal">Come back to the process model. Every connection is a forked OS process consuming several megabytes and a scheduler slot. A web application with 500 connections is asking Postgres to run 500 processes — and Postgres will do it, badly. Throughput <em>collapses</em> past a few hundred, because the machine spends its time context-switching rather than working.</p>
+<p class="reveal">A web application with 500 connections is asking Postgres to run 500 OS processes — and Postgres will do it, badly. Throughput <em>collapses</em> past a few hundred, because the machine spends its time context-switching rather than working.</p>
 
-<p class="reveal">The fix is a <strong>connection pooler</strong> — <code>PgBouncer</code> is the standard one. It keeps a small pool of real backend connections (say 20) and multiplexes thousands of client connections across them. Rule of thumb: <strong>the useful number of active backends is roughly <code>cores × 2–4</code></strong>, not "however many the app opens". If you are running Postgres behind an application server and you do not have a pooler, that is usually the first thing to fix — before any index.</p>
+<p class="reveal">The fix is a <strong>connection pooler</strong> — <code>PgBouncer</code> is the standard one — keeping a small pool of real backends (say 20) and multiplexing thousands of client connections across them. Rule of thumb: <strong>useful active backends ≈ <code>cores × 2–4</code></strong>, not "however many the app opens". Postgres behind an app server with no pooler is usually the first thing to fix, before any index.</p>
 
 <div class="callout gr reveal">
   <p style="margin:.2em 0"><span class="t"><svg class="ico"><use href="#i-zap"/></svg> New in PostgreSQL 18: asynchronous I/O</span></p>
   <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">Those <code>io worker</code> processes in the list above did not exist before PG 18. Historically a backend that needed a page from disk <em>blocked</em> while the kernel fetched it — one page at a time, idling. PG 18 lets backends <em>queue</em> several read requests and keep working while the I/O happens in parallel underneath, instead of stalling on each page.</p>
-  <p style="margin:.7em 0 0;font-size:14.5px;color:#cdd0dd">It speeds up exactly the operations a data engineer cares about — <strong>sequential scans, bitmap heap scans and vacuum</strong> — with reported gains up to 2–3× on read-heavy scans. It's on by default; you don't need to configure anything to benefit. If you're on PG 17 or older, none of this exists and every disk read is a stall.</p>
+  <p style="margin:.7em 0 0;font-size:14.5px;color:#cdd0dd">It speeds up exactly what a data engineer cares about — <strong>sequential scans, bitmap heap scans and vacuum</strong> — with reported gains up to 2–3× on read-heavy scans, on by default. On PG 17 or older, none of this exists and every disk read is a stall.</p>
 </div>
 
 <h3 class="reveal">And the read path, in one paragraph</h3>
 
-<p class="reveal">A query asks for page 14,285. Postgres looks in <code>shared_buffers</code>: if it's there, that's a <strong>buffer hit</strong> — the <code>shared hit=</code> number in every <code>EXPLAIN (BUFFERS)</code> output you'll see later. If not, it reads from the OS page cache or the disk (<code>read=</code>), and evicts something else to make room. That is the entire reason the <strong>cache hit ratio</strong> (§19) matters: at 99% your working set is in RAM and Postgres is fast; at 80% you are going to disk constantly, and no index will save you — you have a memory problem, not a query problem.</p>
+<p class="reveal">A query asks for page 14,285. Postgres looks in <code>shared_buffers</code>: if it's there, that's a <strong>buffer hit</strong> — the <code>shared hit=</code> figure in every <code>EXPLAIN (BUFFERS)</code> below. If not, it reads from the OS cache or disk (<code>read=</code>) and evicts something to make room. That's the whole reason the <strong>cache hit ratio</strong> (§19) matters: at 99% your working set is in RAM; at 80% you're going to disk constantly and no index will save you — that's a memory problem, not a query problem.</p>
 
 <h2 id="hierarchy" class="reveal"><span class="hico"><svg class="ico"><use href="#i-layers"/></svg></span><span class="n">03.</span> The storage hierarchy: cluster to tuple</h2>
 <p class="reveal lead">Six nested layers sit between "a Postgres server" and "one row on a disk". Only the bottom two do any real work.</p>
@@ -449,7 +444,7 @@ postgres: <span class="g">client backend</span>                  <span class="c"
 
 <div class="callout gd reveal">
   <p style="margin:.2em 0"><span class="t"><svg class="ico"><use href="#i-bulb"/></svg> Why "70 rows per page" is the number that explains everything</span></p>
-  <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">A million rows at ~70 per page is <strong>14,286 pages</strong>. A sequential scan must read all 14,286 — that is the cost of the table. An index lookup that finds 109 matching rows must read a handful of index pages plus, in the worst case, <em>107 heap pages</em>, because those 109 rows are scattered across the heap in insertion order, roughly one per page. That ratio — <em>how many pages do I touch to get the rows I want</em> — is the only thing the planner is really thinking about, and it's why an index that matches 30% of the table is worse than no index at all.</p>
+  <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">A million rows at ~70 per page is <strong>14,286 pages</strong> — the cost of a sequential scan. An index lookup finding 109 rows reads a few index pages plus, in the worst case, <em>107 heap pages</em>, because those rows sit scattered roughly one per page. That ratio — <em>how many pages to get the rows I want</em> — is the only thing the planner is really thinking about, and it's why an index matching 30% of a table is worse than no index at all.</p>
 </div>
 
 <h2 id="heap" class="reveal"><span class="hico"><svg class="ico"><use href="#i-database"/></svg></span><span class="n">05.</span> The heap, and why a lookup is always two steps</h2>
@@ -594,7 +589,7 @@ postgres: <span class="g">client backend</span>                  <span class="c"
 
 <div class="callout rd reveal">
   <p style="margin:.2em 0"><span class="t"><svg class="ico"><use href="#i-warn"/></svg> Never run VACUUM FULL on a live production table</span></p>
-  <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">It takes an <code>ACCESS EXCLUSIVE</code> lock for its entire duration — <strong>nothing can read or write the table</strong>, not even a <code>SELECT</code> — and it needs enough free disk to hold a second full copy while it rewrites. On a big table that is a multi-hour outage. If you genuinely need to reclaim space with the table online, use <code>pg_repack</code>, which does the same job without the long lock. Better still: <strong>fix the autovacuum settings so the bloat never accumulates.</strong></p>
+  <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">It holds an <code>ACCESS EXCLUSIVE</code> lock throughout — <strong>nothing can read or write the table</strong>, not even a <code>SELECT</code> — and needs free disk for a second full copy. On a big table that's a multi-hour outage. To reclaim space with the table online, use <code>pg_repack</code>. Better still: <strong>fix autovacuum so the bloat never accumulates.</strong></p>
 </div>
 
 <h3 class="reveal">Why autovacuum falls behind (and the one setting to change)</h3>
@@ -650,7 +645,7 @@ postgres: <span class="g">client backend</span>                  <span class="c"
 
 <div class="callout gd reveal">
   <p style="margin:.2em 0"><span class="t"><svg class="ico"><use href="#i-bulb"/></svg> Why a data engineer should care about TOAST</span></p>
-  <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">TOAST is usually invisible and usually helpful. It becomes a problem in exactly one situation: <strong>you <code>SELECT *</code> on a table with a big <code>jsonb</code> or <code>text</code> column, and you didn't need that column.</strong> Every row now costs an extra trip to the TOAST table plus a decompression. Selecting only the columns you need is not a style preference here — it is the difference between reading one page and reading hundreds. Note also that <code>pg_relation_size()</code> <em>excludes</em> the TOAST table, so a table that looks small can be hiding gigabytes; use <code>pg_total_relation_size()</code> to see the truth.</p>
+  <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">TOAST is usually invisible and helpful. It becomes a problem in exactly one situation: <strong>you <code>SELECT *</code> on a table with a big <code>jsonb</code> or <code>text</code> column you didn't need.</strong> Every row now costs a trip to the TOAST table plus a decompression — so selecting only the columns you need is the difference between reading one page and hundreds. Also: <code>pg_relation_size()</code> <em>excludes</em> the TOAST table, so a table that looks small can hide gigabytes. Use <code>pg_total_relation_size()</code>.</p>
 </div>
 
 <h2 id="btree" class="reveal"><span class="hico"><svg class="ico"><use href="#i-network"/></svg></span><span class="n">09.</span> B-tree: how an index finds a row</h2>
@@ -723,7 +718,7 @@ postgres: <span class="g">client backend</span>                  <span class="c"
 
 <h3 class="reveal">First, how to read the output at all</h3>
 
-<p class="reveal">Before looking at real examples, three things about the shape of <code>EXPLAIN</code> output that nobody explains up front:</p>
+<p class="reveal">There are three ways to ask, and they don't give you the same thing:</p>
 
 <div class="cb reveal"><span class="lang">sql</span><pre><span class="k">EXPLAIN</span>                          <span class="c">-- shows the plan and the planner's GUESSES. Doesn't run the query.</span>
 <span class="k">EXPLAIN</span> (<span class="k">ANALYZE</span>)                <span class="c">-- actually RUNS it. Now you get real rows and real time.</span>
@@ -737,9 +732,7 @@ postgres: <span class="g">client backend</span>                  <span class="c"
   <strong>3. <code>loops=N</code> means "per loop."</strong> If a node says <code>actual rows=36 loops=3</code>, it didn't return 36 rows — it ran 3 times and returned about 36 rows <em>each</em> time, ~108 total. Always multiply before you react to a number.</p>
 </div>
 
-<p class="reveal">One more thing you'll see in the very first example below and might not expect: <strong><code>Gather</code></strong> and <strong><code>Workers Launched</code></strong>. Postgres sometimes splits a big scan across a few background helper processes to run it in parallel, then <code>Gather</code>s their results back together. It's a performance detail, not a new concept — for now just keep adding up the <code>Buffers</code> numbers as usual.</p>
-
-<p class="reveal">With that, here are all four scan types, each one real output from <code>EXPLAIN (ANALYZE, BUFFERS)</code> run on the same one-million-row table.</p>
+<p class="reveal">One unexpected thing in the first example: <strong><code>Gather</code></strong> and <strong><code>Workers Launched</code></strong>. Postgres sometimes splits a big scan across background helper processes and gathers their results back. It's a performance detail, not a new concept — keep adding up <code>Buffers</code> as usual. All four scan types below are real output, same one-million-row table.</p>
 
 <h3 class="reveal">1 · Seq Scan — read every page</h3>
 
@@ -754,7 +747,7 @@ Gather (actual rows=109 loops=1)
        <span class="r">Rows Removed by Filter: 333297</span>            <span class="c">← threw away 99.99% of what it read</span>
 </pre></div>
 
-<p class="reveal">A <strong>Seq(uential) Scan</strong> just reads the whole table, page by page, checking every row against the filter. <strong>Rows Removed by Filter</strong> is the tell: it read 333,297 rows just to keep 36 of them. That ratio — almost everything read, almost nothing kept — is the definition of "this table needs an index." (It wasn't <em>slow</em> here, because Postgres split the work across 3 parallel workers. A seq scan is perfectly fine when you actually want most of the table.)</p>
+<p class="reveal">A <strong>Seq(uential) Scan</strong> reads the whole table page by page, checking every row against the filter. <strong>Rows Removed by Filter</strong> is the tell: 333,297 rows read to keep 36. That ratio — almost everything read, almost nothing kept — is the definition of "this table needs an index." (It wasn't <em>slow</em> here, because 3 parallel workers split the job. A seq scan is fine when you genuinely want most of the table.)</p>
 
 <h3 class="reveal">2 · Index Scan / Bitmap Heap Scan — walk the tree, then fetch</h3>
 
@@ -768,7 +761,7 @@ Bitmap Heap Scan on events (actual rows=109 loops=1)
        Buffers: shared read=3                       <span class="c">← the index itself cost 3 pages</span>
 </pre></div>
 
-<p class="reveal">Add an index and the same query drops from 14,286 pages to 110 — a huge win. But look closer at <code>Heap Blocks: exact=107</code>: it still took <strong>107 heap pages to fetch 109 rows</strong>, nearly one page per row. This is the "red arrows" cost from the B-tree diagram in §09 — those 109 matching rows are scattered randomly across the heap, one per page, so the index gets you to the right rows but each one still costs a separate page read.</p>
+<p class="reveal">Add an index and the same query drops from 14,286 pages to 110. But look at <code>Heap Blocks: exact=107</code> — <strong>107 heap pages to fetch 109 rows</strong>, nearly one page each. That's the "red arrows" cost from §09's diagram: the index gets you to the right rows, but they sit scattered one per page, so each still costs its own page read.</p>
 
 <p class="reveal">There are two flavors of this, and it's worth knowing the difference since both show up constantly in real plans:</p>
 <ul class="reveal">
@@ -785,7 +778,7 @@ Bitmap Heap Scan on events (actual rows=25921 loops=1)
   Buffers: shared hit=11780 read=234
 </pre></div>
 
-<p class="reveal">This is the example that surprises people. Matching only <strong>2.6% of the rows</strong> still required reading <strong>84% of the pages</strong> — because 26,000 randomly-scattered rows land on almost every page in a 14,286-page table. Past this point the index isn't buying you much, and the planner will soon correctly give up on it and just seq-scan instead. The lesson: <em>an index only pays off when the rows it finds are few, or physically clustered together</em> — not just "a small percentage" of the table.</p>
+<p class="reveal">This is the one that surprises people. Matching <strong>2.6% of the rows</strong> still required reading <strong>84% of the pages</strong>, because 26,000 scattered rows land on almost every page of a 14,286-page table. Past this point the index buys little, and the planner will rightly give up and seq-scan. The lesson: <em>an index pays off when the rows it finds are few, or physically clustered</em> — not merely "a small percentage."</p>
 
 <h3 class="reveal">4 · Index-Only Scan — never touch the heap at all</h3>
 
@@ -810,14 +803,14 @@ Index Only Scan using idx_user on events (actual rows=109 loops=1)
 </table></div>
 
 <div class="callout gd reveal">
-  <p style="margin:.2em 0"><span class="t"><svg class="ico"><use href="#i-bulb"/></svg> If you only remember two things when a query is slow</span></p>
-  <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">Look at <strong><code>Buffers</code></strong> first — that's the actual work done, in pages. Then compare <strong>estimated rows vs actual rows</strong> on the slow node: if the planner guessed 10 and got 500,000, it picked its plan on bad information, and the fix is almost always <code>ANALYZE tablename;</code> to refresh its statistics. That single check resolves more "why is this suddenly slow" questions than anything else in this article.</p>
+  <p style="margin:.2em 0"><span class="t"><svg class="ico"><use href="#i-bulb"/></svg> The one check to run on any slow query</span></p>
+  <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">After <code>Buffers</code>, compare <strong>estimated rows vs actual rows</strong> on the slow node. If the planner guessed 10 and got 500,000, it chose its plan on bad information, and the fix is almost always <code>ANALYZE tablename;</code> to refresh statistics — not a new index. That single comparison resolves more "why is this suddenly slow" questions than anything else on this page.</p>
 </div>
 
 <h2 id="joins" class="reveal"><span class="hico"><svg class="ico"><use href="#i-merge"/></svg></span><span class="n">11.</span> How Postgres joins tables</h2>
 <p class="reveal lead">The last section covered how rows come <em>out of one table</em>. Most real queries combine two, and Postgres has exactly <strong>three</strong> different mechanical ways to do that combining.</p>
 
-<p class="reveal">Every join you will ever see in an <code>EXPLAIN</code> plan is one of three algorithms: <strong>Nested Loop</strong>, <strong>Hash Join</strong>, or <strong>Merge Join</strong>. All three produce exactly the same rows — they're just different strategies for doing the matching, and each one is cheap in some situations and disastrous in others. The planner picks between them using its row-count statistics, which is exactly why a bad row estimate so often shows up as "it picked a terrible join."</p>
+<p class="reveal">They are <strong>Nested Loop</strong>, <strong>Hash Join</strong> and <strong>Merge Join</strong>. All three produce exactly the same rows; each is cheap in some situations and disastrous in others. The planner chooses using its row-count statistics — which is exactly why a bad estimate so often surfaces as "it picked a terrible join."</p>
 
 <h3 class="reveal">1 · Nested Loop — and the <code>loops=</code> number everyone misreads</h3>
 
@@ -835,7 +828,7 @@ Nested Loop (actual rows=109 loops=1)
 
 <div class="callout rd reveal">
   <p style="margin:.2em 0"><span class="t"><svg class="ico"><use href="#i-warn"/></svg> <code>loops=N</code> means the numbers next to it are <strong>per loop</strong></span></p>
-  <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">This is the single most misread thing in <code>EXPLAIN</code>. In a real plan I captured, the inner node said <code>actual rows=100 loops=2435</code>. That does <strong>not</strong> mean 100 rows — it means the node ran <strong>2,435 times</strong> and returned ~100 rows each time. The real total is <strong>243,554 rows</strong>. Always multiply <code>rows × loops</code> before you decide a node is cheap. A nested loop with a huge outer side and <em>no index</em> on the inner is <code>N × M</code> — and it will run until the heat death of the universe while the plan looks innocent.</p>
+  <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">In a real plan I captured, the inner node said <code>actual rows=100 loops=2435</code> — not 100 rows, but <strong>2,435 executions</strong> returning ~100 rows each, <strong>243,554 rows</strong> in total. A nested loop with a huge outer side and <em>no index</em> on the inner is <code>N × M</code>, and it will run until the heat death of the universe while the plan looks innocent.</p>
 </div>
 
 <h3 class="reveal">2 · Hash Join — the data engineer's workhorse</h3>
@@ -875,7 +868,7 @@ Hash Join (actual rows=81184 loops=3)
 
 <div class="callout cy reveal">
   <p style="margin:.2em 0"><span class="t"><svg class="ico"><use href="#i-key"/></svg> How to debug a bad join, in order</span></p>
-  <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd"><strong>1.</strong> Compare <em>estimated</em> vs <em>actual</em> rows on the join node. Off by 100× or more? The planner chose this algorithm on bad information — run <code>ANALYZE</code> and re-check <em>before</em> touching anything else. This is the fix far more often than people expect.<br/>
+  <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd"><strong>1.</strong> The estimated-vs-actual check from §10, applied to the join node. Off by 100× or more? <code>ANALYZE</code> and re-check before touching anything else.<br/>
   <strong>2.</strong> Nested loop with a big <code>loops=</code>? The inner side needs an index.<br/>
   <strong>3.</strong> <code>Batches &gt; 1</code> or <code>temp read/written</code>? It spilled. <code>SET work_mem</code> higher <em>for that query only</em> (§02 — it multiplies).<br/>
   <strong>4.</strong> Only as a last resort, and only to <em>diagnose</em>, disable an algorithm to see what the planner would do otherwise: <code>SET enable_nestloop = off;</code>. Never leave that in production code — you are lying to the planner, not fixing it.</p>
@@ -994,8 +987,8 @@ Hash Join (actual rows=81184 loops=3)
 
 <div class="callout gd reveal">
   <p style="margin:.2em 0"><span class="t"><svg class="ico"><use href="#i-bulb"/></svg> BRIN is the data engineer's index</span></p>
-  <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">Think about what a typical DE fact table looks like: <strong>append-only, ordered by time, enormous, and queried by time range.</strong> That is precisely BRIN's ideal case — the physical order already matches the logical order, so the block summaries are tight. You get range-scan pruning for a rounding error of disk space and almost no write overhead. If your events table is 500 GB and you're indexing <code>created_at</code> with a B-tree, you are spending gigabytes to buy what BRIN would give you for megabytes.</p>
-  <p style="margin:.7em 0 0;font-size:14.5px;color:#cdd0dd"><strong>The one condition:</strong> correlation. Check it with <code>SELECT correlation FROM pg_stats WHERE attname='created_at'</code>. Near 1.0 (or −1.0) → BRIN will fly. Near 0 → BRIN is worthless, because every block range will contain the full spread of values and nothing can be skipped.</p>
+  <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">A typical fact table is <strong>append-only, time-ordered, enormous, and queried by time range</strong> — precisely BRIN's ideal case, since physical order already matches logical order and the block summaries stay tight. You get range pruning for a rounding error of disk and almost no write overhead. Indexing <code>created_at</code> with a B-tree on a 500 GB events table spends gigabytes to buy what BRIN gives you for megabytes.</p>
+  <p style="margin:.7em 0 0;font-size:14.5px;color:#cdd0dd"><strong>The one condition</strong> is the correlation figure from §05: <code>SELECT correlation FROM pg_stats WHERE attname='created_at'</code>. Near 1.0 or −1.0 and BRIN flies; near 0 and it's worthless, because every block range then spans the full value spread and nothing can be skipped.</p>
 </div>
 
 <div class="cb reveal"><span class="lang">sql</span><pre><span class="k">CREATE INDEX</span> idx_brin <span class="k">ON</span> events <span class="k">USING</span> brin(created_at);        <span class="c">-- 24 kB</span>
@@ -1015,7 +1008,7 @@ Hash Join (actual rows=81184 loops=3)
 
 <h3 class="reveal">Partial — index only the rows you actually query</h3>
 
-<p class="reveal">Add a <code>WHERE</code> clause to <code>CREATE INDEX</code> and only matching rows get indexed. If 90% of your orders are <code>completed</code> and every query hunts for the <code>pending</code> ones, indexing all of them is waste. Measured on our table, a partial index was <strong>half the size</strong> of the full one:</p>
+<p class="reveal">Add a <code>WHERE</code> clause to <code>CREATE INDEX</code> and only matching rows get indexed. If 90% of your rows are <code>completed</code> and every query hunts for the <code>pending</code> ones, indexing all of them is waste. Measured on our table, a partial index was <strong>half the size</strong> of the full one:</p>
 
 <div class="cb reveal"><span class="lang">sql</span><pre><span class="k">CREATE INDEX</span> idx_pending <span class="k">ON</span> events(user_id) <span class="k">WHERE</span> status = <span class="g">'pending'</span>;
 <span class="c">--  full B-tree on user_id  : 6,960 kB</span>
@@ -1068,15 +1061,15 @@ Index Only Scan using idx_multi on events (actual rows=109 loops=1)
 
 <div class="callout gd reveal">
   <p style="margin:.2em 0"><span class="t"><svg class="ico"><use href="#i-bulb"/></svg> Does skip scan mean column order stopped mattering? No.</span></p>
-  <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">Skip scan only pays when the leading column has <strong>few distinct values</strong> — here <code>status</code> had 3, so 7 tree descents covered it. If the leading column were <code>user_id</code> with 10,000 distinct values, skipping would mean 10,000 descents and the planner would rightly seq-scan instead. <strong>The rule still stands: put the column you filter on most selectively, and most often, first.</strong> Skip scan is a safety net that rescues a badly-ordered index on a low-cardinality prefix — not a licence to stop thinking. (And on PG 17 or older, none of this exists: that query is a plain Seq Scan.)</p>
+  <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">It only pays when the leading column has <strong>few distinct values</strong> — <code>status</code> had 3, so 7 tree descents covered it. Make that column <code>user_id</code> with 10,000 distinct values and skipping means 10,000 descents; the planner rightly seq-scans instead. <strong>So the rule stands: put the column you filter on most selectively, and most often, first.</strong> Skip scan rescues a badly-ordered index on a low-cardinality prefix — it isn't a licence to stop thinking. (On PG 17 and older that query is a plain Seq Scan.)</p>
 </div>
 
 <h2 id="columnstore" class="reveal"><span class="hico"><svg class="ico"><use href="#i-cloud"/></svg></span><span class="n">15.</span> Columnstore: the thing Postgres doesn't have</h2>
 <p class="reveal lead">This is the one item on the list with <strong>no Postgres answer</strong> — and understanding why leads straight to why your lakehouse exists.</p>
 
-<p class="reveal">Postgres is <strong>row-oriented</strong>, all the way down. A page holds whole tuples, with every column of a row sitting together. That's ideal for OLTP: fetch one customer, get all their fields in one page read. It is close to the worst possible layout for analytics. Run <code>SELECT AVG(amount) FROM events</code> and Postgres must read all 14,286 pages — <em>every column of every row</em> — in order to use one number from each. You paid to read the payload, the status, the timestamps, and threw them all away.</p>
+<p class="reveal">Postgres is <strong>row-oriented</strong>, all the way down: a page holds whole tuples, every column of a row together. Ideal for OLTP, close to the worst possible layout for analytics. Run <code>SELECT AVG(amount) FROM events</code> and Postgres reads all 14,286 pages — <em>every column of every row</em> — to use one number from each. You paid to read the payload, the status and the timestamps, then threw them away.</p>
 
-<p class="reveal">A <strong>columnstore</strong> stores each column separately. The same query reads only the <code>amount</code> column's storage — a fraction of the bytes — and because a column holds one data type with lots of repetition, it compresses 10× or better. That is why analytical engines are all columnar.</p>
+<p class="reveal">A <strong>columnstore</strong> stores each column separately, so the same query reads only <code>amount</code>'s storage — and because a column holds one repetitive data type, it compresses 10× or better.</p>
 
 <div class="tw reveal"><table>
 <tr><th></th><th>Rowstore (Postgres heap)</th><th>Columnstore (Parquet, Delta)</th></tr>
@@ -1090,7 +1083,7 @@ Index Only Scan using idx_multi on events (actual rows=109 loops=1)
 <div class="callout gr reveal">
   <p style="margin:.2em 0"><span class="t"><svg class="ico"><use href="#i-key"/></svg> This is the whole reason the lakehouse exists</span></p>
   <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">Core Postgres has no columnstore, and the extensions that add one (Citus <code>columnar</code>, Hydra) are real but niche. The industry's actual answer was to <em>stop trying</em> — and to put the analytical copy of the data somewhere columnar instead: <strong>Parquet files, and Delta Lake or Iceberg on top of them.</strong> When you write a Delta table in Databricks, or a Spark job reads Parquet and skips 95% of the file via column pruning and min/max statistics, that is a columnstore doing exactly what Postgres cannot.</p>
-  <p style="margin:.7em 0 0;font-size:14.5px;color:#cdd0dd">And notice that Delta's file-level min/max skipping is <strong>the same idea as BRIN</strong> (§13), just applied to files instead of block ranges. Same trick, different scale. Postgres is the right tool for the transactional source; the lakehouse is the right tool for the analytical copy. Knowing <em>why</em> is what the OLTP-vs-OLAP distinction actually means.</p>
+  <p style="margin:.7em 0 0;font-size:14.5px;color:#cdd0dd">Note that Delta's file-level min/max skipping is <strong>the same idea as BRIN</strong> (§13) applied to files instead of block ranges — same trick, different scale. Postgres is the right tool for the transactional source; the lakehouse for the analytical copy. Knowing <em>why</em> is what the OLTP-vs-OLAP distinction actually means.</p>
 </div>
 
 <h2 id="partition" class="reveal"><span class="hico"><svg class="ico"><use href="#i-split"/></svg></span><span class="n">16.</span> Partitioning: RANGE, LIST, HASH</h2>
@@ -1138,7 +1131,7 @@ Aggregate
 
 <div class="callout rd reveal">
   <p style="margin:.2em 0"><span class="t"><svg class="ico"><use href="#i-warn"/></svg> No partition key in the WHERE clause = no pruning = you made things worse</span></p>
-  <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">This is the mistake that turns partitioning from a win into a regression. If your query doesn't filter on the partition key, Postgres must scan <strong>every partition</strong> — and you've now added per-partition planning overhead on top of the same work. <strong>Choose the partition key to match how you actually query</strong>, which for a fact table is almost always the time column. And beware the subtle version: wrapping the key in a function (<code>WHERE date_trunc('day', created_at) = …</code>) can defeat pruning, exactly as it defeats an index.</p>
+  <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">This is what turns partitioning from a win into a regression: without the key in the <code>WHERE</code>, Postgres scans <strong>every partition</strong> and you've added per-partition planning overhead on top of the same work. <strong>Choose the key to match how you actually query</strong> — for a fact table, almost always the time column. And the subtle version: wrapping the key in a function defeats pruning exactly as it defeats an index.</p>
 </div>
 
 <h3 class="reveal">When partitioning is worth it — and when it isn't</h3>
@@ -1165,7 +1158,7 @@ Aggregate
 
 <div class="callout cy reveal">
   <p style="margin:.2em 0"><span class="t"><svg class="ico"><use href="#i-key"/></svg> The design that actually works for a fact table</span></p>
-  <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd"><strong>Partition by time</strong> (RANGE on <code>created_at</code>, monthly or daily) so old data drops instantly and vacuum stays sane. <strong>Index by access pattern</strong> — a B-tree on the columns you filter by <em>within</em> a time window (<code>user_id</code>, <code>status</code>). Then <strong>BRIN the time column</strong> inside each partition if the partitions are still large, since the data is append-ordered and BRIN costs nothing. And put the current month's partition on a fast tablespace and the archive on cheap disk — <code>ALTER TABLE … SET TABLESPACE</code> per partition. That's the whole recipe, and it's the same shape as partitioning a Delta table by date.</p>
+  <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd"><strong>Partition by time</strong> (RANGE on <code>created_at</code>) so old data drops instantly and vacuum stays sane. <strong>Index by access pattern</strong> — a B-tree on what you filter by <em>within</em> a window (<code>user_id</code>, <code>status</code>). <strong>BRIN the time column</strong> inside each partition if they're still large. And put the current month on a fast tablespace, the archive on cheap disk. That's the whole recipe — the same shape as partitioning a Delta table by date.</p>
 </div>
 
 <div class="cb reveal"><span class="lang">sql</span><pre><span class="c">-- A unique constraint on a partitioned table MUST include the partition key.</span>
@@ -1178,8 +1171,8 @@ Aggregate
 <p class="reveal">That last constraint catches people out and is worth internalising: <strong>you cannot have a globally-unique <code>id</code> on a partitioned table</strong> unless the partition key is part of the key. It is a direct consequence of there being no global index — and it is the same trade-off, for the same reason, that you meet when partitioning tables in a lakehouse.</p>
 
 <div class="callout reveal">
-  <p style="margin:.2em 0"><span class="t">You've now covered every concept in this page</span></p>
-  <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">Everything from here on (§18–21, plus the glossary) is a <strong>reference toolkit</strong>, not more new ideas — a playbook, a set of copy-pasteable monitoring queries, a checklist of gotchas, and a one-page cheat sheet, all built from what §01–17 already explained. There's no need to read it start to finish: skim it once so you know it's here, then come back to the specific query or table you need when you actually hit that situation.</p>
+  <p style="margin:.2em 0"><span class="t">That's every concept — the rest is reference</span></p>
+  <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">§18–21 and the glossary add no new ideas: a playbook, copy-pasteable monitoring queries, a gotcha checklist, a cheat sheet. Skim once so you know what's here, then come back to the specific query when you hit the situation.</p>
 </div>
 
 <h2 id="optimize" class="reveal"><span class="hico"><svg class="ico"><use href="#i-zap"/></svg></span><span class="n">18.</span> The optimization playbook</h2>
@@ -1235,7 +1228,7 @@ Aggregate
 
 <div class="step reveal"><div class="num-bubble">2</div><div class="body">
 <h4 style="margin-top:0">Keep the column bare — or index the expression</h4>
-<p style="margin:.2em 0"><code>WHERE date_trunc('day', created_at) = '2024-03-01'</code> cannot use an index on <code>created_at</code>. Either rewrite it as a half-open range (<code>&gt;= '2024-03-01' AND &lt; '2024-03-02'</code>), or build an <em>expression index</em> on <code>date_trunc('day', created_at)</code>. Both work; the range is usually better because one index then serves every granularity.</p>
+<p style="margin:.2em 0">A wrapped column isn't sargable (§14). Either rewrite <code>WHERE date_trunc('day', created_at) = '2024-03-01'</code> as a half-open range (<code>&gt;= '2024-03-01' AND &lt; '2024-03-02'</code>), or build an expression index. The range is usually better, because one index then serves every granularity.</p>
 </div></div>
 
 <div class="step reveal"><div class="num-bubble">3</div><div class="body">
@@ -1335,7 +1328,7 @@ Aggregate
 <span class="c">--  99.86     ← measured. You want &gt; 99%.</span>
 </pre></div>
 
-<p class="reveal">Below 95% on an OLTP workload means your working set doesn't fit in <code>shared_buffers</code> and you're going to disk constantly. That is a memory problem, not a query problem, and no index will fix it.</p>
+<p class="reveal">Below 95% on an OLTP workload, your working set doesn't fit in <code>shared_buffers</code> — the memory problem from §02, not a query problem.</p>
 
 <h3 class="reveal">6 · What is blocking what?</h3>
 
