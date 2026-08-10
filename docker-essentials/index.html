@@ -164,8 +164,8 @@
 <header>
   <div class="kicker"><a class="back" href="../">❮ Data &amp; AI Engineering, Simply Explained</a></div>
   <h1>Docker Essentials for Data Engineers</h1>
-  <p class="dek"><strong>Docker</strong> packages your code <em>and everything it needs to run</em> — the Python version, the system libraries, the environment variables — into a single portable box that behaves identically on your laptop, in CI, and in production. It is the definitive cure for "but it works on my machine." This guide builds the mental model one piece at a time (<strong>image vs container</strong>, and why that distinction explains almost everything), then makes it concrete with <strong>Dockerfiles</strong> you can copy — before covering the parts that actually bite: the <strong>layer cache</strong>, <strong>multi-stage builds</strong>, <strong>volumes</strong>, <strong>networking</strong>, <strong>Compose</strong>, a fully worked example, and the data-engineering specifics: dbt, Airflow, Spark and reproducible environments.</p>
-  <div class="byline">~25 min read · Essentials · Reference</div>
+  <p class="dek"><strong>Docker</strong> packages your code <em>and everything it needs to run</em> — the Python version, the system libraries, the environment variables — into a single portable box that behaves identically on your laptop, in CI, and in production. The definitive cure for "but it works on my machine." Starts from <strong>image vs container</strong>, the distinction that explains almost everything, then <strong>Dockerfiles</strong> you can copy, then the parts that actually bite: the <strong>layer cache</strong>, <strong>multi-stage builds</strong>, <strong>volumes</strong>, <strong>networking</strong>, <strong>Compose</strong>, and the data-engineering specifics — dbt, Airflow, Spark, reproducible environments.</p>
+  <div class="byline">~26 min read · Essentials · Reference</div>
   <div class="stack reveal">
     <span class="chip"><svg class="ico"><use href="#i-whale"/></svg> Docker</span>
     <span class="chip" style="color:#8AA4FF;border-color:#33396b;background:#161a33"><svg class="ico"><use href="#i-package"/></svg> Podman · OCI</span>
@@ -503,7 +503,7 @@
 
 <div class="callout gd reveal">
   <p style="margin:.2em 0"><span class="t"><svg class="ico"><use href="#i-warn"/></svg> Access to <code>/var/run/docker.sock</code> IS root access</span></p>
-  <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">The daemon runs as root, and it will happily run any container you ask it to — including one that bind-mounts the host's <code>/</code> and gives you a shell in it. So adding a user to the <code>docker</code> group is <em>exactly</em> the same as giving them passwordless sudo, and mounting the socket into a container ("so it can build images") hands that container the whole machine. This is the single most common way a container escape happens, and it isn't a bug — it's the design. If you need rootless builds, use <strong>rootless mode</strong> or <strong>Podman</strong>, which runs containers as your own user with no daemon at all.</p>
+  <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">The daemon runs as root, and it will happily run any container you ask it to — including one that bind-mounts the host's <code>/</code> and gives you a shell in it. Adding a user to the <code>docker</code> group is <em>exactly</em> giving them passwordless sudo, and mounting the socket into a container "so it can build images" hands that container the whole machine. It's the most common way a container escape happens, and it isn't a bug — it's the design. For rootless builds use <strong>rootless mode</strong> or <strong>Podman</strong>, which runs containers as your own user with no daemon at all.</p>
 </div>
 
 <h4 class="reveal">What each piece is for</h4>
@@ -1082,7 +1082,7 @@ docker system prune -a        <span class="c"># reclaim it. Careful: -a removes 
 
 <div class="callout cy reveal">
   <p style="margin:.2em 0"><span class="t"><svg class="ico"><use href="#i-key"/></svg> A container lives exactly as long as its main process</span></p>
-  <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">This one fact explains the most common beginner bug: <em>"my container exits immediately."</em> A container is not a machine that "stays up" — it is a wrapper around <strong>PID 1</strong>. When that process finishes, the container stops. Full stop. So a container whose command is <code>bash</code> (with nothing to read) exits instantly; a container running a web server stays up because the server never returns. If yours dies on startup, run <code>docker logs &lt;name&gt;</code> — the process almost certainly crashed, and the exit code tells you why (<code>0</code> = finished normally, <code>1</code> = error, <code>137</code> = killed, usually out of memory, <code>139</code> = segfault).</p>
+  <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">This one fact explains the most common beginner bug: <em>"my container exits immediately."</em> A container is not a machine that stays up — it is a wrapper around <strong>PID 1</strong>. When that process finishes, the container stops. So a container whose command is <code>bash</code>, with nothing to read, exits instantly; one running a web server stays up because the server never returns. If yours dies on startup, run <code>docker logs &lt;name&gt;</code> — the process almost certainly crashed, and the exit code says why (<code>0</code> = finished normally, <code>1</code> = error, <code>137</code> = killed, usually out of memory, <code>139</code> = segfault).</p>
 </div>
 
 <!-- 09 -->

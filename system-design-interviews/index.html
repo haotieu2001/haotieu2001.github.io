@@ -145,7 +145,7 @@ h2 .n{color:var(--blue2,#5C78FF)}
   <div class="kicker">System Design Interview Guide · Data &amp; AI Engineering</div>
   <h1>Data Engineering System Design Interviews: The Complete Framework</h1>
   <p class="dek">A from-zero reference for the data engineering system design round: a repeatable <strong>6-step framework</strong> — requirements, pipeline design, data modeling, storage &amp; formats, data quality, and scalability — plus every sub-topic that comes up under it (Lambda/Kappa, medallion architecture, star schema vs. OBT, SCD, partitioning, Parquet/Avro, Delta/Iceberg/Hudi, data contracts, idempotency, backfills, schema evolution), closing with a <strong>full worked interview walkthrough</strong> in the style of a real Uber Eats / Zomato / Swiggy-scale question.</p>
-  <div class="byline">~25 min read · Reference · System Design</div>
+  <div class="byline">~26 min read · Reference · System Design</div>
 </header>
 
 <figure class="diagram reveal" aria-label="Data flowing from sources through ingestion, processing, and storage to a serving layer">
@@ -179,9 +179,9 @@ h2 .n{color:var(--blue2,#5C78FF)}
   <a href="#requirements"><svg class="ico"><use href="#i-list"/></svg>03 · Step 1 — Requirements gathering</a>
   <a href="#pipeline"><svg class="ico"><use href="#i-workflow"/></svg>04 · Step 2 — Pipeline design</a>
   <a href="#modeling"><svg class="ico"><use href="#i-package"/></svg>05 · Step 3 — Data modeling</a>
-  <a href="#storage"><svg class="ico"><use href="#i-file"/></svg>06 · Step 4 — Storage &amp;amp; file formats</a>
-  <a href="#quality"><svg class="ico"><use href="#i-check"/></svg>07 · Step 5 — Data quality &amp;amp; observability</a>
-  <a href="#scale"><svg class="ico"><use href="#i-repeat"/></svg>08 · Step 6 — Scalability, backfills &amp;amp; DataOps</a>
+  <a href="#storage"><svg class="ico"><use href="#i-file"/></svg>06 · Step 4 — Storage &amp; file formats</a>
+  <a href="#quality"><svg class="ico"><use href="#i-check"/></svg>07 · Step 5 — Data quality &amp; observability</a>
+  <a href="#scale"><svg class="ico"><use href="#i-repeat"/></svg>08 · Step 6 — Scalability, backfills &amp; DataOps</a>
   <a href="#walkthrough"><svg class="ico"><use href="#i-user"/></svg>09 · Interview walkthrough — food delivery platform</a>
   <a href="#glossary"><svg class="ico"><use href="#i-book"/></svg>10 · ＊ · Glossary</a>
 </div>
@@ -405,7 +405,7 @@ h2 .n{color:var(--blue2,#5C78FF)}
 <figcaption>Same Kafka topic, two independent consumer groups: the speed layer (cyan) answers in milliseconds but lacks context; the batch layer (purple) is accurate but stale. The serving layer blends both.</figcaption>
 </figure>
 
-<p class="reveal">Two consumer groups read the <em>same</em> Kafka topic independently. The speed layer (Flink) computes surge pricing and driver ETA within milliseconds and writes to a cache — "fare ₹330, driver arriving in 4 minutes." On the other path, Firehose just buffers the same events straight into S3, with zero awareness of what Flink is doing — if Flink goes down, Firehose keeps writing uninterrupted. That decoupling is the whole point: each layer fails independently. The <em>batch layer</em> proper is what runs on top of that landed data: nightly Airflow-triggered EMR jobs that walk bronze → silver → gold to compute things that need <em>history</em> — which pickup zones spike hardest on Friday evenings, which routes have 3x higher cancellation rates, where to pre-position drivers ahead of a stadium event letting out.</p>
+<p class="reveal">Two consumer groups read the <em>same</em> Kafka topic independently. The speed layer (Flink) computes surge pricing and driver ETA within milliseconds and writes to a cache — "fare ₹330, driver arriving in 4 minutes." On the other path, Firehose buffers the same events straight into S3, with no awareness of what Flink is doing — if Flink goes down, Firehose keeps writing uninterrupted. That decoupling is the point: each layer fails independently. The <em>batch layer</em> runs on top of that landed data: nightly Airflow-triggered EMR jobs walking bronze → silver → gold to compute what needs <em>history</em> — which pickup zones spike hardest on Friday evenings, which routes have 3x higher cancellation rates, where to pre-position drivers before a stadium empties.</p>
 
 <p class="reveal">The serving layer blends both because neither is sufficient alone: real-time data is noisy and lacks context (47 requests, 12 drivers available right now → roughly 1.8x surge), while batch data is accurate but already stale by the time you read it (historically, this zone averages 2.1x surge on Friday 7–9pm). Combined, you get a grounded estimate instead of either a jumpy real-time number or a lagging historical one.</p>
 
@@ -586,7 +586,7 @@ h2 .n{color:var(--blue2,#5C78FF)}
 <p class="reveal"><strong>Bucketing</strong> is a separate, complementary technique: hashing a high-cardinality join key (e.g. <code>user_id</code>) into a fixed number of files so rows that will be joined together end up co-located. That reduces <strong>shuffle</strong> — the expensive redistribution of data across a cluster's nodes that a join normally requires — on large joins, and it's orthogonal to date partitioning; you can partition by date <em>and</em> bucket by a join key at the same time.</p>
 
 <!-- 06 -->
-<h2 id="storage" class="reveal"><span class="hico"><svg class="ico"><use href="#i-file"/></svg></span><span class="n">06.</span> Step 4 — Storage &amp;amp; file formats</h2>
+<h2 id="storage" class="reveal"><span class="hico"><svg class="ico"><use href="#i-file"/></svg></span><span class="n">06.</span> Step 4 — Storage &amp; file formats</h2>
 <p class="reveal">Once the logical model is fixed — bronze/silver/gold, star schema or OBT, how dimensions version themselves — the physical files backing it raise their own set of decisions: what format they're written in, and what sits on top of them to make them safe to write to concurrently.</p>
 <p class="reveal lead">Motivating example to hold in mind for this whole section: a table with 200 columns and a billion rows, where analysts routinely query only 3 of those columns. A row-based format has to read every column of every row just to hand you the 3 you asked for. A columnar format reads <em>only</em> those 3 columns and ignores the rest — same table, same query, but one engine touches under 2% of the data the other one touches.</p>
 
@@ -622,7 +622,7 @@ h2 .n{color:var(--blue2,#5C78FF)}
 <p class="reveal">That selective read is called <strong>column pruning</strong>. Parquet also keeps per-file statistics (min/max values, row counts), so a query engine can skip entire files that can't possibly match a filter — <strong>file skipping</strong> — before it even opens them. This is why Parquet is the default choice for analytical, read-heavy workloads: its performance advantage comes exactly from never touching irrelevant columns or files.</p>
 
 <h3 class="reveal">Avro — row-based, built for writes</h3>
-<p class="reveal">Avro is Parquet's mirror image: row-based, and optimized for write-heavy workloads. In a streaming system, every event — a ride completed, a button clicked, an order placed — has to be written as one complete record the instant it arrives. Avro serializes each event as one row with all its fields packed together, written in a single shot. A columnar format, by contrast, needs to <em>collect a batch of rows first</em> and reorganize them column-by-column before writing — fine for an hourly batch job, but a poor fit for 10,000 events/sec landing on Kafka that each need to be durably written immediately. That's why Avro (often paired with a schema registry) is the standard format <em>inside</em> Kafka topics, while Parquet takes over once that data is batched and landed for analytics.</p>
+<p class="reveal">Avro is Parquet's mirror image: row-based, optimized for write-heavy workloads. In a streaming system every event — a ride completed, a button clicked, an order placed — has to be written as one complete record the instant it arrives, and Avro serializes each as one row with all its fields packed together, in a single shot. A columnar format must <em>collect a batch of rows first</em> and reorganize them column by column before writing — fine for an hourly batch job, a poor fit for 10,000 events/sec landing on Kafka that each need durable writing immediately. That's why Avro, often paired with a schema registry, is the standard format <em>inside</em> Kafka topics, while Parquet takes over once that data is batched and landed for analytics.</p>
 
 <h3 class="reveal">Why Delta Lake / Iceberg / Hudi matter</h3>
 <p class="reveal">Early data lakes were just raw Parquet files dumped into S3 with nothing managing them — and that created four concrete problems:</p>
@@ -652,7 +652,7 @@ h2 .n{color:var(--blue2,#5C78FF)}
 </table>
 
 <!-- 07 -->
-<h2 id="quality" class="reveal"><span class="hico"><svg class="ico"><use href="#i-check"/></svg></span><span class="n">07.</span> Step 5 — Data quality &amp;amp; observability</h2>
+<h2 id="quality" class="reveal"><span class="hico"><svg class="ico"><use href="#i-check"/></svg></span><span class="n">07.</span> Step 5 — Data quality &amp; observability</h2>
 <p class="reveal lead">Everything so far assumes the data flowing through is correct. In production it often isn't: sources change without warning, fields go null, row counts silently drop. Without explicit checks, a pipeline can finish "successfully" while quietly writing bad data — and stakeholders make decisions on it before anyone notices.</p>
 
 <h3 class="reveal">The 5 data quality dimensions</h3>
@@ -684,7 +684,7 @@ h2 .n{color:var(--blue2,#5C78FF)}
 <p class="reveal">Distinct from data quality: this is about whether the <em>process</em> producing the data is healthy, not whether the data itself looks right. Is the DAG running on schedule? Did it fail? Did it take 3 hours when it normally takes 40 minutes (a signal worth investigating — a volume spike, or an undersized cluster)? Orchestrators (Airflow, Prefect, Dagster) expose this natively; external tools like Datadog or CloudWatch layer on top for alerting.</p>
 
 <!-- 08 -->
-<h2 id="scale" class="reveal"><span class="hico"><svg class="ico"><use href="#i-repeat"/></svg></span><span class="n">08.</span> Step 6 — Scalability, backfills &amp;amp; DataOps</h2>
+<h2 id="scale" class="reveal"><span class="hico"><svg class="ico"><use href="#i-repeat"/></svg></span><span class="n">08.</span> Step 6 — Scalability, backfills &amp; DataOps</h2>
 <p class="reveal lead">The closing set of questions: what happens when things break — because they will; how do you rerun a pipeline without duplicating data; how do you reprocess years of history when the business logic changes; how do you ship changes without taking production down?</p>
 
 <h3 class="reveal">Idempotency — the golden rule</h3>

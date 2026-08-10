@@ -170,7 +170,7 @@ h2 .n{color:var(--blue2,#5C78FF)}
   <div class="kicker"><a class="back" href="../">❮ Data &amp; AI Engineering, Simply Explained</a></div>
   <h1>Git Essentials for Data Engineers</h1>
   <p class="dek"><strong>Git</strong> is the tool that remembers every version of your code, lets a whole team work on the same project without stepping on each other, and makes "undo" possible even weeks later. It builds Git's mental model one piece at a time, walks through every command you'll actually use, then covers the team <strong>workflows</strong> (Gitflow, GitHub Flow, trunk-based) and the parts that matter specifically for <strong>data engineering</strong> — dbt, notebooks, CI/CD, and versioning data itself.</p>
-  <div class="byline">~25 min read · Essentials · Reference</div>
+  <div class="byline">~23 min read · Essentials · Reference</div>
 </header>
 
 <figure class="fig reveal">
@@ -210,23 +210,23 @@ h2 .n{color:var(--blue2,#5C78FF)}
 
 <div class="toc reveal">
   <strong>Contents</strong>
-  <a href="#why"><svg class="ico"><use href="#i-question"/></svg>01 · What Git is &amp;amp; why it exists</a>
+  <a href="#why"><svg class="ico"><use href="#i-question"/></svg>01 · What Git is &amp; why it exists</a>
   <a href="#model"><svg class="ico"><use href="#i-blocks"/></svg>02 · How Git thinks (the mental model)</a>
   <a href="#everyday"><svg class="ico"><use href="#i-blocks"/></svg>03 · The everyday commands</a>
   <a href="#branches"><svg class="ico"><use href="#i-blocks"/></svg>04 · Branches — just movable pointers</a>
   <a href="#remotes"><svg class="ico"><use href="#i-user"/></svg>05 · Remotes — sharing with a team</a>
-  <a href="#merge-rebase"><svg class="ico"><use href="#i-list"/></svg>06 · Merge vs rebase (&amp;amp; conflicts)</a>
+  <a href="#merge-rebase"><svg class="ico"><use href="#i-list"/></svg>06 · Merge vs rebase (&amp; conflicts)</a>
   <a href="#undo"><svg class="ico"><use href="#i-blocks"/></svg>07 · Undoing things safely</a>
-  <a href="#workflows"><svg class="ico"><use href="#i-workflow"/></svg>08 · Git workflows &amp;amp; Gitflow</a>
-  <a href="#pr"><svg class="ico"><use href="#i-code"/></svg>09 · Pull requests &amp;amp; code review</a>
+  <a href="#workflows"><svg class="ico"><use href="#i-workflow"/></svg>08 · Git workflows &amp; Gitflow</a>
+  <a href="#pr"><svg class="ico"><use href="#i-code"/></svg>09 · Pull requests &amp; code review</a>
   <a href="#de"><svg class="ico"><use href="#i-blocks"/></svg>10 · Git for data engineers</a>
-  <a href="#best"><svg class="ico"><use href="#i-check"/></svg>11 · Best practices &amp;amp; commit style</a>
+  <a href="#best"><svg class="ico"><use href="#i-check"/></svg>11 · Best practices &amp; commit style</a>
   <a href="#cheatsheet"><svg class="ico"><use href="#i-book"/></svg>12 · Quick-reference cheat sheet</a>
   <a href="#glossary"><svg class="ico"><use href="#i-book"/></svg>13 · ＊ · Glossary</a>
 </div>
 
 <!-- 01 -->
-<h2 id="why" class="reveal"><span class="hico"><svg class="ico"><use href="#i-question"/></svg></span><span class="n">01.</span> What Git is &amp;amp; why it exists</h2>
+<h2 id="why" class="reveal"><span class="hico"><svg class="ico"><use href="#i-question"/></svg></span><span class="n">01.</span> What Git is &amp; why it exists</h2>
 <p class="reveal lead">Imagine writing an important document and saving copies named <code>report_final.doc</code>, <code>report_final_v2.doc</code>, <code>report_final_REALLY_final.doc</code>. That's <em>version control</em> done by hand — and it falls apart the moment a second person joins. Git is the tool that does this properly: it tracks every change to a set of files, remembers who changed what and why, and lets many people work on the same project at once without overwriting each other.</p>
 
 <p class="reveal">Concretely, Git gives you four superpowers over a plain folder:</p>
@@ -352,7 +352,7 @@ h2 .n{color:var(--blue2,#5C78FF)}
 </div>
 
 <h3 class="reveal">HEAD — the "you are here" marker</h3>
-<p class="reveal"><strong>HEAD</strong> is Git's name for "the commit you're currently sitting on." Normally HEAD points at the latest commit of your current branch. When you make a new commit, HEAD (and the branch) move forward to it. When you switch branches, HEAD moves to point at that other branch's latest commit. Whenever a command mentions <code>HEAD</code>, read it as "where I am right now." (One gotcha: if you check out a raw commit hash instead of a branch, you land in a "<strong>detached HEAD</strong>" — you're sitting on a commit that no branch points to, so new commits there can be lost. To keep them, make a branch: <code>git switch -c new-branch</code>.)</p>
+<p class="reveal"><strong>HEAD</strong> is Git's name for "the commit you're currently sitting on." Normally it points at the latest commit of your current branch; a new commit moves both forward, and switching branches moves HEAD to that branch's latest commit. Whenever a command mentions <code>HEAD</code>, read it as "where I am right now." One gotcha: check out a raw commit hash instead of a branch and you land in a <strong>detached HEAD</strong> — sitting on a commit no branch points to, so new commits there can be lost. To keep them, make a branch: <code>git switch -c new-branch</code>.</p>
 
 <!-- 03 -->
 <h2 id="everyday" class="reveal"><span class="hico"><svg class="ico"><use href="#i-blocks"/></svg></span><span class="n">03.</span> The everyday commands</h2>
@@ -551,7 +551,7 @@ __pycache__/
 <span class="c"># 5. open a Pull Request on GitHub → review → merge (see §09)</span></pre></div>
 
 <!-- 06 -->
-<h2 id="merge-rebase" class="reveal"><span class="hico"><svg class="ico"><use href="#i-list"/></svg></span><span class="n">06.</span> Merge vs rebase (&amp;amp; conflicts)</h2>
+<h2 id="merge-rebase" class="reveal"><span class="hico"><svg class="ico"><use href="#i-list"/></svg></span><span class="n">06.</span> Merge vs rebase (&amp; conflicts)</h2>
 <p class="reveal lead">Eventually two lines of work need to become one. Git has two ways to do that — <strong>merge</strong> and <strong>rebase</strong> — and understanding the difference (plus how to handle conflicts) is the thing that separates a nervous beginner from a confident user.</p>
 
 <h3 class="reveal">Merge: join two histories with a "knot" commit</h3>
@@ -739,7 +739,7 @@ SELECT revenue, country
 </div>
 
 <!-- 08 -->
-<h2 id="workflows" class="reveal"><span class="hico"><svg class="ico"><use href="#i-workflow"/></svg></span><span class="n">08.</span> Git workflows &amp;amp; Gitflow</h2>
+<h2 id="workflows" class="reveal"><span class="hico"><svg class="ico"><use href="#i-workflow"/></svg></span><span class="n">08.</span> Git workflows &amp; Gitflow</h2>
 <p class="reveal lead">The commands so far are the <em>mechanics</em>. A <strong>workflow</strong> (or "branching strategy") is the <em>team agreement</em> about how to use them: which branches exist, what each is for, and how work flows from idea to production. Picking one keeps a team coordinated. Here are the four you'll actually meet, from simplest to most structured.</p>
 
 <h3 class="reveal">① Feature-branch workflow (the foundation)</h3>
@@ -805,7 +805,7 @@ SELECT revenue, country
 
 <div class="callout cy reveal">
   <p style="margin:.2em 0"><span class="t">What a <code>release/*</code> branch is really for</span></p>
-  <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">It fills the gap between "all the features for this version are done" and "it's actually shipped." When <code>develop</code> has gathered enough for, say, <strong>v1.4</strong>, you cut a <code>release/1.4</code> branch off it. From that moment the release is <strong>frozen to new features</strong> — only bug-fixes, version-number bumps, and last-minute polish are allowed in. That freeze <em>is</em> the point: testers can stabilise a <em>fixed</em> target instead of chasing a branch that keeps changing, while the rest of the team carries on adding new features to <code>develop</code> for the version <em>after</em> this one. When it's solid, <code>release/1.4</code> is merged into <code>main</code> and tagged <code>v1.4</code> (the shipped version) <em>and</em> merged back into <code>develop</code> so those bug-fixes aren't lost.</p>
+  <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">It fills the gap between "all the features for this version are done" and "it's actually shipped." When <code>develop</code> has gathered enough for, say, <strong>v1.4</strong>, you cut a <code>release/1.4</code> branch off it. From that moment the release is <strong>frozen to new features</strong> — only bug-fixes, version bumps and last-minute polish get in. That freeze <em>is</em> the point: testers stabilise a <em>fixed</em> target instead of chasing a moving branch, while everyone else keeps adding features to <code>develop</code> for the version <em>after</em> this one. When it's solid, <code>release/1.4</code> merges into <code>main</code> and is tagged <code>v1.4</code>, <em>and</em> merges back into <code>develop</code> so those bug-fixes aren't lost.</p>
   <p style="margin:.6em 0 0;font-size:14.5px;color:#cdd0dd">A <code>hotfix/*</code> branch is the same idea for an emergency: a fix to code that's <em>already live</em>, so it branches off <code>main</code> (not <code>develop</code>), then merges back into both <code>main</code> and <code>develop</code>.</p>
 </div>
 <ul class="reveal">
@@ -898,7 +898,7 @@ SELECT revenue, country
 </div>
 
 <!-- 09 -->
-<h2 id="pr" class="reveal"><span class="hico"><svg class="ico"><use href="#i-code"/></svg></span><span class="n">09.</span> Pull requests &amp;amp; code review</h2>
+<h2 id="pr" class="reveal"><span class="hico"><svg class="ico"><use href="#i-code"/></svg></span><span class="n">09.</span> Pull requests &amp; code review</h2>
 <p class="reveal lead">A <strong>pull request</strong> (PR) — called a "merge request" on GitLab — is where collaboration actually happens. It's a GitHub feature (not a Git command) that says: <em>"here's the work on my branch; please review it and merge it into <code>main</code>."</em> It turns a raw <code>git merge</code> into a reviewed, discussed, tested gate.</p>
 
 <p class="reveal">The PR lifecycle, step by step:</p>
@@ -930,7 +930,7 @@ SELECT revenue, country
 </ul>
 
 <h3 class="reveal">dbt: the model citizen of Git in data</h3>
-<p class="reveal"><strong>dbt</strong> made software engineering practices mainstream in analytics, and it's built around Git. A typical flow: each analyst branches off <code>main</code>, edits SQL models, opens a PR; CI spins up the models in a temporary schema and runs the tests; on merge, the changes deploy to production. Branches commonly map to <strong>environments</strong> — e.g. a <code>dev</code> branch builds into a <code>dev</code> schema, <code>main</code> into <code>prod</code> — so your Git branches commonly correspond to your data environments. (In practice it's looser than a strict 1:1: developers often share a <code>dev</code> target with per-user schemas, CI builds each PR into a throwaway schema, and prod is a scheduled job on <code>main</code>.) This is exactly where GitLab Flow's environment branches shine.</p>
+<p class="reveal"><strong>dbt</strong> made software engineering practices mainstream in analytics, and it's built around Git. A typical flow: an analyst branches off <code>main</code>, edits SQL models, opens a PR; CI builds those models in a temporary schema and runs their tests; on merge, the changes deploy to production. Branches commonly map to <strong>environments</strong> — a <code>dev</code> branch building into a <code>dev</code> schema, <code>main</code> into <code>prod</code>. In practice it's looser than a strict 1:1: developers share a <code>dev</code> target with per-user schemas, CI builds each PR into a throwaway schema, and prod is a scheduled job on <code>main</code>. This is exactly where GitLab Flow's environment branches shine.</p>
 
 <h3 class="reveal">Notebooks: the awkward case</h3>
 <p class="reveal">Jupyter/Databricks notebooks (<code>.ipynb</code>) are stored as <strong>JSON that mixes your code with cell outputs, images, and an execution counter that changes every run.</strong> That wrecks Git: diffs are unreadable, and merge conflicts are common and ugly — if two people just <em>run</em> the same notebook, every cell's execution count clashes, and Git's conflict markers can even make the JSON invalid so the notebook won't open.</p>
@@ -960,7 +960,7 @@ SELECT revenue, country
 </div>
 
 <!-- 11 -->
-<h2 id="best" class="reveal"><span class="hico"><svg class="ico"><use href="#i-check"/></svg></span><span class="n">11.</span> Best practices &amp;amp; commit style</h2>
+<h2 id="best" class="reveal"><span class="hico"><svg class="ico"><use href="#i-check"/></svg></span><span class="n">11.</span> Best practices &amp; commit style</h2>
 <ul class="reveal">
   <li><strong>Commit small and often.</strong> One logical change per commit. Small commits are easy to review, easy to understand later, and easy to revert if one turns out wrong.</li>
   <li><strong>Write meaningful messages.</strong> The message explains <em>why</em>, not just what. "Fix bug" is useless; "Handle null customer_id in revenue join" is gold six months later.</li>

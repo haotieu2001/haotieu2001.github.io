@@ -150,15 +150,15 @@
     <figure><svg viewBox="0 0 100 100" role="img" aria-label="Snowflake icon"><circle cx="50" cy="50" r="44" fill="#1D1D26" stroke="#28B9FF" stroke-width="2"/><line x1="50" y1="20" x2="50" y2="80" stroke="#28B9FF" stroke-width="2.5"/><line x1="24" y1="35" x2="76" y2="65" stroke="#28B9FF" stroke-width="2.5"/><line x1="24" y1="65" x2="76" y2="35" stroke="#28B9FF" stroke-width="2.5"/><circle cx="50" cy="50" r="6" fill="#28B9FF"/></svg><figcaption>Snowflake warehouse</figcaption></figure>
     <figure><svg viewBox="0 0 100 100" role="img" aria-label="Orchestration icon"><circle cx="50" cy="50" r="44" fill="#1D1D26" stroke="#A56BFF" stroke-width="2"/><rect x="26" y="26" width="16" height="16" rx="4" fill="#A56BFF"/><rect x="58" y="26" width="16" height="16" rx="4" fill="#A56BFF"/><rect x="42" y="58" width="16" height="16" rx="4" fill="#A56BFF"/><line x1="34" y1="42" x2="46" y2="60" stroke="#A56BFF" stroke-width="2"/><line x1="66" y1="42" x2="54" y2="60" stroke="#A56BFF" stroke-width="2"/></svg><figcaption>Orchestration &amp; CI/CD</figcaption></figure>
   </div>
-  <div class="byline">~60 min read · updated 2026 · written in plain English, no assumed background</div>
+  <div class="byline">~53 min read · updated 2026 · written in plain English, no assumed background</div>
 </header>
 
 <div class="wrap">
 
 <!-- HOOK -->
 <div class="prose reveal">
-<p class="lead">Every data team eventually hits the same wall: a folder full of ad-hoc SQL scripts, nobody quite sure which one runs first, no tests, no documentation, and one person who "just knows" how the numbers get built. <strong>dbt</strong> (data build tool) exists to fix exactly that problem — not by replacing your warehouse's SQL engine, but by giving your SQL a project structure, a dependency graph, tests, documentation, and a repeatable way to deploy it, the same way software engineers already treat application code.</p>
-<p>This guide is built around a real, working example: a dbt project that transforms raw MovieLens rating data (styled as a "Netflix" analytics project for a portfolio, from a widely-watched YouTube tutorial) into clean dimension and fact tables in Snowflake — staging models, dimension/fact tables, a snapshot, custom tests, and a mart. That concrete project shows up throughout this guide as a worked example, but the guide itself covers the full breadth of dbt: every core concept, dbt's newest 2024-2026 features, and — because "I understand dbt" and "I could run dbt in production" are very different skills — a dedicated look at how real companies actually deploy, orchestrate, test, and govern dbt once it's live.</p>
+<p class="lead">Every data team eventually hits the same wall: a folder of ad-hoc SQL scripts, nobody quite sure which one runs first, no tests, no documentation, and one person who "just knows" how the numbers get built. <strong>dbt</strong> (data build tool) fixes exactly that — not by replacing your warehouse's SQL engine, but by giving your SQL a project structure, a dependency graph, tests, documentation, and a repeatable way to deploy it, the way software engineers already treat application code.</p>
+<p>This guide is built around a real, working example: a dbt project that transforms raw MovieLens rating data into clean dimension and fact tables in Snowflake — staging models, dimensions and facts, a snapshot, custom tests, a mart. That project recurs throughout as a worked example, alongside the full breadth of dbt: every core concept, the newest 2024-2026 features, and — because "I understand dbt" and "I could run dbt in production" are very different skills — a dedicated look at how real companies deploy, orchestrate, test and govern it once it's live.</p>
 </div>
 
 <!-- TL;DR -->
@@ -202,13 +202,13 @@
 <h2 id="s01" class="reveal"><span class="hico"><svg class="ico"><use href="#i-question"/></svg></span><span class="n">01.</span> Why dbt Exists</h2>
 <p class="sectionsub reveal">From "a folder of SQL scripts" to a real, tested, documented codebase</p>
 <div class="prose reveal">
-<p>Before dbt, most SQL-based transformation work looked the same everywhere: a pile of <code>.sql</code> scripts, run by hand or by a fragile cron job, in whatever order someone remembered to run them in. No one could easily answer "what depends on this table?" or "did this number change because of a bug?" — because nothing wrote that dependency down anywhere except in someone's head. <strong>dbt (data build tool)</strong> exists to fix exactly that: it turns your SQL transformations into a real, version-controlled project — with dependencies, tests, and documentation — while leaving the actual data movement and computation to tools that already do those jobs well.</p>
+<p>Before dbt, SQL transformation work looked the same everywhere: a pile of <code>.sql</code> scripts run by hand or by a fragile cron job, in whatever order someone remembered. Nobody could answer "what depends on this table?" or "did this number change because of a bug?" — because nothing wrote that dependency down anywhere except in someone's head. <strong>dbt (data build tool)</strong> turns your SQL transformations into a real, version-controlled project — with dependencies, tests and documentation — while leaving data movement and computation to tools that already do those jobs well.</p>
 <p>That last point matters more than it sounds: <strong>dbt does not extract data from source systems, and it does not execute SQL itself.</strong> It compiles the SQL you write (with some templating help from Jinja, section 08) and hands it to your warehouse — Snowflake, BigQuery, Databricks, Redshift, Postgres — which does 100% of the actual computation. dbt's job is everything <em>around</em> the SQL: dependency ordering, testing, documentation, and environments.</p>
 </div>
 
 <div class="def reveal">
 <p class="t">ETL vs. ELT — why dbt showed up when it did</p>
-<p>Older data platforms did <strong>ETL</strong>: Extract data from a source, Transform it (usually in a separate processing tool, before it ever reached the warehouse), then Load the finished result. That made sense when warehouses were expensive and slow. Cloud warehouses changed the economics — storage and compute got cheap and fast enough that it became easier to <strong>Load</strong> raw data first and <strong>Transform</strong> it afterward, directly inside the warehouse, using the warehouse's own SQL engine: <strong>ELT</strong>. Tools like Fivetran and Airbyte handle the "EL" (getting raw data into the warehouse, largely unmodified); dbt is built specifically for the "T" — transforming that raw data into clean, tested, analysis-ready tables, using nothing but SQL the warehouse already understands.</p>
+<p>Older data platforms did <strong>ETL</strong>: Extract from a source, Transform in a separate processing tool before the data ever reached the warehouse, then Load the finished result. That made sense when warehouses were expensive and slow. Cloud warehouses changed the economics — storage and compute got cheap and fast enough that it became easier to <strong>Load</strong> raw data first and <strong>Transform</strong> it afterward, inside the warehouse, with the warehouse's own SQL engine: <strong>ELT</strong>. Fivetran and Airbyte handle the "EL"; dbt is built for the "T" — turning that raw data into clean, tested, analysis-ready tables using nothing but SQL the warehouse already understands.</p>
 </div>
 
 <figure class="diagram reveal">
@@ -231,7 +231,7 @@
 
 <div class="profile int reveal">
 <p class="one">The role dbt helped create: analytics engineer</p>
-<p>dbt didn't just ship a tool — it popularized a job title. An <strong>analytics engineer</strong> sits between a data engineer (who builds pipelines that move raw data into the warehouse) and a data analyst (who answers business questions with that data). They own the transformation layer: writing and testing the SQL that turns raw, messy source tables into clean, well-modeled, documented tables analysts can trust — using software-engineering practices (version control, code review, tests, CI) on SQL that used to live in nobody's repository at all.</p>
+<p>dbt didn't just ship a tool — it popularized a job title. An <strong>analytics engineer</strong> sits between the data engineer who moves raw data into the warehouse and the analyst who answers business questions with it. They own the transformation layer: writing and testing the SQL that turns raw, messy source tables into clean, well-modeled, documented tables analysts can trust — applying version control, code review, tests and CI to SQL that used to live in nobody's repository at all.</p>
 </div>
 
 <div class="tldr reveal">
@@ -251,7 +251,7 @@
 
 <div class="def reveal">
 <p class="t"><code>ref()</code> — the single most important function in dbt</p>
-<p>Instead of writing <code>SELECT * FROM analytics.staging.stg_orders</code>, you write <code>SELECT * FROM {{ ref('stg_orders') }}</code>. That one substitution does two things: dbt resolves it to the right, fully-qualified table name for whichever environment you're running in (dev schema, staging, prod — you never hardcode a database or schema again), and — because dbt now knows this model reads from that one — it can automatically compute the correct build order for every model in your project. Do this consistently, and the <strong>DAG (directed acyclic graph)</strong> of your entire transformation layer falls out for free, without you ever writing it down by hand.</p>
+<p>Instead of <code>SELECT * FROM analytics.staging.stg_orders</code>, you write <code>SELECT * FROM {{ ref('stg_orders') }}</code>. That substitution does two things: dbt resolves it to the right, fully-qualified table name for whichever environment you're running in — dev schema, staging, prod, never hardcoded again — and, because dbt now knows this model reads from that one, it computes the correct build order for every model in the project. Do it consistently and the <strong>DAG (directed acyclic graph)</strong> of your entire transformation layer falls out for free, without you ever writing it down by hand.</p>
 </div>
 
 <pre><code>-- models/marts/fct_orders.sql
@@ -294,8 +294,8 @@ LEFT JOIN customers c ON o.customer_id = c.customer_id</code></pre>
 </figure>
 
 <div class="prose reveal">
-<p>The other half of this is <code>source()</code> (covered fully in section 04): a pointer to a raw table dbt did <em>not</em> create — something a loader like Fivetran or a native pipe wrote. Using <code>source()</code> instead of hardcoding the raw table name gives dbt the starting nodes of the DAG, plus a place to declare freshness checks on data it doesn't own. Between <code>ref()</code> and <code>source()</code>, every table your project touches — the ones it builds and the raw ones it reads from — is represented as one connected graph.</p>
-<p>Two commands make the compile/run distinction concrete: <code>dbt compile</code> takes every model's Jinja-templated SQL and resolves it down to plain SQL your warehouse could run directly — writing the result to <code>target/compiled/</code> without touching the warehouse at all. <code>dbt run</code> does that same compilation and then actually executes the result against the warehouse, writing what it ran to <code>target/run/</code>. If you ever want to know exactly what SQL dbt is about to run, or debug why a model behaves unexpectedly, reading its compiled file in <code>target/compiled/</code> is the fastest way to find out — it's the literal SQL your warehouse receives, with every <code>ref()</code> and macro already expanded.</p>
+<p>The other half is <code>source()</code> (section 04): a pointer to a raw table dbt did <em>not</em> create — something a loader like Fivetran or a native pipe wrote. Using it instead of hardcoding the raw table name gives dbt the DAG's starting nodes, plus a place to declare freshness checks on data it doesn't own. Between <code>ref()</code> and <code>source()</code>, every table your project touches — built or merely read — is one connected graph.</p>
+<p>Two commands make the compile/run distinction concrete. <code>dbt compile</code> resolves every model's Jinja-templated SQL down to plain SQL your warehouse could run directly, writing it to <code>target/compiled/</code> without touching the warehouse. <code>dbt run</code> does the same compilation and then executes the result, writing what it ran to <code>target/run/</code>. To know exactly what SQL dbt is about to run, or to debug a model behaving unexpectedly, read its file in <code>target/compiled/</code> — it's the literal SQL your warehouse receives, with every <code>ref()</code> and macro already expanded.</p>
 </div>
 
 <div class="tldr reveal">
@@ -315,12 +315,12 @@ LEFT JOIN customers c ON o.customer_id = c.customer_id</code></pre>
 
 <div class="def reveal">
 <p class="t">Installing dbt</p>
-<p>dbt Core installs like any Python package: <code>pip install dbt-core dbt-snowflake</code> — swap <code>dbt-snowflake</code> for whichever adapter matches your warehouse (<code>dbt-bigquery</code>, <code>dbt-databricks</code>, <code>dbt-postgres</code>, and so on). The adapter is the piece that actually knows how to talk to that specific warehouse; dbt Core itself is warehouse-agnostic. <code>dbt init &lt;project_name&gt;</code> scaffolds the standard folder layout below and interactively walks you through your first <code>profiles.yml</code> entry. Run <code>dbt debug</code> immediately after — it confirms dbt can actually reach your warehouse before you write a single model.</p>
+<p>dbt Core installs like any Python package: <code>pip install dbt-core dbt-snowflake</code> — swap the adapter for whichever warehouse you use (<code>dbt-bigquery</code>, <code>dbt-databricks</code>, <code>dbt-postgres</code>). The adapter is the piece that knows how to talk to that specific warehouse; dbt Core itself is warehouse-agnostic. <code>dbt init &lt;project_name&gt;</code> scaffolds the standard folder layout below and walks you through your first <code>profiles.yml</code> entry. Run <code>dbt debug</code> immediately after — it confirms dbt can reach your warehouse before you write a single model.</p>
 </div>
 
 <div class="def reveal">
 <p class="t"><code>dbt_project.yml</code> vs. <code>profiles.yml</code></p>
-<p><code>dbt_project.yml</code> lives inside the project, is committed to git, and configures the project itself: its name, which folders hold models/seeds/macros/tests/snapshots, and default materializations per folder. <code>profiles.yml</code> lives <em>outside</em> the project (by default in <code>~/.dbt/</code>) and is <strong>never</strong> committed to git, because it holds warehouse connection details — account, user, and (for local dev) credentials. dbt Cloud sidesteps this file entirely by managing connections and secrets through its own UI and environment variables instead of a local file on disk.</p>
+<p><code>dbt_project.yml</code> lives inside the project, is committed to git, and configures the project itself: its name, which folders hold models/seeds/macros/tests/snapshots, and default materializations per folder. <code>profiles.yml</code> lives <em>outside</em> the project (by default <code>~/.dbt/</code>) and is <strong>never</strong> committed, because it holds warehouse connection details — account, user, and for local dev, credentials. dbt Cloud sidesteps the file entirely, managing connections and secrets through its own UI and environment variables.</p>
 </div>
 
 <pre><code># dbt_project.yml
@@ -362,7 +362,7 @@ models:
 </figure>
 
 <div class="prose reveal">
-<p>One folder is easy to overlook: <strong>analyses/</strong> holds <code>.sql</code> files that dbt will compile — resolving every <code>ref()</code>, <code>source()</code>, and Jinja block exactly like a model — but never actually run or materialize as a table or view. It's the right home for a one-off, ad-hoc analytical query you still want version-controlled and benefiting from dbt's templating (say, an investigation into a data-quality anomaly, or a query a stakeholder asked for once) without permanently cluttering your DAG with a model nobody downstream should depend on.</p>
+<p>One folder is easy to overlook: <strong>analyses/</strong> holds <code>.sql</code> files dbt will compile — resolving every <code>ref()</code>, <code>source()</code> and Jinja block exactly like a model — but never run or materialize. It's the right home for a one-off analytical query you still want version-controlled and templated, say an investigation into a data-quality anomaly, without permanently cluttering your DAG with a model nobody downstream should depend on.</p>
 </div>
 
 <div class="callout wn reveal">
@@ -400,11 +400,11 @@ sources:
 
 <div class="def reveal">
 <p class="t">Source freshness — catching a broken loader before your dashboards do</p>
-<p><code>dbt source freshness</code> checks how long ago each source table was last updated (via its <code>loaded_at_field</code>) and compares that gap against the <code>warn_after</code>/<code>error_after</code> thresholds you set. If the upstream loader silently stops working overnight, this is what tells you before a stakeholder notices a dashboard hasn't moved in three days — a cheap, automatable check most teams run at the very start of every production job, before wasting compute rebuilding models on top of stale data.</p>
+<p><code>dbt source freshness</code> checks how long ago each source table was last updated (via its <code>loaded_at_field</code>) against the <code>warn_after</code>/<code>error_after</code> thresholds you set. If the upstream loader silently stops overnight, this tells you before a stakeholder notices a dashboard hasn't moved in three days — a cheap check most teams run at the very start of every production job, before wasting compute on models built from stale data.</p>
 </div>
 
 <div class="prose reveal">
-<p><strong>Seeds</strong> solve a different, smaller problem: small, static, rarely-changing datasets that live comfortably as a CSV in your repo — a lookup of country codes to region names, a manually-curated list of holiday dates, an internal mapping table nobody else owns. You put the CSV in your <code>seeds/</code> folder, run <code>dbt seed</code>, and dbt loads it into the warehouse as a real table you can then <code>ref()</code> exactly like any model. Seeds are for reference data measured in kilobytes, not a substitute for a real ingestion tool — if a dataset changes often or grows large, it belongs behind a source, not a seed.</p>
+<p><strong>Seeds</strong> solve a smaller problem: small, static, rarely-changing datasets that live comfortably as a CSV in your repo — country codes to region names, a curated list of holiday dates, an internal mapping nobody else owns. Put the CSV in <code>seeds/</code>, run <code>dbt seed</code>, and dbt loads it into the warehouse as a real table you can <code>ref()</code> like any model. Seeds are for reference data measured in kilobytes, not a substitute for real ingestion — if a dataset changes often or grows large, it belongs behind a source.</p>
 </div>
 
 <figure class="diagram reveal">
@@ -437,7 +437,7 @@ sources:
 
 <div class="def reveal">
 <p class="t">Staging → Intermediate → Marts</p>
-<p><strong>Staging</strong> models sit directly on top of sources: one staging model per source table, doing only light, mechanical cleanup — renaming columns to a consistent convention, casting types, standardizing casing — never joins, never business logic. <strong>Intermediate</strong> models sit between staging and marts: this is where joins, deduplication, and business logic building blocks live, often <em>not</em> meant to be queried directly by anyone outside the project (frequently built as <code>ephemeral</code>, section 06, so they don't even appear as objects in the warehouse). <strong>Marts</strong> are the final, consumption-ready layer — the dimension and fact tables (or wide, denormalized tables) that BI tools, analysts, and other teams actually query.</p>
+<p><strong>Staging</strong> models sit directly on sources: one per source table, doing only light, mechanical cleanup — renaming columns to a consistent convention, casting types, standardizing casing — never joins, never business logic. <strong>Intermediate</strong> models sit between staging and marts, where joins, deduplication and business-logic building blocks live; they're often not meant to be queried from outside the project, and are frequently <code>ephemeral</code> (section 06) so they never appear in the warehouse at all. <strong>Marts</strong> are the consumption-ready layer — the dimension and fact tables, or wide denormalized tables, that BI tools, analysts and other teams actually query.</p>
 <p class="ex">Naming convention most teams follow: <b>stg_orders</b>, <b>stg_customers</b> (staging) → <b>int_orders_joined</b> (intermediate) → <b>dim_customers</b>, <b>fct_orders</b> (marts, Kimball-style dimension/fact naming).</p>
 </div>
 
@@ -521,7 +521,7 @@ FROM {{ ref('stg_customers') }}</code></pre>
 </figure>
 
 <div class="callout gd reveal">
-<p><b>Newer addition: microbatch.</b> As of recent dbt Core releases, <code>incremental_strategy: microbatch</code> gives you a purpose-built strategy for very large, time-partitioned fact tables: instead of one big incremental SQL statement, dbt breaks the run into many small, independent per-time-slice batches (e.g. one batch per day), each processed and retried independently. That makes backfills over months of history dramatically more resilient — a single failed batch doesn't take down the whole run, and failed batches can be retried individually. Covered in more depth in section 19.</p>
+<p><b>Newer addition: microbatch.</b> Recent dbt Core releases add <code>incremental_strategy: microbatch</code> for very large, time-partitioned fact tables: instead of one big incremental statement, dbt splits the run into many small, independent per-time-slice batches — one per day, say — each processed and retried on its own. Backfills over months of history get dramatically more resilient, since one failed batch doesn't take down the whole run and can be retried individually. More in section 19.</p>
 </div>
 
 <div class="tldr reveal">
@@ -558,7 +558,7 @@ FROM {{ ref('stg_events') }}
 
 <div class="def reveal">
 <p class="t">Incremental strategies — how new rows actually get merged in</p>
-<p><strong>append</strong> just inserts the new rows — fastest, but unsafe if a row you already loaded could show up again with changed values (you'd get a duplicate, not an update). <strong>merge</strong> (the most common choice, on warehouses that support it) does a real <code>MERGE</code>/upsert keyed on <code>unique_key</code>: an existing row gets updated in place, a new row gets inserted — safe against reprocessing the same time window twice. <strong>delete+insert</strong> deletes any existing rows matching the new batch's keys, then inserts the new batch — a common fallback on warehouses without a native merge. <strong>microbatch</strong> (section 06, section 19) is newer still: it doesn't compute a single incremental filter at all — dbt itself decides the time slices and runs one batch per slice.</p>
+<p><strong>append</strong> just inserts the new rows — fastest, but unsafe if a row you already loaded can reappear with changed values (you get a duplicate, not an update). <strong>merge</strong>, the most common choice on warehouses that support it, does a real <code>MERGE</code>/upsert keyed on <code>unique_key</code>: existing rows update in place, new ones insert — safe against reprocessing the same time window twice. <strong>delete+insert</strong> deletes existing rows matching the new batch's keys then inserts the batch, a common fallback where there's no native merge. <strong>microbatch</strong> (sections 06 and 19) computes no single incremental filter at all — dbt itself decides the time slices and runs one batch per slice.</p>
 </div>
 
 <figure class="diagram reveal">
@@ -578,7 +578,7 @@ FROM {{ ref('stg_events') }}
 </figure>
 
 <div class="callout wn reveal">
-<p><b>The classic incremental footgun: schema changes.</b> If an upstream source silently adds, removes, or changes the type of a column, an incremental model's next run tries to merge new-shape rows into an old-shape table. The <code>on_schema_change</code> config decides what happens: <code>ignore</code> (default, often wrong — can silently drop or misalign columns), <code>fail</code> (stop and force a human to look, the safest default for anything important), <code>append_new_columns</code>, or <code>sync_all_columns</code>. Pick this deliberately per model instead of leaving it at the default.</p>
+<p><b>The classic incremental footgun: schema changes.</b> If an upstream source silently adds, removes or retypes a column, an incremental model's next run tries to merge new-shape rows into an old-shape table. <code>on_schema_change</code> decides what happens: <code>ignore</code> (the default, often wrong — it can silently drop or misalign columns), <code>fail</code> (stop and force a human to look, the safest default for anything important), <code>append_new_columns</code>, or <code>sync_all_columns</code>. Pick it deliberately per model.</p>
 </div>
 
 <div class="tldr reveal">
@@ -593,7 +593,7 @@ FROM {{ ref('stg_events') }}
 <h2 id="s08" class="reveal"><span class="hico"><svg class="ico"><use href="#i-code"/></svg></span><span class="n">08.</span> Jinja &amp; Macros</h2>
 <p class="sectionsub reveal">Why dbt files aren't quite plain SQL, and how to reuse logic across models</p>
 <div class="prose reveal">
-<p>Every dbt model is actually a <strong>Jinja</strong> template that happens to render into SQL. <code>{{ ... }}</code> is an expression that gets replaced with its rendered value (<code>{{ ref('stg_orders') }}</code> becomes a real table path); <code>{% ... %}</code> is a statement — an <code>if</code>, a <code>for</code> loop, a macro call — that controls what gets rendered but produces no output itself. This is what makes <code>is_incremental()</code> (section 07) and looping over column lists (like generating a <code>pivot</code>) possible in something that's ultimately just a SQL file.</p>
+<p>Every dbt model is a <strong>Jinja</strong> template that happens to render into SQL. <code>{{ ... }}</code> is an expression replaced with its rendered value (<code>{{ ref('stg_orders') }}</code> becomes a real table path); <code>{% ... %}</code> is a statement — an <code>if</code>, a <code>for</code> loop, a macro call — that controls what gets rendered but produces no output itself. That's what makes <code>is_incremental()</code> (section 07) and looping over column lists possible in something that's ultimately just a SQL file.</p>
 </div>
 
 <div class="def reveal">
@@ -613,7 +613,7 @@ SELECT
 FROM {{ ref('stg_orders') }}</code></pre>
 
 <div class="prose reveal">
-<p>You rarely have to write every macro yourself. <strong>Packages</strong> — declared in <code>packages.yml</code> and installed with <code>dbt deps</code> — are shareable dbt projects made almost entirely of macros and, sometimes, models. <strong>dbt_utils</strong> (maintained by dbt Labs) is the one nearly every project installs, for things like <code>dbt_utils.generate_surrogate_key()</code> (a stable hash of several columns, commonly used as a primary key for a snapshot or a table with no natural key) and <code>dbt_utils.date_spine()</code> (generate a row per day/week/month over a date range). <strong>dbt-expectations</strong> ports much of the Python library Great Expectations' test vocabulary into dbt-native generic tests.</p>
+<p>You rarely have to write every macro yourself. <strong>Packages</strong> — declared in <code>packages.yml</code>, installed with <code>dbt deps</code> — are shareable dbt projects made almost entirely of macros and sometimes models. <strong>dbt_utils</strong> (from dbt Labs) is the one nearly every project installs, for <code>dbt_utils.generate_surrogate_key()</code> (a stable hash of several columns, commonly the primary key for a snapshot or a table with no natural key) and <code>dbt_utils.date_spine()</code> (a row per day, week or month over a date range). <strong>dbt-expectations</strong> ports much of Great Expectations' test vocabulary into dbt-native generic tests.</p>
 </div>
 
 <pre><code># packages.yml
@@ -676,7 +676,7 @@ WHERE ABS(o.order_total - l.computed_total) > 0.01</code></pre>
 
 <div class="def reveal">
 <p class="t">Unit tests — testing logic without touching real data</p>
-<p>Generic and singular tests both run <em>after</em> a model is built, against whatever real data happens to be sitting in your warehouse — great for catching bad data, useless for testing a tricky piece of SQL logic in isolation (you'd need real rows that happen to hit every edge case). A <strong>unit test</strong> gives a model a handful of hand-written fake input rows and asserts on the exact output rows your SQL should produce from them — the same "arrange, act, assert" idea as a unit test in application code, finally available for SQL. This is the tool for "I refactored this CASE statement, prove it still does the same thing" — not for catching bad production data.</p>
+<p>Generic and singular tests both run <em>after</em> a model is built, against whatever real data happens to be sitting in your warehouse — great for catching bad data, useless for testing a tricky piece of SQL logic in isolation, since you'd need real rows that happen to hit every edge case. A <strong>unit test</strong> gives a model a handful of hand-written fake input rows and asserts the exact output rows your SQL should produce — the same "arrange, act, assert" idea as a unit test in application code, finally available for SQL. It's the tool for "I refactored this CASE statement, prove it still does the same thing," not for catching bad production data.</p>
 </div>
 
 <pre><code># models/schema.yml — a unit test
@@ -705,7 +705,7 @@ unit_tests:
 <h2 id="s10" class="reveal"><span class="hico"><svg class="ico"><use href="#i-eye"/></svg></span><span class="n">10.</span> Snapshots</h2>
 <p class="sectionsub reveal">Capturing change history from a source that only shows you "now"</p>
 <div class="prose reveal">
-<p>Most operational source tables only show you the current state — a <code>customers</code> table with a <code>status</code> column shows today's status, with no record of what it was last month. If you need to answer "what was this customer's status on any given date in the past," the source table alone can't tell you, because the row was overwritten in place. A <strong>snapshot</strong> is dbt's answer: on every run, it compares the current source data to the last snapshot it took, and records any change as a new row — building up exactly the kind of change history relational modeling calls <strong>Slowly Changing Dimension Type 2 (SCD Type 2)</strong>.</p>
+<p>Most operational source tables show only current state: a <code>customers</code> table's <code>status</code> column shows today's status, with no record of what it was last month. Asked "what was this customer's status on a given date in the past," the source table can't tell you — the row was overwritten in place. A <strong>snapshot</strong> is dbt's answer: on every run it compares current source data to the last snapshot it took and records any change as a new row, building up exactly the change history relational modeling calls <strong>Slowly Changing Dimension Type 2 (SCD Type 2)</strong>.</p>
 </div>
 
 <pre><code>-- snapshots/snap_customer_status.sql
@@ -758,7 +758,7 @@ FROM {{ source('shop_raw', 'customers') }}
 <h2 id="s11" class="reveal"><span class="hico"><svg class="ico"><use href="#i-book"/></svg></span><span class="n">11.</span> Documentation &amp; the DAG</h2>
 <p class="sectionsub reveal">Turning your schema.yml descriptions into a browsable lineage graph</p>
 <div class="prose reveal">
-<p>Every description you write in a <code>schema.yml</code> file — for a model, a column, a source — isn't just a comment; it's structured metadata dbt can render into an actual documentation site. <code>dbt docs generate</code> builds that site (reading every model's compiled SQL, every test, every description) and <code>dbt docs serve</code> runs it locally so you can click through it. The centerpiece is the <strong>lineage graph</strong>: a visual, interactive rendering of the exact DAG built from every <code>ref()</code> and <code>source()</code> in your project (section 02) — click any model and see everything upstream and downstream of it, instantly, instead of grepping through SQL files trying to reconstruct dependencies by hand.</p>
+<p>Every description you write in a <code>schema.yml</code> — for a model, a column, a source — isn't just a comment; it's structured metadata dbt renders into an actual documentation site. <code>dbt docs generate</code> builds that site from every model's compiled SQL, every test and every description, and <code>dbt docs serve</code> runs it locally. The centerpiece is the <strong>lineage graph</strong>: an interactive rendering of the exact DAG built from every <code>ref()</code> and <code>source()</code> in your project (section 02) — click any model and see everything upstream and downstream of it instantly, instead of grepping SQL files to reconstruct dependencies by hand.</p>
 </div>
 
 <pre><code># models/schema.yml
@@ -771,7 +771,7 @@ models:
 
 <div class="def reveal">
 <p class="t">Exposures — extending the DAG past dbt's own models</p>
-<p>An <strong>exposure</strong> declares something outside dbt — a Looker dashboard, a Tableau workbook, an ML feature pipeline — that depends on specific models, so it shows up as a node in the lineage graph too. That closes an otherwise-invisible gap: without an exposure, "who actually uses <code>fct_orders</code>" is tribal knowledge; with one, it's a documented, visible dependency, which matters enormously once you're deciding whether it's safe to change or deprecate a model (and is one of the building blocks dbt Mesh, section 14, uses to reason about cross-team dependencies).</p>
+<p>An <strong>exposure</strong> declares something outside dbt — a Looker dashboard, a Tableau workbook, an ML feature pipeline — that depends on specific models, so it becomes a node in the lineage graph too. That closes an otherwise-invisible gap: without one, "who actually uses <code>fct_orders</code>" is tribal knowledge; with one it's a documented dependency, which matters enormously when deciding whether it's safe to change or deprecate a model. It's also one of the building blocks dbt Mesh (section 14) uses to reason about cross-team dependencies.</p>
 </div>
 
 <figure class="diagram reveal">
@@ -805,7 +805,7 @@ models:
 
 <div class="def reveal">
 <p class="t">dbt Core vs. dbt Cloud</p>
-<p><strong>dbt Core</strong> is the free, open-source, MIT-licensed command-line tool. You install it with pip, run <code>dbt run</code>/<code>dbt test</code>/<code>dbt build</code> yourself, and you're responsible for hosting it somewhere and triggering it on a schedule (section 16). <strong>dbt Cloud</strong> is dbt Labs' commercial, managed platform: a hosted IDE for developing models, a scheduler for production jobs, a hosted docs site, environment/secret management with no local <code>profiles.yml</code>, and features that only exist there (like the original dbt Semantic Layer API and the dbt Cloud CLI). Neither replaces the modeling language you learned in sections 01-11 — dbt Cloud is a management and orchestration layer wrapped around the same core engine.</p>
+<p><strong>dbt Core</strong> is the free, open-source, MIT-licensed command-line tool: install it with pip, run <code>dbt run</code>/<code>dbt test</code>/<code>dbt build</code> yourself, and host and schedule it somewhere (section 16). <strong>dbt Cloud</strong> is dbt Labs' commercial, managed platform: a hosted IDE, a scheduler for production jobs, a hosted docs site, environment and secret management with no local <code>profiles.yml</code>, plus features that only exist there (the original dbt Semantic Layer API, the dbt Cloud CLI). Neither replaces the modeling language from sections 01-11 — dbt Cloud wraps management and orchestration around the same core engine.</p>
 </div>
 
 <figure class="diagram reveal">
@@ -824,7 +824,7 @@ models:
 </figure>
 
 <div class="callout mg reveal">
-<p><b>The Fusion engine.</b> dbt Labs has been building a new execution engine — written in Rust rather than Python — with a real SQL comprehension layer that understands column-level lineage and type information <i>before</i> ever sending a query to the warehouse, instead of dbt's traditional approach of only understanding your project through Jinja templating and the compiled SQL text. The goal is faster local compilation, better editor tooling (real autocomplete and error-checking on your SQL, not just your Jinja), and faster CI feedback. Section 19 covers where this stands as of this guide's most recent update — engine internals are exactly the kind of thing that moves fast, so treat any specific version/availability claim as a snapshot in time, not a permanent fact.</p>
+<p><b>The Fusion engine.</b> dbt Labs has been building a new execution engine — in Rust rather than Python — with a real SQL comprehension layer that understands column-level lineage and type information <i>before</i> any query reaches the warehouse, instead of understanding your project only through Jinja templating and compiled SQL text. The goal: faster local compilation, better editor tooling (real autocomplete and error-checking on your SQL, not just your Jinja), faster CI feedback. Section 19 covers where this stands as of this guide's most recent update — engine internals move fast, so treat any specific version or availability claim as a snapshot in time.</p>
 </div>
 
 <div class="tldr reveal">
@@ -858,7 +858,7 @@ models:
 
 <div class="def reveal">
 <p class="t">What "enforced" actually does</p>
-<p>With <code>contract.enforced: true</code>, dbt checks — <i>before</i> building the model — that its <code>SELECT</code> statement's actual output columns, order, and types exactly match what's declared in <code>schema.yml</code>. If a column is missing, extra, reordered, or the wrong type, the run fails immediately with a clear error, instead of silently building a table that no longer matches what downstream consumers expect. This converts "someone changed the model and something broke three hops downstream two weeks later" into "the build failed right here, right now, with a message pointing at the exact mismatch."</p>
+<p>With <code>contract.enforced: true</code>, dbt checks — <i>before</i> building the model — that its <code>SELECT</code>'s actual output columns, order and types exactly match what <code>schema.yml</code> declares. A missing, extra, reordered or wrongly-typed column fails the run immediately with a clear error, instead of silently building a table that no longer matches what downstream consumers expect. That converts "someone changed the model and something broke three hops downstream two weeks later" into "the build failed right here, right now, with a message pointing at the exact mismatch."</p>
 </div>
 
 <div class="prose reveal">
@@ -892,12 +892,12 @@ models:
 <h2 id="s14" class="reveal"><span class="hico"><svg class="ico"><use href="#i-network"/></svg></span><span class="n">14.</span> dbt Mesh &amp; Multi-Project Architecture</h2>
 <p class="sectionsub reveal">What happens once one dbt project isn't the right unit of ownership anymore</p>
 <div class="prose reveal">
-<p>Everything so far has assumed one dbt project, owned by one team. That works until an organization grows past it: a hundred-model project with five teams committing to the same repo turns code review, CI run times, and "who owns this model" into constant friction. <strong>dbt Mesh</strong> is dbt Labs' architecture for splitting a monolithic project into several smaller, independently owned projects that can still safely reference each other's models — the same "modular monolith to microservices" motivation applied to a dbt project instead of an application.</p>
+<p>Everything so far assumed one dbt project owned by one team. That works until an organization grows past it: a hundred-model project with five teams committing to the same repo turns code review, CI run times and "who owns this model" into constant friction. <strong>dbt Mesh</strong> is dbt Labs' architecture for splitting a monolith into several smaller, independently owned projects that can still safely reference each other's models — the "modular monolith to microservices" motivation applied to a dbt project.</p>
 </div>
 
 <div class="def reveal">
 <p class="t">Cross-project <code>ref()</code> and groups</p>
-<p>A model in a <strong>producer project</strong> can be exposed for other projects to consume; a <strong>consumer project</strong> then calls <code>ref()</code> across the project boundary exactly like it would within its own project — the mechanics don't change, only the ownership boundary does. Within a single project, <strong>groups</strong> let you restrict which models can <code>ref()</code> a given model at all (e.g. "only models in the finance group may select from this raw PII model directly"), enforcing team-level ownership boundaries even before you split into separate projects — often the natural first step before adopting full multi-project Mesh.</p>
+<p>A model in a <strong>producer project</strong> can be exposed for other projects to consume; a <strong>consumer project</strong> then calls <code>ref()</code> across the project boundary exactly as it would inside its own — the mechanics don't change, only the ownership boundary. Within a single project, <strong>groups</strong> restrict which models may <code>ref()</code> a given model at all ("only models in the finance group may select from this raw PII model"), enforcing team ownership boundaries before you split into separate projects — often the natural first step toward full multi-project Mesh.</p>
 </div>
 
 <figure class="diagram reveal">
@@ -925,12 +925,12 @@ models:
 <h2 id="s15" class="reveal"><span class="hico"><svg class="ico"><use href="#i-compass"/></svg></span><span class="n">15.</span> The Semantic Layer &amp; MetricFlow</h2>
 <p class="sectionsub reveal">Metrics as version-controlled code instead of a chart-by-chart definition</p>
 <div class="prose reveal">
-<p>Without a semantic layer, "revenue" gets defined once in a Tableau workbook, slightly differently in a Looker explore, and slightly differently again in an analyst's ad-hoc SQL — three numbers, all called "revenue," none of them guaranteed to agree. dbt's <strong>Semantic Layer</strong> fixes this by letting you define a metric exactly once, as code, on top of your existing marts, and have every BI tool and query ask <em>that</em> definition for the answer instead of reimplementing it.</p>
+<p>Without a semantic layer, "revenue" gets defined once in a Tableau workbook, slightly differently in a Looker explore, and differently again in an analyst's ad-hoc SQL — three numbers, all called "revenue," none guaranteed to agree. dbt's <strong>Semantic Layer</strong> lets you define a metric exactly once, as code, on top of your existing marts, and have every BI tool and query ask <em>that</em> definition for the answer instead of reimplementing it.</p>
 </div>
 
 <div class="def reveal">
 <p class="t">Semantic models and metrics — built on <strong>MetricFlow</strong></p>
-<p>A <strong>semantic model</strong> declares, on top of an existing mart, which columns are <strong>dimensions</strong> (things you group or filter by — order status, region, signup month) and which are <strong>measures</strong> (things you aggregate — order count, revenue). A <strong>metric</strong> is then built from one or more measures — a simple aggregation, a ratio of two measures, or a calculation derived from other metrics. <strong>MetricFlow</strong> is the query-building engine underneath all of this: given a metric and a requested set of dimensions, it compiles the correct SQL — joins, aggregation, and all — so nobody hand-writes that SQL per dashboard ever again.</p>
+<p>A <strong>semantic model</strong> declares, on top of an existing mart, which columns are <strong>dimensions</strong> (what you group or filter by — order status, region, signup month) and which are <strong>measures</strong> (what you aggregate — order count, revenue). A <strong>metric</strong> is built from one or more measures: a simple aggregation, a ratio of two, or a calculation derived from other metrics. <strong>MetricFlow</strong> is the query-building engine underneath: given a metric and a requested set of dimensions, it compiles the correct SQL — joins, aggregation and all — so nobody hand-writes it per dashboard again.</p>
 </div>
 
 <pre><code># models/marts/_fct_orders.yml
@@ -1029,7 +1029,7 @@ dbt build --select state:modified+ --defer --state ./prod-artifacts</code></pre>
 
 <div class="def reveal">
 <p class="t"><code>state:modified+</code> and <code>--defer</code></p>
-<p><code>state:modified+</code> compares the current branch's compiled project against a saved set of artifacts from a previous run (usually production's last successful run) and selects only the models that changed, plus (the trailing <code>+</code>) everything downstream of them — the minimum set of models a given change could possibly have affected. <code>--defer</code> then lets those selected models still resolve <code>ref()</code> calls to their <em>unselected</em> upstream parents' already-built production tables, instead of needing to rebuild the entire upstream DAG in a throwaway CI schema just to satisfy a foreign-key-style dependency. Together, these two flags are what makes a PR touching one model in a thousand-model project buildable in CI in seconds instead of hours.</p>
+<p><code>state:modified+</code> compares the current branch's compiled project against saved artifacts from a previous run (usually production's last successful one) and selects only the changed models plus — the trailing <code>+</code> — everything downstream: the minimum set a given change could possibly have affected. <code>--defer</code> then lets those models resolve <code>ref()</code> calls to their <em>unselected</em> upstream parents' already-built production tables, instead of rebuilding the entire upstream DAG in a throwaway CI schema just to satisfy a dependency. Together the two flags make a PR touching one model in a thousand-model project buildable in CI in seconds instead of hours.</p>
 </div>
 
 <figure class="diagram reveal">
@@ -1096,7 +1096,7 @@ dbt build --select state:modified+ --defer --state ./prod-artifacts</code></pre>
 
 <div class="def reveal">
 <p class="t">What Fusion actually is</p>
-<p>dbt Core has always worked by treating your SQL as text: it renders Jinja into a SQL string and hands that string to the warehouse, without ever really "understanding" the SQL itself — no awareness of column-level lineage, types, or syntax errors until the warehouse itself complains. <strong>Fusion</strong> is a from-scratch rewrite of dbt's execution engine in Rust, built on SQL-compiler technology dbt Labs acquired from SDF Labs, that gives dbt genuine <strong>SQL comprehension</strong>: real parsing and understanding of your SQL and its column-level lineage across the whole project, multi-dialect, before anything is sent to the warehouse — while keeping the same SQL/YAML/Jinja authoring experience you already know from sections 01-11. dbt Labs launched Fusion as a public beta on May 28, 2025, rolling out warehouse support one adapter at a time, Snowflake first.</p>
+<p>dbt Core has always treated your SQL as text: it renders Jinja into a SQL string and hands it to the warehouse, without ever really "understanding" the SQL — no column-level lineage, no types, no syntax errors caught until the warehouse complains. <strong>Fusion</strong> is a from-scratch rewrite of dbt's execution engine in Rust, built on SQL-compiler technology dbt Labs acquired from SDF Labs, giving dbt genuine <strong>SQL comprehension</strong>: real parsing of your SQL and its column-level lineage across the whole project, multi-dialect, before anything reaches the warehouse — while keeping the same SQL/YAML/Jinja authoring experience from sections 01-11. dbt Labs launched Fusion as a public beta on May 28, 2025, rolling out warehouse support one adapter at a time, Snowflake first.</p>
 </div>
 
 <figure class="diagram reveal">
@@ -1121,17 +1121,17 @@ dbt build --select state:modified+ --defer --state ./prod-artifacts</code></pre>
 </figure>
 
 <div class="callout wn reveal">
-<p><b>Status, honestly: still in preview, not GA.</b> Despite an originally stated ambition to reach general availability within roughly a year of the beta, the most recent tracked release at the time of this guide's research was still labeled a preview build, with dbt Labs continuing to work toward full feature parity with dbt Core before calling it GA. Specific performance-multiplier claims (parsing/compilation speedups) circulate widely but didn't hold up to direct scrutiny of dbt Labs' own materials strongly enough to repeat as settled numbers here — if you need current figures, check <code>docs.getdbt.com/docs/fusion/fusion-releases</code> directly rather than trusting a number in any secondary write-up, including this one.</p>
+<p><b>Status, honestly: still in preview, not GA.</b> Despite an original ambition to reach general availability within roughly a year of the beta, the most recent tracked release at the time of this guide's research was still a preview build, with dbt Labs working toward full feature parity with dbt Core first. Specific performance-multiplier claims for parsing and compilation circulate widely but didn't survive direct scrutiny of dbt Labs' own materials well enough to repeat as settled numbers — for current figures check <code>docs.getdbt.com/docs/fusion/fusion-releases</code> rather than any secondary write-up, including this one.</p>
 </div>
 
 <div class="def reveal">
 <p class="t">Licensing, clarified</p>
-<p>dbt Labs has explicitly and repeatedly confirmed that <strong>dbt Core stays permanently licensed under Apache 2.0</strong> — including future v2.x releases — with no change planned. A separate 2023 licensing action under a Business Source License applied only to a distinct, newly-created "dbt Server" component, never to dbt Core itself, and was designed to auto-convert to Apache 2.0 over time regardless. The Fusion engine's own specific licensing terms are a separate, still-evolving question dbt Labs has framed differently from dbt Core's — worth checking directly before assuming it inherits dbt Core's Apache 2.0 terms.</p>
+<p>dbt Labs has repeatedly confirmed that <strong>dbt Core stays permanently licensed under Apache 2.0</strong>, including future v2.x releases, with no change planned. A separate 2023 licensing action under a Business Source License applied only to a distinct, newly-created "dbt Server" component, never to dbt Core, and was designed to auto-convert to Apache 2.0 over time regardless. Fusion's own licensing terms are a separate, still-evolving question dbt Labs has framed differently — worth checking directly before assuming it inherits dbt Core's Apache 2.0 terms.</p>
 </div>
 
 <div class="tldr reveal">
 <h4>❯ Short version</h4>
-<p>The <b>dbt Fusion engine</b> is a from-scratch Rust rewrite (built on acquired SDF Labs SQL-compiler technology) that gives dbt real SQL comprehension and column-level lineage instead of treating SQL as opaque text — same authoring experience, different internals. It launched as public beta in May 2025, rolling out warehouse-by-warehouse, and was still in preview (not GA) as of this guide's research. dbt Core itself remains permanently Apache 2.0 licensed; Fusion's own licensing terms are a distinct, separately-evolving question.</p>
+<p>The <b>dbt Fusion engine</b> is a from-scratch Rust rewrite, built on acquired SDF Labs SQL-compiler technology, giving dbt real SQL comprehension and column-level lineage instead of treating SQL as opaque text — same authoring experience, different internals. It launched as public beta in May 2025, rolling out warehouse by warehouse, and was still in preview as of this guide's research. dbt Core remains permanently Apache 2.0 licensed; Fusion's licensing is a distinct, separately-evolving question.</p>
 </div>
 <hr/>
 <!-- END s19 -->
@@ -1142,17 +1142,17 @@ dbt build --select state:modified+ --defer --state ./prod-artifacts</code></pre>
 <h2 id="s20" class="reveal"><span class="hico"><svg class="ico"><use href="#i-terminal"/></svg></span><span class="n">20.</span> Worked Example: A Movie-Ratings dbt Project on Snowflake</h2>
 <p class="sectionsub reveal">Every idea from sections 01-11, seen together in one small, real project</p>
 <div class="prose reveal">
-<p>Abstract explanations only click so far. This section walks through the shape of a real, publicly documented dbt project — a widely-watched YouTube tutorial project that transforms the public <a href="https://grouplens.org/datasets/movielens/" target="_blank" rel="noopener">MovieLens</a> ratings dataset (millions of movie ratings, tags, and metadata) into a small analytics warehouse on Snowflake, presented as a "Netflix-style" portfolio project. It's a genuinely good teaching example precisely because it's small enough to hold in your head, while still touching almost every concept from sections 01-11.</p>
+<p>Abstract explanations only click so far. This section walks through a real, publicly documented dbt project — a widely-watched tutorial that transforms the public <a href="https://grouplens.org/datasets/movielens/" target="_blank" rel="noopener">MovieLens</a> ratings dataset (millions of ratings, tags and metadata) into a small analytics warehouse on Snowflake, presented as a "Netflix-style" portfolio project. It's a good teaching example precisely because it's small enough to hold in your head while still touching almost every concept from sections 01-11.</p>
 </div>
 
 <div class="def reveal">
 <p class="t">What Snowflake actually is</p>
-<p>Snowflake is a cloud data warehouse built around one architectural idea: storage and compute are completely separate. Your data sits once in Snowflake-managed cloud storage; any number of independently-sized <strong>virtual warehouses</strong> — the actual compute clusters that run queries — can read that same data at once, each scaling up, down, or to zero without touching the data itself or each other. That's why a dbt project typically runs against its own small, dedicated virtual warehouse: it scales independently of whatever warehouse a BI tool queries against at the same time, and you only pay for compute while a warehouse is actually running.</p>
+<p>Snowflake is a cloud data warehouse built around one architectural idea: storage and compute are completely separate. Your data sits once in Snowflake-managed cloud storage, and any number of independently-sized <strong>virtual warehouses</strong> — the compute clusters that run queries — can read it at once, each scaling up, down, or to zero without touching the data or each other. That's why a dbt project typically runs against its own small, dedicated virtual warehouse: it scales independently of whatever a BI tool is querying at the same time, and you pay for compute only while it's running.</p>
 </div>
 
 <div class="profile dbt reveal">
 <p class="one">The setup: Snowflake plus a plain dbt Core project</p>
-<p>The raw CSVs (movies, ratings, tags, genome scores/tags, cross-platform ID links) get into Snowflake through a standard cloud-to-warehouse loading path: the files are uploaded to an Amazon S3 bucket, Snowflake is pointed at that bucket via an <strong>external stage</strong> (a named reference to the S3 location plus the IAM role/credentials needed to read it), and a <code>COPY INTO</code> statement bulk-loads each CSV from the stage into a raw table — <code>raw_movies</code>, <code>raw_ratings</code>, <code>raw_tags</code>, and so on. (For data arriving continuously rather than as a one-time file drop, Snowflake's <strong>Snowpipe</strong> automates that same <code>COPY INTO</code> on every new file landing in the bucket — worth knowing exists, even though a one-time learning dataset doesn't need it.) A dedicated Snowflake role, warehouse, and database are then provisioned specifically for dbt to connect with (mirroring the general permissions story: a scoped, least-privilege service account rather than a personal login, section 12's "who's allowed to run this" concern showing up even in a learning project). From there it's a standard dbt Core CLI project — <code>dbt init</code>, a <code>profiles.yml</code> pointing at that Snowflake account, and the folder layout from section 03.</p>
+<p>The raw CSVs (movies, ratings, tags, genome scores/tags, cross-platform ID links) reach Snowflake by a standard cloud-to-warehouse path: upload the files to an Amazon S3 bucket, point Snowflake at it with an <strong>external stage</strong> (a named reference to the S3 location plus the IAM role needed to read it), and bulk-load each CSV with <code>COPY INTO</code> into a raw table — <code>raw_movies</code>, <code>raw_ratings</code>, <code>raw_tags</code> and so on. For data arriving continuously rather than as a one-time file drop, Snowflake's <strong>Snowpipe</strong> automates that same <code>COPY INTO</code> on every new file landing in the bucket; a one-time learning dataset doesn't need it. A dedicated Snowflake role, warehouse and database are then provisioned for dbt to connect with — a scoped, least-privilege service account rather than a personal login, section 12's "who's allowed to run this" concern showing up even in a learning project. From there it's a standard dbt Core CLI project: <code>dbt init</code>, a <code>profiles.yml</code> pointing at that Snowflake account, and the folder layout from section 03.</p>
 </div>
 
 <figure class="diagram reveal">
@@ -1186,7 +1186,7 @@ dbt build --select state:modified+ --defer --state ./prod-artifacts</code></pre>
 </div>
 
 <div class="callout cy reveal">
-<p><b>What this project doesn't show — and why that's normal.</b> It's a single-developer, single-environment learning project, so it doesn't need dbt Mesh (section 14), a Semantic Layer (section 15), or Slim CI (section 17) — none of those solve a problem this project actually has. That's not a gap in the tutorial; it's exactly the right call. Reach for those tools when the problem they solve shows up (multiple teams, multiple environments, a slow CI pipeline), not by default just because they exist. Sections 14, 15, and 17 exist for the day this same project grows past one person and one environment.</p>
+<p><b>What this project doesn't show — and why that's normal.</b> It's a single-developer, single-environment learning project, so it needs neither dbt Mesh (section 14), a Semantic Layer (section 15), nor Slim CI (section 17) — none of those solve a problem it actually has. That's not a gap in the tutorial; it's exactly the right call. Reach for those tools when the problem they solve shows up (multiple teams, multiple environments, a slow CI pipeline), not by default because they exist. Sections 14, 15 and 17 are there for the day this project grows past one person and one environment.</p>
 </div>
 
 <div class="tldr reveal">

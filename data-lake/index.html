@@ -189,7 +189,7 @@ h2 .n{color:var(--blue2,#5C78FF)}
   <div class="kicker"><a class="back" href="../">❮ Data &amp; AI Engineering, Simply Explained</a></div>
   <h1>Data Lake &amp; Data Lakehouse, Simply Explained</h1>
   <p class="dek">A Data Lake gives you cheap, flexible storage — but with no rules and no safety net. This guide opens it up: how Parquet stores your data underneath, the six ways plain lakes break in production, and how Delta Lake turns them into a reliable source of truth.</p>
-  <div class="byline">~26 min read · Data Engineering · Jun 2026</div>
+  <div class="byline">~25 min read · Data Engineering · Jun 2026</div>
 </header>
 
 <figure class="reveal" style="margin:18px 0 6px;background:#141826;border:1px solid #3C4356;border-radius:16px;padding:8px 10px;overflow:hidden">
@@ -310,7 +310,7 @@ h2 .n{color:var(--blue2,#5C78FF)}
   <a href="#problems"><svg class="ico"><use href="#i-eye"/></svg>05 · The 6 big problems</a>
   <a href="#lakehouse"><svg class="ico"><use href="#i-database"/></svg>06 · Enter the Lakehouse</a>
   <a href="#delta-fixes"><svg class="ico"><use href="#i-disk"/></svg>07 · How Delta Lake fixes each problem</a>
-  <a href="#summary"><svg class="ico"><use href="#i-eye"/></svg>08 · Summary &amp;amp; what to read next</a>
+  <a href="#summary"><svg class="ico"><use href="#i-eye"/></svg>08 · Summary &amp; what to read next</a>
   <a href="#glossary"><svg class="ico"><use href="#i-book"/></svg>09 · ＊ · Glossary</a>
 </div>
 
@@ -659,7 +659,7 @@ Partitions : year, month, day</pre></div>
 
 <div class="callout cy reveal">
   <p style="margin:.2em 0"><span class="t">What is a "cluster"?</span></p>
-  <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">A cluster is a group of virtual machines — rented cloud servers — that work together. When you "spin up a Spark cluster" with 10 machines, you're renting 10 virtual servers from AWS/Azure/GCP. Spark splits your data processing job across all 10 machines so they work in parallel, finishing in roughly 1/10th the time it would take one machine alone. When the job is done, you release the machines and stop paying for them. The separation of compute and storage is the key cost advantage of a Data Lake: you only pay for compute while it's actually running, not 24/7.</p>
+  <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">A cluster is a group of virtual machines — rented cloud servers — working together. "Spin up a Spark cluster" with 10 machines and you're renting 10 virtual servers from AWS/Azure/GCP. Spark splits your job across all 10 so they work in parallel, finishing in roughly a tenth of the time one machine would take. When the job is done you release them and stop paying. That's the key cost advantage of separating compute from storage in a Data Lake: you pay for compute only while it's running, not 24/7.</p>
 </div>
 
 <!-- 03 -->
@@ -819,7 +819,7 @@ GROUP BY category;</pre></div>
 
 <div class="callout cy reveal">
   <p style="margin:.2em 0"><span class="t">Why the very end of the file?</span></p>
-  <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">The Parquet format specification requires the last 4 bytes of every file to be a "footer length" — an integer that says exactly how many bytes the footer occupies. When a query engine opens a Parquet file, it always seeks to the end, reads those 4 bytes, then seeks backwards by that many bytes to land at the start of the footer. It's like a book where the very last line tells you "the index starts on page X" — you flip straight to the index without reading the whole book. This is a deliberate design decision baked into the Parquet standard, so every engine knows exactly where to look.</p>
+  <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">The Parquet specification requires the last 4 bytes of every file to be a "footer length" — an integer saying exactly how many bytes the footer occupies. A query engine opening a Parquet file seeks to the end, reads those 4 bytes, then seeks backwards by that many to land at the footer's start. Like a book whose very last line says "the index starts on page X" — you flip straight there without reading the whole book. It's deliberate, baked into the standard, so every engine knows exactly where to look.</p>
 </div>
 
 <p class="reveal">The footer contains three things:</p>
@@ -975,7 +975,7 @@ GROUP BY category;</pre></div>
 <div class="pain reveal">
   <h4>Problem 6 — Two jobs writing at the same time (concurrent writes)</h4>
   <p style="margin:.4em 0;font-size:14.5px;color:#dcdce4">When would two jobs write to the same table at once? More often than you'd think. A nightly batch job runs at midnight. A data science cleanup job also runs at midnight. Or a streaming job is writing new events while a batch job is updating old ones. Or two engineers trigger re-runs at the same time.</p>
-  <p style="margin:.4em 0;font-size:14.5px;color:#dcdce4">Here's exactly what goes wrong. Job A reads the table and sees files [F1, F2]. It processes the data, removes F2, and creates new file F3. Job B also read [F1, F2] at the same time. It removes F1 and creates new file F4. Job A finishes first and writes its result: "F2 is gone, F3 is here." Now Job B finishes and writes its view: "F1 is gone, F4 is here." Job B's write overwrites the record of what Job A did. F3 — all of Job A's work — is no longer referenced anywhere. It's silently lost. The table now appears to have only [F2, F4], which is a mix of states that never existed at the same time.</p>
+  <p style="margin:.4em 0;font-size:14.5px;color:#dcdce4">Here's exactly what goes wrong. Job A reads the table, sees files [F1, F2], removes F2 and creates F3. Job B read [F1, F2] at the same time; it removes F1 and creates F4. Job A finishes first and writes "F2 is gone, F3 is here." Then Job B finishes and writes its own view: "F1 is gone, F4 is here." That overwrites the record of what Job A did, so F3 — all of Job A's work — is no longer referenced anywhere. Silently lost. The table now appears to hold only [F2, F4], a mix of states that never existed at the same time.</p>
 </div>
 
 <!-- 06 -->
@@ -1251,7 +1251,7 @@ df_bad.write.format("delta").mode("append").save("/path/to/orders")
   <p style="margin:.4em 0;font-size:14.5px;color:#dcdce4">Delta supports <code>UPDATE</code>, <code>DELETE</code>, and <code>MERGE</code> (upsert). Under the hood, it first uses the <strong>column statistics recorded in the transaction log</strong> to find which Parquet files actually contain the target rows — it doesn't scan every file blindly. (These statistics — min value, max value, null count per column — are captured from each Parquet file's footer at write time and stored inside the commit JSON. At delete/update time, Delta reads the log to do this lookup, not the Parquet files themselves.) Then it uses one of two strategies to apply the change:</p>
   <ul style="font-size:14.5px;color:#dcdce4">
     <li><strong>Copy-on-Write (CoW) — the default.</strong> Delta reads only the files that contain the target rows, rewrites those files without the deleted/changed rows, and logs the old files as removed and the new files as added. All other files are untouched. Reads remain fast because there's no extra processing needed. Writes are slower if the affected files are large — but they only touch the files that actually contain the target rows, not the whole table.</li>
-    <li><strong>Merge-on-Read via Deletion Vectors — the faster alternative for deletes.</strong> Instead of rewriting a Parquet file, Delta writes a tiny <strong>deletion vector</strong> file alongside it — a bitmap (a compact list of bit flags, one per row in the file) where a "1" means "skip this row." Deleting row 42 out of a 1-million-row file doesn't require rewriting all 1 million rows — it just flips bit 42 to 1 in a tiny bitmap file (kilobytes, instead of rewriting the whole multi-hundred-MB Parquet file). When you later read that file, Delta combines the Parquet data with the deletion vector and skips the flagged rows automatically. Deleted rows still sit physically on S3 until you run <code>VACUUM</code>, which cleans up old files that are no longer referenced by any active version of the table.</li>
+    <li><strong>Merge-on-Read via Deletion Vectors — the faster alternative for deletes.</strong> Instead of rewriting a Parquet file, Delta writes a tiny <strong>deletion vector</strong> alongside it — a bitmap, one bit flag per row, where a "1" means "skip this row." Deleting row 42 of a 1-million-row file rewrites nothing: it flips bit 42 in a kilobyte-scale file rather than rewriting a multi-hundred-MB Parquet file. On the next read Delta combines the Parquet data with the deletion vector and skips the flagged rows automatically. Deleted rows still sit physically on S3 until <code>VACUUM</code> cleans up files no longer referenced by any active version of the table.</li>
   </ul>
   <div class="cb" style="margin:.8em 0 0"><span class="lang">SQL · update, delete, and upsert</span><pre><span class="c">-- Update one customer's email</span>
 UPDATE orders SET email = 'new@email.com' WHERE customer_id = 123;
@@ -1273,7 +1273,7 @@ VACUUM orders RETAIN 168 HOURS;  <span class="c">-- keep 7 days of history, dele
 <div class="fix reveal">
   <h4>Fix 4 — Solving the small file problem with OPTIMIZE</h4>
   <p style="margin:.4em 0;font-size:14.5px;color:#dcdce4">Delta has a single command — <code>OPTIMIZE</code> — that reads many small Parquet files and combines them into a few right-sized ones (typically 128–256 MB each). The swap is logged atomically: old small files are marked as removed, new large files are added — all in one commit. If OPTIMIZE is interrupted, the table stays consistent.</p>
-  <p style="margin:.4em 0;font-size:14.5px;color:#dcdce4">You can add <code>ZORDER BY</code> to sort the data at the same time. Z-Order is a technique that co-locates rows with similar values in multiple columns into the same files. Unlike a simple <code>ORDER BY (date)</code> which sorts only by one column, Z-Order interleaves multiple sort dimensions — so rows close in both <code>order_date</code> and <code>category</code> end up in the same Parquet files. The result: tighter min/max statistics per row group, so more row groups can be skipped when queries filter on both columns. Think of it as "sorting by multiple columns simultaneously rather than one at a time."</p>
+  <p style="margin:.4em 0;font-size:14.5px;color:#dcdce4">You can add <code>ZORDER BY</code> to sort the data at the same time. Z-Order co-locates rows with similar values across <em>multiple</em> columns into the same files. Unlike <code>ORDER BY (date)</code>, which sorts by one column, Z-Order interleaves several sort dimensions, so rows close in both <code>order_date</code> and <code>category</code> land in the same Parquet files. The result: tighter min/max statistics per row group, so more row groups get skipped when queries filter on both columns. Think of it as sorting by several columns simultaneously rather than one at a time.</p>
   <div class="cb" style="margin:.8em 0 0"><span class="lang">SQL · compact and sort</span><pre><span class="c">-- Combine small files into right-sized ones</span>
 OPTIMIZE orders;
 
@@ -1332,7 +1332,7 @@ DESCRIBE HISTORY orders;</pre></div>
 </table>
 
 <!-- 08 -->
-<h2 id="summary" class="reveal"><span class="hico"><svg class="ico"><use href="#i-eye"/></svg></span><span class="n">08.</span> Summary &amp;amp; what to read next</h2>
+<h2 id="summary" class="reveal"><span class="hico"><svg class="ico"><use href="#i-eye"/></svg></span><span class="n">08.</span> Summary &amp; what to read next</h2>
 <p class="reveal">Here's what you've learned:</p>
 <ol class="reveal">
   <li>A <strong>Data Lake</strong> was invented to store massive amounts of data cheaply in object storage (S3/ADLS), separated from compute. It works great as a raw archive but breaks as a reliable source of truth.</li>

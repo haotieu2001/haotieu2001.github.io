@@ -172,13 +172,13 @@
 <header>
   <div class="kicker"><a class="back" href="../">❮ Data &amp; AI Engineering, Simply Explained</a></div>
   <h1>SQL for Data Engineers</h1>
-  <p class="dek">Almost nobody fails a SQL interview on syntax — the <code>LEFT JOIN</code> keyword is the easy part. They fail on the quiet bugs: a join that secretly <strong>triples their SUM</strong>, a <code>NOT IN</code> that returns nothing because one row was <code>NULL</code>, a subquery where a window function was the answer. This page is the SQL that <strong>Medium and Hard problems actually test</strong> — from how the engine really runs your clauses to joins, <strong>GROUP BY</strong>, window functions and CTEs — plus the write side, for the half of the job that isn't a puzzle.</p>
+  <p class="dek">Almost nobody fails a SQL interview on syntax — <code>LEFT JOIN</code> is the easy part. They fail on the quiet bugs: a join that secretly <strong>triples their SUM</strong>, a <code>NOT IN</code> that returns nothing because one row was <code>NULL</code>, a subquery where a window function was the answer. This page is the SQL that <strong>Medium and Hard problems actually test</strong> — how the engine really runs your clauses, joins, <strong>GROUP BY</strong>, window functions and CTEs — plus the write side, for the half of the job that isn't a puzzle.</p>
   <div class="stack">
     <span class="chip"><svg class="ico"><use href="#i-database"/></svg> SQL</span>
     <span class="chip"><svg class="ico"><use href="#i-window"/></svg> windows &#183; CTEs &#183; joins</span>
     <span class="chip" style="color:#5AC8FF;border-color:#2b4a80;background:#0e2740"><svg class="ico"><use href="#i-target"/></svg> LeetCode &#183; StrataScratch</span>
   </div>
-  <div class="byline">~50 min read · Reference · Fundamentals</div>
+  <div class="byline">~46 min read · Reference · Fundamentals</div>
 </header>
 
 <div class="toc reveal">
@@ -216,13 +216,13 @@
 <h2 id="why" class="reveal"><span class="hico"><svg class="ico"><use href="#i-rocket"/></svg></span><span class="n">01.</span> Declarative: you describe, it decides</h2>
 <p class="reveal lead">In Python you write <em>how</em> to get the answer. In SQL you write <em>what the answer looks like</em>, and the engine invents the how.</p>
 
-<p class="reveal">Write <code>SELECT name FROM users WHERE age &lt; 30</code> and you have not told the database to scan a table, or use an index, or read rows in any particular order. You have described a set: <em>the names of users under thirty</em>. The engine is then free to get there however it likes — a sequential scan, an index lookup, a parallel scan across eight cores — and it will pick based on statistics about your data. Two queries that describe the same set are interchangeable, so the optimiser can rewrite yours into something faster as long as the answer is identical.</p>
+<p class="reveal">Write <code>SELECT name FROM users WHERE age &lt; 30</code> and you have not told the database to scan a table, use an index, or read rows in any order. You described a set: <em>the names of users under thirty</em>. The engine gets there however it likes — sequential scan, index lookup, parallel scan across eight cores — picking based on statistics about your data. Two queries describing the same set are interchangeable, so the optimiser can rewrite yours into something faster as long as the answer is identical.</p>
 
-<p class="reveal">This is the source of SQL's power and of every one of its surprises. The power: you get a query planner doing work you never wrote. The surprise: <strong>the order you write the clauses has almost nothing to do with the order they take effect.</strong> You write <code>SELECT</code> first and it runs nearly last. That single mismatch causes most of the "why doesn't this work?" moments a beginner hits, and it is the reason the next section is the most important one on this page.</p>
+<p class="reveal">That is the source of SQL's power and every one of its surprises. The power: a query planner doing work you never wrote. The surprise: <strong>the order you write the clauses has almost nothing to do with the order they take effect.</strong> You write <code>SELECT</code> first and it runs nearly last. That one mismatch causes most of the "why doesn't this work?" moments a beginner hits, which is why the next section is the most important one on this page.</p>
 
 <div class="callout cy reveal">
   <p style="margin:.2em 0"><span class="t"><svg class="ico"><use href="#i-key"/></svg> The mindset shift that makes SQL click</span></p>
-  <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">Stop reading a query top-to-bottom like a program. Read it as a <em>pipeline of table transformations</em>: each clause takes a table in and hands a different table out. <code>FROM</code> builds a working table. <code>WHERE</code> hands back a smaller one. <code>GROUP BY</code> hands back a table with <em>one row per group</em> — at which point the original rows no longer exist, which is exactly why you can't select a column that isn't in the grouping key. Every rule you were told to memorise is a consequence of what shape the table has at that moment in the pipeline.</p>
+  <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">Stop reading a query top-to-bottom like a program. Read it as a <em>pipeline of table transformations</em>: each clause takes a table in and hands a different one out. <code>FROM</code> builds a working table. <code>WHERE</code> hands back a smaller one. <code>GROUP BY</code> hands back a table with <em>one row per group</em> — the original rows no longer exist, which is exactly why you can't select a column outside the grouping key. Every rule you were told to memorise follows from what shape the table has at that point in the pipeline.</p>
 </div>
 
 <h2 id="order" class="reveal"><span class="hico"><svg class="ico"><use href="#i-layers"/></svg></span><span class="n">02.</span> The logical order of operations</h2>
@@ -427,7 +427,7 @@
 <h2 id="null" class="reveal"><span class="hico"><svg class="ico"><use href="#i-alert"/></svg></span><span class="n">05.</span> NULL and three-valued logic</h2>
 <p class="reveal lead"><code>NULL</code> does not mean zero, and it does not mean empty string. It means <strong>"unknown"</strong> — and unknown is contagious.</p>
 
-<p class="reveal">Because <code>NULL</code> means <em>we don't know</em>, any comparison involving it must also be <em>we don't know</em>. Is an unknown age greater than 30? Unknown. Is an unknown age equal to another unknown age? Still unknown — they might be the same, they might not. So SQL does not have two truth values, it has three: <strong>TRUE, FALSE, and UNKNOWN</strong>. And the single rule that ties it all together is this: <code>WHERE</code> keeps a row only when the predicate is <strong>TRUE</strong>. Both FALSE and UNKNOWN are thrown out, which means <em>a NULL row silently disappears from your result and never tells you it was there.</em></p>
+<p class="reveal">Because <code>NULL</code> means <em>we don't know</em>, any comparison involving it is also <em>we don't know</em>. Is an unknown age greater than 30? Unknown. Equal to another unknown age? Still unknown — they might be the same, they might not. So SQL has three truth values, not two: <strong>TRUE, FALSE, and UNKNOWN</strong>. The rule that ties it together: <code>WHERE</code> keeps a row only when the predicate is <strong>TRUE</strong>. FALSE and UNKNOWN are both thrown out, which means <em>a NULL row silently disappears from your result and never tells you it was there.</em></p>
 
 <figure class="fig reveal">
 <svg viewBox="0 0 760 250" width="100%" aria-label="The WHERE clause keeps only rows whose predicate is TRUE. FALSE and UNKNOWN are both dropped.">
@@ -524,7 +524,7 @@ revenue / <span class="p">NULLIF</span>(orders, 0)                      <span cl
 
 <div class="callout rd reveal">
   <p style="margin:.2em 0"><span class="t"><svg class="ico"><use href="#i-warn"/></svg> Know which dialect you are in — it changes the function names</span></p>
-  <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">Scalar functions are the <em>least</em> standardised part of SQL. <strong>LeetCode</strong> defaults to <strong>MySQL</strong>; <strong>StrataScratch</strong> defaults to <strong>PostgreSQL</strong>. They disagree on almost every date function, on string concatenation, and on rounding. Worse, a lot of SQL material online is <strong>T-SQL</strong> (SQL Server) — <code>DATEPART</code>, <code>DATEADD</code>, <code>DATEDIFF(part, a, b)</code>, <code>FORMAT</code>, <code>CONVERT</code>, <code>LEN</code>, <code>ISDATE</code>, <code>EOMONTH</code>, <code>GETDATE</code>, <code>TOP</code> — and <strong>none of those exist in Postgres, and most don't exist in MySQL either.</strong> If you learned dates from a SQL Server tutorial, half of what you know will throw a syntax error on both of the sites you're practising on.</p>
+  <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">Scalar functions are the <em>least</em> standardised part of SQL. <strong>LeetCode</strong> defaults to <strong>MySQL</strong>; <strong>StrataScratch</strong> to <strong>PostgreSQL</strong>. They disagree on almost every date function, on string concatenation, and on rounding. Worse, much SQL material online is <strong>T-SQL</strong> (SQL Server) — <code>DATEPART</code>, <code>DATEADD</code>, <code>DATEDIFF(part, a, b)</code>, <code>FORMAT</code>, <code>CONVERT</code>, <code>LEN</code>, <code>ISDATE</code>, <code>EOMONTH</code>, <code>GETDATE</code>, <code>TOP</code> — and <strong>none of those exist in Postgres, most not in MySQL either.</strong> If you learned dates from a SQL Server tutorial, half of what you know throws a syntax error on both sites you're practising on.</p>
 </div>
 
 <h3 class="reveal">Dates: the three things you ever actually do</h3>
@@ -641,7 +641,7 @@ revenue / <span class="p">NULLIF</span>(orders, 0)                      <span cl
 
 <div class="callout cy reveal">
   <p style="margin:.2em 0"><span class="t"><svg class="ico"><use href="#i-key"/></svg> The one date insight worth more than the function list</span></p>
-  <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd"><strong>"The previous row" and "the previous day" are not the same thing.</strong> <code>LAG</code> gives you the row before — which is only yesterday if no day is missing from your data. If a sensor skipped a day, or a user didn't log in, <code>LAG</code> happily compares Monday to Thursday and tells you nothing broke. When a question says <em>consecutive days</em>, join on the date arithmetic (<code>d = prev_d + INTERVAL '1 day'</code>) rather than trusting row order — or generate a complete date spine first (<a href="#recursive">§16</a>). This distinction is the whole difficulty of half the Medium date problems.</p>
+  <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd"><strong>"The previous row" and "the previous day" are not the same thing.</strong> <code>LAG</code> gives you the row before — only yesterday if no day is missing from your data. If a sensor skipped a day, or a user didn't log in, <code>LAG</code> happily compares Monday to Thursday and reports nothing broke. When a question says <em>consecutive days</em>, join on date arithmetic (<code>d = prev_d + INTERVAL '1 day'</code>) rather than trusting row order — or generate a complete date spine first (<a href="#recursive">§16</a>). This distinction is the whole difficulty of half the Medium date problems.</p>
 </div>
 
 <h3 class="reveal">Strings: eight functions, three patterns</h3>
@@ -903,7 +903,7 @@ revenue / <span class="p">NULLIF</span>(orders, 0)                      <span cl
 
 <div class="callout rd reveal">
   <p style="margin:.2em 0"><span class="t"><svg class="ico"><use href="#i-alert"/></svg> Fan-out compounds</span></p>
-  <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">Join a customer to 3 orders <em>and</em> 4 support tickets in the same query and you don't get 3 + 4 = 7 rows. You get 3 × 4 = <strong>12</strong> — every order paired with every ticket, because the two joins have nothing to do with each other. Revenue is now 4× too high and ticket counts are 3× too high. Whenever you need to aggregate along two independent one-to-many paths, <strong>aggregate each one separately in its own CTE and join the summaries together.</strong> There is no clever way around this; there is only doing it properly.</p>
+  <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">Join a customer to 3 orders <em>and</em> 4 support tickets in one query and you don't get 3 + 4 = 7 rows. You get 3 × 4 = <strong>12</strong> — every order paired with every ticket, because the two joins have nothing to do with each other. Revenue is now 4× too high, ticket counts 3× too high. To aggregate along two independent one-to-many paths, <strong>aggregate each separately in its own CTE and join the summaries.</strong> There is no clever way around it; there is only doing it properly.</p>
 </div>
 
 <h2 id="groupby" class="reveal"><span class="hico"><svg class="ico"><use href="#i-sigma"/></svg></span><span class="n">09.</span> GROUP BY and aggregation</h2>
@@ -1483,7 +1483,7 @@ ranked <span class="k">AS</span> (
 
 <h3 class="reveal">Why this shape keeps appearing</h3>
 
-<p class="reveal">Look at what forced the CTE here. A window function is computed at step 5 (<code>SELECT</code>), so you cannot say <code>WHERE ROW_NUMBER() OVER (...) = 1</code> — the number doesn't exist yet when <code>WHERE</code> runs. The only way to filter on it is to <strong>finish the query, then filter the result</strong>, and a CTE is how you say that. <em>Compute the window in one layer, filter it in the next.</em> Once you internalise that, "top N per group" stops being a puzzle and becomes a reflex.</p>
+<p class="reveal">Look at what forced the CTE. A window function is computed at step 5 (<code>SELECT</code>), so <code>WHERE ROW_NUMBER() OVER (...) = 1</code> is impossible — the number doesn't exist yet when <code>WHERE</code> runs. The only way to filter on it is to <strong>finish the query, then filter the result</strong>, and a CTE is how you say that. <em>Compute the window in one layer, filter it in the next.</em> Internalise that and "top N per group" stops being a puzzle.</p>
 
 <div class="callout reveal">
   <p style="margin:.2em 0"><span class="t"><svg class="ico"><use href="#i-eye"/></svg> How to debug a CTE chain</span></p>
@@ -1492,7 +1492,7 @@ ranked <span class="k">AS</span> (
 
 <h3 class="reveal">Performance, briefly and honestly</h3>
 
-<p class="reveal">A CTE is usually <em>inlined</em> — the engine expands it into the main query and optimises the whole thing together, so it costs nothing over a derived table. The historical exception is Postgres before version 12, where <code>WITH</code> was an <strong>optimisation fence</strong>: it always materialised the CTE and never pushed your outer <code>WHERE</code> down into it, which could be catastrophically slow. Postgres 12+ inlines by default, and you can still force either behaviour explicitly with <code>WITH x AS MATERIALIZED (...)</code> or <code>AS NOT MATERIALIZED (...)</code>. Worth knowing because it is a genuine interview question, and because the folklore "CTEs are slow" comes from exactly this and is now out of date.</p>
+<p class="reveal">A CTE is usually <em>inlined</em> — the engine expands it into the main query and optimises the whole thing together, so it costs nothing over a derived table. The historical exception is Postgres before version 12, where <code>WITH</code> was an <strong>optimisation fence</strong>: it always materialised the CTE and never pushed your outer <code>WHERE</code> into it, which could be catastrophically slow. Postgres 12+ inlines by default, and you can force either behaviour with <code>WITH x AS MATERIALIZED (...)</code> or <code>AS NOT MATERIALIZED (...)</code>. Worth knowing: it's a genuine interview question, and the folklore "CTEs are slow" comes from exactly this and is now out of date.</p>
 
 <p class="reveal">One real caveat remains: <strong>a CTE referenced twice may be computed twice.</strong> If a CTE is expensive and you use it in two places, check the plan.</p>
 
@@ -1661,7 +1661,7 @@ ranked <span class="k">AS</span> (
 
 <div class="callout gd reveal">
   <p style="margin:.2em 0"><span class="t"><svg class="ico"><use href="#i-bulb"/></svg> Where this actually matters for you</span></p>
-  <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">Be clear-eyed: <strong>none of this is testable on LeetCode or StrataScratch</strong> — both give you a read-only console, so you can't create anything. It is <em>not</em> exam material. But <strong>CTAS is everywhere in the data-engineering job</strong>, and especially in Databricks, where <code>CREATE TABLE AS SELECT</code> is the standard way to materialise a Delta table and shows up constantly in the Data Engineer Professional material. The view-versus-materialized-view trade-off — <em>freshness against read speed</em> — is also the exact trade-off behind every incremental pipeline you will ever build, so understanding it here pays off far beyond SQL.</p>
+  <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">Be clear-eyed: <strong>none of this is testable on LeetCode or StrataScratch</strong> — both give you a read-only console, so you can't create anything. But <strong>CTAS is everywhere in the data-engineering job</strong>, especially in Databricks, where <code>CREATE TABLE AS SELECT</code> is the standard way to materialise a Delta table. The view-versus-materialized-view trade-off — <em>freshness against read speed</em> — is also the exact trade-off behind every incremental pipeline you will build, so understanding it here pays off far beyond SQL.</p>
 </div>
 
 <h2 id="ddl" class="reveal"><span class="hico"><svg class="ico"><use href="#i-blocks"/></svg></span><span class="n">18.</span> DDL: tables, types, and constraints</h2>
@@ -1724,7 +1724,7 @@ ranked <span class="k">AS</span> (
 <span class="k">DROP TABLE IF EXISTS</span> employees;    <span class="c">-- no error if it was never there — use this in scripts</span>
 </pre></div>
 
-<p class="reveal">A quiet warning about <code>ALTER</code> on a big table: adding a column with a <code>DEFAULT</code>, or changing a column's type, may force the engine to <strong>rewrite every row</strong> and hold a lock while it does — which on a 500-million-row table means your "quick schema tweak" takes the table offline for an hour. Modern Postgres avoids the rewrite for a simple <code>ADD COLUMN ... DEFAULT</code>, but the general lesson stands: on a large table, <em>check what the ALTER actually does before you run it in production.</em></p>
+<p class="reveal">A quiet warning about <code>ALTER</code> on a big table: adding a column with a <code>DEFAULT</code>, or changing a column's type, may force the engine to <strong>rewrite every row</strong> and hold a lock while it does — on a 500-million-row table, your "quick schema tweak" takes it offline for an hour. Modern Postgres avoids the rewrite for a simple <code>ADD COLUMN ... DEFAULT</code>, but the lesson stands: on a large table, <em>check what the ALTER actually does before running it in production.</em></p>
 
 <h2 id="dml" class="reveal"><span class="hico"><svg class="ico"><use href="#i-plug"/></svg></span><span class="n">19.</span> DML: INSERT, UPDATE, DELETE</h2>
 <p class="reveal lead">Everything so far has been <em>reading</em>. These three statements <strong>change</strong> the data — and they have no undo button unless you put one there yourself.</p>
@@ -1923,7 +1923,7 @@ ranked <span class="k">AS</span> (
 
 <div class="callout cy reveal">
   <p style="margin:.2em 0"><span class="t"><svg class="ico"><use href="#i-key"/></svg> The default frame is the thing that surprises everyone</span></p>
-  <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">Adding an <code>ORDER BY</code> to an aggregate window <strong>silently changes what it computes</strong>. <code>SUM(x) OVER (PARTITION BY d)</code> is the partition total — the same number on every row. Add an <code>ORDER BY</code> and it becomes <code>SUM(x) OVER (PARTITION BY d ORDER BY t)</code>, whose implicit frame is "everything up to and including me" — a <strong>running total</strong>, different on every row. Same function, same partition, completely different answer. If you want the plain total <em>and</em> an ordering, either drop the <code>ORDER BY</code> from that one window or write the frame out explicitly.</p>
+  <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">Adding an <code>ORDER BY</code> to an aggregate window <strong>silently changes what it computes</strong>. <code>SUM(x) OVER (PARTITION BY d)</code> is the partition total — the same number on every row. Add an <code>ORDER BY</code> and the implicit frame becomes "everything up to and including me" — a <strong>running total</strong>, different on every row. Same function, same partition, completely different answer. If you want the plain total <em>and</em> an ordering, drop the <code>ORDER BY</code> from that window or write the frame out explicitly.</p>
 </div>
 
 <h2 id="frames" class="reveal"><span class="hico"><svg class="ico"><use href="#i-disk"/></svg></span><span class="n">21.</span> Window frames: ROWS vs RANGE</h2>

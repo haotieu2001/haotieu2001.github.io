@@ -167,7 +167,7 @@
     <span class="chip"><svg class="ico"><use href="#i-code"/></svg> bash &#183; awk &#183; cron</span>
     <span class="chip" style="color:#5AC8FF;border-color:#2b4a80;background:#0e2740"><svg class="ico"><use href="#i-database"/></svg> Data engineering</span>
   </div>
-  <div class="byline">~25 min read · Reference · Fundamentals</div>
+  <div class="byline">~24 min read · Reference · Fundamentals</div>
 </header>
 
 <div class="toc reveal">
@@ -206,7 +206,7 @@
 
 <div class="callout cy reveal">
   <p style="margin:.2em 0"><span class="t"><svg class="ico"><use href="#i-key"/></svg> The mindset shift that makes Linux click</span></p>
-  <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">Linux is not an application you learn the menus of. It is a box of <em>small, sharp tools that all speak the same language</em> — lines of text — and a way of bolting them together into a chain. There is no "log analysis program." There is <code>grep</code>, which throws away lines you don't want; <code>awk</code>, which pulls out columns; <code>sort</code> and <code>uniq</code>, which count things. Bolt those four together with pipes and you have written a log analyser in one line, on a server with no software installed, over SSH, at 3am. That composability <em>is</em> the operating system's design.</p>
+  <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">Linux is not an application you learn the menus of. It is a box of <em>small, sharp tools that all speak the same language</em> — lines of text — and a way of bolting them into a chain. There is no "log analysis program." There is <code>grep</code>, which throws away lines you don't want; <code>awk</code>, which pulls out columns; <code>sort</code> and <code>uniq</code>, which count things. Bolt those four together with pipes and you've written a log analyser in one line, on a server with no software installed, over SSH, at 3am. That composability <em>is</em> the design.</p>
 </div>
 
 <h2 id="model" class="reveal"><span class="hico"><svg class="ico"><use href="#i-layers"/></svg></span><span class="n">02.</span> The mental model: kernel, shell, process, file</h2>
@@ -1347,13 +1347,13 @@ log <span class="g">"done — compressed $COMPRESSED, pruned $PRUNED, $(df -h "$
 
 <div class="callout reveal">
   <p style="margin:.2em 0"><span class="t"><svg class="ico"><use href="#i-bulb"/></svg> Cron's real limits — and when to stop using it</span></p>
-  <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">Cron has no memory. It cannot express "run B after A succeeds", it will not retry a failure, it has no backfill, and if the box was down at 02:30 the run is simply lost forever. It also runs in the <em>system</em> timezone, which is why servers are set to UTC and why a job scheduled in local time will fire twice — or not at all — on daylight-saving night. Cron is perfect for one independent, idempotent job on one machine. The moment you need dependencies, retries, or backfills, that is what Airflow (or a systemd timer, for something simple with proper logging) exists for. Reaching for Airflow first is over-engineering; still being on cron when you have twelve interdependent jobs is the other mistake.</p>
+  <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">Cron has no memory. It cannot express "run B after A succeeds," will not retry a failure, has no backfill, and if the box was down at 02:30 the run is lost forever. It also runs in the <em>system</em> timezone, which is why servers are set to UTC and why a job scheduled in local time fires twice — or not at all — on daylight-saving night. Cron is perfect for one independent, idempotent job on one machine. The moment you need dependencies, retries or backfills, that is what Airflow exists for (or a systemd timer, for something simple with proper logging). Reaching for Airflow first is over-engineering; still being on cron with twelve interdependent jobs is the other mistake.</p>
 </div>
 
 <h2 id="wget" class="reveal"><span class="hico"><svg class="ico"><use href="#i-package"/></svg></span><span class="n">14.</span> Downloading files with wget</h2>
 <p class="reveal lead">wget is a file-fetcher. Point it at a URL and it puts the bytes on disk — reliably, resumably, and without you watching.</p>
 
-<p class="reveal">The division of labour is worth stating plainly, because interviewers ask it: <strong>wget downloads, curl converses.</strong> wget's defaults are built around "get this file, keep trying, save it, survive a bad connection" — it writes to disk by default, retries automatically, and can resume a half-finished 40 GB transfer. curl's defaults are built around "make this HTTP request and show me exactly what came back" — it prints to stdout, follows nothing unless told, and speaks two dozen protocols with total control over headers. Use wget for the nightly dump; use curl for the API.</p>
+<p class="reveal">The division of labour is worth stating plainly, because interviewers ask it: <strong>wget downloads, curl converses.</strong> wget's defaults are built around "get this file, keep trying, save it, survive a bad connection" — it writes to disk, retries automatically, and can resume a half-finished 40 GB transfer. curl's defaults are built around "make this HTTP request and show me exactly what came back" — it prints to stdout, follows nothing unless told, and speaks two dozen protocols with total control over headers. Use wget for the nightly dump, curl for the API.</p>
 
 <div class="cb"><span class="lang">bash &#183; wget</span><pre><span class="k">wget</span> https://example.com/data/events.csv.gz          <span class="c"># saves as events.csv.gz</span>
 <span class="k">wget</span> -O daily.csv.gz <span class="g">"$URL"</span>                          <span class="c"># -O choose the output name</span>
@@ -1568,7 +1568,7 @@ log <span class="g">"done — compressed $COMPRESSED, pruned $PRUNED, $(df -h "$
 
 <div class="callout cy reveal">
   <p style="margin:.2em 0"><span class="t"><svg class="ico"><use href="#i-zap"/></svg> Exit code 137 means the kernel killed you</span></p>
-  <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">If a job dies with <strong>137</strong> and no stack trace, it was not a bug in your code — 137 = 128 + 9 = killed by SIGKILL, and the killer was almost certainly the kernel's <strong>OOM killer</strong> reclaiming memory (or a container hitting its memory limit — the exact same mechanism, which is why this shows up constantly in Kubernetes). Confirm with <code>dmesg -T | grep -i kill</code>. The fix is never "retry": it is to process the data in chunks, raise the limit, or stream it instead of loading it. Similarly <strong>143</strong> = 128 + 15 = SIGTERM, meaning something asked it to stop politely — usually a scheduler timeout.</p>
+  <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">If a job dies with <strong>137</strong> and no stack trace, it was not a bug in your code — 137 = 128 + 9 = killed by SIGKILL, and the killer was almost certainly the kernel's <strong>OOM killer</strong> reclaiming memory, or a container hitting its memory limit (the same mechanism, which is why this shows up constantly in Kubernetes). Confirm with <code>dmesg -T | grep -i kill</code>. The fix is never "retry": process the data in chunks, raise the limit, or stream it instead of loading it. Similarly <strong>143</strong> = 128 + 15 = SIGTERM, something asking it to stop politely — usually a scheduler timeout.</p>
 </div>
 
 <h2 id="remote" class="reveal"><span class="hico"><svg class="ico"><use href="#i-network"/></svg></span><span class="n">19.</span> Working on a remote box: ssh, rsync, tmux</h2>
