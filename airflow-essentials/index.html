@@ -196,27 +196,27 @@ h2 .n{color:var(--blue2,#5C78FF)}
 <div class="toc reveal">
   <strong>Contents</strong>
   <a href="#s01"><svg class="ico"><use href="#i-question"/></svg>01 · What Is Apache Airflow?</a>
-  <a href="#s02"><svg class="ico"><use href="#i-blocks"/></svg>02 · DAGs, Tasks &amp;amp; Operators — Core Concepts</a>
-  <a href="#s03"><svg class="ico"><use href="#i-blocks"/></svg>03 · Airflow Architecture: Scheduler, Webserver, Metadata DB, Executor &amp;amp; Triggerer</a>
-  <a href="#s04"><svg class="ico"><use href="#i-zap"/></svg>04 · Executors Compared: Sequential, Local, Celery &amp;amp; Kubernetes</a>
-  <a href="#s05"><svg class="ico"><use href="#i-workflow"/></svg>05 · Writing DAGs: TaskFlow API, Classic Operators &amp;amp; Dependencies</a>
+  <a href="#s02"><svg class="ico"><use href="#i-blocks"/></svg>02 · DAGs, Tasks &amp; Operators — Core Concepts</a>
+  <a href="#s03"><svg class="ico"><use href="#i-blocks"/></svg>03 · Airflow Architecture: Scheduler, Webserver, Metadata DB, Executor &amp; Triggerer</a>
+  <a href="#s04"><svg class="ico"><use href="#i-zap"/></svg>04 · Executors Compared: Sequential, Local, Celery &amp; Kubernetes</a>
+  <a href="#s05"><svg class="ico"><use href="#i-workflow"/></svg>05 · Writing DAGs: TaskFlow API, Classic Operators &amp; Dependencies</a>
   <a href="#s06"><svg class="ico"><use href="#i-repeat"/></svg>06 · XComs: Passing Data Between Tasks</a>
-  <a href="#s07"><svg class="ico"><use href="#i-repeat"/></svg>07 · Scheduling: Timetables, start_date, Catchup &amp;amp; Backfill</a>
-  <a href="#s08"><svg class="ico"><use href="#i-repeat"/></svg>08 · Task Execution Semantics: Retries, Timeouts, Trigger Rules &amp;amp; SLAs</a>
-  <a href="#s09"><svg class="ico"><use href="#i-blocks"/></svg>09 · Dynamic Task Mapping &amp;amp; Task Groups</a>
-  <a href="#s10"><svg class="ico"><use href="#i-plug"/></svg>10 · Connections, Variables, Hooks &amp;amp; Providers</a>
-  <a href="#s11"><svg class="ico"><use href="#i-eye"/></svg>11 · Sensors &amp;amp; Deferrable Operators — the Triggerer</a>
-  <a href="#s12"><svg class="ico"><use href="#i-repeat"/></svg>12 · Datasets &amp;amp; Data-Aware Scheduling</a>
-  <a href="#s13"><svg class="ico"><use href="#i-workflow"/></svg>13 · Monitoring, Logging, Alerting &amp;amp; the Airflow UI</a>
-  <a href="#s14"><svg class="ico"><use href="#i-check"/></svg>14 · Security &amp;amp; Production Best Practices</a>
-  <a href="#s15"><svg class="ico"><use href="#i-compass"/></svg>15 · AWS MWAA: Overview &amp;amp; Architecture</a>
-  <a href="#s16"><svg class="ico"><use href="#i-rocket"/></svg>16 · Setting Up &amp;amp; Operating an MWAA Environment</a>
+  <a href="#s07"><svg class="ico"><use href="#i-repeat"/></svg>07 · Scheduling: Timetables, start_date, Catchup &amp; Backfill</a>
+  <a href="#s08"><svg class="ico"><use href="#i-repeat"/></svg>08 · Task Execution Semantics: Retries, Timeouts, Trigger Rules &amp; SLAs</a>
+  <a href="#s09"><svg class="ico"><use href="#i-blocks"/></svg>09 · Dynamic Task Mapping &amp; Task Groups</a>
+  <a href="#s10"><svg class="ico"><use href="#i-plug"/></svg>10 · Connections, Variables, Hooks &amp; Providers</a>
+  <a href="#s11"><svg class="ico"><use href="#i-eye"/></svg>11 · Sensors &amp; Deferrable Operators — the Triggerer</a>
+  <a href="#s12"><svg class="ico"><use href="#i-repeat"/></svg>12 · Datasets &amp; Data-Aware Scheduling</a>
+  <a href="#s13"><svg class="ico"><use href="#i-workflow"/></svg>13 · Monitoring, Logging, Alerting &amp; the Airflow UI</a>
+  <a href="#s14"><svg class="ico"><use href="#i-check"/></svg>14 · Security &amp; Production Best Practices</a>
+  <a href="#s15"><svg class="ico"><use href="#i-compass"/></svg>15 · AWS MWAA: Overview &amp; Architecture</a>
+  <a href="#s16"><svg class="ico"><use href="#i-rocket"/></svg>16 · Setting Up &amp; Operating an MWAA Environment</a>
   <a href="#s17"><svg class="ico"><use href="#i-workflow"/></svg>17 · MWAA Integrations with the AWS Ecosystem</a>
-  <a href="#s18"><svg class="ico"><use href="#i-book"/></svg>18 · Glossary &amp;amp; Quick Reference</a>
+  <a href="#s18"><svg class="ico"><use href="#i-book"/></svg>18 · Glossary &amp; Quick Reference</a>
 </div>
 
 <!-- START s01 -->
-<p class="promptline">~/airflow <b>❯</b> cat README.md | head -n 3</p>
+<p class="promptline">~/airflow <b>❯</b> airflow version</p>
 <h2 id="s01" class="reveal"><span class="hico"><svg class="ico"><use href="#i-question"/></svg></span><span class="n">01.</span> What Is Apache Airflow?</h2>
 <p class="sectionsub reveal">Workflows as code: an orchestrator that schedules, sequences, and watches over the jobs that do the real work.</p>
 
@@ -296,8 +296,8 @@ h2 .n{color:var(--blue2,#5C78FF)}
 <!-- END s01 -->
 
 <!-- START s02 -->
-<p class="promptline">~/airflow <b>❯</b> airflow dags list-runs -d daily_sales_report</p>
-<h2 id="s02" class="reveal"><span class="hico"><svg class="ico"><use href="#i-blocks"/></svg></span><span class="n">02.</span> DAGs, Tasks &amp;amp; Operators — Core Concepts</h2>
+<p class="promptline">~/airflow <b>❯</b> airflow dags list</p>
+<h2 id="s02" class="reveal"><span class="hico"><svg class="ico"><use href="#i-blocks"/></svg></span><span class="n">02.</span> DAGs, Tasks &amp; Operators — Core Concepts</h2>
 <p class="sectionsub reveal">The three nouns you need before anything else in Airflow makes sense.</p>
 
 <div class="prose reveal">
@@ -319,9 +319,9 @@ h2 .n{color:var(--blue2,#5C78FF)}
 <div class="tablewrap reveal">
 <table>
 <tr><th>Concept</th><th>Definition</th><th>Example</th></tr>
-<tr><td>DAG</td><td>The whole workflow: a graph of tasks and their dependencies</td><td><code>daily_sales_report</code> DAG</td></tr>
-<tr><td>Task</td><td>One node in the DAG — a unit of work, defined once</td><td><code>extract_raw_sales</code> task</td></tr>
-<tr><td>Task instance</td><td>One specific run of a task, for one logical date</td><td><code>extract_raw_sales</code> for 2026-07-12</td></tr>
+<tr><td>DAG</td><td>The whole workflow: a graph of tasks and their dependencies</td><td><code>daily_report</code> DAG</td></tr>
+<tr><td>Task</td><td>One node in the DAG — a unit of work, defined once</td><td><code>extract_raw</code> task</td></tr>
+<tr><td>Task instance</td><td>One specific run of a task, for one logical date</td><td><code>extract_raw</code> for 2026-07-12</td></tr>
 <tr><td>Operator</td><td>The reusable class that implements a task's behavior</td><td><code>BashOperator</code>, <code>PythonOperator</code></td></tr>
 <tr><td>Action operator</td><td>Performs a concrete piece of work</td><td><code>PythonOperator</code>, <code>BashOperator</code></td></tr>
 <tr><td>Transfer operator</td><td>Moves data between two systems</td><td>S3-to-database transfer operator</td></tr>
@@ -361,11 +361,11 @@ from airflow.operators.python import PythonOperator
 
 <span class="c1"># A minimal DAG built from classic operators</span>
 with DAG(
-    dag_id="daily_sales_report",
+    dag_id="daily_report",
     start_date=datetime(2026, 1, 1),
     schedule="0 6 * * *",   <span class="c1"># recent Airflow versions use `schedule`; older ones use `schedule_interval`</span>
     catchup=False,
-    tags=["sales", "reporting"],
+    tags=["etl", "reporting"],
 ) as dag:
 
     def _build_report(**context):
@@ -373,10 +373,10 @@ with DAG(
         print(f"Building report for logical date {context['ds']}")
 
     extract = BashOperator(
-        task_id="extract_raw_sales",
+        task_id="extract_raw",
         <span class="c1"># {{ ds }} is Jinja templating -- Airflow fills it in with this run's</span>
         <span class="c1"># logical date (e.g. "2026-07-13") at execution time; see Section 07</span>
-        bash_command="extract_sales.sh {{ ds }}",
+        bash_command="extract_raw.sh {{ ds }}",
     )
 
     build_report = PythonOperator(
@@ -386,7 +386,7 @@ with DAG(
 
     notify = BashOperator(
         task_id="notify_slack",
-        bash_command="notify.sh 'sales report ready'",
+        bash_command="notify.sh 'daily report ready'",
     )
 
     <span class="c1"># >> declares the dependency graph, not the order Python statements execute in</span>
@@ -400,7 +400,7 @@ with DAG(
 
 <!-- START s03 -->
 <p class="promptline">~/airflow <b>❯</b> airflow scheduler &amp; airflow webserver &amp; airflow triggerer &amp;</p>
-<h2 id="s03" class="reveal"><span class="hico"><svg class="ico"><use href="#i-blocks"/></svg></span><span class="n">03.</span> Airflow Architecture: Scheduler, Webserver, Metadata DB, Executor &amp;amp; Triggerer</h2>
+<h2 id="s03" class="reveal"><span class="hico"><svg class="ico"><use href="#i-blocks"/></svg></span><span class="n">03.</span> Airflow Architecture: Scheduler, Webserver, Metadata DB, Executor &amp; Triggerer</h2>
 <p class="sectionsub reveal">A small set of cooperating processes built around one shared database — how the pieces actually talk to each other.</p>
 
 <div class="prose reveal">
@@ -484,7 +484,7 @@ with DAG(
 
 <!-- START s04 -->
 <p class="promptline">~/airflow <b>❯</b> airflow config get-value core executor</p>
-<h2 id="s04" class="reveal"><span class="hico"><svg class="ico"><use href="#i-zap"/></svg></span><span class="n">04.</span> Executors Compared: Sequential, Local, Celery &amp;amp; Kubernetes</h2>
+<h2 id="s04" class="reveal"><span class="hico"><svg class="ico"><use href="#i-zap"/></svg></span><span class="n">04.</span> Executors Compared: Sequential, Local, Celery &amp; Kubernetes</h2>
 <p class="sectionsub reveal">One setting that decides whether your DAGs run one at a time on a laptop or across a fleet of machines.</p>
 
 <div class="prose reveal">
@@ -544,7 +544,7 @@ with DAG(
 <!-- END s04 -->
 <!-- START s05 -->
 <p class="promptline">~/airflow <b>❯</b> cat dags/etl_pipeline.py</p>
-<h2 id="s05" class="reveal"><span class="hico"><svg class="ico"><use href="#i-workflow"/></svg></span><span class="n">05.</span> Writing DAGs: TaskFlow API, Classic Operators &amp;amp; Dependencies</h2>
+<h2 id="s05" class="reveal"><span class="hico"><svg class="ico"><use href="#i-workflow"/></svg></span><span class="n">05.</span> Writing DAGs: TaskFlow API, Classic Operators &amp; Dependencies</h2>
 <p class="sectionsub reveal">Two syntaxes, one dependency graph underneath.</p>
 <div class="prose reveal">
 <p>Every DAG, no matter how it is written, ultimately produces the same thing: a graph of task instances connected by upstream/downstream dependencies, stored in Airflow's metadata database and executed by the scheduler and executor described in <a href="#s03">Section 03</a>. What differs is the Python surface you write against. Airflow has historically offered the <b>classic</b> operator style — instantiate an operator class, pass it a <code>task_id</code> and whatever arguments it needs, and wire dependencies explicitly. Airflow 2.0 added the <b>TaskFlow API</b>, a decorator-based layer (<code>@dag</code>, <code>@task</code>) that lets you write plain Python functions and have Airflow turn them into tasks automatically, inferring dependencies from how you call one function's result into another.</p>
@@ -794,8 +794,8 @@ process(extract())
 <!-- END s06 -->
 
 <!-- START s07 -->
-<p class="promptline">~/airflow <b>❯</b> airflow dags list-runs -d daily_sales --state queued</p>
-<h2 id="s07" class="reveal"><span class="hico"><svg class="ico"><use href="#i-repeat"/></svg></span><span class="n">07.</span> Scheduling: Timetables, start_date, Catchup &amp;amp; Backfill</h2>
+<p class="promptline">~/airflow <b>❯</b> airflow dags backfill -s 2026-07-01 -e 2026-07-13 etl_pipeline</p>
+<h2 id="s07" class="reveal"><span class="hico"><svg class="ico"><use href="#i-repeat"/></svg></span><span class="n">07.</span> Scheduling: Timetables, start_date, Catchup &amp; Backfill</h2>
 <p class="sectionsub reveal">The interval ends before the run begins — and that single fact explains most scheduling confusion.</p>
 <div class="prose reveal">
 <p><code>start_date</code> is not "when the DAG starts running" in wall-clock time — it is the earliest <b>logical date</b> Airflow will ever consider scheduling a run for. The scheduler compares it against the DAG's <code>schedule</code> (formerly <code>schedule_interval</code>) — a cron string, a <code>timedelta</code>, a preset like <code>@daily</code>/<code>@hourly</code>, or in recent Airflow versions a custom <b>Timetable</b> object for schedules that don't fit a fixed interval, such as "every weekday except public holidays" — to decide which intervals exist and which have already been satisfied.</p>
@@ -896,9 +896,9 @@ process(extract())
 
 kick_off_report = TriggerDagRunOperator(
     task_id="kick_off_report",
-    trigger_dag_id="orders_report",       <span class="c1"># the DAG to start</span>
+    trigger_dag_id="summary_report",       <span class="c1"># the DAG to start</span>
     conf={"source": "manual_reprocess"},   <span class="c1"># available in the triggered run's context</span>
-    wait_for_completion=True,              <span class="c1"># block this task until orders_report finishes</span>
+    wait_for_completion=True,              <span class="c1"># block this task until summary_report finishes</span>
     poke_interval=30,
 )
 </code></pre>
@@ -908,8 +908,8 @@ kick_off_report = TriggerDagRunOperator(
 <!-- END s07 -->
 
 <!-- START s08 -->
-<p class="promptline">~/airflow <b>❯</b> airflow tasks test daily_sales cleanup_task 2026-07-13</p>
-<h2 id="s08" class="reveal"><span class="hico"><svg class="ico"><use href="#i-repeat"/></svg></span><span class="n">08.</span> Task Execution Semantics: Retries, Timeouts, Trigger Rules &amp;amp; SLAs</h2>
+<p class="promptline">~/airflow <b>❯</b> airflow tasks test etl_pipeline cleanup_task 2026-07-13</p>
+<h2 id="s08" class="reveal"><span class="hico"><svg class="ico"><use href="#i-repeat"/></svg></span><span class="n">08.</span> Task Execution Semantics: Retries, Timeouts, Trigger Rules &amp; SLAs</h2>
 <p class="sectionsub reveal">Controlling not just whether a task runs, but how it fails, how long it waits, and what upstream state it demands.</p>
 <div class="prose reveal">
 <p>Beyond the dependency graph itself, Airflow gives each task a set of execution controls that decide its resilience and its relationship to failure. <code>retries</code> sets how many times a failed task instance will be automatically re-attempted, paired with <code>retry_delay</code> (a fixed wait between attempts) and optionally <code>retry_exponential_backoff=True</code> (each retry waits longer than the last). <code>execution_timeout</code> is a hard ceiling — if the task instance runs longer than this duration, it is killed and marked failed, independent of whether it would have eventually succeeded.</p>
@@ -979,8 +979,8 @@ fetch_task &gt;&gt; cleanup_task
 </div>
 <!-- END s08 -->
 <!-- START s09 -->
-<p class="promptline">~/airflow <b>❯</b> airflow tasks list orders_pipeline --tree</p>
-<h2 id="s09" class="reveal"><span class="hico"><svg class="ico"><use href="#i-blocks"/></svg></span><span class="n">09.</span> Dynamic Task Mapping &amp;amp; Task Groups</h2>
+<p class="promptline">~/airflow <b>❯</b> airflow tasks list etl_pipeline --tree</p>
+<h2 id="s09" class="reveal"><span class="hico"><svg class="ico"><use href="#i-blocks"/></svg></span><span class="n">09.</span> Dynamic Task Mapping &amp; Task Groups</h2>
 <p class="sectionsub reveal">Grouping tasks for humans vs. multiplying tasks for data — two different problems that both look like "lots of boxes"</p>
 <div class="prose reveal">
 <p>As DAGs grow, you run into two unrelated needs that beginners often conflate. The first is <b>organizational</b>: a DAG with 40 tasks becomes unreadable in the graph view unless you can collapse related tasks into a single visual node. The second is <b>structural</b>: you frequently don't know how many tasks you need until the DAG is actually running — the number of files in a directory, the number of partitions in a table, the number of rows returned by a query. <a href="#s02">Section 02</a> introduced tasks and operators as fixed, hand-written units; this section covers the two mechanisms Airflow provides once a fixed, hand-written task list stops being enough.</p>
@@ -1071,7 +1071,7 @@ process_incoming_files()
 
 <!-- START s10 -->
 <p class="promptline">~/airflow <b>❯</b> airflow connections get aws_default</p>
-<h2 id="s10" class="reveal"><span class="hico"><svg class="ico"><use href="#i-plug"/></svg></span><span class="n">10.</span> Connections, Variables, Hooks &amp;amp; Providers</h2>
+<h2 id="s10" class="reveal"><span class="hico"><svg class="ico"><use href="#i-plug"/></svg></span><span class="n">10.</span> Connections, Variables, Hooks &amp; Providers</h2>
 <p class="sectionsub reveal">How Airflow talks to everything that isn't Airflow</p>
 <div class="prose reveal">
 <p>Airflow's core distribution is deliberately thin — it ships the scheduler, webserver, and DAG-authoring primitives, but almost none of the integrations needed to actually talk to S3, Snowflake, Postgres, or Slack. Four concepts work together to bridge that gap: <b>Connections</b> hold credentials, <b>Hooks</b> wrap a system's client library using those credentials, <b>Operators</b> package a hook into a ready-to-use task, and <b>Providers</b> are the installable packages that bundle all three for a given system.</p>
@@ -1189,8 +1189,8 @@ class S3RowCountCheckOperator(BaseOperator):
 <!-- END s10 -->
 
 <!-- START s11 -->
-<p class="promptline">~/airflow <b>❯</b> airflow tasks state orders_pipeline wait_for_upstream 2026-07-13</p>
-<h2 id="s11" class="reveal"><span class="hico"><svg class="ico"><use href="#i-eye"/></svg></span><span class="n">11.</span> Sensors &amp;amp; Deferrable Operators — the Triggerer</h2>
+<p class="promptline">~/airflow <b>❯</b> airflow tasks state etl_pipeline wait_for_upstream 2026-07-13</p>
+<h2 id="s11" class="reveal"><span class="hico"><svg class="ico"><use href="#i-eye"/></svg></span><span class="n">11.</span> Sensors &amp; Deferrable Operators — the Triggerer</h2>
 <p class="sectionsub reveal">Waiting for something to happen without paying for a worker slot the whole time</p>
 <div class="prose reveal">
 <p>A huge share of real pipelines start with "wait until X exists" — a file lands, an upstream DAG finishes, an S3 key appears. Airflow's answer is the <b>Sensor</b>, a special operator subclass whose <code>poke()</code> method returns true once its condition is satisfied. Common examples include <code>FileSensor</code> (waits for a file on disk), <code>ExternalTaskSensor</code> (waits for a task in another DAG to reach a given state), and <code>S3KeySensor</code> (waits for an object to exist in S3). Downstream tasks simply depend on the sensor like any other task.</p>
@@ -1271,18 +1271,18 @@ wait_for_export_deferrable = S3KeySensor(
 <!-- END s11 -->
 
 <!-- START s12 -->
-<p class="promptline">~/airflow <b>❯</b> airflow dags list-jobs --dag-id orders_report --state queued</p>
-<h2 id="s12" class="reveal"><span class="hico"><svg class="ico"><use href="#i-repeat"/></svg></span><span class="n">12.</span> Datasets &amp;amp; Data-Aware Scheduling</h2>
+<p class="promptline">~/airflow <b>❯</b> airflow datasets list</p>
+<h2 id="s12" class="reveal"><span class="hico"><svg class="ico"><use href="#i-repeat"/></svg></span><span class="n">12.</span> Datasets &amp; Data-Aware Scheduling</h2>
 <p class="sectionsub reveal">Triggering a DAG when data is actually ready, not when the clock says it probably is</p>
 <div class="prose reveal">
 <p>Time-based scheduling, covered in <a href="#s07">Section 07</a>, assumes you can predict when upstream data will be ready and pick a safe cron time after it. In practice that safety margin is a guess, and guesses cause two failure modes: run too early and you process incomplete or stale data, or pad the buffer so generously that downstream reports are needlessly delayed by hours. <b>Datasets</b>, introduced in Airflow 2.4, offer a different trigger: schedule a DAG to run when the data it depends on is actually updated, expressed as a first-class object rather than an assumed time offset.</p>
-<p>A <code>Dataset</code> is identified by a URI string — conventionally something like <code>s3://bucket/cleaned_orders/</code>, though Airflow does not validate or resolve the URI itself; it's an opaque logical identifier. A producing task declares it updates a dataset via the <code>outlets</code> parameter. A consuming DAG sets its <code>schedule</code> (in place of a cron expression) to a list of one or more <code>Dataset</code> objects; Airflow triggers that DAG automatically once every listed dataset has been updated at least once since the consumer's last run. If a downstream DAG depends on three datasets produced by three different upstream DAGs, it waits for all three before running — no cron guessing required.</p>
+<p>A <code>Dataset</code> is identified by a URI string — conventionally something like <code>s3://bucket/cleaned_data/</code>, though Airflow does not validate or resolve the URI itself; it's an opaque logical identifier. A producing task declares it updates a dataset via the <code>outlets</code> parameter. A consuming DAG sets its <code>schedule</code> (in place of a cron expression) to a list of one or more <code>Dataset</code> objects; Airflow triggers that DAG automatically once every listed dataset has been updated at least once since the consumer's last run. If a downstream DAG depends on three datasets produced by three different upstream DAGs, it waits for all three before running — no cron guessing required.</p>
 <p>These dependencies are tracked centrally and are visible in a dedicated Datasets view in the Airflow UI, which shows which DAGs produce and which DAGs consume each dataset — useful for understanding cross-DAG data lineage that would otherwise be invisible outside each DAG's own code. For many cross-DAG dependency cases, this is a substantially lighter-weight alternative to polling with <code>ExternalTaskSensor</code>: no sensor task, no worker slot, and neither DAG needs to know the other's internal task IDs or DAG structure — only the shared dataset URI. Later Airflow releases (Airflow 3.0) broadened this idea into a more general "Asset" concept with additional scheduling capabilities; the core producer/consumer model described here is the foundation that generalization builds on, though you should check the current documentation for the full extent of what changed if you're on a newer release.</p>
 </div>
 <div class="def reveal">
 <p class="t">Data-aware scheduling (Dataset)</p>
 <p>A scheduling mode where a DAG's <code>schedule</code> is a list of <code>Dataset</code> objects instead of a cron expression or timetable; the DAG is triggered once all listed datasets have been updated since its last run.</p>
-<p class="ex"><b>Example:</b> a <code>clean_orders</code> DAG's final task declares <code>outlets=[Dataset("s3://bucket/cleaned_orders/")]</code>. A separate <code>orders_report</code> DAG sets <code>schedule=[Dataset("s3://bucket/cleaned_orders/")]</code> and runs automatically the moment the cleaning DAG finishes — with no cron time and no direct reference between the two DAGs' task IDs.</p>
+<p class="ex"><b>Example:</b> a <code>clean_raw</code> DAG's final task declares <code>outlets=[Dataset("s3://bucket/cleaned_data/")]</code>. A separate <code>summary_report</code> DAG sets <code>schedule=[Dataset("s3://bucket/cleaned_data/")]</code> and runs automatically the moment the cleaning DAG finishes — with no cron time and no direct reference between the two DAGs' task IDs.</p>
 </div>
 <div class="tablewrap reveal">
 <table>
@@ -1294,7 +1294,7 @@ wait_for_export_deferrable = S3KeySensor(
 </div>
 <figure class="diagram reveal">
 <svg viewBox="0 0 900 300" role="img" aria-label="An upstream DAG's last task updates a Dataset, which triggers the first task of a downstream DAG in a separate row">
-  <text x="20" y="25" font-size="12" font-family="var(--font)" fill="#E7E7EE" text-anchor="start">Upstream DAG: clean_orders</text>
+  <text x="20" y="25" font-size="12" font-family="var(--font)" fill="#E7E7EE" text-anchor="start">Upstream DAG: clean_raw</text>
   <rect x="40" y="60" width="150" height="50" rx="4" fill="none" stroke="var(--cyan2)"/>
   <text x="115" y="90" font-size="12" font-family="var(--font)" fill="var(--ink)" text-anchor="middle">task_extract</text>
   <rect x="220" y="60" width="150" height="50" rx="4" fill="none" stroke="var(--cyan2)"/>
@@ -1304,9 +1304,9 @@ wait_for_export_deferrable = S3KeySensor(
 
   <rect x="395" y="150" width="160" height="40" rx="4" fill="none" stroke="var(--mwaa)"/>
   <text x="475" y="167" font-size="12" font-family="var(--font)" fill="var(--ink)" text-anchor="middle">Dataset</text>
-  <text x="475" y="183" font-size="12" font-family="var(--font)" fill="#E7E7EE" text-anchor="middle">cleaned_orders/</text>
+  <text x="475" y="183" font-size="12" font-family="var(--font)" fill="#E7E7EE" text-anchor="middle">cleaned_data/</text>
 
-  <text x="20" y="215" font-size="12" font-family="var(--font)" fill="#E7E7EE" text-anchor="start">Downstream DAG: orders_report</text>
+  <text x="20" y="215" font-size="12" font-family="var(--font)" fill="#E7E7EE" text-anchor="start">Downstream DAG: summary_report</text>
   <rect x="395" y="230" width="160" height="50" rx="4" fill="none" stroke="var(--cyan2)"/>
   <text x="475" y="260" font-size="12" font-family="var(--font)" fill="var(--ink)" text-anchor="middle">build_report</text>
   <rect x="600" y="230" width="150" height="50" rx="4" fill="none" stroke="var(--cyan2)"/>
@@ -1334,24 +1334,24 @@ from airflow.decorators import dag, task
 from airflow import DAG
 from datetime import datetime
 
-cleaned_orders = Dataset("s3://bucket/cleaned_orders/")
+cleaned_data = Dataset("s3://bucket/cleaned_data/")
 
 with DAG(
-    dag_id="clean_orders",
+    dag_id="clean_raw",
     schedule="@daily",
     start_date=datetime(2024, 1, 1),
     catchup=False,
 ) as upstream_dag:
 
-    @task(outlets=[cleaned_orders])
-    def clean_orders_task():
+    @task(outlets=[cleaned_data])
+    def clean_raw_task():
         ...  <span class="c1"># writes the cleaned dataset out to S3</span>
 
-    clean_orders_task()
+    clean_raw_task()
 
 with DAG(
-    dag_id="orders_report",
-    schedule=[cleaned_orders],  <span class="c1"># triggered when cleaned_orders updates, not on a cron</span>
+    dag_id="summary_report",
+    schedule=[cleaned_data],  <span class="c1"># triggered when cleaned_data updates, not on a cron</span>
     start_date=datetime(2024, 1, 1),
     catchup=False,
 ) as downstream_dag:
@@ -1368,7 +1368,7 @@ with DAG(
 <!-- END s12 -->
 <!-- START s13 -->
 <p class="promptline">~/airflow <b>❯</b> tail -f logs/*/*.log | grep -i failed</p>
-<h2 id="s13" class="reveal"><span class="hico"><svg class="ico"><use href="#i-workflow"/></svg></span><span class="n">13.</span> Monitoring, Logging, Alerting &amp;amp; the Airflow UI</h2>
+<h2 id="s13" class="reveal"><span class="hico"><svg class="ico"><use href="#i-workflow"/></svg></span><span class="n">13.</span> Monitoring, Logging, Alerting &amp; the Airflow UI</h2>
 <p class="sectionsub reveal">Reading the Grid and Graph views, finding logs when workers are ephemeral, and wiring failures to a pager.</p>
 <div class="prose reveal">
 <p>Airflow's webserver ships with a UI built around two complementary views of the same information. The <b>Grid view</b> (the successor to the old "Tree view" in Airflow 2.x) lays DAG runs out as columns and tasks as rows, so each cell is one task instance's state at one point in run history — it is the fastest way to see "has this task been flaky over the last two weeks" at a glance. The <b>Graph view</b> instead shows the dependency structure of a single specific run, with each node colored by that task instance's current state — it answers "where exactly did today's run stop." Airflow 3.0 reworked the UI's look and navigation substantially, but the underlying concepts — a run-history matrix and a per-run dependency graph — carry over; check the version-specific docs for exact screen names if you're on a newer release.</p>
@@ -1483,7 +1483,7 @@ billing_pipeline()
 
 <!-- START s14 -->
 <p class="promptline">~/airflow <b>❯</b> grep -rn "requests.get" dags/ --include=*.py</p>
-<h2 id="s14" class="reveal"><span class="hico"><svg class="ico"><use href="#i-check"/></svg></span><span class="n">14.</span> Security &amp;amp; Production Best Practices</h2>
+<h2 id="s14" class="reveal"><span class="hico"><svg class="ico"><use href="#i-check"/></svg></span><span class="n">14.</span> Security &amp; Production Best Practices</h2>
 <p class="sectionsub reveal">RBAC, secrets backends, and the authoring habits that keep the scheduler fast and retries safe.</p>
 <div class="prose reveal">
 <p>Running Airflow safely in production is two separate problems that get lumped together: securing who can see and do what, and writing DAGs that don't quietly damage the system that runs them. On the access-control side, Airflow's webserver has built-in <b>RBAC</b> (Role-Based Access Control), with default roles — <span class="kv">Admin</span>, <span class="kv">Op</span>, <span class="kv">User</span>, <span class="kv">Viewer</span>, <span class="kv">Public</span> — of increasing restriction, plus the ability to define custom roles scoped to specific DAGs (e.g. a role that can only view and trigger DAGs in one team's namespace). Credentials shouldn't live in the metadata database's Connections/Variables tables in the first place: a <b>secrets backend</b> — AWS Secrets Manager, HashiCorp Vault, GCP Secret Manager — lets Airflow resolve a connection or variable's value at runtime from an external vault instead, as covered in <a href="#s10">Section 10</a>. At the network layer, restrict who can reach the webserver at all, and make sure the metadata database is not reachable from anywhere outside the Airflow components that need it.</p>
@@ -1496,8 +1496,8 @@ billing_pipeline()
 <div class="def reveal">
 <p class="t">Idempotency</p>
 <p>A DAG run for a given logical date produces the same end result no matter how many times, or in what order, it is re-executed.</p>
-<p class="ex"><b>Not idempotent:</b> <code>INSERT INTO sales SELECT * FROM staging WHERE ds = '{{ ds }}'</code> — rerunning it duplicates every row.</p>
-<p class="ex"><b>Idempotent:</b> <code>DELETE FROM sales WHERE ds = '{{ ds }}'; INSERT INTO sales SELECT * FROM staging WHERE ds = '{{ ds }}'</code> — or a native <code>MERGE</code> / <code>INSERT ... ON CONFLICT DO UPDATE</code> — so a rerun overwrites rather than appends.</p>
+<p class="ex"><b>Not idempotent:</b> <code>INSERT INTO daily_metrics SELECT * FROM staging WHERE ds = '{{ ds }}'</code> — rerunning it duplicates every row.</p>
+<p class="ex"><b>Idempotent:</b> <code>DELETE FROM daily_metrics WHERE ds = '{{ ds }}'; INSERT INTO daily_metrics SELECT * FROM staging WHERE ds = '{{ ds }}'</code> — or a native <code>MERGE</code> / <code>INSERT ... ON CONFLICT DO UPDATE</code> — so a rerun overwrites rather than appends.</p>
 </div>
 <h3 class="reveal">Keep DAG files cheap and dumb</h3>
 <div class="prose reveal">
@@ -1574,7 +1574,7 @@ billing_pipeline()
 
 <!-- START s15 -->
 <p class="promptline">~/airflow <b>❯</b> aws mwaa get-environment --name prod-airflow</p>
-<h2 id="s15" class="reveal"><span class="hico"><svg class="ico"><use href="#i-compass"/></svg></span><span class="n">15.</span> AWS MWAA: Overview &amp;amp; Architecture</h2>
+<h2 id="s15" class="reveal"><span class="hico"><svg class="ico"><use href="#i-compass"/></svg></span><span class="n">15.</span> AWS MWAA: Overview &amp; Architecture</h2>
 <p class="sectionsub reveal">Same Airflow you've been reading about, minus the pager for the infrastructure underneath it.</p>
 <div class="prose reveal">
 <p><span class="tag mwaa">MWAA</span> — Amazon Managed Workflows for Apache Airflow — is a fully managed AWS service that runs Apache Airflow on your behalf. Instead of standing up and operating the <a href="#s03">scheduler, webserver, metadata database, and executor</a> yourself, you point MWAA at an S3 bucket containing your DAGs, and AWS provisions, patches, scales, and monitors the Airflow components for you, inside a VPC you designate. The trade you're making is explicit: you give up direct control over — and direct access to — the underlying infrastructure, in exchange for not having to run it.</p>
@@ -1655,7 +1655,7 @@ billing_pipeline()
 <!-- END s15 -->
 <!-- START s16 -->
 <p class="promptline">~/airflow <b>❯</b> aws s3 sync ./dags s3://prod-mwaa-bucket/dags/</p>
-<h2 id="s16" class="reveal"><span class="hico"><svg class="ico"><use href="#i-rocket"/></svg></span><span class="n">16.</span> Setting Up &amp;amp; Operating an MWAA Environment</h2>
+<h2 id="s16" class="reveal"><span class="hico"><svg class="ico"><use href="#i-rocket"/></svg></span><span class="n">16.</span> Setting Up &amp; Operating an MWAA Environment</h2>
 <p class="sectionsub reveal">No servers to SSH into — just an S3 bucket, an IAM role, and a few dials AWS turns for you.</p>
 <div class="prose reveal">
 <p>Running Airflow yourself means owning the scheduler process, the webserver process, the metadata database, and whatever executor and broker sit underneath. Running it on <span class="tag mwaa">MWAA</span> flips that model: AWS owns all of those internals, and what you actually configure is a much smaller, more declarative surface — an S3 bucket layout, an IAM role, a size tier, and a networking choice. Understanding exactly what that surface is (and isn't) is the difference between a smooth MWAA rollout and a confusing week of "why won't my DAG show up."</p>
@@ -1790,8 +1790,8 @@ boto3==1.34.11
 <!-- END s17 -->
 
 <!-- START s18 -->
-<p class="promptline">~/airflow <b>❯</b> airflow dags list-runs -d checkpoint_review --state failed</p>
-<h2 id="s18" class="reveal"><span class="hico"><svg class="ico"><use href="#i-book"/></svg></span><span class="n">18.</span> Glossary &amp;amp; Quick Reference</h2>
+<p class="promptline">~/airflow <b>❯</b> airflow cheat-sheet</p>
+<h2 id="s18" class="reveal"><span class="hico"><svg class="ico"><use href="#i-book"/></svg></span><span class="n">18.</span> Glossary &amp; Quick Reference</h2>
 <p class="sectionsub reveal">Every term from this guide, in one scannable table, plus a self-hosted-vs-MWAA cheat sheet.</p>
 <div class="prose reveal">
 <p>Use this section as a lookup, not a read-through — each definition is deliberately terse, matching how the term was used earlier in the guide. The final table maps each core Airflow component to its self-hosted form and its MWAA equivalent, which is often the fastest way to answer "wait, do I still manage that under MWAA?"</p>
