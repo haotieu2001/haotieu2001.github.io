@@ -813,7 +813,7 @@ def lambda_handler(event, context):
 
 <div class="def reveal">
 <p class="t">Crawlers — the lazy way to populate the Catalog</p>
-<p>A <strong>Crawler</strong> connects to a data source (an S3 prefix, a JDBC database), inspects a sample of files, infers the schema and partition structure, and writes (or updates) a table definition in the Catalog automatically — no <code>CREATE TABLE</code> statement required. Crawlers are convenient for getting started and for sources whose schema genuinely drifts over time, but they cost real money per run and can occasionally infer a schema you wouldn't have chosen by hand (a column that's usually an integer but has one string value in a rare file becomes a string column for the whole table). Many production teams define Catalog tables explicitly via infrastructure-as-code instead, and reserve Crawlers for genuinely-evolving or exploratory sources.</p>
+<p>A <strong>Crawler</strong> connects to a data source (an S3 prefix, a JDBC database), inspects a sample of files, infers the schema and partition structure, and writes or updates a table definition in the Catalog — no <code>CREATE TABLE</code> required. Crawlers are convenient for getting started and for sources whose schema genuinely drifts, but they cost real money per run and can infer a schema you wouldn't have chosen by hand: a column that's usually an integer but holds one string value in a rare file becomes a string column for the whole table. Many production teams define Catalog tables explicitly as infrastructure-as-code instead, reserving Crawlers for genuinely evolving or exploratory sources.</p>
 </div>
 
 <figure class="diagram reveal">
@@ -870,7 +870,7 @@ def lambda_handler(event, context):
 
 <div class="tldr reveal">
 <h4>❯ Short version</h4>
-<p>The <b>Glue Data Catalog</b> is the shared metadata store (schema, S3 location, format, partitions) that Athena, Redshift Spectrum, EMR, and Glue ETL all read from — define a table once, use it everywhere. <b>Crawlers</b> auto-populate the Catalog by inspecting files, convenient but not free and not always precisely the schema you'd choose by hand; many production tables are instead defined explicitly as code.</p>
+<p>The <b>Glue Data Catalog</b> is the shared metadata store — schema, S3 location, format, partitions — that Athena, Redshift Spectrum, EMR, and Glue ETL all read from: define a table once, use it everywhere. <b>Crawlers</b> auto-populate it by inspecting files, which is convenient but neither free nor always the schema you'd choose by hand; many production tables are defined explicitly as code instead.</p>
 </div>
 <hr/>
 <!-- END s08 -->
@@ -885,7 +885,7 @@ def lambda_handler(event, context):
 
 <div class="def reveal">
 <p class="t">DynamicFrame vs. DataFrame — Glue's one real API quirk</p>
-<p>Glue's Spark jobs can use a normal Spark <code>DataFrame</code>, but Glue also offers its own <code>DynamicFrame</code>: almost the same idea, but more forgiving about schema inconsistencies across files (a column that's sometimes missing, sometimes a different type) and with built-in helpers for reading straight from a Catalog table. Most real jobs read as a <code>DynamicFrame</code>, convert to a <code>DataFrame</code> immediately for the actual transformation logic (where the much larger Spark ecosystem's functions are available), and convert back only if writing via a Glue-specific sink.</p>
+<p>Glue's Spark jobs can use a normal Spark <code>DataFrame</code>, but Glue also offers its own <code>DynamicFrame</code>: the same idea, more forgiving about schema inconsistencies across files (a column that's sometimes missing, sometimes a different type) and with helpers for reading straight from a Catalog table. Most real jobs read as a <code>DynamicFrame</code>, convert to a <code>DataFrame</code> immediately for the transformation logic — where the far larger Spark ecosystem is available — and convert back only to write through a Glue-specific sink.</p>
 </div>
 
 <pre><code># glue_jobs/bronze_to_silver_statistics.py -- the real shape of a medallion transform
@@ -927,7 +927,7 @@ silver_df.write.mode("overwrite").partitionBy("region").parquet(
 </div>
 
 <div class="callout wn reveal">
-<p><b>Glue jobs bill for a minimum duration even for tiny datasets.</b> A Spark Glue job has real cluster-startup overhead — a job processing a few megabytes still takes a minute or more to actually start running, and you're billed for that. For very small, frequent transforms, a Lambda function is usually both faster and cheaper; reach for a Glue Spark job once the data volume genuinely benefits from distributed processing.</p>
+<p><b>Glue jobs bill for a minimum duration even for tiny datasets.</b> A Spark Glue job has real cluster-startup overhead: a job processing a few megabytes still takes a minute or more to start, and you're billed for it. For very small, frequent transforms a Lambda is usually faster and cheaper; reach for a Glue Spark job once the data volume genuinely benefits from distributed processing.</p>
 </div>
 
 <div class="tldr reveal">
@@ -956,7 +956,7 @@ Rules = [
 
 <div class="def reveal">
 <p class="t">Where this fits relative to a hand-written DQ Lambda</p>
-<p>The worked example in this guide's later sections uses a custom Lambda function for data quality checks — a perfectly valid, common approach, especially when checks need custom logic (freshness relative to a specific business rule, cross-table consistency). Glue Data Quality is worth knowing as the managed alternative: less custom code, a declarative rule language, and quality metrics tracked over time in the Glue console automatically — a good default to reach for first, reserving a custom Lambda for checks Glue Data Quality's rule language genuinely can't express.</p>
+<p>The worked example later in this guide uses a custom Lambda for data-quality checks — a common, perfectly valid approach, especially when checks need custom logic (freshness against a specific business rule, cross-table consistency). Glue Data Quality is the managed alternative: less custom code, a declarative rule language, and quality metrics tracked over time in the Glue console. Reach for it first, and keep a custom Lambda for checks its rule language genuinely can't express.</p>
 </div>
 
 <div class="tldr reveal">
@@ -971,7 +971,7 @@ Rules = [
 <h2 id="s11" class="reveal"><span class="hico"><svg class="ico"><use href="#i-zap"/></svg></span><span class="n">11.</span> Amazon EMR &amp; EMR Serverless</h2>
 <p class="sectionsub reveal">The same open-source big data engines, with more control than Glue gives you</p>
 <div class="prose reveal">
-<p><strong>Amazon EMR</strong> runs open-source big data frameworks — Spark, Hive, Presto/Trino, Flink — on a cluster you have far more control over than a Glue job gives you: choice of exact instance types, custom bootstrap scripts, long-running clusters instead of per-job ones, and support for frameworks Glue doesn't wrap at all. <strong>EMR Serverless</strong> gives you that same Spark/Hive engine without managing cluster sizing yourself, positioning it as a middle ground between Glue's simplicity and classic EMR's control.</p>
+<p><strong>Amazon EMR</strong> runs open-source big data frameworks — Spark, Hive, Presto/Trino, Flink — on a cluster you control far more than a Glue job lets you: exact instance types, custom bootstrap scripts, long-running clusters instead of per-job ones, and frameworks Glue doesn't wrap at all. <strong>EMR Serverless</strong> gives you the same Spark/Hive engine without sizing a cluster yourself, sitting between Glue's simplicity and classic EMR's control.</p>
 </div>
 
 <div class="tablewrap reveal">
@@ -987,7 +987,7 @@ Rules = [
 </div>
 
 <div class="callout gd reveal">
-<p><b>A reasonable default decision rule.</b> Start with Glue for standard batch ETL — it's the least operational overhead and integrates most tightly with the Catalog. Reach for EMR Serverless when a job needs a framework or a Spark/Hive configuration Glue doesn't expose. Reach for classic EMR when you need genuine infrastructure control (specific instance types, a long-running shared cluster many jobs use, or a framework like Trino/Flink that Glue doesn't run at all).</p>
+<p><b>A reasonable default decision rule.</b> Start with Glue for standard batch ETL — least operational overhead, tightest Catalog integration. Reach for EMR Serverless when a job needs a framework or a Spark/Hive configuration Glue doesn't expose. Reach for classic EMR when you need real infrastructure control: specific instance types, a long-running shared cluster many jobs use, or a framework like Trino or Flink that Glue doesn't run at all.</p>
 </div>
 
 <div class="tldr reveal">
@@ -1003,12 +1003,12 @@ Rules = [
 <h2 id="s12" class="reveal"><span class="hico"><svg class="ico"><use href="#i-search"/></svg></span><span class="n">12.</span> Amazon Athena</h2>
 <p class="sectionsub reveal">Serverless SQL over the Glue Catalog — no cluster, no loading, pay per query</p>
 <div class="prose reveal">
-<p><strong>Amazon Athena</strong> runs standard SQL (built on Trino/Presto) directly against files sitting in S3, using the Glue Data Catalog for schema and location — there's nothing to provision, nothing to load, and no cluster sitting idle between queries. You pay per query, priced by the amount of data actually scanned, which is exactly why storage format and partitioning (section 04) directly control your Athena bill, not just your query latency.</p>
+<p><strong>Amazon Athena</strong> runs standard SQL (built on Trino/Presto) directly against files sitting in S3, using the Glue Data Catalog for schema and location — nothing to provision, nothing to load, no cluster idling between queries. You pay per query, priced by data actually scanned, which is why storage format and partitioning (section 04) control your Athena bill, not just your query latency.</p>
 </div>
 
 <div class="def reveal">
 <p class="t">Two levers that change an Athena bill by 10-100x on the same data</p>
-<p><strong>Columnar formats</strong> (Parquet, ORC) let Athena read only the columns a query actually selects, instead of every column in every row — a <code>SELECT views FROM table</code> against Parquet reads a fraction of what the same query reads against row-oriented CSV/JSON. <strong>Partition pruning</strong> (section 04) lets Athena skip entire S3 prefixes a query's <code>WHERE</code> clause can't match. Together, these two are why the same logical query can cost cents against a well-organized table and dollars against a poorly organized one holding identical data.</p>
+<p><strong>Columnar formats</strong> (Parquet, ORC) let Athena read only the columns a query selects instead of every column in every row — <code>SELECT views FROM table</code> against Parquet reads a fraction of what the same query reads against row-oriented CSV/JSON. <strong>Partition pruning</strong> (section 04) lets Athena skip entire S3 prefixes the <code>WHERE</code> clause can't match. Together they are why the same logical query costs cents against a well-organized table and dollars against a poorly organized one holding identical data.</p>
 </div>
 
 <pre><code>-- Athena reads the Glue Catalog for schema + partition locations -- no data movement
@@ -1024,7 +1024,7 @@ SELECT video_id, views FROM trending_gold
 WHERE trending_date = '2026-04-01' AND region = 'US';</code></pre>
 
 <div class="callout gd reveal">
-<p><b>Athena vs. a data warehouse — not a replacement, a different entry point.</b> Athena doesn't load or store data itself; it's a query engine on top of files you already have in S3. That makes it excellent for ad hoc analysis, one-off investigations, and BI tools that can point straight at S3 — but a warehouse like Redshift (section 13) still wins for workloads with heavy, repeated joins/aggregations at scale, because a warehouse's storage engine is built and tuned specifically for that, where Athena is bounded by whatever format and layout the underlying S3 files happen to have.</p>
+<p><b>Athena vs. a data warehouse — not a replacement, a different entry point.</b> Athena doesn't load or store data; it queries files you already have in S3. That makes it excellent for ad hoc analysis, one-off investigations, and BI tools pointed straight at S3. A warehouse like Redshift (section 13) still wins for heavy, repeated joins and aggregations at scale, because its storage engine is built and tuned for exactly that, while Athena is bounded by whatever format and layout the underlying S3 files happen to have.</p>
 </div>
 
 <div class="tldr reveal">
@@ -1039,12 +1039,12 @@ WHERE trending_date = '2026-04-01' AND region = 'US';</code></pre>
 <h2 id="s13" class="reveal"><span class="hico"><svg class="ico"><use href="#i-database"/></svg></span><span class="n">13.</span> Amazon Redshift &amp; Redshift Spectrum</h2>
 <p class="sectionsub reveal">A columnar warehouse for heavy, repeated SQL — plus a bridge back to S3</p>
 <div class="prose reveal">
-<p><strong>Amazon Redshift</strong> is a fully managed, columnar SQL data warehouse: you load data into it (or query in place via Spectrum, below), and it's built specifically for large, repeated aggregations and joins across big tables — the workload Athena is not optimized for. Modern Redshift is usually <strong>Redshift Serverless</strong>, which bills by compute actually used instead of requiring you to size and pay for a fixed cluster around the clock.</p>
+<p><strong>Amazon Redshift</strong> is a managed, columnar SQL data warehouse: you load data into it (or query in place via Spectrum, below), and it's built for large, repeated aggregations and joins across big tables — the workload Athena is not optimized for. Modern Redshift is usually <strong>Redshift Serverless</strong>, billing by compute actually used instead of a fixed cluster you size and pay for around the clock.</p>
 </div>
 
 <div class="def reveal">
 <p class="t">Redshift Spectrum — querying S3 without loading it in first</p>
-<p><strong>Redshift Spectrum</strong> lets a Redshift query reach outside the warehouse and read data straight from S3 (via the Glue Catalog, same as Athena) in the same query as data already loaded into Redshift tables. This is the practical bridge between "data lake" and "data warehouse": keep cold or rarely-joined data in S3 as Parquet, keep hot, frequently-joined data loaded natively in Redshift, and let one Spectrum query span both without a separate ETL step to merge them.</p>
+<p><strong>Redshift Spectrum</strong> lets a Redshift query reach outside the warehouse and read straight from S3 (via the Glue Catalog, same as Athena) in the same query as data already loaded into Redshift tables. That's the practical bridge between "data lake" and "data warehouse": keep cold or rarely-joined data in S3 as Parquet, keep hot, frequently-joined data native in Redshift, and let one Spectrum query span both with no ETL step to merge them.</p>
 </div>
 
 <figure class="diagram reveal">
@@ -1099,12 +1099,12 @@ WHERE trending_date = '2026-04-01' AND region = 'US';</code></pre>
 <h2 id="s14" class="reveal"><span class="hico"><svg class="ico"><use href="#i-file"/></svg></span><span class="n">14.</span> AWS Lake Formation</h2>
 <p class="sectionsub reveal">Fine-grained governance on top of the Glue Catalog — column, row, and cell-level access control</p>
 <div class="prose reveal">
-<p>IAM (section 05) controls access at the level of an S3 bucket, a Glue table, or an API call — it has no concept of "this analyst can see 8 of a table's 12 columns" or "this role can only see rows where <code>region='US'</code>." <strong>AWS Lake Formation</strong> sits on top of the Glue Catalog specifically to add that finer grain: column-level, row-level, and (via data filters) cell-level permissions, defined once centrally and enforced consistently across Athena, Redshift Spectrum, EMR, and QuickSight — instead of every consuming service needing its own separate access-control mechanism.</p>
+<p>IAM (section 05) controls access at the level of an S3 bucket, a Glue table, or an API call. It has no concept of "this analyst can see 8 of a table's 12 columns" or "this role can only see rows where <code>region='US'</code>." <strong>AWS Lake Formation</strong> sits on top of the Glue Catalog to add exactly that grain: column-level, row-level and — via data filters — cell-level permissions, defined once centrally and enforced consistently across Athena, Redshift Spectrum, EMR, and QuickSight, instead of every consuming service needing its own access-control mechanism.</p>
 </div>
 
 <div class="def reveal">
 <p class="t">Why this matters specifically for a regulated data platform</p>
-<p>A common real requirement: an analytics team should see anonymized/aggregated customer metrics, but never raw PII columns like national ID or account number, even though both live in the same underlying table. Doing this with IAM alone means either duplicating the table (a masked copy for analysts, a full copy for compliance — extra storage, extra pipelines, extra drift risk) or writing custom application-layer masking everywhere the data gets queried. Lake Formation's column-level permissions and data filters solve this once, centrally, at the Catalog layer — every engine that reads the table through Lake Formation sees the same, consistently enforced view.</p>
+<p>A common real requirement: an analytics team should see aggregated customer metrics but never raw PII columns like national ID or account number, though both live in the same underlying table. With IAM alone you either duplicate the table — a masked copy for analysts, a full copy for compliance, at the cost of extra storage, extra pipelines and drift risk — or write custom application-layer masking everywhere the data gets queried. Lake Formation's column-level permissions and data filters solve it once, centrally, at the Catalog layer: every engine reading the table through Lake Formation sees the same enforced view.</p>
 </div>
 
 <div class="tldr reveal">
@@ -1119,12 +1119,12 @@ WHERE trending_date = '2026-04-01' AND region = 'US';</code></pre>
 <h2 id="s15" class="reveal"><span class="hico"><svg class="ico"><use href="#i-network"/></svg></span><span class="n">15.</span> Amazon Kinesis Data Streams</h2>
 <p class="sectionsub reveal">A durable, ordered, replayable buffer for continuously arriving records</p>
 <div class="prose reveal">
-<p>Everything covered so far assumes data that's already sitting still, in a file. <strong>Kinesis Data Streams</strong> is for data that isn't: clickstreams, IoT telemetry, application logs, change events — records arriving continuously, which one or more consumers need to process, often in near-real-time. A stream is split into <strong>shards</strong>, each an ordered, independently-scalable sequence of records; a <strong>partition key</strong> on each record decides which shard it lands on, and records with the same key always land on the same shard, preserving order for that key.</p>
+<p>Everything so far assumes data already sitting still, in a file. <strong>Kinesis Data Streams</strong> is for data that isn't: clickstreams, IoT telemetry, application logs, change events — records arriving continuously for one or more consumers to process, often in near-real-time. A stream splits into <strong>shards</strong>, each an ordered, independently-scalable sequence of records; a <strong>partition key</strong> on each record decides which shard it lands on, and records sharing a key always land on the same shard, preserving order for that key.</p>
 </div>
 
 <div class="def reveal">
 <p class="t">Why "durable and replayable" is the actual point</p>
-<p>Records written to a Kinesis stream stay available for a configurable retention window (24 hours by default, up to 365 days) and can be re-read from any point in that window by any number of independent consumers, each tracking its own read position. That's the core difference from a simple pub/sub queue: a stream isn't consumed-and-gone, so a second consumer can be added later, or a failed consumer can rewind and reprocess, without losing or duplicating what already happened upstream.</p>
+<p>Records stay available for a configurable retention window — 24 hours by default, up to 365 days — and can be re-read from any point in it by any number of independent consumers, each tracking its own read position. That's the core difference from a simple pub/sub queue: a stream isn't consumed-and-gone, so a second consumer can be added later, or a failed one can rewind and reprocess, without losing or duplicating what already happened upstream.</p>
 </div>
 
 <div class="tablewrap reveal">
@@ -1151,7 +1151,7 @@ WHERE trending_date = '2026-04-01' AND region = 'US';</code></pre>
 <h2 id="s16" class="reveal"><span class="hico"><svg class="ico"><use href="#i-blocks"/></svg></span><span class="n">16.</span> Amazon Data Firehose</h2>
 <p class="sectionsub reveal">The managed, no-code way to land a stream in S3, Redshift, or an OpenSearch index</p>
 <div class="prose reveal">
-<p><strong>Amazon Data Firehose</strong> (formerly Kinesis Data Firehose) takes records — from a Kinesis stream, direct API calls, or several other AWS sources — and delivers them into a destination like S3, Redshift, or OpenSearch, batching, compressing, optionally transforming (via an attached Lambda), and handling retries automatically. It's the managed answer to "I don't want to write and operate a consumer application just to get streaming data into a bucket."</p>
+<p><strong>Amazon Data Firehose</strong> (formerly Kinesis Data Firehose) takes records — from a Kinesis stream, direct API calls, or other AWS sources — and delivers them into S3, Redshift, or OpenSearch, batching, compressing, optionally transforming through an attached Lambda, and retrying automatically. It's the managed answer to "I don't want to write and operate a consumer application just to get streaming data into a bucket."</p>
 </div>
 
 <figure class="diagram reveal">
@@ -1180,7 +1180,7 @@ WHERE trending_date = '2026-04-01' AND region = 'US';</code></pre>
 </figure>
 
 <div class="callout gd reveal">
-<p><b>Kinesis Data Streams vs. Firehose — the question that actually decides which one you need.</b> Do you need custom, low-latency, per-record processing logic, and/or multiple independent consumers reading the same records? Use <b>Data Streams</b> with your own consumer (often a Lambda). Do you just need the data to reliably land in S3/Redshift/OpenSearch, batched sensibly, with no consumer application to write or operate? Use <b>Firehose</b> — and note Firehose can itself read from a Kinesis stream, so the two are often used together, not as alternatives.</p>
+<p><b>Kinesis Data Streams vs. Firehose — the question that actually decides it.</b> Do you need custom, low-latency, per-record processing logic, or multiple independent consumers reading the same records? Use <b>Data Streams</b> with your own consumer, often a Lambda. Do you just need the data to land reliably in S3/Redshift/OpenSearch, batched sensibly, with no consumer application to write or operate? Use <b>Firehose</b> — and note it can itself read from a Kinesis stream, so the two are often used together rather than as alternatives.</p>
 </div>
 
 <div class="tldr reveal">
@@ -1195,12 +1195,12 @@ WHERE trending_date = '2026-04-01' AND region = 'US';</code></pre>
 <h2 id="s17" class="reveal"><span class="hico"><svg class="ico"><use href="#i-network"/></svg></span><span class="n">17.</span> Amazon MSK (Managed Streaming for Kafka)</h2>
 <p class="sectionsub reveal">Real Apache Kafka, with AWS operating the brokers</p>
 <div class="prose reveal">
-<p><strong>Amazon MSK</strong> runs real, open-source Apache Kafka brokers, managed by AWS — broker provisioning, patching, and (optionally, via MSK Serverless) capacity scaling are handled for you, but the wire protocol, topic/partition model, and consumer-group semantics are exactly standard Kafka. If your team already knows Kafka, or needs a Kafka-specific feature Kinesis doesn't offer (Kafka Connect, Kafka Streams, an existing Kafka-based application being lifted into AWS), MSK is the natural choice over Kinesis.</p>
+<p><strong>Amazon MSK</strong> runs real, open-source Apache Kafka brokers managed by AWS: broker provisioning, patching and — via MSK Serverless — capacity scaling are handled for you, but the wire protocol, topic/partition model and consumer-group semantics are exactly standard Kafka. If your team already knows Kafka, or needs something Kinesis doesn't offer (Kafka Connect, Kafka Streams, an existing Kafka application being lifted into AWS), MSK is the natural choice.</p>
 </div>
 
 <div class="def reveal">
 <p class="t">MSK vs. Kinesis Data Streams — both solve "durable, ordered, replayable stream," differently</p>
-<p>They overlap heavily in what problem they solve. The practical decision is less about capability and more about fit: <b>Kinesis</b> is simpler to operate, integrates most tightly with other AWS services (Firehose, Lambda triggers, Data Analytics), and bills more simply. <b>MSK</b> is the right call when Kafka-ecosystem compatibility matters directly — existing Kafka producers/consumers, Kafka Connect connectors, Kafka Streams applications, or a team's existing operational Kafka expertise — none of which translate directly to Kinesis's API.</p>
+<p>They overlap heavily. The decision is less about capability than fit: <b>Kinesis</b> is simpler to operate, integrates most tightly with other AWS services (Firehose, Lambda triggers), and bills more simply. <b>MSK</b> is the right call when Kafka-ecosystem compatibility matters directly — existing producers and consumers, Kafka Connect connectors, Kafka Streams applications, or a team's operational Kafka expertise — none of which translate to Kinesis's API.</p>
 </div>
 
 <div class="tablewrap reveal">
@@ -1226,12 +1226,12 @@ WHERE trending_date = '2026-04-01' AND region = 'US';</code></pre>
 <h2 id="s18" class="reveal"><span class="hico"><svg class="ico"><use href="#i-network"/></svg></span><span class="n">18.</span> Amazon Managed Service for Apache Flink</h2>
 <p class="sectionsub reveal">Continuous, stateful computation over a stream — the piece Kinesis Data Streams and Firehose don't do</p>
 <div class="prose reveal">
-<p><strong>Apache Flink</strong> is an open-source <strong>stateful stream-processing engine</strong>: it doesn't just move records (that's Kinesis Data Streams, see that section) or land them somewhere (that's Firehose, see that section) — it runs a continuous computation that keeps state across many events, such as a running count, a session window, or a join between two streams. <strong>Amazon Managed Service for Apache Flink</strong> (renamed from Kinesis Data Analytics, as this guide notes elsewhere) runs Flink applications without handing you a cluster to size or patch: AWS runs the underlying compute, automatically checkpoints application state to a durable store so a failed task resumes from where it left off instead of from zero, and scales the application's parallelism with load.</p>
+<p><strong>Apache Flink</strong> is an open-source <strong>stateful stream-processing engine</strong>. It doesn't just move records (Kinesis Data Streams) or land them somewhere (Firehose) — it runs a continuous computation that keeps state across many events: a running count, a session window, a join between two streams. <strong>Amazon Managed Service for Apache Flink</strong> (renamed from Kinesis Data Analytics) runs Flink applications without handing you a cluster to size or patch: AWS runs the compute, checkpoints application state to a durable store so a failed task resumes where it left off instead of from zero, and scales the application's parallelism with load.</p>
 </div>
 
 <div class="def reveal">
 <p class="t">Why a Lambda function sitting on a Kinesis stream can't do this</p>
-<p>Take "the rolling 5-minute average of views per video" or a fraud check that needs to correlate several events across a time window. A single <strong>Lambda</strong> invocation is stateless and short-lived: it processes one batch and exits, carrying nothing forward except what you manually write out and reload — typically to DynamoDB — on every single invocation, which is slow and easy to get subtly wrong (missed windows, double counts on retries). <strong>Flink</strong> keeps the aggregation state in memory, checkpointed for durability, for the entire life of the window, as a first-class part of how you write the application — not something you bolt on yourself.</p>
+<p>Take "the rolling 5-minute average of views per video," or a fraud check correlating several events across a time window. A single <strong>Lambda</strong> invocation is stateless and short-lived: it processes one batch and exits, carrying nothing forward except what you manually write out and reload — typically to DynamoDB — on every invocation, which is slow and easy to get subtly wrong (missed windows, double counts on retries). <strong>Flink</strong> keeps the aggregation state in memory, checkpointed for durability, for the entire life of the window, as a first-class part of how you write the application rather than something you bolt on.</p>
 </div>
 
 <figure class="diagram reveal">
@@ -1292,7 +1292,7 @@ WHERE trending_date = '2026-04-01' AND region = 'US';</code></pre>
 
 <div class="tldr reveal">
 <h4>❯ Short version</h4>
-<p><b>Apache Flink</b> is a stateful stream-processing engine — it computes continuously over events rather than just moving or delivering them. <b>Managed Service for Apache Flink</b> removes the cluster, handles checkpointing to a durable store, and auto-scales the application. Reach for it over a Kinesis-plus-Lambda consumer specifically when the problem needs a <b>rolling window, a running aggregate, or state correlated across events</b> — something a stateless, short-lived Lambda invocation structurally cannot hold onto.</p>
+<p><b>Apache Flink</b> is a stateful stream-processing engine: it computes continuously over events rather than just moving or delivering them. <b>Managed Service for Apache Flink</b> removes the cluster, checkpoints state to a durable store, and auto-scales the application. Reach for it over a Kinesis-plus-Lambda consumer when the problem needs a <b>rolling window, a running aggregate, or state correlated across events</b> — something a stateless, short-lived Lambda invocation structurally cannot hold onto.</p>
 </div>
 <hr/>
 <!-- END s18 -->
@@ -1303,7 +1303,7 @@ WHERE trending_date = '2026-04-01' AND region = 'US';</code></pre>
 <h2 id="s19" class="reveal"><span class="hico"><svg class="ico"><use href="#i-blocks"/></svg></span><span class="n">19.</span> Amazon SQS &amp; SNS</h2>
 <p class="sectionsub reveal">A queue for one consumer to work through at its own pace, and a topic for fanning out to many</p>
 <div class="prose reveal">
-<p><strong>Amazon SQS</strong> is a message queue: a producer sends a message, and exactly one consumer (out of however many are polling) picks it up and processes it, deleting it when done — a natural fit for "a backlog of work items to get through," decoupling how fast producers send from how fast consumers can process. <strong>Amazon SNS</strong> is a pub/sub topic: a message published to a topic is delivered to <i>every</i> subscriber (which can itself be an SQS queue, a Lambda function, an email address, and more) — a natural fit for "several independent systems all need to react to this same event."</p>
+<p><strong>Amazon SQS</strong> is a message queue: a producer sends a message, exactly one consumer out of however many are polling picks it up and processes it, deleting it when done — a natural fit for "a backlog of work items to get through," decoupling how fast producers send from how fast consumers can process. <strong>Amazon SNS</strong> is a pub/sub topic: a message published to it is delivered to <i>every</i> subscriber (an SQS queue, a Lambda function, an email address) — a natural fit for "several independent systems all need to react to this same event."</p>
 </div>
 
 <div class="tablewrap reveal">
@@ -1318,7 +1318,7 @@ WHERE trending_date = '2026-04-01' AND region = 'US';</code></pre>
 </div>
 
 <div class="callout gd reveal">
-<p><b>The "SNS fan-out to SQS" pattern.</b> A very common combination: publish once to an SNS topic, and give each independent consumer its own SQS queue subscribed to that topic. Every consumer gets every message (SNS's fan-out), but each consumer processes its own queue at its own pace with its own retry/failure handling (SQS's durability) — getting both properties at once, which neither service alone provides.</p>
+<p><b>The "SNS fan-out to SQS" pattern.</b> Publish once to an SNS topic, and give each independent consumer its own SQS queue subscribed to that topic. Every consumer gets every message (SNS's fan-out), and each processes its own queue at its own pace with its own retry and failure handling (SQS's durability) — both properties at once, which neither service alone provides.</p>
 </div>
 
 <div class="tldr reveal">
@@ -1333,12 +1333,12 @@ WHERE trending_date = '2026-04-01' AND region = 'US';</code></pre>
 <h2 id="s20" class="reveal"><span class="hico"><svg class="ico"><use href="#i-zap"/></svg></span><span class="n">20.</span> Amazon EventBridge</h2>
 <p class="sectionsub reveal">Scheduling a pipeline, and routing events between services, without hand-wiring either</p>
 <div class="prose reveal">
-<p><strong>Amazon EventBridge</strong> does two related jobs. As a <strong>scheduler</strong>, a cron or rate expression triggers a target (a Lambda, a Step Functions execution) on a fixed cadence — the most common way a batch pipeline actually starts, replacing what used to be a literal cron job on a server nobody wants to maintain. As an <strong>event bus</strong>, it routes events from AWS services (an S3 upload, a Glue job state change) or custom application events to one or more targets, based on rules that match on the event's content — a more flexible alternative to wiring services directly together.</p>
+<p><strong>Amazon EventBridge</strong> does two related jobs. As a <strong>scheduler</strong>, a cron or rate expression triggers a target (a Lambda, a Step Functions execution) on a fixed cadence — the most common way a batch pipeline actually starts, replacing a literal cron job on a server nobody wants to maintain. As an <strong>event bus</strong>, it routes events from AWS services (an S3 upload, a Glue job state change) or custom applications to one or more targets, using rules that match on the event's content — more flexible than wiring services directly together.</p>
 </div>
 
 <div class="def reveal">
 <p class="t">Where EventBridge sits relative to the "one Lambda triggers the next" instinct</p>
-<p>It's tempting to have a Lambda directly invoke the next Lambda when it finishes. EventBridge (or Step Functions, next section) decouples that: a producer emits an event or runs on schedule without knowing or caring who consumes it, and rules/targets can be added, removed, or changed later without touching the producer's code at all. For anything beyond a single trigger→single action, this decoupling is what keeps a pipeline's services from becoming tightly, invisibly wired together.</p>
+<p>It's tempting to have a Lambda directly invoke the next Lambda when it finishes. EventBridge — or Step Functions, next section — decouples that: a producer emits an event or runs on a schedule without knowing who consumes it, and rules and targets can be added, removed or changed later without touching the producer's code. For anything beyond a single trigger → single action, that decoupling is what keeps a pipeline's services from becoming invisibly wired together.</p>
 </div>
 
 <div class="tldr reveal">
@@ -1353,12 +1353,12 @@ WHERE trending_date = '2026-04-01' AND region = 'US';</code></pre>
 <h2 id="s21" class="reveal"><span class="hico"><svg class="ico"><use href="#i-workflow"/></svg></span><span class="n">21.</span> AWS Step Functions</h2>
 <p class="sectionsub reveal">A visual state machine for stitching many services into one reliable, observable pipeline</p>
 <div class="prose reveal">
-<p><strong>AWS Step Functions</strong> defines a pipeline as a <strong>state machine</strong> — a sequence (and branching structure) of states, each usually a <strong>Task</strong> that invokes another AWS service (a Lambda, a Glue job, an ECS task) — with built-in, declarative handling for retries, error branching, parallel execution, and waiting, instead of every one of those concerns being hand-coded inside a monolithic script. It is the piece that turns "several separate AWS services" into "one pipeline with one execution history you can look at."</p>
+<p><strong>AWS Step Functions</strong> defines a pipeline as a <strong>state machine</strong>: a sequence and branching structure of states, each usually a <strong>Task</strong> that invokes another AWS service (a Lambda, a Glue job, an ECS task), with declarative handling for retries, error branching, parallel execution and waiting — instead of hand-coding every one of those concerns inside a monolithic script. It's the piece that turns "several separate AWS services" into "one pipeline with one execution history you can look at."</p>
 </div>
 
 <div class="def reveal">
 <p class="t">The state types that show up in almost every real pipeline</p>
-<p><code>Task</code> invokes a service and waits for its result. <code>Wait</code> pauses for a fixed time or until a timestamp (used, for example, to pace a step that depends on an upstream async process — like a Glue Crawler or Catalog update — finishing before the next state reads its result). <code>Parallel</code> runs multiple branches concurrently and waits for all to finish. <code>Choice</code> branches based on a prior state's output — commonly used right after a data-quality check, to route to "continue" or "fail loudly" depending on the result. <code>Retry</code> and <code>Catch</code> attach to any state: <code>Retry</code> re-attempts a failed state automatically (with backoff), and <code>Catch</code> routes a failure to a specific error-handling state instead of failing the whole execution silently.</p>
+<p><code>Task</code> invokes a service and waits for its result. <code>Wait</code> pauses for a fixed time or until a timestamp — used to pace a step that depends on an upstream async process, like a Glue Crawler or Catalog update, finishing first. <code>Parallel</code> runs branches concurrently and waits for all of them. <code>Choice</code> branches on a prior state's output, commonly right after a data-quality check to route to "continue" or "fail loudly." <code>Retry</code> and <code>Catch</code> attach to any state: <code>Retry</code> re-attempts a failed state automatically with backoff, and <code>Catch</code> routes a failure to a specific error-handling state instead of failing the whole execution silently.</p>
 </div>
 
 <figure class="diagram reveal">
@@ -1389,7 +1389,7 @@ WHERE trending_date = '2026-04-01' AND region = 'US';</code></pre>
 </figure>
 
 <div class="callout wn reveal">
-<p><b>Step Functions vs. orchestrating from inside a Lambda.</b> It's possible to have one Lambda call several others in sequence and call that "orchestration." The difference that matters in production: Step Functions gives you a visual execution history for every single run (which state failed, with what input, at what time), declarative retry/catch without try/except sprawl, and a 15-minute Lambda timeout stops applying to the pipeline as a whole, since Step Functions itself can run for up to a year. A pipeline with more than two or three steps, or any step that can plausibly fail, benefits from this almost immediately.</p>
+<p><b>Step Functions vs. orchestrating from inside a Lambda.</b> One Lambda can call several others in sequence, and you can call that "orchestration." What matters in production: Step Functions gives a visual execution history for every run (which state failed, with what input, at what time), declarative retry and catch without try/except sprawl, and the 15-minute Lambda timeout stops applying to the pipeline as a whole — a Step Functions execution can run for up to a year. Any pipeline with more than two or three steps, or one step that can plausibly fail, benefits almost immediately.</p>
 </div>
 
 <div class="tldr reveal">
@@ -1404,12 +1404,12 @@ WHERE trending_date = '2026-04-01' AND region = 'US';</code></pre>
 <h2 id="s22" class="reveal"><span class="hico"><svg class="ico"><use href="#i-workflow"/></svg></span><span class="n">22.</span> Amazon MWAA (Managed Workflows for Apache Airflow)</h2>
 <p class="sectionsub reveal">Orchestration as version-controlled Python DAGs — the choice for teams who already think that way</p>
 <div class="prose reveal">
-<p><strong>Amazon MWAA</strong> (Managed Workflows for Apache Airflow) is a managed <strong>Apache Airflow</strong> environment: AWS runs the webserver, scheduler, and worker infrastructure, and handles patching and version upgrades on a schedule you control. You author pipelines as <strong>DAGs</strong> (Directed Acyclic Graphs) — plain Python files — and upload them to an S3 bucket that MWAA continuously watches; drop a new or changed DAG file in, and the scheduler picks it up automatically, no redeploy step involved.</p>
+<p><strong>Amazon MWAA</strong> (Managed Workflows for Apache Airflow) is a managed <strong>Apache Airflow</strong> environment: AWS runs the webserver, scheduler and worker infrastructure, and handles patching and version upgrades on a schedule you control. You author pipelines as <strong>DAGs</strong> (Directed Acyclic Graphs) — plain Python files — in an S3 bucket MWAA continuously watches; drop a new or changed DAG file in and the scheduler picks it up, with no redeploy step.</p>
 </div>
 
 <div class="def reveal">
 <p class="t">The real mental-model difference from Step Functions: code vs. configuration</p>
-<p>A Step Functions state machine (see the AWS Step Functions section) is a declarative JSON/ASL document — you describe states, and Step Functions calls each AWS service directly through its own SDK integration. An Airflow DAG is <strong>imperative Python</strong>: you instantiate <strong>Operators</strong> (an <code>S3KeySensor</code> that waits for a file, a <code>GlueJobOperator</code> that starts a Glue job, a <code>PythonOperator</code> that runs any callable) as task objects, then wire dependencies between them with <code>&gt;&gt;</code>. The pipeline's logic — retries, branching, what runs in parallel — lives in a file that goes through the same code review and version control as any other application code, rather than in a separate state-machine artifact.</p>
+<p>A Step Functions state machine is a declarative JSON/ASL document: you describe states, and Step Functions calls each AWS service through its own SDK integration. An Airflow DAG is <strong>imperative Python</strong>: you instantiate <strong>Operators</strong> — an <code>S3KeySensor</code> that waits for a file, a <code>GlueJobOperator</code> that starts a Glue job, a <code>PythonOperator</code> that runs any callable — as task objects, then wire dependencies with <code>&gt;&gt;</code>. Retries, branching and what runs in parallel live in a file that goes through the same code review and version control as any other application code, rather than in a separate state-machine artifact.</p>
 </div>
 
 <pre><code># A DAG shaped like this guide's Step Functions worked example,
@@ -1492,13 +1492,13 @@ with DAG(
 </div>
 
 <div class="callout gd reveal">
-<p><b>When a real team reaches for MWAA instead of Step Functions.</b> The decision is rarely "which is more powerful" — both can express the same DAG-shaped pipeline. It's usually one of: an existing Airflow deployment (and years of DAGs) being lifted onto AWS rather than rewritten; a need for Airflow's large catalog of pre-built Operators/Hooks covering systems well outside AWS (Snowflake, dbt, on-prem databases, other clouds); or a preference for orchestration logic to live as ordinary, version-controlled Python rather than a separate JSON artifact. Step Functions tends to win instead when the pipeline is AWS-native end to end, nobody wants to own sizing or patching an Airflow environment, and a full, built-in visual execution history per run matters more than DAG-authoring flexibility.</p>
+<p><b>When a real team reaches for MWAA instead of Step Functions.</b> The decision is rarely "which is more powerful" — both express the same DAG-shaped pipeline. It's usually one of: an existing Airflow deployment, and years of DAGs, being lifted onto AWS rather than rewritten; a need for Airflow's large catalog of pre-built Operators and Hooks covering systems well outside AWS (Snowflake, dbt, on-prem databases, other clouds); or a preference for orchestration logic as ordinary, version-controlled Python rather than a separate JSON artifact. Step Functions wins instead when the pipeline is AWS-native end to end, nobody wants to own sizing or patching an Airflow environment, and a built-in visual execution history per run matters more than DAG-authoring flexibility.</p>
 </div>
 
 
 <div class="tldr reveal">
 <h4>❯ Short version</h4>
-<p><b>MWAA</b> is a managed Apache Airflow environment — pipelines are Python <b>DAGs</b> built from <b>Operators</b>, uploaded to an S3 bucket MWAA watches, and run by a scheduler/worker fleet you size. It wins when a team already thinks in Airflow, needs Airflow's Operator ecosystem, or wants orchestration as version-controlled Python; <b>Step Functions</b> (see that section) wins on tighter native AWS integration and near-zero operational overhead.</p>
+<p><b>MWAA</b> is a managed Apache Airflow environment: pipelines are Python <b>DAGs</b> built from <b>Operators</b>, uploaded to an S3 bucket MWAA watches and run by a scheduler and worker fleet you size. It wins when a team already thinks in Airflow, needs its Operator ecosystem, or wants orchestration as version-controlled Python; <b>Step Functions</b> wins on tighter native AWS integration and near-zero operational overhead.</p>
 </div>
 <hr/>
 <!-- END s22 -->
