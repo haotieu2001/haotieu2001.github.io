@@ -167,7 +167,7 @@ h2 .n{color:var(--blue2,#5C78FF)}
   <div class="kicker"><a class="back" href="../">❮ Data &amp; AI Engineering, Simply Explained</a></div>
   <h1>The Three Layers of a Data Lake, In Depth</h1>
   <p class="dek">Every Data Lake is built from three layers stacked on top of each other: <strong>Storage</strong> (the files), <strong>Metadata</strong> (the catalogue that turns files into tables), and <strong>Compute</strong> (the engines that read and process them). This guide opens each layer up — how it works inside, why it is kept separate from the others, the problems each one runs into, and how a single query travels down through all three to give you an answer.</p>
-  <div class="byline">~22 min read · Data Engineering · Jun 2026</div>
+  <div class="byline">~21 min read · Data Engineering · Jun 2026</div>
 </header>
 
 <figure class="reveal" style="margin:18px 0 6px;background:#141826;border:1px solid #3C4356;border-radius:16px;padding:10px 10px;overflow:hidden">
@@ -253,7 +253,7 @@ h2 .n{color:var(--blue2,#5C78FF)}
   <a href="#metadata"><svg class="ico"><use href="#i-layers"/></svg>03 · Layer 2 — Metadata, in depth</a>
   <a href="#compute"><svg class="ico"><use href="#i-layers"/></svg>04 · Layer 3 — Compute, in depth</a>
   <a href="#trace"><svg class="ico"><use href="#i-search"/></svg>05 · One query through all three layers</a>
-  <a href="#summary"><svg class="ico"><use href="#i-eye"/></svg>06 · Summary &amp;amp; what to read next</a>
+  <a href="#summary"><svg class="ico"><use href="#i-eye"/></svg>06 · Summary &amp; what to read next</a>
   <a href="#glossary"><svg class="ico"><use href="#i-book"/></svg>07 · ＊ · Glossary</a>
 </div>
 
@@ -274,7 +274,7 @@ h2 .n{color:var(--blue2,#5C78FF)}
   <li>You can <strong>turn all compute off overnight</strong> and pay only for storage — the data just sits there.</li>
   <li>You can <strong>swap the catalogue</strong> (e.g. migrate from Hive Metastore to Unity Catalog) without moving a single data file.</li>
 </ul>
-<p class="reveal">In a traditional database, all three layers are fused into one product you can't pull apart. That fusion makes it fast — compute sits right next to the data with no network round-trip out to a separate storage service — but also expensive (you pay for that tightly-coupled box even when idle) and rigid (you can't scale or swap one part alone). The Data Lake's whole design philosophy is the opposite: <em>separate</em> the layers so each can be chosen, scaled, and paid for independently, accepting a little extra read latency in exchange. Keeping the three layers independent like this is the through-line of the whole article — it's what lets you scale, swap, and pay for each one on its own. We'll go shelf by shelf, bottom to top.</p>
+<p class="reveal">In a traditional database all three layers are fused into one product you can't pull apart. The fusion makes it fast — compute sits right next to the data, with no network round-trip to a separate storage service — but also expensive (you pay for that tightly-coupled box even when idle) and rigid (you can't scale or swap one part alone). The Data Lake's design philosophy is the opposite: <em>separate</em> the layers so each can be chosen, scaled and paid for independently, accepting a little extra read latency in exchange. That independence is the through-line of this whole article. We'll go shelf by shelf, bottom to top.</p>
 
 <!-- 02 -->
 <h2 id="storage" class="reveal"><span class="hico"><svg class="ico"><use href="#i-disk"/></svg></span><span class="n">02.</span> Layer 1 — Storage, in depth</h2>
@@ -499,7 +499,7 @@ Partition values known:
 <p class="reveal">Born with Apache Hive in the Hadoop era, it's the catalogue everything else is compatible with. Under the hood it's just a small relational database (usually MySQL or PostgreSQL) holding the table records, fronted by a service that engines talk to over a standard API. Its big strength is being <strong>open and engine-neutral</strong>: Spark, Trino, Presto, and Flink can all read the same metastore, which is why it became the de-facto standard. The downsides: <strong>you operate it yourself</strong> (run and scale that database and service), it has <strong>no built-in security or governance</strong> (access control has to be bolted on by the surrounding system), and it slows down once a table has hundreds of thousands of partitions.</p>
 
 <h4 class="reveal">AWS Glue Data Catalog — the managed, serverless version</h4>
-<p class="reveal">Amazon's <strong>drop-in replacement</strong> for the Hive Metastore: same concepts and API, but <strong>nothing to run</strong> — AWS hosts it and you pay per object stored and per request. It's the default catalogue across AWS analytics (Athena, EMR, Redshift Spectrum, Glue ETL), and it adds <strong>crawlers</strong> to fill itself in automatically. A crawler is a job you point at an S3 location (or a database, JDBC source, etc.): it samples the files it finds, works out the file format (Parquet, CSV, JSON…), infers each column's name and type, detects <a href="#storage">Hive-style partition folders</a>, and then creates or updates the matching table definition in the catalogue — so nobody has to hand-write the schema. Put it on a schedule and it keeps the catalogue current as data lands: new partitions and new columns get registered on the next run. (The catch: its type-guessing is heuristic and can occasionally mislabel a column — e.g. read a ZIP code as an integer — so inferred schemas are worth a sanity check.) The trade-off overall is lock-in: it lives inside AWS, and governance comes from AWS IAM / Lake Formation rather than from the catalogue itself.</p>
+<p class="reveal">Amazon's <strong>drop-in replacement</strong> for the Hive Metastore: same concepts and API, but <strong>nothing to run</strong> — AWS hosts it and you pay per object stored and per request. It's the default catalogue across AWS analytics (Athena, EMR, Redshift Spectrum, Glue ETL), and it adds <strong>crawlers</strong> that fill it in automatically. Point a crawler at an S3 location, a database or a JDBC source: it samples the files, works out the format (Parquet, CSV, JSON…), infers each column's name and type, detects <a href="#storage">Hive-style partition folders</a>, then creates or updates the matching table definition — so nobody hand-writes the schema. On a schedule it keeps the catalogue current as data lands, registering new partitions and columns on the next run. The catch: type-guessing is heuristic and can mislabel a column — reading a ZIP code as an integer, say — so inferred schemas are worth a sanity check. The broader trade-off is lock-in: it lives inside AWS, and governance comes from IAM / Lake Formation rather than the catalogue itself.</p>
 
 <h4 class="reveal">Unity Catalog — the governance-first catalogue</h4>
 <p class="reveal">Databricks' newer catalogue, built for the things the Hive Metastore never handled. On top of the basic name→location mapping it adds <strong>fine-grained access control</strong> (grant permissions down to a single column or row), <strong>data lineage</strong> (what produced a table and what reads it), <strong>auditing</strong>, and a <strong>three-level namespace</strong> (<code>catalog.schema.table</code>) that works across workspaces and clouds. It also governs more than tables — files, ML models, even dashboards — from one place, and it's now open-sourced. If you're on Databricks it's the default; the cost is that it's centred on the Databricks ecosystem.</p>
@@ -621,7 +621,7 @@ Partition values known:
 </svg>
 </figure>
 
-<p class="reveal">Because the files are independent objects in storage, the driver can hand each executor a different set of files and they all read at once. Ten executors reading ten files finish the <em>reading</em> in roughly the time it takes one executor to read one — that's the parallelism a Data Lake is built to exploit. (This is near-linear speedup for the read phase only; the final combine step — e.g. merging partial <code>GROUP BY</code> sums — plus scheduling overhead and the occasional slow machine mean real end-to-end speedup is a bit below perfect.)</p>
+<p class="reveal">Because the files are independent objects in storage, the driver hands each executor a different set and they all read at once. Ten executors reading ten files finish the <em>reading</em> in roughly the time one executor takes for one — the parallelism a Data Lake is built to exploit. That near-linear speedup applies to the read phase only: the final combine step (merging partial <code>GROUP BY</code> sums, say), scheduling overhead and the occasional slow machine put real end-to-end speedup a bit below perfect.</p>
 
 <h3 class="reveal">How the engine plans a query (the four steps inside the driver)</h3>
 <div class="step reveal"><div class="num-bubble">1</div><div class="body"><strong>Parse.</strong> Read your SQL and check it's valid — turn the text into a tree the engine can reason about.</div></div>
@@ -726,7 +726,7 @@ GROUP BY category;</pre></div>
 </div>
 
 <!-- 06 -->
-<h2 id="summary" class="reveal"><span class="hico"><svg class="ico"><use href="#i-eye"/></svg></span><span class="n">06.</span> Summary &amp;amp; what to read next</h2>
+<h2 id="summary" class="reveal"><span class="hico"><svg class="ico"><use href="#i-eye"/></svg></span><span class="n">06.</span> Summary &amp; what to read next</h2>
 <table class="reveal">
   <tr><th>Layer</th><th>Job</th><th>Key idea to remember</th><th>Main pitfall</th></tr>
   <tr><td><strong style="color:#5AC8FF">Storage</strong></td><td>Hold raw bytes cheaply</td><td>Immutable key→bytes store; layout = performance</td><td>Small files &amp; over-partitioning</td></tr>

@@ -98,7 +98,7 @@
   .step .num-bubble{flex:0 0 28px;height:28px;border-radius:50%;background:var(--grad);display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;color:#fff;margin-top:2px}
   .step .body{flex:1}
   figure.mm{background:#141826;border:1px solid #3C4356;border-radius:14px;padding:14px 10px 6px;margin:20px 0;overflow-x:auto}
-  figure.mm figcaption{font-size:12px;color:#555;text-align:center;margin-bottom:.4em;letter-spacing:.06em;text-transform:uppercase}
+  figure.mm figcaption{font-size:12px;color:#E7E7EE;text-align:center;margin-bottom:.4em;letter-spacing:.06em;text-transform:uppercase}
   .mermaid{display:flex;justify-content:center;font-family:var(--font)!important}
   footer{border-top:1px solid #3C4356;margin-top:50px;padding:24px 0 90px;color:var(--dim);font-size:13px}
   footer a{color:var(--cyan2)}
@@ -176,7 +176,7 @@ h2 .n{color:var(--blue2,#5C78FF)}
   <div class="kicker"><a class="back" href="../">❮ Data &amp; AI Engineering, Simply Explained</a></div>
   <h1>OLTP vs OLAP, In Depth</h1>
   <p class="dek">Two database worlds, built for opposite jobs. <strong>OLTP</strong> systems answer thousands of tiny questions per second — "place this order," "fetch user 42." <strong>OLAP</strong> systems answer one enormous question at a time — "what was revenue by region, by month, across three years?" This piece opens both up to the metal: how each one <em>stores</em> data on disk, how a query actually <em>runs</em> through it, every trick used to make it <em>fast</em>, and why a design that's perfect for one is a disaster for the other.</p>
-  <div class="byline">~23 min read · Deep dive · Fundamentals</div>
+  <div class="byline">~22 min read · Deep dive · Fundamentals</div>
 </header>
 
 <figure class="reveal" style="margin:18px 0 6px;background:#141826;border:1px solid #3C4356;border-radius:16px;padding:14px 10px;overflow:hidden">
@@ -222,10 +222,10 @@ h2 .n{color:var(--blue2,#5C78FF)}
   <a href="#oltp-opt"><svg class="ico"><use href="#i-blocks"/></svg>06 · Making OLTP queries fast</a>
   <a href="#wall"><svg class="ico"><use href="#i-question"/></svg>07 · Why OLTP collapses under analytics</a>
   <a href="#olap"><svg class="ico"><use href="#i-eye"/></svg>08 · OLAP — the world of big scans</a>
-  <a href="#olap-store"><svg class="ico"><use href="#i-blocks"/></svg>09 · How OLAP stores data (columnar &amp;amp; Parquet)</a>
+  <a href="#olap-store"><svg class="ico"><use href="#i-blocks"/></svg>09 · How OLAP stores data (columnar &amp; Parquet)</a>
   <a href="#olap-query"><svg class="ico"><use href="#i-search"/></svg>10 · How an OLAP query runs, step by step</a>
   <a href="#olap-opt"><svg class="ico"><use href="#i-blocks"/></svg>11 · Making OLAP queries fast</a>
-  <a href="#compare"><svg class="ico"><use href="#i-blocks"/></svg>12 · Side-by-side &amp;amp; when to use which</a>
+  <a href="#compare"><svg class="ico"><use href="#i-blocks"/></svg>12 · Side-by-side &amp; when to use which</a>
   <a href="#glossary"><svg class="ico"><use href="#i-book"/></svg>13 · ＊ · Glossary</a>
 </div>
 
@@ -514,7 +514,7 @@ h2 .n{color:var(--blue2,#5C78FF)}
 <p class="reveal">To serve that, OLAP flips the two foundations we just studied: it stores data <em>by column</em>, and it spreads the work across <em>many machines</em>. Let's open both up.</p>
 
 <!-- 09 -->
-<h2 id="olap-store" class="reveal"><span class="hico"><svg class="ico"><use href="#i-blocks"/></svg></span><span class="n">09.</span> How OLAP stores data (columnar &amp;amp; Parquet)</h2>
+<h2 id="olap-store" class="reveal"><span class="hico"><svg class="ico"><use href="#i-blocks"/></svg></span><span class="n">09.</span> How OLAP stores data (columnar &amp; Parquet)</h2>
 <p class="reveal lead">The core move is <strong>column-oriented storage</strong>: instead of keeping each row's fields together, keep each <em>column's</em> values together. All the <code>city</code> values in one run, all the <code>total</code> values in another, all the <code>created_at</code> values in another.</p>
 
 <figure class="reveal" style="margin:1.4em 0;background:#1C1C2A;border:1px solid #3C4356;border-radius:10px;padding:1.2em 1em 1em;overflow:hidden">

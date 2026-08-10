@@ -154,7 +154,7 @@ h2 .n{color:var(--blue2,#5C78FF)}
   <div class="kicker"><a class="back" href="../">❮ Data &amp; AI Engineering, Simply Explained</a></div>
   <h1>Delta Lake, Under the Hood</h1>
   <p class="dek">A complete guide to how Delta Lake works — the transaction log, ACID, time travel, MERGE, deletion vectors, OPTIMIZE, Z-Order, liquid clustering, streaming and change data — with simple SQL + PySpark you can run yourself. It is long by design — a reference you can return to.</p>
-  <div class="byline">~21 min read · Data Engineering · SQL + PySpark on Databricks</div>
+  <div class="byline">~20 min read · Data Engineering · SQL + PySpark on Databricks</div>
   <div class="stack reveal">
     <span class="lbl">Built on</span>
     <span class="b2 delta">
@@ -198,28 +198,28 @@ h2 .n{color:var(--blue2,#5C78FF)}
   <a href="#why"><svg class="ico"><use href="#i-question"/></svg>02 · Why Delta Lake exists</a>
   <a href="#acid"><svg class="ico"><use href="#i-blocks"/></svg>03 · ACID, the foundation</a>
   <a href="#log"><svg class="ico"><use href="#i-blocks"/></svg>04 · The transaction log</a>
-  <a href="#dml"><svg class="ico"><use href="#i-blocks"/></svg>05 · DML &amp;amp; computing the state</a>
+  <a href="#dml"><svg class="ico"><use href="#i-blocks"/></svg>05 · DML &amp; computing the state</a>
   <a href="#dv"><svg class="ico"><use href="#i-eye"/></svg>06 · Copy-on-Write vs Merge-on-Read</a>
-  <a href="#scale"><svg class="ico"><use href="#i-blocks"/></svg>07 · Checkpoints &amp;amp; log compaction</a>
+  <a href="#scale"><svg class="ico"><use href="#i-blocks"/></svg>07 · Checkpoints &amp; log compaction</a>
   <a href="#occ"><svg class="ico"><use href="#i-blocks"/></svg>08 · Optimistic concurrency</a>
-  <a href="#tt"><svg class="ico"><use href="#i-blocks"/></svg>09 · Time travel &amp;amp; RESTORE</a>
+  <a href="#tt"><svg class="ico"><use href="#i-blocks"/></svg>09 · Time travel &amp; RESTORE</a>
   <a href="#merge"><svg class="ico"><use href="#i-blocks"/></svg>10 · MERGE — the main command</a>
   <a href="#enforce"><svg class="ico"><use href="#i-blocks"/></svg>11 · Schema enforcement</a>
   <a href="#evolve"><svg class="ico"><use href="#i-blocks"/></svg>12 · Schema evolution</a>
-  <a href="#colmap"><svg class="ico"><use href="#i-blocks"/></svg>13 · Rename &amp;amp; drop columns</a>
-  <a href="#constraints"><svg class="ico"><use href="#i-blocks"/></svg>14 · Constraints &amp;amp; generated columns</a>
+  <a href="#colmap"><svg class="ico"><use href="#i-blocks"/></svg>13 · Rename &amp; drop columns</a>
+  <a href="#constraints"><svg class="ico"><use href="#i-blocks"/></svg>14 · Constraints &amp; generated columns</a>
   <a href="#idem"><svg class="ico"><use href="#i-blocks"/></svg>15 · Idempotent writes</a>
   <a href="#partition"><svg class="ico"><use href="#i-layers"/></svg>16 · Partitioning (and when not to)</a>
-  <a href="#optimize"><svg class="ico"><use href="#i-zap"/></svg>17 · Small files &amp;amp; OPTIMIZE</a>
-  <a href="#zorder"><svg class="ico"><use href="#i-blocks"/></svg>18 · Z-Order &amp;amp; data skipping</a>
+  <a href="#optimize"><svg class="ico"><use href="#i-zap"/></svg>17 · Small files &amp; OPTIMIZE</a>
+  <a href="#zorder"><svg class="ico"><use href="#i-blocks"/></svg>18 · Z-Order &amp; data skipping</a>
   <a href="#liquid"><svg class="ico"><use href="#i-blocks"/></svg>19 · Liquid clustering</a>
-  <a href="#vacuum"><svg class="ico"><use href="#i-blocks"/></svg>20 · VACUUM &amp;amp; retention</a>
+  <a href="#vacuum"><svg class="ico"><use href="#i-blocks"/></svg>20 · VACUUM &amp; retention</a>
   <a href="#convert"><svg class="ico"><use href="#i-blocks"/></svg>21 · Converting to Delta</a>
   <a href="#tables"><svg class="ico"><use href="#i-list"/></svg>22 · Managed vs external</a>
   <a href="#clone"><svg class="ico"><use href="#i-blocks"/></svg>23 · Cloning</a>
   <a href="#stream"><svg class="ico"><use href="#i-network"/></svg>24 · Streaming with Delta</a>
   <a href="#cdf"><svg class="ico"><use href="#i-blocks"/></svg>25 · Change Data Feed</a>
-  <a href="#share"><svg class="ico"><use href="#i-blocks"/></svg>26 · Sharing &amp;amp; UniForm</a>
+  <a href="#share"><svg class="ico"><use href="#i-blocks"/></svg>26 · Sharing &amp; UniForm</a>
   <a href="#delta4"><svg class="ico"><use href="#i-bulb"/></svg>27 · What&#x27;s new in Delta 4.0</a>
   <a href="#cheat"><svg class="ico"><use href="#i-blocks"/></svg>28 · Cheat sheet: when to use what</a>
   <a href="#glossary"><svg class="ico"><use href="#i-book"/></svg>29 · ＊ · Glossary</a>
@@ -312,7 +312,7 @@ display(spark.read.json(loc + "/_delta_log/00000000000000000000.json"))   <span 
 </figure>
 
 <!-- 04 -->
-<h2 id="dml" class="reveal"><span class="hico"><svg class="ico"><use href="#i-blocks"/></svg></span><span class="n">05.</span> DML &amp;amp; computing the state</h2>
+<h2 id="dml" class="reveal"><span class="hico"><svg class="ico"><use href="#i-blocks"/></svg></span><span class="n">05.</span> DML &amp; computing the state</h2>
 <p class="reveal"><strong>INSERT</strong> adds a new Parquet file and a new commit. <strong>UPDATE</strong> and <strong>DELETE</strong> are smarter — with deletion vectors on (commonly enabled on Databricks; explained next in §05), they avoid rewriting whole files:</p>
 <div class="cb reveal"><span class="lang">SQL</span><pre>INSERT INTO invoices VALUES (6,'INV006',4,12.0,'tech',DATE'2026-01-04');  <span class="c">-- adds 1 file</span>
 UPDATE invoices SET quantity = 10 WHERE customer_id = 1;                  <span class="c">-- writes a deletion vector + 1 tiny file</span>
@@ -362,7 +362,7 @@ DESCRIBE HISTORY invoices_mor;   <span class="c">-- metrics: numRemovedFiles=0, 
 </figure>
 
 <!-- 06 -->
-<h2 id="scale" class="reveal"><span class="hico"><svg class="ico"><use href="#i-blocks"/></svg></span><span class="n">07.</span> Checkpoints &amp;amp; log compaction</h2>
+<h2 id="scale" class="reveal"><span class="hico"><svg class="ico"><use href="#i-blocks"/></svg></span><span class="n">07.</span> Checkpoints &amp; log compaction</h2>
 <p class="reveal">Millions of changes = millions of tiny JSON files, and reading them all would be slow. Delta adds two helpers:</p>
 <ul class="reveal">
 <li><strong>Compacted JSON</strong> — every few commits are joined into one file (it just copies the notes together; it does not apply them). It still lists every change — just in fewer files — which saves the cost of opening many small files and makes the next checkpoint cheaper to build.</li>
@@ -437,7 +437,7 @@ display(dbutils.fs.ls(loc + "/_delta_log"))</pre></div>
 </figure>
 
 <!-- 08 -->
-<h2 id="tt" class="reveal"><span class="hico"><svg class="ico"><use href="#i-blocks"/></svg></span><span class="n">09.</span> Time travel &amp;amp; RESTORE</h2>
+<h2 id="tt" class="reveal"><span class="hico"><svg class="ico"><use href="#i-blocks"/></svg></span><span class="n">09.</span> Time travel &amp; RESTORE</h2>
 <p class="reveal">Because every version is kept, you can read or return to any earlier point:</p>
 <div class="cb reveal"><span class="lang">SQL</span><pre>SELECT * FROM invoices VERSION AS OF 0;
 SELECT * FROM invoices TIMESTAMP AS OF '2026-06-01 09:35:00';
@@ -572,7 +572,7 @@ df2 = df.withColumn("note", lit("hello"))   <span class="c"># df (the invoices t
 </figure>
 
 <!-- 12 column mapping -->
-<h2 id="colmap" class="reveal"><span class="hico"><svg class="ico"><use href="#i-blocks"/></svg></span><span class="n">13.</span> Rename &amp;amp; drop columns</h2>
+<h2 id="colmap" class="reveal"><span class="hico"><svg class="ico"><use href="#i-blocks"/></svg></span><span class="n">13.</span> Rename &amp; drop columns</h2>
 <p class="reveal">A common beginner mistake: you try to rename or drop a column and get an error. That's because, by default, the data files use the column names directly. Turn on <strong>column mapping</strong> first, then it works without rewriting data:</p>
 <div class="cb reveal"><span class="lang">SQL</span><pre>ALTER TABLE invoices SET TBLPROPERTIES (
   'delta.columnMapping.mode' = 'name',
@@ -583,7 +583,7 @@ ALTER TABLE invoices DROP COLUMN payment_method;</pre></div>
 <p class="reveal">Column mapping lets Delta track columns by a hidden id instead of by name, so renames and drops are just metadata changes. (After a DROP, the old data stays in the files until you run <code>REORG TABLE invoices APPLY (PURGE)</code> and then <code>VACUUM</code>.) Turning column mapping on is a one-way change — you can't easily turn it off.</p>
 
 <!-- 13 -->
-<h2 id="constraints" class="reveal"><span class="hico"><svg class="ico"><use href="#i-blocks"/></svg></span><span class="n">14.</span> Constraints &amp;amp; generated columns</h2>
+<h2 id="constraints" class="reveal"><span class="hico"><svg class="ico"><use href="#i-blocks"/></svg></span><span class="n">14.</span> Constraints &amp; generated columns</h2>
 <div class="cb reveal"><span class="lang">SQL</span><pre><span class="c">-- CHECK rule: every future write must satisfy it, or it's rejected</span>
 ALTER TABLE invoices ADD CONSTRAINT pos_price CHECK (price &gt; 0);
 
@@ -659,7 +659,7 @@ SELECT * FROM events;   <span class="c">-- event_date is filled in automatically
 </figure>
 
 <!-- 16 -->
-<h2 id="optimize" class="reveal"><span class="hico"><svg class="ico"><use href="#i-zap"/></svg></span><span class="n">17.</span> Small files &amp;amp; OPTIMIZE</h2>
+<h2 id="optimize" class="reveal"><span class="hico"><svg class="ico"><use href="#i-zap"/></svg></span><span class="n">17.</span> Small files &amp; OPTIMIZE</h2>
 <p class="reveal">Thousands of tiny files = thousands of open/close steps = wasted compute. (Imagine a 300-page book saved as 300 one-page PDFs — you'd spend all your time opening files.) <code>OPTIMIZE</code> packs small files into a few large ones — it fits small pieces together like packing boxes (this is called "bin-packing") — toward a target file size.</p>
 <div class="cb reveal"><span class="lang">SQL</span><pre>OPTIMIZE invoices;                          <span class="c">-- whole table</span>
 OPTIMIZE invoices WHERE invoice_date = '2026-01-03';   <span class="c">-- just one partition (cheap, common)</span></pre></div>
@@ -702,7 +702,7 @@ OPTIMIZE invoices WHERE invoice_date = '2026-01-03';   <span class="c">-- just o
 </figure>
 
 <!-- 17 -->
-<h2 id="zorder" class="reveal"><span class="hico"><svg class="ico"><use href="#i-blocks"/></svg></span><span class="n">18.</span> Z-Order &amp;amp; data skipping</h2>
+<h2 id="zorder" class="reveal"><span class="hico"><svg class="ico"><use href="#i-blocks"/></svg></span><span class="n">18.</span> Z-Order &amp; data skipping</h2>
 <p class="reveal">Data skipping uses each file's smallest/largest values to avoid reading files that can't match your filter. It only helps if file ranges <em>don't overlap</em>. <strong>Z-Order</strong> sorts and re-packs the data so similar values are stored together, which reduces overlap:</p>
 <div class="cb reveal"><span class="lang">SQL</span><pre>OPTIMIZE invoices ZORDER BY (customer_id);
 OPTIMIZE invoices WHERE invoice_date = '2026-01-03' ZORDER BY (customer_id);</pre></div>
@@ -801,7 +801,7 @@ OPTIMIZE invoices WHERE invoice_date = '2026-01-03' ZORDER BY (customer_id);</pr
 </figure>
 
 <!-- 19 -->
-<h2 id="vacuum" class="reveal"><span class="hico"><svg class="ico"><use href="#i-blocks"/></svg></span><span class="n">20.</span> VACUUM &amp;amp; retention</h2>
+<h2 id="vacuum" class="reveal"><span class="hico"><svg class="ico"><use href="#i-blocks"/></svg></span><span class="n">20.</span> VACUUM &amp; retention</h2>
 <p class="reveal">DELETE/UPDATE/OPTIMIZE only <strong>tombstone</strong> (mark as removed) old files; <code>VACUUM</code> actually deletes them from storage.</p>
 <div class="cb reveal"><span class="lang">SQL</span><pre>VACUUM invoices;                       <span class="c">-- removes tombstoned files older than the retention window (default 7 days)</span>
 <span class="c">-- lab only — never in production:</span>
@@ -960,7 +960,7 @@ SELECT * FROM table_changes('invoices', 5);   <span class="c">-- changes since v
 </figure>
 
 <!-- 25 -->
-<h2 id="share" class="reveal"><span class="hico"><svg class="ico"><use href="#i-blocks"/></svg></span><span class="n">26.</span> Sharing &amp;amp; UniForm</h2>
+<h2 id="share" class="reveal"><span class="hico"><svg class="ico"><use href="#i-blocks"/></svg></span><span class="n">26.</span> Sharing &amp; UniForm</h2>
 <ul class="reveal">
 <li><strong>Delta Sharing</strong> — an open way to share a live table with another team or company <em>without copying it</em>; they read your latest data through a secure connection.</li>
 <li><strong>UniForm</strong> — Delta also writes <em>Iceberg</em> (and Hudi) metadata next to its own log, so Iceberg/Hudi readers can read your Delta table. It means choosing Delta does not block other engines.</li>
