@@ -151,13 +151,13 @@ h2 .n{color:var(--blue2,#5C78FF)}
 <header class="hero">
   <div class="kicker">Data Engineering · AWS Services Guide</div>
   <h1>AWS for Data Engineers</h1>
-  <p class="dek">The AWS services a data engineer actually uses — storage, networking, ETL, warehousing, streaming, orchestration and governance — explained from the ground up and grounded in two projects that really run: a YouTube trending-data pipeline and a full Iceberg lakehouse build, with a head-to-head Databricks comparison.</p>
+  <p class="dek">The AWS services a data engineer actually uses — storage, networking, ETL, warehousing, streaming, orchestration and governance — explained from the ground up.</p>
   <div class="logos">
     <figure><svg viewBox="0 0 100 100" role="img" aria-label="AWS icon"><circle cx="50" cy="50" r="44" fill="#1D1D26" stroke="#FF9900" stroke-width="2"/><path d="M28 62 Q50 74 72 62" stroke="#FF9900" stroke-width="3" fill="none"/><polygon points="68,58 76,60 72,67" fill="#FF9900"/><rect x="32" y="30" width="10" height="20" fill="#FF9900"/><rect x="46" y="24" width="10" height="26" fill="#FFAC31"/><rect x="60" y="34" width="10" height="16" fill="#FF9900"/></svg><figcaption>Amazon Web Services</figcaption></figure>
     <figure><svg viewBox="0 0 100 100" role="img" aria-label="Data lake icon"><circle cx="50" cy="50" r="44" fill="#1D1D26" stroke="#5C78FF" stroke-width="2"/><ellipse cx="50" cy="38" rx="26" ry="10" fill="none" stroke="#5C78FF" stroke-width="2.5"/><path d="M24 38 v18 a26 10 0 0 0 52 0 v-18" fill="none" stroke="#5C78FF" stroke-width="2.5"/><path d="M24 50 a26 10 0 0 0 52 0" fill="none" stroke="#5C78FF" stroke-width="2"/></svg><figcaption>Data Lake / Lakehouse</figcaption></figure>
     <figure><svg viewBox="0 0 100 100" role="img" aria-label="Orchestration icon"><circle cx="50" cy="50" r="44" fill="#1D1D26" stroke="#A56BFF" stroke-width="2"/><rect x="26" y="26" width="16" height="16" rx="4" fill="#A56BFF"/><rect x="58" y="26" width="16" height="16" rx="4" fill="#A56BFF"/><rect x="42" y="58" width="16" height="16" rx="4" fill="#A56BFF"/><line x1="34" y1="42" x2="46" y2="60" stroke="#A56BFF" stroke-width="2"/><line x1="66" y1="42" x2="54" y2="60" stroke="#A56BFF" stroke-width="2"/></svg><figcaption>Step Functions</figcaption></figure>
   </div>
-  <div class="byline">~82 min read · updated 2026 · written in plain English, no assumed background</div>
+  <div class="byline">~70 min read · updated 2026 · written in plain English, no assumed background</div>
 </header>
 
 <div class="wrap">
@@ -198,11 +198,6 @@ h2 .n{color:var(--blue2,#5C78FF)}
   <a href="#s28"><svg class="ico"><use href="#i-blocks"/></svg>28 · Amazon QuickSight</a>
   <a href="#s29"><svg class="ico"><use href="#i-workflow"/></svg>29 · Infrastructure as Code &amp; CI/CD for Data Pipelines</a>
   <a href="#s30"><svg class="ico"><use href="#i-cloud"/></svg>30 · What&#x27;s New: AWS Data Engineering, 2024-2026</a>
-  <a href="#s31"><svg class="ico"><use href="#i-workflow"/></svg>31 · Worked Example: A Real YouTube Trending Data Pipeline</a>
-  <a href="#s32"><svg class="ico"><use href="#i-workflow"/></svg>32 · Worked Example: The Step Functions Execution, State by State</a>
-  <a href="#s33"><svg class="ico"><use href="#i-check"/></svg>33 · Worked Example: The Data Quality Gate &amp; SNS Alerting Pattern</a>
-  <a href="#s34"><svg class="ico"><use href="#i-compass"/></svg>34 · End-to-End Lakehouse Project on AWS: Architecture Overview</a>
-  <a href="#s35"><svg class="ico"><use href="#i-file"/></svg>35 · End-to-End Lakehouse Project: Building It Step by Step</a>
   <a href="#s36"><svg class="ico"><use href="#i-database"/></svg>36 · AWS Lakehouse vs. Databricks Lakehouse: A Head-to-Head Comparison</a>
   <a href="#s37"><svg class="ico"><use href="#i-check"/></svg>37 · Enterprise Validation: How These Services Are Actually Used</a>
   <a href="#s38"><svg class="ico"><use href="#i-cloud"/></svg>38 · AWS-Native vs. Cross-Cloud Alternatives</a>
@@ -942,7 +937,7 @@ silver_df.write.mode("overwrite").partitionBy("region").parquet(
 <h2 id="s10" class="reveal"><span class="hico"><svg class="ico"><use href="#i-check"/></svg></span><span class="n">10.</span> AWS Glue Data Quality</h2>
 <p class="sectionsub reveal">A rules engine that enforces expectations about a dataset inside the pipeline itself</p>
 <div class="prose reveal">
-<p><strong>Glue Data Quality</strong> is a rules engine: you declare expectations about a dataset — row counts, null thresholds, value ranges, freshness — and it evaluates them automatically as part of a pipeline, the same job the DQ Lambda plays in the worked example this guide references throughout (section 33).</p>
+<p><strong>Glue Data Quality</strong> is a rules engine: you declare expectations about a dataset — row counts, null thresholds, value ranges, freshness — and it evaluates them automatically as part of a pipeline.</p>
 </div>
 
 <pre><code># A Glue Data Quality ruleset -- DQDL (Data Quality Definition Language)
@@ -956,7 +951,7 @@ Rules = [
 
 <div class="def reveal">
 <p class="t">Where this fits relative to a hand-written DQ Lambda</p>
-<p>The worked example later in this guide uses a custom Lambda for data-quality checks — a common, perfectly valid approach, especially when checks need custom logic (freshness against a specific business rule, cross-table consistency). Glue Data Quality is the managed alternative: less custom code, a declarative rule language, and quality metrics tracked over time in the Glue console. Reach for it first, and keep a custom Lambda for checks its rule language genuinely can't express.</p>
+<p>A custom Lambda for data-quality checks is a common, perfectly valid approach, especially when checks need custom logic (freshness against a specific business rule, cross-table consistency). Glue Data Quality is the managed alternative: less custom code, a declarative rule language, and quality metrics tracked over time in the Glue console. Reach for it first, and keep a custom Lambda for checks its rule language genuinely can't express.</p>
 </div>
 
 <div class="tldr reveal">
@@ -1385,7 +1380,7 @@ WHERE trending_date = '2026-04-01' AND region = 'US';</code></pre>
 <text x="775" y="90" text-anchor="middle" font-size="9" fill="var(--good)" font-family="var(--font)">yes</text>
 <text x="775" y="168" text-anchor="middle" font-size="9" fill="#FF6B9D" font-family="var(--font)">no</text>
 </svg>
-<figcaption>Modeled on a real production state machine: parallel ingestion branches, a Wait for S3 consistency, a Choice gate on data-quality results, and a dedicated SNS failure path — every stage this guide's worked example (section 31) walks through in detail.</figcaption>
+<figcaption>Modeled on a real production state machine: parallel ingestion branches, a Wait for S3 consistency, a Choice gate on data-quality results, and a dedicated SNS failure path.</figcaption>
 </figure>
 
 <div class="callout wn reveal">
@@ -1412,8 +1407,8 @@ WHERE trending_date = '2026-04-01' AND region = 'US';</code></pre>
 <p>A Step Functions state machine is a declarative JSON/ASL document: you describe states, and Step Functions calls each AWS service through its own SDK integration. An Airflow DAG is <strong>imperative Python</strong>: you instantiate <strong>Operators</strong> — an <code>S3KeySensor</code> that waits for a file, a <code>GlueJobOperator</code> that starts a Glue job, a <code>PythonOperator</code> that runs any callable — as task objects, then wire dependencies with <code>&gt;&gt;</code>. Retries, branching and what runs in parallel live in a file that goes through the same code review and version control as any other application code, rather than in a separate state-machine artifact.</p>
 </div>
 
-<pre><code># A DAG shaped like this guide's Step Functions worked example,
-# rewritten as Airflow tasks instead of ASL states.
+<pre><code># A typical ingest → transform → DQ check pipeline,
+# expressed as Airflow tasks instead of a Step Functions ASL document.
 from airflow import DAG
 from airflow.providers.amazon.aws.sensors.s3 import S3KeySensor
 from airflow.providers.amazon.aws.operators.glue import GlueJobOperator
@@ -1475,7 +1470,7 @@ with DAG(
 <text x="430" y="200" text-anchor="middle" font-size="10.5" fill="#E7E7EE" font-family="var(--font)">Scheduled, executed, and retried entirely by MWAA's Airflow scheduler + workers</text>
 </g>
 </svg>
-<figcaption>The same pipeline shape as the Step Functions worked example, expressed as Airflow tasks and <code>&gt;&gt;</code> dependencies instead of ASL states.</figcaption>
+<figcaption>A typical ingest → transform → DQ-gate pipeline, expressed as Airflow tasks and <code>&gt;&gt;</code> dependencies instead of ASL states.</figcaption>
 </figure>
 
 <div class="tablewrap reveal">
@@ -1856,337 +1851,6 @@ glue_job = glue.CfnJob(self, "SilverToGoldJob",
 <hr/>
 <!-- END s30 -->
 
-<!-- START s31 -->
-<p class="promptline">~/aws-data-eng <b>❯</b> putting it all together</p>
-<h2 id="s31" class="reveal"><span class="hico"><svg class="ico"><use href="#i-workflow"/></svg></span><span class="n">31.</span> Worked Example: A Real YouTube Trending Data Pipeline</h2>
-<p class="sectionsub reveal">Every service in this guide, wired into one production-shaped architecture</p>
-<div class="prose reveal">
-<p>Sections 01-28 covered each AWS service in isolation. This section and the next two walk through how a real, working pipeline combines a subset of them: a system that pulls trending-video data from the YouTube Data API across 10 regions, runs it through a medallion bronze→silver→gold flow, gates promotion to gold behind an automated data-quality check, and produces analytics tables a BI tool queries — architecturally representative of a large share of real AWS data platforms, regardless of the specific source data.</p>
-</div>
-
-<figure class="diagram reveal">
-<svg viewBox="0 0 900 260" role="img" aria-label="YouTube API and Kaggle CSVs land in Bronze S3, two parallel Silver transforms run, a DQ gate decides whether Gold aggregation runs, and Gold feeds Athena and QuickSight">
-<g font-family="var(--font)" font-size="10" fill="var(--ink)">
-<rect x="15" y="95" width="90" height="70" rx="8" fill="#1D1D26" stroke="var(--muted)" stroke-width="1.5"/><text x="60" y="120" text-anchor="middle" font-size="9.5">YouTube API</text><text x="60" y="145" text-anchor="middle" font-size="9.5">+ Kaggle CSV</text>
-<rect x="150" y="95" width="100" height="70" rx="8" fill="#191921" stroke="var(--aws)" stroke-width="2"/><text x="200" y="118" text-anchor="middle" fill="var(--aws)">Bronze</text><text x="200" y="136" text-anchor="middle" font-size="9">raw JSON/CSV</text><text x="200" y="150" text-anchor="middle" font-size="9">partitioned S3</text>
-<rect x="320" y="45" width="120" height="45" rx="8" fill="#1D1D26" stroke="var(--muted)" stroke-width="1.5"/><text x="380" y="64" text-anchor="middle" font-size="9.5">Glue: bronze_to_</text><text x="380" y="78" text-anchor="middle" font-size="9.5">silver_statistics</text>
-<rect x="320" y="170" width="120" height="45" rx="8" fill="#1D1D26" stroke="var(--muted)" stroke-width="1.5"/><text x="380" y="189" text-anchor="middle" font-size="9.5">Lambda: json_to_</text><text x="380" y="203" text-anchor="middle" font-size="9.5">parquet (ref data)</text>
-<rect x="500" y="95" width="100" height="70" rx="8" fill="#191921" stroke="var(--aws)" stroke-width="2"/><text x="550" y="118" text-anchor="middle" fill="var(--aws)">Silver</text><text x="550" y="136" text-anchor="middle" font-size="9">cleansed Parquet</text><text x="550" y="150" text-anchor="middle" font-size="9">deduped, typed</text>
-<rect x="650" y="95" width="90" height="70" rx="8" fill="#1D1D26" stroke="var(--awsblue)" stroke-width="2"/><text x="695" y="118" text-anchor="middle" fill="var(--awsblue)" font-size="9.5">DQ Lambda</text><text x="695" y="136" text-anchor="middle" font-size="9">gate</text><text x="695" y="150" text-anchor="middle" font-size="9">check</text>
-<rect x="790" y="55" width="95" height="60" rx="8" fill="#191921" stroke="var(--good)" stroke-width="2"/><text x="837" y="78" text-anchor="middle" fill="var(--good)" font-size="9.5">Gold</text><text x="837" y="94" text-anchor="middle" font-size="8.5">trending/channel/</text><text x="837" y="106" text-anchor="middle" font-size="8.5">category analytics</text>
-<rect x="790" y="175" width="95" height="45" rx="8" fill="#191921" stroke="#FF6B9D" stroke-width="1.5"/><text x="837" y="194" text-anchor="middle" fill="#FF6B9D" font-size="9">SNS alert</text><text x="837" y="208" text-anchor="middle" fill="#FF6B9D" font-size="9">on failure</text>
-</g>
-<g stroke="var(--cyan2)" stroke-width="1.6" fill="none">
-<line x1="105" y1="130" x2="148" y2="130"/><polygon points="148,130 139,126 139,134" fill="var(--cyan2)"/>
-<line x1="250" y1="115" x2="318" y2="72"/><polygon points="318,72 308,73 312,81" fill="var(--cyan2)"/>
-<line x1="250" y1="145" x2="318" y2="188"/><polygon points="318,188 308,187 312,179" fill="var(--cyan2)"/>
-<line x1="440" y1="72" x2="502" y2="115"/><polygon points="502,115 492,113 496,106" fill="var(--cyan2)"/>
-<line x1="440" y1="188" x2="502" y2="145"/><polygon points="502,145 492,147 496,154" fill="var(--cyan2)"/>
-<line x1="600" y1="130" x2="648" y2="130"/><polygon points="648,130 639,126 639,134" fill="var(--cyan2)"/>
-</g>
-<line x1="740" y1="118" x2="788" y2="90" stroke="var(--good)" stroke-width="1.6"/><polygon points="788,90 778,89 782,98" fill="var(--good)"/>
-<line x1="740" y1="142" x2="788" y2="188" stroke="#FF6B9D" stroke-width="1.6"/><polygon points="788,188 778,184 784,178" fill="#FF6B9D"/>
-<text x="765" y="90" text-anchor="middle" font-size="8.5" fill="var(--good)" font-family="var(--font)">pass</text>
-<text x="765" y="192" text-anchor="middle" font-size="8.5" fill="#FF6B9D" font-family="var(--font)">fail</text>
-<text x="837" y="145" text-anchor="middle" font-size="9" fill="#E7E7EE" font-family="var(--font)">Athena / QuickSight ↓</text>
-</svg>
-<figcaption>Ingestion, two parallel Silver transforms (one Glue Spark job, one Lambda), a DQ Lambda gate, then Gold — the same medallion shape this guide's dbt-focused sibling document builds on Databricks, here built entirely from AWS-native services.</figcaption>
-</figure>
-
-<div class="def reveal">
-<p class="t">What each layer actually is, concretely, in this pipeline</p>
-<p><b>Bronze</b> is the ingestion Lambda's raw output — untouched JSON from the YouTube API, partitioned by region/date/hour — plus historical Kaggle CSVs uploaded once for backfill. <b>Silver</b> is the output of two independent transforms running in parallel: a Glue Spark job (<code>bronze_to_silver_statistics</code>) that enforces schema across both the API-JSON and Kaggle-CSV shapes, casts types, dedupes, and derives metrics like <code>like_ratio</code>; and a small Lambda (<code>json_to_parquet</code>) that normalizes the separate category-ID reference data. <b>Gold</b> is three business-facing aggregate tables — <code>trending_analytics</code>, <code>channel_analytics</code>, <code>category_analytics</code> — built by a second Glue job only after the data-quality gate (section 33) passes.</p>
-</div>
-
-<div class="tldr reveal">
-<h4>❯ Short version</h4>
-<p>A real pipeline chains ingestion (Lambda) → Bronze (S3) → two parallel Silver transforms (Glue + Lambda) → a DQ gate → Gold (Glue) → BI (Athena/QuickSight), with Step Functions as the conductor and SNS as the failure channel — the same medallion shape covered abstractly in sections 04 and 09, now concrete.</p>
-</div>
-<hr/>
-<!-- END s31 -->
-
-<!-- START s32 -->
-<p class="promptline">~/aws-data-eng <b>❯</b> reading a state machine like an engineer, not a diagram</p>
-<h2 id="s32" class="reveal"><span class="hico"><svg class="ico"><use href="#i-workflow"/></svg></span><span class="n">32.</span> Worked Example: The Step Functions Execution, State by State</h2>
-<p class="sectionsub reveal">Every Retry, Catch, and Choice in the real state machine, and why each one is there</p>
-<div class="prose reveal">
-<p>This is the actual shape of the Step Functions state machine that runs the pipeline from section 31 — the same structure introduced abstractly in section 21's diagram, now traced state by state with the real reasoning behind each retry and branch.</p>
-</div>
-
-<pre><code>"IngestFromYouTubeAPI": {
-  "Type": "Task",
-  "Resource": "arn:aws:states:::lambda:invoke",
-  "Parameters": { "FunctionName": "...youtube-ingestion-dev", "Payload": {...} },
-  "Retry": [{ "ErrorEquals": ["Lambda.ServiceException", "Lambda.TooManyRequestsException"],
-              "IntervalSeconds": 30, "MaxAttempts": 3, "BackoffRate": 2 }],
-  "Catch": [{ "ErrorEquals": ["States.ALL"], "Next": "NotifyIngestionFailure" }],
-  "Next": "WaitForS3Consistency"
-}</code></pre>
-
-<div class="def reveal">
-<p class="t">Reading this state, line by line</p>
-<p>The <code>Retry</code> block targets two specific, transient error types — a Lambda service hiccup or a throttling response — and backs off exponentially (30s, 60s, 120s) rather than hammering a rate-limited API immediately again. That specificity matters: retrying <i>every</i> error type, including a genuine bug in the Lambda's code, would just waste three attempts before failing anyway. The <code>Catch</code> block is the safety net for everything <code>Retry</code> doesn't handle (or that still fails after retries exhaust) — <code>States.ALL</code> routes any remaining failure to a dedicated notification state, so the execution never just silently dies with no one told.</p>
-</div>
-
-<pre><code>"WaitForS3Consistency": { "Type": "Wait", "Seconds": 10, "Next": "ProcessInParallel" }
-
-"ProcessInParallel": {
-  "Type": "Parallel",
-  "Branches": [
-    { "StartAt": "TransformReferenceData", "States": { "TransformReferenceData": {
-        "Type": "Task", "Resource": "arn:aws:states:::lambda:invoke", "End": true } } },
-    { "StartAt": "RunBronzeToSilverGlueJob", "States": { "RunBronzeToSilverGlueJob": {
-        "Type": "Task", "Resource": "arn:aws:states:::glue:startJobRun.sync", "End": true } } }
-  ],
-  "Catch": [{ "ErrorEquals": ["States.ALL"], "Next": "NotifyTransformFailure" }],
-  "Next": "RunDataQualityChecks"
-}</code></pre>
-
-<div class="callout gd reveal">
-<p><b>Two details worth noticing in this Parallel state.</b> First, the short <code>Wait</code> before it exists as a small, deliberate pacing buffer — giving the ingestion Lambda's write and any Catalog-side bookkeeping a moment to settle before the next stage reads that output (S3 itself has provided strong read-after-write consistency for every request since December 2020, so this isn't working around an S3 consistency gap — it's just cheap insurance against other, less-guaranteed propagation delays). Second, the Glue branch's <code>Resource</code> ends in <code>.sync</code> — that suffix tells Step Functions to wait for the Glue job to actually finish (not just accept the start request) before treating the branch as done, which is what lets <code>ProcessInParallel</code> correctly wait for both the Lambda and the Glue job before moving on.</p>
-</div>
-
-<pre><code>"EvaluateDataQuality": {
-  "Type": "Choice",
-  "Choices": [{ "Variable": "$.dq_result.Payload.quality_passed",
-                "BooleanEquals": true, "Next": "RunSilverToGoldGlueJob" }],
-  "Default": "NotifyDQFailure"
-}</code></pre>
-
-<div class="def reveal">
-<p class="t">The Choice state — this is the actual data-quality gate</p>
-<p>This is the mechanism, not a metaphor: the DQ Lambda's boolean result, sitting at <code>$.dq_result.Payload.quality_passed</code> in the execution's accumulated state, is the single value this <code>Choice</code> state branches on. If it's <code>true</code>, Gold aggregation runs. Otherwise, execution falls to <code>Default</code> — <code>NotifyDQFailure</code> — and Gold simply never runs for that execution. Section 33 covers what the DQ Lambda actually checks to produce that boolean.</p>
-</div>
-
-<div class="tldr reveal">
-<h4>❯ Short version</h4>
-<p>The real state machine pairs targeted <code>Retry</code> (specific transient errors, exponential backoff) with a catch-all <code>Catch</code> (nothing fails silently), uses a <code>Wait</code> to dodge an S3 consistency race, uses <code>.sync</code> so a Parallel branch actually waits for a Glue job to finish, and gates Gold behind a <code>Choice</code> state reading one boolean the DQ Lambda produced.</p>
-</div>
-<hr/>
-<!-- END s32 -->
-
-<!-- START s33 -->
-<p class="promptline">~/aws-data-eng <b>❯</b> the gate that decides whether Gold runs at all</p>
-<h2 id="s33" class="reveal"><span class="hico"><svg class="ico"><use href="#i-check"/></svg></span><span class="n">33.</span> Worked Example: The Data Quality Gate &amp; SNS Alerting Pattern</h2>
-<p class="sectionsub reveal">A DQ Lambda producing one boolean, and four distinct failure paths, each telling a human something different</p>
-<div class="prose reveal">
-<p>Section 32 showed the <code>Choice</code> state reading <code>$.dq_result.Payload.quality_passed</code>. This section covers what actually produces that boolean, and why the pipeline has <i>four</i> separate SNS notification states instead of one generic "something failed" alert.</p>
-</div>
-
-<div class="tablewrap reveal">
-<table>
-<thead><tr><th>Check</th><th>Threshold</th><th>What it catches</th></tr></thead>
-<tbody>
-<tr><td>Row count</td><td>≥ 10 rows</td><td>An upstream API/parsing failure that silently produced an near-empty dataset</td></tr>
-<tr><td>Null percentage</td><td>≤ 5% on critical columns</td><td>A schema or parsing regression corrupting a specific field across many rows</td></tr>
-<tr><td>Schema validation</td><td>Required columns present</td><td>An upstream API or CSV format change breaking an assumption downstream code relies on</td></tr>
-<tr><td>Value ranges</td><td>Views sanity check</td><td>Obviously-corrupt values (negative or absurdly large view counts) slipping through type casting</td></tr>
-<tr><td>Data freshness</td><td>&lt; 48 hours since last data</td><td>A pipeline that's technically "succeeding" but has actually stopped receiving new data</td></tr>
-</tbody>
-</table>
-</div>
-
-<div class="def reveal">
-<p class="t">Why four separate SNS notification states, not one</p>
-<p><code>NotifyIngestionFailure</code>, <code>NotifyTransformFailure</code>, <code>NotifyDQFailure</code>, and <code>NotifyGoldFailure</code> each publish to the same SNS topic, but with a distinct <code>Subject</code> and a message built from that specific failure's context (<code>$.error</code> for a hard failure, the full <code>$.dq_result</code> payload for a DQ failure). A single generic "pipeline failed" alert would tell an on-call engineer nothing about where to start looking; these four tell them immediately whether the problem is upstream (ingestion), in a transform, in the data itself (DQ), or in the final aggregation — collapsing what would otherwise be several minutes of digging through Step Functions' execution history into what the alert's subject line already says.</p>
-</div>
-
-<pre><code>"NotifyDQFailure": {
-  "Type": "Task",
-  "Resource": "arn:aws:states:::sns:publish",
-  "Parameters": {
-    "TopicArn": "arn:aws:sns:ap-south-1:&lt;account-id&gt;:yt-data-pipeline-alerts-dev",
-    "Subject": "[YT Pipeline] WARNING — Data quality checks failed",
-    "Message.$": "States.JsonToString($.dq_result)"
-  },
-  "End": true
-}</code></pre>
-
-<div class="callout wn reveal">
-<p><b>Notice this is a WARNING, not a FAILURE, in its own subject line — and that's deliberate.</b> A DQ gate failing doesn't mean anything crashed; it means the pipeline correctly refused to promote data it couldn't vouch for. That's a meaningfully different signal than a Lambda throwing an exception, and the pipeline's alert wording reflects it — an important habit for any DQ gate: failing loudly and safely is the gate working as designed, not the pipeline breaking.</p>
-</div>
-
-<div class="tldr reveal">
-<h4>❯ Short version</h4>
-<p>The DQ Lambda checks row count, null percentage, schema, value ranges, and freshness, producing one pass/fail boolean the Step Functions <code>Choice</code> state branches on. Four distinct SNS notification states — one per failure category — turn "something broke" into an immediately actionable alert, and a DQ-gate failure is worded as a warning, not a crash, because refusing bad data is the gate doing its job.</p>
-</div>
-<hr/>
-<!-- END s33 -->
-
-<!-- START s34 -->
-<p class="promptline">~/aws-data-eng <b>❯</b> one copy of data, every engine reads it</p>
-<h2 id="s34" class="reveal"><span class="hico"><svg class="ico"><use href="#i-compass"/></svg></span><span class="n">34.</span> End-to-End Lakehouse Project on AWS: Architecture Overview</h2>
-<p class="sectionsub reveal">The modern shape: one Iceberg-backed copy of the data, queried by both the lake side and the warehouse side</p>
-<div class="prose reveal">
-<p>A <strong>lakehouse</strong> is a specific architectural claim, not a marketing word: a single storage layer — here, Amazon S3 — holding data in an <strong>open table format</strong> (<strong>Apache Iceberg</strong>, either as an <strong>S3 Tables</strong> bucket or as ordinary S3 objects registered as Iceberg tables in the Glue Data Catalog) that both lake-style engines (Spark on EMR or Glue, Athena) <i>and</i> a warehouse engine (Redshift, via Spectrum or native Iceberg support) can read <i>and write</i>. That last part is the whole point: a classic two-tier "lake plus warehouse" architecture keeps two physical copies of the same data — one in S3 for the lake, one loaded into the warehouse's own storage — synced by a scheduled ETL job that can drift, lag, or simply fail one night. A lakehouse deletes that second copy and that sync job entirely. The worked pipeline in the <strong>Worked Example: A Real YouTube Trending Data Pipeline</strong> section is the other, simpler shape — plain Parquet on S3, no table format, no cross-engine write path — and is worth keeping in mind as the contrast point throughout this section and the next.</p>
-</div>
-
-<div class="tablewrap reveal">
-<table>
-<thead><tr><th>Layer</th><th>AWS service(s)</th><th>Why this one, specifically</th></tr></thead>
-<tbody>
-<tr><td>1. Sources</td><td>Batch files, an operational database, streaming events</td><td>Not a service choice — it's the reality any real project starts from: files someone drops somewhere, an OLTP database that already exists (<strong>RDS</strong>/<strong>Aurora</strong>), and a stream of events an application already emits (via <strong>Kinesis</strong> or <strong>MSK</strong>).</td></tr>
-<tr><td>2. Ingestion</td><td class="cell-orc">Lambda/Glue, DMS, Firehose</td><td><strong>Lambda</strong> handles lightweight batch pulls (see AWS Lambda for Data Engineering); <strong>DMS</strong> streams row-level changes off Aurora/RDS without hammering the source database with polling queries (see AWS Database Migration Service (DMS)); <strong>Firehose</strong> buffers and delivers streaming records straight into S3 with no custom retry/batching code (see Amazon Data Firehose).</td></tr>
-<tr><td>3. Storage &amp; table format</td><td class="cell-aws">S3 + Apache Iceberg</td><td>S3 (see Amazon S3: The Foundation of Every AWS Data Platform) is the durable object store underneath everything; Iceberg is what turns a folder of files into an actual <i>table</i> — one with ACID transactions, a real schema, and history — whether that table lives in an S3 Tables bucket or as Glue-Catalog-registered Iceberg tables on ordinary S3.</td></tr>
-<tr><td>4. Cataloging &amp; governance</td><td class="cell-aws">Glue Data Catalog + Lake Formation</td><td>The Catalog (see AWS Glue Data Catalog &amp; Crawlers) is the single metadata store every engine below reads table definitions from; Lake Formation (see AWS Lake Formation) sits on top of it enforcing column-, row-, and cell-level permissions once, regardless of which engine is asking.</td></tr>
-<tr><td>5. Transformation</td><td class="cell-aws">Glue Spark ETL, EMR</td><td>Glue ETL (see AWS Glue ETL Jobs) runs the bronze→silver→gold Spark logic with no cluster to manage; EMR (see Amazon EMR &amp; EMR Serverless) is the fallback when a job needs more direct control over the Spark/Hadoop stack or sustained heavy compute than a managed Glue job comfortably gives.</td></tr>
-<tr><td>6. Serving/query</td><td class="cell-blue">Athena + Redshift</td><td>Athena (see Amazon Athena) serves ad hoc, pay-per-query SQL straight off the gold Iceberg tables; Redshift (see Amazon Redshift &amp; Redshift Spectrum), via Spectrum or native Iceberg table support, serves the same tables for heavy, repeated analytical joins — against the identical physical data, not a second copy.</td></tr>
-<tr><td>7. Consumption</td><td>QuickSight, SageMaker Feature Store</td><td>QuickSight (see Amazon QuickSight) is the BI layer end users see; because the gold tables are just Iceberg tables with no BI-specific shape, the same tables can equally feed a SageMaker Feature Store for a model-training use case with no separate export step.</td></tr>
-<tr><td>8. Cross-cutting</td><td class="cell-orc">Step Functions, CloudWatch, KMS + IAM</td><td>Step Functions (see AWS Step Functions) — or MWAA, noted as its DAG-based alternative in the AWS-Native vs. Cross-Cloud Alternatives section — sequences every layer above on a schedule; CloudWatch (see Amazon CloudWatch) watches for failures and staleness; KMS-encrypted storage plus IAM roles (see IAM for Data Engineers) secure every layer without each one reinventing access control.</td></tr>
-</tbody>
-</table>
-</div>
-
-<figure class="diagram reveal">
-<svg viewBox="0 0 880 260" role="img" aria-label="Batch files, an operational database via DMS CDC, and streaming events via Kinesis or MSK land through Lambda, Glue, DMS, and Firehose into a Lakehouse Core made of S3, Iceberg tables, the Glue Data Catalog, and Lake Formation. Glue Spark ETL and EMR transform bronze into gold there. Athena and Redshift both query the same gold Iceberg tables directly. Results reach QuickSight and optionally a SageMaker Feature Store. Step Functions, CloudWatch, and KMS plus IAM run across every layer.">
-<text x="665" y="30" text-anchor="middle" font-size="9" fill="#E7E7EE" font-family="var(--font)">same table, 2 engines</text>
-<g font-family="var(--font)" font-size="9.5" fill="var(--ink)">
-<rect x="10" y="55" width="110" height="130" rx="8" fill="#1D1D26" stroke="var(--muted)" stroke-width="1.5"/>
-<text x="65" y="75" text-anchor="middle" font-size="10" fill="#E7E7EE">Sources</text>
-<text x="65" y="95" text-anchor="middle" font-size="9">Batch files</text>
-<text x="65" y="112" text-anchor="middle" font-size="9">RDS/Aurora</text>
-<text x="65" y="127" text-anchor="middle" font-size="9">(DMS CDC)</text>
-<text x="65" y="144" text-anchor="middle" font-size="9">Kinesis/MSK</text>
-<text x="65" y="160" text-anchor="middle" font-size="9">app events</text>
-
-<rect x="150" y="55" width="100" height="130" rx="8" fill="#1D1D26" stroke="var(--orch)" stroke-width="1.5"/>
-<text x="200" y="75" text-anchor="middle" font-size="10" fill="var(--orch)">Ingestion</text>
-<text x="200" y="100" text-anchor="middle" font-size="9">Lambda / Glue</text>
-<text x="200" y="118" text-anchor="middle" font-size="9">DMS (CDC)</text>
-<text x="200" y="136" text-anchor="middle" font-size="9">Firehose</text>
-
-<rect x="280" y="45" width="150" height="150" rx="8" fill="#191921" stroke="var(--aws)" stroke-width="2"/>
-<text x="355" y="65" text-anchor="middle" font-size="11" fill="var(--aws)">Lakehouse Core</text>
-<text x="355" y="90" text-anchor="middle" font-size="9.5">S3 + Iceberg tables</text>
-<text x="355" y="108" text-anchor="middle" font-size="9.5">Glue Data Catalog</text>
-<text x="355" y="128" text-anchor="middle" font-size="9.5">Lake Formation</text>
-<text x="355" y="144" text-anchor="middle" font-size="9">(governance)</text>
-
-<rect x="460" y="55" width="110" height="130" rx="8" fill="#1D1D26" stroke="var(--aws2)" stroke-width="1.5"/>
-<text x="515" y="75" text-anchor="middle" font-size="10" fill="var(--aws2)">Transform</text>
-<text x="515" y="100" text-anchor="middle" font-size="9">Glue Spark ETL</text>
-<text x="515" y="118" text-anchor="middle" font-size="9">(medallion)</text>
-<text x="515" y="136" text-anchor="middle" font-size="9">EMR (heavy)</text>
-
-<rect x="600" y="50" width="130" height="60" rx="8" fill="#191921" stroke="var(--awsblue)" stroke-width="2"/>
-<text x="665" y="72" text-anchor="middle" font-size="11" fill="var(--awsblue)">Athena</text>
-<text x="665" y="90" text-anchor="middle" font-size="9">(ad hoc SQL)</text>
-
-<rect x="600" y="140" width="130" height="60" rx="8" fill="#191921" stroke="var(--awsblue)" stroke-width="2"/>
-<text x="665" y="162" text-anchor="middle" font-size="11" fill="var(--awsblue)">Redshift</text>
-<text x="665" y="182" text-anchor="middle" font-size="9">(Spectrum/native)</text>
-
-<rect x="760" y="55" width="110" height="130" rx="8" fill="#191921" stroke="var(--good)" stroke-width="1.5"/>
-<text x="815" y="75" text-anchor="middle" font-size="10" fill="var(--good)">Consume</text>
-<text x="815" y="98" text-anchor="middle" font-size="9">QuickSight</text>
-<text x="815" y="114" text-anchor="middle" font-size="9">(BI dashboards)</text>
-<text x="815" y="136" text-anchor="middle" font-size="9">SageMaker</text>
-<text x="815" y="152" text-anchor="middle" font-size="9">Feature Store</text>
-</g>
-<g stroke="var(--cyan2)" stroke-width="1.6" fill="none">
-<line x1="120" y1="120" x2="148" y2="120"/><polygon points="148,120 139,116 139,124" fill="var(--cyan2)"/>
-<line x1="250" y1="120" x2="278" y2="120"/><polygon points="278,120 269,116 269,124" fill="var(--cyan2)"/>
-<line x1="430" y1="120" x2="458" y2="120"/><polygon points="458,120 449,116 449,124" fill="var(--cyan2)"/>
-<line x1="570" y1="105" x2="598" y2="82"/><polygon points="598,82 588,83 591,91" fill="var(--cyan2)"/>
-<line x1="570" y1="135" x2="598" y2="168"/><polygon points="598,168 588.4,163.2 594.9,157.7" fill="var(--cyan2)"/>
-<line x1="730" y1="82" x2="758" y2="100"/><polygon points="758,100 748,99 751,91" fill="var(--cyan2)"/>
-<line x1="730" y1="168" x2="758" y2="140"/><polygon points="758,140 754,150 748,144" fill="var(--cyan2)"/>
-</g>
-<text x="440" y="222" text-anchor="middle" font-size="9.5" fill="#E7E7EE" font-family="var(--font)">Orchestration: Step Functions / MWAA</text>
-<text x="440" y="238" text-anchor="middle" font-size="9.5" fill="#E7E7EE" font-family="var(--font)">Observability: CloudWatch &#183; Security: KMS + IAM</text>
-</svg>
-<figcaption>The full lakehouse shape: three source types land through three matching ingestion paths into one Iceberg-backed Storage/Catalog/Governance core; Glue Spark (or EMR) reads and writes that same core to build gold tables; Athena and Redshift then query those gold tables directly, with no load step between them.</figcaption>
-</figure>
-
-<div class="def reveal">
-<p class="t">Why this earns its complexity over the plain-Parquet medallion pattern</p>
-<p>The YouTube pipeline's medallion layers (bronze/silver/gold, all plain Parquet on S3) are simpler to build, and that simplicity is a legitimate choice for a lot of real workloads. Iceberg earns the extra moving parts specifically when a project needs: <b>ACID transactions</b> — a reader querying a table mid-write sees either the old snapshot or the new one, never a half-written mix of files, which plain Parquet on S3 cannot guarantee under concurrent writers; <b>schema evolution without rewriting history</b> — adding, renaming, or widening a column updates the table's schema going forward without touching a single existing data file; <b>time travel</b> — querying the table as of a prior snapshot, covered as an operational tool in the next section; and, biggest of all, <b>one physical copy serving both the lake engines and the warehouse engine</b>, removing the "load into Redshift" step and the drift risk that step always carries.</p>
-</div>
-
-<div class="callout wn reveal">
-<p><b>Iceberg doesn't remove the small-files problem — it just gives you a tool to fix it.</b> Continuous writers (a Firehose-fed streaming ingest job, or frequent small Glue Spark commits) still produce many small underlying data files per Iceberg table, which slows scans just like it would with plain Parquet. Iceberg's answer is periodic <b>compaction</b> (rewriting many small files into fewer large ones via a Spark job or Athena's table-optimization support) — a maintenance step a real project has to actually schedule, not something that happens automatically just because the table format is Iceberg.</p>
-</div>
-
-<div class="tldr reveal">
-<h4>❯ Short version</h4>
-<p>A <b>lakehouse</b> is one Iceberg-backed copy of data on S3 that both lake engines (Athena, Spark/EMR) and a warehouse engine (Redshift) read and write directly — no separate "load into the warehouse" step. The reference shape chains sources → ingestion (Lambda/Glue, DMS, Firehose) → S3+Iceberg storage with Glue Catalog and Lake Formation governance → Glue Spark/EMR transformation → dual serving (Athena + Redshift on the same gold tables) → QuickSight/ML consumption, with Step Functions, CloudWatch, and KMS/IAM running across all of it. It earns its complexity through ACID transactions, safe schema evolution, time travel, and eliminating a duplicate, drift-prone copy.</p>
-</div>
-<hr/>
-<!-- END s34 -->
-
-<!-- START s35 -->
-<p class="promptline">~/aws-data-eng <b>❯</b> building the lakehouse, step by step</p>
-<h2 id="s35" class="reveal"><span class="hico"><svg class="ico"><use href="#i-file"/></svg></span><span class="n">35.</span> End-to-End Lakehouse Project: Building It Step by Step</h2>
-<p class="sectionsub reveal">Turning the architecture from the previous section into an actual build order, with the reasoning behind each step</p>
-<div class="prose reveal">
-<p>The previous section laid out the shape. This one walks it in the order a real project would actually build it — not source code order, but decision order: what has to exist before the next thing can safely land on top of it. Each step below leans on a full section elsewhere in this guide for the mechanics and only explains what's specific to building it <i>this</i> way, as a lakehouse, rather than the plain-Parquet way the earlier worked example used.</p>
-</div>
-
-<h3>Step 1 — Provision storage and governance before any data lands</h3>
-<div class="prose reveal">
-<p>Create the S3 bucket(s) — or enable an <strong>S3 Tables</strong> bucket directly — register the Iceberg table format, stand up the target databases in the <strong>Glue Data Catalog</strong>, and register <strong>Lake Formation</strong> as the permissions layer on top of that catalog, all before a single ingestion job runs. This ordering matters: retrofitting governance onto a lake that's already accumulated data means auditing every existing table for who can already see what, under whatever ad hoc bucket-policy or IAM rules grew up organically — a much bigger job than declaring permissions once, up front, and having every table inherit them by default from the moment it's created.</p>
-</div>
-
-<h3>Step 2 — Land raw data through three ingestion paths into one bronze table format</h3>
-<div class="prose reveal">
-<p>Stand up all three ingestion paths from the architecture: a batch Lambda or Glue job for files, a <strong>DMS</strong> CDC task streaming changes off the operational RDS/Aurora database, and <strong>Firehose</strong> receiving app events from Kinesis or MSK — and point all three at bronze tables using the <i>same</i> Iceberg table format, not a separate streaming-only store for the Firehose path. That single decision is what makes this a lakehouse rather than two parallel systems bolted together: a batch record and a streaming record that both describe "an event that happened" end up in tables governed by the same catalog, the same Lake Formation rules, and the same downstream Spark code, instead of one path needing its own bespoke query tooling.</p>
-</div>
-
-<h3>Step 3 — Transform bronze → silver → gold with Iceberg-aware Spark code</h3>
-<div class="prose reveal">
-<p>Write the Glue Spark ETL jobs the same way the medallion pattern always works — bronze cleaned into silver, silver aggregated into gold — but change how the job <i>writes</i>. A plain-Parquet job (like the one behind the YouTube pipeline's silver and gold layers) writes with a raw path, e.g. <code>df.write.mode("overwrite").parquet("s3://bucket/gold/table/")</code>: the job just drops files at a path, and nothing enforces that the next write matches the previous write's schema. An Iceberg job instead writes through the catalog:</p>
-</div>
-
-<pre><code># Plain Parquet path write (the shape behind the YouTube pipeline's Silver/Gold jobs)
-df.write.mode("overwrite").parquet("s3://bucket/gold/channel_analytics/")
-
-# Catalog-aware Iceberg write (this lakehouse's Silver/Gold jobs)
-df.writeTo("glue_catalog.gold.channel_analytics") \
-  .using("iceberg") \
-  .createOrReplace()</code></pre>
-
-<div class="def reveal">
-<p class="t">Why that difference is what unlocks ACID and schema evolution</p>
-<p>Writing through <code>glue_catalog.gold.channel_analytics</code> means the write goes through Iceberg's transaction machinery: new data files get written, then a single atomic commit swaps the table's metadata pointer to include them, so any concurrent reader either sees the fully-committed old state or the fully-committed new state — never a partial mix. A raw <code>.parquet()</code> path write has no such commit step; a reader hitting that S3 path mid-write can see an inconsistent set of files. The catalog-aware write path is also what lets a later <code>ALTER TABLE ... ADD COLUMN</code> apply going forward without rewriting every historical Parquet file underneath.</p>
-</div>
-
-<h3>Step 4 — Gate the promotion to gold, at two layers</h3>
-<div class="prose reveal">
-<p>Reuse the exact pattern from the <strong>Worked Example: The Data Quality Gate &amp; SNS Alerting Pattern</strong> and <strong>Worked Example: The Step Functions Execution, State by State</strong> sections — a DQ Lambda producing a pass/fail boolean, and a Step Functions <code>Choice</code> state branching on it — sitting between silver and gold in this lakehouse exactly as it does in the YouTube pipeline. Iceberg adds a second, complementary layer underneath that application-level check: because gold tables have a real, registered schema, a write that doesn't match it — a column with the wrong type, say — can be rejected by the table itself at write time, not just eventually noticed by a downstream consumer. The DQ gate catches bad <i>values</i>; Iceberg's schema enforcement catches bad <i>shape</i>, and a real pipeline wants both.</p>
-</div>
-
-<h3>Step 5 — Enforce governance on the finished gold layer</h3>
-<div class="prose reveal">
-<p>Apply <strong>Lake Formation</strong> permissions (see AWS Lake Formation) directly on the gold tables once they exist: a column-level filter masking a PII column like <code>customer_email</code> for a role that only needs aggregate metrics, and a row-level filter restricting a regional analyst role to <code>WHERE region = 'ap-south-1'</code> rather than every region in the table. Because these rules live on the table in the catalog rather than inside each consuming query or dashboard, a new consumer — a new QuickSight dashboard, a new Athena workgroup, a data scientist's notebook — inherits the same restrictions automatically, with nothing to re-implement per consumer.</p>
-</div>
-
-<h3>Step 6 — Serve the same gold tables two ways, from one copy</h3>
-<div class="prose reveal">
-<p>Point <strong>Athena</strong> at the gold tables for ad hoc SQL and BI-tool connections, and point <strong>Redshift</strong> (via Spectrum, or native Iceberg table support) at the <i>identical</i> tables for the heavy, repeated analytical joins a provisioned or serverless warehouse engine handles well. This is the step worth pausing on: it is structurally impossible in the YouTube pipeline's plain-Parquet worked example without adding a separate load job to copy gold data into Redshift's own storage first. Here, both engines query the same physical Iceberg table at the same time — there is no second copy to load, refresh, or let drift out of sync with the first.</p>
-</div>
-
-<h3>Step 7 — Orchestrate and observe the whole pipeline</h3>
-<div class="prose reveal">
-<p>Wrap every step above in a <strong>Step Functions</strong> state machine (see AWS Step Functions) on a schedule, following the same <code>Retry</code>/<code>Catch</code>/<code>Choice</code> shape traced in the Step Functions worked example section — the state-machine mechanics don't change just because the tables underneath are Iceberg instead of plain Parquet. Add <strong>CloudWatch</strong> alarms (see Amazon CloudWatch) on job failures and on data freshness, and route failures to SNS, exactly as the DQ gate worked example does. None of this is new for a lakehouse; it's the same operational discipline the rest of this guide already covers, applied to one more pipeline.</p>
-</div>
-
-<h3>Step 8 — Iterate, using time travel as a real operational tool</h3>
-<div class="prose reveal">
-<p>Because every write to an Iceberg table creates a new snapshot rather than overwriting the old one in place, a bad transformation run — a Glue job with a subtle bug that silvers or golds data incorrectly — can be recovered from by querying the table <b>as of</b> the snapshot immediately before that run, e.g. a <code>FOR VERSION AS OF &lt;snapshot_id&gt;</code>-style clause (exact syntax varies by engine), and re-pointing the table there or re-running downstream logic against that earlier state. That is a genuinely practical recovery path a plain-Parquet table doesn't offer without a separate, manually-maintained backup/restore process.</p>
-</div>
-
-<div class="callout wn reveal">
-<p><b>Time travel is not a permanent backup.</b> Iceberg snapshots expire on a retention policy (configurable, but not infinite) and old data files get cleaned up behind expired snapshots to control storage cost. Treat it as a short-window operational safety net for "I need yesterday's state to fix today's bad run" — not as a substitute for actual backups of anything that needs to be recoverable months later.</p>
-</div>
-
-
-<div class="tldr reveal">
-<h4>❯ Short version</h4>
-<p>Build governance and storage first, land all three ingestion paths into the same Iceberg table format, transform with catalog-aware writes (<code>writeTo(...).using("iceberg")</code>, not raw <code>.parquet()</code> paths) to unlock ACID and schema evolution, gate gold behind both a DQ check and Iceberg's own schema enforcement, apply Lake Formation permissions on the finished gold tables, and serve those exact tables from both Athena and Redshift with no load step between them. Step Functions and CloudWatch run it on a schedule; Iceberg time travel gives you a real rollback path when a run goes wrong.</p>
-</div>
-<hr/>
-<!-- END s35 -->
-
 <!-- START s36 -->
 <p class="promptline">~/aws-data-eng <b>❯</b> same lakehouse, different platform boundary</p>
 <h2 id="s36" class="reveal"><span class="hico"><svg class="ico"><use href="#i-database"/></svg></span><span class="n">36.</span> AWS Lakehouse vs. Databricks Lakehouse: A Head-to-Head Comparison</h2>
@@ -2368,7 +2032,7 @@ df.writeTo("glue_catalog.gold.channel_analytics") \
 <tr><td>Using Lambda for a heavy Spark-scale transform</td><td>Lambda is the easiest service to start with, so it's tempting to stretch it past its 15-minute/10GB limits</td><td>Move genuinely large transforms to Glue or EMR once data volume justifies distributed processing (sections 07, 09, 11)</td></tr>
 <tr><td>Confusing a trust policy with a permissions policy</td><td>Both are JSON IAM documents attached to a role, but they answer different questions</td><td>Trust policy = who can assume the role; permissions policy = what it can do once assumed (section 05)</td></tr>
 <tr><td>Polling a source table with <code>SELECT ... WHERE updated_at > ?</code> instead of real CDC</td><td>It's the first idea that comes to mind, and doesn't need a new service</td><td>Use log-based CDC (DMS, or DynamoDB Streams) — it captures deletes and doesn't add repeated load to a live database (sections 23, 27)</td></tr>
-<tr><td>One generic "pipeline failed" alert for every failure type</td><td>It's less code to write one Catch/notify path than several</td><td>Give each failure category (ingestion, transform, DQ, aggregation) its own notification with its own context, the way the worked example does (section 33)</td></tr>
+<tr><td>One generic "pipeline failed" alert for every failure type</td><td>It's less code to write one Catch/notify path than several</td><td>Give each failure category (ingestion, transform, DQ, aggregation) its own notification with its own context</td></tr>
 <tr><td>Treating a Crawler-inferred schema as ground truth</td><td>Crawlers are the path of least resistance to get a table into the Catalog</td><td>Review (or define explicitly, as code) the schema for tables where correctness matters, especially ones with any type ambiguity in the source files (section 08)</td></tr>
 </tbody>
 </table>
@@ -2439,12 +2103,12 @@ df.writeTo("glue_catalog.gold.channel_analytics") \
 
 <div class="def reveal">
 <p class="t">A concrete first project, sized to be finishable</p>
-<p>Pick any public API or dataset producing at least daily-changing data. Land raw pulls in S3 (Bronze) via a scheduled Lambda (sections 07, 20). Transform to cleaned, typed, deduplicated Parquet (Silver) with a Glue job (section 09). Add one automated data-quality check before promoting to a Gold aggregate table (sections 10, 33). Orchestrate the whole thing with Step Functions, including at least one retry policy and one SNS failure notification (sections 21, 33). Query the Gold table from Athena (section 12), and, if there's appetite, put a QuickSight dashboard on top (section 28). That's the worked example from sections 31-33, rebuilt with different source data — deliberately, since rebuilding a known-good shape with new data is a far faster way to internalize it than starting from a blank page.</p>
+<p>Pick any public API or dataset producing at least daily-changing data. Land raw pulls in S3 (Bronze) via a scheduled Lambda (sections 07, 20). Transform to cleaned, typed, deduplicated Parquet (Silver) with a Glue job (section 09). Add one automated data-quality check before promoting to a Gold aggregate table (section 10). Orchestrate the whole thing with Step Functions, including at least one retry policy and one SNS failure notification (section 21). Query the Gold table from Athena (section 12), and, if there's appetite, put a QuickSight dashboard on top (section 28).</p>
 </div>
 
 <div class="tldr reveal">
 <h4>❯ Short version</h4>
-<p>This guide's value compounds once it's paired with actually building something: a small, real, end-to-end pipeline — ingest, medallion transform, a DQ gate, Step Functions orchestration, a queryable Gold table — following the worked example's shape with different source data. That's where the AWS console's error messages, IAM's rough edges, and Step Functions' execution history actually teach the parts a document can't.</p>
+<p>This guide's value compounds once it's paired with actually building something: a small, real, end-to-end pipeline — ingest, medallion transform, a DQ gate, Step Functions orchestration, a queryable Gold table — with your own source data. That's where the AWS console's error messages, IAM's rough edges, and Step Functions' execution history actually teach the parts a document can't.</p>
 </div>
 <hr/>
 <!-- END s41 -->
