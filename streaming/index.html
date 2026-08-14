@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Real-Time Data &amp; Stream Processing — A Kafka + Spark Structured Streaming + Flink Guide</title>
+<title>Real-Time Data &amp; Stream Processing — A Kafka + Spark Structured Streaming Guide</title>
 <style>
   :root{
     --bg:#111117; --bg2:#16161D; --panel:#191921; --panel2:#16161d;
@@ -150,13 +150,12 @@ h2 .n{color:var(--blue2,#5C78FF)}
 <header class="hero">
   <div class="kicker">Data Engineering · Streaming Guide</div>
   <h1>Real-Time Data &amp; Stream Processing</h1>
-  <p class="dek">Everything you need to actually understand Apache Kafka, Spark Structured Streaming, and Apache Flink — from the first message written to a topic, to exactly-once pipelines feeding a lakehouse, to how Netflix, Uber, LinkedIn, and other real companies wire these engines together in production. Long on purpose, with a diagram for almost every idea, and no assumed background.</p>
+  <p class="dek">Everything you need to actually understand Apache Kafka and Spark Structured Streaming — from the first message written to a topic, to exactly-once pipelines feeding a lakehouse, to how real companies wire these engines together in production. Long on purpose, with a diagram for almost every idea, and no assumed background.</p>
   <div class="logos">
     <figure><svg viewBox="0 0 100 100" role="img" aria-label="Kafka icon"><circle cx="50" cy="50" r="44" fill="#1D1D26" stroke="#28B9FF" stroke-width="2"/><circle cx="50" cy="26" r="7" fill="#28B9FF"/><circle cx="50" cy="74" r="7" fill="#28B9FF"/><circle cx="28" cy="50" r="7" fill="#5AC8FF"/><circle cx="72" cy="50" r="7" fill="#5AC8FF"/><line x1="50" y1="33" x2="50" y2="67" stroke="#28B9FF" stroke-width="2"/><line x1="35" y1="50" x2="65" y2="50" stroke="#28B9FF" stroke-width="2"/></svg><figcaption>Apache Kafka</figcaption></figure>
     <figure><svg viewBox="0 0 100 100" role="img" aria-label="Spark icon"><circle cx="50" cy="50" r="44" fill="#1D1D26" stroke="#A56BFF" stroke-width="2"/><polygon points="50,16 58,42 50,36 42,42" fill="#A56BFF"/><polygon points="50,36 62,54 50,50 38,54" fill="#A56BFF"/><polygon points="50,50 66,72 50,64 34,72" fill="#A56BFF"/></svg><figcaption>Spark Structured Streaming</figcaption></figure>
-    <figure><svg viewBox="0 0 100 100" role="img" aria-label="Flink icon"><circle cx="50" cy="50" r="44" fill="#1D1D26" stroke="#5C78FF" stroke-width="2"/><path d="M32 30 L32 70 L52 70 L52 58 L44 58 L44 42 L58 42 L58 30 Z" fill="#5C78FF"/><circle cx="66" cy="34" r="6" fill="#5C78FF"/></svg><figcaption>Apache Flink</figcaption></figure>
   </div>
-  <div class="byline">~102 min read · updated 2026 · written in plain English, no assumed background</div>
+  <div class="byline">~75 min read · updated 2026 · written in plain English, no assumed background</div>
 </header>
 
 <div class="wrap">
@@ -181,7 +180,6 @@ h2 .n{color:var(--blue2,#5C78FF)}
   <a href="#s08"><svg class="ico"><use href="#i-network"/></svg>08 · Kafka Streams &amp; ksqlDB</a>
   <a href="#s09"><svg class="ico"><use href="#i-shield"/></svg>09 · Kafka Security &amp; Monitoring</a>
   <a href="#s10"><svg class="ico"><use href="#i-blocks"/></svg>10 · Cross-Cluster Replication</a>
-  <a href="#s11"><svg class="ico"><use href="#i-network"/></svg>11 · What&#x27;s New in Kafka (2024-2026)</a>
   <a href="#s12"><svg class="ico"><use href="#i-network"/></svg>12 · Spark Structured Streaming Fundamentals</a>
   <a href="#s13"><svg class="ico"><use href="#i-database"/></svg>13 · Sources &amp; Sinks</a>
   <a href="#s14"><svg class="ico"><use href="#i-blocks"/></svg>14 · Output Modes &amp; Triggers</a>
@@ -189,17 +187,7 @@ h2 .n{color:var(--blue2,#5C78FF)}
   <a href="#s16"><svg class="ico"><use href="#i-blocks"/></svg>16 · Windowing</a>
   <a href="#s17"><svg class="ico"><use href="#i-blocks"/></svg>17 · Stateful Processing &amp; Fault Tolerance</a>
   <a href="#s18"><svg class="ico"><use href="#i-network"/></svg>18 · Streaming Joins</a>
-  <a href="#s19"><svg class="ico"><use href="#i-network"/></svg>19 · What&#x27;s New in Spark Structured Streaming (2024-2026)</a>
-  <a href="#s20"><svg class="ico"><use href="#i-blocks"/></svg>20 · Flink Architecture &amp; Core Concepts</a>
-  <a href="#s21"><svg class="ico"><use href="#i-network"/></svg>21 · The Flink DataStream API</a>
-  <a href="#s22"><svg class="ico"><use href="#i-zap"/></svg>22 · Event Time, Watermarks &amp; Windowing in Flink</a>
-  <a href="#s23"><svg class="ico"><use href="#i-blocks"/></svg>23 · State, Checkpoints &amp; Exactly-Once in Flink</a>
-  <a href="#s24"><svg class="ico"><use href="#i-blocks"/></svg>24 · Flink&#x27;s Table API &amp; Flink SQL</a>
-  <a href="#s25"><svg class="ico"><use href="#i-rocket"/></svg>25 · Flink Deployment, Scaling &amp; Operations</a>
-  <a href="#s26"><svg class="ico"><use href="#i-bulb"/></svg>26 · What&#x27;s New in Flink (2024-2026)</a>
   <a href="#s27"><svg class="ico"><use href="#i-blocks"/></svg>27 · Putting It Together: Kafka + Spark Architecture</a>
-  <a href="#s28"><svg class="ico"><use href="#i-network"/></svg>28 · Kafka Streams vs Spark Structured Streaming vs Flink</a>
-  <a href="#s29"><svg class="ico"><use href="#i-rocket"/></svg>29 · Streaming in Production: Real-World Case Studies</a>
   <a href="#s30"><svg class="ico"><use href="#i-warn"/></svg>30 · Common Pitfalls &amp; Best Practices</a>
   <a href="#s31"><svg class="ico"><use href="#i-book"/></svg>31 · Glossary</a>
   <a href="#s32"><svg class="ico"><use href="#i-compass"/></svg>32 · Learning Path &amp; Resources</a>
@@ -1321,167 +1309,6 @@ emit.checkpoints.interval.seconds = 30   # keeps consumer offsets translated</co
 <hr/>
 <!-- END s10 -->
 
-<!-- START s11 -->
-<p class="promptline">~/streaming <b>❯</b> kafka: the last two years</p>
-<h2 id="s11" class="reveal"><span class="hico"><svg class="ico"><use href="#i-network"/></svg></span><span class="n">11.</span> What&#x27;s New in Kafka (2024-2026)</h2>
-<p class="sectionsub reveal">The parts of Kafka that did not exist yet when most textbooks were written</p>
-<div class="prose reveal">
-  <p>Kafka keeps moving, and a few changes landed recently enough that older books and tutorials simply do not mention them. This section is a deliberate "catch-up" — four things anyone working with a modern Kafka cluster (roughly version 3.7 and up, and definitely version 4.0 and up) should know about.</p>
-</div>
-
-<div class="callout ok reveal">
-  <p><b>Kafka 4.0 (2024): ZooKeeper is gone.</b> As covered in <a href="#s06">section 06</a>, Kafka used to depend on ZooKeeper (an external coordination service) to track cluster metadata, and then migrated to its own built-in replacement called <b>KRaft</b>. Kafka 4.0 finishes that migration: ZooKeeper mode has been fully removed. Every Kafka 4.0+ cluster is KRaft-only. If you see a tutorial that starts with "first, start ZooKeeper," it was written for an older version.</p>
-</div>
-
-<div class="prose reveal">
-  <p>The next change fixes a problem every team running consumer groups eventually feels: rebalances used to be disruptive for everyone, even consumers who had nothing to do with the change that triggered the rebalance.</p>
-</div>
-
-<div class="def reveal">
-  <p class="t">KIP-848 — the next-generation consumer group protocol</p>
-  <p>A KIP (Kafka Improvement Proposal) is Apache Kafka's formal design-document process for significant changes — this is KIP number 848. The classic rebalance protocol is called <b>eager</b>, and it is stop-the-world: the moment group membership changes (a consumer joins, leaves, or crashes), <i>every</i> consumer in the group gives up all of its partitions and pauses, the group coordinator recomputes the whole assignment from scratch, and only then does everyone resume — even consumers whose own assignment did not actually change. KIP-848 replaces this with a protocol where the group coordinator, running on the broker, computes assignments incrementally and pushes out only the changes that are actually needed. A consumer whose partitions are unaffected just keeps consuming. The result is rebalances that are faster and far less disruptive.</p>
-</div>
-
-<figure class="diagram reveal">
-  <svg viewBox="0 0 780 430" role="img" aria-label="Side by side timelines comparing the old eager rebalance protocol, where all three consumers pause during a rebalance, against the new KIP-848 protocol, where only the affected consumer pauses">
-    <text x="20" y="35" font-size="13" fill="var(--warn)">OLD: EAGER REBALANCE (stop-the-world)</text>
-    <text x="20" y="55" font-size="11" fill="var(--dim)">C1</text>
-    <rect x="140" y="55" width="200" height="36" rx="6" fill="#1D1D26" stroke="var(--good)" stroke-width="1.5"/>
-    <text x="240" y="78" font-size="13" fill="var(--ink)" text-anchor="middle">processing</text>
-    <rect x="340" y="55" width="200" height="36" rx="6" fill="#1D1D26" stroke="var(--warn)" stroke-width="1.5"/>
-    <text x="440" y="78" font-size="13" fill="var(--warn)" text-anchor="middle">PAUSED (all stop)</text>
-    <rect x="540" y="55" width="200" height="36" rx="6" fill="#1D1D26" stroke="var(--good)" stroke-width="1.5"/>
-    <text x="640" y="78" font-size="13" fill="var(--ink)" text-anchor="middle">processing</text>
-
-    <text x="20" y="123" font-size="11" fill="var(--dim)">C2</text>
-    <rect x="140" y="101" width="200" height="36" rx="6" fill="#1D1D26" stroke="var(--good)" stroke-width="1.5"/>
-    <text x="240" y="124" font-size="13" fill="var(--ink)" text-anchor="middle">processing</text>
-    <rect x="340" y="101" width="200" height="36" rx="6" fill="#1D1D26" stroke="var(--warn)" stroke-width="1.5"/>
-    <text x="440" y="124" font-size="13" fill="var(--warn)" text-anchor="middle">PAUSED (all stop)</text>
-    <rect x="540" y="101" width="200" height="36" rx="6" fill="#1D1D26" stroke="var(--good)" stroke-width="1.5"/>
-    <text x="640" y="124" font-size="13" fill="var(--ink)" text-anchor="middle">processing</text>
-
-    <text x="20" y="169" font-size="11" fill="var(--dim)">C3</text>
-    <rect x="140" y="147" width="200" height="36" rx="6" fill="#1D1D26" stroke="var(--good)" stroke-width="1.5"/>
-    <text x="240" y="170" font-size="13" fill="var(--ink)" text-anchor="middle">processing</text>
-    <rect x="340" y="147" width="200" height="36" rx="6" fill="#1D1D26" stroke="var(--warn)" stroke-width="1.5"/>
-    <text x="440" y="170" font-size="13" fill="var(--warn)" text-anchor="middle">PAUSED (all stop)</text>
-    <rect x="540" y="147" width="200" height="36" rx="6" fill="#1D1D26" stroke="var(--good)" stroke-width="1.5"/>
-    <text x="640" y="170" font-size="13" fill="var(--ink)" text-anchor="middle">processing</text>
-
-    <text x="20" y="213" font-size="13" fill="var(--good)">NEW: KIP-848 INCREMENTAL PROTOCOL</text>
-    <text x="20" y="256" font-size="11" fill="var(--dim)">C1</text>
-    <rect x="140" y="233" width="600" height="36" rx="6" fill="#1D1D26" stroke="var(--good)" stroke-width="1.5"/>
-    <text x="440" y="256" font-size="13" fill="var(--ink)" text-anchor="middle">processing (uninterrupted)</text>
-
-    <text x="20" y="302" font-size="11" fill="var(--dim)">C2</text>
-    <rect x="140" y="279" width="200" height="36" rx="6" fill="#1D1D26" stroke="var(--good)" stroke-width="1.5"/>
-    <text x="240" y="302" font-size="13" fill="var(--ink)" text-anchor="middle">processing</text>
-    <rect x="340" y="279" width="90" height="36" rx="6" fill="#1D1D26" stroke="var(--warn)" stroke-width="1.5"/>
-    <text x="385" y="302" font-size="13" fill="var(--warn)" text-anchor="middle">PAUSED</text>
-    <rect x="430" y="279" width="310" height="36" rx="6" fill="#1D1D26" stroke="var(--good)" stroke-width="1.5"/>
-    <text x="585" y="302" font-size="13" fill="var(--ink)" text-anchor="middle">processing (new job)</text>
-
-    <text x="20" y="348" font-size="11" fill="var(--dim)">C3</text>
-    <rect x="140" y="325" width="600" height="36" rx="6" fill="#1D1D26" stroke="var(--good)" stroke-width="1.5"/>
-    <text x="440" y="348" font-size="13" fill="var(--ink)" text-anchor="middle">processing (uninterrupted)</text>
-
-    <rect x="140" y="390" width="14" height="14" fill="#1D1D26" stroke="var(--good)" stroke-width="1.5"/>
-    <text x="160" y="401" font-size="13" fill="#E7E7EE">Processing</text>
-    <rect x="340" y="390" width="14" height="14" fill="#1D1D26" stroke="var(--warn)" stroke-width="1.5"/>
-    <text x="360" y="401" font-size="13" fill="#E7E7EE">Paused / reassigning</text>
-  </svg>
-  <figcaption>Both panels cover the same stretch of time. In the old eager protocol, all three consumers pause together and stay paused until the whole group is reassigned. In KIP-848, only C2 — the consumer whose assignment actually changed — pauses, and even its pause is shorter, because the coordinator only needs to push out the one change.</figcaption>
-</figure>
-
-<div class="prose reveal">
-  <p>The last major addition is not a tweak to an existing feature — it is a genuinely new way to consume from Kafka.</p>
-</div>
-
-<div class="def reveal">
-  <p class="t">KIP-932 — "Queues for Kafka" / share groups</p>
-  <p>Recall from <a href="#s04">section 04</a> that in a normal consumer group, each partition is assigned to exactly one consumer at a time — that is how Kafka guarantees order within a partition. A <b>share group</b> breaks that rule on purpose: multiple consumers in a share group can read from the <i>same</i> partition at the same time. Each individual record is handed to one consumer and must be acknowledged by that consumer, record by record — much closer to how a traditional message queue (like RabbitMQ or SQS) works. This trades away strict per-partition ordering guarantees in exchange for being able to spread work across more consumers than you have partitions, which is exactly what you want for workloads like "process this stream of independent jobs as fast as possible" where the order between jobs does not matter.</p>
-  <p class="ex">Example: a topic with 3 partitions, but a workload that needs 12 workers to keep up. A share group can spread records across all 12, regardless of partition count — something a classic consumer group cannot do, since it would leave 9 consumers with no partition at all.</p>
-</div>
-<pre><code># the only real difference from section 04's consumer code: group.protocol=share
-consumer = KafkaConsumer(
-    "notification-jobs",
-    bootstrap_servers="broker1:9092",
-    group_id="notification-workers",
-    group_protocol="share",   # opt into share-group semantics (Kafka 4.0+)
-)
-
-while True:
-    records = consumer.poll(timeout_ms=1000)
-    for record in records:
-        process(record.value)
-        consumer.acknowledge(record)   # per-record ack, not a partition-wide offset commit</code></pre>
-<figure class="diagram reveal">
-  <svg viewBox="0 0 780 450" role="img" aria-label="A share group with three consumers cooperatively reading and individually acknowledging records from one partition, contrasted with an inset showing the classic model of one partition assigned to one consumer">
-    <defs>
-      <marker id="arrowKf11a" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
-        <path d="M0,0 L10,5 L0,10 z" fill="var(--spark)"/>
-      </marker>
-    </defs>
-    <text x="390" y="35" font-size="13" fill="var(--ink)" text-anchor="middle">SHARE GROUP — many consumers, one partition</text>
-    <text x="390" y="52" font-size="13" fill="#E7E7EE" text-anchor="middle">Partition 0</text>
-    <rect x="270" y="60" width="40" height="32" fill="#1D1D26" stroke="var(--kafka)" stroke-width="1.5"/>
-    <text x="290" y="80" font-size="13" fill="var(--ink)" text-anchor="middle">1</text>
-    <rect x="310" y="60" width="40" height="32" fill="#1D1D26" stroke="var(--kafka)" stroke-width="1.5"/>
-    <text x="330" y="80" font-size="13" fill="var(--ink)" text-anchor="middle">2</text>
-    <rect x="350" y="60" width="40" height="32" fill="#1D1D26" stroke="var(--kafka)" stroke-width="1.5"/>
-    <text x="370" y="80" font-size="13" fill="var(--ink)" text-anchor="middle">3</text>
-    <rect x="390" y="60" width="40" height="32" fill="#1D1D26" stroke="var(--kafka)" stroke-width="1.5"/>
-    <text x="410" y="80" font-size="13" fill="var(--ink)" text-anchor="middle">4</text>
-    <rect x="430" y="60" width="40" height="32" fill="#1D1D26" stroke="var(--kafka)" stroke-width="1.5"/>
-    <text x="450" y="80" font-size="13" fill="var(--ink)" text-anchor="middle">5</text>
-    <rect x="470" y="60" width="40" height="32" fill="#1D1D26" stroke="var(--kafka)" stroke-width="1.5"/>
-    <text x="490" y="80" font-size="13" fill="var(--ink)" text-anchor="middle">6</text>
-
-    <line x1="390" y1="92" x2="235" y2="167" stroke="var(--spark)" stroke-width="2" marker-end="url(#arrowKf11a)"/>
-    <line x1="390" y1="92" x2="390" y2="167" stroke="var(--spark)" stroke-width="2" marker-end="url(#arrowKf11a)"/>
-    <line x1="390" y1="92" x2="545" y2="167" stroke="var(--spark)" stroke-width="2" marker-end="url(#arrowKf11a)"/>
-    <text x="297" y="121" font-size="11" fill="#E7E7EE" text-anchor="middle">recs 1,4</text>
-    <text x="415" y="140" font-size="11" fill="#E7E7EE" text-anchor="middle">recs 2,5</text>
-    <text x="483" y="121" font-size="11" fill="#E7E7EE" text-anchor="middle">recs 3,6</text>
-
-    <rect x="175" y="170" width="110" height="40" rx="10" fill="#1D1D26" stroke="var(--spark)" stroke-width="1.5"/>
-    <text x="230" y="195" font-size="13" fill="var(--ink)" text-anchor="middle">Consumer 1</text>
-    <rect x="335" y="170" width="110" height="40" rx="10" fill="#1D1D26" stroke="var(--spark)" stroke-width="1.5"/>
-    <text x="390" y="195" font-size="13" fill="var(--ink)" text-anchor="middle">Consumer 2</text>
-    <rect x="495" y="170" width="110" height="40" rx="10" fill="#1D1D26" stroke="var(--spark)" stroke-width="1.5"/>
-    <text x="550" y="195" font-size="13" fill="var(--ink)" text-anchor="middle">Consumer 3</text>
-
-    <text x="230" y="225" font-size="11" fill="var(--good)" text-anchor="middle">ack</text>
-    <text x="390" y="225" font-size="11" fill="var(--good)" text-anchor="middle">ack</text>
-    <text x="550" y="225" font-size="11" fill="var(--good)" text-anchor="middle">ack</text>
-
-    <rect x="210" y="260" width="360" height="150" rx="10" fill="none" stroke="var(--dim)" stroke-width="1.5" stroke-dasharray="4,4"/>
-    <text x="390" y="285" font-size="11" fill="#E7E7EE" text-anchor="middle">CLASSIC MODEL: 1 partition, 1 consumer</text>
-    <rect x="240" y="320" width="120" height="40" rx="10" fill="#1D1D26" stroke="var(--kafka)" stroke-width="1.5"/>
-    <text x="300" y="345" font-size="13" fill="var(--ink)" text-anchor="middle">Partition 0</text>
-    <line x1="360" y1="340" x2="427" y2="340" stroke="var(--kafka)" stroke-width="2" marker-end="url(#arrowKf11a)"/>
-    <rect x="430" y="320" width="110" height="40" rx="10" fill="#1D1D26" stroke="var(--kafka)" stroke-width="1.5"/>
-    <text x="485" y="345" font-size="13" fill="var(--ink)" text-anchor="middle">Consumer A</text>
-  </svg>
-  <figcaption>Top: a share group lets three consumers pull individual records from the same partition, each record acknowledged on its own — like workers pulling tickets from a shared queue. Bottom inset: the classic model from section 04, where that one partition could only ever go to a single consumer.</figcaption>
-</figure>
-
-<div class="callout wn reveal">
-  <p><b>Don't confuse the two models.</b> A share group is a deliberate trade: you get to spread work across more consumers than partitions, but you give up the strict per-key ordering that a normal consumer group guarantees within a partition. Use share groups for independent units of work (e.g. "process this notification job"), not for anything where the order of records for the same key matters.</p>
-</div>
-
-<div class="prose reveal">
-  <p>Two more things worth knowing about, more briefly. <b>Tiered storage</b> — the ability to move older log segments off broker-attached disks and into cheaper object storage like S3, while Kafka still serves reads for that data transparently — reached general availability, building on what was introduced as covered in <a href="#s06">section 06</a>. And more broadly, the wider streaming ecosystem is trending toward what people are starting to call <b>"diskless" or cloud-native Kafka-compatible engines</b> — systems that speak the Kafka protocol but write data directly to object storage instead of broker-attached disks, aiming for lower operating cost at large scale. This is worth knowing as a direction the industry is exploring; it is not (as of this writing) a settled standard, and it does not replace Kafka itself — just something to keep an eye on as the ecosystem matures.</p>
-</div>
-
-<p class="pull reveal">Kafka in 2026 is KRaft-only, rebalances faster, and — for the first time — lets more than one consumer share a single partition's work.</p>
-
-<div class="tldr reveal">
-  <h4>❯ Short version</h4>
-  <p>Kafka 4.0 removed ZooKeeper for good — KRaft only. KIP-848 replaced the old stop-the-world "eager" rebalance with an incremental one where unaffected consumers keep working. KIP-932 introduced share groups, a queue-like consumption model where multiple consumers split the work of one partition, record by record. Tiered storage is now GA, and "diskless" object-storage-native engines are an industry direction worth watching, not a Kafka replacement.</p>
-</div>
-<!-- END s11 -->
 <!-- START s12 -->
 <p class="promptline">~/streaming <b>❯</b> spark: the basics</p>
 <h2 id="s12" class="reveal"><span class="hico"><svg class="ico"><use href="#i-network"/></svg></span><span class="n">12.</span> Spark Structured Streaming Fundamentals</h2>
@@ -2360,592 +2187,6 @@ matched = orders.join(
 <hr/>
 <!-- END s18 -->
 
-<!-- START s19 -->
-<p class="promptline">~/streaming <b>❯</b> spark: the last two years</p>
-<h2 id="s19" class="reveal"><span class="hico"><svg class="ico"><use href="#i-network"/></svg></span><span class="n">19.</span> What&#x27;s New in Spark Structured Streaming (2024-2026)</h2>
-<p class="sectionsub reveal">The classic textbooks stop around Spark 3.x. Here's what changed since — this is the part that keeps this guide from being a museum piece.</p>
-<div class="prose reveal">
-<p>Most Spark books (including the well-known <i>Learning Spark</i>) describe <code>mapGroupsWithState</code> and <code>flatMapGroupsWithState</code> as the way to do custom stateful logic, and full RocksDB snapshots as the way state gets checkpointed. Both are still valid and still ship in Spark — but Spark 4.0 (released 2025) and recent Databricks runtimes added real, documented upgrades on top of them. This section covers five of them.</p>
-</div>
-
-<div class="def reveal">
-<p class="t">transformWithState <span class="tag sp">Spark 4.0</span></p>
-<p>This is the modern replacement for <code>mapGroupsWithState</code> / <code>flatMapGroupsWithState</code> from the previous section. It does the same basic job — custom per-key logic across micro-batches — but fixes several rough edges. There's also a Pandas variant, <code>TransformWithStateInPandas</code>, for PySpark users who want to write their state logic with pandas data structures instead of plain Python objects.</p>
-<p class="kv">• <b>Richer state types</b> — instead of one simple object per key, you can keep several named, independently-typed pieces of state per key (e.g. a value, a list, and a map, all at once).</p>
-<p class="kv">• <b>Built-in TTL (time-to-live)</b> — you can tell Spark "expire this piece of state automatically after X time" without writing manual timeout bookkeeping yourself.</p>
-<p class="kv">• <b>Explicit timers</b> — you can register and cancel your own timers per key/state, instead of relying only on one global per-key timeout.</p>
-<p class="kv">• <b>Graceful schema evolution</b> — changing the shape of your state between app versions (e.g. adding a field) is handled far more gracefully than before, where it could break restarts from an old checkpoint.</p>
-</div>
-<pre><code>class FraudCounter(StatefulProcessor):
-    def init(self, handle):
-        # named, typed state -- with a TTL, so inactive accounts clean up on their own
-        self.count = handle.getValueState("count", IntegerType(), ttl_duration=timedelta(hours=1))
-
-    def handleInputRows(self, key, rows, timer_values):
-        new_count = (self.count.get() or 0) + len(list(rows))
-        self.count.update(new_count)
-        yield Row(account_id=key[0], swipe_count=new_count)
-
-counts = df.groupBy("account_id").transformWithState(
-    FraudCounter(), outputMode="update", timeMode="ProcessingTime"
-)</code></pre>
-
-<figure class="diagram reveal">
-<svg viewBox="0 0 600 240" role="img" aria-label="Feature comparison between mapGroupsWithState and flatMapGroupsWithState on the left versus transformWithState on the right, shown as two labeled columns">
-<defs><marker id="arrTv" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><polygon points="0,0 7,3 0,6" fill="var(--muted)"/></marker></defs>
-<text x="300" y="20" font-size="12" fill="#E7E7EE" text-anchor="middle">Spark 4.0 replacement</text>
-<line x1="270" y1="30" x2="330" y2="30" stroke="var(--muted)" stroke-width="1.5" marker-end="url(#arrTv)"/>
-<rect x="40" y="60" width="230" height="150" rx="10" fill="#1D1D26" stroke="var(--dim)" stroke-width="1.5"/>
-<text x="155" y="82" font-size="13" fill="var(--ink)" text-anchor="middle">mapGroupsWithState /</text>
-<text x="155" y="98" font-size="13" fill="var(--ink)" text-anchor="middle">flatMapGroupsWithState</text>
-<text x="55" y="122" font-size="12" fill="#E7E7EE">- One state object per key</text>
-<text x="55" y="142" font-size="12" fill="#E7E7EE">- Manual timeout bookkeeping</text>
-<text x="55" y="162" font-size="12" fill="#E7E7EE">- No built-in TTL</text>
-<text x="55" y="182" font-size="12" fill="#E7E7EE">- Schema changes need care</text>
-<rect x="330" y="60" width="230" height="150" rx="10" fill="#1D1D26" stroke="var(--spark)" stroke-width="2"/>
-<text x="445" y="82" font-size="13" fill="var(--ink)" text-anchor="middle">transformWithState</text>
-<text x="445" y="98" font-size="13" fill="var(--ink)" text-anchor="middle">(Spark 4.0)</text>
-<text x="345" y="122" font-size="12" fill="var(--good)">+ Composite, richer state</text>
-<text x="345" y="142" font-size="12" fill="var(--good)">+ Built-in TTL expiry</text>
-<text x="345" y="162" font-size="12" fill="var(--good)">+ Register/cancel timers</text>
-<text x="345" y="182" font-size="12" fill="var(--good)">+ Handles schema evolution</text>
-</svg>
-<figcaption>transformWithState keeps the same core idea as mapGroupsWithState / flatMapGroupsWithState — custom logic per key across micro-batches — while adding richer state, built-in expiry, timers, and safer schema changes.</figcaption>
-</figure>
-
-<div class="def reveal">
-<p class="t">RocksDB changelog checkpointing <span class="tag sp">Spark 3.4+</span></p>
-<p>RocksDB lets state grow larger than memory by spilling to local disk. The remaining problem was checkpointing: writing a full snapshot of a large RocksDB state store on every checkpoint is slow, and that slowness lands as extra latency in every micro-batch. Changelog checkpointing writes small, incremental records of just what changed since the last checkpoint, taking a full snapshot only occasionally. The win is in <b>normal operation, not recovery</b>: each micro-batch writes a small diff instead of a large snapshot, so steady-state checkpointing latency drops noticeably. Recovery still replays the last full snapshot plus the changelogs after it — no faster — which is exactly why Spark keeps taking periodic full snapshots in the background: it bounds how many changelogs could ever need replaying, so a crash never forces replaying an unbounded pile of tiny diffs.</p>
-</div>
-
-<figure class="diagram reveal">
-<svg viewBox="0 0 700 380" role="img" aria-label="Full snapshot checkpointing writes a large snapshot every interval, while changelog checkpointing writes small incremental changes with occasional full snapshots; the bottom comparison shows changelog checkpoints are a much smaller write during normal operation">
-<text x="20" y="30" font-size="13" fill="var(--ink)">Full snapshot checkpointing (before)</text>
-<rect x="45" y="35" width="90" height="40" rx="8" fill="#1D1D26" stroke="var(--dim)" stroke-width="1.5"/>
-<text x="90" y="59" font-size="11" fill="#E7E7EE" text-anchor="middle">snapshot</text>
-<rect x="205" y="35" width="90" height="40" rx="8" fill="#1D1D26" stroke="var(--dim)" stroke-width="1.5"/>
-<text x="250" y="59" font-size="11" fill="#E7E7EE" text-anchor="middle">snapshot</text>
-<rect x="365" y="35" width="90" height="40" rx="8" fill="#1D1D26" stroke="var(--dim)" stroke-width="1.5"/>
-<text x="410" y="59" font-size="11" fill="#E7E7EE" text-anchor="middle">snapshot</text>
-<rect x="525" y="35" width="90" height="40" rx="8" fill="#1D1D26" stroke="var(--dim)" stroke-width="1.5"/>
-<text x="570" y="59" font-size="11" fill="#E7E7EE" text-anchor="middle">snapshot</text>
-<line x1="40" y1="95" x2="640" y2="95" stroke="var(--dim)" stroke-width="1.5"/>
-<text x="20" y="120" font-size="13" fill="var(--ink)">Changelog checkpointing (Spark 3.4+)</text>
-<rect x="45" y="140" width="34" height="34" rx="6" fill="#1D1D26" stroke="var(--kafka)" stroke-width="1.5"/>
-<text x="62" y="161" font-size="11" fill="var(--kafka)" text-anchor="middle">&#916;</text>
-<rect x="89" y="140" width="34" height="34" rx="6" fill="#1D1D26" stroke="var(--kafka)" stroke-width="1.5"/>
-<text x="106" y="161" font-size="11" fill="var(--kafka)" text-anchor="middle">&#916;</text>
-<rect x="133" y="140" width="34" height="34" rx="6" fill="#1D1D26" stroke="var(--kafka)" stroke-width="1.5"/>
-<text x="150" y="161" font-size="11" fill="var(--kafka)" text-anchor="middle">&#916;</text>
-<rect x="177" y="130" width="90" height="54" rx="8" fill="#1D1D26" stroke="var(--dim)" stroke-width="1.5"/>
-<text x="222" y="161" font-size="11" fill="#E7E7EE" text-anchor="middle">snapshot</text>
-<rect x="277" y="140" width="34" height="34" rx="6" fill="#1D1D26" stroke="var(--kafka)" stroke-width="1.5"/>
-<text x="294" y="161" font-size="11" fill="var(--kafka)" text-anchor="middle">&#916;</text>
-<rect x="321" y="140" width="34" height="34" rx="6" fill="#1D1D26" stroke="var(--kafka)" stroke-width="1.5"/>
-<text x="338" y="161" font-size="11" fill="var(--kafka)" text-anchor="middle">&#916;</text>
-<rect x="365" y="140" width="34" height="34" rx="6" fill="#1D1D26" stroke="var(--kafka)" stroke-width="1.5"/>
-<text x="382" y="161" font-size="11" fill="var(--kafka)" text-anchor="middle">&#916;</text>
-<rect x="409" y="130" width="90" height="54" rx="8" fill="#1D1D26" stroke="var(--dim)" stroke-width="1.5"/>
-<text x="454" y="161" font-size="11" fill="#E7E7EE" text-anchor="middle">snapshot</text>
-<rect x="509" y="140" width="34" height="34" rx="6" fill="#1D1D26" stroke="var(--kafka)" stroke-width="1.5"/>
-<text x="526" y="161" font-size="11" fill="var(--kafka)" text-anchor="middle">&#916;</text>
-<rect x="553" y="140" width="34" height="34" rx="6" fill="#1D1D26" stroke="var(--kafka)" stroke-width="1.5"/>
-<text x="570" y="161" font-size="11" fill="var(--kafka)" text-anchor="middle">&#916;</text>
-<rect x="597" y="140" width="34" height="34" rx="6" fill="#1D1D26" stroke="var(--kafka)" stroke-width="1.5"/>
-<text x="614" y="161" font-size="11" fill="var(--kafka)" text-anchor="middle">&#916;</text>
-<line x1="40" y1="200" x2="640" y2="200" stroke="var(--dim)" stroke-width="1.5"/>
-<text x="20" y="235" font-size="12" fill="#E7E7EE">Typical write size per checkpoint, during normal operation:</text>
-<text x="40" y="270" font-size="11" fill="#E7E7EE" text-anchor="start">Full snapshot every time:</text>
-<rect x="280" y="250" width="320" height="30" rx="6" fill="#191921" stroke="var(--dim)" stroke-width="1.5"/>
-<text x="440" y="270" font-size="11" fill="#E7E7EE" text-anchor="middle">large write, every checkpoint</text>
-<text x="40" y="320" font-size="11" fill="#E7E7EE" text-anchor="start">Changelog, most checkpoints:</text>
-<rect x="280" y="300" width="70" height="30" rx="6" fill="#191921" stroke="var(--good)" stroke-width="1.5"/>
-<text x="315" y="320" font-size="10.5" fill="var(--good)" text-anchor="middle">small Δ</text>
-</svg>
-<figcaption>Full-snapshot checkpointing writes a large state snapshot every checkpoint interval. Changelog checkpointing writes small incremental changes ("Δ") most of the time and only occasionally a full snapshot — the win is a much smaller write on every ordinary checkpoint. Recovery after a crash still replays the last snapshot plus its changelogs, which is why Spark keeps taking full snapshots periodically: it keeps that replay bounded.</figcaption>
-</figure>
-
-<div class="prose reveal">
-<p>Two patterns from earlier sections have also become much more mainstream in production over the last couple of years:</p>
-<p class="kv">• <b>Trigger.AvailableNow</b> — recap from an earlier section: this trigger processes exactly whatever data is currently available, as a bounded batch of micro-batches, then stops the query on its own. It has become the go-to pattern for "streaming pipeline that only needs to run periodically" (e.g. every hour via a scheduler), because it reuses all your streaming code and checkpoint logic without needing a query that runs forever.</p>
-<p class="kv">• <b>Spark Connect for streaming</b> — Spark Connect is a thin client protocol that lets an application talk to a remote Spark cluster over a lightweight <b>gRPC</b>-based connection (gRPC is just a common, efficient way for one program to call functions on another program over a network — think of it as a fast, modern alternative to a REST API), without needing a full Spark driver running locally. Streaming queries can now be started and managed through Spark Connect, which makes it much easier to trigger and monitor streaming jobs from small client applications, notebooks, or services that shouldn't have to embed a full Spark installation.</p>
-</div>
-
-<div class="def reveal">
-<p class="t">Lakeflow Declarative Pipelines <span class="tag int">Databricks, 2024 rebrand of Delta Live Tables</span></p>
-<p>Lakeflow Declarative Pipelines is Databricks' evolution of Delta Live Tables (DLT). Instead of imperative Structured Streaming code saying exactly <i>how</i> to read, transform and write each table, you declare in SQL or Python <i>what</i> tables you want and whether each is streaming or batch. The system works out how to run it: managing checkpoints, retrying failed runs, and resolving dependency order so a downstream table always runs after the upstream table it reads from is up to date. Under the hood the streaming tables are still Structured Streaming — a declarative layer on top, not a replacement engine.</p>
-</div>
-
-<figure class="diagram reveal">
-<svg viewBox="0 0 640 340" role="img" aria-label="Three stacked layers: Lakeflow Declarative Pipelines on top declaring what tables are wanted, Structured Streaming engine in the middle doing the execution, and Delta or Iceberg lakehouse tables at the bottom as storage">
-<defs><marker id="arrLf" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><polygon points="0,0 7,3 0,6" fill="var(--muted)"/></marker></defs>
-<rect x="100" y="40" width="440" height="70" rx="10" fill="#1D1D26" stroke="var(--purple)" stroke-width="2"/>
-<text x="320" y="65" font-size="13" fill="var(--ink)" text-anchor="middle">Lakeflow Declarative Pipelines</text>
-<text x="320" y="83" font-size="11" fill="#E7E7EE" text-anchor="middle">(declare WHAT tables you want)</text>
-<line x1="320" y1="110" x2="320" y2="138" stroke="var(--muted)" stroke-width="1.5" marker-end="url(#arrLf)"/>
-<text x="335" y="128" font-size="11" fill="#E7E7EE">built on top of</text>
-<rect x="100" y="140" width="440" height="70" rx="10" fill="#1D1D26" stroke="var(--spark)" stroke-width="1.5"/>
-<text x="320" y="165" font-size="13" fill="var(--ink)" text-anchor="middle">Structured Streaming engine</text>
-<text x="320" y="183" font-size="11" fill="#E7E7EE" text-anchor="middle">(micro-batches, checkpoints, state)</text>
-<line x1="320" y1="210" x2="320" y2="238" stroke="var(--muted)" stroke-width="1.5" marker-end="url(#arrLf)"/>
-<text x="335" y="228" font-size="11" fill="#E7E7EE">built on top of</text>
-<rect x="100" y="240" width="440" height="70" rx="10" fill="#1D1D26" stroke="var(--kafka)" stroke-width="1.5"/>
-<text x="320" y="265" font-size="13" fill="var(--ink)" text-anchor="middle">Delta Lake / Iceberg tables</text>
-<text x="320" y="283" font-size="11" fill="#E7E7EE" text-anchor="middle">(the lakehouse storage layer)</text>
-</svg>
-<figcaption>Lakeflow Declarative Pipelines is a declarative layer: you say what tables you want, and it drives a Structured Streaming engine underneath, reading and writing lakehouse tables at the bottom.</figcaption>
-</figure>
-
-<div class="prose reveal">
-<p>Two more Delta Lake features come up constantly once you pair Structured Streaming with a lakehouse table format:</p>
-<p class="kv">• <b>Auto Loader</b> — an efficient way to incrementally discover new files landing in cloud storage (e.g. new Parquet or JSON files arriving in an S3 bucket) without listing the entire directory tree on every micro-batch. It tracks which files it has already processed, so it scales to directories with millions of files instead of getting slower over time.</p>
-<p class="kv">• <b>Change Data Feed (CDF)</b> — a Delta Lake feature that lets you stream out just the <i>row-level changes</i> — inserts, updates, and deletes — that happened to a Delta table, instead of downstream jobs having to re-read the whole table to figure out what changed. This is what makes it practical to chain several Delta tables together in a streaming fashion, each one reacting only to the actual changes in the table before it.</p>
-</div>
-
-<div class="callout cy reveal">
-<p><b>Iceberg is catching up fast.</b> Apache Iceberg — a competing open table format — is increasingly supported as both a streaming source and a streaming sink in Spark Structured Streaming, in much the same way Delta Lake already works. If you work at a shop that standardized on Iceberg instead of Delta, expect the streaming read/write story to keep converging with what's described here for Delta.</p>
-</div>
-
-<div class="tablewrap reveal">
-<table>
-<thead>
-<tr><th>Feature</th><th>Replaces / extends</th><th>Introduced</th><th>System</th></tr>
-</thead>
-<tbody>
-<tr><td>transformWithState</td><td>mapGroupsWithState / flatMapGroupsWithState</td><td>Spark 4.0</td><td><span class="tag sp">Spark</span></td></tr>
-<tr><td>RocksDB changelog checkpointing</td><td>full RocksDB snapshot checkpointing</td><td>Spark 3.4+</td><td><span class="tag sp">Spark</span></td></tr>
-<tr><td>Trigger.AvailableNow (mainstream use)</td><td>always-on triggers for periodic jobs</td><td>Spark 3.3, widely adopted since</td><td><span class="tag sp">Spark</span></td></tr>
-<tr><td>Spark Connect for streaming</td><td>local-driver-only query management</td><td>Spark 3.5+</td><td><span class="tag sp">Spark</span></td></tr>
-<tr><td>Lakeflow Declarative Pipelines</td><td>Delta Live Tables (renamed/evolved)</td><td>Databricks, 2024</td><td><span class="tag int">Databricks</span></td></tr>
-<tr><td>Auto Loader / Change Data Feed</td><td>manual directory listing / full table re-reads</td><td>Databricks Delta Lake</td><td><span class="tag int">Databricks</span></td></tr>
-</tbody>
-</table>
-</div>
-
-<div class="tldr reveal">
-<h4>❯ Short version</h4>
-<p>transformWithState is the new, richer way to do custom stateful logic. RocksDB changelog checkpointing makes large-state checkpointing cheap. Trigger.AvailableNow and Spark Connect have gone from niche to mainstream. Lakeflow Declarative Pipelines (née Delta Live Tables) lets you declare tables instead of hand-wiring streaming jobs, still running Structured Streaming underneath. Auto Loader and Change Data Feed round out the Delta Lake integration story, and Iceberg is closing the gap.</p>
-</div>
-<p class="pull reveal">The engine underneath hasn't changed its promises — micro-batches, watermarks, exactly-once semantics — but almost everything built on top of it has gotten easier to operate since the textbooks were written.</p>
-<hr/>
-<!-- END s19 -->
-<!-- START s20 -->
-<p class="promptline">~/streaming <b>❯</b> flink: a third engine</p>
-<h2 id="s20" class="reveal"><span class="hico"><svg class="ico"><use href="#i-blocks"/></svg></span><span class="n">20.</span> Flink Architecture &amp; Core Concepts</h2>
-<p class="sectionsub reveal">Built stream-first from day one — batch is just a stream that happens to end</p>
-<div class="prose reveal">
-<p><strong>Apache Flink</strong> is a distributed engine for unbounded and bounded data streams. The key difference from everything above: Spark Structured Streaming starts from a batch engine and adds a micro-batch loop, so a "stream" is really a fast-arriving sequence of tiny batches. Flink inverts that — its runtime is a true <strong>event-at-a-time, pipelined dataflow</strong> engine, and a bounded batch job is the special case, a stream that happens to end. That one design choice is why Flink typically reaches lower latency than Spark's micro-batches, and why its notion of time, state and windows (sections 22-23) is the most complete of the three engines here.</p>
-<p>A Flink program is written against an API (most commonly the <strong>DataStream API</strong>, section 21, or <strong>Table API / Flink SQL</strong>, section 24) and compiled into a <strong>JobGraph</strong> — a graph of operators (source, map, keyBy, window, sink) connected by data streams. That JobGraph is submitted to a Flink cluster, which schedules it, runs it continuously, and keeps it alive indefinitely for a true streaming job.</p>
-</div>
-
-<div class="def reveal">
-<p class="t">JobManager vs. TaskManager</p>
-<p>A Flink cluster has two kinds of processes. The <strong>JobManager</strong> is the brain: it accepts submitted jobs, turns the JobGraph into an <strong>ExecutionGraph</strong> (the JobGraph with parallelism expanded out), schedules tasks onto workers, coordinates checkpoints (section 23), and handles failure recovery. A <strong>TaskManager</strong> is a worker process that actually executes tasks and holds data in memory/state on local disk; each TaskManager offers one or more <strong>task slots</strong>, and a slot is the unit of resource a single parallel slice of the job runs in.</p>
-<p class="ex">Example: think of the JobManager as an air traffic controller and TaskManagers as the actual planes (workers) — the controller decides who flies where and reroutes around problems, but never carries any passengers (data) itself.</p>
-</div>
-
-<figure class="diagram reveal">
-<svg viewBox="0 0 900 320" role="img" aria-label="A Flink cluster with a JobManager containing ResourceManager, Dispatcher, and JobMaster, coordinating three TaskManagers each with task slots">
-<rect x="30" y="30" width="290" height="180" rx="14" fill="#1D1D26" stroke="var(--flink)" stroke-width="2"/>
-<text x="175" y="55" text-anchor="middle" font-size="13" font-weight="700" fill="var(--flink)" font-family="var(--font)">JobManager</text>
-<rect x="48" y="70" width="254" height="36" rx="8" fill="#191921" stroke="#FF6B9D"/><text x="175" y="93" text-anchor="middle" font-size="11" fill="var(--ink)" font-family="var(--font)">Dispatcher — accepts job submissions</text>
-<rect x="48" y="114" width="254" height="36" rx="8" fill="#191921" stroke="#FF6B9D"/><text x="175" y="137" text-anchor="middle" font-size="11" fill="var(--ink)" font-family="var(--font)">ResourceManager — allocates slots</text>
-<rect x="48" y="158" width="254" height="36" rx="8" fill="#191921" stroke="#FF6B9D"/><text x="175" y="181" text-anchor="middle" font-size="11" fill="var(--ink)" font-family="var(--font)">JobMaster — one per running job</text>
-
-<line x1="320" y1="80" x2="360" y2="80" stroke="var(--muted)" stroke-width="1.5"/>
-<line x1="320" y1="160" x2="360" y2="220" stroke="var(--muted)" stroke-width="1.5"/>
-<line x1="320" y1="60" x2="360" y2="120" stroke="var(--muted)" stroke-width="1.5"/>
-
-<rect x="360" y="30" width="170" height="80" rx="10" fill="#1D1D26" stroke="#3C4356" stroke-width="2"/>
-<text x="445" y="52" text-anchor="middle" font-size="12" font-weight="700" fill="var(--ink)" font-family="var(--font)">TaskManager 1</text>
-<rect x="374" y="64" width="60" height="34" rx="6" fill="#191921" stroke="var(--flink)"/><text x="404" y="85" text-anchor="middle" font-size="10" fill="var(--ink)" font-family="var(--font)">slot</text>
-<rect x="440" y="64" width="60" height="34" rx="6" fill="#191921" stroke="var(--flink)"/><text x="470" y="85" text-anchor="middle" font-size="10" fill="var(--ink)" font-family="var(--font)">slot</text>
-
-<rect x="360" y="120" width="170" height="80" rx="10" fill="#1D1D26" stroke="#3C4356" stroke-width="2"/>
-<text x="445" y="142" text-anchor="middle" font-size="12" font-weight="700" fill="var(--ink)" font-family="var(--font)">TaskManager 2</text>
-<rect x="374" y="154" width="60" height="34" rx="6" fill="#191921" stroke="var(--flink)"/><text x="404" y="175" text-anchor="middle" font-size="10" fill="var(--ink)" font-family="var(--font)">slot</text>
-<rect x="440" y="154" width="60" height="34" rx="6" fill="#191921" stroke="var(--flink)"/><text x="470" y="175" text-anchor="middle" font-size="10" fill="var(--ink)" font-family="var(--font)">slot</text>
-
-<rect x="360" y="210" width="170" height="80" rx="10" fill="#1D1D26" stroke="#3C4356" stroke-width="2"/>
-<text x="445" y="232" text-anchor="middle" font-size="12" font-weight="700" fill="var(--ink)" font-family="var(--font)">TaskManager 3</text>
-<rect x="374" y="244" width="60" height="34" rx="6" fill="#191921" stroke="var(--flink)"/><text x="404" y="265" text-anchor="middle" font-size="10" fill="var(--ink)" font-family="var(--font)">slot</text>
-<rect x="440" y="244" width="60" height="34" rx="6" fill="#191921" stroke="var(--flink)"/><text x="470" y="265" text-anchor="middle" font-size="10" fill="var(--ink)" font-family="var(--font)">slot</text>
-
-<text x="700" y="150" text-anchor="middle" font-size="11" fill="#E7E7EE" font-family="var(--font)" width="180">Each slot runs one parallel<tspan x="700" dy="1.3em">slice of the job's operators.</tspan><tspan x="700" dy="1.3em">6 slots here = up to 6-way</tspan><tspan x="700" dy="1.3em">parallelism for this job.</tspan></text>
-</svg>
-<figcaption>Inside the JobManager: a Dispatcher accepts jobs, a ResourceManager tracks available slots, and one JobMaster per running job drives scheduling and checkpointing. TaskManagers are the workers that actually run the data processing.</figcaption>
-</figure>
-
-<div class="prose reveal">
-<p>A job's <strong>parallelism</strong> is how many parallel instances each operator runs as. A <code>keyBy</code>+<code>window</code> stage with parallelism 8 runs 8 copies, each owning a disjoint slice of the keyspace — exactly like Kafka partitions divided among consumers (section 04), or Spark shuffling across partitions for a <code>groupBy</code>. Operators needing no shuffle between them, a <code>map</code> feeding straight into a <code>filter</code>, get fused into a single task by <strong>operator chaining</strong>: one thread, no network or serialization between them. Any shuffle-like operation — <code>keyBy</code>, rebalance, explicit repartition — breaks the chain, because data has to move between parallel instances.</p>
-</div>
-
-<figure class="diagram reveal">
-<svg viewBox="0 0 820 200" role="img" aria-label="A dataflow graph where source, map, and filter are chained into one task, but keyBy breaks the chain into a separate stage">
-<g font-family="var(--font)" font-size="12" fill="var(--ink)">
-<rect x="20" y="60" width="330" height="80" rx="12" fill="#1D1D26" stroke="var(--flink)" stroke-width="2" stroke-dasharray="0"/>
-<text x="185" y="50" text-anchor="middle" font-size="11" fill="#E7E7EE">chained into one task (no shuffle)</text>
-<rect x="40" y="82" width="90" height="36" rx="8" fill="#191921" stroke="#FF6B9D"/><text x="85" y="105" text-anchor="middle">Source</text>
-<rect x="150" y="82" width="90" height="36" rx="8" fill="#191921" stroke="#FF6B9D"/><text x="195" y="105" text-anchor="middle">Map</text>
-<rect x="260" y="82" width="80" height="36" rx="8" fill="#191921" stroke="#FF6B9D"/><text x="300" y="105" text-anchor="middle">Filter</text>
-<line x1="130" y1="100" x2="148" y2="100" stroke="var(--cyan2)" stroke-width="2"/>
-<line x1="240" y1="100" x2="258" y2="100" stroke="var(--cyan2)" stroke-width="2"/>
-
-<line x1="350" y1="100" x2="410" y2="100" stroke="var(--warn)" stroke-width="2" stroke-dasharray="5 4"/>
-<polygon points="410,100 400,95 400,105" fill="var(--warn)"/>
-<text x="380" y="150" text-anchor="middle" font-size="10" fill="var(--warn)">shuffle — breaks the chain</text>
-
-<rect x="420" y="60" width="180" height="80" rx="12" fill="#1D1D26" stroke="var(--flink)" stroke-width="2"/>
-<text x="510" y="50" text-anchor="middle" font-size="11" fill="#E7E7EE">new task, new stage</text>
-<rect x="440" y="82" width="140" height="36" rx="8" fill="#191921" stroke="#FF6B9D"/><text x="510" y="105" text-anchor="middle">keyBy + window</text>
-
-<line x1="600" y1="100" x2="640" y2="100" stroke="var(--cyan2)" stroke-width="2"/>
-<polygon points="640,100 630,95 630,105" fill="var(--cyan2)"/>
-<rect x="650" y="82" width="120" height="36" rx="8" fill="#191921" stroke="#FF6B9D"/><text x="710" y="105" text-anchor="middle">Sink</text>
-</g>
-</svg>
-<figcaption>Source → map → filter run in one thread with zero overhead between them (operator chaining). The keyBy forces a network shuffle, so it starts a new task — the same reason a Spark <code>groupBy</code> or a Kafka Streams <code>groupByKey</code> triggers a repartition.</figcaption>
-</figure>
-
-<div class="profile int reveal">
-<p class="one">Where Flink shows up in the real world</p>
-<p class="kv">• <b>Sub-second fraud &amp; risk scoring</b> — payment networks and banks scoring a transaction against dozens of signals before it completes.</p>
-<p class="kv">• <b>Real-time feature pipelines for ML/recommendation</b> — computing features (click counts, session state) the instant a user acts, so a recommendation model sees fresh signal.</p>
-<p class="kv">• <b>Ride-hailing ETA and pricing</b> — continuously recomputing estimates as GPS pings and demand signals stream in, event by event, not batch by batch.</p>
-<p class="kv">• <b>Complex event processing (CEP)</b> — detecting patterns across a sequence of events (e.g. "three failed logins from the same device in 30 seconds") with strict ordering and timing guarantees.</p>
-<p class="kv">• <b>Large-scale change data capture pipelines</b> — Flink CDC (section 24) reading database change logs from thousands of tables and fanning them out with low, predictable latency.</p>
-</div>
-
-<div class="tldr reveal">
-<h4>❯ Short version</h4>
-<p>Flink is a true event-at-a-time streaming engine, not a micro-batch engine — batch is just a bounded stream. A <b>JobManager</b> (Dispatcher + ResourceManager + one JobMaster per job) coordinates; <b>TaskManagers</b> run the actual work in <b>task slots</b>. Operators chain into one task when there's no shuffle between them, and split into separate stages whenever a <code>keyBy</code> or similar operation forces data to move across the network.</p>
-</div>
-<hr/>
-<!-- END s20 -->
-
-<!-- START s21 -->
-<p class="promptline">~/streaming <b>❯</b> flink: the DataStream API</p>
-<h2 id="s21" class="reveal"><span class="hico"><svg class="ico"><use href="#i-network"/></svg></span><span class="n">21.</span> The Flink DataStream API</h2>
-<p class="sectionsub reveal">Building a topology by hand — sources, transformations, and low-level process functions</p>
-<div class="prose reveal">
-<p>The <strong>DataStream API</strong> (Java, Scala, or Python) is Flink's general-purpose, code-first API — the rough equivalent of Kafka Streams' KStream/KTable API (section 08), but running on a real cluster instead of embedded inside your own application. A program starts from a <code>StreamExecutionEnvironment</code>, adds a source, chains transformations, and ends with one or more sinks. Nothing actually runs until you call <code>execute()</code> — up to that point you're just building the JobGraph described in section 20.</p>
-</div>
-<pre><code>StreamExecutionEnvironment env = StreamExecutionEnvironment.getExecutionEnvironment();
-
-DataStream&lt;Transaction&gt; txns = env.fromSource(
-    KafkaSource.&lt;Transaction&gt;builder()
-        .setBootstrapServers("broker:9092")
-        .setTopics("transactions")
-        .setValueOnlyDeserializer(new TransactionDeserializer())
-        .setStartingOffsets(OffsetsInitializer.latest())
-        .build(),
-    WatermarkStrategy.&lt;Transaction&gt;forBoundedOutOfOrderness(Duration.ofSeconds(5))
-        .withTimestampAssigner((t, ts) -> t.getEventTimeMillis()),
-    "transactions-source");
-
-DataStream&lt;Alert&gt; alerts = txns
-    .filter(t -> t.getAmount() > 0)                       // stateless
-    .keyBy(Transaction::getAccountId)                      // partition by key, like a Kafka partition key
-    .window(TumblingEventTimeWindows.of(Time.minutes(2)))  // section 22
-    .aggregate(new CountAndFlagAggregator());              // stateful -> needs state, section 23
-
-alerts.sinkTo(KafkaSink.&lt;Alert&gt;builder()
-    .setBootstrapServers("broker:9092")
-    .setRecordSerializer(alertSerializer)
-    .setDeliveryGuarantee(DeliveryGuarantee.EXACTLY_ONCE)  // section 23
-    .build());
-
-env.execute("fraud-detection-job");</code></pre>
-
-<div class="prose reveal">
-<p>Most transformations should feel familiar from Kafka Streams and Spark: <code>map</code>/<code>flatMap</code>/<code>filter</code> are stateless, per-record operations; <code>keyBy</code> repartitions the stream by a key, the same idea as a Kafka partition key or a Spark <code>groupBy</code> column; <code>reduce</code>/<code>aggregate</code> combine records per key over a window. Built-in <strong>connectors</strong> read from and write to the outside world — Kafka, filesystems (including S3/HDFS), JDBC databases, Elasticsearch, and Iceberg/Paimon tables are all officially maintained, playing a similar role to Kafka Connect's source/sink connectors (section 07) but compiled directly into the job rather than run as a separate service.</p>
-</div>
-
-<div class="def reveal">
-<p class="t">ProcessFunction — the escape hatch</p>
-<p>Every operation above (<code>map</code>, <code>filter</code>, windowed <code>aggregate</code>) is a friendly wrapper around Flink's lowest-level building block, the <strong>ProcessFunction</strong>. It gives direct access to every event, to keyed state (section 23), and to <strong>timers</strong>: say "wake me up at this future timestamp" and Flink calls your code back exactly then, even if no new event arrives. That's what makes "alert if no follow-up event arrives within 10 minutes" possible without polling. A ProcessFunction can also emit to a <strong>side output</strong> — a separate, differently-typed stream tapped off the main one, commonly used to route late-arriving events (section 22) or malformed records to their own path instead of dropping them silently.</p>
-<p class="ex">Example: a <b>session-timeout detector</b> sets a timer for "now + 30 minutes" every time it sees an event for a user; if the timer fires before a newer event resets it, that's the signal the session ended — no polling loop required.</p>
-</div>
-
-<figure class="diagram reveal">
-<svg viewBox="0 0 780 190" role="img" aria-label="A DataStream topology from Kafka source through filter, keyBy, window, and process to a Kafka sink">
-<g font-family="var(--font)" font-size="12" fill="var(--ink)">
-<rect x="20" y="65" width="120" height="55" rx="10" fill="#1D1D26" stroke="var(--flink)" stroke-width="2"/><text x="80" y="97" text-anchor="middle">Kafka source</text>
-<rect x="170" y="65" width="100" height="55" rx="10" fill="#1D1D26" stroke="var(--flink)" stroke-width="2"/><text x="220" y="97" text-anchor="middle">filter</text>
-<rect x="300" y="65" width="100" height="55" rx="10" fill="#1D1D26" stroke="var(--flink)" stroke-width="2"/><text x="350" y="97" text-anchor="middle">keyBy</text>
-<rect x="430" y="65" width="140" height="55" rx="10" fill="#1D1D26" stroke="var(--flink)" stroke-width="2"/><text x="500" y="97" text-anchor="middle">window + process</text>
-<rect x="600" y="65" width="150" height="55" rx="10" fill="#1D1D26" stroke="var(--flink)" stroke-width="2"/><text x="675" y="97" text-anchor="middle">Kafka sink</text>
-</g>
-<g stroke="var(--cyan2)" stroke-width="2" fill="none">
-<line x1="140" y1="92" x2="168" y2="92"/><polygon points="170,92 160,87 160,97" fill="var(--cyan2)"/>
-<line x1="270" y1="92" x2="298" y2="92"/><polygon points="300,92 290,87 290,97" fill="var(--cyan2)"/>
-<line x1="400" y1="92" x2="428" y2="92"/><polygon points="430,92 420,87 420,97" fill="var(--cyan2)"/>
-<line x1="570" y1="92" x2="598" y2="92"/><polygon points="600,92 590,87 590,97" fill="var(--cyan2)"/>
-</g>
-<line x1="500" y1="120" x2="500" y2="150" stroke="var(--warn)" stroke-width="1.5" stroke-dasharray="4 3"/>
-<text x="500" y="168" text-anchor="middle" font-size="10" fill="var(--warn)">side output: late/bad records routed here instead of dropped</text>
-</svg>
-<figcaption>A typical topology, and the side output pattern: instead of silently dropping late or malformed records, a ProcessFunction can route them to their own separate stream for inspection or a slower reprocessing path.</figcaption>
-</figure>
-
-<div class="tldr reveal">
-<h4>❯ Short version</h4>
-<p>The DataStream API builds a topology from a <code>StreamExecutionEnvironment</code>: sources → stateless transforms (<code>map</code>/<code>filter</code>) → <code>keyBy</code> → stateful transforms (<code>aggregate</code>/<code>process</code>) → sinks. Built-in connectors cover Kafka, files, JDBC, Elasticsearch, and lakehouse formats. When the built-in operators aren't enough, <b>ProcessFunction</b> gives you raw access to events, state, and timers, plus side outputs for anything you don't want to silently drop.</p>
-</div>
-<hr/>
-<!-- END s21 -->
-
-<!-- START s22 -->
-<p class="promptline">~/streaming <b>❯</b> flink: time done right</p>
-<h2 id="s22" class="reveal"><span class="hico"><svg class="ico"><use href="#i-zap"/></svg></span><span class="n">22.</span> Event Time, Watermarks &amp; Windowing in Flink</h2>
-<p class="sectionsub reveal">The same ideas as sections 15-16, taken further</p>
-<div class="prose reveal">
-<p>You already met event-time, processing-time, and watermarks in section 15, and tumbling/sliding/session windows in section 16 — the core ideas are identical here, because Flink's model is what the rest of the industry, including Spark, converged toward. What Flink adds is <strong>composability</strong>: instead of one bundled <code>window()</code> call, Flink separates windowing into independent pieces you can mix and match, which is a big part of why its event-time semantics are widely considered the most flexible of the three engines in this guide.</p>
-</div>
-
-<div class="def reveal">
-<p class="t">WatermarkStrategy, and why "idleness" matters</p>
-<p>A <strong>WatermarkStrategy</strong> tells Flink two things: how to read an event's timestamp out of each record, and how to generate watermarks from the timestamps it sees. The common built-in, <code>forBoundedOutOfOrderness(Duration)</code>, is Spark's <code>withWatermark</code> idea (section 15): "assume events can arrive up to N late, and advance the watermark to <i>max timestamp seen so far minus N</i>." One thing Spark doesn't expose as directly: a source that goes quiet — a low-traffic partition, an idle Kafka topic — silently stalls the <i>whole</i> watermark, because Flink's watermark is the <i>minimum</i> across every parallel source instance. <code>WatermarkStrategy.withIdleness(Duration)</code> tells Flink to ignore an idle instance, so one quiet partition doesn't freeze every window in the job.</p>
-</div>
-
-<figure class="diagram reveal">
-<svg viewBox="0 0 860 230" role="img" aria-label="Two parallel source instances, one idle, and how the combined watermark stalls unless idleness is configured">
-<text x="20" y="24" font-size="12" font-weight="700" fill="var(--ink)" font-family="var(--font)">Without withIdleness</text>
-<rect x="20" y="40" width="380" height="40" rx="8" fill="#1D1D26" stroke="var(--flink)" stroke-width="1.5"/><text x="210" y="65" text-anchor="middle" font-size="11" fill="var(--ink)" font-family="var(--font)">Partition A: watermark advancing normally</text>
-<rect x="20" y="90" width="380" height="40" rx="8" fill="#191921" stroke="#FF6B9D" stroke-width="1.5"/><text x="210" y="115" text-anchor="middle" font-size="10" fill="#FF6B9D" font-family="var(--font)">Partition B: idle — no events, no watermark advance</text>
-<text x="210" y="155" text-anchor="middle" font-size="10.5" fill="var(--warn)" font-family="var(--font)">Combined watermark = min(A, B) → stuck at B's last value</text>
-
-<text x="460" y="24" font-size="12" font-weight="700" fill="var(--ink)" font-family="var(--font)">With withIdleness(30s)</text>
-<rect x="460" y="40" width="380" height="40" rx="8" fill="#1D1D26" stroke="var(--flink)" stroke-width="1.5"/><text x="650" y="65" text-anchor="middle" font-size="11" fill="var(--ink)" font-family="var(--font)">Partition A: watermark advancing normally</text>
-<rect x="460" y="90" width="380" height="40" rx="8" fill="#191921" stroke="var(--good)" stroke-width="1.5"/><text x="650" y="115" text-anchor="middle" font-size="10" fill="var(--good)" font-family="var(--font)">Partition B: idle → marked idle, excluded from the min</text>
-<text x="650" y="155" text-anchor="middle" font-size="10" fill="var(--good)" font-family="var(--font)">Combined watermark = A alone → keeps advancing, windows still fire</text>
-</svg>
-<figcaption>The combined watermark is the minimum across all parallel source instances. One quiet partition can silently freeze every window in the job unless it's explicitly marked idle.</figcaption>
-</figure>
-
-<div class="prose reveal">
-<p>Windowing splits into independent, swappable pieces. A <strong>WindowAssigner</strong> decides which window(s) an event belongs to (tumbling, sliding, session, or a global window you control by hand). A <strong>Trigger</strong> decides when a window fires — by default when the watermark passes the window's end, but you can fire early on a count or a timer. An optional <strong>Evictor</strong> removes elements just before or after firing. A <strong>window function</strong> (<code>reduce</code>, <code>aggregate</code> or <code>process</code>) computes the result. Spark bundles roughly the assigner and the "fire at the watermark" trigger into one <code>window()</code> call and doesn't expose triggers or evictors at all — simpler to learn, less flexible when you need something its defaults don't offer, like firing partial results before a window closes.</p>
-<p>Late data is the other place the two engines diverge. Spark drops any row that arrives after the watermark has passed its window (section 15). Flink instead gives you <strong>allowed lateness</strong>: a grace period after the watermark passes a window's end during which the window stays open and re-fires (updating its result) if more data shows up, and only after that grace period expires does Flink drop the window's state and route any further late arrivals to a side output (section 21) — visible, not silently discarded.</p>
-</div>
-
-<div class="tablewrap reveal">
-<table>
-<thead><tr><th>Concept</th><th>Spark Structured Streaming</th><th>Flink</th></tr></thead>
-<tbody>
-<tr><td>Watermark definition</td><td><code>withWatermark(col, delay)</code>, one setting per stream</td><td><code>WatermarkStrategy</code>, pluggable generators, per-source idleness handling</td></tr>
-<tr><td>Window firing</td><td>Fixed: fires when watermark passes window end</td><td>Pluggable <b>Trigger</b> — fire on watermark, count, custom timer, or combinations</td></tr>
-<tr><td>Late data</td><td>Silently dropped once past the watermark</td><td><b>Allowed lateness</b> keeps the window open longer, then routes to a side output</td></tr>
-<tr><td>Partial/early results</td><td>Not supported for event-time windows</td><td>Supported via custom triggers firing before the window closes</td></tr>
-</tbody>
-</table>
-</div>
-
-<div class="tldr reveal">
-<h4>❯ Short version</h4>
-<p>Event-time and watermarks work the same way conceptually as sections 15-16, but Flink decomposes windowing into an assigner, a trigger, and an optional evictor instead of one bundled call, and its watermark is the minimum across all parallel sources — so an idle source needs <code>withIdleness</code> or it stalls everything. <b>Allowed lateness</b> keeps a window re-firing after the watermark passes it, instead of dropping late data outright like Spark does.</p>
-</div>
-<hr/>
-<!-- END s22 -->
-
-<!-- START s23 -->
-<p class="promptline">~/streaming <b>❯</b> flink: memory that survives crashes</p>
-<h2 id="s23" class="reveal"><span class="hico"><svg class="ico"><use href="#i-blocks"/></svg></span><span class="n">23.</span> State, Checkpoints &amp; Exactly-Once in Flink</h2>
-<p class="sectionsub reveal">How a job remembers things, and how it recovers when a machine dies mid-stream</p>
-<div class="prose reveal">
-<p>Any stateful operation — a running count, a window's accumulator, a ProcessFunction's timers — needs somewhere to keep that memory. Flink calls it <strong>keyed state</strong> when scoped to the current key in a <code>keyBy</code>'d stream (a <code>ValueState</code>, <code>ListState</code> or <code>MapState</code> per key, the same role as Kafka Streams' state store from section 08), and <strong>operator state</strong> when it isn't tied to a key at all (rarer, mostly inside custom connectors). State lives in a <strong>state backend</strong>: the default <strong>HashMap</strong> backend keeps everything in JVM heap, fast but bounded by RAM, while the <strong>RocksDB</strong> backend spills to local disk via an embedded key-value store — the same RocksDB behind Kafka Streams and Spark's state store — letting state grow far larger than memory at some cost in per-access latency.</p>
-</div>
-
-<div class="def reveal">
-<p class="t">Checkpoints vs. savepoints</p>
-<p>A <strong>checkpoint</strong> is an automatic, periodic, internal snapshot of every operator's state, taken so the job can recover after a crash — you rarely touch these directly. A <strong>savepoint</strong> is the same underlying mechanism, but triggered manually and kept until you delete it, used for planned operations: upgrading your job's code, changing its parallelism, or migrating it to a different cluster, all while resuming from exactly the state it had before. Think of a checkpoint as an autosave and a savepoint as a save file you choose to keep.</p>
-</div>
-
-<div class="prose reveal">
-<p>The mechanism behind both is a distributed snapshot algorithm using <strong>checkpoint barriers</strong>: the JobManager periodically injects a marker record into every source, and that barrier flows through the dataflow graph <i>alongside the real data</i>, in the same order. When an operator receives a barrier on all its input streams, it snapshots its own state to durable storage (typically S3 or HDFS) and forwards the barrier downstream. Once every operator down to the sinks has done this, the checkpoint is complete and globally consistent — one exact, coherent point in the stream's history across the entire job, not just one machine.</p>
-</div>
-
-<figure class="diagram reveal">
-<svg viewBox="0 0 860 240" role="img" aria-label="A checkpoint barrier flowing through source, map, and window operators, each snapshotting state as the barrier passes">
-<text x="20" y="24" font-size="11" fill="#E7E7EE" font-family="var(--font)">Barrier travels with the data, left to right, in order</text>
-<g font-family="var(--font)" font-size="12" fill="var(--ink)">
-<rect x="20" y="60" width="140" height="55" rx="10" fill="#1D1D26" stroke="var(--flink)" stroke-width="2"/><text x="90" y="92" text-anchor="middle">Source</text>
-<rect x="230" y="60" width="140" height="55" rx="10" fill="#1D1D26" stroke="var(--flink)" stroke-width="2"/><text x="300" y="92" text-anchor="middle">Map</text>
-<rect x="440" y="60" width="160" height="55" rx="10" fill="#1D1D26" stroke="var(--flink)" stroke-width="2"/><text x="520" y="92" text-anchor="middle">Window (stateful)</text>
-<rect x="670" y="60" width="150" height="55" rx="10" fill="#1D1D26" stroke="var(--flink)" stroke-width="2"/><text x="745" y="92" text-anchor="middle">Sink</text>
-</g>
-<line x1="160" y1="87" x2="228" y2="87" stroke="var(--cyan2)" stroke-width="2"/><polygon points="230,87 220,82 220,92" fill="var(--cyan2)"/>
-<line x1="370" y1="87" x2="438" y2="87" stroke="var(--cyan2)" stroke-width="2"/><polygon points="440,87 430,82 430,92" fill="var(--cyan2)"/>
-<line x1="600" y1="87" x2="668" y2="87" stroke="var(--cyan2)" stroke-width="2"/><polygon points="670,87 660,82 660,92" fill="var(--cyan2)"/>
-<rect x="195" y="60" width="14" height="55" fill="var(--warn)" opacity="0.85"/>
-<text x="202" y="130" text-anchor="middle" font-size="10" fill="var(--warn)" font-family="var(--font)">barrier #42</text>
-<rect x="20" y="150" width="380" height="50" rx="8" fill="none" stroke="var(--good)" stroke-width="1.5" stroke-dasharray="5 4"/>
-<text x="210" y="180" text-anchor="middle" font-size="10" fill="var(--good)" font-family="var(--font)">Source &amp; Map already snapshotted for barrier #42</text>
-<rect x="420" y="150" width="410" height="50" rx="8" fill="none" stroke="var(--muted)" stroke-width="1.5" stroke-dasharray="5 4"/>
-<text x="625" y="180" text-anchor="middle" font-size="10" fill="#E7E7EE" font-family="var(--font)">Window &amp; Sink still waiting for the barrier</text>
-</svg>
-<figcaption>The checkpoint barrier moves through the pipeline with the data. Each operator snapshots its own state the moment the barrier reaches it — once every operator has done so, the checkpoint is globally consistent.</figcaption>
-</figure>
-
-<div class="callout cy reveal">
-<p><b>Aligned vs. unaligned checkpoints.</b> An <b>aligned</b> checkpoint makes an operator with multiple inputs wait for the barrier to arrive on <i>all</i> of them before snapshotting — simple, but under heavy backpressure (one input much slower than another) this wait can stall checkpoints for a long time. An <b>unaligned</b> checkpoint lets the barrier overtake buffered records already sitting in the input queues, snapshotting that in-flight buffered data as part of the state instead of waiting for it to drain — trading a slightly larger snapshot for checkpoints that complete quickly even under severe backpressure.</p>
-</div>
-
-<div class="prose reveal">
-<p>None of this matters end to end unless the sink cooperates — the same "chain of guarantees" idea as section 27's exactly-once discussion. Flink's answer is <strong>two-phase commit</strong>: a transactional sink (the Kafka sink with <code>DeliveryGuarantee.EXACTLY_ONCE</code> is canonical) opens a transaction, writes to it as records arrive, and <i>commits</i> only once the JobManager confirms the checkpoint covering those records is complete. If the job crashes first, the transaction aborts and none of those writes become visible, so a downstream consumer never sees partial or duplicate output — mirroring Kafka's transactional producer (section 05).</p>
-</div>
-
-<div class="tldr reveal">
-<h4>❯ Short version</h4>
-<p>Keyed state lives in a state backend — heap (fast, RAM-limited) or RocksDB (disk-backed, scales further). <b>Checkpoints</b> are automatic snapshots for crash recovery; <b>savepoints</b> are the same mechanism triggered manually for planned upgrades and rescaling. Both work by flowing a <b>barrier</b> through the dataflow graph and snapshotting each operator's state as it passes — aligned barriers wait for all inputs, unaligned barriers overtake buffered data to checkpoint faster under backpressure. End-to-end exactly-once needs a transactional, two-phase-commit sink that only makes writes visible once the covering checkpoint is confirmed.</p>
-</div>
-<hr/>
-<!-- END s23 -->
-
-<!-- START s24 -->
-<p class="promptline">~/streaming <b>❯</b> flink: SQL over a stream</p>
-<h2 id="s24" class="reveal"><span class="hico"><svg class="ico"><use href="#i-blocks"/></svg></span><span class="n">24.</span> Flink&#x27;s Table API &amp; Flink SQL</h2>
-<p class="sectionsub reveal">The same declarative idea as ksqlDB and Spark SQL, applied to Flink's engine</p>
-<div class="prose reveal">
-<p>Writing raw DataStream code (section 21) for every job is more power than most pipelines need. The <strong>Table API</strong> (a fluent, DataFrame-like API in Java/Scala/Python) and <strong>Flink SQL</strong> (plain, mostly-standard SQL) sit on top of it and compile to the same runtime — the relationship Spark SQL has to Spark's execution engine, or ksqlDB to Kafka Streams (section 08). The central idea is the <strong>dynamic table</strong>: a table that keeps changing as events arrive, with a continuous SQL query re-evaluating over it and emitting a <i>changelog stream</i> of inserts, updates and deletes as the answer changes — identical in concept to a Kafka Streams KTable, just expressed in SQL instead of Java.</p>
-</div>
-
-<pre><code>CREATE TABLE transactions (
-    account_id STRING,
-    amount DECIMAL(12,2),
-    event_time TIMESTAMP(3),
-    WATERMARK FOR event_time AS event_time - INTERVAL '5' SECOND
-) WITH (
-    'connector' = 'kafka',
-    'topic' = 'transactions',
-    'properties.bootstrap.servers' = 'broker:9092',
-    'format' = 'avro-confluent'
-);
-
-CREATE TABLE alerts (
-    account_id STRING,
-    window_start TIMESTAMP(3),
-    swipe_count BIGINT
-) WITH ('connector' = 'kafka', 'topic' = 'alerts', 'format' = 'json');
-
-INSERT INTO alerts
-SELECT account_id, window_start, COUNT(*) AS swipe_count
-FROM TABLE(
-    TUMBLE(TABLE transactions, DESCRIPTOR(event_time), INTERVAL '2' MINUTES))
-GROUP BY account_id, window_start
-HAVING COUNT(*) >= 10;</code></pre>
-
-<div class="prose reveal">
-<p>A <code>CREATE TABLE ... WITH (...)</code> statement is Flink SQL's equivalent of a Kafka Connect connector config (section 07): it declares a connector (Kafka, JDBC, filesystem, Iceberg/Paimon), a format, and — critically for streaming — where the watermark comes from, right in the DDL. The same query can run in <strong>streaming mode</strong> (continuous, unbounded) or <strong>batch mode</strong> (over a fixed, bounded table) with no code changes, which is the Table API's version of Spark's "one API for batch and streaming" pitch.</p>
-</div>
-
-<div class="callout mg reveal">
-<p><b>Flink CDC.</b> Capturing every row-level change from an operational database (the same job Debezium does for Kafka Connect, section 07) is common enough that it has its own project, <b>Apache Flink CDC</b>, built around a YAML-configured "pipeline connector" that can snapshot and stream changes from an entire database — many tables at once — directly into Flink, with schema evolution handled automatically. Where Debezium-into-Kafka-Connect gives you one topic per table for something else to consume, Flink CDC treats the whole thing as one integrated ingestion + processing job.</p>
-</div>
-
-<div class="tablewrap reveal">
-<table>
-<thead><tr><th>Aspect</th><th><span class="tag kf">ksqlDB</span></th><th><span class="tag fl">Flink SQL</span></th></tr></thead>
-<tbody>
-<tr><td>Runs on top of</td><td>Kafka Streams</td><td>Flink's DataStream runtime</td></tr>
-<tr><td>Table abstraction</td><td>KTable (latest value per key)</td><td>Dynamic table (full insert/update/delete changelog)</td></tr>
-<tr><td>Batch queries</td><td>Not a first-class mode</td><td>Same SQL, switchable to batch mode over bounded data</td></tr>
-<tr><td>Connector story</td><td>Reads/writes Kafka topics directly</td><td>Kafka, JDBC, filesystem, Iceberg/Paimon, and more via table connectors</td></tr>
-</tbody>
-</table>
-</div>
-
-<div class="tldr reveal">
-<h4>❯ Short version</h4>
-<p>The Table API and Flink SQL are declarative layers over the DataStream runtime, built around <b>dynamic tables</b> that emit a changelog of inserts/updates/deletes as a continuous query's answer evolves. <code>CREATE TABLE ... WITH (...)</code> plays the same role Kafka Connect configs do — declaring connectors instead of writing code — and the same SQL runs unmodified in streaming or batch mode. <b>Flink CDC</b> extends this to whole-database change capture.</p>
-</div>
-<hr/>
-<!-- END s24 -->
-
-<!-- START s25 -->
-<p class="promptline">~/streaming <b>❯</b> flink: running it for real</p>
-<h2 id="s25" class="reveal"><span class="hico"><svg class="ico"><use href="#i-rocket"/></svg></span><span class="n">25.</span> Flink Deployment, Scaling &amp; Operations</h2>
-<p class="sectionsub reveal">Session vs. application clusters, Kubernetes, and how a job survives failures in production</p>
-<div class="prose reveal">
-<p>Flink can run on standalone servers, YARN, or Kubernetes, but in 2024-2026 production environments the overwhelming default is <strong>Kubernetes</strong>, usually via the <strong>Flink Kubernetes Operator</strong> — a controller that manages Flink clusters and jobs as native Kubernetes custom resources, the same operational pattern most teams already use for every other stateful service they run.</p>
-</div>
-
-<div class="def reveal">
-<p class="t">Session mode vs. Application mode</p>
-<p>In <strong>session mode</strong>, one long-running Flink cluster (a JobManager plus a pool of TaskManagers) stays up and accepts many jobs over time — cheaper to keep warm, but jobs share the JobManager, so a crash or a resource-hungry neighbour can affect every job on the cluster. In <strong>application mode</strong>, the recommended production default since Flink 1.11+, each job gets its own JobManager and TaskManagers, spun up to run that one application's <code>main()</code> and torn down when it finishes — a little startup overhead for full isolation, so a runaway job on one team's pipeline can't take down another's.</p>
-</div>
-
-<figure class="diagram reveal">
-<svg viewBox="0 0 820 220" role="img" aria-label="Session mode with one shared JobManager running many jobs, versus application mode with one dedicated cluster per job">
-<text x="205" y="24" text-anchor="middle" font-size="12" font-weight="700" fill="var(--ink)" font-family="var(--font)">Session mode — shared cluster</text>
-<rect x="30" y="40" width="350" height="150" rx="12" fill="#1D1D26" stroke="var(--flink)" stroke-width="2"/>
-<rect x="50" y="58" width="120" height="30" rx="6" fill="#191921" stroke="#FF6B9D"/><text x="110" y="78" text-anchor="middle" font-size="10" fill="var(--ink)" font-family="var(--font)">JobManager</text>
-<rect x="50" y="100" width="90" height="70" rx="6" fill="#191921" stroke="var(--flink)"/><text x="95" y="130" text-anchor="middle" font-size="9" fill="var(--ink)" font-family="var(--font)">Job A</text>
-<rect x="150" y="100" width="90" height="70" rx="6" fill="#191921" stroke="var(--flink)"/><text x="195" y="130" text-anchor="middle" font-size="9" fill="var(--ink)" font-family="var(--font)">Job B</text>
-<rect x="250" y="100" width="110" height="70" rx="6" fill="#191921" stroke="var(--flink)"/><text x="305" y="130" text-anchor="middle" font-size="9" fill="var(--ink)" font-family="var(--font)">Job C</text>
-<text x="205" y="200" text-anchor="middle" font-size="10" fill="var(--warn)" font-family="var(--font)">One JobManager for all — no isolation between jobs</text>
-
-<text x="615" y="24" text-anchor="middle" font-size="12" font-weight="700" fill="var(--ink)" font-family="var(--font)">Application mode — one cluster per job</text>
-<rect x="440" y="40" width="120" height="150" rx="12" fill="#1D1D26" stroke="var(--good)" stroke-width="2"/><text x="500" y="65" text-anchor="middle" font-size="10" fill="var(--ink)" font-family="var(--font)">Job A</text><text x="500" y="80" text-anchor="middle" font-size="9" fill="#E7E7EE" font-family="var(--font)">own JobManager</text>
-<rect x="570" y="40" width="120" height="150" rx="12" fill="#1D1D26" stroke="var(--good)" stroke-width="2"/><text x="630" y="65" text-anchor="middle" font-size="10" fill="var(--ink)" font-family="var(--font)">Job B</text><text x="630" y="80" text-anchor="middle" font-size="9" fill="#E7E7EE" font-family="var(--font)">own JobManager</text>
-<rect x="700" y="40" width="120" height="150" rx="12" fill="#1D1D26" stroke="var(--good)" stroke-width="2"/><text x="760" y="65" text-anchor="middle" font-size="10" fill="var(--ink)" font-family="var(--font)">Job C</text><text x="760" y="80" text-anchor="middle" font-size="9" fill="#E7E7EE" font-family="var(--font)">own JobManager</text>
-<text x="630" y="200" text-anchor="middle" font-size="10" fill="var(--good)" font-family="var(--font)">Fully isolated — the production default</text>
-</svg>
-<figcaption>Session mode keeps one warm shared cluster for many jobs. Application mode gives every job its own dedicated cluster — more resource overhead, but no cross-job blast radius, which is why it's the default recommendation in production.</figcaption>
-</figure>
-
-<div class="prose reveal">
-<p>The <strong>Flink Kubernetes Operator</strong> lets you describe a job as a <code>FlinkDeployment</code> custom resource — a YAML file with image, parallelism, checkpoint config and resource requests — and leaves the operator to reconcile that desired state: starting pods, restarting a crashed JobManager, rolling out upgrades from a savepoint (section 23) instead of a cold restart. Its most valuable production feature is the built-in <strong>autoscaler</strong>, which watches each operator's busy-time and backpressure metrics and raises or lowers parallelism to hit a target utilization, instead of an engineer guessing a fixed parallelism and re-tuning by hand every time traffic shifts.</p>
-</div>
-
-<div class="prose reveal">
-<p>When something fails — a TaskManager crashes, a checkpoint times out — the JobManager's <strong>restart strategy</strong> decides what happens: <code>fixed-delay</code> retries a fixed number of times with a fixed pause; <code>failure-rate</code> gives up only if failures exceed a rate threshold over a window, tolerating blips without exhausting retries; <code>exponential-backoff</code> spaces retries out to avoid hammering a struggling downstream system. Every restart resumes from the most recent completed checkpoint, so recovery means "replay from the last consistent snapshot," not "start over." For the JobManager itself, <strong>high availability</strong> (Kubernetes-native HA, or ZooKeeper in older deployments) keeps a standby ready to take over leadership, so a JobManager crash doesn't take the job down with it.</p>
-</div>
-
-<div class="callout gd reveal">
-<p><b>Watching for trouble.</b> The Flink Web UI (bundled with every cluster) shows per-operator <b>backpressure</b> — whether an operator is waiting on a slow downstream neighbor — directly in the job graph, which is usually the fastest way to spot the one slow stage causing an entire pipeline to lag. For anything beyond ad-hoc debugging, Flink's metrics system exports the same signals (checkpoint duration, backpressure, records/sec, state size) to Prometheus/Grafana, the same monitoring stack described for Kafka in section 09.</p>
-</div>
-
-<div class="tldr reveal">
-<h4>❯ Short version</h4>
-<p>Production Flink runs on Kubernetes via the Flink Kubernetes Operator, almost always in <b>application mode</b> (one dedicated cluster per job) rather than session mode, for isolation. The operator's <b>autoscaler</b> tunes parallelism automatically from backpressure metrics. Failures recover by restarting from the latest checkpoint under a configurable restart strategy, and JobManager HA keeps a standby ready so a single JobManager crash doesn't kill the job.</p>
-</div>
-<hr/>
-<!-- END s25 -->
-
-<!-- START s26 -->
-<p class="promptline">~/streaming <b>❯</b> flink: what changed</p>
-<h2 id="s26" class="reveal"><span class="hico"><svg class="ico"><use href="#i-bulb"/></svg></span><span class="n">26.</span> What&#x27;s New in Flink (2024-2026)</h2>
-<p class="sectionsub reveal">Flink 2.0 and the shift toward cloud-native, disaggregated state</p>
-<div class="prose reveal">
-<p>Flink's biggest recent shift mirrors what section 11 described for Kafka's tiered storage and section 19 described for Spark's RocksDB changelog checkpointing: separating compute from storage so a cluster can scale and recover without dragging gigabytes of local state around with it. <strong>Flink 2.0</strong>, released in 2025, is the vehicle for that shift — a major version that removed long-deprecated APIs (including the legacy DataSet batch API, fully folded into the unified DataStream API) and raised the baseline Java version, clearing the way for the state-management changes below.</p>
-</div>
-
-<div class="tablewrap reveal">
-<table>
-<thead><tr><th>Feature</th><th>Replaces / extends</th><th>Introduced</th></tr></thead>
-<tbody>
-<tr><td>Flink 2.0</td><td>Flink 1.x line; removes the legacy DataSet API</td><td>2025</td></tr>
-<tr><td>Disaggregated state backend (ForSt)</td><td>Local-disk RocksDB state backend</td><td>Flink 2.0, expanding through 2025-2026</td></tr>
-<tr><td>Asynchronous state access / async execution model</td><td>Synchronous per-record state access</td><td>Flink 2.0 era</td></tr>
-<tr><td>Kubernetes Operator autoscaler (GA maturity)</td><td>Manually-tuned fixed parallelism</td><td>Matured through 2024-2025</td></tr>
-<tr><td>Materialized Tables (Flink SQL)</td><td>Hand-wired refresh jobs for derived tables</td><td>Flink SQL, 2024+</td></tr>
-<tr><td>Apache Flink CDC as a top-level project</td><td>Bespoke Debezium-into-Kafka-Connect pipelines</td><td>Graduated 2024</td></tr>
-</tbody>
-</table>
-</div>
-
-<div class="prose reveal">
-<p>The centerpiece is <strong>disaggregated state management</strong>, built around a new state backend called <strong>ForSt</strong> ("far and fast state" — like RocksDB, but designed to work efficiently against remote object storage such as S3). Today's RocksDB backend keeps state on each TaskManager's local disk, so rescaling a job — doubling parallelism for a traffic spike — means physically redistributing potentially huge amounts of state across machines before processing resumes. A disaggregated backend keeps state in remote shared storage, so rescaling becomes reassigning which TaskManager reads which slice, not copying gigabytes of RocksDB files over the network. The tradeoff is per-access latency to remote storage, which is where the paired <strong>asynchronous state access</strong> work comes in: rather than blocking on every state read, the runtime overlaps many in-flight requests, hiding the added latency behind throughput instead of paying for it serially.</p>
-<p>On the SQL side, <strong>Materialized Tables</strong> let you declare a query and a target freshness ("keep this table updated within 5 minutes of the source") and have Flink's SQL Gateway manage the underlying continuous refresh job for you — the same "describe what you want, not how to run it" shift section 19 described for Spark's Lakeflow Declarative Pipelines. And <strong>Apache Flink CDC</strong> (mentioned in section 24) graduating to a top-level Apache project reflects just how central whole-database change capture has become to real-time architectures — it's no longer a niche integration, it's core infrastructure in its own right.</p>
-</div>
-
-<div class="tldr reveal">
-<h4>❯ Short version</h4>
-<p>Flink 2.0 is a cleanup release that unblocks a bigger architectural shift: disaggregated state (the ForSt backend) moves state off local TaskManager disks and into remote storage, making rescaling far cheaper, paired with asynchronous state access to hide the added remote-storage latency. Materialized Tables bring declarative, freshness-based refresh to Flink SQL, and Flink CDC has grown into a top-level project for whole-database change capture.</p>
-</div>
-<hr/>
-<!-- END s26 -->
-
 <!-- START s27 -->
 <p class="promptline">~/streaming <b>❯</b> the full pipeline</p>
 <h2 id="s27" class="reveal"><span class="hico"><svg class="ico"><use href="#i-blocks"/></svg></span><span class="n">27.</span> Putting It Together: Kafka + Spark Architecture</h2>
@@ -3051,156 +2292,6 @@ def write_alerts(batch_df, batch_id):
 </div>
 <hr/>
 
-<p class="promptline">~/streaming <b>❯</b> picking a tool</p>
-<h2 id="s28" class="reveal"><span class="hico"><svg class="ico"><use href="#i-network"/></svg></span><span class="n">28.</span> Kafka Streams vs Spark Structured Streaming vs Flink</h2>
-<p class="sectionsub reveal">Three different tools for stream processing, and when each one actually wins</p>
-<div class="prose reveal">
-<p>You now know three ways to process a stream in real depth: Kafka Streams (a library), Spark Structured Streaming (a cluster engine), and Apache Flink (sections 20-26) — a third major cluster engine you'll run into constantly in job postings, conference talks, and architecture diagrams. This section is the payoff for having learned all three: a direct, side-by-side comparison so you can pick the right one for a given job instead of defaulting to whichever your team already happens to know.</p>
-</div>
-<div class="profile reveal kf">
-<p class="kv">• <b><span class="tag kf">Kafka</span> Kafka Streams — recap</b></p>
-<p>A Java/Scala <b>library</b> you add to your own application's code — there is no separate cluster to deploy or operate. It reads from and writes to Kafka topics directly. It shines when your data already lives in Kafka and your per-event logic is relatively simple (filter, map, join two topics, keep a running count), and it's especially popular for microservices that want to react to events without bolting on a whole separate processing platform.</p>
-</div>
-<div class="profile reveal sp">
-<p class="kv">• <b><span class="tag sp">Spark</span> Spark Structured Streaming — recap</b></p>
-<p>A full <b>cluster compute engine</b> — a driver plus a pool of executors, the same engine batch Spark jobs use. It's the right choice when you need heavy transformations, joins against large batch or reference datasets, tight integration with ML pipelines, or when your team is already running Spark for batch work and wants one engine and one skill set for both.</p>
-</div>
-<div class="profile reveal int">
-<p class="kv">• <b><span class="tag int">Both / Integration</span> Apache Flink — the third engine</b></p>
-<p>Flink is a true <b>event-at-a-time</b> engine: it processes each record the instant it arrives rather than collecting records into small batches first. That gives it the lowest typical latency of the three, with event-time and windowing semantics widely considered the most mature and flexible available. That makes it a strong and increasingly popular choice for the lowest-latency cases — sub-second fraud detection, real-time bidding, live risk scoring — where even Spark's fast micro-batches add more delay than the use case tolerates. No knock on Spark: for the vast majority of analytics and ETL-style streaming, its micro-batch model is fast enough, simpler to reason about, and carries a much bigger batch/ML ecosystem. Pick on your actual latency budget, not on which engine sounds newest.</p>
-</div>
-<div class="callout wn reveal">
-<p><b>Back to this guide's opening example.</b> Section 01 opened with "score a card swipe as fraud in under a second." That's a real latency budget — worth writing down explicitly before you pick a tool. If your actual requirement is a few hundred milliseconds to a couple of seconds, Spark Structured Streaming's micro-batches comfortably fit. If it's truly sub-second with hard tail-latency limits (a payment that must be approved or declined before the terminal times out), that's the situation where it's worth asking whether Flink — or a non-streaming synchronous lookup outside this guide's scope entirely — is the better fit, rather than assuming the tool your team already knows is automatically the right one.</p>
-</div>
-<div class="tablewrap reveal">
-<table>
-<thead><tr><th>Aspect</th><th>Kafka Streams</th><th>Spark Structured Streaming</th><th>Flink</th></tr></thead>
-<tbody>
-<tr><td>Processing model</td><td>Event-at-a-time</td><td>Micro-batch (default); experimental continuous processing</td><td>Event-at-a-time</td></tr>
-<tr><td>Typical latency</td><td>Low (single-digit to tens of ms)</td><td>Hundreds of ms to a few seconds, set by the trigger interval</td><td>Lowest (often sub-10ms)</td></tr>
-<tr><td>Deployment shape</td><td>Embedded library inside your app — no separate cluster</td><td>Cluster engine — driver + executors</td><td>Cluster engine — JobManager + TaskManagers</td></tr>
-<tr><td>State backend</td><td>Local RocksDB per instance + changelog topic in Kafka</td><td>RocksDB state store (recommended) checkpointed to durable storage</td><td>RocksDB or heap state backend, checkpointed to durable storage</td></tr>
-<tr><td>Strongest use case</td><td>Simple per-event logic inside a microservice already using Kafka</td><td>Heavy transforms, large joins, ML integration, unified batch+stream</td><td>Lowest-latency, complex event-time processing</td></tr>
-<tr><td>Learning curve</td><td>Low, if you already know Java and Kafka</td><td>Moderate — Spark DataFrame/SQL API plus streaming concepts</td><td>Steeper — its own APIs and operational model</td></tr>
-</tbody>
-</table>
-</div>
-<figure class="diagram reveal">
-<svg viewBox="0 0 760 240" role="img" aria-label="Conceptual, non-benchmark latency ladder positioning Flink lowest, Kafka Streams in the middle, and Spark Structured Streaming highest">
-<defs>
-<marker id="s21arrow" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><polygon points="0,0 8,4 0,8" fill="var(--muted)"/></marker>
-</defs>
-<text x="20" y="20" font-size="11" fill="var(--dim)" text-anchor="start">Typical latency only — conceptual ordering, not a benchmark.</text>
-<text x="20" y="36" font-size="11" fill="var(--dim)" text-anchor="start">See the table above for throughput, deployment, and other factors.</text>
-<line x1="40" y1="70" x2="720" y2="70" stroke="var(--muted)" stroke-width="1.5" marker-end="url(#s21arrow)"/>
-<text x="40" y="55" font-size="11" fill="#E7E7EE" text-anchor="start">lower latency</text>
-<text x="720" y="55" font-size="11" fill="#E7E7EE" text-anchor="end">higher latency</text>
-<circle cx="100" cy="70" r="6" fill="var(--good)"/>
-<rect x="60" y="90" width="80" height="30" rx="8" fill="#1D1D26" stroke="var(--good)" stroke-width="1.5"/>
-<text x="100" y="110" text-anchor="middle" font-size="13" fill="var(--ink)">Flink</text>
-<circle cx="360" cy="70" r="6" fill="var(--kafka)"/>
-<rect x="285" y="90" width="150" height="30" rx="8" fill="#1D1D26" stroke="var(--kafka)" stroke-width="1.5"/>
-<text x="360" y="110" text-anchor="middle" font-size="13" fill="var(--ink)">Kafka Streams</text>
-<circle cx="640" cy="70" r="6" fill="var(--spark)"/>
-<rect x="530" y="90" width="220" height="30" rx="8" fill="#1D1D26" stroke="var(--spark)" stroke-width="1.5"/>
-<text x="640" y="110" text-anchor="middle" font-size="12" fill="var(--ink)">Spark Structured Streaming</text>
-<text x="380" y="160" font-size="11" fill="#E7E7EE" text-anchor="middle">All three can be tuned; this ordering holds for typical, untuned defaults.</text>
-</svg>
-<figcaption>Rough conceptual latency ordering only: Flink's event-at-a-time model typically reaches the lowest latency, Kafka Streams sits in the middle, and Spark's micro-batch model trades a little latency for its heavier transform and join capabilities. Real numbers depend entirely on your workload and tuning — this is not a benchmark.</figcaption>
-</figure>
-<div class="tldr reveal">
-<h4>❯ Short version</h4>
-<p>Kafka Streams: embedded library, simple logic, no cluster. Spark Structured Streaming: cluster engine, best for heavy transforms/joins/ML and teams already on Spark. Flink: lowest latency, most mature event-time semantics, best when your latency budget is measured in single-digit milliseconds. None of the three is universally "best" — match the tool to the actual latency and complexity requirement.</p>
-</div>
-<hr/>
-<!-- END s28 -->
-
-<!-- START s29 -->
-<p class="promptline">~/streaming <b>❯</b> what real companies actually ship</p>
-<h2 id="s29" class="reveal"><span class="hico"><svg class="ico"><use href="#i-rocket"/></svg></span><span class="n">29.</span> Streaming in Production: Real-World Case Studies</h2>
-<p class="sectionsub reveal">Not "how it works," but what LinkedIn, Netflix, Uber, and DoorDash actually run</p>
-<div class="prose reveal">
-<p>Everything so far explained how Kafka, Spark Structured Streaming and Flink work. This section is what happens when you point them at a real business with real traffic: which engine companies picked, why, and what broke along the way. Every claim below comes from a company's own engineering blog, a peer-reviewed paper by its own engineers, or an official conference talk — not secondhand summaries — each checked against its primary source. Where the public record has real gaps (and it does — see the callout at the end), that's stated plainly rather than papered over with a plausible guess.</p>
-</div>
-
-<div class="callout cy reveal">
-<p><b>The one pattern that shows up everywhere below.</b> Every verified case study here uses <b><span class="tag kf">Kafka</span></b> as durable transport and <b><span class="tag fl">Flink</span></b> as the compute engine — not Spark Structured Streaming. That doesn't mean Spark has no place in real companies; it's everywhere in batch ETL and ML pipelines. But for the specific job of "process a Kafka stream with low latency and strict correctness at extreme scale," the verified public record points overwhelmingly at Kafka+Flink. Take it as a data point for section 28's comparison, not a verdict — plenty of companies run Spark Structured Streaming successfully, they just don't dominate the public case-study literature the way Netflix, Uber and DoorDash's Flink writeups do.</p>
-</div>
-
-<div class="profile reveal int">
-<p class="one">Netflix — Keystone, the Real-Time Distributed Graph, and the ads pipeline</p>
-<p>Netflix's streaming platform, <b>Keystone</b>, splits into two production services: a Kafka-based <b>Data Pipeline</b> that routes events, and <b>Stream Processing as a Service (SPaaS)</b>, which runs custom streaming applications with Apache Flink as the processing engine. Each Flink job gets its own isolated Flink cluster running on Netflix's Titus container runtime, coordinating through ZooKeeper and checkpointing to S3 — the same JobManager/TaskManager and checkpoint-to-durable-storage model from sections 20 and 23, just running one dedicated cluster per job the way section 25 described application mode.</p>
-<p>A newer system, the <b>Real-Time Distributed Graph (RDG)</b>, ingests Kafka topics that each produce up to roughly <b>1 million messages per second</b>. Netflix's engineers initially built one large Flink job to consume every source topic at once — and found that uneven throughput between topics made the whole job unstable and hard to tune. They re-architected to a <b>1:1 mapping of one Flink job per Kafka topic</b>, trading "more jobs to operate" for "each job is simple enough to actually tune" — a concrete, publicly documented instance of the operator-parallelism tradeoffs discussed in section 20. Separately, Netflix's ads event pipeline runs two dedicated Flink jobs: <b>Ads Metrics</b> (raw events → dimensions/metrics → Apache Druid) and <b>Ads Sessionizer</b> (stitches every event for one ad into a single "Ad Session," the base every downstream ads report is built on).</p>
-<p class="ex">Historical data point (2016, not current scale): Netflix's Kafka fleet ran <b>36 clusters with 4,000+ broker instances</b>, split into "Fronting Kafka" (collection) and "Consumer Kafka" (routing/consumption) roles. At that time Netflix deliberately chose <i>availability over strict durability</i> at ingestion — producers configured with <code>acks=1</code> and non-blocking sends — accepting a measured under-0.01% daily data loss rather than paying the latency/backpressure cost of stronger guarantees. That's a real, documented tradeoff, not a mistake: for Netflix's use case at the time, a rare dropped viewing event mattered far less than the ingestion tier falling behind.</p>
-<p style="color:var(--muted);font-size:13px;margin-top:10px">Sources: Netflix Technology Blog — "Keystone Real-time Stream Processing Platform"; "How and Why Netflix Built a Real-Time Distributed Graph, Part 1" (2025); "Behind the Scenes: Building a Robust Ads Event Processing Pipeline" (2025); "Kafka Inside Keystone Pipeline" (2016).</p>
-</div>
-
-<div class="profile reveal fl">
-<p class="one">Uber — Kafka + Flink + Pinot, and why they picked Flink over Storm and Spark</p>
-<p>Uber's own account of this decision is unusually direct: an internal 2016 comparison found <b>Flink recovered from a backlog of millions of buffered messages in about 20 minutes</b>, where Apache Storm took several hours to do the same, and equivalent Spark jobs used <b>5-10x more memory</b> than the same workload running on Flink. That benchmark — not a preference for whichever tool was newest — is why Flink became the default compute layer across Uber's real-time stack, alongside Kafka for transport and Apache Pinot for low-latency OLAP serving.</p>
-<p>The clearest worked example is Uber's <b>real-time, exactly-once ad event processing pipeline</b>: three Flink jobs (Aggregation, Attribution, and Union-and-Load) deployed across two regions for resiliency, processing hundreds of millions of ad events per week. Exactly-once here is built from the same pieces as section 23's two-phase-commit pattern, tuned for their latency budget: Kafka transactional writes, a Flink consumer reading in <code>read_committed</code> mode, and a <b>checkpoint interval shortened to 2 minutes</b> (Flink's default is 10). Because their correctness contract says an event only counts as "processed" once its covering checkpoint commits, that 2-minute interval is a direct, deliberate trade of latency for correctness — precisely the tension section 23 describes. On top of that, a UUID generated in the Aggregation job doubles as a deduplication key, paired with upsert support Uber added to Pinot's real-time ingestion, as a second line of defense against double-counting.</p>
-<p>At the scale of Uber's <i>overall</i> real-time infrastructure — trillions of messages and petabytes of data per day — the guarantees loosen deliberately: Kafka and Flink run <b>at-least-once by default</b>, and full exactly-once (via primary-key upsert) is reserved for a small set of critical use cases at the Pinot layer, not applied universally. Operationally, Uber also caps individual Kafka clusters below roughly 150 nodes each and federates many such clusters together, rather than growing one cluster without bound — the same "spread the blast radius" instinct behind Kafka's replication design in section 05.</p>
-<p style="color:var(--muted);font-size:13px;margin-top:10px">Sources: Fu &amp; Soman (Uber, Inc.), "Real-time Data Infrastructure at Uber," SIGMOD 2021 (arXiv:2104.00087); Uber Engineering Blog, "Real-Time Exactly-Once Ad Event Processing with Apache Flink, Kafka, and Pinot."</p>
-</div>
-
-<div class="profile reveal fl">
-<p class="one">DoorDash — Iguazu, and exactly-once all the way into the warehouse</p>
-<p>DoorDash's <b>Iguazu</b> platform picked Kafka as its pub/sub layer specifically to unify data from many heterogeneous sources at high throughput, and picked Flink for its layered API (both the DataStream API and Flink SQL from sections 21 and 24), low-latency event-time processing, built-in fault tolerance, and ready-made connectors to Kafka, Redis, Elasticsearch, and S3. Over roughly two years, Iguazu scaled to process <b>hundreds of billions of events per day at a 99.99% delivery rate</b>.</p>
-<p>Their exactly-once-to-the-warehouse design is a clean, concrete example of the checkpoint-plus-transactional-sink chain from section 23: Flink's file sink writes Parquet files to S3 as part of the checkpoint itself, so a file only becomes visible once its covering checkpoint is confirmed complete, guaranteeing consistency before Snowpipe loads that data into Snowflake. It's the same "nothing partial ever becomes visible" guarantee Uber gets from Kafka transactions, applied to a filesystem sink instead of a message broker.</p>
-<p style="color:var(--muted);font-size:13px;margin-top:10px">Source: DoorDash Engineering Blog, "Building Scalable Real-Time Event Processing with Kafka and Flink" (2022).</p>
-</div>
-
-<div class="profile reveal kf">
-<p class="one">LinkedIn — Brooklin, moving data across more than just Kafka</p>
-<p>LinkedIn (where Kafka itself was born) built <b>Brooklin</b>, a distributed streaming system for moving data reliably across multiple different data stores and messaging systems at once — Espresso (LinkedIn's own Oracle-backed store), Kafka, Azure Event Hubs, and AWS Kinesis among them — covering both streaming-bridge (move events from system A to system B continuously) and change-data-capture use cases. It's a useful reminder that "streaming infrastructure" at this scale isn't only "Kafka plus a compute engine" — it also includes the connective tissue that gets data between systems that were never built to talk to each other directly, playing a role adjacent to Kafka Connect (section 07) but across more than just Kafka.</p>
-<p class="ex">Honest caveat: the verified public record for Brooklin covers its purpose and architecture category well, but doesn't include hard scale numbers (throughput, cluster size, latency) the way the Netflix and Uber sources do — so treat this entry as thinner evidence than the other three.</p>
-<p style="color:var(--muted);font-size:13px;margin-top:10px">Source: LinkedIn Engineering Blog, "Brooklin: Open Source Data Streaming for Everyone" (2019).</p>
-</div>
-
-<figure class="diagram reveal">
-<svg viewBox="0 0 950 260" role="img" aria-label="The shared architecture pattern across Netflix, Uber, and DoorDash: Kafka as durable transport, Flink jobs with shortened checkpoints and transactional sinks, feeding OLAP or a lakehouse warehouse">
-<text x="20" y="24" font-size="11" fill="#E7E7EE" font-family="var(--font)">The shape that repeats across every verified case study above</text>
-<rect x="20" y="90" width="150" height="70" rx="10" fill="#1D1D26" stroke="var(--muted)" stroke-width="1.5"/><text x="95" y="130" text-anchor="middle" font-size="12" fill="var(--ink)" font-family="var(--font)">Producers /<tspan x="95" dy="1.2em">apps</tspan></text>
-<line x1="170" y1="125" x2="200" y2="125" stroke="var(--muted)" stroke-width="1.5"/><polygon points="200,125 190,120 190,130" fill="var(--muted)"/>
-<rect x="205" y="90" width="140" height="70" rx="10" fill="#1D1D26" stroke="var(--kafka)" stroke-width="2"/><text x="319" y="133" text-anchor="middle" font-size="12" fill="var(--kafka)" font-family="var(--font)">Kafka<tspan x="275" dy="1.2em" fill="var(--ink)">(durable transport)</tspan></text>
-<line x1="345" y1="125" x2="375" y2="125" stroke="var(--muted)" stroke-width="1.5"/><polygon points="375,125 365,120 365,130" fill="var(--muted)"/>
-<rect x="380" y="80" width="200" height="90" rx="10" fill="#1D1D26" stroke="var(--flink)" stroke-width="2"/>
-<text x="480" y="108" text-anchor="middle" font-size="12" fill="var(--flink)" font-family="var(--font)">Flink job</text>
-<text x="480" y="128" text-anchor="middle" font-size="10" fill="#E7E7EE" font-family="var(--font)">shortened checkpoint interval</text>
-<text x="480" y="144" text-anchor="middle" font-size="10" fill="#E7E7EE" font-family="var(--font)">(minutes, not the 10min default)</text>
-<line x1="480" y1="170" x2="480" y2="190" stroke="var(--warn)" stroke-width="1.5" stroke-dasharray="4 3"/>
-<text x="480" y="205" text-anchor="middle" font-size="9" fill="var(--warn)" font-family="var(--font)">checkpoints → S3 / durable storage</text>
-<line x1="580" y1="125" x2="610" y2="125" stroke="var(--muted)" stroke-width="1.5"/><polygon points="610,125 600,120 600,130" fill="var(--muted)"/>
-<rect x="615" y="90" width="170" height="70" rx="10" fill="#1D1D26" stroke="var(--good)" stroke-width="2"/><text x="700" y="120" text-anchor="middle" font-size="12" fill="var(--good)" font-family="var(--font)">Transactional sink</text><text x="700" y="140" text-anchor="middle" font-size="9" fill="var(--ink)" font-family="var(--font)">(Kafka txn or S3+checkpoint)</text>
-<line x1="785" y1="125" x2="815" y2="125" stroke="var(--muted)" stroke-width="1.5"/><polygon points="815,125 805,120 805,130" fill="var(--muted)"/>
-<rect x="820" y="90" width="110" height="70" rx="10" fill="#1D1D26" stroke="var(--muted)" stroke-width="1.5"/><text x="875" y="120" text-anchor="middle" font-size="11" fill="var(--ink)" font-family="var(--font)">OLAP /</text><text x="875" y="138" text-anchor="middle" font-size="11" fill="var(--ink)" font-family="var(--font)">warehouse</text>
-</svg>
-<figcaption>Strip away the company-specific names and Netflix, Uber, and DoorDash all converge on the same shape: Kafka moves events durably, a Flink job checkpoints far more often than Flink's own default in order to hit a tighter correctness/latency target, and a transactional sink is what actually makes "exactly-once" true end-to-end.</figcaption>
-</figure>
-
-<div class="tablewrap reveal">
-<table>
-<thead><tr><th>Company</th><th>Engines</th><th>Verified scale</th><th>Exactly-once / fault tolerance approach</th></tr></thead>
-<tbody>
-<tr><td>Netflix</td><td><span class="tag kf">Kafka</span> + <span class="tag fl">Flink</span></td><td>~1M msgs/sec per Kafka topic (RDG); historically 36 Kafka clusters / 4,000+ brokers (2016)</td><td>Per-job isolated Flink clusters on Titus, ZooKeeper coordination, checkpoints to S3; ingestion historically favored availability (<code>acks=1</code>) over strict durability</td></tr>
-<tr><td>Uber</td><td><span class="tag kf">Kafka</span> + <span class="tag fl">Flink</span> + Pinot</td><td>Trillions of messages / petabytes per day; ad pipeline: hundreds of millions of events/week</td><td>Kafka transactions + Flink two-phase commit, checkpoint interval shortened to 2 min; at-least-once default, exactly-once reserved for critical Pinot upserts</td></tr>
-<tr><td>DoorDash</td><td><span class="tag kf">Kafka</span> + <span class="tag fl">Flink</span></td><td>Hundreds of billions of events/day, 99.99% delivery, ~2-year scale-up</td><td>Flink file sink writes Parquet to S3 as part of the checkpoint itself, then Snowpipe loads into Snowflake</td></tr>
-<tr><td>LinkedIn</td><td><span class="tag kf">Kafka</span> + Brooklin</td><td>Not publicly quantified in verified sources</td><td>Brooklin bridges Kafka with Espresso, Azure Event Hubs, and Kinesis for streaming and CDC use cases</td></tr>
-</tbody>
-</table>
-</div>
-
-<div class="callout wn reveal">
-<p><b>What the public record does <i>not</i> verify — and what that means if you're building this at a bank.</b> Despite being a natural fit for this section, no verified, primary-sourced case study surfaced for Alibaba/Ant Group's internal use of Flink (the project it originally open-sourced as Blink), ByteDance/TikTok's Flink deployments, Airbnb, Pinterest, Stripe, or any named bank's real-time fraud detection architecture — companies in this space overwhelmingly don't publish the kind of concrete, verifiable detail Netflix, Uber, and DoorDash did above, for competitive and security reasons that apply with even more force to a bank's fraud and risk systems. If you're designing something like the card-swipe fraud check from section 01 at a financial institution, the most solid public reference isn't a named bank's disclosure — it's <b>Apache Flink's own official reference architecture</b> for a fraud-detection system (a generic, non-vendor-specific pattern published on the Flink project's blog), combined with the exactly-once and low-latency patterns Uber's ad pipeline demonstrates above. Treat any specific bank's public "we use Kafka and Flink for fraud detection" claim you encounter elsewhere with real skepticism unless it links to that institution's own primary-source engineering writeup — the pattern in this guide is real, but most of the specific numbers attached to it in secondary articles are not independently verifiable.</p>
-</div>
-
-<div class="tldr reveal">
-<h4>❯ Short version</h4>
-<p>Every verified production case study here — Netflix, Uber, DoorDash — runs <b>Kafka for durable transport</b> and <b>Flink as the compute engine</b>, not Spark Structured Streaming. All three get end-to-end exactly-once the same way section 23 describes it in theory: a shortened checkpoint interval plus a transactional sink (Kafka transactions or a checkpoint-integrated file write), trading some latency for correctness. At extreme scale, even these companies default to at-least-once and reserve exactly-once for the specific paths that truly need it. Public, verifiable case studies for Alibaba, ByteDance, and bank-specific fraud systems are genuinely scarce — that gap is real, not an oversight in this guide.</p>
-</div>
-<hr/>
-<!-- END s29 -->
-
 <!-- START s30 -->
 <p class="promptline">~/streaming <b>❯</b> mistakes to avoid</p>
 <h2 id="s30" class="reveal"><span class="hico"><svg class="ico"><use href="#i-warn"/></svg></span><span class="n">30.</span> Common Pitfalls &amp; Best Practices</h2>
@@ -3264,7 +2355,7 @@ df.withWatermark("event_time", "24 hours")   # generous default beats "none" eve
 <h2 id="s31" class="reveal"><span class="hico"><svg class="ico"><use href="#i-book"/></svg></span><span class="n">31.</span> Glossary</h2>
 <p class="sectionsub reveal">Every term and acronym from this guide, in one place, in plain English</p>
 <div class="prose reveal">
-<p>Use this as a lookup, not required reading — if you've read the rest of the guide, most of these will already feel familiar. Terms are sorted alphabetically and cover the Kafka, Spark Structured Streaming, and Flink parts of the guide.</p>
+<p>Use this as a lookup, not required reading — if you've read the rest of the guide, most of these will already feel familiar. Terms are sorted alphabetically and cover the Kafka and Spark Structured Streaming parts of the guide.</p>
 </div>
 <div class="tablewrap reveal">
 <table>
@@ -3273,8 +2364,6 @@ df.withWatermark("event_time", "24 hours")   # generous default beats "none" eve
 <tr><td>ACID</td><td>Atomicity, Consistency, Isolation, Durability — a database-style guarantee that a write either fully completes or has no effect at all, and never leaves data half-written for others to see.</td></tr>
 <tr><td>ACL</td><td>Access Control List — a rule saying which user or app may do what (read, write, create, etc.) on a specific Kafka resource such as a topic.</td></tr>
 <tr><td>Acks</td><td>A producer setting controlling how many brokers must confirm receipt before the producer considers a message "sent" (<code>acks=0</code>, <code>1</code>, or <code>all</code>).</td></tr>
-<tr><td>Allowed Lateness</td><td>Flink's window setting that keeps a window open for a grace period after the watermark passes its end, re-firing with an updated result if more data arrives, before finally closing and routing further stragglers to a side output.</td></tr>
-<tr><td>Application Mode</td><td>A Flink deployment mode where each job gets its own dedicated JobManager and TaskManagers, created for that one job and torn down when it finishes — the recommended default for production isolation.</td></tr>
 <tr><td>At-least-once</td><td>A delivery guarantee where every message is processed at least once, but retries after a failure can cause it to be processed more than once.</td></tr>
 <tr><td>At-most-once</td><td>A delivery guarantee where a message is processed zero or one times; a failure right after sending but before confirming can lose it entirely.</td></tr>
 <tr><td>Auto Loader</td><td>A Spark/Databricks feature that automatically and incrementally discovers new files landing in cloud storage and streams them in, without you tracking which files were already read.</td></tr>
@@ -3285,7 +2374,6 @@ df.withWatermark("event_time", "24 hours")   # generous default beats "none" eve
 <tr><td>Broker</td><td>A single Kafka server that stores data and serves producer/consumer requests; a cluster is a group of brokers working together.</td></tr>
 <tr><td>Change Data Feed (CDF)</td><td>A Delta Lake feature that records exactly which rows were inserted, updated, or deleted between two table versions, so downstream jobs can process just the changes.</td></tr>
 <tr><td>Checkpoint</td><td>A folder where a Spark Structured Streaming query saves its progress (offsets processed, plus any running state) so it can resume exactly where it left off after a restart.</td></tr>
-<tr><td>Checkpoint Barrier</td><td>A marker record Flink injects into every source and flows through the dataflow graph alongside the real data; each operator snapshots its state when the barrier passes, producing a globally consistent checkpoint once it reaches every sink.</td></tr>
 <tr><td>Cluster</td><td>A group of machines working together as one logical system — brokers in Kafka, or a driver plus executors in Spark.</td></tr>
 <tr><td>Compaction (log compaction)</td><td>A Kafka topic-cleanup mode that keeps only the latest message per key and discards older ones with the same key, useful for "current state" style topics.</td></tr>
 <tr><td>Consumer</td><td>An application that reads (subscribes to) messages from one or more Kafka topics.</td></tr>
@@ -3293,19 +2381,14 @@ df.withWatermark("event_time", "24 hours")   # generous default beats "none" eve
 <tr><td>Continuous Processing</td><td>An experimental Spark Structured Streaming mode that processes each record as it arrives instead of in micro-batches, aiming for millisecond-level latency with fewer supported operators.</td></tr>
 <tr><td>Controller</td><td>The broker (or, under KRaft, a small quorum of controller nodes) responsible for cluster-wide decisions like which broker leads which partition.</td></tr>
 <tr><td>Delivery Semantics</td><td>The overall guarantee a system makes about how many times a message can be processed: at-most-once, at-least-once, or exactly-once.</td></tr>
-<tr><td>Disaggregated State</td><td>An approach (Flink's ForSt state backend) that keeps operator state in remote, shared storage instead of on each TaskManager's local disk, so rescaling a job doesn't require physically copying large amounts of state between machines.</td></tr>
-<tr><td>Dynamic Table</td><td>Flink SQL's core abstraction: a table that keeps changing as new events arrive, with a continuous query re-evaluating over it and emitting a changelog of inserts, updates, and deletes.</td></tr>
 <tr><td>Event-time</td><td>The timestamp of when an event actually happened in the real world, as opposed to when the system happened to process it.</td></tr>
 <tr><td>Exactly-once</td><td>A guarantee that every message affects the final result exactly one time, even across retries, failures, and restarts.</td></tr>
-<tr><td>Flink CDC</td><td>A top-level Apache project for capturing row-level changes from an entire database (many tables at once) directly into Flink, playing a role similar to Debezium-plus-Kafka-Connect but as one integrated pipeline.</td></tr>
 <tr><td>foreachBatch</td><td>A Spark Structured Streaming output method that hands you each micro-batch as a regular batch DataFrame, letting you run any batch-style logic (like a Delta MERGE) a built-in sink doesn't support.</td></tr>
-<tr><td>ForSt</td><td>Flink's disaggregated state backend, designed to work efficiently against remote object storage (e.g. S3) instead of local disk, introduced around Flink 2.0.</td></tr>
 <tr><td>GlobalKTable</td><td>A Kafka Streams table that holds a full copy of all partitions' data on every application instance — useful for small reference/lookup data every instance needs.</td></tr>
 <tr><td>gRPC</td><td>A fast, modern protocol for one program to call functions on another program over a network — used by Spark Connect to talk to a remote Spark cluster.</td></tr>
 <tr><td>HDFS</td><td>Hadoop Distributed File System — an older, still widely used way of storing large files spread across many machines; one option (alongside cloud storage like S3) for a checkpoint location.</td></tr>
 <tr><td>Idempotent Producer</td><td>A Kafka producer setting that guarantees a resend after a retry will never create a duplicate message in the log.</td></tr>
 <tr><td>ISR (in-sync replicas)</td><td>The set of a partition's replicas that are fully caught up with the leader; only ISR members are eligible to become the new leader if the current one fails.</td></tr>
-<tr><td>JobManager</td><td>The master process in a Flink cluster: accepts submitted jobs, schedules tasks onto TaskManagers, coordinates checkpoints, and handles failure recovery.</td></tr>
 <tr><td>Kafka Connect</td><td>A framework for moving data in and out of Kafka using pre-built, configuration-only connectors instead of writing custom producer/consumer code.</td></tr>
 <tr><td>Kafka Streams</td><td>A Java library for building stream-processing apps directly inside your own application, reading from and writing to Kafka, with no separate processing cluster to run.</td></tr>
 <tr><td>KIP-848</td><td>The Kafka Improvement Proposal that redesigned the consumer group rebalance protocol, adopted as the new default from Kafka 3.7+/4.0, making rebalances much faster and less disruptive.</td></tr>
@@ -3319,28 +2402,21 @@ df.withWatermark("event_time", "24 hours")   # generous default beats "none" eve
 <tr><td>Micro-batch</td><td>Spark Structured Streaming's default model: instead of one record at a time, incoming data is grouped into small batches processed every few seconds or less.</td></tr>
 <tr><td>MirrorMaker 2</td><td>A Kafka Connect-based tool for replicating topics between two separate Kafka clusters, e.g. for disaster recovery or migrating to a new cluster.</td></tr>
 <tr><td>Offset</td><td>A sequential ID number Kafka assigns to each message within a partition, marking its exact position in that partition's log.</td></tr>
-<tr><td>Operator Chaining</td><td>Flink's optimization of fusing multiple operators with no shuffle between them (e.g. a map feeding a filter) into a single task running in one thread, avoiding network and serialization overhead.</td></tr>
 <tr><td>Output Mode</td><td>A Spark Structured Streaming setting controlling what's written each micro-batch: "append" (new rows only), "complete" (the whole result), or "update" (only changed rows).</td></tr>
 <tr><td>Partition</td><td>A topic is split into one or more partitions, each an independently ordered log; partitions are the unit of parallelism for both writing and reading.</td></tr>
-<tr><td>ProcessFunction</td><td>Flink's lowest-level DataStream API building block, giving direct access to each event, keyed state, and timers, plus the ability to emit to a side output.</td></tr>
 <tr><td>Processing-time</td><td>The timestamp of when a system actually processes an event, which can lag behind the event's real-world event-time.</td></tr>
 <tr><td>Producer</td><td>An application that writes (publishes) messages into a Kafka topic.</td></tr>
 <tr><td>Rebalance</td><td>The process where a consumer group redistributes partitions among its members, triggered when a consumer joins, leaves, or is considered dead; can briefly pause processing.</td></tr>
 <tr><td>Replication Factor</td><td>The number of copies of each partition Kafka keeps across different brokers (e.g. 3 = leader plus 2 followers), protecting against broker failure.</td></tr>
 <tr><td>RocksDB State Store</td><td>The default embedded key-value database Spark Structured Streaming (and Kafka Streams) uses on local disk to hold large amounts of streaming state without keeping it all in memory.</td></tr>
 <tr><td>SASL</td><td>Simple Authentication and Security Layer — a framework Kafka uses to authenticate clients before allowing them to connect, often paired with TLS encryption.</td></tr>
-<tr><td>Savepoint</td><td>A manually-triggered Flink snapshot kept indefinitely (unlike an automatic checkpoint), used for planned operations like upgrading code or changing a job's parallelism.</td></tr>
 <tr><td>Schema Registry</td><td>A separate service that stores and enforces message structure (schema) for a topic, so producers and consumers agree on the format and can evolve it safely over time.</td></tr>
-<tr><td>Session Mode</td><td>A Flink deployment mode where one long-running cluster accepts many jobs submitted to it over time, trading isolation between jobs for a cheaper, always-warm cluster.</td></tr>
 <tr><td>Session Window</td><td>A window with no fixed length that groups events for the same key occurring close together in time, closing after a gap of inactivity longer than a set timeout.</td></tr>
 <tr><td>Share Group</td><td>A newer Kafka consumer model (KIP-932) letting multiple consumers cooperatively read from the same partition at once, sharing individual records instead of one consumer owning the whole partition.</td></tr>
 <tr><td>Sliding Window</td><td>A fixed-length window that moves forward in smaller steps than its own length, so consecutive windows overlap and one event can fall into more than one window.</td></tr>
 <tr><td>Split-brain</td><td>A failure mode where two nodes each wrongly believe they are the one in charge at the same time, risking conflicting decisions — why Kafka's controller quorum always uses an odd number of nodes and a majority vote.</td></tr>
-<tr><td>State Backend</td><td>Where a Flink job's keyed/operator state physically lives: the heap-based backend (fast, RAM-limited) or the RocksDB-based backend (disk-backed, scales further).</td></tr>
 <tr><td>State Store</td><td>The storage a stream-processing job uses to remember information between events (like a running count), needed for any stateful operation.</td></tr>
 <tr><td>Structured Streaming</td><td>Spark's high-level streaming API that lets you write streaming jobs with the same DataFrame/SQL API as batch jobs, treating a stream as an ever-growing table.</td></tr>
-<tr><td>Task Slot</td><td>The unit of resource a Flink TaskManager offers; one slot runs one parallel slice of a job's operators, so the total slots across all TaskManagers cap a job's maximum parallelism.</td></tr>
-<tr><td>TaskManager</td><td>A worker process in a Flink cluster that executes tasks and holds their state, offering one or more task slots.</td></tr>
 <tr><td>Throughput</td><td>How much data a system can move or process per unit of time, e.g. messages per second or MB per second.</td></tr>
 <tr><td>Tiered Storage</td><td>A Kafka feature that automatically moves older log segments from broker disks to cheaper object storage, letting topics retain data far longer without huge local disks.</td></tr>
 <tr><td>Topic</td><td>A named category/feed that producers write to and consumers read from — the basic unit of organization in Kafka.</td></tr>
@@ -3349,7 +2425,6 @@ df.withWatermark("event_time", "24 hours")   # generous default beats "none" eve
 <tr><td>Tumbling Window</td><td>A fixed-length, non-overlapping window (e.g. every 5 minutes); each event belongs to exactly one tumbling window.</td></tr>
 <tr><td>Two-Phase Commit</td><td>The pattern a transactional sink uses for end-to-end exactly-once: writes go into an open transaction that only gets committed once the checkpoint covering them is confirmed complete, so a crash mid-checkpoint aborts the transaction instead of leaving partial output visible.</td></tr>
 <tr><td>Watermark</td><td>A moving threshold telling a streaming engine "I don't expect event-time data older than this anymore," so it knows when it's safe to finalize a window and free its state.</td></tr>
-<tr><td>Watermark Strategy</td><td>Flink's pluggable mechanism for extracting event timestamps and generating watermarks from a stream, including handling for idle sources so one quiet partition doesn't stall the whole job's watermark.</td></tr>
 <tr><td>Windowing</td><td>Grouping streaming events into time-based buckets (tumbling, sliding, or session) so you can compute aggregates like "count per 5-minute window" on an endless stream.</td></tr>
 <tr><td>ZooKeeper</td><td>The external coordination service older Kafka versions relied on for cluster metadata and controller election; replaced by KRaft, and removed as an option entirely in Kafka 4.0.</td></tr>
 </tbody>
@@ -3361,7 +2436,7 @@ df.withWatermark("event_time", "24 hours")   # generous default beats "none" eve
 <h2 id="s32" class="reveal"><span class="hico"><svg class="ico"><use href="#i-compass"/></svg></span><span class="n">32.</span> Learning Path &amp; Resources</h2>
 <p class="sectionsub reveal">A concrete, hands-on order to actually learn this by doing it</p>
 <div class="prose reveal">
-<p>Reading about Kafka, Spark Structured Streaming, and Flink will only get you so far — the concepts (partitions, offsets, watermarks, checkpoints) click into place much faster once you've seen them with your own eyes on your own laptop. Here is a practical, ordered path. Each step builds on the last, and none of them require anything more than a laptop and some free disk space.</p>
+<p>Reading about Kafka and Spark Structured Streaming will only get you so far — the concepts (partitions, offsets, watermarks, checkpoints) click into place much faster once you've seen them with your own eyes on your own laptop. Here is a practical, ordered path. Each step builds on the last, and none of them require anything more than a laptop and some free disk space.</p>
 </div>
 <figure class="diagram reveal">
 <svg viewBox="0 0 400 600" role="img" aria-label="Seven-step hands-on learning path from running a local Kafka broker to going deep on official documentation">
@@ -3413,24 +2488,22 @@ kafka-console-consumer.sh --topic practice --from-beginning --bootstrap-server l
 <p class="kv">• <b>4. Add a tumbling window and a watermark</b> to that same job and watch how the results and their timing change.</p>
 <p class="kv">• <b>5. Add a stream-static join</b> against a small lookup table (a tiny CSV or Delta table of, say, product names) so you see enrichment in action.</p>
 <p class="kv">• <b>6. Re-implement the same simple counting job in Kafka Streams or ksqlDB</b> as a comparison exercise, and notice how differently it feels: no cluster to submit to, a different API shape, but the same underlying Kafka concepts.</p>
-<p class="kv">• <b>6.5. Re-implement it a third time using Flink's DataStream API or Flink SQL</b> (sections 20-24) against the same topic. This is where the differences from sections 20-26 stop being abstract: you'll feel the event-at-a-time model, the separate WatermarkStrategy, and the checkpoint/savepoint split directly.</p>
 <p class="kv">• <b>7. Once you're running one of these in production, go deep on that engine's official docs.</b> Defaults, configuration names, and best practices shift with almost every release, and no guide (including this one) can track that faster than the source.</p>
 </div>
 <div class="callout gd reveal">
 <p><b>Reference sources.</b> This guide draws heavily on two O'Reilly books — <i>Kafka: The Definitive Guide, 2nd Edition</i>, and <i>Learning Spark: Lightning-Fast Data Analytics, 2nd Edition</i> — plus the official documentation, which is the best place to check for the exact current syntax and defaults:</p>
 <p class="kv">• <b>kafka.apache.org</b> — official Kafka documentation, configuration reference, and KIP (Kafka Improvement Proposal) index.</p>
 <p class="kv">• <b>spark.apache.org/docs/latest/structured-streaming-programming-guide.html</b> — the official Structured Streaming programming guide, updated with every Spark release.</p>
-<p class="kv">• <b>nightlies.apache.org/flink/flink-docs-stable</b> — the official Flink documentation, including the DataStream API, Table API/SQL, and the Kubernetes Operator docs.</p>
 </div>
 <div class="tldr reveal">
 <h4>❯ Short version</h4>
-<p>Run Kafka locally → write a producer/consumer → read it from a simple Spark job → add windowing/watermarks → add a join → try the same thing in Kafka Streams, then in Flink → then go deep on whichever engine you actually ship. Once you're in production, official docs beat any book or guide, because defaults change every release.</p>
+<p>Run Kafka locally → write a producer/consumer → read it from a simple Spark job → add windowing/watermarks → add a join → try the same thing in Kafka Streams → then go deep on whichever engine you actually ship. Once you're in production, official docs beat any book or guide, because defaults change every release.</p>
 </div>
 <!-- END s32 -->
 <hr/>
 <div class="prose reveal">
 <h2 style="margin-top:10px"><span class="pfx">∎</span> The takeaway</h2>
-<p>Kafka, Spark Structured Streaming and Flink solve overlapping but distinct halves of the same problem. <strong>Kafka</strong> makes sure every event is captured, kept in order and never lost — the durable, replayable backbone. <strong>Spark Structured Streaming</strong> and <strong>Flink</strong> both turn that endless flow into continuously updated answers — counts, joins, alerts, tables — with different tradeoffs: Spark leans on its micro-batch model and shared batch/ML ecosystem, Flink on true event-at-a-time processing and the most flexible event-time semantics of the three. Section 29 shows how real companies combine these pieces, not just how each works in isolation.</p>
+<p>Kafka and Spark Structured Streaming solve two distinct halves of the same problem. <strong>Kafka</strong> makes sure every event is captured, kept in order and never lost — the durable, replayable backbone. <strong>Spark Structured Streaming</strong> turns that endless flow into continuously updated answers — counts, joins, alerts, tables — treating the stream as a table that never stops growing. Section 27 shows how the two combine into one real pipeline, not just how each works in isolation.</p>
 <p>You do not need to memorize everything in this guide. Come back to it when you hit a real problem: a consumer that will not stop rebalancing, a Spark job whose state keeps growing, a watermark that is dropping data you did not expect. Re-read the relevant section, look at the diagram, and it should click faster the second time.</p>
 </div>
 
