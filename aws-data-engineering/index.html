@@ -157,7 +157,7 @@ h2 .n{color:var(--blue2,#5C78FF)}
     <figure><svg viewBox="0 0 100 100" role="img" aria-label="Data lake icon"><circle cx="50" cy="50" r="44" fill="#1D1D26" stroke="#5C78FF" stroke-width="2"/><ellipse cx="50" cy="38" rx="26" ry="10" fill="none" stroke="#5C78FF" stroke-width="2.5"/><path d="M24 38 v18 a26 10 0 0 0 52 0 v-18" fill="none" stroke="#5C78FF" stroke-width="2.5"/><path d="M24 50 a26 10 0 0 0 52 0" fill="none" stroke="#5C78FF" stroke-width="2"/></svg><figcaption>Data Lake / Lakehouse</figcaption></figure>
     <figure><svg viewBox="0 0 100 100" role="img" aria-label="Orchestration icon"><circle cx="50" cy="50" r="44" fill="#1D1D26" stroke="#A56BFF" stroke-width="2"/><rect x="26" y="26" width="16" height="16" rx="4" fill="#A56BFF"/><rect x="58" y="26" width="16" height="16" rx="4" fill="#A56BFF"/><rect x="42" y="58" width="16" height="16" rx="4" fill="#A56BFF"/><line x1="34" y1="42" x2="46" y2="60" stroke="#A56BFF" stroke-width="2"/><line x1="66" y1="42" x2="54" y2="60" stroke="#A56BFF" stroke-width="2"/></svg><figcaption>Step Functions</figcaption></figure>
   </div>
-  <div class="byline">~70 min read · updated 2026 · written in plain English, no assumed background</div>
+  <div class="byline">~68 min read · updated 2026 · written in plain English, no assumed background</div>
 </header>
 
 <div class="wrap">
@@ -197,7 +197,6 @@ h2 .n{color:var(--blue2,#5C78FF)}
   <a href="#s27"><svg class="ico"><use href="#i-blocks"/></svg>27 · Amazon DynamoDB</a>
   <a href="#s28"><svg class="ico"><use href="#i-blocks"/></svg>28 · Amazon QuickSight</a>
   <a href="#s29"><svg class="ico"><use href="#i-workflow"/></svg>29 · Infrastructure as Code &amp; CI/CD for Data Pipelines</a>
-  <a href="#s30"><svg class="ico"><use href="#i-cloud"/></svg>30 · What&#x27;s New: AWS Data Engineering, 2024-2026</a>
   <a href="#s36"><svg class="ico"><use href="#i-database"/></svg>36 · AWS Lakehouse vs. Databricks Lakehouse: A Head-to-Head Comparison</a>
   <a href="#s37"><svg class="ico"><use href="#i-check"/></svg>37 · Enterprise Validation: How These Services Are Actually Used</a>
   <a href="#s38"><svg class="ico"><use href="#i-cloud"/></svg>38 · AWS-Native vs. Cross-Cloud Alternatives</a>
@@ -1712,7 +1711,7 @@ aws athena create-work-group \
 
 <div class="def reveal">
 <p class="t">DynamoDB Streams — the CDC mechanism that's actually built in</p>
-<p><strong>DynamoDB Streams</strong> captures a time-ordered log of every item-level change (insert/update/delete) in a table, which a Lambda function can subscribe to directly — no separate CDC tool needed, unlike the log-parsing DMS does for relational databases (section 23). This is the standard way a DynamoDB-backed application's data ends up landing in S3 continuously rather than through periodic full-table exports, and it's also the mechanism behind the DynamoDB-to-S3-Tables zero-ETL integration AWS added in 2025 (section 30).</p>
+<p><strong>DynamoDB Streams</strong> captures a time-ordered log of every item-level change (insert/update/delete) in a table, which a Lambda function can subscribe to directly — no separate CDC tool needed, unlike the log-parsing DMS does for relational databases (section 23). This is the standard way a DynamoDB-backed application's data ends up landing in S3 continuously rather than through periodic full-table exports, and it's also the mechanism behind the DynamoDB-to-S3-Tables zero-ETL integration AWS added in 2025.</p>
 </div>
 
 <div class="tldr reveal">
@@ -1810,46 +1809,6 @@ glue_job = glue.CfnJob(self, "SilverToGoldJob",
 </div>
 <hr/>
 <!-- END s29 -->
-
-<!-- START s30 -->
-<p class="promptline">~/aws-data-eng <b>❯</b> what changed while you were learning the basics</p>
-<h2 id="s30" class="reveal"><span class="hico"><svg class="ico"><use href="#i-cloud"/></svg></span><span class="n">30.</span> What&#x27;s New: AWS Data Engineering, 2024-2026</h2>
-<p class="sectionsub reveal">Research-verified — every claim below is sourced to an official AWS "What's New" post or AWS blog</p>
-<div class="prose reveal">
-<p>Everything in sections 01-28 is durable, foundational knowledge that won't go stale next quarter. This section covers what's actually <i>changed</i> since — the direction AWS is visibly pushing the data platform, verified against primary AWS sources rather than summarized from memory.</p>
-</div>
-
-<div class="def reveal">
-<p class="t">The one theme underneath most of these: collapsing "lake" and "warehouse" into one Iceberg-based copy of the data</p>
-<p>The single biggest shift across 2024-2025 isn't any one feature — it's AWS pushing hard toward <strong>Apache Iceberg</strong> as the shared table format that S3, Glue, Athena, Redshift, and EMR all read and write the <i>same</i> physical copy of, instead of each engine holding its own copy synced by ETL. <strong>S3 Tables</strong> and <strong>Amazon SageMaker Lakehouse</strong> are the two clearest expressions of that: pick one Iceberg-backed location once, and query it from whichever engine a given task calls for, without a separate "load it into the warehouse" step.</p>
-</div>
-
-<div class="tablewrap reveal">
-<table>
-<thead><tr><th>What launched</th><th>What it means for a data engineer</th></tr></thead>
-<tbody>
-<tr><td><b>Amazon S3 Tables</b> (re:Invent 2024)</td><td>The first cloud object store with built-in Apache Iceberg support — queryable natively from Athena, EMR, Redshift, Spark, and Glue, with Lake Formation governance built in, no separate table-format setup</td></tr>
-<tr><td><b>Amazon SageMaker Lakehouse</b> (re:Invent 2024)</td><td>Unifies S3 data-lake and Redshift data-warehouse data on one Iceberg-based copy — AWS reports up to 3x year-over-year Iceberg query performance gains</td></tr>
-<tr><td><b>AWS Glue 5.0</b> (Dec 2024)</td><td>Engine upgraded to Spark 3.5.2 / Python 3.11 / Java 17; updated Hudi/Iceberg/Delta Lake support; adds Spark-native fine-grained access control (table/column/row/cell) via Lake Formation</td></tr>
-<tr><td><b>Glue Data Catalog views</b> (Aug 2024, GA)</td><td>One SQL view definition, queryable from both Athena and Redshift, shareable across regions/accounts/orgs — no more maintaining nearly-identical view logic twice</td></tr>
-<tr><td><b>Glue materialized views on Iceberg</b> (Nov 2025)</td><td>Precomputed, auto-refreshing managed tables defined in standard Spark SQL — a managed alternative to hand-rolled "summary table" pipelines</td></tr>
-<tr><td><b>Zero-ETL integrations expansion</b> (2024-2025)</td><td>Fully managed, no-pipeline replication into Redshift/S3 Tables from DynamoDB plus 8 SaaS apps (Salesforce, SAP, ServiceNow, Zendesk, and others) — shrinks the class of "simple SaaS/DynamoDB sync" pipelines a team needs to build by hand</td></tr>
-<tr><td><b>Redshift Serverless AI-driven scaling</b> (GA Oct 2024)</td><td>Automatic, workload-aware scaling — AWS reports up to 10x price-performance on variable workloads (an AWS-published figure, not an independently benchmarked one)</td></tr>
-<tr><td><b>AWS DataZone → Amazon SageMaker Catalog</b> (re:Invent 2025)</td><td>AWS has positioned SageMaker Catalog as the upgrade path from DataZone for data governance/cataloging — worth knowing alongside Lake Formation (section 14) as AWS's other, adjacent governance offering, with DataZone customers actively being pointed toward it</td></tr>
-</tbody>
-</table>
-</div>
-
-<div class="callout wn reveal">
-<p><b>A real deprecation, not a hypothetical one: Kinesis Data Analytics for SQL Applications.</b> <b>Amazon Kinesis Data Analytics</b> was officially renamed <b>Amazon Managed Service for Apache Flink</b> — AWS's fully managed runtime for Apache Flink stream-processing applications — in August 2023, per AWS's own announcement post; existing Flink-based applications kept running unchanged, a rebrand rather than a migration. Separately, the older <b>"Kinesis Data Analytics for SQL Applications"</b> variant is a genuine, dated deprecation, per AWS's official discontinuation notice for that feature: bug fixes stopped September 1, 2025; new-application creation and forced transition of existing apps to READY state stopped October 15, 2025; and application deletion/end-of-support took effect January 27, 2026 — a date that, as of this guide's writing, has already passed. Any SQL-based Kinesis Data Analytics application AWS documentation still references today should be treated as already migrated to Managed Service for Apache Flink, not as a live option.</p>
-</div>
-
-<div class="tldr reveal">
-<h4>❯ Short version</h4>
-<p>The dominant 2024-2026 direction is Apache Iceberg as the shared format collapsing "lake" and "warehouse" into one copy (S3 Tables, SageMaker Lakehouse), alongside a major Glue engine upgrade (5.0), expanding zero-ETL integrations, and AI-driven Redshift Serverless scaling. The one hard deprecation to know: Kinesis Data Analytics for SQL Applications is fully retired as of January 2026 — Managed Service for Apache Flink is the only path forward for that workload.</p>
-</div>
-<hr/>
-<!-- END s30 -->
 
 <!-- START s36 -->
 <p class="promptline">~/aws-data-eng <b>❯</b> same lakehouse, different platform boundary</p>
@@ -1954,7 +1913,7 @@ glue_job = glue.CfnJob(self, "SilverToGoldJob",
 <h2 id="s37" class="reveal"><span class="hico"><svg class="ico"><use href="#i-check"/></svg></span><span class="n">37.</span> Enterprise Validation: How These Services Are Actually Used</h2>
 <p class="sectionsub reveal">Named-company architectures, sourced to each company's own engineering writing — with an honest note on what's less certain</p>
 <div class="callout wn reveal">
-<p><b>A note on sourcing, stated plainly.</b> Every claim below is drawn from a company's own primary technical writing (their engineering blog, or a co-authored post on the AWS Big Data Blog) — not from marketing pages. These claims come from a research pass that fetched and extracted them from primary sources; they were not additionally run through independent cross-source adversarial verification the way section 30's AWS "what's new" claims were. Treat them as "this is what the company itself has publicly said about its own architecture," which is strong evidence, but hold performance figures (latency reductions, cost savings) as company-reported rather than independently audited.</p>
+<p><b>A note on sourcing, stated plainly.</b> Every claim below is drawn from a company's own primary technical writing (their engineering blog, or a co-authored post on the AWS Big Data Blog) — not from marketing pages. These claims come from a research pass that fetched and extracted them from primary sources; they were not additionally run through independent cross-source adversarial verification. Treat them as "this is what the company itself has publicly said about its own architecture," which is strong evidence, but hold performance figures (latency reductions, cost savings) as company-reported rather than independently audited.</p>
 </div>
 
 <div class="def reveal">
@@ -1964,7 +1923,7 @@ glue_job = glue.CfnJob(self, "SilverToGoldJob",
 
 <div class="def reveal">
 <p class="t">Airbnb — moving a warehouse's storage off HDFS, onto S3 plus Iceberg</p>
-<p>Airbnb's own engineering blog describes migrating its data warehouse's storage layer from legacy on-premises HDFS clusters to Amazon S3 for better stability and scalability, later layering Apache Iceberg and Spark 3 on top of that S3 foundation. This is section 30's "collapse lake and warehouse onto one Iceberg-backed copy" theme playing out at real scale, years before most of the AWS-native tooling (S3 Tables, SageMaker Lakehouse) existed to make that pattern turnkey — Airbnb built the equivalent by hand, on S3 directly.</p>
+<p>Airbnb's own engineering blog describes migrating its data warehouse's storage layer from legacy on-premises HDFS clusters to Amazon S3 for better stability and scalability, later layering Apache Iceberg and Spark 3 on top of that S3 foundation — collapsing lake and warehouse onto one Iceberg-backed copy, years before most of the AWS-native tooling (S3 Tables, SageMaker Lakehouse) existed to make that pattern turnkey. Airbnb built the equivalent by hand, on S3 directly.</p>
 </div>
 
 <div class="def reveal">
