@@ -1900,6 +1900,7 @@ sys.<span class="p">setrecursionlimit</span>(<span class="y">10_000</span>)   <s
 
 
 <h2 id="sliding" class="reveal"><span class="hico"><svg class="ico"><use href="#i-window"/></svg></span><span class="n">22.</span> Sliding window &amp; prefix sums</h2>
+<p class="reveal" style="margin:0 0 10px"><span class="chip">Tier 2 &middot; good to know, not required</span></p>
 <p class="reveal lead">When a problem asks for the best contiguous run, whether that is the longest, the shortest, or the max-sum subarray or substring, a sliding window turns the naive O(n²) scan of every possible subarray into one clean O(n) pass.</p>
 
 <p class="reveal">A window is a pair of indices, <code>left</code> and <code>right</code>, that bound a contiguous slice of the data. There are two flavours. A <strong>fixed-size</strong> window has a given length <em>k</em>, and you slide it one step at a time. A <strong>variable-size</strong> window grows its right edge greedily, and only shrinks its left edge when some constraint is broken.</p>
@@ -1979,6 +1980,7 @@ sys.<span class="p">setrecursionlimit</span>(<span class="y">10_000</span>)   <s
 
 
 <h2 id="heaps" class="reveal"><span class="hico"><svg class="ico"><use href="#i-sigma"/></svg></span><span class="n">23.</span> Heaps &amp; priority queues</h2>
+<p class="reveal" style="margin:0 0 10px"><span class="chip">Tier 2 &middot; good to know, not required</span></p>
 <p class="reveal lead">When the question is "the top K", "the k closest", or "merge k sorted streams", a heap gives you the smallest or largest element in O(log n), without needing to keep everything fully sorted. Python ships one in its standard library.</p>
 
 <p class="reveal">A binary heap keeps the smallest (or largest) element instantly reachable while everything else stays only loosely ordered. Python's <code>heapq</code> operates on a plain list and is always a <strong>min-heap</strong>: the smallest element sits at index 0.</p>
@@ -2136,6 +2138,7 @@ sys.<span class="p">setrecursionlimit</span>(<span class="y">10_000</span>)   <s
 
 
 <h2 id="graphs" class="reveal"><span class="hico"><svg class="ico"><use href="#i-workflow"/></svg></span><span class="n">25.</span> Graphs &amp; topological sort</h2>
+<p class="reveal" style="margin:0 0 10px"><span class="chip">Tier 2 &middot; good to know, not required</span></p>
 <p class="reveal lead">Graphs are the one DSA topic that maps directly onto real software you already use. Build systems, task schedulers, package managers: every dependency graph is a graph, and the order things run in is a topological sort, cycle detection included.</p>
 
 <p class="reveal">Represent a graph as an <strong>adjacency list</strong>: a dict that maps each node to the list of nodes it points to. This is compact for sparse graphs, and it gives O(1) access to a node's neighbours.</p>
