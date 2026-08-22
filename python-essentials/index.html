@@ -3,19 +3,19 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Python for Data Engineers</title>
-<meta name="description" content="The Python that data engineering actually runs on: Python as the glue that drives Spark, Snowflake and BigQuery; the data structures, comprehensions and generators that stream data without blowing up memory; decorators, context managers and clean OOP for connectors and config; dataclasses, type hints and testing — then a focused slice of DSA (arrays, hashmaps, two pointers, BFS/DFS, sliding window, 1D DP) that is enough to pass Medium LeetCode."/>
+<title>Python &amp; DSA Essentials</title>
+<meta name="description" content="The core Python you actually need, explained from zero: data structures, comprehensions and generators, decorators, context managers, classes and dataclasses, type hints, concurrency. Then a focused slice of DSA (arrays, hashmaps, two pointers, stacks and queues, trees, BFS/DFS, sliding window, heaps, 1D DP) that is enough to pass Easy and Medium LeetCode."/>
 <meta property="og:type" content="article"/>
-<meta property="og:title" content="Python for Data Engineers"/>
-<meta property="og:description" content="Python as the glue of data engineering — data structures, generators, decorators, context managers, classes and dataclasses, type hints — plus the DSA that Medium interview problems actually test."/>
+<meta property="og:title" content="Python &amp; DSA Essentials"/>
+<meta property="og:description" content="Core Python: data structures, generators, decorators, context managers, classes and dataclasses, type hints. Plus the DSA that Easy and Medium interview problems actually test."/>
 <meta property="og:url" content="https://haotieu2001.github.io/python-essentials/"/>
 <meta property="og:image" content="https://haotieu2001.github.io/og-cover.png"/>
 <meta property="og:image:width" content="1200"/>
 <meta property="og:image:height" content="630"/>
-<meta property="og:image:alt" content="Python for Data Engineers"/>
+<meta property="og:image:alt" content="Python &amp; DSA Essentials"/>
 <meta name="twitter:card" content="summary_large_image"/>
-<meta name="twitter:title" content="Python for Data Engineers"/>
-<meta name="twitter:description" content="Data structures, generators, decorators, context managers, classes, dataclasses and type hints — plus the DSA that Medium problems actually test."/>
+<meta name="twitter:title" content="Python &amp; DSA Essentials"/>
+<meta name="twitter:description" content="Data structures, generators, decorators, context managers, classes, dataclasses and type hints. Plus the DSA that Easy and Medium problems actually test."/>
 <link rel="preconnect" href="https://fonts.googleapis.com"/>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
 <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
@@ -170,19 +170,19 @@
 <div class="page">
 <header>
   <div class="kicker"><a class="back" href="../">❮ Data &amp; AI Engineering, Simply Explained</a></div>
-  <h1>Python for Data Engineers</h1>
-  <p class="dek">The heavy lifting — the joins, the group-bys over a billion rows — is done by Spark, Snowflake and BigQuery. Python is the <strong>glue</strong> that drives them: it pulls from an API, streams a 40&nbsp;GB file without running out of memory, retries the flaky call, and hands the real work to an engine. So the Python that matters here is less clever one-liners and more <strong>code that survives production</strong> — generators, decorators, context managers, classes you'd actually want to maintain. This page covers that half, then the <strong>slice of DSA</strong> — arrays, hashmaps, two pointers, BFS/DFS, sliding window, a little 1D DP — that is enough to pass a Medium interview.</p>
+  <h1>Python &amp; DSA Essentials</h1>
+  <p class="dek">This page covers the Python you actually need to know well: not clever one-liners, but <strong>code you'd want to maintain</strong>. Data structures and their real costs, comprehensions and generators, decorators, context managers, classes and dataclasses, type hints, and concurrency. Then it covers the <strong>slice of DSA</strong> that shows up constantly in real interviews: arrays and two pointers, strings, hashmaps and sets, sorting and binary search, stacks and queues, linked lists, trees and BFS/DFS, sliding window, heaps, and a little 1D DP. Easy and Medium LeetCode, not competitive programming.</p>
   <div class="stack">
     <span class="chip"><svg class="ico"><use href="#i-code"/></svg> Python 3.11+</span>
-    <span class="chip"><svg class="ico"><use href="#i-database"/></svg> pandas &#183; PySpark &#183; Airflow</span>
+    <span class="chip"><svg class="ico"><use href="#i-book"/></svg> Fundamentals &#183; explained from zero</span>
     <span class="chip" style="color:#5AC8FF;border-color:#2B4A80;background:#0E2740"><svg class="ico"><use href="#i-target"/></svg> LeetCode &#183; DSA</span>
   </div>
-  <div class="byline">~52 min read · Reference · Fundamentals</div>
+  <div class="byline">~44 min read · Reference · Fundamentals</div>
 </header>
 
 <div class="toc reveal">
   <strong>Contents</strong>
-  <a href="#why"><svg class="ico"><use href="#i-rocket"/></svg>01 · Why Python runs data engineering</a>
+  <a href="#why"><svg class="ico"><use href="#i-rocket"/></svg>01 · Why these fundamentals matter</a>
   <a href="#datastructures"><svg class="ico"><use href="#i-blocks"/></svg>02 · The four structures: list, dict, set, tuple</a>
   <a href="#comprehensions"><svg class="ico"><use href="#i-zap"/></svg>03 · Comprehensions &amp; generator expressions</a>
   <a href="#generators"><svg class="ico"><use href="#i-repeat"/></svg>04 · Generators &amp; iterators: streaming</a>
@@ -194,131 +194,44 @@
   <a href="#errors"><svg class="ico"><use href="#i-alert"/></svg>10 · Errors, retries &amp; logging</a>
   <a href="#context"><svg class="ico"><use href="#i-file"/></svg>11 · Context managers &amp; files</a>
   <a href="#serde"><svg class="ico"><use href="#i-disk"/></svg>12 · JSON, CSV, datetime</a>
-  <a href="#io"><svg class="ico"><use href="#i-plug"/></svg>13 · Talking to databases &amp; APIs</a>
-  <a href="#pandas"><svg class="ico"><use href="#i-database"/></svg>14 · pandas &amp; the vectorised mindset</a>
-  <a href="#spark"><svg class="ico"><use href="#i-layers"/></svg>15 · From pandas to PySpark</a>
-  <a href="#concurrency"><svg class="ico"><use href="#i-network"/></svg>16 · Concurrency &amp; the GIL</a>
-  <a href="#packaging"><svg class="ico"><use href="#i-terminal"/></svg>17 · venv, packaging &amp; testing</a>
-  <a href="#bigo"><svg class="ico"><use href="#i-compass"/></svg>18 · Big-O intuition</a>
-  <a href="#arrays"><svg class="ico"><use href="#i-list"/></svg>19 · Arrays &amp; two pointers</a>
-  <a href="#strings"><svg class="ico"><use href="#i-code"/></svg>20 · Strings &amp; parsing</a>
-  <a href="#hashing"><svg class="ico"><use href="#i-key"/></svg>21 · Hashmaps &amp; sets</a>
-  <a href="#sorting"><svg class="ico"><use href="#i-search"/></svg>22 · Sorting, searching &amp; binary search</a>
-  <a href="#stacksqueues"><svg class="ico"><use href="#i-layers"/></svg>23 · Stacks &amp; queues</a>
-  <a href="#linkedlists"><svg class="ico"><use href="#i-network"/></svg>24 · Linked lists</a>
-  <a href="#recursion"><svg class="ico"><use href="#i-split"/></svg>25 · Recursion, trees &amp; BFS/DFS</a>
-  <a href="#sliding"><svg class="ico"><use href="#i-window"/></svg>26 · Sliding window &amp; prefix sums</a>
-  <a href="#heaps"><svg class="ico"><use href="#i-sigma"/></svg>27 · Heaps &amp; priority queues</a>
-  <a href="#dp"><svg class="ico"><use href="#i-blocks"/></svg>28 · Basic 1D dynamic programming</a>
-  <a href="#graphs"><svg class="ico"><use href="#i-workflow"/></svg>29 · Graphs &amp; topological sort</a>
-  <a href="#priority"><svg class="ico"><use href="#i-target"/></svg>30 · The DSA priority map for DE</a>
-  <a href="#cheatsheet"><svg class="ico"><use href="#i-list"/></svg>31 · Cheat sheet</a>
+  <a href="#concurrency"><svg class="ico"><use href="#i-network"/></svg>13 · Concurrency &amp; the GIL</a>
+  <a href="#bigo"><svg class="ico"><use href="#i-compass"/></svg>14 · Big-O intuition</a>
+  <a href="#arrays"><svg class="ico"><use href="#i-list"/></svg>15 · Arrays &amp; two pointers</a>
+  <a href="#strings"><svg class="ico"><use href="#i-code"/></svg>16 · Strings &amp; parsing</a>
+  <a href="#hashing"><svg class="ico"><use href="#i-key"/></svg>17 · Hashmaps &amp; sets</a>
+  <a href="#sorting"><svg class="ico"><use href="#i-search"/></svg>18 · Sorting, searching &amp; binary search</a>
+  <a href="#stacksqueues"><svg class="ico"><use href="#i-layers"/></svg>19 · Stacks &amp; queues</a>
+  <a href="#linkedlists"><svg class="ico"><use href="#i-network"/></svg>20 · Linked lists</a>
+  <a href="#recursion"><svg class="ico"><use href="#i-split"/></svg>21 · Recursion, trees &amp; BFS/DFS</a>
+  <a href="#sliding"><svg class="ico"><use href="#i-window"/></svg>22 · Sliding window &amp; prefix sums</a>
+  <a href="#heaps"><svg class="ico"><use href="#i-sigma"/></svg>23 · Heaps &amp; priority queues</a>
+  <a href="#dp"><svg class="ico"><use href="#i-blocks"/></svg>24 · Basic 1D dynamic programming</a>
+  <a href="#graphs"><svg class="ico"><use href="#i-workflow"/></svg>25 · Graphs &amp; topological sort</a>
+  <a href="#priority"><svg class="ico"><use href="#i-target"/></svg>26 · The DSA priority map</a>
+  <a href="#cheatsheet"><svg class="ico"><use href="#i-list"/></svg>27 · Cheat sheet</a>
   <a href="#glossary"><svg class="ico"><use href="#i-book"/></svg>＊ · Glossary</a>
 </div>
-<h2 id="why" class="reveal"><span class="hico"><svg class="ico"><use href="#i-rocket"/></svg></span><span class="n">01.</span> Why Python runs data engineering</h2>
-<p class="reveal lead">Python is the glue of the modern data stack. It does not crunch the data itself. Instead, it tells the tools that do crunch data what to do.</p>
+<h2 id="why" class="reveal"><span class="hico"><svg class="ico"><use href="#i-rocket"/></svg></span><span class="n">01.</span> Why these fundamentals matter</h2>
+<p class="reveal lead">Python is easy to write badly and easy to write well, and the gap between the two comes down to a fairly short list of ideas. This page is a practical tour of those ideas, plus the slice of data structures and algorithms that shows up constantly in coding interviews.</p>
 
-<p class="reveal">Here is a fact that surprises a lot of newcomers: Python is not good at crunching large amounts of data. It was never built to join two tables with 200 million rows each, or to group and summarise a terabyte of events. There are three reasons for this:</p>
+<p class="reveal">Start with a fact that surprises a lot of newcomers: Python is not a fast language for raw computation. There are three reasons for this:</p>
 
 <ul class="reveal">
 <li>Python is <strong>interpreted</strong>. The CPython virtual machine runs each line of code one at a time, instead of compiling the whole program to machine code ahead of time the way C or Rust do.</li>
-<li>A lock called the <strong>Global Interpreter Lock (GIL)</strong> means a single Python process can only use one CPU core at a time for heavy computation. Section 16 covers this in detail.</li>
+<li>A lock called the <strong>Global Interpreter Lock (GIL)</strong> means a single Python process can only use one CPU core at a time for heavy computation. Section 13 covers this in detail.</li>
 <li>Everything a Python program touches lives in the <strong>RAM of one machine</strong>.</li>
 </ul>
 
 <p class="reveal">Put those three together and here is what happens in practice: try to sort a dataset bigger than your computer's memory using a plain Python <code>list</code>, and the operating system runs out of memory and kills the process before it finishes.</p>
 
-<p class="reveal">So why is Python the standard language of data engineering anyway? Because the job is not about crunching numbers. It is about moving data, shaping data, and telling other tools what to do. The heavy computation gets pushed down to engines built for exactly that job: Spark, DuckDB and Polars (written in C++/Rust/Java), plus the cloud warehouses Snowflake and BigQuery. Python's job is to drive those engines. It pulls data from REST APIs with the <code>requests</code> library, parses JSON, reads configuration, connects tasks into DAGs in Airflow, Dagster or Prefect, and then hands the real computation over to an engine. Keep this one idea in mind and most architecture decisions become obvious:</p>
+<p class="reveal">None of this makes Python a bad language. It makes Python a language where knowing what a tool <em>costs</em> matters as much as knowing what it does. That is the real subject of this page, split into two halves. The first half, sections 02 through 13, covers the Python features that separate a quick script from code you would actually want to maintain: picking the right container for the job, comprehensions and generators, decorators, context managers, classes and dataclasses, type hints, and concurrency. The second half, sections 14 through 25, covers the data structures and algorithms that come up again and again in coding interviews: arrays and two pointers, strings, hashmaps and sets, sorting and binary search, stacks and queues, linked lists, trees and graphs, sliding windows, heaps, and a little dynamic programming. None of it requires competitive-programming depth. It is exactly enough to handle Easy and Medium problems calmly. The last two sections wrap it up: a priority map for where to spend your study time, and a dense cheat sheet to scan right before an interview.</p>
 
 <div class="callout gd reveal">
-  <p style="margin:.2em 0"><span class="t"><svg class="ico"><use href="#i-bulb"/></svg> The one mental model</span></p>
-  <p style="margin:.5em 0 0;font-size:14.5px;color:#CDD0DD"><b>Python drives, engines crunch.</b> Your Python code should be a thin, well-tested orchestration layer. The moment you find yourself writing a manual <code>for</code>-loop to aggregate millions of rows, stop — that work belongs in SQL, DuckDB, Polars, or Spark.</p>
+  <p style="margin:.2em 0"><span class="t"><svg class="ico"><use href="#i-bulb"/></svg> The habit worth building</span></p>
+  <p style="margin:.5em 0 0;font-size:14.5px;color:#CDD0DD"><b>Write code that is boring to read.</b> The moment you find yourself proud of a clever one-liner, stop and ask whether the next person to read it (often you, in six months) will understand it in one pass. Clear, well-named, correctly-costed code beats a clever trick almost every time, whether you are shipping a feature or solving problem two of four in an interview.</p>
 </div>
 
-<h3 class="reveal">Do it in Python vs. push it down to an engine</h3>
-<div class="tw reveal"><table>
-<tr><th>Do in Python</th><th>Push down to an engine</th></tr>
-<tr><td class="ok">Calling an API, paging through results</td><td class="no">Joining two large tables</td></tr>
-<tr><td class="ok">Parsing / reshaping JSON into rows</td><td class="no">Group-by / aggregations over millions of rows</td></tr>
-<tr><td class="ok">Reading config, secrets, CLI args</td><td class="no">Sorting / deduping a dataset bigger than RAM</td></tr>
-<tr><td class="ok">Orchestrating tasks &amp; dependencies (DAGs)</td><td class="no">Window functions, rollups, columnar scans</td></tr>
-<tr><td class="ok">Retry / backoff, logging, alerting</td><td class="no">Full-table transforms &amp; heavy filters</td></tr>
-<tr><td class="ok">Streaming a file line by line (glue)</td><td class="no">Anything that would blow the machine's memory</td></tr>
-</table></div>
 
-<h3 class="reveal">Python drives: pull from an API, hand a DataFrame to the engine</h3>
-<p class="reveal">The standard pattern below is 90% of an extract step: Python owns the network I/O and the shaping, then hands a frame straight into DuckDB, which does the crunching in native code.</p>
-
-<div class="cb reveal"><span class="lang">python</span><pre><span class="c"># Python DRIVES: pull JSON from an API, shape it, let DuckDB crunch it.</span>
-<span class="k">import</span> requests, duckdb, pandas <span class="k">as</span> pd
-
-<span class="k">def</span> <span class="p">pull_orders</span>(base: <span class="y">str</span>, page_size: <span class="y">int</span> = <span class="y">500</span>) -&gt; pd.DataFrame:
-    rows, page = [], <span class="y">1</span>
-    <span class="k">while</span> <span class="k">True</span>:
-        r = requests.<span class="p">get</span>(<span class="g">f"{base}/orders"</span>, params={<span class="g">"page"</span>: page, <span class="g">"size"</span>: page_size}, timeout=<span class="y">30</span>)
-        r.<span class="p">raise_for_status</span>()                 <span class="c"># fail loud on 4xx/5xx</span>
-        batch = r.<span class="p">json</span>()[<span class="g">"data"</span>]
-        <span class="k">if</span> <span class="k">not</span> batch:
-            <span class="k">break</span>                            <span class="c"># no more pages</span>
-        rows.<span class="p">extend</span>(batch)
-        page += <span class="y">1</span>
-    <span class="k">return</span> pd.<span class="p">DataFrame</span>(rows)              <span class="c"># shaping = Python's job</span>
-
-df = <span class="p">pull_orders</span>(<span class="g">"https://api.example.com/v1"</span>)
-
-<span class="c"># Crunching = the engine's job. DuckDB reads the DataFrame in place.</span>
-top = duckdb.<span class="p">sql</span>(<span class="g">"""
-    SELECT region, SUM(amount) AS revenue
-    FROM df
-    GROUP BY region
-    ORDER BY revenue DESC
-    LIMIT 10
-"""</span>).<span class="p">df</span>()
-<span class="p">print</span>(top)
-</pre></div>
-
-<p class="reveal">The same shape applies to a database source — Python opens the connection and describes the query, the database does the work, and you get a frame back:</p>
-
-<div class="cb reveal"><span class="lang">python</span><pre><span class="k">import</span> pandas <span class="k">as</span> pd
-<span class="k">from</span> sqlalchemy <span class="k">import</span> create_engine
-
-engine = <span class="p">create_engine</span>(<span class="g">"postgresql+psycopg://user:pw@warehouse:5432/prod"</span>)
-
-<span class="c"># The WHERE/GROUP BY runs IN Postgres. Python just receives the result.</span>
-df = pd.<span class="p">read_sql</span>(
-    <span class="g">"SELECT date, SUM(amount) AS rev FROM sales WHERE date &gt;= '2026-01-01' GROUP BY date"</span>,
-    engine,
-)
-</pre></div>
-
-<figure class="fig reveal">
-<svg viewBox="0 0 760 220" width="100%" aria-label="Python as glue driving three compute engines">
-  <defs>
-    <marker id="s01-arrow" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto">
-      <path d="M0,0 L9,4.5 L0,9 z" fill="#5C78FF"/>
-    </marker>
-  </defs>
-  <text x="380" y="22" font-size="10.5" fill="#E7E7EE" text-anchor="middle" letter-spacing="1.5">PYTHON DRIVES, ENGINES CRUNCH</text>
-  <rect x="40" y="70" width="180" height="80" rx="10" fill="#242739" stroke="#5C78FF"/>
-  <text x="130" y="105" font-size="15" fill="#5AC8FF" text-anchor="middle">Python</text>
-  <text x="130" y="126" font-size="10.5" fill="#E7E7EE" text-anchor="middle">glue / orchestration</text>
-  <line x1="220" y1="90" x2="500" y2="70" stroke="#5C78FF" stroke-width="1.6" marker-end="url(#s01-arrow)"/>
-  <line x1="220" y1="110" x2="500" y2="110" stroke="#5C78FF" stroke-width="1.6" marker-end="url(#s01-arrow)"/>
-  <line x1="220" y1="130" x2="500" y2="150" stroke="#5C78FF" stroke-width="1.6" marker-end="url(#s01-arrow)"/>
-  <rect x="510" y="46" width="210" height="44" rx="8" fill="#1C1C2A" stroke="#3C4356"/>
-  <text x="615" y="73" font-size="12.5" fill="#5AC8FF" text-anchor="middle">Spark / Polars / DuckDB</text>
-  <rect x="510" y="94" width="210" height="44" rx="8" fill="#1C1C2A" stroke="#3C4356"/>
-  <text x="615" y="121" font-size="12.5" fill="#5AC8FF" text-anchor="middle">Snowflake / BigQuery</text>
-  <rect x="510" y="142" width="210" height="44" rx="8" fill="#1C1C2A" stroke="#3C4356"/>
-  <text x="615" y="169" font-size="12.5" fill="#5AC8FF" text-anchor="middle">Postgres / object store</text>
-</svg>
-<figcaption>Python stays in control: it pulls, shapes and schedules, then pushes the compute down to engines built for it.</figcaption>
-</figure>
-
-<div class="callout rd reveal">
-  <p style="margin:.2em 0"><span class="t"><svg class="ico"><use href="#i-warn"/></svg> The RAM ceiling</span></p>
-  <p style="margin:.5em 0 0;font-size:14.5px;color:#CDD0DD">A Python <code>list</code> or a pandas DataFrame lives entirely in RAM, and pandas often needs several times the file size in working memory. <code>pd.read_csv("50gb.csv")</code> on a 16 GB laptop does not run slowly — it dies. When data outgrows memory, stream it (Section 04), push it into DuckDB/Polars with lazy execution, or offload to Spark/the warehouse. "It worked on the sample" is how OOM incidents are born.</p>
-</div>
 
 
 <h2 id="datastructures" class="reveal"><span class="hico"><svg class="ico"><use href="#i-blocks"/></svg></span><span class="n">02.</span> The four structures: list, dict, set, tuple</h2>
@@ -330,7 +243,7 @@ df = pd.<span class="p">read_sql</span>(
 <p class="reveal">A <code>list</code> is a growable array of references. Appending an item and reading by index are both O(1) (append is O(1) on average — the technical term is "amortised"). But checking membership with <code>x in mylist</code> is O(n): Python scans the list one element at a time until it finds a match or reaches the end. A list is great for an ordered batch of records you iterate over once. It is a poor choice as a lookup table.</p>
 
 <h3 class="reveal">dict — the hash map you'll use constantly</h3>
-<p class="reveal">A <code>dict</code> is a hash table. Insert, lookup and delete are all O(1) on average. Since Python 3.7, a <code>dict</code> also remembers the order you inserted its keys. This is the single most important structure for a data engineer: it is how you build in-memory lookups, join keys, and grouping accumulators without needing a database or an engine.</p>
+<p class="reveal">A <code>dict</code> is a hash table. Insert, lookup and delete are all O(1) on average. Since Python 3.7, a <code>dict</code> also remembers the order you inserted its keys. This is one of the most important structures you'll use: it is how you build in-memory lookups, join keys, and grouping accumulators without needing a database or an engine.</p>
 
 <h3 class="reveal">set — dedup, membership, set algebra</h3>
 <p class="reveal">A <code>set</code> is like a <code>dict</code> that only stores keys, with no values. Checking membership is O(1), and adding the same value twice has no effect, so duplicates disappear automatically. A <code>set</code> also supports real set algebra: <code>|</code> for union, <code>&amp;</code> for intersection, <code>-</code> for difference. That makes it the right tool for diffing two datasets: which IDs are new, and which ones disappeared.</p>
@@ -360,7 +273,7 @@ seen.<span class="p">add</span>(key)
 </pre></div>
 
 <h3 class="reveal">The <code>collections</code> toolkit</h3>
-<p class="reveal"><code>collections</code> gives you specialised structures that remove boilerplate and speed common DE patterns:</p>
+<p class="reveal"><code>collections</code> gives you specialised structures that remove boilerplate and speed up common patterns:</p>
 <ul class="reveal">
 <li><b><code>defaultdict</code></b> — auto-creates a default value, so grouping needs no "if key not in dict" dance.</li>
 <li><b><code>Counter</code></b> — frequency counting and top-N in one line.</li>
@@ -450,7 +363,7 @@ n_errors = <span class="p">sum</span>(<span class="y">1</span> <span class="k">f
 
 <div class="callout gr reveal">
   <p style="margin:.2em 0"><span class="t"><svg class="ico"><use href="#i-bulb"/></svg> List-comp vs. gen-exp: the memory tradeoff</span></p>
-  <p style="margin:.5em 0 0;font-size:14.5px;color:#CDD0DD">A <b>list comprehension</b> <code>[...]</code> materialises every element in RAM at once — use it when you need the collection again (index it, len it, iterate twice). A <b>generator expression</b> <code>(...)</code> is lazy and O(1) in memory — use it when you consume the result once, especially over a file or API stream. Rule of thumb for DE: if the source could be large, reach for the parentheses. If you only ever call <code>sum()</code>, <code>any()</code>, <code>max()</code> or a single loop on it, a generator is strictly better.</p>
+  <p style="margin:.5em 0 0;font-size:14.5px;color:#CDD0DD">A <b>list comprehension</b> <code>[...]</code> materialises every element in RAM at once — use it when you need the collection again (index it, len it, iterate twice). A <b>generator expression</b> <code>(...)</code> is lazy and O(1) in memory — use it when you consume the result once, especially over a file or API stream. Rule of thumb: if the source could be large, reach for the parentheses. If you only ever call <code>sum()</code>, <code>any()</code>, <code>max()</code> or a single loop on it, a generator is strictly better.</p>
 </div>
 
 <div class="callout rd reveal">
@@ -460,7 +373,7 @@ n_errors = <span class="p">sum</span>(<span class="y">1</span> <span class="k">f
 
 
 <h2 id="generators" class="reveal"><span class="hico"><svg class="ico"><use href="#i-repeat"/></svg></span><span class="n">04.</span> Generators &amp; iterators: streaming without OOM</h2>
-<p class="reveal lead">Generators let you process a file bigger than your computer's RAM, one record at a time. This is the single most important Python technique for a data engineer. It is what stops your pipeline from crashing with an out-of-memory error.</p>
+<p class="reveal lead">Generators let you process a file bigger than your computer's RAM, one record at a time. This is one of the most important Python techniques you can know. It is what stops a program from crashing with an out-of-memory error.</p>
 
 <p class="reveal">A generator function is any function that contains the word <code>yield</code>. Calling it does not run the function's body right away. Instead, it returns a generator object: a lazy iterator that has not done any work yet. Each time you ask it for the next value, the function runs until it hits the next <code>yield</code>, hands back that one value, and then pauses. It remembers exactly where it stopped — its local variables and its position in the code — until you ask for the next value. Because of this, you can iterate over a 50 GB log file while only ever holding a single line in memory.</p>
 
@@ -623,7 +536,7 @@ to_cents = <span class="p">partial</span>(<span class="p">round</span>, ndigits=
 </pre></div>
 
 <h3 class="reveal">Decorators with arguments: a factory returning a decorator</h3>
-<p class="reveal">To give a decorator its own arguments (for example, "retry up to 5 times") you add one more layer: an outer function that takes those arguments and <em>returns</em> a decorator. That gives you three nested levels — configuration, function, and call — but the pattern is always the same. Here is one every data engineer ends up writing: <code>@retry</code>, with exponential backoff, for a flaky API or database call.</p>
+<p class="reveal">To give a decorator its own arguments (for example, "retry up to 5 times") you add one more layer: an outer function that takes those arguments and <em>returns</em> a decorator. That gives you three nested levels — configuration, function, and call — but the pattern is always the same. Here is one everyone ends up writing eventually: <code>@retry</code>, with exponential backoff, for a flaky API or database call.</p>
 
 <div class="cb reveal"><span class="lang">python</span><pre><span class="k">import</span> functools, time
 
@@ -699,7 +612,7 @@ to_cents = <span class="p">partial</span>(<span class="p">round</span>, ndigits=
 <h2 id="classes" class="reveal"><span class="hico"><svg class="ico"><use href="#i-package"/></svg></span><span class="n">07.</span> Classes &amp; OOP, properly</h2>
 <p class="reveal lead">You won't write classes to model cats and dogs. You'll write them to model the moving parts of a pipeline: a <strong>connector</strong> to a source, a <strong>config</strong> object, a reusable <strong>transformation step</strong>. That keeps the code testable, and keeps it from rotting over time.</p>
 
-<p class="reveal">Object-oriented programming has one core idea: <strong>bundle state (data) together with the behaviour (functions) that acts on that data</strong>, behind a clean interface. A function that takes inputs and returns outputs, with nothing to remember in between, should stay a plain function. But the moment something needs to <em>hold on to state between calls</em>, a class starts to earn its place. That kind of state might be an open database connection, a running row count, a set of credentials, or a buffer of rows waiting to be flushed. This is exactly why the standard DE example is a connector: it holds a live connection, and exposes <code>read()</code> and <code>write()</code> methods that use that connection.</p>
+<p class="reveal">Object-oriented programming has one core idea: <strong>bundle state (data) together with the behaviour (functions) that acts on that data</strong>, behind a clean interface. A function that takes inputs and returns outputs, with nothing to remember in between, should stay a plain function. But the moment something needs to <em>hold on to state between calls</em>, a class starts to earn its place. That kind of state might be an open database connection, a running row count, a set of credentials, or a buffer of rows waiting to be flushed. This is exactly why the standard example everyone reaches for is a connector: it holds a live connection, and exposes <code>read()</code> and <code>write()</code> methods that use that connection.</p>
 
 <div class="callout gr reveal">
   <p style="margin:.2em 0"><span class="t"><svg class="ico"><use href="#i-bulb"/></svg> The honest rule: don't reach for a class too early</span></p>
@@ -758,7 +671,7 @@ a.seen_files.<span class="p">append</span>(<span class="g">"f1.csv"</span>)
 
 <h3 class="reveal">The three method flavours: instance, <code>@classmethod</code>, <code>@staticmethod</code></h3>
 
-<p class="reveal">A regular method takes <code>self</code> and works on one instance. A <code>@classmethod</code> takes the class itself (<code>cls</code>) instead of an instance. Its most useful job in data engineering is the <strong>alternate constructor</strong>: a clean <code>from_config()</code> or <code>from_uri()</code> method that builds and returns an instance. A <code>@staticmethod</code> takes neither <code>self</code> nor <code>cls</code>. It is just a plain function that logically belongs on the class — a helper you don't want floating loose in the module.</p>
+<p class="reveal">A regular method takes <code>self</code> and works on one instance. A <code>@classmethod</code> takes the class itself (<code>cls</code>) instead of an instance. Its most useful job in everyday code is the <strong>alternate constructor</strong>: a clean <code>from_config()</code> or <code>from_uri()</code> method that builds and returns an instance. A <code>@staticmethod</code> takes neither <code>self</code> nor <code>cls</code>. It is just a plain function that logically belongs on the class — a helper you don't want floating loose in the module.</p>
 
 <div class="cb reveal"><span class="lang">python</span><pre><span class="k">class</span> <span class="y">SQLConnector</span>:
     <span class="k">def</span> <span class="p">__init__</span>(self, host, port, user):
@@ -802,7 +715,7 @@ b = <span class="p">Batch</span>([{...}, {...}])
 <p class="reveal">"Dunder" is short for <em>double underscore</em>. These special methods hook your class into Python's own language features: printing, equality checks, iteration, <code>with</code>-blocks. You rarely need all of them, but a few are worth reaching for constantly.</p>
 
 <div class="tw reveal"><table>
-<tr><th>Dunder</th><th>Powers</th><th>Why a DE cares</th></tr>
+<tr><th>Dunder</th><th>Powers</th><th>Why it's worth knowing</th></tr>
 <tr><td><code>__repr__</code></td><td><code>repr(x)</code>, the REPL, logs</td><td class="ok">Always write one. Turns <code>&lt;Connector object at 0x7f…&gt;</code> into something debuggable.</td></tr>
 <tr><td><code>__eq__</code> + <code>__hash__</code></td><td><code>==</code>, use as dict key / in a set</td><td>Value equality for config/keys. Define them <strong>together</strong>.</td></tr>
 <tr><td><code>__len__</code></td><td><code>len(x)</code></td><td>Natural for a batch / result set.</td></tr>
@@ -865,7 +778,7 @@ batch = <span class="p">RowBatch</span>([{<span class="g">"id"</span>: <span cla
 
 <h3 class="reveal">Abstract base classes: writing a contract</h3>
 
-<p class="reveal">Raising <code>NotImplementedError</code> only causes a failure <em>when the method is actually called</em>. An <strong>abstract base class</strong> (from the <code>abc</code> module) fails earlier, <em>at the moment you try to create an instance</em>, if a required method is missing — you cannot even build an incomplete connector. This is the standard DE pattern: define one <code>Connector</code> interface where every source (<code>Postgres</code>, <code>S3</code>, <code>Mongo</code>, an <code>API</code>) must implement <code>read</code> and <code>write</code>. The rest of your pipeline can then treat all of them the same way.</p>
+<p class="reveal">Raising <code>NotImplementedError</code> only causes a failure <em>when the method is actually called</em>. An <strong>abstract base class</strong> (from the <code>abc</code> module) fails earlier, <em>at the moment you try to create an instance</em>, if a required method is missing — you cannot even build an incomplete connector. This is a standard pattern: define one <code>Connector</code> interface where every source (<code>Postgres</code>, <code>S3</code>, <code>Mongo</code>, an <code>API</code>) must implement <code>read</code> and <code>write</code>. The rest of your pipeline can then treat all of them the same way.</p>
 
 <figure class="fig reveal">
 <svg viewBox="0 0 760 250" width="100%" aria-label="An abstract Connector base class defines read and write; PostgresConnector, S3Connector and APIConnector each implement them.">
@@ -938,7 +851,7 @@ src: <span class="y">Connector</span> = <span class="p">S3Connector</span>()    
 <h2 id="dataclasses" class="reveal"><span class="hico"><svg class="ico"><use href="#i-blocks"/></svg></span><span class="n">08.</span> Dataclasses &amp; Pydantic</h2>
 <p class="reveal lead">Stop passing bare dicts around your pipeline. Give every record and config a typed shape instead, and decide up front whether you need cheap structure (a dataclass) or real runtime validation (Pydantic).</p>
 
-<p class="reveal">A data engineer moves records for a living, and the worst bugs come from records that <em>look</em> right but are not: a missing key, a string where a number should be, a config typo that only causes a failure at 3am. <code>@dataclass</code> and Pydantic both replace the "just use a dict" habit with explicit, self-documenting types. What they differ on is <em>when</em> the shape gets checked.</p>
+<p class="reveal">Anyone who moves data around for a living knows the worst bugs come from records that <em>look</em> right but are not: a missing key, a string where a number should be, a config typo that only causes a failure at 3am. <code>@dataclass</code> and Pydantic both replace the "just use a dict" habit with explicit, self-documenting types. What they differ on is <em>when</em> the shape gets checked.</p>
 
 <h3 class="reveal">Dataclasses: structure without boilerplate</h3>
 <p class="reveal">The <code>@dataclass</code> decorator inspects the class annotations and auto-generates <code>__init__</code>, <code>__repr__</code> and <code>__eq__</code> for you. You write the fields once, and you get a constructor, a readable repr for logs, and value equality — all for free.</p>
@@ -961,7 +874,7 @@ r = <span class="p">Record</span>(<span class="y">1</span>, <span class="g">"ord
   <p style="margin:.5em 0 0;font-size:14.5px;color:#CDD0DD">Never write <code>tags: list = []</code> — that single list is shared across every instance, so appending to one record mutates them all. Use <code>field(default_factory=list)</code> so each instance gets a fresh list. This is the same shared-mutable-state bug as a mutable default argument.</p>
 </div>
 
-<h3 class="reveal">The flags that matter for DE</h3>
+<h3 class="reveal">The flags worth knowing</h3>
 <ul class="reveal">
 <li><code>frozen=True</code> — makes instances immutable and hashable. Perfect for a <code>PipelineConfig</code> you never want mutated mid-run, and it can be a dict key or set member.</li>
 <li><code>order=True</code> — generates <code>__lt__</code>/<code>__gt__</code> etc. so instances sort by field order (handy for sorting records or watermarks).</li>
@@ -1016,7 +929,7 @@ order = <span class="p">ApiOrder</span>(**payload)
 </pre></div>
 
 <div class="tw reveal"><table>
-<tr><th>&nbsp;</th><th>validates at runtime?</th><th>coerces types?</th><th>mutable?</th><th>typical DE use</th></tr>
+<tr><th>&nbsp;</th><th>validates at runtime?</th><th>coerces types?</th><th>mutable?</th><th>typical use</th></tr>
 <tr><td><code>dataclass</code></td><td class="no">no</td><td class="no">no</td><td>yes (unless <code>frozen</code>)</td><td>internal records, config, DTOs you trust</td></tr>
 <tr><td><code>pydantic</code></td><td class="ok">yes</td><td class="ok">yes</td><td>yes (or <code>frozen</code>)</td><td>external/API/queue input at the boundary</td></tr>
 <tr><td><code>namedtuple</code></td><td class="no">no</td><td class="no">no</td><td class="no">no (immutable)</td><td>tiny fixed rows, tuple-compatible returns</td></tr>
@@ -1060,7 +973,7 @@ MAX_ROWS: <span class="y">Final</span> = <span class="y">1_000_000</span>
     <span class="k">return</span> sink.write(rows)   <span class="c"># mypy knows write() takes list[Row]</span>
 </pre></div>
 
-<h3 class="reveal">Why DE teams gate CI on mypy</h3>
+<h3 class="reveal">Why teams gate CI on mypy</h3>
 <p class="reveal">A pipeline that quietly converts or drops the wrong type does not crash. It just writes bad data, and you find out days later from a broken dashboard. Running <code>mypy --strict</code> as a required CI check catches whole classes of bugs before code ever reaches production: passing <code>None</code> where a value is required, arguments in the wrong order, a function that forgets to return on some path. It also turns every function signature into living documentation. A new engineer reads <code>def extract(cfg: PipelineConfig) -&gt; Iterator[Row]</code> and instantly knows the contract, without running anything.</p>
 
 <div class="callout rd reveal">
@@ -1248,269 +1161,7 @@ back = datetime.<span class="p">fromtimestamp</span>(epoch, timezone.utc)
 </div>
 
 
-<h2 id="io" class="reveal"><span class="hico"><svg class="ico"><use href="#i-plug"/></svg></span><span class="n">13.</span> Talking to databases &amp; APIs</h2>
-<p class="reveal lead">The two ends of most pipelines, a database and an HTTP API, each have one rule you cannot skip: parameterise every query, and put a timeout on every request.</p>
-
-<h3 class="reveal">Databases: cursors and parameterised queries</h3>
-<p class="reveal">Python's DB-API gives the same basic shape across different database drivers: a connection, a <code>cursor</code>, <code>execute</code> or <code>executemany</code>, then <code>fetchall</code> or <code>fetchone</code>. Always pass values as <strong>parameters</strong>. Never format them directly into the SQL string — building SQL with f-strings is how you get SQL injection and broken quoting. Use <code>executemany</code> for bulk inserts, manage the connection with <code>with</code>, and for real workloads use a SQLAlchemy engine so you get connection pooling instead of reconnecting for every query.</p>
-
-<div class="callout rd reveal">
-  <p style="margin:.2em 0"><span class="t"><svg class="ico"><use href="#i-warn"/></svg> Parameterise — or get injected</span></p>
-  <p style="margin:.5em 0 0;font-size:14.5px;color:#CDD0DD"><code>f"select * from t where id = {user_input}"</code> lets an attacker pass <code>1; drop table t</code>. Use <code>execute(sql, params)</code> and let the driver bind safely. The same habit also fixes quoting/escaping bugs on legitimate data (names with apostrophes, etc.).</p>
-</div>
-
-<h3 class="reveal">APIs: sessions, timeouts, retries, pagination</h3>
-<p class="reveal">Use a <code>requests.Session</code> so calls reuse the same underlying TCP connection, which is much faster over many pages. <strong>Always</strong> pass <code>timeout=</code> — a request with no timeout can hang forever and freeze your whole pipeline. Mount an <code>HTTPAdapter</code> with a urllib3 <code>Retry</code> to automatically retry transient failures and respect a <code>429</code> rate-limit response, then loop until pagination runs out, batching writes to the database as you go.</p>
-
-<div class="cb reveal"><span class="lang">python</span><pre><span class="k">import</span> requests
-<span class="k">from</span> requests.adapters <span class="k">import</span> HTTPAdapter
-<span class="k">from</span> urllib3.util <span class="k">import</span> Retry
-<span class="k">import</span> sqlalchemy <span class="k">as</span> sa
-
-<span class="k">def</span> <span class="p">make_session</span>() -&gt; requests.<span class="y">Session</span>:
-    s = requests.<span class="p">Session</span>()
-    retry = <span class="p">Retry</span>(total=<span class="y">5</span>, backoff_factor=<span class="y">0.5</span>,
-                  status_forcelist=(<span class="y">429</span>, <span class="y">500</span>, <span class="y">502</span>, <span class="y">503</span>),
-                  respect_retry_after_header=<span class="k">True</span>)
-    s.<span class="p">mount</span>(<span class="g">"https://"</span>, <span class="p">HTTPAdapter</span>(max_retries=retry))
-    <span class="k">return</span> s
-
-<span class="k">def</span> <span class="p">pull</span>(session, base: <span class="y">str</span>):
-    page = <span class="y">1</span>
-    <span class="k">while</span> <span class="k">True</span>:
-        r = session.<span class="p">get</span>(base, params={<span class="g">"page"</span>: page},
-                        timeout=<span class="y">10</span>)          <span class="c"># NEVER omit timeout</span>
-        r.<span class="p">raise_for_status</span>()               <span class="c"># turn 4xx/5xx into an exception</span>
-        batch = r.<span class="p">json</span>()[<span class="g">"items"</span>]
-        <span class="k">if</span> <span class="k">not</span> batch:
-            <span class="k">break</span>                          <span class="c"># pagination exhausted</span>
-        <span class="k">yield</span> batch
-        page += <span class="y">1</span>
-
-engine = sa.<span class="p">create_engine</span>(<span class="g">"postgresql://.../warehouse"</span>, pool_size=<span class="y">5</span>)
-ins = sa.<span class="p">text</span>(<span class="g">"insert into orders (id, amt) values (:id, :amt)"</span>)
-
-<span class="k">with</span> make_session() <span class="k">as</span> sess, engine.<span class="p">begin</span>() <span class="k">as</span> conn:
-    <span class="k">for</span> batch <span class="k">in</span> pull(sess, <span class="g">"https://api.example.com/orders"</span>):
-        conn.<span class="p">execute</span>(ins, batch)          <span class="c"># parameterised bulk insert</span>
-</pre></div>
-
-<p class="reveal">This is the shape of a resilient connector: one pooled database engine, one retrying HTTP session, a generator that pages through results until they run out, and a single transactional bulk insert per batch. If the run fails halfway through, it rolls back cleanly instead of leaving half a page committed.</p>
-<h2 id="pandas" class="reveal"><span class="hico"><svg class="ico"><use href="#i-database"/></svg></span><span class="n">14.</span> pandas &amp; the vectorised mindset</h2>
-<p class="reveal lead">pandas is the main tool for single-machine tabular work. The trick to using it well is to stop thinking in row-by-row loops and start thinking in whole columns.</p>
-
-<p class="reveal">A <code>DataFrame</code> is a table made of named columns. Each column is a <code>Series</code>: a typed, labelled array backed by NumPy or Arrow. pandas is fast because operations on a Series run inside compiled C or NumPy code that processes the entire column at once, instead of one value at a time. This is the <strong>vectorised mindset</strong>: write your transform as arithmetic and boolean logic over whole columns, and let the library handle the looping internally. The moment you write a Python-level <code>for</code> loop over rows yourself, you lose that speed advantage and pay Python's interpreter overhead on every single row.</p>
-
-<h3 class="reveal">The vectorised mindset vs row iteration</h3>
-<p class="reveal">Compare computing a fee column three ways. All three produce the same numbers; only the first is acceptable in a pipeline.</p>
-
-<div class="cb reveal"><span class="lang">python</span><pre><span class="k">import</span> pandas <span class="k">as</span> pd
-<span class="k">import</span> numpy <span class="k">as</span> np
-
-df = pd.<span class="p">DataFrame</span>({
-    <span class="g">"amount"</span>: [<span class="y">100.0</span>, <span class="y">250.0</span>, <span class="y">80.0</span>, <span class="y">1200.0</span>],
-    <span class="g">"tier"</span>:   [<span class="g">"gold"</span>, <span class="g">"silver"</span>, <span class="g">"silver"</span>, <span class="g">"gold"</span>],
-})
-
-<span class="c"># GOOD — vectorised: whole-column arithmetic, runs in C</span>
-df[<span class="g">"fee"</span>] = df[<span class="g">"amount"</span>] * <span class="y">0.02</span>
-
-<span class="c"># GOOD — vectorised conditional (np.where instead of a Python if)</span>
-df[<span class="g">"fee"</span>] = np.<span class="p">where</span>(df[<span class="g">"tier"</span>] == <span class="g">"gold"</span>, df[<span class="g">"amount"</span>] * <span class="y">0.01</span>,
-                                                df[<span class="g">"amount"</span>] * <span class="y">0.02</span>)
-
-<span class="c"># SLOW — .apply(axis=1) calls a Python fn per row</span>
-df[<span class="g">"fee"</span>] = df.<span class="p">apply</span>(<span class="k">lambda</span> r: r[<span class="g">"amount"</span>] * <span class="y">0.01</span>, axis=<span class="y">1</span>)
-
-<span class="c"># SLOWEST — iterrows materialises a Series per row; avoid in pipelines</span>
-<span class="k">for</span> i, r <span class="k">in</span> df.<span class="p">iterrows</span>():
-    df.<span class="p">at</span>[i, <span class="g">"fee"</span>] = r[<span class="g">"amount"</span>] * <span class="y">0.01</span>
-</pre></div>
-
-<div class="callout rd reveal">
-  <p style="margin:.2em 0"><span class="t"><svg class="ico"><use href="#i-warn"/></svg> iterrows is a trap</span></p>
-  <p style="margin:.5em 0 0;font-size:14.5px;color:#CDD0DD"><code>.iterrows()</code> and <code>.apply(axis=1)</code> can be 10–100x slower than the vectorised form and also lose dtypes (every row becomes an <code>object</code> Series). Treat them as a last resort. If you truly need per-row Python logic, prefer <code>itertuples()</code> over <code>iterrows()</code>, or push the work to NumPy.</p>
-</div>
-
-<h3 class="reveal">Reading data: csv vs parquet</h3>
-<p class="reveal"><code>read_csv</code> parses plain text and has to guess the data type of each column. <code>read_parquet</code> reads a columnar binary format that already stores the data types, compresses well, and lets you read only the columns you actually need. For data engineering work, parquet almost always wins on both speed and file size. CSV is what you accept at the point of ingest; parquet is what you keep afterward.</p>
-
-<div class="cb reveal"><span class="lang">python</span><pre><span class="c"># Declare dtypes up front so read_csv doesn't guess (faster, less memory)</span>
-df = pd.<span class="p">read_csv</span>(
-    <span class="g">"events.csv"</span>,
-    dtype={<span class="g">"user_id"</span>: <span class="g">"int32"</span>, <span class="g">"tier"</span>: <span class="g">"category"</span>},
-    parse_dates=[<span class="g">"ts"</span>],
-    usecols=[<span class="g">"user_id"</span>, <span class="g">"tier"</span>, <span class="g">"ts"</span>, <span class="g">"amount"</span>],
-)
-
-df.<span class="p">to_parquet</span>(<span class="g">"events.parquet"</span>, compression=<span class="g">"zstd"</span>)
-<span class="c"># Later: read back only two columns, no dtype guessing needed</span>
-sub = pd.<span class="p">read_parquet</span>(<span class="g">"events.parquet"</span>, columns=[<span class="g">"tier"</span>, <span class="g">"amount"</span>])
-</pre></div>
-
-<h3 class="reveal">dtypes &amp; memory</h3>
-<p class="reveal">Memory is the first thing that kills a pandas job. Two cheap ways to save it: downcast numeric columns to the smallest type that still fits the data, and convert string columns with few distinct values to <code>category</code> (which stores each distinct value once, plus small integer codes for the rest).</p>
-
-<div class="cb reveal"><span class="lang">python</span><pre>before = df.<span class="p">memory_usage</span>(deep=<span class="k">True</span>).<span class="p">sum</span>()
-
-df[<span class="g">"amount"</span>]  = pd.<span class="p">to_numeric</span>(df[<span class="g">"amount"</span>], downcast=<span class="g">"float"</span>)
-df[<span class="g">"user_id"</span>] = pd.<span class="p">to_numeric</span>(df[<span class="g">"user_id"</span>], downcast=<span class="g">"integer"</span>)
-df[<span class="g">"tier"</span>]    = df[<span class="g">"tier"</span>].<span class="p">astype</span>(<span class="g">"category"</span>)
-
-after = df.<span class="p">memory_usage</span>(deep=<span class="k">True</span>).<span class="p">sum</span>()
-<span class="p">print</span>(<span class="g">f"saved {(1 - after/before):.0%}"</span>)
-</pre></div>
-
-<h3 class="reveal">Filtering with boolean masks and <code>.loc</code></h3>
-<p class="reveal">You select rows by building a boolean Series and using it to index the DataFrame. Use <code>.loc[mask, cols]</code> to select rows and columns together in a single call. It is explicit, and it is how you avoid the chained-assignment trap described below.</p>
-
-<div class="cb reveal"><span class="lang">python</span><pre>mask = (df[<span class="g">"amount"</span>] &gt; <span class="y">100</span>) &amp; (df[<span class="g">"tier"</span>] == <span class="g">"gold"</span>)
-big_gold = df.<span class="p">loc</span>[mask, [<span class="g">"user_id"</span>, <span class="g">"amount"</span>]]
-
-<span class="c"># Assign into a subset the RIGHT way — single .loc, no chaining</span>
-df.<span class="p">loc</span>[mask, <span class="g">"flag"</span>] = <span class="k">True</span>
-</pre></div>
-
-<div class="callout rd reveal">
-  <p style="margin:.2em 0"><span class="t"><svg class="ico"><use href="#i-warn"/></svg> SettingWithCopyWarning</span></p>
-  <p style="margin:.5em 0 0;font-size:14.5px;color:#CDD0DD">Writing <code>df[df.amount &gt; 100]["flag"] = True</code> assigns into a temporary that may be a copy — the write can silently vanish, and pandas warns you. Always collapse it to one call: <code>df.loc[df.amount &gt; 100, "flag"] = True</code>. When you deliberately want an independent subset, take <code>.copy()</code> explicitly.</p>
-</div>
-
-<h3 class="reveal">groupby &amp; merge</h3>
-<p class="reveal">The split-apply-combine pattern (<code>groupby().agg()</code>) and joins (<code>merge</code>) are the two operations you will reach for constantly. On merges, protect yourself with <code>validate=</code>. It checks the join's cardinality and raises a loud error if a key you assumed was unique turns out not to be — an unexpected many-to-many join is a classic cause of rows silently multiplying and inflating your metrics.</p>
-
-<div class="cb reveal"><span class="lang">python</span><pre>agg = (
-    df.<span class="p">groupby</span>(<span class="g">"tier"</span>, observed=<span class="k">True</span>)
-      .<span class="p">agg</span>(total=(<span class="g">"amount"</span>, <span class="g">"sum"</span>),
-           n=(<span class="g">"amount"</span>, <span class="g">"size"</span>),
-           avg=(<span class="g">"amount"</span>, <span class="g">"mean"</span>))
-      .<span class="p">reset_index</span>()
-)
-
-users = pd.<span class="p">DataFrame</span>({<span class="g">"user_id"</span>: [<span class="y">1</span>, <span class="y">2</span>], <span class="g">"country"</span>: [<span class="g">"VN"</span>, <span class="g">"SG"</span>]})
-<span class="c"># validate guards against an accidental many-to-many blow-up</span>
-joined = df.<span class="p">merge</span>(users, on=<span class="g">"user_id"</span>, how=<span class="g">"left"</span>, validate=<span class="g">"many_to_one"</span>)
-</pre></div>
-
-<h3 class="reveal">Streaming a big CSV with <code>chunksize</code></h3>
-<p class="reveal">When a file is too big to hold in RAM but you only need an aggregate, iterate it in chunks and fold each chunk into a running result. This is the pandas answer to "the file is 20 GB and I have 8 GB of RAM."</p>
-
-<div class="cb reveal"><span class="lang">python</span><pre>totals = pd.<span class="p">Series</span>(dtype=<span class="g">"float64"</span>)
-<span class="k">for</span> chunk <span class="k">in</span> pd.<span class="p">read_csv</span>(<span class="g">"huge.csv"</span>, chunksize=<span class="y">1_000_000</span>,
-                         usecols=[<span class="g">"tier"</span>, <span class="g">"amount"</span>]):
-    part = chunk.<span class="p">groupby</span>(<span class="g">"tier"</span>)[<span class="g">"amount"</span>].<span class="p">sum</span>()
-    totals = totals.<span class="p">add</span>(part, fill_value=<span class="y">0</span>)
-<span class="p">print</span>(totals)
-</pre></div>
-
-<h3 class="reveal">Method chaining &amp; missing data</h3>
-<p class="reveal">Chaining reads top-to-bottom like a pipeline, and it avoids creating intermediate variable names (along with the chained-assignment bugs that come with them). Missing values show up as <code>NaN</code>. Handle them explicitly with <code>fillna</code> or <code>dropna</code>, rather than letting them silently propagate into your aggregates.</p>
-
-<div class="cb reveal"><span class="lang">python</span><pre>clean = (
-    pd.<span class="p">read_parquet</span>(<span class="g">"events.parquet"</span>)
-      .<span class="p">dropna</span>(subset=[<span class="g">"user_id"</span>])            <span class="c"># drop rows missing the key</span>
-      .<span class="p">assign</span>(amount=<span class="k">lambda</span> d: d[<span class="g">"amount"</span>].<span class="p">fillna</span>(<span class="y">0.0</span>))
-      .<span class="p">loc</span>[<span class="k">lambda</span> d: d[<span class="g">"amount"</span>] &gt; <span class="y">0</span>]
-      .<span class="p">reset_index</span>(drop=<span class="k">True</span>)
-)
-</pre></div>
-
-<h3 class="reveal">When pandas fits — and when it doesn't</h3>
-<div class="tw reveal"><table>
-<tr><th>Situation</th><th>Reach for</th></tr>
-<tr><td>Single machine, up to a few GB, rich API, notebooks</td><td class="ok">pandas</td></tr>
-<tr><td>Single machine but tens of GB / multi-core / faster</td><td>Polars or DuckDB</td></tr>
-<tr><td>Data outgrows one machine; cluster; TB scale</td><td>PySpark</td></tr>
-</table></div>
-<p class="reveal">Rule of thumb: pandas is perfect until the data stops fitting comfortably in RAM. The middle ground, still on a single machine, is <strong>Polars</strong> (multi-threaded, built on Arrow, lazy) and <strong>DuckDB</strong> (an embedded SQL engine that reads parquet directly). Once one machine genuinely cannot hold or process the data, you move to Spark, the subject of the next section.</p>
-
-
-<h2 id="spark" class="reveal"><span class="hico"><svg class="ico"><use href="#i-layers"/></svg></span><span class="n">15.</span> From pandas to PySpark</h2>
-<p class="reveal lead">PySpark gives you the same select, filter, join and groupBy vocabulary as pandas. The difference is that it runs distributed across a cluster and is lazily evaluated, so an optimiser can rewrite your plan before anything actually runs.</p>
-
-<p class="reveal">A Spark <code>DataFrame</code> is not held inside your own process. It is a description of a computation over data that is partitioned across many executors. Because of that, PySpark splits every operation into two kinds:</p>
-<ul class="reveal">
-<li><strong>Transformations</strong> (<code>select</code>, <code>filter</code>, <code>withColumn</code>, <code>groupBy</code>, <code>join</code>) are <em>lazy</em>: they build up a logical plan and return immediately without touching data.</li>
-<li><strong>Actions</strong> (<code>count</code>, <code>collect</code>, <code>write</code>, <code>show</code>) <em>trigger</em> execution: only now does Spark run the accumulated plan.</li>
-</ul>
-<p class="reveal">Laziness is the whole point. Because Spark sees the entire chain of operations before running any of it, the <strong>Catalyst</strong> optimiser can push filters down to the scan, skip columns you never use, and reorder joins for speed. This is the same "you describe <em>what</em> you want, the engine decides <em>how</em> to get it" contract you already know from SQL. You are not writing a step-by-step recipe. You are declaring what result you want.</p>
-
-<figure class="fig reveal">
-<svg viewBox="0 0 760 150" width="100%" aria-label="Lazy transformations build a plan; an action triggers it. Catalyst optimises the whole chain before it runs.">
-  <defs>
-    <marker id="spark-arr" viewBox="0 0 8 8" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto"><path d="M0,0 L6,3 L0,6 Z" fill="#6B6B78"/></marker>
-  </defs>
-  <text x="380" y="16" font-size="10.5" fill="#E7E7EE" text-anchor="middle" letter-spacing="1.5">LAZY PLAN vs ACTION</text>
-
-  <rect x="24" y="44" width="116" height="40" rx="6" fill="#1C1C2A" stroke="#3C4356"/>
-  <text x="82" y="69" font-size="12" fill="#E7E7EE" text-anchor="middle">read</text>
-  <rect x="168" y="44" width="116" height="40" rx="6" fill="#1C1C2A" stroke="#3C4356"/>
-  <text x="226" y="69" font-size="12" fill="#E7E7EE" text-anchor="middle">filter</text>
-  <rect x="312" y="44" width="132" height="40" rx="6" fill="#1C1C2A" stroke="#3C4356"/>
-  <text x="378" y="69" font-size="11.5" fill="#E7E7EE" text-anchor="middle">groupBy / agg</text>
-  <rect x="486" y="42" width="150" height="44" rx="6" fill="#242739" stroke="#5C78FF"/>
-  <text x="561" y="61" font-size="12" fill="#E7E7EE" text-anchor="middle">write()</text>
-  <text x="561" y="77" font-size="9" fill="#5AC8FF" text-anchor="middle">ACTION · runs the plan</text>
-
-  <line x1="140" y1="64" x2="166" y2="64" stroke="#3C4356" marker-end="url(#spark-arr)"/>
-  <line x1="284" y1="64" x2="310" y2="64" stroke="#3C4356" marker-end="url(#spark-arr)"/>
-  <line x1="444" y1="64" x2="484" y2="64" stroke="#3C4356" marker-end="url(#spark-arr)"/>
-
-  <path d="M24 92 L24 100 L444 100 L444 92" fill="none" stroke="#3C4356" stroke-width="1"/>
-  <text x="234" y="118" font-size="9.5" fill="#E7E7EE" text-anchor="middle">lazy — transformations just build a plan; nothing runs yet</text>
-  <text x="380" y="139" font-size="9.5" fill="#5AC8FF" text-anchor="middle">Catalyst optimises the whole chain before the action runs</text>
-</svg>
-<figcaption>Nothing runs until the action. Spark optimises the accumulated transformations as one plan.</figcaption>
-</figure>
-
-<h3 class="reveal">read → filter → groupBy → agg → write</h3>
-<p class="reveal">Here is a full mini-pipeline. Notice it is entirely Python, and that no data moves until <code>write</code>. Everything above <code>write</code> is just plan construction.</p>
-
-<div class="cb reveal"><span class="lang">python</span><pre><span class="k">from</span> pyspark.sql <span class="k">import</span> SparkSession
-<span class="k">from</span> pyspark.sql <span class="k">import</span> functions <span class="k">as</span> F
-
-spark = SparkSession.<span class="p">builder</span>.<span class="p">appName</span>(<span class="g">"fees"</span>).<span class="p">getOrCreate</span>()
-
-result = (
-    spark.<span class="p">read</span>.<span class="p">parquet</span>(<span class="g">"s3://bucket/events/"</span>)   <span class="c"># transformation (lazy)</span>
-         .<span class="p">filter</span>(F.<span class="p">col</span>(<span class="g">"amount"</span>) &gt; <span class="y">0</span>)             <span class="c"># transformation</span>
-         .<span class="p">withColumn</span>(<span class="g">"fee"</span>, F.<span class="p">col</span>(<span class="g">"amount"</span>) * <span class="y">0.02</span>)  <span class="c"># transformation</span>
-         .<span class="p">groupBy</span>(<span class="g">"tier"</span>)                       <span class="c"># transformation</span>
-         .<span class="p">agg</span>(F.<span class="p">sum</span>(<span class="g">"fee"</span>).<span class="p">alias</span>(<span class="g">"total_fee"</span>),
-              F.<span class="p">count</span>(<span class="g">"*"</span>).<span class="p">alias</span>(<span class="g">"n"</span>))
-)
-
-result.<span class="p">write</span>.<span class="p">mode</span>(<span class="g">"overwrite"</span>).<span class="p">parquet</span>(<span class="g">"s3://bucket/out/"</span>)  <span class="c"># ACTION</span>
-</pre></div>
-
-<h3 class="reveal">Why Python UDFs are slow</h3>
-<p class="reveal">Spark's engine runs on the JVM (the Java Virtual Machine). A plain Python UDF, or user-defined function, forces every single row to cross the boundary between the JVM and Python: the data is serialized out, your Python code runs, and the result is serialized back. That round trip is slow, and Catalyst cannot see inside your Python code to optimise it. Prefer the built-in <code>pyspark.sql.functions</code> instead, which run natively on the JVM with no crossing at all. When you genuinely need Python logic, use a <strong>pandas (vectorised) UDF</strong>, which sends whole batches of data across at once using Arrow, instead of one row at a time.</p>
-
-<div class="cb reveal"><span class="lang">python</span><pre><span class="c"># BEST — native expression, no Python boundary at all</span>
-df = df.<span class="p">withColumn</span>(<span class="g">"fee"</span>, F.<span class="p">when</span>(F.<span class="p">col</span>(<span class="g">"tier"</span>) == <span class="g">"gold"</span>,
-                                    F.<span class="p">col</span>(<span class="g">"amount"</span>) * <span class="y">0.01</span>)
-                             .<span class="p">otherwise</span>(F.<span class="p">col</span>(<span class="g">"amount"</span>) * <span class="y">0.02</span>))
-
-<span class="c"># If you MUST use Python, a pandas_udf batches rows via Arrow</span>
-<span class="k">from</span> pyspark.sql.functions <span class="k">import</span> pandas_udf
-<span class="k">import</span> pandas <span class="k">as</span> pd
-
-<span class="p">@pandas_udf</span>(<span class="g">"double"</span>)
-<span class="k">def</span> <span class="p">net</span>(amount: pd.Series, fee: pd.Series) -&gt; pd.Series:
-    <span class="k">return</span> amount - fee          <span class="c"># vectorised, whole batch</span>
-
-df = df.<span class="p">withColumn</span>(<span class="g">"net"</span>, <span class="p">net</span>(<span class="g">"amount"</span>, <span class="g">"fee"</span>))
-</pre></div>
-
-<div class="callout rd reveal">
-  <p style="margin:.2em 0"><span class="t"><svg class="ico"><use href="#i-warn"/></svg> collect() can OOM the driver</span></p>
-  <p style="margin:.5em 0 0;font-size:14.5px;color:#CDD0DD"><code>collect()</code> pulls <em>every</em> row from every executor into the single driver process. On a large DataFrame, that causes an immediate out-of-memory crash. Use <code>show(20)</code> or <code>take(n)</code> to peek at the data, <code>write</code> to save it, and only call <code>collect()</code> when you already know the result is small. Keep the actions-versus-transformations distinction in mind at all times: it explains both <em>when</em> the work actually happens and <em>where</em> the data ends up.</p>
-</div>
-
-<p class="reveal">When should you move from pandas to Spark? When the data no longer fits on one machine, or when you need fault-tolerant, distributed I/O over a data lake. Polars and DuckDB are the middle ground on a single machine. Spark is where you go once one machine is no longer enough.</p>
-
-
-<h2 id="concurrency" class="reveal"><span class="hico"><svg class="ico"><use href="#i-network"/></svg></span><span class="n">16.</span> Concurrency &amp; the GIL</h2>
+<h2 id="concurrency" class="reveal"><span class="hico"><svg class="ico"><use href="#i-network"/></svg></span><span class="n">13.</span> Concurrency &amp; the GIL</h2>
 <p class="reveal lead">Python can wait on thousands of things at once, but it can only <em>compute</em> one thing at a time. Understanding that split is the key to correctly picking between threads, processes, and asyncio.</p>
 
 <p class="reveal">CPython has a <strong>Global Interpreter Lock (GIL)</strong>: only one thread can execute Python bytecode at any given instant. This leads to the single most misunderstood fact in Python performance: threads do <em>not</em> give you parallel CPU computation. But the GIL is <em>released</em> while a thread is waiting on the operating system, for example on the network or on disk, so threads do help with <strong>I/O-bound</strong> work. While one thread is blocked waiting on a socket, another thread can run.</p>
@@ -1519,7 +1170,7 @@ df = df.<span class="p">withColumn</span>(<span class="g">"net"</span>, <span cl
 <tr><th>Workload</th><th>Bottleneck</th><th>Use</th></tr>
 <tr><td>I/O-bound: API calls, downloads, DB queries</td><td>waiting on network/disk</td><td class="ok">threads or asyncio</td></tr>
 <tr><td>CPU-bound: parsing, hashing, number crunching</td><td>Python bytecode / GIL</td><td>multiprocessing</td></tr>
-<tr><td>CPU-bound at scale in a pipeline</td><td>one machine's cores</td><td class="ok">push to Spark</td></tr>
+<tr><td>CPU-bound work bigger than one machine</td><td>one machine's cores</td><td class="ok">a distributed system / a cluster</td></tr>
 <tr><td>Very high concurrency I/O (10k+ sockets)</td><td>thread overhead</td><td class="ok">asyncio</td></tr>
 </table></div>
 
@@ -1532,7 +1183,7 @@ df = df.<span class="p">withColumn</span>(<span class="g">"net"</span>, <span cl
 <p class="reveal">In practice you rarely use these tools directly. The <code>concurrent.futures</code> module gives you <code>ThreadPoolExecutor</code> and <code>ProcessPoolExecutor</code>: one clean, high-level API where changing a single word switches you between an I/O strategy and a CPU strategy.</p>
 
 <h3 class="reveal">Parallel downloads with ThreadPoolExecutor</h3>
-<p class="reveal">This is a classic data engineering task: call an API for many keys, or download many files. It is I/O-bound, so threads are the right tool. <code>map</code> preserves the input order. <code>as_completed</code> lets you handle each result as soon as it arrives.</p>
+<p class="reveal">This is a classic I/O-bound task: call an API for many keys, or download many files. It is I/O-bound, so threads are the right tool. <code>map</code> preserves the input order. <code>as_completed</code> lets you handle each result as soon as it arrives.</p>
 
 <div class="cb reveal"><span class="lang">python</span><pre><span class="k">from</span> concurrent.futures <span class="k">import</span> ThreadPoolExecutor, as_completed
 <span class="k">import</span> urllib.request
@@ -1560,122 +1211,11 @@ results = {}
 
 <div class="callout rd reveal">
   <p style="margin:.2em 0"><span class="t"><svg class="ico"><use href="#i-warn"/></svg> The "threads make Python faster" myth</span></p>
-  <p style="margin:.5em 0 0;font-size:14.5px;color:#CDD0DD">Adding threads to a CPU-bound, pure-Python loop makes it <em>the same speed or slower</em>. The GIL still forces the bytecode to run one instruction at a time, and you have only added the overhead of switching between threads. Threads help only when the work spends most of its time <em>waiting</em>. For heavy computation, use separate processes, native or NumPy code that releases the GIL, or, in a real pipeline, push the work to Spark instead of trying to work around the GIL on a single machine.</p>
+  <p style="margin:.5em 0 0;font-size:14.5px;color:#CDD0DD">Adding threads to a CPU-bound, pure-Python loop makes it <em>the same speed or slower</em>. The GIL still forces the bytecode to run one instruction at a time, and you have only added the overhead of switching between threads. Threads help only when the work spends most of its time <em>waiting</em>. For heavy computation, use separate processes, native or NumPy code that releases the GIL, or, if the workload has genuinely outgrown one machine, move it to a distributed system instead of trying to work around the GIL on a single box.</p>
 </div>
 
 
-<h2 id="packaging" class="reveal"><span class="hico"><svg class="ico"><use href="#i-terminal"/></svg></span><span class="n">17.</span> venv, packaging &amp; testing</h2>
-<p class="reveal lead">A pipeline that runs on your laptop but nowhere else is a liability. Isolation, pinned dependencies, a sensible project layout, and real tests are what make it reproducible and shippable.</p>
-
-<h3 class="reveal">Virtual environments</h3>
-<p class="reveal">A <strong>virtual environment</strong> is a separate copy of Python for one project, with its own installed packages, so project A's pandas 2.1 does not collide with project B's pandas 1.5. Never install packages into the system Python. Always work inside a venv.</p>
-
-<div class="cb reveal"><span class="lang">python</span><pre><span class="c"># create and activate an isolated environment</span>
-python -m venv .venv
-<span class="p">source</span> .venv/bin/activate        <span class="c"># Windows: .venv\Scripts\activate</span>
-python -m pip install -U pip
-pip install pandas pytest
-</pre></div>
-
-<h3 class="reveal">Dependency management &amp; reproducibility</h3>
-<p class="reveal">Two files you will meet: <code>requirements.txt</code>, a simple flat list and the classic approach, and <code>pyproject.toml</code>, the modern standard that also describes your package's metadata. Either way, the golden rule is to <strong>pin exact versions</strong>, so that today's build and next month's build install the exact same bytes.</p>
-
-<div class="cb reveal"><span class="lang">python</span><pre><span class="c"># pyproject.toml — modern, declarative</span>
-[project]
-name = <span class="g">"pipelines"</span>
-version = <span class="g">"0.1.0"</span>
-requires-python = <span class="g">"&gt;=3.11"</span>
-dependencies = [
-    <span class="g">"pandas==2.2.2"</span>,      <span class="c"># pinned, not pandas&gt;=2</span>
-    <span class="g">"pyarrow==16.1.0"</span>,
-]
-
-[project.optional-dependencies]
-dev = [<span class="g">"pytest==8.2.0"</span>, <span class="g">"ruff==0.5.0"</span>, <span class="g">"mypy==1.10.0"</span>]
-</pre></div>
-<p class="reveal">Two tools worth knowing: <strong><code>uv</code></strong>, a very fast installer and dependency resolver that is increasingly the default choice, and <strong><code>poetry</code></strong>. Both manage your environment and a lock file for you. A lock file records the exact, fully resolved set of dependencies your project ends up using — that is what makes a build truly reproducible.</p>
-
-<div class="callout gr reveal">
-  <p style="margin:.2em 0"><span class="t"><svg class="ico"><use href="#i-bulb"/></svg> Pin everything, lock the tree</span></p>
-  <p style="margin:.5em 0 0;font-size:14.5px;color:#CDD0DD">Unpinned deps mean a transitive upgrade can break your pipeline at 3 a.m. with no code change on your side. Pin direct deps in <code>pyproject.toml</code> and commit a lock file (<code>uv lock</code> / <code>poetry.lock</code>). Reproducible builds are a data-engineering safety requirement, not something you can skip.</p>
-</div>
-
-<h3 class="reveal">Modules, packages &amp; project layout</h3>
-<p class="reveal">A module is a single <code>.py</code> file. A package is a directory that Python treats as importable, traditionally marked by an <code>__init__.py</code> file inside it. The <code>if __name__ == "__main__":</code> guard lets a file work both as an importable module <em>and</em> as a script you can run directly. The layout that saves you from import headaches is the <strong><code>src/</code> layout</strong>:</p>
-
-<div class="cb reveal"><span class="lang">python</span><pre>project/
-  pyproject.toml
-  src/
-    pipelines/
-      __init__.py
-      transforms.py
-  tests/
-    test_transforms.py
-</pre></div>
-
-<div class="cb reveal"><span class="lang">python</span><pre><span class="c"># src/pipelines/transforms.py</span>
-<span class="k">def</span> <span class="p">normalise_amount</span>(x: <span class="y">float</span>, rate: <span class="y">float</span> = <span class="y">1.0</span>) -&gt; <span class="y">float</span>:
-    <span class="k">if</span> x &lt; <span class="y">0</span>:
-        <span class="k">raise</span> <span class="p">ValueError</span>(<span class="g">"amount must be &gt;= 0"</span>)
-    <span class="k">return</span> <span class="p">round</span>(x * rate, <span class="y">2</span>)
-
-<span class="k">def</span> <span class="p">main</span>() -&gt; <span class="y">None</span>:
-    <span class="p">print</span>(<span class="p">normalise_amount</span>(<span class="y">100.0</span>, <span class="y">1.1</span>))
-
-<span class="k">if</span> __name__ == <span class="g">"__main__"</span>:   <span class="c"># runs only when executed directly</span>
-    <span class="p">main</span>()
-</pre></div>
-
-<h3 class="reveal">Testing with pytest</h3>
-<p class="reveal">pytest finds every function named <code>test_*</code> and runs it. A plain <code>assert</code> statement is the entire assertion API you need. <code>@pytest.mark.parametrize</code> runs one test body against many different input/expected pairs. <strong>Fixtures</strong> give you reusable setup code. And you <strong>mock external calls</strong> (a database, an HTTP API) so tests stay fast, run offline, and give the same result every time — you are testing <em>your</em> transform, not the network.</p>
-
-<div class="cb reveal"><span class="lang">python</span><pre><span class="c"># tests/test_transforms.py</span>
-<span class="k">import</span> pytest
-<span class="k">from</span> unittest.mock <span class="k">import</span> Mock, patch
-<span class="k">from</span> pipelines.transforms <span class="k">import</span> normalise_amount
-
-<span class="p">@pytest.mark.parametrize</span>(<span class="g">"x, rate, expected"</span>, [
-    (<span class="y">100.0</span>, <span class="y">1.0</span>, <span class="y">100.0</span>),
-    (<span class="y">100.0</span>, <span class="y">1.1</span>, <span class="y">110.0</span>),
-    (<span class="y">0.0</span>,   <span class="y">2.0</span>, <span class="y">0.0</span>),
-])
-<span class="k">def</span> <span class="p">test_normalise_amount</span>(x, rate, expected):
-    <span class="k">assert</span> <span class="p">normalise_amount</span>(x, rate) == expected
-
-<span class="k">def</span> <span class="p">test_rejects_negative</span>():
-    <span class="k">with</span> pytest.<span class="p">raises</span>(<span class="p">ValueError</span>):
-        <span class="p">normalise_amount</span>(-<span class="y">5.0</span>)
-
-<span class="k">def</span> <span class="p">test_pipeline_mocks_the_api</span>():
-    <span class="c"># patch the network call so the test never hits a real API</span>
-    <span class="k">with</span> <span class="p">patch</span>(<span class="g">"pipelines.transforms.requests.get"</span>) <span class="k">as</span> mock_get:
-        mock_get.<span class="p">return_value</span> = <span class="p">Mock</span>(status_code=<span class="y">200</span>,
-                                    json=<span class="k">lambda</span>: {<span class="g">"rate"</span>: <span class="y">1.2</span>})
-        <span class="c"># ... call code that uses requests.get, assert on the result ...</span>
-        <span class="k">assert</span> mock_get.<span class="p">called</span> <span class="k">is</span> <span class="k">False</span>   <span class="c"># illustrative placeholder</span>
-</pre></div>
-
-<h3 class="reveal">Pre-commit hooks</h3>
-<p class="reveal">To keep a whole team's code consistent, wire formatters and linters into git using <code>pre-commit</code>. <strong><code>black</code></strong> (or <code>ruff format</code>) formats the code, <strong><code>ruff</code></strong> lints it, and <strong><code>mypy</code></strong> type-checks it, all before a commit is even allowed to land. That way, style debates and trivial bugs never reach code review.</p>
-
-<div class="cb reveal"><span class="lang">python</span><pre><span class="c"># .pre-commit-config.yaml</span>
-repos:
-  - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.5.0
-    hooks:
-      - id: ruff          <span class="c"># lint</span>
-      - id: ruff-format   <span class="c"># format</span>
-  - repo: https://github.com/pre-commit/mirrors-mypy
-    rev: v1.10.0
-    hooks:
-      - id: mypy          <span class="c"># type-check</span>
-</pre></div>
-
-<div class="callout gr reveal">
-  <p style="margin:.2em 0"><span class="t"><svg class="ico"><use href="#i-check"/></svg> Consistency is a feature</span></p>
-  <p style="margin:.5em 0 0;font-size:14.5px;color:#CDD0DD">Pinned dependencies, a lock file, and pre-commit hooks together mean that any teammate, or your CI system, or you yourself a year from now, reproduces the exact same environment and the exact same code style. That reproducibility is what separates a one-off script from a maintainable pipeline.</p>
-</div>
-<h2 id="bigo" class="reveal"><span class="hico"><svg class="ico"><use href="#i-compass"/></svg></span><span class="n">18.</span> Big-O intuition</h2>
+<h2 id="bigo" class="reveal"><span class="hico"><svg class="ico"><use href="#i-compass"/></svg></span><span class="n">14.</span> Big-O intuition</h2>
 <p class="reveal lead">You do not need formal proofs. You need to look at a solution and instantly know its <em>order of growth</em>, because that is the number the interviewer is really checking against the size of the input.</p>
 
 <p class="reveal">Big-O answers one question: as the input <code>n</code> gets big, how does the work grow? Ignore the constants, and keep only the dominant term. A senior engineer reads a loop the way you read a road sign: no arithmetic, just pattern recognition. Here are the five patterns you must recognise on sight.</p>
@@ -1711,14 +1251,14 @@ repos:
 <tr><td><code>lst[i]</code>, <code>lst.append(x)</code></td><td class="ok">O(1)</td><td>amortised for append</td></tr>
 <tr><td><code>x in lst</code></td><td class="no">O(n)</td><td>linear scan — a classic trap</td></tr>
 <tr><td><code>lst.insert(0, x)</code>, <code>lst.pop(0)</code></td><td class="no">O(n)</td><td>shifts every element</td></tr>
-<tr><td><code>x in dict</code> / <code>x in set</code></td><td class="ok">O(1)</td><td>average; the DE default</td></tr>
+<tr><td><code>x in dict</code> / <code>x in set</code></td><td class="ok">O(1)</td><td>average; your default choice</td></tr>
 <tr><td><code>d[k]</code>, <code>s.add(x)</code></td><td class="ok">O(1)</td><td>average</td></tr>
 <tr><td><code>sorted(lst)</code>, <code>lst.sort()</code></td><td>O(n log n)</td><td>Timsort</td></tr>
 <tr><td><code>deque.popleft()</code> / <code>appendleft()</code></td><td class="ok">O(1)</td><td>use this for a queue</td></tr>
 </table></div>
 
 <h3 class="reveal">Space complexity, briefly</h3>
-<p class="reveal">The same idea applies to memory: how much <em>extra</em> space does your solution use as <code>n</code> grows? A hashmap holding every element is O(n) space. Two pointers walking an array in place is O(1) space. Recursion adds one stack frame per call, so its space cost is O(depth). In data engineering terms, this is the difference between streaming a file line by line (O(1) space) and loading the whole thing into a list (O(n) space) — interviewers often care about space precisely because production data does not fit in RAM.</p>
+<p class="reveal">The same idea applies to memory: how much <em>extra</em> space does your solution use as <code>n</code> grows? A hashmap holding every element is O(n) space. Two pointers walking an array in place is O(1) space. Recursion adds one stack frame per call, so its space cost is O(depth). In practical terms, this is the difference between streaming a file line by line (O(1) space) and loading the whole thing into a list (O(n) space) — interviewers often care about space precisely because production data does not fit in RAM.</p>
 
 <figure class="fig reveal">
 <svg viewBox="0 0 760 280" width="100%" aria-label="Growth curves of common Big-O complexities: O(1), O(log n), O(n), O(n log n) and O(n squared)">
@@ -1748,7 +1288,7 @@ repos:
 </div>
 
 
-<h2 id="arrays" class="reveal"><span class="hico"><svg class="ico"><use href="#i-list"/></svg></span><span class="n">19.</span> Arrays &amp; two pointers</h2>
+<h2 id="arrays" class="reveal"><span class="hico"><svg class="ico"><use href="#i-list"/></svg></span><span class="n">15.</span> Arrays &amp; two pointers</h2>
 <p class="reveal lead">The Python <code>list</code> is a dynamic array. The two-pointer technique is how you take an O(n²) array problem and squeeze it down to O(n) time using only O(1) extra space.</p>
 
 <p class="reveal">A <code>list</code> stores its elements next to each other in memory, and allocates a bit of extra room ahead of time so that <code>append</code> is O(1) on average. Reading by index is O(1). Inserting or deleting at the front is O(n), because every other element has to shift over by one. Slicing with <code>a[i:j]</code> <em>copies</em> the elements into a new list — that is safe, but it costs O(k) in both time and space, so avoid slicing inside a tight loop when a plain index would do the job.</p>
@@ -1832,7 +1372,7 @@ c = a[::-<span class="y">1</span>]             <span class="c"># reversed COPY</
 </div>
 
 
-<h2 id="strings" class="reveal"><span class="hico"><svg class="ico"><use href="#i-code"/></svg></span><span class="n">20.</span> Strings &amp; parsing</h2>
+<h2 id="strings" class="reveal"><span class="hico"><svg class="ico"><use href="#i-code"/></svg></span><span class="n">16.</span> Strings &amp; parsing</h2>
 <p class="reveal lead">Strings are immutable in Python. That single fact matters more than anything else for both correctness and performance in a coding interview.</p>
 
 <p class="reveal">Because a <code>str</code> cannot be changed in place, every <code>s += piece</code> inside a loop allocates a brand-new string and copies everything you have built so far into it. Doing this N times costs O(n²). Instead, build up a <code>list</code> and call <code>''.join()</code> on it once, which costs O(n). This exact mistake shows up constantly when people assemble a CSV row, or a log line, piece by piece.</p>
@@ -1847,15 +1387,15 @@ out = <span class="g">","</span>.<span class="p">join</span>(tokens)
 </pre></div>
 
 <h3 class="reveal">Everyday ops and slicing</h3>
-<div class="cb reveal"><span class="lang">python</span><pre>s = <span class="g">"  Data Engineer  "</span>
-s.<span class="p">strip</span>()                <span class="c"># 'Data Engineer'</span>
-s.<span class="p">lower</span>().<span class="p">split</span>()         <span class="c"># ['data', 'engineer']</span>
+<div class="cb reveal"><span class="lang">python</span><pre>s = <span class="g">"  Software Engineer  "</span>
+s.<span class="p">strip</span>()                <span class="c"># 'Software Engineer'</span>
+s.<span class="p">lower</span>().<span class="p">split</span>()         <span class="c"># ['software', 'engineer']</span>
 <span class="g">"pipe"</span> <span class="k">in</span> <span class="g">"pipeline"</span>      <span class="c"># True — substring test, O(n)</span>
 <span class="g">"abc"</span>[::-<span class="y">1</span>]              <span class="c"># 'cba' — reversed copy</span>
 </pre></div>
 
 <h3 class="reveal">Parsing logs with <code>re</code></h3>
-<p class="reveal">Data engineering work involves a huge amount of semi-structured text. A compiled regular expression with capture groups is the fastest way to turn a raw access-log line into typed fields.</p>
+<p class="reveal">Real-world code involves a huge amount of semi-structured text. A compiled regular expression with capture groups is the fastest way to turn a raw access-log line into typed fields.</p>
 <div class="cb reveal"><span class="lang">python</span><pre><span class="k">import</span> re
 
 LINE = <span class="g">'127.0.0.1 - - [16/Jul/2026:10:22:01] "GET /api/v1/users HTTP/1.1" 200 1534'</span>
@@ -1894,12 +1434,12 @@ m = pat.<span class="p">match</span>(LINE)
 
 <div class="callout cy reveal">
   <p style="margin:.2em 0"><span class="t"><svg class="ico"><use href="#i-window"/></svg> Teaser: Longest Substring Without Repeating Characters</span></p>
-  <p style="margin:.5em 0 0;font-size:14.5px;color:#CDD0DD">Find the length of the longest substring in which every character is unique. This is the textbook <strong>sliding window</strong> problem: grow a window to the right, and when a duplicate appears, shrink it from the left. We solve it fully in <strong>§26</strong>. For now, just learn to recognise the shape: "longest or shortest contiguous run that satisfies a rule" means a sliding window, not nested loops.</p>
+  <p style="margin:.5em 0 0;font-size:14.5px;color:#CDD0DD">Find the length of the longest substring in which every character is unique. This is the textbook <strong>sliding window</strong> problem: grow a window to the right, and when a duplicate appears, shrink it from the left. We solve it fully in <strong>§22</strong>. For now, just learn to recognise the shape: "longest or shortest contiguous run that satisfies a rule" means a sliding window, not nested loops.</p>
 </div>
 
 
-<h2 id="hashing" class="reveal"><span class="hico"><svg class="ico"><use href="#i-key"/></svg></span><span class="n">21.</span> Hashmaps &amp; sets</h2>
-<p class="reveal lead">If there is one family of tools that wins Medium interviews for data engineers, it is the hashmap. O(1) lookup is the key that solves nearly every "make this faster" problem.</p>
+<h2 id="hashing" class="reveal"><span class="hico"><svg class="ico"><use href="#i-key"/></svg></span><span class="n">17.</span> Hashmaps &amp; sets</h2>
+<p class="reveal lead">If there is one family of tools that wins Easy and Medium interviews, it is the hashmap. O(1) lookup is the key that solves nearly every "make this faster" problem.</p>
 
 <p class="reveal">Four patterns cover the vast majority of what you'll be asked. Know them from memory and you'll recognise the solution before the interviewer finishes the prompt.</p>
 <p class="reveal"><strong>1. Count frequency</strong> with <code>collections.Counter</code>. <strong>2. Check membership or remove duplicates</strong> with <code>set</code>. <strong>3. Group rows by a key</strong> with <code>defaultdict(list)</code>. <strong>4. The complement trick:</strong> remember what you have already seen in a <code>dict</code>, so a second nested loop turns into a single lookup.</p>
@@ -1971,7 +1511,7 @@ by_day = defaultdict(<span class="y">list</span>)          <span class="c"># gro
 </div>
 
 
-<h2 id="sorting" class="reveal"><span class="hico"><svg class="ico"><use href="#i-search"/></svg></span><span class="n">22.</span> Sorting, searching &amp; binary search</h2>
+<h2 id="sorting" class="reveal"><span class="hico"><svg class="ico"><use href="#i-search"/></svg></span><span class="n">18.</span> Sorting, searching &amp; binary search</h2>
 <p class="reveal lead">Sorting is O(n log n), and it is often the cheapest way to put your data in order so that a single linear sweep becomes possible. Binary search is O(log n), and it is the interviewer's favourite way to check whether you can write a loop without an off-by-one error.</p>
 
 <h3 class="reveal">Sorting in Python</h3>
@@ -1980,7 +1520,7 @@ by_day = defaultdict(<span class="y">list</span>)          <span class="c"># gro
 <span class="p">sorted</span>(rows, key=<span class="k">lambda</span> r: r[<span class="y">1</span>])          <span class="c"># by 2nd field asc</span>
 <span class="p">sorted</span>(rows, key=<span class="k">lambda</span> r: (-r[<span class="y">1</span>], r[<span class="y">0</span>]))   <span class="c"># count desc, then name asc</span>
 
-<span class="c"># Top-K by sorting — fine, but a heap (see §27) is better at O(n log k)</span>
+<span class="c"># Top-K by sorting — fine, but a heap (see §23) is better at O(n log k)</span>
 top3 = <span class="p">sorted</span>(counts.<span class="p">items</span>(), key=<span class="k">lambda</span> kv: -kv[<span class="y">1</span>])[:<span class="y">3</span>]
 </pre></div>
 
@@ -2050,7 +1590,7 @@ bisect_right(a, <span class="y">3</span>)   <span class="c"># 3  -&gt; just past
 <p class="reveal"><strong>Time O(n log n)</strong>, dominated by the sort, and <strong>space O(n)</strong> for the output. Sorting first is what turns "compare every pair of intervals" into a single linear sweep — this "sort first, then walk once" move comes up again and again.</p>
 
 
-<h2 id="stacksqueues" class="reveal"><span class="hico"><svg class="ico"><use href="#i-layers"/></svg></span><span class="n">23.</span> Stacks &amp; queues</h2>
+<h2 id="stacksqueues" class="reveal"><span class="hico"><svg class="ico"><use href="#i-layers"/></svg></span><span class="n">19.</span> Stacks &amp; queues</h2>
 <p class="reveal lead">A stack is last-in-first-out, like an undo history. A queue is first-in-first-out, like a task backlog. Picking the right container for the job is the difference between O(1) and O(n) per operation.</p>
 
 <p class="reveal">A <strong>stack</strong> is just a Python <code>list</code>: <code>append</code> pushes a value on, and <code>pop</code> removes one from the end. Both are O(1). A <strong>queue</strong> needs efficient removal from the <em>front</em>, so use <code>collections.deque</code> instead: <code>append</code> adds to the right, and <code>popleft</code> removes from the left, both O(1) at either end.</p>
@@ -2113,7 +1653,7 @@ q.<span class="p">popleft</span>()                       <span class="c"># 'job1
   <p style="margin:.2em 0"><span class="t"><svg class="ico"><use href="#i-bulb"/></svg> Recognising a monotonic-stack problem</span></p>
   <p style="margin:.5em 0 0;font-size:14.5px;color:#CDD0DD">Phrases like "next greater", "next warmer", "nearest smaller to the left", "largest rectangle in histogram", or "how far until…" are the signal to look for. If you're about to write a nested loop scanning forward for the next bigger thing, a monotonic stack collapses it to O(n).</p>
 </div>
-<h2 id="linkedlists" class="reveal"><span class="hico"><svg class="ico"><use href="#i-network"/></svg></span><span class="n">24.</span> Linked lists</h2>
+<h2 id="linkedlists" class="reveal"><span class="hico"><svg class="ico"><use href="#i-network"/></svg></span><span class="n">20.</span> Linked lists</h2>
 <p class="reveal lead">You will almost never touch a linked list in production data code. Interviewers love them anyway, because they force you to reason carefully about pointers. Learn the three tricks below and you can solve about 90% of the questions.</p>
 
 <p class="reveal">A linked list is a chain of nodes where each node holds a value and a reference to the <em>next</em> node. There is no contiguous block of memory and no index: to reach the 5th element you follow four pointers. The whole model is one tiny class.</p>
@@ -2125,7 +1665,7 @@ q.<span class="p">popleft</span>()                       <span class="c"># 'job1
         self.next = next          <span class="c"># singly linked: one pointer forward</span>
 </pre></div>
 
-<p class="reveal">A <strong>singly</strong> linked list has one pointer per node, called <code>next</code>. A <strong>doubly</strong> linked list adds a second pointer, <code>prev</code>, pointing backward. That gives O(1) deletion when you already have a reference to the node, which is exactly why Python's own <code>collections.OrderedDict</code> and LRU caches use a doubly linked list internally. In actual data engineering data, linked lists are rare: columnar files, Arrow buffers and DataFrames are all contiguous arrays, because scanning contiguous memory is far faster than following pointers. Linked lists show up in <em>interviews</em>, not in your Parquet files.</p>
+<p class="reveal">A <strong>singly</strong> linked list has one pointer per node, called <code>next</code>. A <strong>doubly</strong> linked list adds a second pointer, <code>prev</code>, pointing backward. That gives O(1) deletion when you already have a reference to the node, which is exactly why Python's own <code>collections.OrderedDict</code> and LRU caches use a doubly linked list internally. In most real-world data, linked lists are rare: columnar files, Arrow buffers and DataFrames are all contiguous arrays, because scanning contiguous memory is far faster than following pointers. Linked lists show up in <em>interviews</em>, not in your Parquet files.</p>
 
 <h3 class="reveal">The dummy-head trick</h3>
 <p class="reveal">Half of all linked-list bugs come from special-casing the head node. Allocate a temporary <code>dummy</code> node in front of the real list, build everything off <code>dummy.next</code>, and return <code>dummy.next</code> at the end. Now "insert at the head" and "insert in the middle" become the same code path.</p>
@@ -2230,7 +1770,7 @@ q.<span class="p">popleft</span>()                       <span class="c"># 'job1
 </div>
 
 
-<h2 id="recursion" class="reveal"><span class="hico"><svg class="ico"><use href="#i-split"/></svg></span><span class="n">25.</span> Recursion, trees &amp; BFS/DFS</h2>
+<h2 id="recursion" class="reveal"><span class="hico"><svg class="ico"><use href="#i-split"/></svg></span><span class="n">21.</span> Recursion, trees &amp; BFS/DFS</h2>
 <p class="reveal lead">Trees are recursion made visible. Almost every tree question follows the same shape: "do something at this node, then recurse into its children." The two ways to walk a tree, DFS and BFS, are the traversals interviewers expect you to write from memory.</p>
 
 <p class="reveal">Recursion works because each call gets its own frame on the <strong>call stack</strong>, holding its own local variables and its own return address. A recursive function needs a <strong>base case</strong>, which tells it when to stop, and a <strong>recursive case</strong>, a smaller version of the same problem. Miss the base case, and you overflow the stack.</p>
@@ -2359,7 +1899,7 @@ sys.<span class="p">setrecursionlimit</span>(<span class="y">10_000</span>)   <s
 <p class="reveal">Every one of these traversals is <code>O(n)</code> time, since each node is visited exactly once. Space is <code>O(h)</code> for DFS, where <em>h</em> is the tree's height, because that is how deep the recursion or stack goes. Space is <code>O(w)</code> for BFS, where <em>w</em> is the widest level of the tree. These are the easy-to-medium tree problems interviewers actually reach for. Know max-depth, level-order, and validate-BST from memory, and you have covered the bulk of them.</p>
 
 
-<h2 id="sliding" class="reveal"><span class="hico"><svg class="ico"><use href="#i-window"/></svg></span><span class="n">26.</span> Sliding window &amp; prefix sums</h2>
+<h2 id="sliding" class="reveal"><span class="hico"><svg class="ico"><use href="#i-window"/></svg></span><span class="n">22.</span> Sliding window &amp; prefix sums</h2>
 <p class="reveal lead">When a problem asks for the best contiguous run, whether that is the longest, the shortest, or the max-sum subarray or substring, a sliding window turns the naive O(n²) scan of every possible subarray into one clean O(n) pass.</p>
 
 <p class="reveal">A window is a pair of indices, <code>left</code> and <code>right</code>, that bound a contiguous slice of the data. There are two flavours. A <strong>fixed-size</strong> window has a given length <em>k</em>, and you slide it one step at a time. A <strong>variable-size</strong> window grows its right edge greedily, and only shrinks its left edge when some constraint is broken.</p>
@@ -2433,12 +1973,12 @@ sys.<span class="p">setrecursionlimit</span>(<span class="y">10_000</span>)   <s
 </pre></div>
 
 <div class="callout gr reveal">
-  <p style="margin:.2em 0"><span class="t"><svg class="ico"><use href="#i-bulb"/></svg> Good to know for stronger DE roles</span></p>
-  <p style="margin:.5em 0 0;font-size:14.5px;color:#CDD0DD">Sliding window and prefix sums are not everyday DE tools, but they show you can think in one-pass streaming terms — exactly the mindset for processing an unbounded event stream where you cannot re-scan. Worth knowing well for the stronger interview loops.</p>
+  <p style="margin:.2em 0"><span class="t"><svg class="ico"><use href="#i-bulb"/></svg> Good to know for stronger interview loops</span></p>
+  <p style="margin:.5em 0 0;font-size:14.5px;color:#CDD0DD">Sliding window and prefix sums are not tools you reach for daily, but they show you can think in one-pass streaming terms — exactly the mindset for processing an unbounded event stream where you cannot re-scan. Worth knowing well for the stronger interview loops.</p>
 </div>
 
 
-<h2 id="heaps" class="reveal"><span class="hico"><svg class="ico"><use href="#i-sigma"/></svg></span><span class="n">27.</span> Heaps &amp; priority queues</h2>
+<h2 id="heaps" class="reveal"><span class="hico"><svg class="ico"><use href="#i-sigma"/></svg></span><span class="n">23.</span> Heaps &amp; priority queues</h2>
 <p class="reveal lead">When the question is "the top K", "the k closest", or "merge k sorted streams", a heap gives you the smallest or largest element in O(log n), without needing to keep everything fully sorted. Python ships one in its standard library.</p>
 
 <p class="reveal">A binary heap keeps the smallest (or largest) element instantly reachable while everything else stays only loosely ordered. Python's <code>heapq</code> operates on a plain list and is always a <strong>min-heap</strong>: the smallest element sits at index 0.</p>
@@ -2487,11 +2027,11 @@ sys.<span class="p">setrecursionlimit</span>(<span class="y">10_000</span>)   <s
 
 <div class="callout gr reveal">
   <p style="margin:.2em 0"><span class="t"><svg class="ico"><use href="#i-bulb"/></svg> Good to know for stronger / infra roles</span></p>
-  <p style="margin:.5em 0 0;font-size:14.5px;color:#CDD0DD">Heaps underpin real infrastructure: priority scheduling, k-way merges when a sort spills to disk, rate limiters, and expiry timers. If you are aiming at platform or infrastructure-flavoured DE roles, being comfortable with <code>heapq</code> tuples and the two-heap median pays off.</p>
+  <p style="margin:.5em 0 0;font-size:14.5px;color:#CDD0DD">Heaps underpin real infrastructure: priority scheduling, k-way merges when a sort spills to disk, rate limiters, and expiry timers. If you are aiming at platform or infrastructure-flavoured roles, being comfortable with <code>heapq</code> tuples and the two-heap median pays off.</p>
 </div>
 
 
-<h2 id="dp" class="reveal"><span class="hico"><svg class="ico"><use href="#i-blocks"/></svg></span><span class="n">28.</span> Basic 1D dynamic programming</h2>
+<h2 id="dp" class="reveal"><span class="hico"><svg class="ico"><use href="#i-blocks"/></svg></span><span class="n">24.</span> Basic 1D dynamic programming</h2>
 <p class="reveal lead">You do not need to be a DP expert — you need enough not to freeze when a simple one shows up, and to recognise the signs of a DP problem fast enough to reach for a recurrence instead of brute force.</p>
 
 <p class="reveal">Dynamic programming applies when a problem has two properties. The first is <strong>overlapping subproblems</strong>: the same smaller computation comes up again and again. The second is <strong>optimal substructure</strong>: the best answer is built from the best answers to smaller versions of the same problem. The method is to write the <em>recurrence</em> first, meaning "the answer at step <em>n</em>, in terms of earlier steps," and then either <strong>memoise</strong> the recursion or fill a <strong>table</strong> bottom-up.</p>
@@ -2595,10 +2135,10 @@ sys.<span class="p">setrecursionlimit</span>(<span class="y">10_000</span>)   <s
 </div>
 
 
-<h2 id="graphs" class="reveal"><span class="hico"><svg class="ico"><use href="#i-workflow"/></svg></span><span class="n">29.</span> Graphs &amp; topological sort</h2>
-<p class="reveal lead">Graphs are the one DSA topic that maps directly onto your day job. Every DAG in Airflow or Dagster is a graph, and the order in which tasks run is a topological sort, cycle detection included.</p>
+<h2 id="graphs" class="reveal"><span class="hico"><svg class="ico"><use href="#i-workflow"/></svg></span><span class="n">25.</span> Graphs &amp; topological sort</h2>
+<p class="reveal lead">Graphs are the one DSA topic that maps directly onto real software you already use. Build systems, task schedulers, package managers: every dependency graph is a graph, and the order things run in is a topological sort, cycle detection included.</p>
 
-<p class="reveal">Represent a graph as an <strong>adjacency list</strong>: a dict that maps each node to the list of nodes it points to. This is compact for the sparse graphs that data engineering deals with, and it gives O(1) access to a node's neighbours.</p>
+<p class="reveal">Represent a graph as an <strong>adjacency list</strong>: a dict that maps each node to the list of nodes it points to. This is compact for sparse graphs, and it gives O(1) access to a node's neighbours.</p>
 
 <div class="cb reveal"><span class="lang">python</span><pre><span class="c"># A tiny directed graph as dict[node, list[node]].</span>
 graph: <span class="y">dict</span>[<span class="y">str</span>, <span class="y">list</span>[<span class="y">str</span>]] = {
@@ -2699,39 +2239,39 @@ graph: <span class="y">dict</span>[<span class="y">str</span>, <span class="y">l
   <p style="margin:.2em 0"><span class="t"><svg class="ico"><use href="#i-warn"/></svg> A cycle means there is no valid order</span></p>
   <p style="margin:.5em 0 0;font-size:14.5px;color:#CDD0DD">If Kahn's algorithm finishes having emitted fewer nodes than the graph actually has, some nodes never reached an in-degree of zero — they depend on each other in a loop. That loop is a cycle, and a graph with a cycle is <strong>not a DAG</strong>: there is no order in which every task can run after everything it depends on. This is exactly the error an orchestrator throws when you accidentally wire task A → B → A.</p>
 </div>
-<h2 id="priority" class="reveal"><span class="hico"><svg class="ico"><use href="#i-target"/></svg></span><span class="n">30.</span> The DSA priority map for DE</h2>
-<p class="reveal lead">Most data-engineering interviews test a focused slice of algorithms. You do <strong>not</strong> need competitive-programming depth to pass. Learn the two tiers below in order, and you will recognise the shape of almost every Medium problem you meet.</p>
+<h2 id="priority" class="reveal"><span class="hico"><svg class="ico"><use href="#i-target"/></svg></span><span class="n">26.</span> The DSA priority map</h2>
+<p class="reveal lead">Most technical interviews test a focused slice of algorithms. You do <strong>not</strong> need competitive-programming depth to pass. Learn the two tiers below in order, and you will recognise the shape of almost every Easy or Medium problem you meet.</p>
 
-<p class="reveal">The trap is treating DSA like a hobby: spending hours on hard graph theory and clever DP, when the interview actually wants a clean hashmap, a two-pointer scan, or a sort. Spend your study time where it pays off the most. The list below is exactly that ranking. Tier&nbsp;1 is non-negotiable for essentially every DE role. Tier&nbsp;2 sharpens you for stronger product and infrastructure teams.</p>
+<p class="reveal">The trap is treating DSA like a hobby: spending hours on hard graph theory and clever DP, when the interview actually wants a clean hashmap, a two-pointer scan, or a sort. Spend your study time where it pays off the most. The list below is exactly that ranking. Tier&nbsp;1 is non-negotiable for almost every coding interview. Tier&nbsp;2 sharpens you for stronger, more systems-heavy loops.</p>
 
-<h3 class="reveal">Tier 1 — must know for almost all Data Engineering roles</h3>
+<h3 class="reveal">Tier 1 — must know for almost every coding interview</h3>
 <div class="tw reveal"><table>
-<tr><th>Topic</th><th>What you actually need</th><th>Typical DE use</th></tr>
-<tr><td><a href="#bigo">§18 Big-O intuition</a></td><td>Know the <em>order</em>, not the formulas — feel the gap between <code>O(n)</code> and <code>O(n²)</code> on a million rows. If a loop nests over the same data, that is your red flag.</td><td>Sizing a job before it OOMs; explaining why a nested lookup is slow.</td></tr>
-<tr><td><a href="#arrays">§19 Arrays</a> &middot; <a href="#sorting">binary search</a> &middot; <a href="#strings">§20 strings</a></td><td>Scanning, two pointers, in-place transforms, parsing log lines. One clean pass beats a clever trick: <code>a, b = 0, len(x) - 1</code> and walk inward.</td><td>Parsing logs, deduping a sorted feed, splitting a fixed-width record.</td></tr>
-<tr><td><a href="#hashing">§21 Hashmaps &amp; sets</a></td><td>Counting frequency, membership, dedup, grouping by key. DE interviews <em>love</em> these — <code>Counter(events)</code> or <code>seen = set()</code> solves a surprising share of problems.</td><td>Frequency by user, dedup a stream, join two datasets in memory.</td></tr>
-<tr><td><a href="#sorting">§22 Sorting &amp; searching</a></td><td>Sorting is everywhere: top-K, ranking, merging two ordered feeds. Know <code>sorted(rows, key=...)</code> and that it is <code>O(n log n)</code>.</td><td>Rank by score, merge sorted partitions, order-by before a window.</td></tr>
-<tr><td><a href="#stacksqueues">§23 Stacks &amp; queues</a></td><td>Conceptual grasp plus simple uses — LIFO for undo/backtracking, FIFO for task buffers. Reach for <code>collections.deque</code>, not a raw list.</td><td>Undo history, a bounded task queue, balanced-bracket validation.</td></tr>
-<tr><td><a href="#recursion">§25 Trees</a> &middot; <a href="#graphs">§29 graphs</a></td><td>Understand <code>BFS</code> vs <code>DFS</code> and solve easy–medium tree traversals. A queue drives BFS; recursion or a stack drives DFS.</td><td>Walking a nested JSON, traversing a directory tree, dependency checks.</td></tr>
-<tr><td><a href="#dp">§28 Basic 1D DP</a></td><td>Just enough not to panic if a simple DP shows up — carry a running best across one array (<code>best = max(best, ...)</code>). No need for complicated multi-dimensional tables.</td><td>Max-subarray on a metric series, simple "ways to reach N".</td></tr>
+<tr><th>Topic</th><th>What you actually need</th><th>Where it shows up</th></tr>
+<tr><td><a href="#bigo">§14 Big-O intuition</a></td><td>Know the <em>order</em>, not the formulas — feel the gap between <code>O(n)</code> and <code>O(n²)</code> on a million rows. If a loop nests over the same data, that is your red flag.</td><td>Sizing an approach before it times out; explaining why a nested lookup is slow.</td></tr>
+<tr><td><a href="#arrays">§15 Arrays</a> &middot; <a href="#sorting">binary search</a> &middot; <a href="#strings">§16 strings</a></td><td>Scanning, two pointers, in-place transforms, parsing text. One clean pass beats a clever trick: <code>a, b = 0, len(x) - 1</code> and walk inward.</td><td>Parsing input, deduping a sorted list, splitting a fixed-width record.</td></tr>
+<tr><td><a href="#hashing">§17 Hashmaps &amp; sets</a></td><td>Counting frequency, membership, dedup, grouping by key. Interviewers <em>love</em> these — <code>Counter(events)</code> or <code>seen = set()</code> solves a surprising share of problems.</td><td>Frequency by key, dedup a list, join two collections in memory.</td></tr>
+<tr><td><a href="#sorting">§18 Sorting &amp; searching</a></td><td>Sorting is everywhere: top-K, ranking, merging two ordered feeds. Know <code>sorted(rows, key=...)</code> and that it is <code>O(n log n)</code>.</td><td>Rank by score, merge sorted lists, order-by before a scan.</td></tr>
+<tr><td><a href="#stacksqueues">§19 Stacks &amp; queues</a></td><td>Conceptual grasp plus simple uses — LIFO for undo/backtracking, FIFO for task buffers. Reach for <code>collections.deque</code>, not a raw list.</td><td>Undo history, a bounded task queue, balanced-bracket validation.</td></tr>
+<tr><td><a href="#recursion">§21 Trees</a> &middot; <a href="#graphs">§25 graphs</a></td><td>Understand <code>BFS</code> vs <code>DFS</code> and solve easy–medium tree traversals. A queue drives BFS; recursion or a stack drives DFS.</td><td>Walking a nested JSON, traversing a directory tree, dependency checks.</td></tr>
+<tr><td><a href="#dp">§24 Basic 1D DP</a></td><td>Just enough not to panic if a simple DP shows up — carry a running best across one array (<code>best = max(best, ...)</code>). No need for complicated multi-dimensional tables.</td><td>Max-subarray over a series, simple "ways to reach N".</td></tr>
 </table></div>
 
-<h3 class="reveal">Tier 2 — good to know for stronger / product &amp; infra Data Engineering roles</h3>
+<h3 class="reveal">Tier 2 — good to know for stronger, more systems-heavy interview loops</h3>
 <div class="tw reveal"><table>
-<tr><th>Topic</th><th>What you actually need</th><th>Typical DE use</th></tr>
-<tr><td><a href="#heaps">§27 Heaps &amp; priority queues</a></td><td>Top-K elements and latest-N events without sorting everything. <code>heapq.nlargest(k, xs)</code> is your one-liner; a min-heap of size <code>k</code> is the streaming version.</td><td>Top-K slowest queries, keep the newest N records from a fast-moving stream.</td></tr>
-<tr><td><a href="#sliding">§26 Sliding window &amp; prefix sums</a></td><td>Sliding window for "subarray with a property"; prefix sums for fast range queries — precompute once, answer any range in <code>O(1)</code>.</td><td>Rolling 5-minute error rate, cumulative totals over a time series.</td></tr>
-<tr><td><a href="#graphs">§29 Simple graph algorithms</a></td><td>Shortest-path intuition and <strong>topological sort</strong> — directly relevant to workflow / dependency graphs. Every Airflow DAG is a topo-sort problem.</td><td>Ordering task dependencies, detecting a cycle in a pipeline DAG.</td></tr>
+<tr><th>Topic</th><th>What you actually need</th><th>Where it shows up</th></tr>
+<tr><td><a href="#heaps">§23 Heaps &amp; priority queues</a></td><td>Top-K elements and latest-N events without sorting everything. <code>heapq.nlargest(k, xs)</code> is your one-liner; a min-heap of size <code>k</code> is the streaming version.</td><td>Top-K slowest queries, keep the newest N records from a fast-moving stream.</td></tr>
+<tr><td><a href="#sliding">§22 Sliding window &amp; prefix sums</a></td><td>Sliding window for "subarray with a property"; prefix sums for fast range queries — precompute once, answer any range in <code>O(1)</code>.</td><td>Rolling 5-minute error rate, cumulative totals over a time series.</td></tr>
+<tr><td><a href="#graphs">§25 Simple graph algorithms</a></td><td>Shortest-path intuition and <strong>topological sort</strong> — directly relevant to workflow and dependency graphs. Every DAG in a scheduler like Airflow is a topo-sort problem.</td><td>Ordering task dependencies, detecting a cycle in a dependency graph.</td></tr>
 </table></div>
 
 <div class="callout gr reveal">
-  <p style="margin:.2em 0"><span class="t"><svg class="ico"><use href="#i-bulb"/></svg> What to skip for DE</span></p>
-  <p style="margin:.5em 0 0;font-size:14.5px;color:#CDD0DD">Advanced DP (2D tabulation, bitmask states), segment trees and Fenwick trees, heavy graph theory (min-cut, flow, matching), and tricky bit manipulation almost never appear in data engineering interview loops. If you have spare hours, spend them on <strong>SQL window functions</strong> and <strong>system design</strong> instead — that is where DE interviews actually separate strong candidates from weak ones.</p>
+  <p style="margin:.2em 0"><span class="t"><svg class="ico"><use href="#i-bulb"/></svg> What to skip</span></p>
+  <p style="margin:.5em 0 0;font-size:14.5px;color:#CDD0DD">Advanced DP (2D tabulation, bitmask states), segment trees and Fenwick trees, heavy graph theory (min-cut, flow, matching), and tricky bit manipulation almost never appear in Easy or Medium interview loops. If you have spare hours, spend them on <strong>system design</strong> instead — that is where interviews actually separate strong candidates from weak ones.</p>
 </div>
 
 <figure class="fig reveal">
 <svg viewBox="0 0 760 292" width="100%" aria-label="Two-tier priority map: Tier 1 must-know topics on the left, Tier 2 good-to-know topics on the right">
-  <text x="380" y="22" font-size="10.5" fill="#E7E7EE" text-anchor="middle" letter-spacing="1.5">THE DE DSA PRIORITY MAP</text>
+  <text x="380" y="22" font-size="10.5" fill="#E7E7EE" text-anchor="middle" letter-spacing="1.5">THE DSA PRIORITY MAP</text>
   <rect x="24" y="36" width="352" height="240" rx="12" fill="#1C1C2A" stroke="#3C4356"/>
   <rect x="384" y="36" width="352" height="240" rx="12" fill="#1C1C2A" stroke="#3C4356"/>
   <text x="200" y="66" font-size="13" fill="#5AC8FF" text-anchor="middle" font-weight="700" letter-spacing=".5">TIER 1 · MUST KNOW</text>
@@ -2751,12 +2291,12 @@ graph: <span class="y">dict</span>[<span class="y">str</span>, <span class="y">l
   <text x="560" y="252" font-size="10.5" fill="#E7E7EE" text-anchor="middle" font-style="italic">Skip: advanced DP, segment trees,</text>
   <text x="560" y="268" font-size="10.5" fill="#E7E7EE" text-anchor="middle" font-style="italic">heavy graph theory, bit tricks</text>
 </svg>
-<figcaption>Learn Tier 1 from memory; treat Tier 2 as an edge for stronger roles. Everything outside both boxes is a poor use of interview-prep time for data engineering.</figcaption>
+<figcaption>Learn Tier 1 from memory; treat Tier 2 as an edge for stronger roles. Everything outside both boxes is a poor use of interview-prep time.</figcaption>
 </figure>
 
 
-<h2 id="cheatsheet" class="reveal"><span class="hico"><svg class="ico"><use href="#i-list"/></svg></span><span class="n">31.</span> Cheat sheet</h2>
-<p class="reveal lead">A dense, scannable reference: the Big-O of the core structures, the standard library modules you will actually import, a "which tool for which pattern" map, and the four signature DE Python idioms.</p>
+<h2 id="cheatsheet" class="reveal"><span class="hico"><svg class="ico"><use href="#i-list"/></svg></span><span class="n">27.</span> Cheat sheet</h2>
+<p class="reveal lead">A dense, scannable reference: the Big-O of the core structures, the standard library modules you will actually import, a "which tool for which pattern" map, and four signature Python idioms worth having memorised.</p>
 
 <h3 class="reveal">Core data structures &amp; their Big-O</h3>
 <div class="tw reveal"><table>
@@ -2768,7 +2308,7 @@ graph: <span class="y">dict</span>[<span class="y">str</span>, <span class="y">l
 <tr><td><code>heap</code> (heapq)</td><td><code>heappush</code> / <code>heappop</code> — <code>O(log n)</code>; peek-min <code>O(1)</code></td><td>search for arbitrary value</td><td>Top-K, latest-N, merging sorted streams.</td></tr>
 </table></div>
 
-<h3 class="reveal">Essential stdlib for DE + DSA</h3>
+<h3 class="reveal">Essential stdlib for everyday Python + DSA</h3>
 <div class="tw reveal"><table>
 <tr><th>Module</th><th>What you use it for</th></tr>
 <tr><td><code>collections</code></td><td><code>Counter</code> (frequency), <code>defaultdict</code> (group-by without <code>KeyError</code>), <code>deque</code> (O(1) queue).</td></tr>
@@ -2798,7 +2338,7 @@ graph: <span class="y">dict</span>[<span class="y">str</span>, <span class="y">l
 <tr><td>Guaranteed resource cleanup</td><td class="ok">context manager (<code>with</code>)</td></tr>
 </table></div>
 
-<h3 class="reveal">Signature DE Python idioms</h3>
+<h3 class="reveal">Four signature idioms</h3>
 <h4 class="reveal">Stream a big file with a generator</h4>
 <div class="cb reveal"><span class="lang">python</span><pre><span class="k">def</span> <span class="p">stream</span>(path: <span class="y">str</span>):
     <span class="k">with</span> <span class="p">open</span>(path) <span class="k">as</span> f:          <span class="c"># constant memory: one line at a time</span>
@@ -2858,7 +2398,7 @@ graph: <span class="y">dict</span>[<span class="y">str</span>, <span class="y">l
 <dt>GIL (Global Interpreter Lock)</dt><dd>A CPython lock that lets only one thread execute Python bytecode at a time, so threads help I/O-bound work but not CPU-bound work — for parallel compute use processes or push down to an engine.</dd>
 <dt>Generator</dt><dd>A function using <code>yield</code> that produces values lazily, one at a time, in constant memory — the backbone of streaming a file too big for RAM.</dd>
 <dt>Iterator</dt><dd>Any object with <code>__next__</code> that yields items until <code>StopIteration</code>; a <code>for</code> loop is shorthand for calling <code>next()</code> on one.</dd>
-<dt>Lazy evaluation</dt><dd>Computing a value only when it is actually needed rather than up front — how generators, <code>itertools</code>, and Spark transformations avoid materialising whole datasets.</dd>
+<dt>Lazy evaluation</dt><dd>Computing a value only when it is actually needed rather than up front — how generators and <code>itertools</code> avoid materialising whole collections in memory.</dd>
 <dt>Comprehension</dt><dd>Concise syntax to build a list, set, or dict from an iterable, e.g. <code>[x*2 for x in xs if x]</code>; a generator expression uses parentheses and stays lazy.</dd>
 <dt>Decorator</dt><dd>A callable that wraps a function to add behaviour (retry, timing, caching) without editing it, applied with <code>@name</code> above the <code>def</code>.</dd>
 <dt>Closure</dt><dd>An inner function that captures variables from the enclosing scope and keeps them alive after the outer function returns — the mechanism decorators are built on.</dd>
@@ -2876,7 +2416,7 @@ graph: <span class="y">dict</span>[<span class="y">str</span>, <span class="y">l
 <dt>BFS (breadth-first search)</dt><dd>Level-by-level graph/tree traversal driven by a queue; finds shortest paths in unweighted graphs.</dd>
 <dt>DFS (depth-first search)</dt><dd>Traversal that goes as deep as possible before backtracking, driven by recursion or a stack; used for cycle detection and topological order.</dd>
 <dt>Topological sort</dt><dd>A linear ordering of a DAG's nodes where every edge points forward — the ordering that runs task dependencies, e.g. an Airflow DAG.</dd>
-<dt>DAG (directed acyclic graph)</dt><dd>A directed graph with no cycles; the model for pipelines and Spark job plans, and what topological sort operates on.</dd>
+<dt>DAG (directed acyclic graph)</dt><dd>A directed graph with no cycles; the model for build graphs, task schedulers and dependency graphs, and what topological sort operates on.</dd>
 <dt>Memoization</dt><dd>Caching a function's result per input so repeated calls are instant; in Python often just <code>@functools.lru_cache</code>.</dd>
 <dt>Dynamic programming</dt><dd>Solving a problem by combining answers to overlapping subproblems, stored to avoid recomputation; 1D DP carries a running best across one array.</dd>
 <dt>Big-O</dt><dd>Notation for how runtime or memory grows with input size <code>n</code> — the <em>order</em> (constant, log, linear, n²) matters far more than the exact formula.</dd>
