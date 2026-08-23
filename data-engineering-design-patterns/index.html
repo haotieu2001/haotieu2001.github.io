@@ -1960,6 +1960,10 @@ producer = Producer({
 <p>The transitive distinction confuses people because the allowed actions are identical. An example makes it concrete. Start with <code>Parcel { parcel_id LONG required }</code>. Backward compatibility means a new field must be optional, so v1 adds <code>weight_kg DOUBLE default 0.0</code>. Then the product team asks for the default to be removed, because a zero weight produces misleading analytics — so v2 makes <code>weight_kg</code> required. Against v1 that is fine: a v2 consumer reading v1 data gets the default filled in. Against v0 it is not: v0 data has no weight at all and no default to fall back on. Same change, allowed non-transitively, forbidden transitively.</p>
 </div>
 
+<div class="pat reveal">
+<p class="watch"><b>Watch out.</b> <b>Producing data now costs an extra round trip.</b> With a registry in the loop, the producer has to check every record against the newest schema version before it can send anything — a small price per record, and one more service that has to be up for your producers to work at all. <b>Evolution gets harder, and that is the deal.</b> Every change now has to satisfy the compatibility level you picked, so the obvious one-liner is often simply forbidden: renaming a field becomes "add the new one, deprecate the old one" instead of a single statement. That friction is what you bought — it is the reason nobody is woken at 4am — and working within it is exactly what the next pattern is for.</p>
+</div>
+
 <div class="pat b reveal">
 <h3>Schema Migrator</h3>
 <p class="when">Use it when you need a genuinely breaking change — a rename, a retype, a removal — without breaking anyone.</p>
