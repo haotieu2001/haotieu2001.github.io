@@ -605,11 +605,11 @@ wait_for_partition = FileSensor(
   <text x="595" y="291" font-size="8.5" fill="#E7E7EE" text-anchor="middle">alert on the rate, not the count</text>
   <path d="M442 279 H 490" stroke="#FFB454" stroke-width="1.8" fill="none" marker-end="url(#d4-a)"/>
 
-  <rect x="30" y="248" width="170" height="62" rx="9" fill="#191921" stroke="#A56BFF" stroke-width="2"/>
+  <rect x="30" y="248" width="170" height="62" rx="9" fill="#191921" stroke="#A56BFF" stroke-width="2" stroke-dasharray="6 4"/>
   <text x="115" y="272" font-size="9.5" fill="#C39BFF" text-anchor="middle" font-weight="700">REPLAY &#183; optional</text>
   <text x="115" y="291" font-size="8.5" fill="#E7E7EE" text-anchor="middle">re-inject recovered rows</text>
-  <path d="M248 279 H 200" stroke="#A56BFF" stroke-width="1.8" fill="none" marker-end="url(#d4-p)"/>
-  <path d="M115 246 V 114" stroke="#A56BFF" stroke-width="1.8" fill="none" marker-end="url(#d4-p)"/>
+  <path d="M248 279 H 200" stroke="#A56BFF" stroke-width="1.8" fill="none" stroke-dasharray="6 4" marker-end="url(#d4-p)"/>
+  <path d="M115 246 V 114" stroke="#A56BFF" stroke-width="1.8" fill="none" stroke-dasharray="6 4" marker-end="url(#d4-p)"/>
   <text x="126" y="182" font-size="8.5" fill="#C39BFF">back into the flow</text>
 
   <text x="440" y="345" font-size="9.5" fill="#FFC978" text-anchor="middle">Replaying into partitions consumers already read is what starts the snowball backfill.</text>
@@ -1128,7 +1128,9 @@ wait_for_partition = FileSensor(
   <path d="M515 134 V 214" stroke="#A56BFF" stroke-width="1.6" fill="none" marker-end="url(#d8-p)"/>
   <path d="M625 134 V 214" stroke="#A56BFF" stroke-width="1.6" fill="none" marker-end="url(#d8-p)"/>
   <path d="M735 134 V 214" stroke="#A56BFF" stroke-width="1.6" fill="none" marker-end="url(#d8-p)"/>
-  <text x="650" y="178" font-size="9.5" fill="#C39BFF" text-anchor="middle" font-weight="700">no exchange &#183; nothing crosses the wire</text>
+  <text x="570" y="170" font-size="9" fill="#C39BFF" text-anchor="middle" font-weight="700">no exchange</text>
+  <text x="680" y="170" font-size="9" fill="#C39BFF" text-anchor="middle" font-weight="700">nothing crosses</text>
+  <text x="680" y="184" font-size="9" fill="#C39BFF" text-anchor="middle" font-weight="700">the wire</text>
 
   <rect x="468" y="214" width="94" height="44" rx="7" fill="#191921" stroke="#A56BFF" stroke-width="1.5"/>
   <text x="515" y="232" font-size="9" fill="#fff" text-anchor="middle" font-weight="700">reduce</text>
@@ -1189,8 +1191,8 @@ wait_for_partition = FileSensor(
   <path d="M212 172 H 300" stroke="#5AC8FF" stroke-width="1.8" fill="none" marker-end="url(#d9-c)"/>
   <path d="M502 150 H 560 V 106 H 620" stroke="#5AC8FF" stroke-width="1.8" fill="none" marker-end="url(#d9-c)"/>
   <text x="570" y="96" font-size="8.5" fill="#5AC8FF">closed</text>
-  <path d="M502 194 H 560 V 226 H 620" stroke="#A56BFF" stroke-width="1.8" fill="none" marker-end="url(#d9-p)"/>
-  <text x="570" y="248" font-size="8.5" fill="#C39BFF">still open</text>
+  <path d="M502 194 H 545 V 226 H 620" stroke="#A56BFF" stroke-width="1.8" fill="none" marker-end="url(#d9-p)"/>
+  <text x="552" y="241" font-size="8.5" fill="#C39BFF">still open</text>
   <path d="M618 262 V 292 H 400 V 220" stroke="#A56BFF" stroke-width="1.8" fill="none" stroke-dasharray="6 4" marker-end="url(#d9-p)"/>
   <text x="470" y="282" font-size="8.5" fill="#C39BFF" text-anchor="middle">the next run resumes them</text>
 
@@ -2067,7 +2069,8 @@ producer = Producer({
   <text x="400" y="112" font-size="9" fill="#FFC978" text-anchor="middle" font-weight="700">EVENT-TIME SLA &#183; 28 min</text>
 
   <rect x="580" y="130" width="100" height="22" rx="6" fill="#191921" stroke="#5AC8FF" stroke-width="1.8"/>
-  <text x="570" y="146" font-size="9" fill="#5AC8FF" text-anchor="end" font-weight="700">PROCESSING-TIME SLA &#183; 2 min</text>
+  <text x="630" y="146" font-size="9" fill="#5AC8FF" text-anchor="middle" font-weight="700">2 min</text>
+  <text x="570" y="146" font-size="9" fill="#5AC8FF" text-anchor="end" font-weight="700">PROCESSING-TIME SLA</text>
 
   <path d="M120 96 V 164" stroke="#FFB454" stroke-width="1" stroke-dasharray="4 3" opacity="0.7"/>
   <path d="M680 96 V 164" stroke="#FFB454" stroke-width="1" stroke-dasharray="4 3" opacity="0.7"/>
@@ -2287,7 +2290,7 @@ producer = Producer({
 </div>
 
 <figure class="diagram reveal">
-<svg viewBox="0 0 880 300" role="img" aria-label="Reconstructing state for a batch reprocessing run. The requested range covers the 10:00 and 11:00 event-time partitions, but one parcel's session started at 09:40 and ended at 11:20, so the 09:00 and 12:00 partitions must also be read to rebuild it correctly.">
+<svg viewBox="0 0 880 300" role="img" aria-label="Reconstructing state for a batch reprocessing run. The requested range covers the 10:00 and 11:00 event-time partitions, but one parcel's session started at 09:40 and ended at 11:20. The 09:00 partition must also be read because the session starts there, and the 12:00 partition must also be read to prove no further event follows, so the session really is closed.">
   <text x="440" y="26" font-size="11" fill="#E7E7EE" text-anchor="middle" letter-spacing="1.6">WHY REPROCESSING A SESSION READS MORE THAN YOU ASKED FOR</text>
 
   <text x="520" y="66" font-size="9.5" fill="#5AC8FF" text-anchor="middle" font-weight="700">REQUESTED: reprocess 10:00 &#8211; 11:00</text>
@@ -2313,13 +2316,13 @@ producer = Producer({
 
   <rect x="688" y="90" width="150" height="54" rx="8" fill="#1D1D26" stroke="#FFB454" stroke-width="2"/>
   <text x="763" y="114" font-size="9.5" fill="#FFC978" text-anchor="middle" font-weight="700">12:00</text>
-  <text x="763" y="132" font-size="8.5" fill="#E7E7EE" text-anchor="middle">the session ends here</text>
+  <text x="763" y="132" font-size="8.5" fill="#E7E7EE" text-anchor="middle">proves nothing follows</text>
 
   <text x="277" y="166" font-size="9" fill="#FFC978" text-anchor="middle">must ALSO be read</text>
   <text x="763" y="166" font-size="9" fill="#FFC978" text-anchor="middle">must ALSO be read</text>
 
-  <rect x="300" y="190" width="300" height="20" rx="6" fill="#191921" stroke="#A56BFF" stroke-width="1.8"/>
-  <text x="450" y="204" font-size="8.5" fill="#C39BFF" text-anchor="middle">one parcel's journey: 09:40 &#8594; 11:20</text>
+  <rect x="302" y="190" width="274" height="20" rx="6" fill="#191921" stroke="#A56BFF" stroke-width="1.8"/>
+  <text x="439" y="204" font-size="8.5" fill="#C39BFF" text-anchor="middle">one parcel's journey: 09:40 &#8594; 11:20</text>
 
   <text x="440" y="248" font-size="9" fill="#E7E7EE" text-anchor="middle">1 &#183; find the entities in the range &#8194; 2 &#183; walk backwards until the session rule breaks &#8194; 3 &#183; walk forwards</text>
   <text x="440" y="270" font-size="9" fill="#E7E7EE" text-anchor="middle">Event-time windows never need this. Arbitrary stateful logic always might.</text>
