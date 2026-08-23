@@ -375,7 +375,15 @@ n_errors = <span class="p">sum</span>(<span class="y">1</span> <span class="k">f
 <h2 id="generators" class="reveal"><span class="hico"><svg class="ico"><use href="#i-repeat"/></svg></span><span class="n">04.</span> Generators &amp; iterators: streaming without OOM</h2>
 <p class="reveal lead">Generators let you process a file bigger than your computer's RAM, one record at a time. This is one of the most important Python techniques you can know. It is what stops a program from crashing with an out-of-memory error.</p>
 
-<p class="reveal">A generator function is any function that contains the word <code>yield</code>. Calling it does not run the function's body right away. Instead, it returns a generator object: a lazy iterator that has not done any work yet. Each time you ask it for the next value, the function runs until it hits the next <code>yield</code>, hands back that one value, and then pauses. It remembers exactly where it stopped — its local variables and its position in the code — until you ask for the next value. Because of this, you can iterate over a 50 GB log file while only ever holding a single line in memory.</p>
+<p class="reveal">A generator function is any function that has <code>yield</code> somewhere in its body. That one keyword changes how the function behaves:</p>
+
+<ul class="reveal">
+<li><b>Calling it does nothing yet.</b> <code>read_lines("huge.log")</code> does not read the file — it just hands back a generator object, a placeholder that is ready to work but hasn't started.</li>
+<li><b>Asking for a value runs the function up to the next <code>yield</code>.</b> Each call to <code>next(gen)</code> resumes the function from wherever it last stopped, runs until it hits <code>yield</code> again, and hands back that one value.</li>
+<li><b>Then it pauses again</b>, frozen in place — local variables and all — until you ask for the next value.</li>
+</ul>
+
+<p class="reveal">Because the function never runs further than the one value you asked for, you can iterate over a 50 GB log file while only ever holding a single line in memory.</p>
 
 <div class="cb reveal"><span class="lang">python</span><pre><span class="k">def</span> <span class="p">read_lines</span>(path: <span class="y">str</span>):
     <span class="c"># opening a file is ALREADY lazy — iterating yields one line at a time</span>
@@ -388,7 +396,8 @@ first = <span class="p">next</span>(gen)               <span class="c"># now ONE
 </pre></div>
 
 <h3 class="reveal">Chaining generators into a streaming pipeline</h3>
-<p class="reveal">Because each stage is lazy, you can chain generators together into a pipeline: parse, then filter, then transform. Data flows through one record at a time, and memory use stays flat no matter how large the file is. The <code>yield from</code> keyword hands control to another generator underneath it — useful for combining many files into a single stream.</p>
+<p class="reveal">Because each stage is lazy, you can chain generators together into a pipeline: parse, then filter, then transform. Data flows through one record at a time, and memory use stays flat no matter how large the file is.</p>
+<p class="reveal">The <code>yield from</code> keyword is a shortcut for looping over another generator and re-yielding each of its values one by one. Below, <code>all_files</code> uses it to turn several separate files into what looks, from the outside, like one continuous stream of lines.</p>
 
 <div class="cb reveal"><span class="lang">python</span><pre><span class="k">import</span> json
 
@@ -412,7 +421,16 @@ pipeline = <span class="p">only_paid</span>(<span class="p">parse</span>(<span c
 </pre></div>
 
 <h3 class="reveal">Batching a stream with <code>itertools</code></h3>
-<p class="reveal">In practice you rarely insert one row at a time into a database — you batch rows together first. The <code>itertools</code> module is the standard library's toolkit for working with iterators: <code>islice</code> takes or skips items without building a list, <code>chain</code> concatenates iterables, <code>groupby</code> groups a <em>sorted</em> stream, and (on 3.12+) <code>batched</code> splits a stream into fixed-size chunks. Here is the streaming-plus-batching pattern that most data loaders are built on:</p>
+<p class="reveal">In practice you rarely insert one row at a time into a database — you batch rows together first. The <code>itertools</code> module is the standard library's toolkit for working with iterators without ever building a full list in memory:</p>
+
+<ul class="reveal">
+<li><b><code>islice</code></b> — takes or skips a fixed number of items from a stream, the way slicing works on a list.</li>
+<li><b><code>chain</code></b> — runs several iterables one after another as if they were a single stream.</li>
+<li><b><code>groupby</code></b> — groups consecutive items in a stream that share a key. It only sees neighbors, so the stream needs to be sorted by that key first.</li>
+<li><b><code>batched</code></b> (3.12+) — splits a stream into fixed-size chunks. Below is a backport for older versions.</li>
+</ul>
+
+<p class="reveal">Here is the streaming-plus-batching pattern that most data loaders are built on: <code>islice</code> peels off <code>n</code> items at a time from the stream, and each chunk is inserted before moving to the next.</p>
 
 <div class="cb reveal"><span class="lang">python</span><pre><span class="k">from</span> itertools <span class="k">import</span> islice
 
@@ -447,7 +465,12 @@ rows = <span class="p">parse</span>(<span class="p">read_lines</span>(<span clas
 
 <div class="callout rd reveal">
   <p style="margin:.2em 0"><span class="t"><svg class="ico"><use href="#i-warn"/></svg> Generator gotchas</span></p>
-  <p style="margin:.5em 0 0;font-size:14.5px;color:#CDD0DD">A generator can only be used <b>once</b>. You cannot loop over it twice, and you cannot call <code>len()</code> on it. If you need the data again, convert it to a list with <code>list(gen)</code> — but that gives up the memory savings. <code>itertools.groupby</code> only groups keys that sit next to each other, so sort the data first or the same key will get split into several separate groups. Also open the file <em>inside</em> the generator using <code>with</code> — that guarantees the file closes once the generator has been fully consumed.</p>
+  <ul class="reveal" style="margin:.5em 0 0;font-size:14.5px;color:#CDD0DD">
+    <li>A generator can only be used <b>once</b>. You cannot loop over it twice, and you cannot call <code>len()</code> on it.</li>
+    <li>Need the data again? Convert it to a list with <code>list(gen)</code> — but that gives up the memory savings that made it worth using a generator.</li>
+    <li><code>itertools.groupby</code> only groups keys that sit next to each other. Sort the data by that key first, or the same key will get split into several separate groups.</li>
+    <li>Open the file <em>inside</em> the generator using <code>with</code>, as <code>read_lines</code> does above. That guarantees the file closes once the generator has been fully consumed.</li>
+  </ul>
 </div>
 
 
