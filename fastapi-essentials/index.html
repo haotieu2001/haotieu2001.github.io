@@ -217,7 +217,7 @@
 
   <text x="440" y="234" font-size="10" fill="#E7E7EE" text-anchor="middle">cyan = outside your app  ·  blue = framework plumbing  ·  purple = code you write</text>
 </svg>
-<figcaption>The shape of every FastAPI request. Stages 03 to 06 are the parts you control; stages 01 and 02 are the network and the server process.</figcaption>
+<figcaption>The shape of every FastAPI request. Stages 01 and 02 are the network and the server process. Stages 03 and 04 are framework plumbing you configure; stages 05 and 06 are the code you write.</figcaption>
 </figure>
 
 <div class="tldr reveal">
@@ -227,7 +227,7 @@
     <li><b>Pydantic is the contract.</b> One model class describes what comes in, another describes what goes out. Anything not in the outgoing model never reaches the client - that is your accidental-password-leak insurance.</li>
     <li><b>Use <code>async def</code> only when the body awaits something.</b> A blocking call inside <code>async def</code> freezes every other request on that worker. That single mistake causes most "FastAPI is slow" reports.</li>
     <li><b><code>Depends()</code> is the seam.</b> Database sessions, the current user, settings and feature flags all arrive as arguments, so tests can swap them out with one line.</li>
-    <li><b>Postgres talks to you through a connection pool.</b> One session per request, opened by a dependency, always closed - even when the handler raises.</li>
+    <li><b>You talk to Postgres through a connection pool.</b> One session per request, opened by a dependency, always closed - even when the handler raises.</li>
     <li><b>Deployment is boring on purpose:</b> one container image, many identical tasks behind a load balancer, a managed database next to them, and secrets injected at start-up rather than baked into the image.</li>
   </ul>
 </div>
@@ -258,7 +258,7 @@
 </div>
 
 <h2 id="why" class="reveal"><span class="hico"><svg class="ico"><use href="#i-rocket"/></svg></span><span class="n">01.</span> <span>What FastAPI is, and why it caught on</span></h2>
-<p class="reveal lead">FastAPI is a Python library for building HTTP APIs. Its one big idea: the type hints you already write are enough information to build the whole request layer automatically.</p>
+<p class="reveal lead">FastAPI is a Python framework for building HTTP APIs. Its one big idea: the type hints you already write are enough information to build the whole request layer automatically.</p>
 
 <p class="reveal">An API is a program other programs talk to over HTTP. A phone app asks for a list of orders, a React page submits a form, another service checks whether a user exists. Each of those is an HTTP request with a method (<code>GET</code>, <code>POST</code>, <code>PUT</code>, <code>DELETE</code>), a path (<code>/orders/42</code>), sometimes a body of JSON, and a response with a status code and JSON back.</p>
 
@@ -295,7 +295,7 @@ app <span class="o">=</span> FastAPI()
 <tr><td><b>Litestar</b></td><td>Very close to FastAPI</td><td>Built in</td><td>Native ASGI</td><td>Same use cases; smaller community</td></tr>
 </table></div>
 
-<p class="reveal">Two words worth defining before we go further, because they show up constantly.</p>
+<p class="reveal">Two terms are worth defining before we go further, because they show up constantly.</p>
 
 <div class="gloss reveal">
   <h4><svg class="ico"><use href="#i-book"/></svg> Two terms you need up front</h4>
@@ -361,7 +361,7 @@ app <span class="o">=</span> FastAPI(title<span class="o">=</span><span class="g
 </div>
 
 <h2 id="params" class="reveal"><span class="hico"><svg class="ico"><use href="#i-plug"/></svg></span><span class="n">03.</span> <span>Path, query and body parameters</span></h2>
-<p class="reveal lead">There are only three places data can arrive from, plus headers and cookies. FastAPI decides which is which by a simple rule you can hold in your head.</p>
+<p class="reveal lead">Data reaches your function from five places: the path, the query string, the body, the headers and the cookies. The first three cover almost everything, and FastAPI tells them apart with a simple rule you can hold in your head.</p>
 
 <p class="reveal">The rule, in order:</p>
 
@@ -408,7 +408,7 @@ app <span class="o">=</span> FastAPI()
 
 <h3 class="reveal">Why <code>Annotated</code> instead of a default value</h3>
 
-<p class="reveal">You will see both styles in tutorials. <code>q: str = Query(max_length=50)</code> works, but it puts a FastAPI object where Python expects a default value, which confuses type checkers and makes the function awkward to call directly from a test. <code>q: Annotated[str, Query(max_length=50)] = "x"</code> keeps the default in the normal place and the metadata in the annotation. <b>Prefer <code>Annotated</code> in new code</b> - it is the documented style and it composes with the dependency system in <a href="#depends">§6</a>.</p>
+<p class="reveal">You will see both styles in tutorials. <code>q: str = Query(max_length=50)</code> works, but it puts a FastAPI object where Python expects a default value, which confuses type checkers and makes the function awkward to call directly from a test. <code>q: Annotated[str, Query(max_length=50)] = "x"</code> keeps the default in the normal place and the metadata in the annotation. <b>Prefer <code>Annotated</code> in new code</b> - it is the documented style and it composes with the dependency system in <a href="#depends">§06</a>.</p>
 
 <h3 class="reveal">Required, optional, and nullable are three different things</h3>
 
@@ -420,12 +420,12 @@ app <span class="o">=</span> FastAPI()
 <tr><td><code>q: str | None</code></td><td>Yes, but may be <code>null</code></td><td>Yes</td></tr>
 </table></div>
 
-<p class="reveal">The last row surprises people. Writing <code>| None</code> does not make a field optional; leaving off the default is what makes it required. They are separate switches.</p>
+<p class="reveal">The last row surprises people. These are two independent switches. <code>| None</code> only says the value is allowed to be <code>null</code>. Giving the field a default is what makes it optional. With no default, the client must send the field - even if the only thing it is allowed to send is <code>null</code>.</p>
 
 <h2 id="pydantic" class="reveal"><span class="hico"><svg class="ico"><use href="#i-shield"/></svg></span><span class="n">04.</span> <span>Pydantic: the validation layer</span></h2>
 <p class="reveal lead">Pydantic turns a class definition into a parser, a validator, a serialiser and a JSON Schema document. It is the piece doing most of the work, so it is worth understanding on its own.</p>
 
-<p class="reveal">A Pydantic model looks like a dataclass but behaves very differently: creating one <em>runs</em> the type annotations rather than ignoring them.</p>
+<p class="reveal">A Pydantic model looks like a dataclass, but it behaves very differently. A dataclass ignores its type annotations at runtime: write <code>age: int</code> and it will happily store the string <code>"twelve"</code>. Pydantic <em>enforces</em> them - it checks every value on the way in, converts it where conversion is safe, and raises a precise error where it is not.</p>
 
 <div class="cb reveal"><span class="lang">python</span><pre><span class="k">from</span> datetime <span class="k">import</span> datetime
 <span class="k">from</span> decimal <span class="k">import</span> Decimal
@@ -502,7 +502,7 @@ app <span class="o">=</span> FastAPI()
 </div>
 
 <h2 id="async" class="reveal"><span class="hico"><svg class="ico"><use href="#i-zap"/></svg></span><span class="n">05.</span> <span>async def vs def, and the event loop</span></h2>
-<p class="reveal lead">This is the one section where a wrong choice quietly destroys your performance. The rule is short, but you need the picture underneath it to remember which way round it goes.</p>
+<p class="reveal lead">This is the one section where a wrong choice quietly destroys your performance. The rule itself is one sentence long. The picture underneath it is what makes the rule stick, so start there.</p>
 
 <h3 class="reveal">What the event loop actually does</h3>
 
@@ -579,7 +579,7 @@ app <span class="o">=</span> FastAPI()
 
 <div class="cb reveal"><span class="lang">python</span><pre><span class="c"># CORRECT: async all the way down</span>
 <span class="o">@</span>app.get(<span class="g">"/orders/{oid}"</span>)
-<span class="k">async</span> <span class="k">def</span> <span class="p">read_order</span>(oid: <span class="p">int</span>, db: AsyncSession <span class="o">=</span> Depends(get_db)):
+<span class="k">async</span> <span class="k">def</span> <span class="p">read_order</span>(oid: <span class="p">int</span>, db: Annotated[AsyncSession, Depends(get_db)]):
     row <span class="o">=</span> <span class="k">await</span> db.get(Order, oid)          <span class="c"># async driver, awaited</span>
     <span class="k">return</span> row
 
@@ -595,7 +595,7 @@ app <span class="o">=</span> FastAPI()
 
 <span class="c"># FIXED, option 1: use an async HTTP client</span>
 <span class="o">@</span>app.get(<span class="g">"/rates"</span>)
-<span class="k">async</span> <span class="k">def</span> <span class="p">rates</span>(client: httpx.AsyncClient <span class="o">=</span> Depends(get_client)):
+<span class="k">async</span> <span class="k">def</span> <span class="p">rates</span>(client: Annotated[httpx.AsyncClient, Depends(get_client)]):
     r <span class="o">=</span> <span class="k">await</span> client.get(<span class="g">"https://api.example.com/rates"</span>)
     <span class="k">return</span> r.json()
 
@@ -609,7 +609,7 @@ app <span class="o">=</span> FastAPI()
 
 <h3 class="reveal">Doing several waits at once</h3>
 
-<p class="reveal">Once a handler is <code>async</code>, you get concurrency <em>inside</em> a single request almost for free. Three independent calls that each take 100 ms take 300 ms in sequence and 100 ms together:</p>
+<p class="reveal">Once a handler is <code>async</code>, you get concurrency <em>inside</em> a single request almost for free. Three independent calls that each take 100 ms take 300 ms in sequence and 100 ms together. (<code>DbSession</code> and <code>HttpClient</code> below are short names for arguments the framework fills in; <a href="#depends">§06</a> shows how they are made.)</p>
 
 <div class="cb reveal"><span class="lang">python</span><pre><span class="k">import</span> asyncio
 
@@ -630,7 +630,7 @@ app <span class="o">=</span> FastAPI()
 
 <h3 class="reveal">How many processes to run</h3>
 
-<p class="reveal">One Uvicorn process uses one CPU core, because of Python's global interpreter lock. To use a whole machine you run several processes, each with its own event loop, behind a single port. In containers the usual answer is <b>one process per container</b> and let the orchestrator scale containers - it keeps memory accounting, health checks and rolling deploys simple. The rough starting point when you do run several in one box is <code>workers = (2 × cores) + 1</code>, then measure.</p>
+<p class="reveal">One Uvicorn process uses one CPU core, because of Python's global interpreter lock. To use a whole machine you run several processes, each with its own event loop, behind a single port. In containers the usual answer is <b>one process per container</b> and let the orchestrator scale containers - it keeps memory accounting, health checks and rolling deploys simple. If you do run several processes in one box, start at one worker per core, then measure and adjust. The <code>(2 × cores) + 1</code> formula you will see quoted comes from Gunicorn's <em>synchronous</em> workers, where each worker blocks on a single request; it over-subscribes an async one and multiplies your database connections for nothing.</p>
 
 <h2 id="depends" class="reveal"><span class="hico"><svg class="ico"><use href="#i-blocks"/></svg></span><span class="n">06.</span> <span>Dependency injection with Depends</span></h2>
 <p class="reveal lead">A dependency is just a function whose result FastAPI computes and hands to your handler as an argument. That small idea is what keeps a growing codebase from turning into copy-pasted boilerplate.</p>
@@ -745,7 +745,7 @@ app.dependency_overrides[get_current_user] <span class="o">=</span> lambda: User
 <span class="c"># ... run tests ...</span>
 app.dependency_overrides.clear()</pre></div>
 
-<p class="reveal">This is the practical reason to route <em>all</em> shared state through dependencies, including things that feel too small to bother with, like "what time is it now". The day you need to test the month-end job, you will be glad the clock was injectable.</p>
+<p class="reveal">This is the practical reason to route <em>all</em> shared state through dependencies, even things that feel too small to bother with - the current time, for instance. The day you write a test for the code that runs on the last day of the month, you will be glad you can hand it a fake clock instead of waiting for the calendar.</p>
 
 <h2 id="errors" class="reveal"><span class="hico"><svg class="ico"><use href="#i-alert"/></svg></span><span class="n">07.</span> <span>Errors, status codes and handlers</span></h2>
 <p class="reveal lead">An API is judged by its error responses as much as its happy path. The goal is one predictable JSON shape for every failure, so the frontend has exactly one thing to handle.</p>
@@ -792,8 +792,10 @@ app.dependency_overrides.clear()</pre></div>
 
 <div class="cb reveal"><span class="lang">python</span><pre><span class="k">import</span> logging, uuid
 <span class="k">from</span> fastapi <span class="k">import</span> Request
+<span class="k">from</span> fastapi.encoders <span class="k">import</span> jsonable_encoder
 <span class="k">from</span> fastapi.responses <span class="k">import</span> JSONResponse
 <span class="k">from</span> fastapi.exceptions <span class="k">import</span> RequestValidationError
+<span class="k">from</span> starlette.exceptions <span class="k">import</span> HTTPException <span class="k">as</span> StarletteHTTPException
 
 log <span class="o">=</span> logging.getLogger(<span class="g">"api"</span>)
 
@@ -805,9 +807,14 @@ log <span class="o">=</span> logging.getLogger(<span class="g">"api"</span>)
     )
 
 
-<span class="o">@</span>app.exception_handler(HTTPException)
-<span class="k">async</span> <span class="k">def</span> <span class="p">on_http_error</span>(request: Request, exc: HTTPException):
-    <span class="k">return</span> problem(exc.status_code, <span class="g">"http_error"</span>, <span class="p">str</span>(exc.detail))
+<span class="c"># Register on Starlette's class, not fastapi.HTTPException. Starlette's is</span>
+<span class="c"># the parent, and it is what gets raised for an unmatched route (404) or a</span>
+<span class="c"># wrong method (405) - so this is what makes EVERY failure share one shape.</span>
+<span class="o">@</span>app.exception_handler(StarletteHTTPException)
+<span class="k">async</span> <span class="k">def</span> <span class="p">on_http_error</span>(request: Request, exc: StarletteHTTPException):
+    response <span class="o">=</span> problem(exc.status_code, <span class="g">"http_error"</span>, <span class="p">str</span>(exc.detail))
+    response.headers.update(exc.headers <span class="k">or</span> {})   <span class="c"># keep WWW-Authenticate</span>
+    <span class="k">return</span> response
 
 
 <span class="o">@</span>app.exception_handler(RequestValidationError)
@@ -901,7 +908,7 @@ log <span class="o">=</span> logging.getLogger(<span class="g">"api"</span>)
 
 <h3 class="reveal">Lifespan: start-up and shutdown</h3>
 
-<p class="reveal">Things that must exist for the whole life of the process - a connection pool, an HTTP client, a cache client - belong in the lifespan context manager, not at import time. Anything created at import time also gets created when a test or an Alembic script imports the module, which is rarely what you want.</p>
+<p class="reveal">Anything that <em>opens</em> a resource the moment it is created - an HTTP client, a cache client, a queue consumer - belongs in the lifespan context manager, not at import time. A thing opened at import time is also opened when a test or an Alembic script merely imports the module, which is rarely what you want. The SQLAlchemy engine in <a href="#db1">§09</a> is the safe exception: creating it opens no connections at all, because the pool fills lazily on the first query. Its <em>shutdown</em> still belongs here, which is why <code>engine.dispose()</code> appears below.</p>
 
 <div class="cb reveal"><span class="lang">python</span><pre><span class="c"># app/main.py</span>
 <span class="k">from</span> contextlib <span class="k">import</span> asynccontextmanager
@@ -992,7 +999,7 @@ app <span class="o">=</span> create_app()</pre></div>
     <text x="720" y="118">max_connections = 100</text>
     <text x="720" y="142">one OS process per connection</text>
     <text x="720" y="166">roughly 10 MB of RAM each</text>
-    <text x="720" y="200">4 workers x 15 max = 60 used</text>
+    <text x="720" y="200">4 tasks × 15 max = 60 used</text>
     <text x="720" y="224">40 left for migrations and admins</text>
   </g>
 
@@ -1003,7 +1010,7 @@ app <span class="o">=</span> create_app()</pre></div>
   <line x1="514" y1="160" x2="574" y2="160" stroke="#5AC8FF" stroke-width="1.8" marker-end="url(#pool-c)"/>
   <text x="544" y="148" font-size="9.5" fill="#E7E7EE" text-anchor="middle">TCP</text>
 
-  <text x="440" y="288" font-size="10.5" fill="#E7E7EE" text-anchor="middle">If all 15 are busy, the next request waits up to pool_timeout seconds, then fails with a pool-timeout error</text>
+  <text x="440" y="288" font-size="10.5" fill="#E7E7EE" text-anchor="middle">Once the 5 pooled and 10 overflow connections are all busy, the next request waits pool_timeout seconds, then fails</text>
 </svg>
 <figcaption>Connections are the scarce resource, not CPU. Size the pool so that <em>every replica added together</em> stays under the database's <code>max_connections</code>, with headroom left for migrations and human operators.</figcaption>
 </figure>
@@ -1053,7 +1060,9 @@ SessionLocal <span class="o">=</span> async_sessionmaker(
             <span class="k">await</span> session.rollback()    <span class="c"># anything raised -&gt; undo everything</span>
             <span class="k">raise</span></pre></div>
 
-<p class="reveal">Two settings deserve a note. <code>pool_pre_ping=True</code> costs one tiny round trip but saves you from the classic "server closed the connection unexpectedly" that happens when a load balancer or the database silently drops an idle connection - very common on AWS RDS. <code>expire_on_commit=False</code> means the objects you loaded stay usable after the commit; without it, touching <code>order.id</code> after committing triggers a fresh query, which then fails because the session is closing.</p>
+<p class="reveal">Two settings deserve a note. <code>pool_pre_ping=True</code> tests a pooled connection with a tiny query before handing it out. It costs one extra round trip. It saves you from the error "server closed the connection unexpectedly", which happens when a load balancer or the database quietly drops a connection that has sat idle - very common on AWS RDS.</p>
+
+<p class="reveal"><code>expire_on_commit=False</code> keeps the objects you loaded usable after the commit. Without it, reading <code>order.id</code> after committing makes SQLAlchemy fire a fresh query to refresh the row, and that query fails, because the session is already closing.</p>
 
 <div class="callout mg reveal">
   <p style="margin:.2em 0"><span class="t"><svg class="ico"><use href="#i-check"/></svg> Commit in the dependency, not in the handler</span></p>
@@ -1105,7 +1114,7 @@ SessionLocal <span class="o">=</span> async_sessionmaker(
 
 <h3 class="reveal">Two model families, on purpose</h3>
 
-<p class="reveal">You now have <code>Order</code> in <code>models/</code> (a table row) and <code>OrderOut</code> in <code>schemas/</code> (a JSON document). Duplicating the field names feels wasteful for about a week, and then you rename a column, or add an internal <code>risk_score</code>, and you understand why they are separate. The bridge between them is one line:</p>
+<p class="reveal">You now have two <code>Order</code>-shaped classes: the SQLAlchemy <code>Order</code> in <code>models/</code> is a table row, and the Pydantic <code>OrderOut</code> from <a href="#pydantic">§04</a> is a JSON document. The bridge between them is one line:</p>
 
 <div class="cb reveal"><span class="lang">python</span><pre><span class="k">class</span> <span class="p">OrderOut</span>(<span class="p">BaseModel</span>):
     model_config <span class="o">=</span> ConfigDict(from_attributes<span class="o">=</span><span class="k">True</span>)
@@ -1124,7 +1133,7 @@ SessionLocal <span class="o">=</span> async_sessionmaker(
 <div class="cb reveal"><span class="lang">python</span><pre><span class="k">from</span> sqlalchemy <span class="k">import</span> select, func, update, delete
 <span class="k">from</span> sqlalchemy.orm <span class="k">import</span> selectinload
 
-<span class="c"># one row by primary key - checks the session's identity map first</span>
+<span class="c"># one row by primary key - free if this session already loaded it</span>
 order <span class="o">=</span> <span class="k">await</span> db.get(Order, order_id)
 
 <span class="c"># one row by any condition; None if there is no match</span>
@@ -1194,8 +1203,11 @@ customers <span class="o">=</span> (<span class="k">await</span> db.execute(stmt
         ts, last_id <span class="o">=</span> decode_cursor(after)
         <span class="c"># row-value comparison - one index seek, not a scan</span>
         stmt <span class="o">=</span> stmt.where(tuple_(Order.created_at, Order.id) &lt; (ts, last_id))
-    rows <span class="o">=</span> (<span class="k">await</span> db.execute(stmt.limit(<span class="p">min</span>(limit, 200)))).scalars().all()
-    next_cursor <span class="o">=</span> encode_cursor(rows[-1]) <span class="k">if</span> <span class="p">len</span>(rows) <span class="o">==</span> limit <span class="k">else</span> <span class="k">None</span>
+    capped <span class="o">=</span> <span class="p">min</span>(limit, 200)
+    rows <span class="o">=</span> (<span class="k">await</span> db.execute(stmt.limit(capped))).scalars().all()
+    <span class="c"># compare against `capped`, not `limit`: a client asking for 500 would</span>
+    <span class="c"># otherwise get 200 rows, no cursor, and pagination ending after one page</span>
+    next_cursor <span class="o">=</span> encode_cursor(rows[-1]) <span class="k">if</span> <span class="p">len</span>(rows) <span class="o">==</span> capped <span class="k">else</span> <span class="k">None</span>
     <span class="k">return</span> {<span class="g">"items"</span>: rows, <span class="g">"next"</span>: next_cursor}</pre></div>
 
 <p class="reveal">Note <code>min(limit, 200)</code>. Always cap a client-supplied limit. Otherwise the first curious person to send <code>?limit=999999999</code> takes your service down for everybody.</p>
@@ -1271,6 +1283,8 @@ OrderRepo <span class="o">=</span> Annotated[OrderRepository, Depends(order_repo
         <span class="k">raise</span> HTTPException(404, <span class="g">"Order not found"</span>)
     <span class="k">return</span> order</pre></div>
 
+<p class="reveal">Later sections call three more methods on this repository: <code>create</code>, <code>delete</code>, and <code>get_for_customer</code>, which is <code>get</code> with the customer id added to the <code>WHERE</code> clause. They all follow the same shape as the two above, so they are not written out again each time.</p>
+
 <h2 id="alembic" class="reveal"><span class="hico"><svg class="ico"><use href="#i-repeat"/></svg></span><span class="n">11.</span> <span>Alembic: changing the schema safely</span></h2>
 <p class="reveal lead">Your models describe the tables you want. Alembic is the tool that gets an existing database from the shape it has to the shape you want, one reviewable step at a time.</p>
 
@@ -1305,7 +1319,7 @@ config.set_main_option(<span class="g">"sqlalchemy.url"</span>, <span class="p">
 
 <h3 class="reveal">Adding a required column without downtime</h3>
 
-<p class="reveal">Adding a <code>NOT NULL</code> column with no default to a live table fails, because existing rows have nothing to put in it. The safe recipe is three deploys, and it is worth learning once because you will use it constantly:</p>
+<p class="reveal">Adding a <code>NOT NULL</code> column with no default to a live table fails, because existing rows have nothing to put in it. The safe recipe is three steps spread over two deploys, and it is worth learning once because you will use it constantly:</p>
 
 <div class="step reveal"><div class="num-bubble">1</div><div class="body"><b>Deploy 1 - add it nullable.</b> <code>ALTER TABLE orders ADD COLUMN currency VARCHAR(3)</code>. Existing rows get <code>NULL</code>; nothing breaks. Ship application code that <em>writes</em> the new column but does not require it.</div></div>
 <div class="step reveal"><div class="num-bubble">2</div><div class="body"><b>Backfill in batches.</b> A single <code>UPDATE</code> over 50 million rows locks the table for minutes. Loop in chunks of a few thousand with a commit between them, so other queries keep flowing.</div></div>
@@ -1315,15 +1329,18 @@ config.set_main_option(<span class="g">"sqlalchemy.url"</span>, <span class="p">
 <span class="k">def</span> <span class="p">upgrade</span>() -&gt; <span class="k">None</span>:
     op.add_column(<span class="g">"orders"</span>, sa.Column(<span class="g">"currency"</span>, sa.String(3), nullable<span class="o">=</span><span class="k">True</span>))
 
-    <span class="c"># batched backfill - never one giant UPDATE on a big table</span>
-    conn <span class="o">=</span> op.get_bind()
-    <span class="k">while</span> <span class="k">True</span>:
-        result <span class="o">=</span> conn.execute(sa.text(<span class="g">"""
-            UPDATE orders SET currency = 'USD'
-            WHERE id IN (SELECT id FROM orders WHERE currency IS NULL LIMIT 5000)
-        """</span>))
-        <span class="k">if</span> result.rowcount <span class="o">==</span> 0:
-            <span class="k">break</span>
+    <span class="c"># Alembic wraps a migration in ONE transaction, so without an autocommit</span>
+    <span class="c"># block every chunk just piles up row locks until the very end and the</span>
+    <span class="c"># batching buys nothing. This commits each chunk and releases its locks.</span>
+    <span class="k">with</span> op.get_context().autocommit_block():
+        conn <span class="o">=</span> op.get_bind()
+        <span class="k">while</span> <span class="k">True</span>:
+            result <span class="o">=</span> conn.execute(sa.text(<span class="g">"""
+                UPDATE orders SET currency = 'USD'
+                WHERE id IN (SELECT id FROM orders WHERE currency IS NULL LIMIT 5000)
+            """</span>))
+            <span class="k">if</span> result.rowcount <span class="o">==</span> 0:
+                <span class="k">break</span>
 
 
 <span class="k">def</span> <span class="p">downgrade</span>() -&gt; <span class="k">None</span>:
@@ -1351,7 +1368,7 @@ config.set_main_option(<span class="g">"sqlalchemy.url"</span>, <span class="p">
   typ: JWT                exp: 1735689600 when it dies    header.payload
                           role: "admin"  what it may do   using your secret</pre></div>
 
-<p class="reveal">The big trade-off: because verification is pure arithmetic, <b>no database call is needed to check a token</b>. That is what makes JWTs so good for microservices - any service with the public key can validate a caller. The cost is that you cannot un-issue one. A token stays valid until it expires, so keep access tokens short (15-30 minutes) and pair them with a refresh token you <em>can</em> revoke, because that one is checked against a table.</p>
+<p class="reveal">The big trade-off: because verification is pure arithmetic, <b>no database call is needed to check a token</b>. That is what makes JWTs so good for microservices - any service holding the verification key can validate a caller. Note that with <code>HS256</code>, used below, that key is the same shared secret used to sign, so any service that can verify can also mint tokens; once more than one service is involved, move to <code>RS256</code> and hand out only the public half. The cost is that you cannot un-issue one. A token stays valid until it expires, so keep access tokens short (15-30 minutes) and pair them with a refresh token you <em>can</em> revoke, because that one is checked against a table.</p>
 
 <figure class="fig reveal">
 <svg viewBox="0 0 880 378" width="100%" font-family="ui-monospace,monospace" role="img" aria-label="Sequence diagram: the browser posts credentials, the API looks the user up in PostgreSQL, verifies the password hash and signs a JWT; later requests carry that token and are verified without any database call">
@@ -1491,9 +1508,14 @@ AdminUser <span class="o">=</span> Annotated[User, Depends(require_admin)]</pre>
     stmt <span class="o">=</span> select(User).where(User.email <span class="o">==</span> form.username)
     user <span class="o">=</span> (<span class="k">await</span> db.execute(stmt)).scalar_one_or_none()
 
-    <span class="c"># verify even when the user is missing, so the timing does not leak</span>
-    <span class="c"># whether the email exists. One message for both failure modes.</span>
-    <span class="k">if</span> user <span class="k">is</span> <span class="k">None</span> <span class="k">or</span> <span class="k">not</span> verify_password(form.password, user.password_hash):
+    <span class="c"># `or` short-circuits: writing `user is None or not verify_password(...)`</span>
+    <span class="c"># would skip the bcrypt work for an unknown email, and the faster reply</span>
+    <span class="c"># would reveal that the address is not registered. Always do the same</span>
+    <span class="c"># work, then decide. DUMMY_HASH = hash_password("*"), computed at import.</span>
+    ok <span class="o">=</span> verify_password(
+        form.password, user.password_hash <span class="k">if</span> user <span class="k">else</span> DUMMY_HASH
+    )
+    <span class="k">if</span> user <span class="k">is</span> <span class="k">None</span> <span class="k">or</span> <span class="k">not</span> ok:
         <span class="k">raise</span> HTTPException(401, <span class="g">"Incorrect email or password"</span>)
 
     token <span class="o">=</span> create_access_token(
@@ -1564,7 +1586,7 @@ AdminUser <span class="o">=</span> Annotated[User, Depends(require_admin)]</pre>
     })
     <span class="k">return</span> response</pre></div>
 
-<p class="reveal">Middleware runs in the reverse order it is added: the last one added is the outermost wrapper. That matters when a logging middleware needs to see the response that an error-handling middleware produced.</p>
+<p class="reveal">Middleware nests, and the <em>last</em> one you add ends up on the outside. So on the way in, the last-added runs first; on the way out, it runs last. That matters when a logging middleware needs to see the response an error-handling middleware produced: add the logger last, so it wraps the error handler.</p>
 
 <h3 class="reveal">CORS, explained properly</h3>
 
@@ -1736,7 +1758,7 @@ TEST_URL <span class="o">=</span> <span class="g">"postgresql+asyncpg://test:tes
 
   <rect x="366" y="190" width="148" height="58" rx="10" fill="#251a3a" stroke="#A56BFF" stroke-width="1.5"/>
   <text x="440" y="214" font-size="10.5" fill="#C79BFF" text-anchor="middle" font-weight="700">apiFetch()</text>
-  <text x="440" y="232" font-size="8.5" fill="#E7E7EE" text-anchor="middle">attaches the token</text>
+  <text x="440" y="232" font-size="8.5" fill="#E7E7EE" text-anchor="middle">sends the credentials</text>
 
   <rect x="539" y="190" width="148" height="58" rx="10" fill="#1a1f3d" stroke="#5C78FF" stroke-width="1.5"/>
   <text x="613" y="214" font-size="10.5" fill="#8AA4FF" text-anchor="middle" font-weight="700">FastAPI</text>
@@ -1757,6 +1779,8 @@ TEST_URL <span class="o">=</span> <span class="g">"postgresql+asyncpg://test:tes
 <figcaption>The dashed line is the part teams skip and regret. Generating types from <code>/openapi.json</code> turns "the API changed and nobody told us" into a compile error.</figcaption>
 </figure>
 
+<p class="reveal">Three names in the commands below, if they are new. <b>Vite</b> is the build tool that bundles a React project and serves it while you develop, the way <code>uvicorn</code> serves the API. <code>npm</code> is Node's package installer. <code>npx</code> runs a package once without installing it.</p>
+
 <div class="cb reveal"><span class="lang">bash</span><pre><span class="k">npm</span> create vite@latest web -- --template react-ts
 <span class="k">cd</span> web
 <span class="k">npm</span> install @tanstack/react-query
@@ -1767,7 +1791,7 @@ TEST_URL <span class="o">=</span> <span class="g">"postgresql+asyncpg://test:tes
 
 <h3 class="reveal">One small API client, and nothing else</h3>
 
-<p class="reveal">Resist the urge to install a heavyweight HTTP wrapper. Thirty lines around <code>fetch</code> gives you the base URL, the token, JSON parsing and consistent errors - and you can read all of it.</p>
+<p class="reveal">Resist the urge to install a heavyweight HTTP wrapper. Thirty lines around <code>fetch</code> give you the base URL, the credentials, JSON parsing and one consistent error type - and you can read all of it in one sitting.</p>
 
 <div class="cb reveal"><span class="lang">typescript</span><pre><span class="c">// src/api/client.ts</span>
 <span class="k">import</span> type { paths } <span class="k">from</span> <span class="g">"./types.gen"</span>;
@@ -1855,7 +1879,7 @@ TEST_URL <span class="o">=</span> <span class="g">"postgresql+asyncpg://test:tes
 
 <div class="tablewrap reveal"><table>
 <tr><th>Location</th><th>Readable by injected JavaScript?</th><th>Survives a refresh?</th><th>Verdict</th></tr>
-<tr><td><code>localStorage</code></td><td>Yes - one XSS and the token is gone</td><td>Yes</td><td>Common, and the weakest option</td></tr>
+<tr><td><code>localStorage</code></td><td>Yes - any injected script reads it (an XSS attack)</td><td>Yes</td><td>Common, and the weakest option</td></tr>
 <tr><td>A React variable</td><td>Only while the tab is open</td><td>No - user is logged out on reload</td><td>Safe, but annoying on its own</td></tr>
 <tr><td><b><code>httpOnly</code> cookie</b></td><td><b>No - JavaScript cannot read it</b></td><td>Yes</td><td><b>Preferred.</b> Needs CSRF care</td></tr>
 </table></div>
@@ -1875,7 +1899,9 @@ TEST_URL <span class="o">=</span> <span class="g">"postgresql+asyncpg://test:tes
     )
     <span class="k">return</span> {<span class="g">"ok"</span>: <span class="k">True</span>}</pre></div>
 
-<p class="reveal">With cookies, the frontend sends <code>credentials: "include"</code> and the backend needs <code>allow_credentials=True</code> plus a real origin list. <code>SameSite=Lax</code> covers the common CSRF cases; if you have cross-site form posts, add a CSRF token as well.</p>
+<p class="reveal">This cookie replaces the <code>Authorization: Bearer</code> header used in <a href="#auth">§12</a>. It is the same JWT either way - the only question is who holds it. A browser should use the cookie, because it is the one place injected JavaScript cannot reach. A mobile app, a background service or a <code>curl</code> command has no browser to protect and no cookie jar, so it keeps sending the header. Your <code>get_current_user</code> dependency can read from whichever is present.</p>
+
+<p class="reveal">With cookies, the frontend sends <code>credentials: "include"</code> and the backend needs <code>allow_credentials=True</code> plus a real origin list. <code>SameSite=Lax</code> covers the common CSRF cases; if you have cross-site form posts, add a CSRF token as well. <b>CSRF</b> - cross-site request forgery - is the attack where some other website makes your logged-in browser fire a request at your API; because the browser attaches the cookie automatically, the request arrives looking genuine.</p>
 
 <h3 class="reveal">Two dev-time conveniences worth setting up</h3>
 
@@ -1891,14 +1917,14 @@ TEST_URL <span class="o">=</span> <span class="g">"postgresql+asyncpg://test:tes
 <p class="reveal">And keep configuration in <code>.env</code> files rather than in code. Vite only exposes variables prefixed with <code>VITE_</code>, and they are baked into the bundle at build time, so they are visible to anyone - <b>never put a secret in one</b>. An API base URL is fine; an API key is not.</p>
 
 <h2 id="docker" class="reveal"><span class="hico"><svg class="ico"><use href="#i-whale"/></svg></span><span class="n">16.</span> <span>Docker and the local full stack</span></h2>
-<p class="reveal lead">The goal is one command that gives a new teammate a working database, API and frontend, and an image that runs identically on their laptop and in production.</p>
+<p class="reveal lead">Two goals. One command that gives a new teammate a working database, API and frontend. And one image, built the same way every time, that runs in production and can be run on a laptop to reproduce a bug.</p>
 
 <div class="cb reveal"><span class="lang">dockerfile</span><pre><span class="c"># Dockerfile - multi-stage keeps the final image small and free of build tools</span>
 FROM python:3.12-slim AS builder
 WORKDIR /app
 RUN pip install --no-cache-dir uv
 COPY pyproject.toml uv.lock ./
-RUN uv export --no-dev --format requirements-txt &gt; req.txt \
+RUN uv export --no-dev --no-emit-project --format requirements-txt &gt; req.txt \
  &amp;&amp; pip install --no-cache-dir --prefix=/install -r req.txt
 
 FROM python:3.12-slim AS runtime
@@ -1948,7 +1974,9 @@ services:
     image: node:22-alpine
     working_dir: /web
     environment:
-      VITE_API_URL: http://localhost:8000
+      <span class="c"># empty on purpose: the browser calls /api on its own origin and Vite</span>
+      <span class="c"># proxies it to the api service, so there is no CORS in development</span>
+      VITE_API_URL: ""
     ports: ["5173:5173"]
     volumes: ["./web:/web"]
     command: sh -c "npm install &amp;&amp; npm run dev -- --host"
@@ -2122,7 +2150,7 @@ compensate      order.cancelled  ←  payment.refunded  ←  ──────�
 <span class="o">@</span>app.middleware(<span class="g">"http"</span>)
 <span class="k">async</span> <span class="k">def</span> <span class="p">correlation</span>(request: Request, call_next):
     cid <span class="o">=</span> request.headers.get(<span class="g">"x-correlation-id"</span>) <span class="k">or</span> <span class="p">str</span>(uuid.uuid4())
-    correlation_id.set(cid)               <span class="c"># a contextvar the logger reads</span>
+    correlation_id.set(cid)               <span class="c"># a per-request variable the logger reads</span>
     response <span class="o">=</span> <span class="k">await</span> call_next(request)
     response.headers[<span class="g">"x-correlation-id"</span>] <span class="o">=</span> cid
     <span class="k">return</span> response</pre></div>
@@ -2167,14 +2195,14 @@ compensate      order.cancelled  ←  payment.refunded  ←  ──────�
   <line x1="162" y1="78" x2="186" y2="78" stroke="#5AC8FF" stroke-width="1.6" marker-end="url(#aws-c)"/>
   <line x1="322" y1="78" x2="346" y2="78" stroke="#5AC8FF" stroke-width="1.6" marker-end="url(#aws-c)"/>
   <line x1="502" y1="78" x2="526" y2="78" stroke="#5AC8FF" stroke-width="1.6" marker-end="url(#aws-c)"/>
-  <text x="514" y="42" font-size="8.5" fill="#E7E7EE" text-anchor="middle">/*</text>
+  <text x="514" y="68" font-size="8.5" fill="#E7E7EE" text-anchor="middle">/*</text>
 
   <!-- VPC -->
   <rect x="20" y="140" width="700" height="282" rx="12" fill="none" stroke="#5C78FF" stroke-width="1.6" stroke-dasharray="7 5"/>
   <text x="32" y="158" font-size="10" fill="#8AA4FF" font-weight="700">VPC 10.0.0.0/16</text>
 
-  <path d="M425 106 V178" fill="none" stroke="#5AC8FF" stroke-width="1.8" marker-end="url(#aws-c)"/>
-  <text x="433" y="132" font-size="9" fill="#5AC8FF">/api/*</text>
+  <path d="M425 106 V182" fill="none" stroke="#5AC8FF" stroke-width="1.8" marker-end="url(#aws-c)"/>
+  <text x="433" y="132" font-size="9" fill="#E7E7EE">/api/*</text>
 
   <!-- public subnets -->
   <rect x="40" y="168" width="660" height="62" rx="9" fill="#16161d" stroke="#3C4356"/>
@@ -2224,11 +2252,11 @@ compensate      order.cancelled  ←  payment.refunded  ←  ──────�
   <text x="804" y="348" font-size="9.5" fill="#FFB454" text-anchor="middle" font-weight="700">CloudWatch</text>
   <text x="804" y="364" font-size="8" fill="#E7E7EE" text-anchor="middle">logs and metrics</text>
 
-  <line x1="740" y1="200" x2="678" y2="266" stroke="#FFB454" stroke-width="1.3" stroke-dasharray="4 4" marker-end="url(#aws-a)"/>
-  <line x1="740" y1="276" x2="678" y2="288" stroke="#FFB454" stroke-width="1.3" stroke-dasharray="4 4" marker-end="url(#aws-a)"/>
-  <line x1="678" y1="312" x2="740" y2="344" stroke="#FFB454" stroke-width="1.3" stroke-dasharray="4 4" marker-end="url(#aws-a)"/>
+  <line x1="740" y1="200" x2="674" y2="272" stroke="#FFB454" stroke-width="1.3" stroke-dasharray="4 4" marker-end="url(#aws-a)"/>
+  <line x1="740" y1="276" x2="674" y2="288" stroke="#FFB454" stroke-width="1.3" stroke-dasharray="4 4" marker-end="url(#aws-a)"/>
+  <line x1="674" y1="312" x2="740" y2="344" stroke="#FFB454" stroke-width="1.3" stroke-dasharray="4 4" marker-end="url(#aws-a)"/>
 
-  <text x="440" y="440" font-size="10" fill="#E7E7EE" text-anchor="middle">Public = the load balancer, in 2 zones. Private = no inbound route; outbound goes through a NAT gateway. Isolated = the task security group only.</text>
+  <text x="440" y="440" font-size="10" fill="#E7E7EE" text-anchor="middle">Public = the load balancer only. Private = the tasks; nothing on the internet reaches in. Isolated = the database; only tasks connect.</text>
   <text x="440" y="456" font-size="10" fill="#E7E7EE" text-anchor="middle">amber = supporting AWS services: pull the image, read the secrets, ship the logs</text>
 </svg>
 <figcaption>Three subnet tiers, one job each: the load balancer is exposed, the application is not, and the database is reachable only from the application's security group.</figcaption>
@@ -2317,7 +2345,7 @@ compensate      order.cancelled  ←  payment.refunded  ←  ──────�
 
 <div class="step reveal"><div class="num-bubble">1</div><div class="body"><b>Test.</b> Lint, type-check and run pytest against a real Postgres service container. Nothing ships that has not passed.</div></div>
 <div class="step reveal"><div class="num-bubble">2</div><div class="body"><b>Build and push.</b> One image, tagged with the git SHA. The SHA is what makes a rollback exact: you can name the artefact that was running yesterday.</div></div>
-<div class="step reveal"><div class="num-bubble">3</div><div class="body"><b>Migrate.</b> Run <code>alembic upgrade head</code> as a one-off ECS task and <em>wait for it to succeed</em>. Because migrations are backward-compatible (<a href="#alembic">§11</a>), the old code keeps working while this runs.</div></div>
+<div class="step reveal"><div class="num-bubble">3</div><div class="body"><b>Migrate.</b> Run <code>alembic upgrade head</code> as a one-off ECS task and <em>wait for it to succeed</em>. This ordering is only safe if you wrote the migration to be backward-compatible - add nullable columns, and never drop or rename one in the same deploy that ships the code depending on the change (<a href="#alembic">§11</a>). Get that right and the old tasks, which are still serving live traffic, keep working while the schema changes underneath them.</div></div>
 <div class="step reveal"><div class="num-bubble">4</div><div class="body"><b>Roll out.</b> Update the service; ECS starts new tasks, waits for their health checks, shifts traffic, then drains the old ones. If the new tasks never go healthy, the deployment circuit breaker rolls back automatically.</div></div>
 <div class="step reveal"><div class="num-bubble">5</div><div class="body"><b>Publish the frontend.</b> Sync the build to S3, then invalidate the CloudFront cache for <code>/index.html</code>. Hashed asset files never need invalidating - that is the point of hashing them.</div></div>
 
@@ -2370,6 +2398,8 @@ jobs:
 
       - name: Migrate the database, and stop if it fails
         run: |
+          NET_CONFIG='{"awsvpcConfiguration":{"subnets":["subnet-aaa","subnet-bbb"],
+                       "securityGroups":["sg-tasks"],"assignPublicIp":"DISABLED"}}'
           aws ecs run-task --cluster prod --task-definition orders-migrate \
             --launch-type FARGATE --network-configuration "$NET_CONFIG" \
             --overrides '{"containerOverrides":[{"name":"api",
@@ -2382,8 +2412,17 @@ jobs:
 
       - name: Roll out the API
         run: |
-          aws ecs update-service --cluster prod --service orders-api \
-            --task-definition orders-api --force-new-deployment
+          <span class="c"># Register a new revision pointing at the image we just pushed.</span>
+          <span class="c"># --force-new-deployment on its own restarts the tasks with the</span>
+          <span class="c"># OLD image, so the pipeline goes green and ships nothing.</span>
+          aws ecs describe-task-definition --task-definition orders-api \
+            --query 'taskDefinition' --output json \
+            | jq --arg IMAGE "$IMAGE" '.containerDefinitions[0].image = $IMAGE
+                | del(.taskDefinitionArn, .revision, .status, .requiresAttributes,
+                      .compatibilities, .registeredAt, .registeredBy)' &gt; taskdef.json
+          NEW=$(aws ecs register-task-definition --cli-input-json file://taskdef.json \
+            --query 'taskDefinition.taskDefinitionArn' --output text)
+          aws ecs update-service --cluster prod --service orders-api --task-definition "$NEW"
           aws ecs wait services-stable --cluster prod --services orders-api
 
       - name: Publish the frontend
@@ -2409,6 +2448,9 @@ jobs:
 
 correlation_id: ContextVar[<span class="p">str</span>] <span class="o">=</span> ContextVar(<span class="g">"correlation_id"</span>, default<span class="o">=</span><span class="g">"-"</span>)
 
+<span class="c"># every attribute the logging module puts on a record by itself</span>
+BUILTIN <span class="o">=</span> <span class="p">set</span>(logging.LogRecord(<span class="g">""</span>, 0, <span class="g">""</span>, 0, <span class="g">""</span>, (), <span class="k">None</span>).__dict__) <span class="o">|</span> {<span class="g">"message"</span>, <span class="g">"asctime"</span>, <span class="g">"taskName"</span>}
+
 
 <span class="k">class</span> <span class="p">JsonFormatter</span>(logging.Formatter):
     <span class="k">def</span> <span class="p">format</span>(self, record: logging.LogRecord) -&gt; <span class="p">str</span>:
@@ -2419,8 +2461,10 @@ correlation_id: ContextVar[<span class="p">str</span>] <span class="o">=</span> 
             <span class="g">"msg"</span>: record.getMessage(),
             <span class="g">"correlation_id"</span>: correlation_id.get(),
         }
-        <span class="c"># anything passed as extra={...} rides along as its own field</span>
-        payload.update(<span class="p">getattr</span>(record, <span class="g">"context"</span>, {}))
+        <span class="c"># anything passed as extra={...} rides along as its own field.</span>
+        <span class="c"># logging puts those keys straight onto the record, so filter out</span>
+        <span class="c"># the built-ins rather than looking for a "context" attribute.</span>
+        payload.update({k: v <span class="k">for</span> k, v <span class="k">in</span> record.__dict__.items() <span class="k">if</span> k <span class="k">not</span> <span class="k">in</span> BUILTIN})
         <span class="k">if</span> record.exc_info:
             payload[<span class="g">"exc"</span>] <span class="o">=</span> self.formatException(record.exc_info)
         <span class="k">return</span> json.dumps(payload)
@@ -2445,7 +2489,7 @@ logging.basicConfig(handlers<span class="o">=</span>[handler], level<span class=
 <tr><td><b>Saturation</b></td><td>Pool checkouts, task CPU, RDS connections</td><td>Database connections above 80% of the limit</td></tr>
 </table></div>
 
-<p class="reveal">Exposing them to Prometheus takes one dependency, and the same metrics feed a CloudWatch dashboard through the ADOT collector:</p>
+<p class="reveal">Exposing them takes one dependency. It publishes the numbers at <code>/metrics</code> in the format Prometheus, Grafana and most other monitoring tools read. On AWS the ADOT collector - AWS Distro for OpenTelemetry, a small agent that runs alongside your container - scrapes the same endpoint and forwards it to CloudWatch, so you instrument once and choose the destination later:</p>
 
 <div class="cb reveal"><span class="lang">python</span><pre><span class="k">from</span> prometheus_fastapi_instrumentator <span class="k">import</span> Instrumentator
 
@@ -2467,11 +2511,14 @@ HTTPXClientInstrumentor().instrument()
 
 <h3 class="reveal">Rate limiting and body size</h3>
 
-<div class="cb reveal"><span class="lang">python</span><pre><span class="k">from</span> slowapi <span class="k">import</span> Limiter
+<div class="cb reveal"><span class="lang">python</span><pre><span class="k">from</span> slowapi <span class="k">import</span> Limiter, _rate_limit_exceeded_handler
+<span class="k">from</span> slowapi.errors <span class="k">import</span> RateLimitExceeded
 <span class="k">from</span> slowapi.util <span class="k">import</span> get_remote_address
 
 limiter <span class="o">=</span> Limiter(key_func<span class="o">=</span>get_remote_address, storage_uri<span class="o">=</span><span class="g">"redis://cache:6379"</span>)
 app.state.limiter <span class="o">=</span> limiter
+<span class="c"># without this, hitting the limit is an unhandled error - a 500, not a 429</span>
+app.add_exception_handler(RateLimitExceeded, _rate_limit_exceeded_handler)
 
 <span class="o">@</span>router.post(<span class="g">"/auth/token"</span>)
 <span class="o">@</span>limiter.limit(<span class="g">"5/minute"</span>)          <span class="c"># slow down credential stuffing</span>
@@ -2492,7 +2539,7 @@ app.state.limiter <span class="o">=</span> limiter
     <dt>Connections</dt><dd>The <a href="#db1">§09</a> arithmetic checked against your maximum task count, not your current one.</dd>
     <dt>Timeouts</dt><dd>Every outbound HTTP call has one. Every database statement has <code>statement_timeout</code>. A hung dependency should fail fast, not pile up.</dd>
     <dt>Graceful shutdown</dt><dd>On <code>SIGTERM</code>, stop accepting new work, finish in-flight requests, close the pool. Set the ALB deregistration delay above your slowest request.</dd>
-    <dt>Alarms that page</dt><dd>Error rate, p95 latency, and database connections. Everything else is a dashboard, and a dashboard nobody watches is fine.</dd>
+    <dt>Alarms that page</dt><dd>Only three things should wake a human: error rate, p95 latency, and database connections. Everything else belongs on a dashboard. A dashboard nobody looks at costs you nothing; a pager that fires for something nobody acts on teaches the team to ignore the pager.</dd>
     <dt>Rollback</dt><dd>You can name the previous image tag and redeploy it in one command. You have done this once, on purpose, in business hours.</dd>
   </dl>
 </div>
@@ -2532,9 +2579,9 @@ app.state.limiter <span class="o">=</span> limiter
 <span class="k">async</span> <span class="k">def</span> <span class="p">handler</span>(
     tid: <span class="p">int</span>,                                    <span class="c"># path</span>
     payload: ThingCreate,                        <span class="c"># body</span>
+    user: CurrentUser,                           <span class="c"># auth</span>
+    db: DbSession,                               <span class="c"># data</span>
     limit: <span class="p">int</span> <span class="o">=</span> 50,                             <span class="c"># query, capped inside</span>
-    user: CurrentUser <span class="o">=</span> ...,                     <span class="c"># auth</span>
-    db: DbSession <span class="o">=</span> ...,                        <span class="c"># data</span>
 ): ...</pre></div>
 
 <h4 class="reveal">SQLAlchemy in six lines</h4>
@@ -2576,7 +2623,7 @@ db.add(obj); <span class="k">await</span> db.flush()                        <spa
 <h2 id="glossary" class="reveal"><span class="hico"><svg class="ico"><use href="#i-book"/></svg></span><span class="n">＊.</span> <span>Glossary</span></h2>
 
 <div class="gloss reveal">
-  <h4><svg class="ico"><use href="#i-book"/></svg> Every term used on this page</h4>
+  <h4><svg class="ico"><use href="#i-book"/></svg> The terms this page relies on</h4>
   <dl>
     <dt>ASGI</dt><dd>The contract between a Python web framework and its server that allows many requests to be in flight at once. The async successor to WSGI.</dd>
     <dt>Uvicorn</dt><dd>The ASGI server that actually listens on a port and runs your FastAPI app.</dd>
@@ -2588,23 +2635,34 @@ db.add(obj); <span class="k">await</span> db.flush()                        <spa
     <dt>Dependency injection</dt><dd>Declaring what a function needs in its signature and letting the framework supply it. In FastAPI, <code>Depends()</code>.</dd>
     <dt><code>response_model</code></dt><dd>The Pydantic model a response is validated and filtered through on the way out. Unlisted fields are dropped.</dd>
     <dt>OpenAPI</dt><dd>The standard JSON description of an API. FastAPI generates yours; <code>/docs</code> renders it and code generators consume it.</dd>
-    <dt>SQLAlchemy</dt><dd>Python's main database toolkit. The ORM maps classes to tables; Core builds SQL statements.</dd>
+    <dt>ORM</dt><dd>Object-Relational Mapper. A library that lets you treat database rows as ordinary Python objects and writes the SQL for you.</dd>
+    <dt>SQLAlchemy</dt><dd>Python's main database toolkit. Its ORM maps classes to tables; its Core layer builds SQL statements directly.</dd>
     <dt>Session</dt><dd>A SQLAlchemy unit of work: one per request, wrapping one transaction, holding the objects you loaded.</dd>
     <dt>Connection pool</dt><dd>A small set of open database connections reused across requests, because opening one is expensive.</dd>
     <dt>N+1 query</dt><dd>Loading a list, then firing one extra query per item. Fixed with <code>selectinload</code> or <code>joinedload</code>.</dd>
     <dt>Eager loading</dt><dd>Fetching related rows in the same trip as the parents, on purpose, instead of on first access.</dd>
+    <dt>Lazy loading</dt><dd>The opposite: the ORM fetches a related row only when you first touch the attribute. Convenient, and the direct cause of the N+1 query.</dd>
     <dt>Migration</dt><dd>A versioned, reviewable script that moves a database schema from one shape to the next. Alembic manages them.</dd>
     <dt>Keyset pagination</dt><dd>Paging with <code>WHERE key &lt; last_seen</code> instead of <code>OFFSET</code>, so deep pages stay fast.</dd>
     <dt>JWT</dt><dd>A signed, base64-encoded token carrying claims. Readable by anyone, forgeable by nobody without the key.</dd>
     <dt>Claim</dt><dd>One field inside a JWT payload: <code>sub</code> (who), <code>exp</code> (until when), <code>iss</code> (who issued it).</dd>
+    <dt>Access token vs refresh token</dt><dd>The access token is short-lived and sent with every request. The refresh token is long-lived, stored in a table, and traded in for a fresh access token - which is exactly why it can be revoked and the access token cannot.</dd>
     <dt>OAuth2 password flow</dt><dd>Exchanging a username and password at a token endpoint for an access token. What <code>OAuth2PasswordBearer</code> wires up.</dd>
     <dt>CORS</dt><dd>The browser rule that stops JavaScript on one origin from reading a response from another unless the server allows it.</dd>
     <dt>Preflight</dt><dd>The automatic <code>OPTIONS</code> request a browser sends before a non-simple cross-origin request, asking permission.</dd>
+    <dt>XSS</dt><dd>Cross-site scripting: an attacker gets their own JavaScript to run on your page. Anything JavaScript can read is then theirs, which is why token storage matters.</dd>
+    <dt>CSRF</dt><dd>Cross-site request forgery: another website makes your logged-in browser send a request to your API. The browser attaches the cookie automatically, so the request arrives looking genuine.</dd>
+    <dt>CRUD</dt><dd>Create, read, update, delete. Shorthand for a plain data-management API with no unusual work in it.</dd>
     <dt>Idempotency</dt><dd>The property that doing something twice has the same effect as doing it once. What makes a retry safe.</dd>
     <dt>Saga</dt><dd>A multi-service workflow built from local transactions, each with a compensating action to undo it.</dd>
     <dt>Eventual consistency</dt><dd>Different services hold briefly different views of the same fact, converging shortly after.</dd>
     <dt>Correlation id</dt><dd>One identifier attached to a request and passed to every service it touches, so the logs can be joined.</dd>
     <dt>Liveness vs readiness</dt><dd>Liveness: the process is alive - restart it if not. Readiness: it can serve traffic - send requests only if so.</dd>
+    <dt>p95, p99</dt><dd>The response time that 95% (or 99%) of requests come in under. The average hides the slow tail; these do not.</dd>
+    <dt>VPC and subnets</dt><dd>A private network inside AWS, cut into subnets. Public subnets have a route to the internet; private and isolated ones do not.</dd>
+    <dt>Security group</dt><dd>A firewall attached to a resource. "Only the tasks' security group may reach the database" is one rule, rather than a list of addresses to maintain.</dd>
+    <dt>CDN</dt><dd>Content delivery network. Copies of your static files held in cities near your users, so each download is short. CloudFront is AWS's.</dd>
+    <dt>Multi-AZ</dt><dd>A standby copy of the database kept in a second data centre in the same region, promoted automatically if the first one fails.</dd>
     <dt>ECS Fargate</dt><dd>AWS's serverless container runtime: you supply an image and a size, AWS supplies the machines.</dd>
     <dt>Task definition</dt><dd>The JSON blueprint for a container in ECS: image, CPU, memory, secrets, logging, health check.</dd>
     <dt>ALB</dt><dd>Application Load Balancer. One HTTPS front door that spreads requests across healthy tasks.</dd>
