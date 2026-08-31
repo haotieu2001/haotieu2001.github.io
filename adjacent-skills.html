@@ -3,18 +3,18 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Blogs — Hao Tieu Kim</title>
-<meta name="description" content="Blog — practical, example-driven guides to data and AI engineering by Hao Tieu Kim."/>
+<title>Adjacent Skills - Hao Tieu Kim</title>
+<meta name="description" content="Adjacent Skills - deep references for the skills next to data engineering: Kubernetes, FastAPI, and how Postgres stores your data."/>
 <meta property="og:type" content="website"/>
-<meta property="og:title" content="Blogs — Hao Tieu Kim"/>
-<meta property="og:description" content="Practical, example-driven guides to data and AI engineering."/>
-<meta property="og:url" content="https://haotieu2001.github.io/blogs.html"/>
+<meta property="og:title" content="Adjacent Skills - Hao Tieu Kim"/>
+<meta property="og:description" content="Deep references for the skills next to data engineering: Kubernetes, FastAPI, Postgres internals."/>
+<meta property="og:url" content="https://haotieu2001.github.io/adjacent-skills.html"/>
 <meta property="og:image" content="https://haotieu2001.github.io/og-cover.png"/>
 <meta property="og:image:width" content="1200"/>
 <meta property="og:image:height" content="630"/>
 <meta name="twitter:card" content="summary_large_image"/>
-<meta name="twitter:title" content="Blogs — Hao Tieu Kim"/>
-<meta name="twitter:description" content="Practical, example-driven guides to data and AI engineering."/>
+<meta name="twitter:title" content="Adjacent Skills - Hao Tieu Kim"/>
+<meta name="twitter:description" content="Deep references for the skills next to data engineering: Kubernetes, FastAPI, Postgres internals."/>
 <meta name="twitter:image" content="https://haotieu2001.github.io/og-cover.png"/>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -71,6 +71,7 @@
   .card .body{padding:16px 20px 20px}
   .card h3{margin:0 0 8px;font-size:18px;color:#fff}
   .card p{margin:0 0 14px;color:var(--soft);font-size:13.5px}
+  .card p strong{color:#fff}
   .card .meta{color:var(--muted);font-size:12px;margin-bottom:12px}
   .badge{display:inline-block;font-size:12px;font-weight:700;padding:5px 13px;border-radius:8px}
 
@@ -106,9 +107,9 @@
     <a class="nav-brand" href="index.html">HAO TIEU KIM</a>
     <div class="nav-links">
       <a href="index.html">Portfolio</a>
-      <a href="blogs.html" class="active">Blogs</a>
+      <a href="blogs.html">Blogs</a>
       <a href="essentials.html">Data Engineer Essentials</a>
-      <a href="adjacent-skills.html">Adjacent Skills</a>
+      <a href="adjacent-skills.html" class="active">Adjacent Skills</a>
     </div>
   </div>
 </nav>
@@ -116,82 +117,53 @@
 <div class="page">
 
 <header>
-  <div class="kicker">~/blog <b>❯</b> posts</div>
-  <h1>Blogs</h1>
-  <p class="dek">Practical, example-driven guides to data and AI engineering — the long-form deep dives.</p>
+  <div class="kicker">~/adjacent <b>❯</b> reference</div>
+  <h1>Adjacent Skills</h1>
+  <p class="dek">The skills next to data engineering, not inside it - platform, backend and database internals that keep turning up in the work. Deep references for when a project pulls you across the line.</p>
   <div class="herobar"></div>
 </header>
 
 <div class="wrap">
 
-  <section class="panel reveal" style="--a:#28B9FF">
-    <span class="tab"><span class="n">01</span> Latest posts</span>
+  <section class="panel reveal" id="adjacent" style="--a:#28B9FF">
+    <span class="tab"><span class="n">01</span> Reference library</span>
     <div class="grid">
 
-      <a class="card live" href="data-lake/">
-        <div class="strip">foundations · start here</div>
+      <a class="card live" href="kubernetes-essentials/">
+        <div class="strip">kubernetes · orchestration · eks</div>
         <div class="body">
-          <h3>Data Lake &amp; Data Lakehouse, Simply Explained</h3>
-          <p>What a Data Lake is really made of, how Parquet stores data on disk, why plain lakes break in production — and how Delta Lake fixes every problem.</p>
-          <div class="meta">Jun 2026 · ~25 min read · Data Engineering</div>
-          <span class="badge">Read article →</span>
+          <h3>Kubernetes for Data Engineers</h3>
+          <p>From "what is a container?" to running Spark, Airflow and Kafka on Kubernetes: Pods, Deployments &amp; controllers, the scheduler, storage &amp; networking, autoscaling, and <strong>AWS EKS</strong> - the cluster mechanics behind modern data platforms.</p>
+          <div class="meta">Reference · ~161 min read · Adjacent</div>
+          <span class="badge">Read reference →</span>
         </div>
       </a>
 
-      <a class="card live" href="lakehouse-guide/">
-        <div class="strip">open table formats</div>
+      <a class="card live" href="fastapi-essentials/">
+        <div class="strip">api · postgres · react · aws</div>
         <div class="body">
-          <h3>Delta Lake vs Iceberg vs Hudi</h3>
-          <p>The friendly, no-jargon guide to the three open table formats — what they are, how they work inside, and which one to pick.</p>
-          <div class="meta">Jun 2026 · ~18 min read · Data Engineering</div>
-          <span class="badge">Read article →</span>
+          <h3>FastAPI Essentials</h3>
+          <p>The whole path from a typed function to a deployed stack: the <strong>request lifecycle</strong>, <strong>Pydantic</strong> validation, the <strong>async</strong> trap that quietly serialises your API, <strong>dependency injection</strong>, <strong>PostgreSQL</strong> with SQLAlchemy, connection-pool arithmetic and Alembic, <strong>JWT auth</strong>, testing, a typed <strong>React</strong> frontend generated from OpenAPI, <strong>Docker Compose</strong>, when to split into <strong>microservices</strong>, and the full <strong>AWS</strong> deployment on ECS Fargate, RDS and CloudFront.</p>
+          <div class="meta">Reference · ~55 min read · Adjacent</div>
+          <span class="badge">Read reference →</span>
         </div>
       </a>
 
-      <a class="card live" href="delta-lake/">
-        <div class="strip">deep dive · with code</div>
+      <a class="card live" href="postgres-internals/">
+        <div class="strip">postgres · storage internals</div>
         <div class="body">
-          <h3>Delta Lake, Under the Hood</h3>
-          <p>A hands-on deep dive: the transaction log, ACID, time travel, MERGE, deletion vectors, OPTIMIZE, Z-Order, liquid clustering, streaming &amp; CDC — with runnable SQL + PySpark.</p>
-          <div class="meta">Jun 2026 · ~20 min read · Data Engineering</div>
+          <h3>How Postgres Stores Your Data</h3>
+          <p>What actually happens on disk: the process model and why you need a connection pooler, the WAL, pages and tuples, the heap, MVCC and dead tuples, VACUUM and bloat, TOAST, B-tree / BRIN / GIN indexes, index-only scans, partial and covering indexes, declarative partitioning, and how to read EXPLAIN.</p>
+          <div class="meta">Jul 2026 · ~34 min read · Adjacent</div>
           <span class="badge">Read article →</span>
         </div>
       </a>
-
-      <a class="card live" href="data-lake-layers/">
-        <div class="strip">architecture · deep dive</div>
-        <div class="body">
-          <h3>The Three Layers of a Data Lake, In Depth</h3>
-          <p>Storage, Metadata, and Compute — opened up one shelf at a time. How each layer works inside, why they're kept separate, and how a single query travels down through all three.</p>
-          <div class="meta">Jun 2026 · ~21 min read · Data Engineering</div>
-          <span class="badge">Read article →</span>
-        </div>
-      </a>
-
-      <a class="card live" href="oltp-vs-olap/">
-        <div class="strip">fundamentals · deep dive</div>
-        <div class="body">
-          <h3>OLTP vs OLAP, In Depth</h3>
-          <p>Why transactional and analytical systems are built so differently — row vs columnar storage on disk, how each runs a query, every optimization technique, and why a design that's perfect for one is a disaster for the other.</p>
-          <div class="meta">Jun 2026 · ~22 min read · Data Engineering</div>
-          <span class="badge">Read article →</span>
-        </div>
-      </a>
-
-      <div class="card soon s-ai">
-        <div class="strip">query engine · spark</div>
-        <div class="body">
-          <h3>The Journey of a Spark Query, From SELECT to Result</h3>
-          <p>What actually happens after you hit run — how Spark plans the work, splits it across a cluster, reads only the Parquet it needs, and shuffles the rest into your answer.</p>
-          <span class="badge">Coming soon</span>
-        </div>
-      </div>
 
       <div class="card soon s-dbt">
-        <div class="strip">performance · data layout</div>
+        <div class="strip">more on the way</div>
         <div class="body">
-          <h3>Partitioning, Z-Order &amp; Clustering in Detail</h3>
-          <p>How to physically lay out files so queries skip the data they don't need — partition pruning, Z-Order, and liquid clustering, step by step.</p>
+          <h3>More on the way</h3>
+          <p>Other skills that sit just outside data engineering - and keep showing up in the work - will land here over time.</p>
           <span class="badge">Coming soon</span>
         </div>
       </div>
@@ -204,8 +176,8 @@
 <footer>
   <div class="connect">
     <a href="index.html">Portfolio</a>
+    <a href="blogs.html">Blogs</a>
     <a href="essentials.html">Data Engineer Essentials</a>
-    <a href="adjacent-skills.html">Adjacent Skills</a>
     <a href="https://linkedin.com/in/haotieu2001" target="_blank" rel="noopener">LinkedIn</a>
     <a href="mailto:haotieu1601@gmail.com">Email</a>
   </div>
