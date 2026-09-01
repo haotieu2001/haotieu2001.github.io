@@ -1750,36 +1750,36 @@ min.insync.replicas=2          # paired with replication.factor=3 on the topic
 <p>The concepts click into place much faster once you have seen them on your own laptop. A practical, ordered path - each step builds on the last, and none needs more than a laptop and some free disk space.</p>
 </div>
 <figure class="diagram reveal">
-<svg viewBox="0 0 400 600" role="img" aria-label="Seven-step hands-on learning path from running a local Kafka broker to going deep on official documentation">
+<svg viewBox="0 0 480 600" role="img" aria-label="Seven-step hands-on learning path, from running a local Kafka broker to breaking a Spark job and watching it recover from its checkpoint">
 <line x1="50" y1="70" x2="50" y2="550" stroke="var(--dim)" stroke-width="2"/><circle cx="50" cy="71" r="12" fill="#191921" stroke="#3C4356" stroke-width="1.5"/><circle cx="50" cy="151" r="12" fill="#191921" stroke="#3C4356" stroke-width="1.5"/><circle cx="50" cy="231" r="12" fill="#191921" stroke="#3C4356" stroke-width="1.5"/><circle cx="50" cy="311" r="12" fill="#191921" stroke="#3C4356" stroke-width="1.5"/><circle cx="50" cy="391" r="12" fill="#191921" stroke="#3C4356" stroke-width="1.5"/><circle cx="50" cy="471" r="12" fill="#191921" stroke="#3C4356" stroke-width="1.5"/><circle cx="50" cy="551" r="12" fill="#191921" stroke="#3C4356" stroke-width="1.5"/>
 <circle cx="50" cy="70" r="14" fill="#1D1D26" stroke="var(--kafka)" stroke-width="2"/>
 <text x="50" y="75" text-anchor="middle" font-size="13" fill="var(--kafka)">1</text>
-<rect x="80" y="42" width="280" height="56" rx="10" fill="#1D1D26" stroke="var(--kafka)" stroke-width="1.5"/>
-<text x="92" y="62" text-anchor="start" font-size="13" fill="var(--ink)"><tspan x="92">Run a local Kafka broker</tspan><tspan x="92" dy="1.3em" fill="#E7E7EE">(KRaft mode, no ZooKeeper)</tspan></text>
+<rect x="80" y="42" width="384" height="56" rx="10" fill="#1D1D26" stroke="var(--kafka)" stroke-width="1.5"/>
+<text x="94" y="62" text-anchor="start" font-size="13" fill="var(--ink)"><tspan x="94">Run a local Kafka broker</tspan><tspan x="94" dy="1.3em" fill="#E7E7EE">(KRaft mode, no ZooKeeper)</tspan></text>
 <circle cx="50" cy="150" r="14" fill="#1D1D26" stroke="var(--kafka)" stroke-width="2"/>
 <text x="50" y="155" text-anchor="middle" font-size="13" fill="var(--kafka)">2</text>
-<rect x="80" y="122" width="280" height="56" rx="10" fill="#1D1D26" stroke="var(--kafka)" stroke-width="1.5"/>
-<text x="92" y="142" text-anchor="start" font-size="13" fill="var(--ink)"><tspan x="92">Write a tiny producer</tspan><tspan x="92" dy="1.3em" fill="#E7E7EE">and consumer; watch offsets move</tspan></text>
+<rect x="80" y="122" width="384" height="56" rx="10" fill="#1D1D26" stroke="var(--kafka)" stroke-width="1.5"/>
+<text x="94" y="142" text-anchor="start" font-size="13" fill="var(--ink)"><tspan x="94">Write a tiny producer and consumer</tspan><tspan x="94" dy="1.3em" fill="#E7E7EE">watch the offsets move as you send</tspan></text>
 <circle cx="50" cy="230" r="14" fill="#1D1D26" stroke="var(--spark)" stroke-width="2"/>
 <text x="50" y="235" text-anchor="middle" font-size="13" fill="var(--spark)">3</text>
-<rect x="80" y="202" width="280" height="56" rx="10" fill="#1D1D26" stroke="var(--spark)" stroke-width="1.5"/>
-<text x="92" y="222" text-anchor="start" font-size="13" fill="var(--ink)"><tspan x="92">Count records per key</tspan><tspan x="92" dy="1.3em" fill="#E7E7EE">in Spark (console sink)</tspan></text>
+<rect x="80" y="202" width="384" height="56" rx="10" fill="#1D1D26" stroke="var(--spark)" stroke-width="1.5"/>
+<text x="94" y="222" text-anchor="start" font-size="13" fill="var(--ink)"><tspan x="94">Count records per key in Spark</tspan><tspan x="94" dy="1.3em" fill="#E7E7EE">write to the console sink and watch it</tspan></text>
 <circle cx="50" cy="310" r="14" fill="#1D1D26" stroke="var(--spark)" stroke-width="2"/>
 <text x="50" y="315" text-anchor="middle" font-size="13" fill="var(--spark)">4</text>
-<rect x="80" y="282" width="280" height="56" rx="10" fill="#1D1D26" stroke="var(--spark)" stroke-width="1.5"/>
-<text x="92" y="302" text-anchor="start" font-size="13" fill="var(--ink)"><tspan x="92">Add a tumbling window</tspan><tspan x="92" dy="1.3em" fill="#E7E7EE">+ watermark, compare results</tspan></text>
+<rect x="80" y="282" width="384" height="56" rx="10" fill="#1D1D26" stroke="var(--spark)" stroke-width="1.5"/>
+<text x="94" y="302" text-anchor="start" font-size="13" fill="var(--ink)"><tspan x="94">Add a tumbling window + watermark</tspan><tspan x="94" dy="1.3em" fill="#E7E7EE">compare the results and their timing</tspan></text>
 <circle cx="50" cy="390" r="14" fill="#1D1D26" stroke="var(--spark)" stroke-width="2"/>
 <text x="50" y="395" text-anchor="middle" font-size="13" fill="var(--spark)">5</text>
-<rect x="80" y="362" width="280" height="56" rx="10" fill="#1D1D26" stroke="var(--spark)" stroke-width="1.5"/>
-<text x="92" y="382" text-anchor="start" font-size="13" fill="var(--ink)"><tspan x="92">Add a stream-static join</tspan><tspan x="92" dy="1.3em" fill="#E7E7EE">then land silver via foreachBatch MERGE</tspan></text>
+<rect x="80" y="362" width="384" height="56" rx="10" fill="#1D1D26" stroke="var(--spark)" stroke-width="1.5"/>
+<text x="94" y="382" text-anchor="start" font-size="13" fill="var(--ink)"><tspan x="94">Add a stream-static join</tspan><tspan x="94" dy="1.3em" fill="#E7E7EE">then land silver via a foreachBatch MERGE</tspan></text>
 <circle cx="50" cy="470" r="14" fill="#1D1D26" stroke="var(--spark)" stroke-width="2"/>
 <text x="50" y="475" text-anchor="middle" font-size="13" fill="var(--spark)">6</text>
-<rect x="80" y="442" width="280" height="56" rx="10" fill="#1D1D26" stroke="var(--spark)" stroke-width="1.5"/>
-<text x="92" y="462" text-anchor="start" font-size="13" fill="var(--ink)"><tspan x="92">Kill the job mid-run, restart it</tspan><tspan x="92" dy="1.3em" fill="#E7E7EE">confirm checkpoint recovery: no dupes, no gaps</tspan></text>
+<rect x="80" y="442" width="384" height="56" rx="10" fill="#1D1D26" stroke="var(--spark)" stroke-width="1.5"/>
+<text x="94" y="462" text-anchor="start" font-size="13" fill="var(--ink)"><tspan x="94">Kill the job mid-run, then restart it</tspan><tspan x="94" dy="1.3em" fill="#E7E7EE">it must resume with no dupes and no gaps</tspan></text>
 <circle cx="50" cy="550" r="14" fill="#1D1D26" stroke="var(--blue2)" stroke-width="2"/>
 <text x="50" y="555" text-anchor="middle" font-size="13" fill="var(--blue2)">7</text>
-<rect x="80" y="522" width="280" height="56" rx="10" fill="#1D1D26" stroke="var(--blue2)" stroke-width="1.5"/>
-<text x="92" y="542" text-anchor="start" font-size="13" fill="var(--ink)"><tspan x="92">Go deep on official docs</tspan><tspan x="92" dy="1.3em" fill="#E7E7EE">for the engine you actually ship</tspan></text>
+<rect x="80" y="522" width="384" height="56" rx="10" fill="#1D1D26" stroke="var(--blue2)" stroke-width="1.5"/>
+<text x="94" y="542" text-anchor="start" font-size="13" fill="var(--ink)"><tspan x="94">Go deep on the official docs</tspan><tspan x="94" dy="1.3em" fill="#E7E7EE">for the engine you actually ship</tspan></text>
 </svg>
 <figcaption>Seven hands-on steps: from a single local Kafka broker through a windowed, joined Spark job, to deliberately breaking it and watching checkpoint recovery work.</figcaption>
 </figure>
