@@ -170,13 +170,13 @@
 </defs></svg>
 <div class="page">
 <header>
-  <div class="kicker"><a class="back" href="../">❮ Data &amp; AI Engineering, Simply Explained</a></div>
+  <div class="kicker"><a class="back" href="../adjacent-skills.html">❮ Adjacent Skills</a></div>
   <h1>How Postgres Stores Your Data</h1>
   <p class="dek">Every query you write eventually becomes the same physical act: <strong>read some 8 KB pages off a disk</strong>. An index is a device for reading fewer of them. A partition is a device for skipping them entirely. <code>VACUUM</code> exists because Postgres never overwrites a row in place. This page opens up the engine behind those four sentences, then shows you how to read <code>EXPLAIN</code> and which monitoring queries actually tell you something.</p>
   <div class="stack">
     <span class="chip"><svg class="ico"><use href="#i-database"/></svg> PostgreSQL 18</span>
     <span class="chip"><svg class="ico"><use href="#i-disk"/></svg> storage &#183; indexes &#183; partitions</span>
-    <span class="chip" style="color:#5AC8FF;border-color:#2c4c34;background:#1D1D26"><svg class="ico"><use href="#i-check"/></svg> every claim verified on a live server</span>
+    <span class="chip" style="color:#5AC8FF;border-color:#2c4c5c;background:#1D1D26"><svg class="ico"><use href="#i-check"/></svg> every claim verified on a live server</span>
   </div>
   <div class="byline">~34 min read · Reference · Internals</div>
 </header>
@@ -192,7 +192,7 @@
   <a href="#arch"><svg class="ico"><use href="#i-workflow"/></svg>02 · Architecture: processes, memory, WAL</a>
   <a href="#hierarchy"><svg class="ico"><use href="#i-layers"/></svg>03 · The storage hierarchy: cluster to tuple</a>
   <a href="#page"><svg class="ico"><use href="#i-disk"/></svg>04 · Inside an 8 KB page</a>
-  <a href="#heap"><svg class="ico"><use href="#i-database"/></svg>05 · The heap — and the clustered index that isn't</a>
+  <a href="#heap"><svg class="ico"><use href="#i-database"/></svg>05 · The heap — and why a lookup is two steps</a>
   <a href="#mvcc"><svg class="ico"><use href="#i-repeat"/></svg>06 · MVCC: an UPDATE is a DELETE plus an INSERT</a>
   <a href="#vacuum"><svg class="ico"><use href="#i-shield"/></svg>07 · VACUUM, autovacuum, and bloat</a>
   <a href="#toast"><svg class="ico"><use href="#i-package"/></svg>08 · TOAST: oversized values</a>
@@ -679,7 +679,7 @@ postgres: <span class="g">client backend</span>                  <span class="c"
   <text x="325" y="164" font-size="8" fill="#E7E7EE" text-anchor="middle">leaf</text>
   <text x="325" y="179" font-size="7.5" fill="#E7E7EE" text-anchor="middle">63 &#8594; (901,7)</text>
 
-  <g stroke="#9AA0B4" stroke-width="1.2" fill="none">
+  <g stroke="#5C78FF" stroke-width="1.2" fill="none">
     <path d="M215 70 L 156 86" marker-end="url(#b-a)"/>
     <path d="M275 70 L 334 86" marker-end="url(#b-a)"/>
     <path d="M120 124 L 100 140" marker-end="url(#b-a)"/>
@@ -874,10 +874,17 @@ Hash Join (actual rows=81184 loops=3)
   <strong>4.</strong> Only as a last resort, and only to <em>diagnose</em>, disable an algorithm to see what the planner would do otherwise: <code>SET enable_nestloop = off;</code>. Never leave that in production code — you are lying to the planner, not fixing it.</p>
 </div>
 
-<h2 id="ios" class="reveal"><span class="hico"><svg class="ico"><use href="#i-eye"/></svg></span><span class="n">12.</span> Index-only scans and the visibility map</h2>
-<p class="reveal lead">An index-only scan is the fastest thing Postgres can do. It also silently doesn't happen, for a reason that has nothing to do with your index.</p>
+<div class="callout cy reveal">
+  <p style="margin:.2em 0"><span class="t"><svg class="ico"><use href="#i-key"/></svg> How to read the next six sections</span></p>
+  <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">§01–11 was the engine. §12–17 is the toolkit — and day to day you reach for <strong>three</strong> tools: <strong>index-only scans</strong> (§12), <strong>BRIN</strong> for huge time-series tables (§13), and <strong>time-based partitioning</strong> (§16). Everything else here — GIN, GiST, the five B-tree variants, LIST/HASH partitioning — is <em>"know it exists, look it up when your data needs it."</em> Read hard for those three; skim the rest without guilt.</p>
+</div>
 
-<p class="reveal">Here's the problem. The index holds the key and the <code>ctid</code> — but <strong>it does not hold visibility information</strong>. It cannot tell you whether a given row version is dead, or belongs to an uncommitted transaction. Normally Postgres resolves that by fetching the heap tuple and checking <code>xmin</code>/<code>xmax</code>. But that fetch is exactly what an index-only scan is trying to avoid.</p>
+<h2 id="ios" class="reveal"><span class="hico"><svg class="ico"><use href="#i-eye"/></svg></span><span class="n">12.</span> Index-only scans and the visibility map</h2>
+<p class="reveal lead">You add a covering index, the plan proudly reports <code>Index Only Scan</code> — and it's still slow. There is one reason for that, and it isn't your index.</p>
+
+<p class="reveal"><strong>The two-line refresher you need first (from §06–07):</strong> every <code>UPDATE</code> leaves the old row version behind as a <em>dead tuple</em>, and <code>VACUUM</code> is what eventually cleans those up. Whether a given row version is alive is decided by its hidden <code>xmin</code>/<code>xmax</code> columns — <em>and that information lives only in the heap</em>.</p>
+
+<p class="reveal">So here is the problem. An index leaf holds the key and the <code>ctid</code> — but <strong>not</strong> whether that row version is currently visible to you. Normally Postgres settles that by fetching the heap tuple and checking <code>xmin</code>/<code>xmax</code>. But that fetch is exactly what an index-only scan is trying to skip.</p>
 
 <p class="reveal">The escape is the <strong>visibility map</strong>: one bit per heap page, meaning "every tuple on this page is visible to everyone". <code>VACUUM</code> sets those bits. If the bit is set, Postgres can trust the index and skip the heap entirely. <strong>If it isn't set, it must go to the heap anyway</strong> — and your index-only scan quietly degrades into an ordinary one.</p>
 
@@ -938,22 +945,16 @@ Hash Join (actual rows=81184 loops=3)
 </div>
 
 <h2 id="types" class="reveal"><span class="hico"><svg class="ico"><use href="#i-blocks"/></svg></span><span class="n">13.</span> The other index types: GIN, GiST, BRIN, Hash</h2>
-<p class="reveal lead">Postgres ships <strong>six</strong> index methods. B-tree is the default and covers ~90% of cases. But one of the others is a superpower for data engineers, and it is almost always overlooked.</p>
-
-<p class="reveal">I asked the live server what it has:</p>
-
-<div class="cb reveal"><span class="lang">sql</span><pre><span class="k">SELECT</span> amname <span class="k">FROM</span> pg_am <span class="k">WHERE</span> amtype = <span class="g">'i'</span>;
-<span class="c">--  brin · btree · gin · gist · hash · spgist</span>
-</pre></div>
+<p class="reveal lead">Postgres ships <strong>six</strong> index methods. As a data engineer you actively choose <strong>two</strong>: <code>btree</code> for anything sortable, and <code>brin</code> for huge append-only tables. The other four exist for specific data shapes — JSON, geometry, full-text — and you reach for them only when your data forces it. So this section is really about <strong>BRIN</strong>.</p>
 
 <div class="tw reveal"><table>
-<tr><th>Method</th><th>Use it for</th><th>Notes</th></tr>
-<tr><td><strong><code>btree</code></td><td>Equality and ranges on anything sortable. <code>=</code>, <code>&lt;</code>, <code>&gt;</code>, <code>BETWEEN</code>, <code>ORDER BY</code></td><td class="ok">The default. If unsure, this</td></tr>
-<tr><td><strong><code>brin</code></td><td><strong>Huge tables where the column tracks physical order</strong> — timestamps in an append-only log</td><td class="ok">Astonishingly small. See below</td></tr>
-<tr><td><strong><code>gin</code></td><td><code>jsonb</code>, arrays, full-text search — "does this contain that?"</td><td>Slower to write, superb to read</td></tr>
-<tr><td><code>gist</code></td><td>Geometry, ranges, nearest-neighbour (PostGIS)</td><td>Extensible, lossy-but-fast</td></tr>
-<tr><td><code>spgist</code></td><td>Non-balanced structures: quadtrees, tries, IP prefixes</td><td>Niche</td></tr>
-<tr><td><code>hash</code></td><td>Equality only, nothing else</td><td>B-tree does this too and does more. <strong>Rarely worth it</strong></td></tr>
+<tr><th>Method</th><th>For a DE</th><th>Use it for</th></tr>
+<tr><td><strong><code>btree</code></strong></td><td class="ok">★ default</td><td>Equality and ranges on anything sortable — <code>=</code>, <code>&lt;</code>, <code>&gt;</code>, <code>BETWEEN</code>, <code>ORDER BY</code>. If unsure, this.</td></tr>
+<tr><td><strong><code>brin</code></strong></td><td class="ok">★ learn this</td><td><strong>Huge tables where the column already tracks physical order</strong> — a timestamp in an append-only log. Tiny. Covered below.</td></tr>
+<tr><td><code>gin</code></td><td>when data forces it</td><td><code>jsonb</code>, arrays, full-text search — "does this contain that?". Slower to write, superb to read.</td></tr>
+<tr><td><code>gist</code></td><td>PostGIS only</td><td>Geometry, ranges, nearest-neighbour. Extensible, lossy-but-fast.</td></tr>
+<tr><td><code>spgist</code></td><td class="no">skip</td><td>Non-balanced structures: quadtrees, tries, IP prefixes. Niche.</td></tr>
+<tr><td><code>hash</code></td><td class="no">skip</td><td>Equality only. B-tree does this and more — rarely worth it.</td></tr>
 </table></div>
 
 <h3 class="reveal">BRIN: the index that costs almost nothing</h3>
@@ -996,8 +997,22 @@ Hash Join (actual rows=81184 loops=3)
 <span class="k">CREATE INDEX</span> idx_fts  <span class="k">ON</span> docs   <span class="k">USING</span> gin(to_tsvector(<span class="g">'english'</span>, body));
 </pre></div>
 
+<div class="callout reveal">
+  <p style="margin:.2em 0"><span class="t">Bottom line</span></p>
+  <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">Default to <code>btree</code>. On a big append-only table with a time column, add a <strong>BRIN on that column</strong> — a few kB instead of gigabytes — but only if <code>SELECT correlation FROM pg_stats</code> for it is near ±1. Use <code>gin</code> when you query inside <code>jsonb</code>/arrays/text. Ignore the rest.</p>
+</div>
+
 <h2 id="variants" class="reveal"><span class="hico"><svg class="ico"><use href="#i-list"/></svg></span><span class="n">14.</span> Unique, partial, covering, expression, multicolumn</h2>
-<p class="reveal lead">Same B-tree, five different ways of aiming it. These are where most of the practical wins live.</p>
+<p class="reveal lead">Not five new index types — <strong>one B-tree, aimed five different ways</strong>. This is where most hand-tuning wins actually come from, so it's worth the map before the detail:</p>
+
+<div class="tw reveal"><table>
+<tr><th>Variant</th><th>What it buys you</th><th>Reach for it when</th></tr>
+<tr><td><strong>Unique</strong></td><td>Enforces uniqueness <em>and</em> indexes the column</td><td>Any natural key — email, slug. A <code>PRIMARY KEY</code> is this + <code>NOT NULL</code>.</td></tr>
+<tr><td><strong>Partial</strong> <code>… WHERE</code></td><td>Indexes only the rows you query — half the size or less</td><td>You always filter for a small slice: <code>status = 'pending'</code>, <code>churned_at IS NOT NULL</code>.</td></tr>
+<tr><td><strong>Covering</strong> <code>INCLUDE</code></td><td>Carries extra columns so a query never touches the heap (§12)</td><td>A hot query selects one or two columns it doesn't filter on.</td></tr>
+<tr><td><strong>Expression</strong></td><td>Indexes a computed value so the query can use it</td><td>You filter on <code>LOWER(email)</code> or <code>date_trunc('day', ts)</code>.</td></tr>
+<tr><td><strong>Multicolumn</strong></td><td>One index serves several filter combinations</td><td>You filter on <code>(tenant_id, created_at)</code> together — put the more selective column first.</td></tr>
+</table></div>
 
 <h3 class="reveal">Unique — a constraint that happens to be an index</h3>
 
@@ -1035,7 +1050,12 @@ Hash Join (actual rows=81184 loops=3)
 
 <h3 class="reveal">Expression — index the computed thing, not the column</h3>
 
-<p class="reveal">A B-tree index on <code>email</code> can't help <code>WHERE LOWER(email) = 'a@b.com'</code> — the index is sorted by the raw column, but the query is filtering on something computed <em>from</em> it, so the two don't line up. (A predicate an index <em>can</em> be used for is called <strong>sargable</strong>; wrapping the column in a function like this makes it non-sargable.) The fix is direct: if you always filter on <code>LOWER(email)</code>, <em>index</em> <code>LOWER(email)</code> instead of the bare column, so the index and the query match exactly.</p>
+<p class="reveal">A B-tree index on <code>email</code> can't help <code>WHERE LOWER(email) = 'a@b.com'</code> — the index is sorted by the raw column, but the query is filtering on something computed <em>from</em> it, so the two don't line up. The fix is direct: if you always filter on <code>LOWER(email)</code>, <em>index</em> <code>LOWER(email)</code> instead of the bare column, so the index and the query match exactly.</p>
+
+<div class="callout cy reveal">
+  <p style="margin:.2em 0"><span class="t"><svg class="ico"><use href="#i-key"/></svg> "Sargable" — a word you'll meet again in §18</span></p>
+  <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">A predicate is <strong>sargable</strong> if an index can be used for it — which requires the indexed column to stand <em>bare</em> on one side of the comparison. <code>WHERE created_at &gt;= '2024-03-01'</code> is sargable; <code>WHERE date_trunc('day', created_at) = '2024-03-01'</code> is not, because the column is wrapped in a function. Either index the expression, or rewrite the filter as a bare-column range.</p>
+</div>
 
 <div class="cb reveal"><span class="lang">sql</span><pre><span class="k">CREATE INDEX</span> idx_lower_email <span class="k">ON</span> users(<span class="p">LOWER</span>(email));
 <span class="k">SELECT</span> * <span class="k">FROM</span> users <span class="k">WHERE</span> <span class="p">LOWER</span>(email) = <span class="g">'a@b.com'</span>;    <span class="c">-- + now uses the index</span>
@@ -1064,8 +1084,13 @@ Index Only Scan using idx_multi on events (actual rows=109 loops=1)
   <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">It only pays when the leading column has <strong>few distinct values</strong> — <code>status</code> had 3, so 7 tree descents covered it. Make that column <code>user_id</code> with 10,000 distinct values and skipping means 10,000 descents; the planner rightly seq-scans instead. <strong>So the rule stands: put the column you filter on most selectively, and most often, first.</strong> Skip scan rescues a badly-ordered index on a low-cardinality prefix — it isn't a licence to stop thinking. (On PG 17 and older that query is a plain Seq Scan.)</p>
 </div>
 
+<div class="callout reveal">
+  <p style="margin:.2em 0"><span class="t">Bottom line</span></p>
+  <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">Reach for <strong>partial</strong> when you always query a small slice, <strong><code>INCLUDE</code></strong> to turn a hot query into an index-only scan, an <strong>expression index</strong> when you filter on a computed value, and a <strong>multicolumn</strong> index (most-selective column first) when you filter on a fixed combination. Keep the filtered column bare or none of it works.</p>
+</div>
+
 <h2 id="columnstore" class="reveal"><span class="hico"><svg class="ico"><use href="#i-cloud"/></svg></span><span class="n">15.</span> Columnstore: the thing Postgres doesn't have</h2>
-<p class="reveal lead">This is the one item on the list with <strong>no Postgres answer</strong> — and understanding why leads straight to why your lakehouse exists.</p>
+<p class="reveal lead">A step back from indexes: there's one query pattern <strong>no Postgres index can fix</strong> — and understanding why leads straight to why your lakehouse exists.</p>
 
 <p class="reveal">Postgres is <strong>row-oriented</strong>, all the way down: a page holds whole tuples, every column of a row together. Ideal for OLTP, close to the worst possible layout for analytics. Run <code>SELECT AVG(amount) FROM events</code> and Postgres reads all 14,286 pages — <em>every column of every row</em> — to use one number from each. You paid to read the payload, the status and the timestamps, then threw them away.</p>
 
@@ -1087,9 +1112,9 @@ Index Only Scan using idx_multi on events (actual rows=109 loops=1)
 </div>
 
 <h2 id="partition" class="reveal"><span class="hico"><svg class="ico"><use href="#i-split"/></svg></span><span class="n">16.</span> Partitioning: RANGE, LIST, HASH</h2>
-<p class="reveal lead">Partitioning splits one logical table into many physical ones. The payoff is not "smaller tables" — it's that the planner can <strong>throw entire partitions away without opening them</strong>.</p>
+<p class="reveal lead">Picture the end state for a big fact table: <strong>one partition per month</strong>. Old months <code>DROP</code> in milliseconds. Each month is small enough that vacuum keeps up and BRIN stays tight. A query for last week only opens <em>one</em> partition. The next three sections are how the pieces get you there — this one is the strategies, §17 is adding indexes, and the payoff recipe is the callout at the end of §17.</p>
 
-<p class="reveal">Postgres has had proper <strong>declarative partitioning</strong> since version 10. You declare a partition key and a strategy, then attach child tables. Inserts route automatically; queries see one table.</p>
+<p class="reveal">Mechanically: partitioning splits one logical table into many physical child tables. Inserts route automatically by a <strong>partition key</strong>; queries still see one table. The win is <strong>pruning</strong> — the planner discards partitions it can prove can't match, without opening them. Postgres has had proper <strong>declarative partitioning</strong> since version 10.</p>
 
 <div class="cb reveal"><span class="lang">sql</span><pre><span class="k">CREATE TABLE</span> ev_part (
     id <span class="y">bigint</span>, created_at <span class="y">timestamptz</span> <span class="k">NOT NULL</span>, user_id <span class="y">int</span>, amount <span class="y">numeric</span>
@@ -1205,7 +1230,7 @@ Aggregate
   <text x="621" y="94" font-size="8" fill="#E7E7EE" text-anchor="middle">index · ANALYZE · rewrite</text>
   <text x="621" y="108" font-size="8" fill="#E7E7EE" text-anchor="middle">then measure again</text>
 
-  <g stroke="#9AA0B4" stroke-width="1.5" fill="none">
+  <g stroke="#5C78FF" stroke-width="1.5" fill="none">
     <path d="M178 88 H 192" marker-end="url(#o-a)"/>
     <path d="M352 88 H 366" marker-end="url(#o-a)"/>
     <path d="M526 88 H 540" marker-end="url(#o-a)"/>
