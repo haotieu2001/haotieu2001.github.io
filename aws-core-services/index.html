@@ -203,16 +203,16 @@ h2 .n{color:var(--blue2,#5C78FF)}
   <path d="M658 70 L688 58" stroke="#5AC8FF" stroke-width="1.7" marker-end="url(#ah)"/>
   <path d="M658 88 L688 98" stroke="#5AC8FF" stroke-width="1.7" marker-end="url(#ah)"/>
 
-  <rect x="346" y="160" width="150" height="46" rx="8" fill="#191921" stroke="#A56BFF" stroke-width="1.9"/>
-  <text x="421" y="180" text-anchor="middle" fill="#C79BFF">Amazon MWAA</text>
-  <text x="421" y="196" text-anchor="middle" font-size="8.5" fill="#E7E7EE">runs the steps in order, retries</text>
+  <rect x="330" y="160" width="176" height="48" rx="8" fill="#191921" stroke="#A56BFF" stroke-width="1.9"/>
+  <text x="418" y="181" text-anchor="middle" fill="#C79BFF">Amazon MWAA</text>
+  <text x="418" y="197" text-anchor="middle" font-size="8.5" fill="#E7E7EE">runs steps in order, retries</text>
 
-  <rect x="560" y="160" width="150" height="46" rx="8" fill="#191921" stroke="#C79BFF" stroke-width="1.6"/>
-  <text x="635" y="180" text-anchor="middle" fill="#C79BFF">AWS Lambda</text>
-  <text x="635" y="196" text-anchor="middle" font-size="8.5" fill="#E7E7EE">S3 events, small steps, alerts</text>
+  <rect x="558" y="160" width="176" height="48" rx="8" fill="#191921" stroke="#C79BFF" stroke-width="1.6"/>
+  <text x="646" y="181" text-anchor="middle" fill="#C79BFF">AWS Lambda</text>
+  <text x="646" y="197" text-anchor="middle" font-size="8.5" fill="#E7E7EE">reacts to S3 events, alerts</text>
 
-  <path d="M421 158 L421 108" stroke="#A56BFF" stroke-width="1.6" stroke-dasharray="5 3" marker-end="url(#ap)"/>
-  <path d="M496 183 L556 183" stroke="#A56BFF" stroke-width="1.6" stroke-dasharray="5 3" marker-end="url(#ap)"/>
+  <path d="M418 158 L418 106" stroke="#A56BFF" stroke-width="1.6" stroke-dasharray="5 3" marker-end="url(#ap)"/>
+  <path d="M506 184 L554 184" stroke="#A56BFF" stroke-width="1.6" stroke-dasharray="5 3" marker-end="url(#ap)"/>
 
   <rect x="30" y="236" width="840" height="42" rx="8" fill="#191921" stroke="#FFB454" stroke-width="1.6"/>
   <text x="450" y="253" text-anchor="middle" font-size="10.5" fill="#FFB454">IAM</text>
@@ -293,32 +293,32 @@ s3://lake/silver/orders/order_date=2026-04-02/part-0000.parquet</code></pre>
 <figure class="diagram reveal">
 <svg viewBox="0 0 900 210" role="img" aria-label="A lakehouse on S3 in three zones: Bronze holds raw files exactly as received, Silver holds cleaned and conformed Parquet partitioned by date, Gold holds business-ready aggregate tables">
 <g font-family="var(--font)" font-size="10.5" fill="#E7E7EE">
-  <rect x="40" y="50" width="240" height="110" rx="10" fill="#191921" stroke="#FFB454" stroke-width="2"/>
-  <text x="160" y="74" text-anchor="middle" fill="#FFB454" font-size="12">BRONZE / raw</text>
-  <text x="160" y="96" text-anchor="middle" font-size="9">exactly as received</text>
-  <text x="160" y="112" text-anchor="middle" font-size="9">JSON, CSV, no changes</text>
-  <text x="160" y="128" text-anchor="middle" font-size="9">immutable, append-only</text>
-  <text x="160" y="144" text-anchor="middle" font-size="9">Standard-IA &rarr; Glacier</text>
+  <rect x="35" y="50" width="215" height="110" rx="10" fill="#191921" stroke="#FFB454" stroke-width="2"/>
+  <text x="142" y="74" text-anchor="middle" fill="#FFB454" font-size="12">BRONZE / raw</text>
+  <text x="142" y="96" text-anchor="middle" font-size="9">exactly as received</text>
+  <text x="142" y="112" text-anchor="middle" font-size="9">JSON, CSV, no changes</text>
+  <text x="142" y="128" text-anchor="middle" font-size="9">immutable, append-only</text>
+  <text x="142" y="144" text-anchor="middle" font-size="9">Standard-IA &rarr; Glacier</text>
 
-  <rect x="330" y="50" width="240" height="110" rx="10" fill="#191921" stroke="#9FE1FF" stroke-width="2"/>
+  <rect x="343" y="50" width="215" height="110" rx="10" fill="#191921" stroke="#9FE1FF" stroke-width="2"/>
   <text x="450" y="74" text-anchor="middle" fill="#9FE1FF" font-size="12">SILVER / cleaned</text>
   <text x="450" y="96" text-anchor="middle" font-size="9">typed, deduped, conformed</text>
   <text x="450" y="112" text-anchor="middle" font-size="9">Parquet, partitioned by date</text>
   <text x="450" y="128" text-anchor="middle" font-size="9">one row per business entity</text>
   <text x="450" y="144" text-anchor="middle" font-size="9">most jobs read from here</text>
 
-  <rect x="620" y="50" width="240" height="110" rx="10" fill="#191921" stroke="#5AC8FF" stroke-width="2"/>
-  <text x="740" y="74" text-anchor="middle" fill="#5AC8FF" font-size="12">GOLD / serving</text>
-  <text x="740" y="96" text-anchor="middle" font-size="9">business-ready aggregates</text>
-  <text x="740" y="112" text-anchor="middle" font-size="9">dimensional / wide tables</text>
-  <text x="740" y="128" text-anchor="middle" font-size="9">read by Athena, Redshift, BI</text>
-  <text x="740" y="144" text-anchor="middle" font-size="9">small, fast, denormalised</text>
+  <rect x="651" y="50" width="215" height="110" rx="10" fill="#191921" stroke="#5AC8FF" stroke-width="2"/>
+  <text x="758" y="74" text-anchor="middle" fill="#5AC8FF" font-size="12">GOLD / serving</text>
+  <text x="758" y="96" text-anchor="middle" font-size="9">business-ready aggregates</text>
+  <text x="758" y="112" text-anchor="middle" font-size="9">dimensional / wide tables</text>
+  <text x="758" y="128" text-anchor="middle" font-size="9">read by Athena, Redshift, BI</text>
+  <text x="758" y="144" text-anchor="middle" font-size="9">small, fast, denormalised</text>
 
-  <path d="M282 105 L328 105" stroke="#5AC8FF" stroke-width="2" fill="none" marker-end="url(#s3a)"/>
-  <path d="M572 105 L618 105" stroke="#5AC8FF" stroke-width="2" fill="none" marker-end="url(#s3a)"/>
-  <text x="305" y="92" text-anchor="middle" font-size="8.5" fill="#9FE1FF">clean &amp; type</text>
-  <text x="595" y="92" text-anchor="middle" font-size="8.5" fill="#9FE1FF">aggregate</text>
-  <text x="450" y="188" text-anchor="middle" font-size="10" fill="#FFB454">One bucket, three prefixes. Bronze is cheap and huge; Gold is small and hot.</text>
+  <path d="M252 105 L341 105" stroke="#5AC8FF" stroke-width="2" fill="none" marker-end="url(#s3a)"/>
+  <path d="M560 105 L649 105" stroke="#5AC8FF" stroke-width="2" fill="none" marker-end="url(#s3a)"/>
+  <text x="296" y="93" text-anchor="middle" font-size="8.5" fill="#9FE1FF">clean &amp; type</text>
+  <text x="604" y="93" text-anchor="middle" font-size="8.5" fill="#9FE1FF">aggregate</text>
+  <text x="450" y="190" text-anchor="middle" font-size="10" fill="#FFB454">One bucket, three prefixes. Bronze is cheap and huge; Gold is small and hot.</text>
 </g>
 <defs><marker id="s3a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#5AC8FF"/></marker></defs>
 </svg>
