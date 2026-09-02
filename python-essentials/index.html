@@ -169,15 +169,15 @@
 </defs></svg>
 <div class="page">
 <header>
-  <div class="kicker"><a class="back" href="../">❮ Data &amp; AI Engineering, Simply Explained</a></div>
+  <div class="kicker"><a class="back" href="../essentials.html">❮ Data Engineer Essentials</a></div>
   <h1>Python for Data Engineers</h1>
-  <p class="dek">The Python you actually need to know well: not clever one-liners, but <strong>code you'd want to maintain</strong>. Data structures and their real costs, comprehensions and generators, decorators, context managers, classes and dataclasses, type hints, error handling and logging, JSON/CSV/datetime, and concurrency and the GIL. The interview-focused <strong>data-structures-and-algorithms</strong> slice now lives on its own page: <a href="../dsa-python/">DSA in Python</a>.</p>
+  <p class="dek">The Python you actually need to know well: not clever one-liners, but <strong>code you'd want to maintain</strong>. Data structures and their real costs, comprehensions and generators, decorators, context managers, classes and dataclasses, type hints, error handling and logging, strings and regular expressions, JSON/CSV/datetime, concurrency and the GIL, and packaging a script so a scheduler can run it. The interview-focused <strong>data-structures-and-algorithms</strong> slice now lives on its own page: <a href="../dsa-python/">DSA in Python</a>.</p>
   <div class="stack">
     <span class="chip"><svg class="ico"><use href="#i-code"/></svg> Python 3.11+</span>
     <span class="chip"><svg class="ico"><use href="#i-book"/></svg> Fundamentals &#183; explained from zero</span>
     <span class="chip" style="color:#5AC8FF;border-color:#2B4A80;background:#0E2740"><svg class="ico"><use href="#i-target"/></svg> Maintainable, correctly-costed code</span>
   </div>
-  <div class="byline">~28 min read · Reference · Fundamentals</div>
+  <div class="byline">~34 min read · Reference · Fundamentals</div>
 </header>
 
 <div class="toc reveal">
@@ -193,8 +193,10 @@
   <a href="#typing"><svg class="ico"><use href="#i-shield"/></svg>09 · Type hints and why teams enforce them</a>
   <a href="#errors"><svg class="ico"><use href="#i-alert"/></svg>10 · Errors, retries &amp; logging</a>
   <a href="#context"><svg class="ico"><use href="#i-file"/></svg>11 · Context managers &amp; files</a>
-  <a href="#serde"><svg class="ico"><use href="#i-disk"/></svg>12 · JSON, CSV, datetime</a>
-  <a href="#concurrency"><svg class="ico"><use href="#i-network"/></svg>13 · Concurrency &amp; the GIL</a>
+  <a href="#strings"><svg class="ico"><use href="#i-search"/></svg>12 · Strings, f-strings &amp; text</a>
+  <a href="#serde"><svg class="ico"><use href="#i-disk"/></svg>13 · JSON, CSV, datetime</a>
+  <a href="#concurrency"><svg class="ico"><use href="#i-network"/></svg>14 · Concurrency &amp; the GIL</a>
+  <a href="#scripts"><svg class="ico"><use href="#i-terminal"/></svg>15 · Scripts, config &amp; dependencies</a>
   <a href="#glossary"><svg class="ico"><use href="#i-book"/></svg>＊ · Glossary</a>
   <a href="../dsa-python/"><svg class="ico"><use href="#i-target"/></svg>→ Companion: DSA in Python</a>
 </div>
@@ -205,13 +207,13 @@
 
 <ul class="reveal">
 <li>Python is <strong>interpreted</strong>. The CPython virtual machine runs each line of code one at a time, instead of compiling the whole program to machine code ahead of time the way C or Rust do.</li>
-<li>A lock called the <strong>Global Interpreter Lock (GIL)</strong> means a single Python process can only use one CPU core at a time for heavy computation. Section 13 covers this in detail.</li>
+<li>A lock called the <strong>Global Interpreter Lock (GIL)</strong> means a single Python process can only use one CPU core at a time for heavy computation. Section 14 covers this in detail.</li>
 <li>Everything a Python program touches lives in the <strong>RAM of one machine</strong>.</li>
 </ul>
 
 <p class="reveal">Put those three together and here is what happens in practice: try to sort a dataset bigger than your computer's memory using a plain Python <code>list</code>, and the operating system runs out of memory and kills the process before it finishes.</p>
 
-<p class="reveal">None of this makes Python a bad language. It makes Python a language where knowing what a tool <em>costs</em> matters as much as knowing what it does. That is the real subject of this page. Sections 02 through 13 cover the Python features that separate a quick script from code you would actually want to maintain: picking the right container for the job, comprehensions and generators, decorators, context managers, classes and dataclasses, type hints, error handling and logging, serialization, and concurrency. The data structures and algorithms that come up again and again in coding interviews (arrays and two pointers, hashmaps, sorting and binary search, trees and graphs, sliding windows, heaps, a little DP) are on the companion page, <a href="../dsa-python/">DSA in Python</a>, which builds directly on the containers and costs covered here.</p>
+<p class="reveal">None of this makes Python a bad language. It makes Python a language where knowing what a tool <em>costs</em> matters as much as knowing what it does. That is the real subject of this page. Sections 02 through 15 cover the Python features that separate a quick script from code you would actually want to maintain: picking the right container for the job, comprehensions and generators, decorators, context managers, classes and dataclasses, type hints, error handling and logging, text and regular expressions, serialization, concurrency, and packaging a job so a scheduler can run it. The data structures and algorithms that come up again and again in coding interviews (arrays and two pointers, hashmaps, sorting and binary search, trees and graphs, sliding windows, heaps, a little DP) are on the companion page, <a href="../dsa-python/">DSA in Python</a>, which builds directly on the containers and costs covered here.</p>
 
 <div class="callout gd reveal">
   <p style="margin:.2em 0"><span class="t"><svg class="ico"><use href="#i-bulb"/></svg> The habit worth building</span></p>
@@ -1113,7 +1115,94 @@ out.<span class="p">write_text</span>(<span class="g">"ok"</span>, encoding=<spa
 </pre></div>
 
 
-<h2 id="serde" class="reveal"><span class="hico"><svg class="ico"><use href="#i-disk"/></svg></span><span class="n">12.</span> JSON, CSV, datetime</h2>
+<h2 id="strings" class="reveal"><span class="hico"><svg class="ico"><use href="#i-search"/></svg></span><span class="n">12.</span> Strings, f-strings &amp; text</h2>
+<p class="reveal lead">Text is the type you handle most and get wrong most: a comma inside a field, a timestamp with the wrong format, a file that isn't UTF-8. The stdlib has a clean answer for each.</p>
+
+<h3 class="reveal">The string methods you reach for daily</h3>
+<p class="reveal">Strings are immutable — every method returns a <em>new</em> string, it never edits in place. The handful below cover almost all day-to-day parsing before you reach for anything heavier.</p>
+
+<div class="cb reveal"><span class="lang">python</span><pre>line = <span class="g">"  user_id=42; status=paid ; region=APAC  "</span>
+
+line.<span class="p">strip</span>()                       <span class="c"># drop leading/trailing whitespace</span>
+line.<span class="p">split</span>(<span class="g">";"</span>)                    <span class="c"># -&gt; ['  user_id=42', ' status=paid ', ' region=APAC  ']</span>
+<span class="g">","</span>.<span class="p">join</span>([<span class="g">"a"</span>, <span class="g">"b"</span>, <span class="g">"c"</span>])           <span class="c"># -&gt; "a,b,c"   (join is a method ON the separator)</span>
+<span class="g">"orders_2026.csv.gz"</span>.<span class="p">removesuffix</span>(<span class="g">".gz"</span>)   <span class="c"># -&gt; "orders_2026.csv"   (3.9+)</span>
+<span class="g">"s3://bucket/key"</span>.<span class="p">startswith</span>(<span class="g">"s3://"</span>)      <span class="c"># -&gt; True</span>
+<span class="g">"PAID"</span>.<span class="p">lower</span>()                     <span class="c"># normalise before comparing</span>
+text.<span class="p">splitlines</span>()                  <span class="c"># split on \n / \r\n WITHOUT a trailing "" element</span>
+
+<span class="c"># parse "k=v; k=v" into a dict — split twice, strip both halves</span>
+parts = (kv.<span class="p">split</span>(<span class="g">"="</span>, <span class="y">1</span>) <span class="k">for</span> kv <span class="k">in</span> line.<span class="p">split</span>(<span class="g">";"</span>))
+fields = {k.<span class="p">strip</span>(): v.<span class="p">strip</span>() <span class="k">for</span> k, v <span class="k">in</span> parts}
+<span class="c"># {'user_id': '42', 'status': 'paid', 'region': 'APAC'}</span>
+</pre></div>
+
+<h3 class="reveal">f-strings and format specs</h3>
+<p class="reveal">An f-string interpolates any expression inside <code>{ }</code>. The part after the colon is a <strong>format spec</strong> — the same mini-language <code>format()</code> uses — and it is where most of the value is: fixed decimals for money, thousands separators for row counts, fixed width for aligned logs.</p>
+
+<div class="cb reveal"><span class="lang">python</span><pre>amount, rows, pct = <span class="y">1234567.5</span>, <span class="y">48213</span>, <span class="y">0.0731</span>
+
+<span class="g">f"{amount:,.2f}"</span>      <span class="c"># "1,234,567.50"   thousands sep + 2 decimals</span>
+<span class="g">f"{rows:,}"</span>           <span class="c"># "48,213"</span>
+<span class="g">f"{pct:.1%}"</span>          <span class="c"># "7.3%"           .Nf but scaled ×100 with a % sign</span>
+<span class="g">f"{'region':&lt;10}|"</span>    <span class="c"># "region    |"    left-align in a 10-wide field (&gt; right, ^ centre)</span>
+<span class="g">f"{name!r}"</span>           <span class="c"># calls repr(name) — quotes strings, shows None clearly</span>
+<span class="g">f"{ts:%Y-%m-%d}"</span>      <span class="c"># format a datetime inline</span>
+
+<span class="c"># self-documenting debug output (3.8+): prints the expression text too</span>
+<span class="p">print</span>(<span class="g">f"{rows=} {amount=:,.2f}"</span>)   <span class="c"># rows=48213 amount=1,234,567.50</span>
+</pre></div>
+
+<h3 class="reveal"><code>str</code> vs <code>bytes</code>: the encoding footgun</h3>
+<p class="reveal">A file on disk or a socket is <strong>bytes</strong>. Python text is <strong>str</strong> (Unicode). Converting between them needs an <em>encoding</em>, and getting it wrong is one of the most common real-world data bugs — a partner sends a Latin-1 CSV, your code assumes UTF-8, and it crashes on the first accented character (or worse, silently mangles it).</p>
+
+<div class="cb reveal"><span class="lang">python</span><pre>b = <span class="g">"Hà Nội"</span>.<span class="p">encode</span>(<span class="g">"utf-8"</span>)     <span class="c"># str  -&gt; bytes  b'H\xc3\xa0 N\xe1\xbb\x99i'</span>
+b.<span class="p">decode</span>(<span class="g">"utf-8"</span>)                  <span class="c"># bytes -&gt; str  "Hà Nội"</span>
+
+<span class="c"># ALWAYS pass encoding explicitly — the default is platform-dependent</span>
+<span class="k">with</span> <span class="p">open</span>(<span class="g">"partner.csv"</span>, encoding=<span class="g">"utf-8"</span>) <span class="k">as</span> f:
+    ...
+
+<span class="c"># a file that might have a byte-order mark (Excel exports do): utf-8-sig strips it</span>
+<span class="p">open</span>(<span class="g">"excel_export.csv"</span>, encoding=<span class="g">"utf-8-sig"</span>)
+
+<span class="c"># last resort for genuinely dirty data — don't crash the run on one bad byte</span>
+raw.<span class="p">decode</span>(<span class="g">"utf-8"</span>, errors=<span class="g">"replace"</span>)   <span class="c"># each bad byte becomes U+FFFD, no crash</span>
+</pre></div>
+
+<div class="callout rd reveal">
+  <p style="margin:.2em 0"><span class="t"><svg class="ico"><use href="#i-warn"/></svg> Three text traps</span></p>
+  <p style="margin:.5em 0 0;font-size:14.5px;color:#CDD0DD"><b>1.</b> Never rely on the default file encoding — CI, a container and a laptop can disagree, so a job that works locally corrupts data in prod. Pass <code>encoding="utf-8"</code> to every <code>open()</code>. <b>2.</b> <code>UnicodeDecodeError: ... 'utf-8'</code> almost always means the file is Latin-1 / Windows-1252; decode with that, don't paper over it with <code>errors="ignore"</code> (which deletes data). <b>3.</b> Building a path or a query by <code>+</code>-joining strings invites bugs — use <code>pathlib</code> (§11) for paths and parameterised queries for SQL, never f-string interpolation into SQL.</p>
+</div>
+
+<h3 class="reveal">Regular expressions with <code>re</code></h3>
+<p class="reveal">When a string is too irregular for <code>.split()</code> — a log line, a filename convention, a free-text field — a regular expression describes the shape of what you want to pull out. Write patterns as <strong>raw strings</strong> (<code>r"..."</code>) so backslashes mean what they say.</p>
+
+<div class="cb reveal"><span class="lang">python</span><pre><span class="k">import</span> re
+
+log = <span class="g">'2026-07-16T03:00:01Z ERROR user=42 "disk full" retries=3'</span>
+
+<span class="c"># search: first match anywhere; match: only at the start; findall: every match</span>
+m = re.<span class="p">search</span>(<span class="g">r'user=(\d+)'</span>, log)
+m.<span class="p">group</span>(<span class="y">1</span>)                     <span class="c"># "42"   — group(1) is the first (...)</span>
+
+<span class="c"># named groups read far better once there is more than one</span>
+pat = re.<span class="p">compile</span>(
+    <span class="g">r'(?P&lt;ts&gt;\S+)\s+(?P&lt;level&gt;\w+)\s+user=(?P&lt;user&gt;\d+)'</span>
+)                              <span class="c"># compile once, reuse in a hot loop</span>
+d = pat.<span class="p">search</span>(log).<span class="p">groupdict</span>()
+<span class="c"># {'ts': '2026-07-16T03:00:01Z', 'level': 'ERROR', 'user': '42'}</span>
+
+re.<span class="p">findall</span>(<span class="g">r'\d+'</span>, log)          <span class="c"># ['2026', '16', '03', '00', '01', '42', '3']</span>
+re.<span class="p">sub</span>(<span class="g">r'user=\d+'</span>, <span class="g">'user=***'</span>, log)   <span class="c"># redact before logging</span>
+</pre></div>
+
+<div class="callout rd reveal">
+  <p style="margin:.2em 0"><span class="t"><svg class="ico"><use href="#i-warn"/></svg> Regex, but not for everything</span></p>
+  <p style="margin:.5em 0 0;font-size:14.5px;color:#CDD0DD"><b>Don't</b> parse JSON, CSV or HTML with regex — use the real parser (§13), which handles quoting and nesting a pattern never will. <b>Greedy by default:</b> <code>.*</code> grabs as much as possible, so <code>".*"</code> on <code>"a" and "b"</code> matches the whole thing — use the lazy <code>.*?</code> to stop at the first closing quote. <b>Compile once:</b> a pattern used per-row in a million-row loop should be a module-level <code>re.compile(...)</code>, not rebuilt every call. And a genuinely complex pattern needs <code>re.VERBOSE</code> and a comment, or the next person (you) cannot change it safely.</p>
+</div>
+
+<h2 id="serde" class="reveal"><span class="hico"><svg class="ico"><use href="#i-disk"/></svg></span><span class="n">13.</span> JSON, CSV, datetime</h2>
 <p class="reveal lead">Serialization is where quiet data corruption tends to hide: broken unicode, quoted commas split in half, and timestamps with no timezone that drift your whole warehouse by hours.</p>
 
 <h3 class="reveal">JSON and the streaming standard: JSON Lines</h3>
@@ -1171,7 +1260,7 @@ back = datetime.<span class="p">fromtimestamp</span>(epoch, timezone.utc)
 </div>
 
 
-<h2 id="concurrency" class="reveal"><span class="hico"><svg class="ico"><use href="#i-network"/></svg></span><span class="n">13.</span> Concurrency &amp; the GIL</h2>
+<h2 id="concurrency" class="reveal"><span class="hico"><svg class="ico"><use href="#i-network"/></svg></span><span class="n">14.</span> Concurrency &amp; the GIL</h2>
 <p class="reveal lead">Python can wait on thousands of things at once, but it can only <em>compute</em> one thing at a time. Understanding that split is the key to correctly picking between threads, processes, and asyncio.</p>
 
 <p class="reveal">CPython has a <strong>Global Interpreter Lock (GIL)</strong>: only one thread can execute Python bytecode at any given instant. This leads to the single most misunderstood fact in Python performance: threads do <em>not</em> give you parallel CPU computation. But the GIL is <em>released</em> while a thread is waiting on the operating system, for example on the network or on disk, so threads do help with <strong>I/O-bound</strong> work. While one thread is blocked waiting on a socket, another thread can run.</p>
@@ -1225,6 +1314,103 @@ results = {}
 </div>
 
 
+<h2 id="scripts" class="reveal"><span class="hico"><svg class="ico"><use href="#i-terminal"/></svg></span><span class="n">15.</span> Scripts, config &amp; dependencies</h2>
+<p class="reveal lead">A data pipeline is usually a script that <em>something else</em> runs — cron, Airflow, a CI job. Four small things separate a script that survives contact with a scheduler from a snippet that only works in your terminal.</p>
+
+<h3 class="reveal"><code>if __name__ == "__main__"</code> and a <code>main()</code></h3>
+<p class="reveal">When Python imports a file, it <em>runs</em> the whole thing. Code sitting loose at module level therefore fires the moment a test, an Alembic script, or another module merely imports yours. The guard <code>if __name__ == "__main__":</code> is true only when the file is run <em>directly</em> (<code>python job.py</code> or <code>python -m pkg.job</code>), not when it is imported — so put the actual work in a <code>main()</code> function and call it from the guard.</p>
+
+<div class="cb reveal"><span class="lang">python</span><pre><span class="c"># jobs/ingest.py</span>
+<span class="k">import</span> sys
+
+<span class="k">def</span> <span class="p">main</span>() -&gt; <span class="y">int</span>:
+    rows = <span class="p">run_pipeline</span>()
+    <span class="k">if</span> <span class="k">not</span> rows:
+        <span class="p">print</span>(<span class="g">"no rows — upstream empty?"</span>, file=sys.stderr)
+        <span class="k">return</span> <span class="y">1</span>            <span class="c"># non-zero exit -&gt; the scheduler marks the run FAILED</span>
+    <span class="p">load</span>(rows)
+    <span class="k">return</span> <span class="y">0</span>
+
+<span class="k">if</span> __name__ == <span class="g">"__main__"</span>:
+    <span class="p">raise</span> <span class="y">SystemExit</span>(<span class="p">main</span>())   <span class="c"># SystemExit(0) is a clean exit; (1) signals failure</span>
+</pre></div>
+
+<p class="reveal">The exit code is not a detail: cron, Airflow's <code>BashOperator</code> and every CI step decide "did this succeed?" purely from whether the process exited <code>0</code>. A script that hits an error, prints it, and falls off the end still exits <code>0</code> — a green run that shipped nothing.</p>
+
+<h3 class="reveal">Arguments with <code>argparse</code></h3>
+<p class="reveal">The same job usually needs to run for a specific date, or in a dry-run mode, or against a subset. Hard-coding those means editing the file to change them; <code>argparse</code> turns them into real command-line flags, with types, defaults, validation and a generated <code>--help</code>.</p>
+
+<div class="cb reveal"><span class="lang">python</span><pre><span class="k">import</span> argparse
+<span class="k">from</span> datetime <span class="k">import</span> date
+
+<span class="k">def</span> <span class="p">parse_args</span>(argv=<span class="k">None</span>) -&gt; argparse.<span class="y">Namespace</span>:
+    p = argparse.<span class="p">ArgumentParser</span>(description=<span class="g">"Ingest one day of orders."</span>)
+    p.<span class="p">add_argument</span>(<span class="g">"--date"</span>, type=date.<span class="p">fromisoformat</span>, required=<span class="k">True</span>,
+                   help=<span class="g">"partition to load, YYYY-MM-DD"</span>)
+    p.<span class="p">add_argument</span>(<span class="g">"--source"</span>, choices=[<span class="g">"s3"</span>, <span class="g">"sftp"</span>], default=<span class="g">"s3"</span>)
+    p.<span class="p">add_argument</span>(<span class="g">"--limit"</span>, type=<span class="y">int</span>, default=<span class="k">None</span>, help=<span class="g">"cap rows (debugging)"</span>)
+    p.<span class="p">add_argument</span>(<span class="g">"--dry-run"</span>, action=<span class="g">"store_true"</span>, help=<span class="g">"read + validate, do not write"</span>)
+    <span class="k">return</span> p.<span class="p">parse_args</span>(argv)
+
+<span class="c"># python -m jobs.ingest --date 2026-07-16 --dry-run</span>
+args = <span class="p">parse_args</span>()
+<span class="k">if</span> args.dry_run:
+    ...
+</pre></div>
+
+<h3 class="reveal">Configuration comes from the environment</h3>
+<p class="reveal">Connection strings, credentials and bucket names change between dev, staging and prod, and must never live in the code or in Git. The <strong>twelve-factor</strong> convention is to read them from environment variables. <code>os.environ["X"]</code> raises <code>KeyError</code> if it is missing — which is what you want for anything required, so the job dies immediately at startup with a clear message instead of a confusing failure ten minutes in. Use <code>os.getenv("X", default)</code> only for genuinely optional settings.</p>
+
+<div class="cb reveal"><span class="lang">python</span><pre><span class="k">import</span> os
+
+DATABASE_URL = os.<span class="p">environ</span>[<span class="g">"DATABASE_URL"</span>]        <span class="c"># required -&gt; fail loud if unset</span>
+BATCH_SIZE   = <span class="y">int</span>(os.<span class="p">getenv</span>(<span class="g">"BATCH_SIZE"</span>, <span class="g">"1000"</span>))  <span class="c"># optional, with a default (still a str!)</span>
+DEBUG        = os.<span class="p">getenv</span>(<span class="g">"DEBUG"</span>, <span class="g">""</span>).<span class="p">lower</span>() <span class="k">in</span> {<span class="g">"1"</span>, <span class="g">"true"</span>, <span class="g">"yes"</span>}
+
+<span class="c"># For anything beyond a handful of vars, use pydantic-settings (see the FastAPI</span>
+<span class="c"># guide): it reads env + a .env file, coerces types, and validates on startup.</span>
+</pre></div>
+
+<div class="callout gr reveal">
+  <p style="margin:.2em 0"><span class="t"><svg class="ico"><use href="#i-check"/></svg> Validate config once, at the top</span></p>
+  <p style="margin:.5em 0 0;font-size:14.5px;color:#CDD0DD">Read and check every setting the job needs in the first few lines of <code>main()</code>, before doing any work. A missing <code>DATABASE_URL</code> should crash the container at 09:00:00 with <code>KeyError: 'DATABASE_URL'</code>, not produce a mysterious connection error at 09:11 after you have already deleted the target table. This is the same "fail at startup" rule the settings object in the FastAPI guide enforces.</p>
+</div>
+
+<h3 class="reveal">Calling other programs with <code>subprocess</code></h3>
+<p class="reveal">Sometimes the tool you need is a CLI — <code>aws</code>, <code>dbt</code>, <code>rclone</code>. <code>subprocess.run</code> shells out to it. Pass the command as a <strong>list</strong> (never a string with <code>shell=True</code> and interpolated input — that is a command-injection hole), and pass <code>check=True</code> so a non-zero exit raises instead of being ignored.</p>
+
+<div class="cb reveal"><span class="lang">python</span><pre><span class="k">import</span> subprocess
+
+result = subprocess.<span class="p">run</span>(
+    [<span class="g">"dbt"</span>, <span class="g">"run"</span>, <span class="g">"--select"</span>, <span class="g">"staging.orders"</span>, <span class="g">"--target"</span>, <span class="g">"prod"</span>],
+    check=<span class="k">True</span>,          <span class="c"># non-zero exit -&gt; CalledProcessError</span>
+    capture_output=<span class="k">True</span>, <span class="c"># collect stdout/stderr instead of letting them through</span>
+    text=<span class="k">True</span>,           <span class="c"># decode to str, not bytes</span>
+    timeout=<span class="y">1800</span>,        <span class="c"># always bound it — a hung child hangs the whole job</span>
+)
+<span class="p">print</span>(result.stdout)
+</pre></div>
+
+<div class="callout rd reveal">
+  <p style="margin:.2em 0"><span class="t"><svg class="ico"><use href="#i-warn"/></svg> Prefer a library to a subprocess when one exists</span></p>
+  <p style="margin:.5em 0 0;font-size:14.5px;color:#CDD0DD">Shelling out to <code>aws s3 cp</code> works, but <code>boto3</code> gives you real exceptions, retries, pagination and no parsing of human-readable output. Use <code>subprocess</code> for tools that have no Python API (<code>dbt</code>, <code>rclone</code>, a legacy binary); reach for the SDK for anything that has one. And whatever you do, <strong>never</strong> build a shell command by concatenating a value someone else controls.</p>
+</div>
+
+<h3 class="reveal">Virtual environments and pinned dependencies</h3>
+<p class="reveal">Every project gets its own isolated set of packages, so two jobs on the same box can need different versions of <code>pandas</code> without a fight. And the versions must be <strong>pinned</strong> — a lock file recording the exact version of every direct and transitive dependency — or "works on my machine" becomes "broke in prod when a transitive dep released overnight".</p>
+
+<div class="cb reveal"><span class="lang">bash</span><pre><span class="c"># the classic tools</span>
+<span class="k">python</span> -m venv .venv &amp;&amp; <span class="k">source</span> .venv/bin/activate
+<span class="k">pip</span> install -r requirements.txt        <span class="c"># deps listed, ideally each ==pinned</span>
+
+<span class="c"># the modern one: uv — same idea, ~10-100x faster, writes a real lock file</span>
+<span class="k">uv</span> add pandas httpx                     <span class="c"># updates pyproject.toml + uv.lock</span>
+<span class="k">uv</span> sync                                <span class="c"># recreate the exact environment from the lock</span>
+<span class="k">uv</span> run python -m jobs.ingest --date 2026-07-16
+</pre></div>
+
+<p class="reveal">Commit the lock file (<code>uv.lock</code>, or a fully-pinned <code>requirements.txt</code> from <code>pip freeze</code> / <code>pip-compile</code>). CI and the production image install <em>from the lock</em>, so every environment is byte-identical — the same guarantee <code>package-lock.json</code> gives a JavaScript project.</p>
+
 <h2 id="glossary" class="reveal"><span class="hico"><svg class="ico"><use href="#i-book"/></svg></span><span class="n">＊.</span> Glossary</h2>
 <p class="reveal lead">The core vocabulary of this guide, defined clearly. Skim it to check that you can explain each term in a sentence.</p>
 
@@ -1249,6 +1435,10 @@ results = {}
 <dt>Vectorisation</dt><dd>Expressing an operation over a whole array/column at once so it runs in fast native code, instead of a Python-level loop — the pandas/NumPy performance mindset.</dd>
 <dt>DB-API</dt><dd>Python's standard database interface (PEP 249): <code>connect</code>, <code>cursor</code>, <code>execute</code>, <code>fetch*</code>, <code>commit</code> — the shape every SQL driver follows.</dd>
 <dt>Idempotency</dt><dd>A property where running an operation again yields the same result — critical for safe pipeline retries and backfills (e.g. upsert, not blind insert).</dd>
+<dt>f-string</dt><dd>A string literal prefixed <code>f"..."</code> that interpolates <code>{expression}</code> inline; the part after <code>:</code> is a format spec (<code>:,.2f</code>, <code>:&gt;10</code>, <code>:.1%</code>). <code>f"{x=}"</code> prints the expression text too.</dd>
+<dt>Encoding</dt><dd>The rule that maps text (<code>str</code>) to bytes and back — UTF-8 by convention. Guessing wrong raises <code>UnicodeDecodeError</code> or silently mangles data; pass <code>encoding="utf-8"</code> to every <code>open()</code>.</dd>
+<dt>Regular expression</dt><dd>A pattern language (<code>re</code> module) for finding and extracting structure from irregular text — log lines, filenames, free-text fields. Write patterns as raw strings <code>r"..."</code>; not for parsing JSON/CSV/HTML.</dd>
+<dt>Environment variable</dt><dd>A key/value set outside the program (<code>os.environ</code>) used to pass config and secrets that differ per environment, so they never live in code or Git. <code>os.environ["X"]</code> fails loud if missing; <code>os.getenv("X", default)</code> for optional ones.</dd>
 </dl>
 </div>
 <footer class="reveal">
