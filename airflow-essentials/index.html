@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Apache Airflow Essentials — Architecture, DAGs &amp; AWS MWAA in Depth</title>
+<title>Apache Airflow Essentials — Architecture, DAGs &amp; Production Practices</title>
 <style>
   :root{
     --bg:#111117; --bg2:#16161D; --panel:#191921; --panel2:#16161d;
@@ -12,7 +12,6 @@
     --purple:#A56BFF; --magenta:#FF6B9D; --magenta2:#A56BFF;
     --warn:#FFB454; --good:#5AC8FF;
     --sched:#5AC8FF; --web:#28B9FF; --dbc:#FFB454; --exec:#A56BFF; --trig:#FF6B9D;
-    --mwaa:#FF9900;
     --grad:linear-gradient(90deg,#28B9FF,#5C78FF);
     --font:"JetBrainsMono Nerd Font","JetBrains Mono","Symbols Nerd Font",ui-monospace,"Cascadia Code",Menlo,Consolas,monospace;
   }
@@ -69,12 +68,11 @@
   .tag.dbc{color:var(--dbc);border-color:#FFB45455;background:#FFB45414}
   .tag.exec{color:var(--exec);border-color:#A56BFF55;background:#A56BFF14}
   .tag.trig{color:var(--trig);border-color:#FF6B9D55;background:#FF6B9D14}
-  .tag.mwaa{color:var(--mwaa);border-color:#FF990055;background:#FF990014}
   .tag.int{color:#5AC8FF;border-color:#5C78FF55;background:linear-gradient(90deg,#5C78FF14,#A56BFF14)}
   .profile{border:1px solid #2c2c36;border-radius:16px;padding:22px 26px;margin:22px auto;max-width:820px;background:#1D1D26}
   .profile.sched{border-top:3px solid var(--sched)} .profile.web{border-top:3px solid var(--web)}
   .profile.dbc{border-top:3px solid var(--dbc)} .profile.exec{border-top:3px solid var(--exec)}
-  .profile.trig{border-top:3px solid var(--trig)} .profile.mwaa{border-top:3px solid var(--mwaa)}
+  .profile.trig{border-top:3px solid var(--trig)}
   .profile.int{border-top:3px solid transparent;border-image:var(--grad) 1}
   .profile .one{font-size:17px;color:#fff;font-weight:700;margin:10px 0 12px}
   .kv{font-size:14.5px;color:#cdd0dd;margin:5px 0}
@@ -86,7 +84,7 @@
   tr:nth-child(even) td{background:#17171E}
   .cell-sched{color:var(--sched);font-weight:700}.cell-web{color:var(--web);font-weight:700}
   .cell-dbc{color:var(--dbc);font-weight:700}.cell-exec{color:var(--exec);font-weight:700}
-  .cell-trig{color:var(--trig);font-weight:700}.cell-mwaa{color:var(--mwaa);font-weight:700}
+  .cell-trig{color:var(--trig);font-weight:700}
   .promptline{color:var(--dim);font-size:13px;margin:54px 0 -6px}
   .promptline b{color:var(--cyan2)}
   .js .reveal{opacity:0;transform:translateY(22px);transition:opacity .7s ease,transform .7s ease}
@@ -170,21 +168,20 @@ h2 .n{color:var(--blue2,#5C78FF)}
 
 <header class="hero">
   <div class="kicker">Data Orchestration · Field Guide</div>
-  <h1>Apache Airflow Essentials: Architecture, DAGs &amp; AWS MWAA</h1>
-  <p class="dek">How Airflow actually works — the DAG model, the scheduler/executor/triggerer architecture, and the authoring habits that keep it fast in production — then the same ground for Amazon MWAA, where AWS runs that architecture for you.</p>
+  <h1>Apache Airflow Essentials: Architecture, DAGs &amp; Production Practices</h1>
+  <p class="dek">How Airflow actually works — the DAG model, the scheduler/executor/triggerer architecture, and the authoring habits that keep it fast in production — for anyone who runs pipelines on it, self-hosted or managed.</p>
   <div class="logos">
     <figure><svg viewBox="0 0 100 100" role="img" aria-label="Airflow DAG icon"><circle cx="50" cy="50" r="44" fill="#1D1D26" stroke="#28B9FF" stroke-width="2"/><circle cx="30" cy="35" r="7" fill="#5AC8FF"/><circle cx="70" cy="35" r="7" fill="#5AC8FF"/><circle cx="50" cy="65" r="7" fill="#A56BFF"/><line x1="30" y1="35" x2="50" y2="65" stroke="#5AC8FF" stroke-width="2"/><line x1="70" y1="35" x2="50" y2="65" stroke="#5AC8FF" stroke-width="2"/></svg><figcaption>DAG</figcaption></figure>
-    <figure><svg viewBox="0 0 100 100" role="img" aria-label="AWS MWAA icon"><circle cx="50" cy="50" r="44" fill="#1D1D26" stroke="#FF9900" stroke-width="2"/><rect x="30" y="32" width="40" height="10" rx="3" fill="#FF9900"/><rect x="30" y="46" width="40" height="10" rx="3" fill="#FFA733"/><rect x="30" y="60" width="40" height="10" rx="3" fill="#FFB966"/></svg><figcaption>MWAA</figcaption></figure>
   </div>
-  <p class="byline">~44 min read · updated 2026 · a field guide, not official Apache or AWS documentation · no assumed orchestration background</p>
+  <p class="byline">~36 min read · updated 2026 · a field guide, not official Apache documentation · no assumed orchestration background</p>
 </header>
 
 <div class="wrap">
 
 <!-- HOOK -->
 <div class="prose reveal">
-<p class="lead">A batch job that runs once, by hand, from a laptop is not a data pipeline — it is a demo. The moment that job needs to run every night, depend on three upstream jobs finishing first, retry safely when a network call fails, and page someone at 3 a.m. only when it actually matters, you need an <strong>orchestrator</strong>. <strong>Apache Airflow</strong> is the most widely adopted answer to that problem: a platform for defining workflows as Python code, scheduling them, and watching them run — and <strong>Amazon MWAA</strong> is AWS's answer to the next problem Airflow creates once you adopt it: someone still has to patch, scale, and secure the thing that orchestrates everything else.</p>
-<p>Sections 01–14 cover Airflow itself, written to be useful whether you run it yourself or through a managed service. Sections 15–18 are a dedicated look at <strong>AWS Managed Workflows for Apache Airflow (MWAA)</strong>.</p>
+<p class="lead">A batch job that runs once, by hand, from a laptop is not a data pipeline — it is a demo. The moment that job needs to run every night, depend on three upstream jobs finishing first, retry safely when a network call fails, and page someone at 3 a.m. only when it actually matters, you need an <strong>orchestrator</strong>. <strong>Apache Airflow</strong> is the most widely adopted answer to that problem: a platform for defining workflows as Python code, scheduling them, and watching them run.</p>
+<p>This guide covers Airflow itself — the model, the architecture, and the authoring and operating habits that matter in production — written to be useful whether you run it yourself or through a managed service (AWS MWAA, Google Cloud Composer, Astronomer). The specifics of any one managed platform are out of scope.</p>
 </div>
 
 <div class="toc reveal">
@@ -203,10 +200,7 @@ h2 .n{color:var(--blue2,#5C78FF)}
   <a href="#s12"><svg class="ico"><use href="#i-repeat"/></svg>12 · Datasets &amp; Data-Aware Scheduling</a>
   <a href="#s13"><svg class="ico"><use href="#i-workflow"/></svg>13 · Monitoring, Logging, Alerting &amp; the Airflow UI</a>
   <a href="#s14"><svg class="ico"><use href="#i-check"/></svg>14 · Security &amp; Production Best Practices</a>
-  <a href="#s15"><svg class="ico"><use href="#i-compass"/></svg>15 · AWS MWAA: Overview &amp; Architecture</a>
-  <a href="#s16"><svg class="ico"><use href="#i-rocket"/></svg>16 · Setting Up &amp; Operating an MWAA Environment</a>
-  <a href="#s17"><svg class="ico"><use href="#i-workflow"/></svg>17 · MWAA Integrations with the AWS Ecosystem</a>
-  <a href="#s18"><svg class="ico"><use href="#i-book"/></svg>18 · Glossary &amp; Quick Reference</a>
+  <a href="#s18"><svg class="ico"><use href="#i-book"/></svg>15 · Glossary &amp; Quick Reference</a>
 </div>
 
 <!-- START s01 -->
@@ -481,7 +475,7 @@ with DAG(
 <div class="prose reveal">
 <p>The executor is one configuration value — <code>core.executor</code> — that shapes how a deployment scales, fails, and costs money. The table below compares all five; what follows is the reasoning the table can't hold.</p>
 <p><b>SequentialExecutor</b> is the out-of-the-box default, paired with SQLite. It exists only so a fresh install can run its first DAG with no setup. <b>LocalExecutor</b> is the smallest genuinely production-usable step up: parallel subprocesses on the scheduler's own machine, requiring a real database.</p>
-<p><b>CeleryExecutor</b> hands tasks to remote workers through a broker (Redis or RabbitMQ); workers report back through the metadata database, so you absorb load by adding workers. This is the model AWS MWAA runs under the hood, as a managed auto-scaling Fargate fleet — see <a href="#s15">Section 15</a>. <b>KubernetesExecutor</b> trades startup latency for isolation: a brand-new pod per task instance, each with its own resource limits and no leftover state. <b>CeleryKubernetesExecutor</b> routes per task by queue name, for when most tasks are light but a few need real isolation.</p>
+<p><b>CeleryExecutor</b> hands tasks to remote workers through a broker (Redis or RabbitMQ); workers report back through the metadata database, so you absorb load by adding workers. This is the model most managed Airflow services run under the hood, as an auto-scaling worker fleet. <b>KubernetesExecutor</b> trades startup latency for isolation: a brand-new pod per task instance, each with its own resource limits and no leftover state. <b>CeleryKubernetesExecutor</b> routes per task by queue name, for when most tasks are light but a few need real isolation.</p>
 </div>
 
 <div class="tablewrap reveal">
@@ -1103,7 +1097,7 @@ def check_export_ready(key: str) -&gt; bool:
 <h3 class="reveal">Building Custom Operators, Hooks &amp; Sensors</h3>
 <div class="prose reveal">
 <p>When nothing existing fits logic your team repeats, subclass the same base classes the built-ins use. A <b>custom hook</b> subclasses <code>BaseHook</code> and wraps a client library the way <code>S3Hook</code> wraps boto3. A <b>custom operator</b> subclasses <code>BaseOperator</code>, takes its parameters in <code>__init__</code>, and does the work in <code>execute(self, context)</code> — whose return value becomes the task's XCom <code>return_value</code>. A <b>custom sensor</b> subclasses <code>BaseSensorOperator</code> and implements <code>poke()</code>, inheriting poke/reschedule mode for free.</p>
-<p>They earn their cost when the same logic must be reused, tested, and documented as one named building block across teams. For a one-off, a plain <code>@task</code> calling an existing hook is simpler and no worse — don't write an operator class to wrap a single call site. Package the ones you do build as a plugin (<code>plugins.zip</code>, per <a href="#s16">Section 16</a>) or as an installable package if more than one environment needs it.</p>
+<p>They earn their cost when the same logic must be reused, tested, and documented as one named building block across teams. For a one-off, a plain <code>@task</code> calling an existing hook is simpler and no worse — don't write an operator class to wrap a single call site. Package the ones you do build as a plugin (a <code>plugins.zip</code> in the plugins folder) or as an installable package if more than one environment needs it.</p>
 </div>
 <pre class="reveal"><code><span class="c1"># custom_operators/reconciliation_operator.py</span>
 from airflow.models import BaseOperator
@@ -1128,7 +1122,7 @@ class S3RowCountCheckOperator(BaseOperator):
 </code></pre>
 <div class="prose reveal">
 <p>Add <code>template_fields = ("prefix",)</code> as a class attribute and that parameter runs through Jinja at execution time, exactly like a built-in operator's <code>sql</code> — so a DAG author can pass <code>prefix="daily/{{ ds }}/"</code> and have it resolve per run, without your operator knowing anything about dates.</p>
-<p>Airflow discovers packaged components two ways. A <code>plugins.zip</code> in the plugins folder (or synced by MWAA, per <a href="#s16">Section 16</a>) is picked up at the next restart — fine for one environment. An installable package registers itself via Python entry points, the same mechanism every provider uses, so it can be versioned and reused across deployments without copying files by hand.</p>
+<p>Airflow discovers packaged components two ways. A <code>plugins.zip</code> in the plugins folder (or synced from object storage by a managed service) is picked up at the next restart — fine for one environment. An installable package registers itself via Python entry points, the same mechanism every provider uses, so it can be versioned and reused across deployments without copying files by hand.</p>
 </div>
 <!-- END s10 -->
 
@@ -1233,7 +1227,7 @@ wait_for_export_deferrable = S3KeySensor(
   <rect x="400" y="60" width="150" height="50" rx="4" fill="none" stroke="var(--cyan2)"/>
   <text x="475" y="90" font-size="12" font-family="var(--font)" fill="var(--ink)" text-anchor="middle">task_load</text>
 
-  <rect x="395" y="150" width="160" height="40" rx="4" fill="none" stroke="var(--mwaa)"/>
+  <rect x="395" y="150" width="160" height="40" rx="4" fill="none" stroke="var(--purple)"/>
   <text x="475" y="167" font-size="12" font-family="var(--font)" fill="var(--ink)" text-anchor="middle">Dataset</text>
   <text x="475" y="183" font-size="12" font-family="var(--font)" fill="#E7E7EE" text-anchor="middle">cleaned_data/</text>
 
@@ -1248,11 +1242,11 @@ wait_for_export_deferrable = S3KeySensor(
   <line x1="370" y1="85" x2="390" y2="85" stroke="var(--muted)"/>
   <polygon points="400,85 390,80 390,90" fill="var(--muted)"/>
 
-  <line x1="475" y1="110" x2="475" y2="140" stroke="var(--mwaa)"/>
-  <polygon points="475,150 470,140 480,140" fill="var(--mwaa)"/>
+  <line x1="475" y1="110" x2="475" y2="140" stroke="var(--purple)"/>
+  <polygon points="475,150 470,140 480,140" fill="var(--purple)"/>
 
-  <line x1="475" y1="190" x2="475" y2="220" stroke="var(--mwaa)"/>
-  <polygon points="475,230 470,220 480,220" fill="var(--mwaa)"/>
+  <line x1="475" y1="190" x2="475" y2="220" stroke="var(--purple)"/>
+  <polygon points="475,230 470,220 480,220" fill="var(--purple)"/>
 
   <line x1="555" y1="255" x2="590" y2="255" stroke="var(--muted)"/>
   <polygon points="600,255 590,250 590,260" fill="var(--muted)"/>
@@ -1501,222 +1495,12 @@ daily_pipeline()
 </div>
 <!-- END s14 -->
 
-<!-- START s15 -->
-<p class="promptline">~/airflow <b>❯</b> aws mwaa get-environment --name prod-airflow</p>
-<h2 id="s15" class="reveal"><span class="hico"><svg class="ico"><use href="#i-compass"/></svg></span><span class="n">15.</span> AWS MWAA: Overview &amp; Architecture</h2>
-<p class="sectionsub reveal">Same Airflow you've been reading about, minus the pager for the infrastructure underneath it.</p>
-<div class="prose reveal">
-<p><span class="tag mwaa">MWAA</span> — Amazon Managed Workflows for Apache Airflow — is a fully managed AWS service that runs Apache Airflow on your behalf. Instead of standing up and operating the <a href="#s03">scheduler, webserver, metadata database, and executor</a> yourself, you point MWAA at an S3 bucket containing your DAGs, and AWS provisions, patches, scales, and monitors the Airflow components for you, inside a VPC you designate. The trade you're making is explicit: you give up direct control over — and direct access to — the underlying infrastructure, in exchange for not having to run it.</p>
-<p>One <b>environment</b> is one complete deployment, tied to exactly one VPC, one S3 bucket, and one set of size and autoscaling settings. Scheduler, workers, webserver and metadata database all live inside it.</p>
-</div>
-<h3 class="reveal">What runs where</h3>
-<div class="prose reveal">
-<p>Every Airflow component runs as a task on <b>AWS Fargate</b> — serverless containers, so there's no EC2 fleet to patch — inside private subnets of a VPC you provide. MWAA requires at least two private subnets across two Availability Zones, so an environment survives losing one AZ.</p>
-<p>The <b>metadata database</b> is an Aurora (PostgreSQL-compatible) cluster MWAA creates and manages; you cannot connect to it, query it, or pick its engine version. The <b>executor</b> is a managed Celery executor — MWAA doesn't expose the choice that <a href="#s04">Section 04</a> compares — and worker capacity autoscales on queue depth within limits you set. <b>Amazon SQS</b> is the broker underneath, an implementation detail rather than a resource you provision or tune.</p>
-<p>Your side of the contract is the <b>S3 bucket</b>: a <span class="kv">dags/</span> prefix, an optional <span class="kv">plugins.zip</span>, and a <span class="kv">requirements.txt</span>, all synced into the running environment automatically. The <b>webserver</b> is either public (behind AWS-managed auth) or, in <b>private access mode</b>, reachable only from your VPC or a network connected to it.</p>
-</div>
-<figure class="diagram reveal">
-<svg viewBox="0 0 950 360" role="img" aria-label="MWAA architecture: a customer S3 bucket syncing DAGs, plugins, and requirements into an AWS-managed environment boundary containing Scheduler, Workers, Webserver, and Aurora metadata database, all inside a customer VPC">
-  <rect x="30" y="30" width="220" height="170" rx="6" fill="none" stroke="var(--cyan2)"/>
-  <text x="140" y="55" text-anchor="middle" font-size="13" font-family="var(--font)" fill="var(--ink)">Amazon S3 Bucket</text>
-  <text x="50" y="90" font-size="12" font-family="var(--font)" fill="#E7E7EE">dags/</text>
-  <text x="50" y="115" font-size="12" font-family="var(--font)" fill="#E7E7EE">plugins.zip</text>
-  <text x="50" y="140" font-size="12" font-family="var(--font)" fill="#E7E7EE">requirements.txt</text>
-  <text x="140" y="175" text-anchor="middle" font-size="11" font-family="var(--font)" fill="#E7E7EE">(customer-managed)</text>
-
-  <rect x="280" y="20" width="560" height="300" rx="8" fill="none" stroke="var(--dim)" stroke-dasharray="6 4"/>
-  <text x="295" y="40" font-size="12" font-family="var(--font)" fill="#E7E7EE">Your VPC</text>
-
-  <rect x="310" y="70" width="470" height="220" rx="8" fill="none" stroke="var(--mwaa)" stroke-dasharray="5 5"/>
-  <text x="325" y="90" font-size="12" font-family="var(--font)" fill="var(--mwaa)">MWAA Environment (AWS-managed)</text>
-
-  <rect x="330" y="100" width="190" height="65" rx="6" fill="none" stroke="var(--sched)"/>
-  <text x="425" y="128" text-anchor="middle" font-size="13" font-family="var(--font)" fill="var(--ink)">Scheduler</text>
-  <text x="425" y="147" text-anchor="middle" font-size="11" font-family="var(--font)" fill="#E7E7EE">(Fargate task)</text>
-
-  <rect x="540" y="100" width="190" height="65" rx="6" fill="none" stroke="var(--exec)"/>
-  <text x="635" y="128" text-anchor="middle" font-size="13" font-family="var(--font)" fill="var(--ink)">Worker(s)</text>
-  <text x="635" y="147" text-anchor="middle" font-size="11" font-family="var(--font)" fill="#E7E7EE">(Fargate, autoscaled)</text>
-
-  <rect x="330" y="215" width="190" height="65" rx="6" fill="none" stroke="var(--web)"/>
-  <text x="425" y="243" text-anchor="middle" font-size="13" font-family="var(--font)" fill="var(--ink)">Webserver</text>
-  <text x="425" y="262" text-anchor="middle" font-size="11" font-family="var(--font)" fill="#E7E7EE">(Fargate task)</text>
-
-  <rect x="540" y="215" width="190" height="65" rx="6" fill="none" stroke="var(--dbc)"/>
-  <text x="635" y="243" text-anchor="middle" font-size="13" font-family="var(--font)" fill="var(--ink)">Aurora (PostgreSQL)</text>
-  <text x="635" y="262" text-anchor="middle" font-size="11" font-family="var(--font)" fill="#E7E7EE">metadata DB</text>
-
-  <line x1="250" y1="182" x2="310" y2="195" stroke="var(--cyan2)" stroke-width="1.5"/>
-  <polygon points="310,195 299,198 301,188" fill="var(--cyan2)"/>
-  <text x="264" y="178" text-anchor="middle" font-size="10" font-family="var(--font)" fill="var(--cyan2)">sync</text>
-
-  <line x1="520" y1="132" x2="530" y2="132" stroke="var(--muted)" stroke-width="1.5"/>
-  <polygon points="540,132 530,127 530,137" fill="var(--muted)"/>
-  <text x="398" y="178" text-anchor="middle" font-size="10" font-family="var(--font)" fill="#E7E7EE">internal Amazon SQS queue (AWS-managed)</text>
-
-  <line x1="520" y1="165" x2="560" y2="215" stroke="var(--dbc)" stroke-width="1.5"/>
-  <polygon points="560,215 550,210 558,204" fill="var(--dbc)"/>
-  <text x="585" y="195" text-anchor="middle" font-size="10" font-family="var(--font)" fill="var(--dbc)">metadata</text>
-
-  <rect x="310" y="333" width="14" height="12" fill="none" stroke="var(--cyan2)"/>
-  <text x="332" y="343" font-size="11" font-family="var(--font)" fill="#E7E7EE">Customer-managed: S3, VPC, IAM role</text>
-  <rect x="610" y="333" width="14" height="12" fill="none" stroke="var(--mwaa)"/>
-  <text x="632" y="343" font-size="11" font-family="var(--font)" fill="#E7E7EE">AWS-managed: inside environment boundary</text>
-</svg>
-<figcaption>DAGs, plugins, and requirements sync from a customer-owned S3 bucket into an AWS-operated environment running inside the customer's VPC.</figcaption>
-</figure>
-<div class="tablewrap reveal">
-<table>
-<tr><th>Component</th><th>What runs it</th><th>Customer vs. AWS</th></tr>
-<tr><td>Scheduler</td><td>An AWS Fargate task inside your VPC's private subnets</td><td>AWS provisions, patches, and scales it; you only choose environment size/class</td></tr>
-<tr><td>Worker(s)</td><td>AWS Fargate tasks under the managed Celery executor</td><td>AWS manages the executor and autoscaling; you set min/max worker count</td></tr>
-<tr><td>Webserver</td><td>An AWS Fargate task exposing the Airflow UI</td><td>AWS manages it; you choose public or private access mode</td></tr>
-<tr><td>Metadata database</td><td>Amazon Aurora (PostgreSQL-compatible)</td><td>Fully managed by MWAA — no direct database access</td></tr>
-<tr><td>Message broker</td><td>Amazon SQS, used internally by the Celery executor</td><td>Entirely AWS-managed implementation detail, not a resource you operate</td></tr>
-</table>
-</div>
-<div class="callout mg reveal">
-<p><b>What you explicitly give up:</b> executor choice, and any direct access to the metadata database — so no ad-hoc SQL against task instance history, and no custom monitoring queries against Aurora. That's the deliberate trade for not operating a scheduler, a broker, and a database cluster yourself.</p>
-</div>
-<!-- END s15 -->
-<!-- START s16 -->
-<p class="promptline">~/airflow <b>❯</b> aws s3 sync ./dags s3://prod-mwaa-bucket/dags/</p>
-<h2 id="s16" class="reveal"><span class="hico"><svg class="ico"><use href="#i-rocket"/></svg></span><span class="n">16.</span> Setting Up &amp; Operating an MWAA Environment</h2>
-<p class="sectionsub reveal">No servers to SSH into — just an S3 bucket, an IAM role, and a few dials AWS turns for you.</p>
-<div class="prose reveal">
-<p>On <span class="tag mwaa">MWAA</span>, AWS owns the scheduler, webserver, database, executor and broker; what you configure is a much smaller declarative surface — an S3 bucket layout, an IAM role, a size tier, and a networking choice.</p>
-<p>Every environment is anchored to one S3 bucket whose layout is not arbitrary: MWAA looks for specific prefixes and object names. Enable versioning on it — that's your rollback path when a bad DAG or broken <code>requirements.txt</code> lands. The DAG processor polls the bucket on a short interval, so deploying is just <code>aws s3 cp</code>: no server to push to, no container to rebuild, no restart for a plain DAG change.</p>
-<p>Two objects in that bucket carry more weight than a DAG file. <code>plugins.zip</code> holds custom operators, hooks and UI plugins; <code>requirements.txt</code> pins the environment's Python packages. Because both change the interpreter the scheduler and workers run in, editing either triggers a rebuild and restart that briefly interrupts scheduling. AWS publishes a "local-runner" Docker image reproducing MWAA's install process, so validate <code>requirements.txt</code> locally first.</p>
-</div>
-<div class="def reveal">
-<p class="t">Execution role (MWAA)</p>
-<p>The IAM role MWAA assumes on your behalf to read your S3 bucket, ship logs to CloudWatch, and reach any AWS service your DAG code touches. There is exactly one per environment, and <i>every</i> permission any task in any DAG needs must be attached to it.</p>
-<p class="ex"><b>Example:</b> a task calling <code>S3Hook.download_file()</code> needs <code>s3:GetObject</code> on that bucket in the role's policy. Without it the DAG still parses and appears in the UI — the failure surfaces only at run time as an access-denied error in the task log, which is why it catches teams off guard.</p>
-</div>
-<figure class="diagram reveal">
-<svg viewBox="0 0 900 280" role="img" aria-label="S3 bucket structure with dags, plugins, and requirements syncing into an MWAA environment">
-<rect x="40" y="40" width="380" height="220" rx="6" fill="none" stroke="var(--muted)" stroke-width="1.5"/>
-<text x="60" y="62" font-size="13" font-family="var(--font)" fill="var(--ink)">S3 bucket (versioning enabled)</text>
-<rect x="70" y="80" width="320" height="40" rx="4" fill="none" stroke="var(--cyan2)" stroke-width="1.5"/>
-<text x="230" y="105" text-anchor="middle" font-size="13" font-family="var(--font)" fill="var(--ink)">dags/</text>
-<rect x="70" y="130" width="320" height="40" rx="4" fill="none" stroke="var(--cyan2)" stroke-width="1.5"/>
-<text x="230" y="155" text-anchor="middle" font-size="13" font-family="var(--font)" fill="var(--ink)">plugins.zip</text>
-<rect x="70" y="180" width="320" height="40" rx="4" fill="none" stroke="var(--cyan2)" stroke-width="1.5"/>
-<text x="230" y="205" text-anchor="middle" font-size="13" font-family="var(--font)" fill="var(--ink)">requirements.txt</text>
-<rect x="600" y="110" width="240" height="80" rx="6" fill="none" stroke="var(--mwaa)" stroke-width="1.5"/>
-<text x="720" y="145" text-anchor="middle" font-size="13" font-family="var(--font)" fill="var(--ink)">MWAA environment</text>
-<text x="720" y="165" text-anchor="middle" font-size="12" font-family="var(--font)" fill="#E7E7EE">(managed by AWS)</text>
-<line x1="420" y1="150" x2="590" y2="150" stroke="var(--mwaa)" stroke-width="1.5"/>
-<polygon points="600,150 590,145 590,155" fill="var(--mwaa)"/>
-<text x="510" y="138" text-anchor="middle" font-size="12" font-family="var(--font)" fill="#E7E7EE">sync (~seconds)</text>
-</svg>
-<figcaption>MWAA never touches a server you manage — it continuously pulls DAGs, plugins, and pinned requirements straight from your S3 bucket.</figcaption>
-</figure>
-<div class="prose reveal">
-<p>An environment is sized by an <b>environment class</b> — a few predefined tiers setting baseline scheduler and webserver capacity — and separately by <b>minimum and maximum worker counts</b>, which bound MWAA's autoscaling as load rises and falls. You're tuning capacity, not choosing an executor.</p>
-<p>The last major decision is the webserver's <b>networking mode</b>. Public mode puts the UI on the internet, still gated by IAM permissions and a generated token mapped to an Airflow RBAC role rather than a separate Airflow password database. Private mode restricts it to your VPC or a network connected to it via Direct Connect, VPN, or peering — the better default for sensitive data, since it removes an entire class of internet-facing exposure regardless of how strong Airflow's own auth is.</p>
-</div>
-<div class="tablewrap reveal">
-<table>
-<tr><th>Setup element</th><th>What it configures</th><th>Who/what manages it</th></tr>
-<tr><td>S3 bucket &amp; <code>dags/</code> prefix</td><td>Where DAG source files live; polled on an interval</td><td>You upload; MWAA's sync process reads</td></tr>
-<tr><td><code>plugins.zip</code></td><td>Custom operators, hooks, and UI plugins</td><td>You build &amp; upload; MWAA installs on rebuild</td></tr>
-<tr><td><code>requirements.txt</code></td><td>Pinned Python package versions for the environment</td><td>You author; MWAA installs at create/update time</td></tr>
-<tr><td>Execution role (IAM)</td><td>Permissions for S3, CloudWatch, and any AWS service your DAGs call</td><td>You attach policies; <span class="cell-mwaa">AWS assumes the role</span></td></tr>
-<tr><td>Environment class</td><td>Baseline scheduler/webserver capacity tier</td><td>You choose at creation; <span class="cell-mwaa">AWS provisions it</span></td></tr>
-<tr><td>Min/max workers</td><td>Autoscaling bounds for the worker fleet</td><td>You set bounds; <span class="cell-mwaa">MWAA autoscaler manages within them</span></td></tr>
-<tr><td>Networking mode</td><td>Public vs. private webserver reachability</td><td>You choose at creation, fixed to your VPC</td></tr>
-<tr><td>Airflow version</td><td>Which Airflow minor version the environment runs</td><td><span class="cell-mwaa">AWS publishes supported versions</span>; you pick one</td></tr>
-</table>
-</div>
-<pre class="reveal"><code><span class="c1">## requirements.txt -- pin every package, test locally before deploying</span>
-apache-airflow-providers-amazon==8.19.0
-pandas==2.1.4
-boto3==1.34.11
-<span class="c1">## do not pin "apache-airflow" itself -- the core version is fixed</span>
-<span class="c1">## by the MWAA environment's own Airflow version setting</span>
-</code></pre>
-<div class="callout wn reveal">
-<p><b>Operational gotcha.</b> A broken <code>requirements.txt</code> doesn't fail one DAG — it can push the entire environment into a degraded or failed state, because the scheduler and workers rebuild against it.</p>
-</div>
-<div class="callout gd reveal">
-<p><b>Recommended default.</b> Pair private webserver access with VPC endpoints for the services your DAGs call (S3, CloudWatch, Secrets Manager) so traffic never leaves your network boundary.</p>
-</div>
-<!-- END s16 -->
-
-<!-- START s17 -->
-<p class="promptline">~/airflow <b>❯</b> airflow tasks test glue_pipeline run_glue_job 2026-07-13</p>
-<h2 id="s17" class="reveal"><span class="hico"><svg class="ico"><use href="#i-workflow"/></svg></span><span class="n">17.</span> MWAA Integrations with the AWS Ecosystem</h2>
-<p class="sectionsub reveal">MWAA rarely moves data itself — it tells other AWS services when to move it.</p>
-<div class="prose reveal">
-<p>MWAA is the conductor, not the orchestra. Almost nothing in a well-designed DAG processes data directly — tasks call operators and hooks from <code>apache-airflow-providers-amazon</code> that reach out to purpose-built services doing the actual work, while Airflow handles sequencing, retries, backfills and alerting around them. That keeps the scheduler light and lets each service scale independently. The table below maps the common ones to their operators; three are worth a note.</p>
-<p><span class="tag mwaa">S3</span> appears twice over — as the DAG-deployment bucket from <a href="#s16">Section 16</a>, and separately as a data lake source and sink. <span class="tag mwaa">AWS Glue</span> is the most common Airflow-on-AWS pattern and the clearest illustration of the division of labor: Airflow decides <i>when</i>, Glue's own Spark environment does the <i>what</i>. And <span class="tag mwaa">CloudWatch</span> is where MWAA ships all component logs and metrics — the first place to look when a DAG that used to appear has silently stopped being parsed, since the Airflow UI can't tell you about a file it never loaded.</p>
-</div>
-<figure class="diagram reveal">
-<svg viewBox="0 0 940 320" role="img" aria-label="MWAA environment at the center with arrows fanning out to six AWS services it orchestrates">
-<rect x="380" y="130" width="180" height="60" rx="6" fill="none" stroke="var(--mwaa)" stroke-width="1.5"/>
-<text x="470" y="155" text-anchor="middle" font-size="13" font-family="var(--font)" fill="var(--ink)">MWAA</text>
-<text x="470" y="173" text-anchor="middle" font-size="12" font-family="var(--font)" fill="#E7E7EE">(orchestrator)</text>
-<rect x="40" y="20" width="150" height="50" rx="5" fill="none" stroke="var(--cyan2)" stroke-width="1.5"/>
-<text x="115" y="42" text-anchor="middle" font-size="13" font-family="var(--font)" fill="var(--ink)">Amazon S3</text>
-<text x="115" y="58" text-anchor="middle" font-size="12" font-family="var(--font)" fill="#E7E7EE">(data lake)</text>
-<rect x="750" y="20" width="150" height="50" rx="5" fill="none" stroke="var(--cyan2)" stroke-width="1.5"/>
-<text x="825" y="49" text-anchor="middle" font-size="13" font-family="var(--font)" fill="var(--ink)">Amazon Redshift</text>
-<rect x="20" y="135" width="150" height="50" rx="5" fill="none" stroke="var(--cyan2)" stroke-width="1.5"/>
-<text x="95" y="164" text-anchor="middle" font-size="13" font-family="var(--font)" fill="var(--ink)">AWS Lambda</text>
-<rect x="770" y="135" width="150" height="50" rx="5" fill="none" stroke="var(--cyan2)" stroke-width="1.5"/>
-<text x="845" y="157" text-anchor="middle" font-size="13" font-family="var(--font)" fill="var(--ink)">Amazon</text>
-<text x="845" y="173" text-anchor="middle" font-size="13" font-family="var(--font)" fill="var(--ink)">CloudWatch</text>
-<rect x="20" y="250" width="150" height="50" rx="5" fill="none" stroke="var(--cyan2)" stroke-width="1.5"/>
-<text x="95" y="279" text-anchor="middle" font-size="13" font-family="var(--font)" fill="var(--ink)">AWS Glue</text>
-<rect x="770" y="250" width="150" height="50" rx="5" fill="none" stroke="var(--cyan2)" stroke-width="1.5"/>
-<text x="845" y="279" text-anchor="middle" font-size="13" font-family="var(--font)" fill="var(--ink)">Amazon EMR</text>
-<line x1="400" y1="130" x2="190" y2="70" stroke="var(--muted)" stroke-width="1.5"/>
-<polygon points="190,70 201,68 198,78" fill="var(--muted)"/>
-<text x="302" y="77" text-anchor="middle" font-size="12" font-family="var(--font)" fill="#E7E7EE">reads/writes</text>
-<line x1="540" y1="130" x2="750" y2="70" stroke="var(--muted)" stroke-width="1.5"/>
-<polygon points="750,70 742,78 739,68" fill="var(--muted)"/>
-<text x="645" y="90" text-anchor="middle" font-size="12" font-family="var(--font)" fill="#E7E7EE">loads to</text>
-<line x1="380" y1="155" x2="180" y2="155" stroke="var(--muted)" stroke-width="1.5"/>
-<polygon points="170,155 180,150 180,160" fill="var(--muted)"/>
-<text x="275" y="145" text-anchor="middle" font-size="12" font-family="var(--font)" fill="#E7E7EE">invokes</text>
-<line x1="560" y1="155" x2="760" y2="155" stroke="var(--muted)" stroke-width="1.5"/>
-<polygon points="770,155 760,150 760,160" fill="var(--muted)"/>
-<text x="665" y="145" text-anchor="middle" font-size="12" font-family="var(--font)" fill="#E7E7EE">sends logs to</text>
-<line x1="400" y1="190" x2="180" y2="248" stroke="var(--muted)" stroke-width="1.5"/>
-<polygon points="170,250 179,243 182,253" fill="var(--muted)"/>
-<text x="296" y="242" text-anchor="middle" font-size="12" font-family="var(--font)" fill="#E7E7EE">triggers job</text>
-<line x1="540" y1="190" x2="760" y2="248" stroke="var(--muted)" stroke-width="1.5"/>
-<polygon points="770,250 761,243 758,253" fill="var(--muted)"/>
-<text x="644" y="242" text-anchor="middle" font-size="12" font-family="var(--font)" fill="#E7E7EE">triggers step</text>
-</svg>
-<figcaption>MWAA fans out to the services that do the real work; it sequences and monitors, it doesn't process data itself.</figcaption>
-</figure>
-<div class="tablewrap reveal">
-<table>
-<tr><th>AWS service</th><th>Used for, from a DAG</th><th>Typical operator/hook</th></tr>
-<tr><td class="cell-mwaa">Amazon S3</td><td>DAG/plugin storage, plus data lake reads &amp; writes</td><td><code>S3Hook</code>, <code>S3KeySensor</code></td></tr>
-<tr><td class="cell-mwaa">Amazon Redshift</td><td>Warehouse loads and SQL queries</td><td><code>RedshiftDataOperator</code></td></tr>
-<tr><td class="cell-mwaa">AWS Glue</td><td>Triggering Spark ETL jobs &amp; catalog crawlers</td><td><code>GlueJobOperator</code>, <code>GlueCrawlerOperator</code></td></tr>
-<tr><td class="cell-mwaa">Amazon EMR</td><td>Triggering big Spark/Hadoop clusters &amp; steps</td><td><code>EmrCreateJobFlowOperator</code>, <code>EmrAddStepsOperator</code></td></tr>
-<tr><td class="cell-mwaa">AWS Lambda</td><td>Lightweight function-call task steps</td><td><code>LambdaInvokeFunctionOperator</code></td></tr>
-<tr><td class="cell-mwaa">Secrets Manager</td><td>Secrets backend for connections &amp; variables</td><td>Airflow secrets backend config</td></tr>
-<tr><td class="cell-mwaa">Amazon CloudWatch</td><td>Scheduler/webserver/worker/DAG-processing logs &amp; metrics</td><td>Native MWAA log/metric export</td></tr>
-<tr><td class="cell-mwaa">SNS / SQS</td><td>Alert fan-out and event-driven decoupling</td><td><code>SnsPublishOperator</code>, SQS hooks</td></tr>
-<tr><td class="cell-mwaa">Amazon SageMaker</td><td>Triggering ML training/inference jobs</td><td><code>SageMakerTrainingOperator</code></td></tr>
-</table>
-</div>
-<div class="callout cy reveal">
-<p><b>"Why not just use Step Functions?"</b> Step Functions is AWS-native, defined in JSON/ASL, billed per state transition — a good fit for a simpler AWS-only state machine. MWAA is Python-native, with a provider ecosystem well beyond AWS and a mature scheduling, retry and backfill model out of the box. Plenty of architectures use both: a Step Functions state machine handling one Glue-triggered piece, nested inside a larger pipeline Airflow runs end to end.</p>
-</div>
-<!-- END s17 -->
-
 <!-- START s18 -->
 <p class="promptline">~/airflow <b>❯</b> airflow cheat-sheet</p>
-<h2 id="s18" class="reveal"><span class="hico"><svg class="ico"><use href="#i-book"/></svg></span><span class="n">18.</span> Glossary &amp; Quick Reference</h2>
-<p class="sectionsub reveal">Every term from this guide, in one scannable table, plus a self-hosted-vs-MWAA cheat sheet.</p>
+<h2 id="s18" class="reveal"><span class="hico"><svg class="ico"><use href="#i-book"/></svg></span><span class="n">15.</span> Glossary &amp; Quick Reference</h2>
+<p class="sectionsub reveal">Every term from this guide, in one scannable table, plus a component cheat sheet.</p>
 <div class="prose reveal">
-<p>Use this section as a lookup, not a read-through — each definition is deliberately terse, matching how the term was used earlier in the guide. The final table maps each core Airflow component to its self-hosted form and its MWAA equivalent, which is often the fastest way to answer "wait, do I still manage that under MWAA?"</p>
+<p>Use this section as a lookup, not a read-through — each definition is deliberately terse, matching how the term was used earlier in the guide. The final table lists each core Airflow component and what operating it involves when you self-host.</p>
 </div>
 <div class="tablewrap reveal">
 <table>
@@ -1761,18 +1545,6 @@ boto3==1.34.11
 <tr><td>DAG parse time</td><td>The moment the scheduler re-reads and re-evaluates a DAG file, distinct from any task's runtime — top-level code runs here.</td></tr>
 <tr><td>RBAC (Airflow)</td><td>Role-based access control restricting which users can view or act on which DAGs and UI features.</td></tr>
 <tr><td>Remote logging</td><td>Configuring task logs to ship to external storage (S3, CloudWatch, etc.) so they survive ephemeral workers being torn down.</td></tr>
-<tr><td>VPC</td><td>Virtual Private Cloud — your own private, isolated network inside AWS, with address space and access rules you control; MWAA environments run inside one you designate.</td></tr>
-<tr><td>IAM</td><td>Identity and Access Management — AWS's system for permissions; an IAM role is a set of permissions a service (like an MWAA environment) can assume temporarily.</td></tr>
-<tr><td>MWAA</td><td>Amazon Managed Workflows for Apache Airflow — AWS's fully managed Airflow service.</td></tr>
-<tr><td>MWAA environment</td><td>A single managed Airflow deployment within MWAA, tied to one S3 bucket, one execution role, and one networking configuration.</td></tr>
-<tr><td>Execution role (MWAA)</td><td>The IAM role MWAA assumes to access your S3 bucket, write CloudWatch logs, and reach any other AWS service your DAGs use.</td></tr>
-<tr><td>Environment class (MWAA)</td><td>The predefined size tier (small/medium/large-style) setting baseline scheduler/webserver capacity.</td></tr>
-<tr><td>Private/public webserver access mode</td><td>Whether the MWAA Airflow UI is reachable only from within your VPC/connected network, or from the public internet (still behind login).</td></tr>
-<tr><td>AWS Fargate (MWAA context)</td><td>The serverless compute AWS uses under the hood to run MWAA's managed components, with no servers exposed to the customer.</td></tr>
-<tr><td>Amazon Aurora (MWAA context)</td><td>The managed relational database AWS uses under the hood for MWAA's metadata database, with no direct customer access.</td></tr>
-<tr><td>Amazon SQS</td><td>Simple Queue Service — AWS's managed message queue; MWAA uses it internally as the Celery broker between scheduler and workers.</td></tr>
-<tr><td>ARN</td><td>Amazon Resource Name — the unique identifier string AWS uses to reference a specific resource (a role, a bucket, a function) in permissions and configuration.</td></tr>
-<tr><td>AWS Step Functions</td><td>AWS's native, JSON/ASL (Amazon States Language)-defined, pay-per-transition state-machine service; a comparison point to Airflow/MWAA for simpler AWS-only workflows.</td></tr>
 <tr><td>SMTP</td><td>Simple Mail Transfer Protocol — the standard email-sending protocol Airflow's built-in <code>email_on_failure</code>/<code>email_on_retry</code> options rely on.</td></tr>
 <tr><td>CI/CD</td><td>Continuous Integration/Continuous Delivery — automatically testing and deploying code changes, including DAG files, rather than editing them by hand in production.</td></tr>
 </table>
@@ -1780,21 +1552,22 @@ boto3==1.34.11
 <h3 class="reveal">Airflow component quick reference</h3>
 <div class="tablewrap reveal">
 <table>
-<tr><th>Component</th><th>Self-hosted Airflow</th><th>MWAA equivalent</th></tr>
-<tr><td>Scheduler</td><td>A process you deploy, size, and keep alive yourself</td><td class="cell-mwaa">Fully managed; sized by environment class</td></tr>
-<tr><td>Executor</td><td>You choose and configure one (Local, Celery, Kubernetes, ...)</td><td class="cell-mwaa">Fixed and abstracted away; you set worker min/max instead</td></tr>
-<tr><td>Webserver</td><td>A process you deploy and expose (reverse proxy, TLS, etc.)</td><td class="cell-mwaa">Managed; you only pick public or private access mode</td></tr>
-<tr><td>Metadata DB</td><td>A Postgres/MySQL instance you provision, back up, and upgrade</td><td class="cell-mwaa">Managed Aurora instance with no direct customer access</td></tr>
-<tr><td>Message broker</td><td>Redis/RabbitMQ you run if using CeleryExecutor</td><td class="cell-mwaa">Not exposed; internal to the managed worker fleet</td></tr>
-<tr><td>DAG deployment</td><td>Your own CI/CD pushing files to wherever the scheduler reads from</td><td>Upload to the environment's S3 <code>dags/</code> prefix; MWAA syncs it</td></tr>
+<tr><th>Component</th><th>What you operate when self-hosting</th></tr>
+<tr><td>Scheduler</td><td>A process you deploy, size, and keep alive yourself (run more than one for redundancy)</td></tr>
+<tr><td>Executor</td><td>You choose and configure one — Local, Celery, Kubernetes, ...</td></tr>
+<tr><td>Webserver / UI</td><td>A process you deploy and expose (reverse proxy, TLS, auth)</td></tr>
+<tr><td>Metadata DB</td><td>A Postgres/MySQL instance you provision, back up, and upgrade</td></tr>
+<tr><td>Message broker</td><td>Redis/RabbitMQ you run if using CeleryExecutor</td></tr>
+<tr><td>DAG deployment</td><td>Your own CI/CD pushing files to wherever the scheduler reads from</td></tr>
 </table>
 </div>
-<!-- END s19 -->
+<p>A managed service (AWS MWAA, Google Cloud Composer, Astronomer, ...) runs every row of that table for you; you trade the operational work for the constraints of a fixed deployment model. That trade-off is out of scope here.</p>
+<!-- END s18 -->
 <hr/>
 <div class="prose reveal">
 <h2 style="margin-top:10px"><span class="pfx">∎</span> The takeaway</h2>
 <p>Airflow's entire value proposition comes down to one idea: workflows as code, coordinated by a scheduler that knows the full dependency graph, executed by workers that can be scaled independently of the scheduler itself. Everything else in this guide — TaskFlow, dynamic task mapping, deferrable operators, datasets — is refinement on top of that one idea, built to make DAGs easier to write correctly and cheaper to run at scale.</p>
-<p>MWAA doesn't change any of that. It takes the same scheduler, the same executor model, the same metadata database, and runs them as a managed service inside your VPC — trading the operational work of patching and scaling Airflow yourself for the constraints of a managed environment (fixed environment classes, an S3-based deployment model, AWS-specific networking and IAM). Whether that trade is worth it depends on the same question every technology choice in data engineering comes down to: what does your team gain by not operating this themselves, and what do they give up in flexibility to get it.</p>
+<p>Running Airflow yourself or through a managed service (AWS MWAA, Cloud Composer, Astronomer) is an operational choice layered on top — the scheduler, executor model and metadata database underneath are identical either way. Whether to manage it yourself comes down to the same question every technology choice in data engineering does: what does your team gain by not operating this, and what flexibility do they give up to get it.</p>
 </div>
 
 <footer class="end" style="text-align:center;padding:34px 0 8px;border-top:1px solid #3C4356;margin-top:44px"><p style="margin-bottom:8px"><a href="../essentials.html">← Back to all articles</a></p><p style="color:#9aa0b4">© 2026 · Hao Tieu Kim · Built with GitHub Pages</p></footer>
