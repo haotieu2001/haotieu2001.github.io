@@ -159,7 +159,7 @@
 </defs></svg>
 <div class="page">
 <header>
-  <div class="kicker"><a class="back" href="../">❮ Data &amp; AI Engineering, Simply Explained</a></div>
+  <div class="kicker"><a class="back" href="../adjacent-skills.html">❮ Adjacent Skills</a></div>
   <h1>Linux for Data Engineers</h1>
   <p class="dek">Your pipeline does not run on your laptop. It runs on a <strong>Linux box you will only ever meet through a terminal</strong> — and when it fails at 3am, that terminal is the whole conversation. This is the Linux that actually shows up in the job: finding things, reading text at scale, permissions, pipes, <strong>grep</strong> and <strong>awk</strong>, writing a script that is safe to run unattended, <strong>cron</strong>, and pulling data in with <strong>wget</strong>, <strong>curl</strong> and <strong>jq</strong> — ending in a nightly ingestion script you could ship tonight.</p>
   <div class="stack">
@@ -257,7 +257,7 @@
   <rect x="170" y="312" width="380" height="34" rx="7" fill="#242739" stroke="#5C78FF"/>
   <text x="360" y="334" font-size="10.5" fill="#E7E7EE" text-anchor="middle">HARDWARE &#183; CPU &#183; RAM &#183; disk &#183; network card</text>
 
-  <g stroke="#9AA0B4" stroke-width="1.5" fill="none">
+  <g stroke="#5C78FF" stroke-width="1.5" fill="none">
     <path d="M360 76 V 92" marker-end="url(#l-a)"/>
     <path d="M360 144 V 160" marker-end="url(#l-a)"/>
     <path d="M360 204 V 220" marker-end="url(#l-a)"/>
@@ -374,7 +374,7 @@
   <text x="235" y="206" font-size="9.5" fill="#E7E7EE" text-anchor="middle">/home/hao</text>
   <rect x="330" y="186" width="110" height="30" rx="5" fill="#242739" stroke="#5C78FF"/>
   <text x="385" y="206" font-size="9.5" fill="#E7E7EE" text-anchor="middle" font-weight="700">/home/hao/data</text>
-  <g stroke="#9AA0B4" stroke-width="1.5" fill="none">
+  <g stroke="#5C78FF" stroke-width="1.5" fill="none">
     <path d="M140 201 H 180" marker-end="url(#l-c)"/>
     <path d="M284 201 H 324" marker-end="url(#l-c)"/>
   </g>
@@ -539,7 +539,7 @@
   <text x="650" y="195" font-size="9.5" fill="#E7E7EE" text-anchor="middle" font-weight="700">the complaints</text>
   <text x="650" y="211" font-size="9" fill="#E7E7EE" text-anchor="middle">kept separate ON PURPOSE</text>
 
-  <g stroke="#9AA0B4" stroke-width="1.6" fill="none">
+  <g stroke="#5C78FF" stroke-width="1.6" fill="none">
     <path d="M176 138 H 280" marker-end="url(#l-d)"/>
     <path d="M456 124 C 500 124, 512 79, 560 79" marker-end="url(#l-d)"/>
   </g>
@@ -663,7 +663,7 @@ cmd1 | cmd2 | cmd3       <span class="c"># a pipeline: 1's stdout becomes 2's st
   <text x="660" y="168" font-size="9" fill="#E7E7EE" text-anchor="middle" font-family="monospace">us  340</text>
   <text x="660" y="192" font-size="8.5" fill="#E7E7EE" text-anchor="middle">a group-by, in one line</text>
 
-  <g stroke="#9AA0B4" stroke-width="1.5" fill="none">
+  <g stroke="#5C78FF" stroke-width="1.5" fill="none">
     <path d="M166 110 H 220" marker-end="url(#l-f)"/>
     <path d="M534 157 H 580" marker-end="url(#l-f)"/>
   </g>
@@ -749,7 +749,7 @@ cmd1 | cmd2 | cmd3       <span class="c"># a pipeline: 1's stdout becomes 2's st
   <text x="780" y="128" font-size="10" fill="#28B9FF" text-anchor="middle" font-weight="700">37</text>
   <text x="780" y="142" font-size="8.5" fill="#E7E7EE" text-anchor="middle">distinct errors</text>
 
-  <g stroke="#9AA0B4" stroke-width="1.5" fill="none">
+  <g stroke="#5C78FF" stroke-width="1.5" fill="none">
     <path d="M160 77 H 184" marker-end="url(#l-g)"/>
     <path d="M330 77 H 354" marker-end="url(#l-g)"/>
     <path d="M500 77 H 524" marker-end="url(#l-g)"/>
@@ -902,7 +902,7 @@ Ctrl-Z                       <span class="c"># suspend the foreground job</span>
   <text x="650" y="78" font-size="9.5" fill="#E7E7EE" text-anchor="middle" font-weight="700">rm gets 2 arguments</text>
   <text x="650" y="96" font-size="8.5" fill="#E7E7EE" text-anchor="middle">deletes two wrong files</text>
 
-  <g stroke="#9AA0B4" stroke-width="1.5" fill="none">
+  <g stroke="#5C78FF" stroke-width="1.5" fill="none">
     <path d="M182 82 H 200" marker-end="url(#l-k)"/>
     <path d="M362 82 H 380" marker-end="url(#l-k)"/>
     <path d="M542 82 H 560" marker-end="url(#l-k)"/>
@@ -1350,6 +1350,29 @@ log <span class="g">"done — compressed $COMPRESSED, pruned $PRUNED, $(df -h "$
   <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">Cron has no memory. It cannot express "run B after A succeeds," will not retry a failure, has no backfill, and if the box was down at 02:30 the run is lost forever. It also runs in the <em>system</em> timezone, which is why servers are set to UTC and why a job scheduled in local time fires twice — or not at all — on daylight-saving night. Cron is perfect for one independent, idempotent job on one machine. The moment you need dependencies, retries or backfills, that is what Airflow exists for (or a systemd timer, for something simple with proper logging). Reaching for Airflow first is over-engineering; still being on cron with twelve interdependent jobs is the other mistake.</p>
 </div>
 
+<h3 class="reveal">systemd timers — what you'll meet on a modern box</h3>
+
+<p class="reveal">Most current server distros ship <strong>systemd</strong>, and its <strong>timers</strong> are steadily replacing cron for anything the OS itself schedules. You will not always write them, but you need to read them: a job you expected in <code>crontab -l</code> may instead be a <code>.timer</code> unit. A timer is two files — a <code>.service</code> that says <em>what</em> to run and a <code>.timer</code> that says <em>when</em> — and the payoff is that every run is captured in <code>journalctl</code> with exit status, duration and output, instead of vanishing into cron's non-existent mail.</p>
+
+<div class="cb"><span class="lang">bash &#183; reading and running systemd timers</span><pre><span class="k">systemctl</span> list-timers --all             <span class="c"># every timer, last run, next run</span>
+<span class="k">systemctl</span> status ingest.timer            <span class="c"># is it enabled? when does it fire next?</span>
+<span class="k">journalctl</span> -u ingest.service --since today  <span class="c"># the run log — the whole point</span>
+<span class="k">systemctl</span> start ingest.service           <span class="c"># run it right now, by hand</span>
+
+<span class="c"># /etc/systemd/system/ingest.service   — WHAT to run</span>
+<span class="c">#   [Service]</span>
+<span class="c">#   Type=oneshot</span>
+<span class="c">#   ExecStart=/opt/etl/ingest.sh</span>
+<span class="c">#   EnvironmentFile=/opt/etl/.env         # loads env explicitly, like the cron fix above</span>
+
+<span class="c"># /etc/systemd/system/ingest.timer     — WHEN to run</span>
+<span class="c">#   [Timer]</span>
+<span class="c">#   OnCalendar=Mon..Fri 02:30            # same idea as 5 cron fields, but readable</span>
+<span class="c">#   Persistent=true                      # if the box was off at 02:30, run at next boot</span>
+</pre></div>
+
+<p class="reveal"><code>Persistent=true</code> is the line cron cannot match — a missed run is caught up instead of lost. Timers also inherit a clean, predictable environment (no <code>.bashrc</code> surprise) and are trivial to disable without editing a shared crontab. For a single throwaway job cron is still faster to write; for anything that matters on a box you do not own, expect a timer.</p>
+
 <h2 id="wget" class="reveal"><span class="hico"><svg class="ico"><use href="#i-package"/></svg></span><span class="n">14.</span> Downloading files with wget</h2>
 <p class="reveal lead">wget is a file-fetcher. Point it at a URL and it puts the bytes on disk — reliably, resumably, and without you watching.</p>
 
@@ -1638,7 +1661,7 @@ log <span class="g">"done — compressed $COMPRESSED, pruned $PRUNED, $(df -h "$
   <text x="810" y="68" font-size="10" fill="#28B9FF" text-anchor="middle" font-weight="700">mv</text>
   <text x="810" y="85" font-size="8.5" fill="#E7E7EE" text-anchor="middle">atomic publish</text>
 
-  <g stroke="#9AA0B4" stroke-width="1.5" fill="none">
+  <g stroke="#5C78FF" stroke-width="1.5" fill="none">
     <path d="M138 73 H 162" marker-end="url(#l-i)"/>
     <path d="M286 73 H 310" marker-end="url(#l-i)"/>
     <path d="M434 73 H 458" marker-end="url(#l-i)"/>
@@ -1650,7 +1673,7 @@ log <span class="g">"done — compressed $COMPRESSED, pruned $PRUNED, $(df -h "$
   <text x="523" y="198" font-size="10" fill="#E7E7EE" text-anchor="middle" font-weight="700">ANY failure &#8594; set -e stops &#183; trap cleans up &#183; exit 1</text>
   <text x="523" y="217" font-size="9" fill="#E7E7EE" text-anchor="middle">the log says why, the exit code is non-zero, and the alert fires</text>
 
-  <g stroke="#9AA0B4" stroke-width="1.4" fill="none" stroke-dasharray="4,3">
+  <g stroke="#5C78FF" stroke-width="1.4" fill="none" stroke-dasharray="4,3">
     <path d="M375 102 V 170" marker-end="url(#l-j)"/>
     <path d="M523 102 V 170" marker-end="url(#l-j)"/>
     <path d="M671 102 V 170" marker-end="url(#l-j)"/>

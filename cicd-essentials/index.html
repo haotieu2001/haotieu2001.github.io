@@ -165,7 +165,7 @@
 <div class="page">
 
 <header>
-  <div class="kicker"><a class="back" href="../">❮ Data &amp; AI Engineering, Simply Explained</a></div>
+  <div class="kicker"><a class="back" href="../adjacent-skills.html">❮ Adjacent Skills</a></div>
   <h1>CI/CD Essentials for Data Engineers</h1>
   <p class="dek"><strong>CI/CD</strong> is the automation that takes the code you just committed and — with nobody clicking through a checklist by hand — tests it, packages it and ships it safely to production. Starts with what <strong>continuous integration</strong>, <strong>delivery</strong> and <strong>deployment</strong> each really mean, makes it concrete with runnable <strong>GitHub Actions</strong> workflows, then covers <strong>environments</strong>, <strong>deployment strategies</strong>, and what matters specifically for <strong>data engineering</strong>: dbt, Airflow, Databricks, data-quality gates and infrastructure-as-code. Every company wires CI/CD up with a different tool; the <em>concepts</em> transfer to all of them.</p>
   <div class="byline">~24 min read · Essentials · Reference</div>
@@ -476,7 +476,7 @@
       - <span class="k">uses</span>: actions/checkout@v4   <span class="c"># 1. pull the repo onto the runner</span>
       - <span class="k">uses</span>: actions/setup-python@v5
         <span class="k">with</span>:
-          <span class="k">python-version</span>: <span class="g">"3.12"</span>
+          <span class="k">python-version</span>: <span class="g">"3.13"</span>
       - <span class="k">run</span>: pip install -r requirements.txt -r requirements-dev.txt
       - <span class="k">run</span>: ruff check .            <span class="c"># 2. lint   (fastest, fails first)</span>
       - <span class="k">run</span>: sqlfluff lint models/   <span class="c"># 3. lint the SQL too</span>
@@ -484,7 +484,7 @@
 
 <div class="callout reveal">
   <p style="margin:.2em 0"><span class="t"><svg class="ico"><use href="#i-code"/></svg> Two bits of YAML to know first</span></p>
-  <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">These files are written in <strong>YAML</strong> — a plain-text format for structured config (indentation shows nesting). Two shorthands trip up beginners: a key with <em>nothing after the colon</em>, like <code>pull_request:</code> above, means "use the defaults" (here: run on any pull request). And a block written over several indented lines is identical to its compact one-line form — <code>with:</code> then an indented <code>python-version: "3.12"</code> means exactly the same as <code>with: { python-version: "3.12" }</code> (you'll see both styles in this guide). Same data, two ways to write it.</p>
+  <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">These files are written in <strong>YAML</strong> — a plain-text format for structured config (indentation shows nesting). Two shorthands trip up beginners: a key with <em>nothing after the colon</em>, like <code>pull_request:</code> above, means "use the defaults" (here: run on any pull request). And a block written over several indented lines is identical to its compact one-line form — <code>with:</code> then an indented <code>python-version: "3.13"</code> means exactly the same as <code>with: { python-version: "3.13" }</code> (you'll see both styles in this guide). Same data, two ways to write it.</p>
 </div>
 
 <div class="callout gr reveal">
@@ -631,7 +631,7 @@
     <span class="k">steps</span>:
       - <span class="k">uses</span>: actions/checkout@v4         <span class="c"># clone the repo onto the runner</span>
       - <span class="k">uses</span>: actions/setup-python@v5
-        <span class="k">with</span>: { <span class="k">python-version</span>: <span class="g">"3.12"</span> }
+        <span class="k">with</span>: { <span class="k">python-version</span>: <span class="g">"3.13"</span> }
       - <span class="k">run</span>: pip install -r requirements.txt
       - <span class="k">run</span>: pytest -q                      <span class="c"># test</span>
       - <span class="k">run</span>: python -m build                 <span class="c"># produce dist/*.whl</span>
@@ -672,14 +672,14 @@
       <span class="k">SNOWFLAKE_ACCOUNT</span>: ${{ vars.SNOWFLAKE_ACCOUNT }}  <span class="c"># non-secret variable</span></pre></div>
 
 <h3 class="reveal">The build matrix — test many versions at once</h3>
-<p class="reveal">A <strong>matrix</strong> runs the same job across a grid of values — Python 3.11 <em>and</em> 3.12, on Linux <em>and</em> macOS — all in parallel, each on its own runner. One block of YAML fans out into many runs.</p>
+<p class="reveal">A <strong>matrix</strong> runs the same job across a grid of values — Python 3.12 <em>and</em> 3.13, on Linux <em>and</em> macOS — all in parallel, each on its own runner. One block of YAML fans out into many runs.</p>
 <div class="cb reveal"><span class="lang">matrix strategy</span><pre><span class="k">jobs</span>:
   <span class="k">test</span>:
     <span class="k">runs-on</span>: ${{ matrix.os }}
     <span class="k">strategy</span>:
       <span class="k">matrix</span>:
         <span class="k">os</span>: [ubuntu-latest, macos-latest]
-        <span class="k">python</span>: [<span class="g">"3.11"</span>, <span class="g">"3.12"</span>]      <span class="c"># 2 × 2 = 4 parallel runs</span>
+        <span class="k">python</span>: [<span class="g">"3.12"</span>, <span class="g">"3.13"</span>]      <span class="c"># 2 × 2 = 4 parallel runs</span>
     <span class="k">steps</span>:
       - <span class="k">uses</span>: actions/checkout@v4
       - <span class="k">uses</span>: actions/setup-python@v5
@@ -1022,7 +1022,7 @@ ${{ github.ref }}                     <span class="c"># the triggering branch/ta
 ${{ matrix.python }}                  <span class="c"># current matrix value</span>
 
 <span class="c">── matrix &amp; caching ──────────────────────────────────</span>
-<span class="k">strategy</span>: { <span class="k">matrix</span>: { <span class="k">python</span>: [<span class="g">"3.11"</span>, <span class="g">"3.12"</span>] } }
+<span class="k">strategy</span>: { <span class="k">matrix</span>: { <span class="k">python</span>: [<span class="g">"3.12"</span>, <span class="g">"3.13"</span>] } }
 <span class="k">uses</span>: actions/cache@v4  <span class="k">with</span>: { <span class="k">key</span>: pip-${{ hashFiles('requirements.txt') }} }
 
 <span class="c">── the data engineer's PR pipeline ───────────────────</span>
