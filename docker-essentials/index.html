@@ -586,12 +586,18 @@ curl localhost:8000                         <span class="c"># it answers. the sa
     <dt>COPY</dt><dd>Copies files from the build context into the image. Prefer it over <code>ADD</code>, which also auto-extracts tarballs and fetches URLs — surprising behaviour you rarely want.</dd>
     <dt>WORKDIR</dt><dd>Sets the working directory for everything after it. Use it instead of <code>RUN cd /app</code>, which doesn't persist between instructions.</dd>
     <dt>ENV / ARG</dt><dd><code>ENV</code> is available at build time <em>and</em> at run time, and is baked into the image. <code>ARG</code> exists only during the build. Neither is a secret store — both are visible in <code>docker history</code>.</dd>
-    <dt>CMD</dt><dd>The <em>default</em> command, run when the container starts. Easily overridden: <code>docker run myimage python -c "print(1)"</code> replaces it entirely.</dd>
+    <dt>CMD</dt><dd>The <em>default</em> command, run when the container starts. Easily overridden: <code>docker run myimage python -c "print(1)"</code> replaces it entirely. Write it in <strong>exec form</strong> — a JSON array, <code>CMD ["python","-m","app"]</code> — not shell form (<code>CMD python -m app</code>); see the callout below.</dd>
     <dt>ENTRYPOINT</dt><dd>The command that <em>always</em> runs; anything you pass to <code>docker run</code> becomes its arguments. Use <code>ENTRYPOINT</code> for the executable and <code>CMD</code> for the default arguments — that combination gives you a container that behaves like a CLI tool.</dd>
     <dt>USER</dt><dd>Switches to a non-root user for everything after it. See <a href="#security">§14</a> — the default really is root, and that really is a problem.</dd>
     <dt>EXPOSE</dt><dd>Documents which port the app listens on. It does <strong>not</strong> publish anything — only <code>docker run -p</code> does that. A genuinely misleading name.</dd>
     <dt>HEALTHCHECK</dt><dd>A command Docker runs periodically to decide whether the container is actually <em>healthy</em>, not merely running. Compose can wait on it (<a href="#compose">§12</a>).</dd>
+    <dt>VOLUME</dt><dd>Declares a path whose data should live outside the image. A base image doing this (<code>postgres</code> declares <code>VOLUME /var/lib/postgresql/data</code>) means that path always gets a mount — an <em>anonymous</em> volume you'll never find again unless you mount your own named volume there. Rarely worth writing yourself; worth recognising when a base image surprises you with stray volumes.</dd>
   </dl>
+</div>
+
+<div class="callout gd reveal">
+  <p style="margin:.2em 0"><span class="t"><svg class="ico"><use href="#i-warn"/></svg> Exec form, or your container ignores <code>SIGTERM</code></span></p>
+  <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd"><strong>Exec form</strong> (<code>CMD ["python","-m","app"]</code>) runs your process <em>directly</em> as PID 1, so it receives <code>docker stop</code>'s <code>SIGTERM</code> and can flush, checkpoint, or close connections before it dies. <strong>Shell form</strong> (<code>CMD python -m app</code>) runs it as a child of <code>/bin/sh -c</code>, which does <em>not</em> forward signals — so <code>SIGTERM</code> hits the shell, your app never hears it, and after a 10-second grace period Docker <code>SIGKILL</code>s it mid-write. For a data pipeline that's a corrupted partial output on every deploy. Two rules: always use exec form for <code>CMD</code>/<code>ENTRYPOINT</code>, and add <code>docker run --init</code> (or <code>init: true</code> in Compose) so a tiny init process reaps zombie child processes and forwards signals properly.</p>
 </div>
 
 <h3 class="reveal">Two rules that separate good Dockerfiles from bad ones</h3>
@@ -713,7 +719,13 @@ notebooks/
    │       └─────────── the org / namespace
    └─────────────────── the REGISTRY (default: docker.io — Docker Hub)
 
-<span class="c"># Registries you'll meet: Docker Hub · GitHub (ghcr.io) · AWS ECR · Azure ACR · GCP Artifact Registry</span></pre></div>
+<span class="c"># Registries you'll meet: Docker Hub · GitHub (ghcr.io) · AWS ECR · Azure ACR · GCP Artifact Registry</span>
+
+<span class="c"># Private registries need a login before push/pull:</span>
+docker login ghcr.io -u USER --password-stdin        <span class="c"># Docker Hub / GHCR: a token on stdin</span>
+aws ecr get-login-password --region eu-west-1 \       <span class="c"># AWS ECR: no static password —</span>
+  | docker login --password-stdin \                   <span class="c"># mint a short-lived one from your AWS creds</span>
+      1234.dkr.ecr.eu-west-1.amazonaws.com</pre></div>
 
 <div class="callout gd reveal">
   <p style="margin:.2em 0"><span class="t"><svg class="ico"><use href="#i-warn"/></svg> <code>:latest</code> is a lie</span></p>
@@ -963,9 +975,10 @@ docker system prune -a        <span class="c"># reclaim it. Careful: -a removes 
 
   <span class="k">postgres</span>:                                <span class="c"># ← this name IS the hostname (§11)</span>
     <span class="k">image</span>: postgres:16                      <span class="c"># pinned, not :latest</span>
+    <span class="k">restart</span>: unless-stopped                 <span class="c"># ← auto-restart if it crashes; not after `compose down`</span>
     <span class="k">environment</span>:
       <span class="k">POSTGRES_USER</span>: dev
-      <span class="k">POSTGRES_PASSWORD</span>: dev              <span class="c"># fine for LOCAL only</span>
+      <span class="k">POSTGRES_PASSWORD</span>: ${POSTGRES_PASSWORD:-dev}   <span class="c"># ← from .env, default "dev" locally</span>
       <span class="k">POSTGRES_DB</span>: warehouse
     <span class="k">volumes</span>:
       - pgdata:/var/lib/postgresql/data     <span class="c"># ← named volume: the data survives (§10)</span>
@@ -982,12 +995,15 @@ docker system prune -a        <span class="c"># reclaim it. Careful: -a removes 
 
   <span class="k">pipeline</span>:
     <span class="k">build</span>: .                                <span class="c"># build from the Dockerfile here…</span>
+    <span class="k">init</span>: true                              <span class="c"># ← reap zombies + forward SIGTERM (§06)</span>
     <span class="k">depends_on</span>:
       <span class="k">postgres</span>:
         <span class="k">condition</span>: service_healthy         <span class="c"># ← wait for the HEALTHCHECK, not just start</span>
+    <span class="k">env_file</span>: [.env]                        <span class="c"># ← load a whole file of vars into the container</span>
     <span class="k">environment</span>:
       <span class="k">DB_HOST</span>: postgres                    <span class="c"># ← the service name. NOT localhost.</span>
       <span class="k">S3_ENDPOINT</span>: http://minio:9000
+    <span class="k">mem_limit</span>: 4g                           <span class="c"># ← cgroup cap; exceed it → exit 137 (§03)</span>
     <span class="k">volumes</span>:
       - ./src:/app/src                      <span class="c"># ← bind mount: live code editing in dev</span>
 
@@ -1006,6 +1022,16 @@ docker compose down -v            <span class="c"># …AND delete the volumes. Y
 <div class="callout cy reveal">
   <p style="margin:.2em 0"><span class="t"><svg class="ico"><use href="#i-key"/></svg> <code>depends_on</code> alone does not wait for readiness</span></p>
   <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">A classic and maddening race. Plain <code>depends_on: [postgres]</code> waits only until the Postgres <em>container has started</em> — not until Postgres is <em>accepting connections</em>, which takes a few seconds longer. So your pipeline starts, connects, and dies with "connection refused" roughly one run in three. The fix is exactly what's in the file above: give the dependency a <code>healthcheck</code>, and depend on <code>condition: service_healthy</code>. Now Compose genuinely waits.</p>
+</div>
+
+<div class="callout cy reveal">
+  <p style="margin:.2em 0"><span class="t"><svg class="ico"><use href="#i-key"/></svg> The <code>.env</code> file, and two forms of "pass a variable"</span></p>
+  <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">Compose auto-reads a file literally named <code>.env</code> sitting next to <code>docker-compose.yml</code> and substitutes <code>${VAR}</code> references <em>inside the compose file itself</em> — that's how <code>POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-dev}</code> above picks up a real password in prod and falls back to <code>dev</code> locally. Don't confuse that with passing variables <em>into a container</em>: <code>environment:</code> sets them inline, <code>env_file:</code> loads a whole file of them. Same <code>.env</code> file name, but the auto-substitution and <code>env_file:</code> are separate mechanisms. Keep every <code>.env</code> in <code>.gitignore</code> — it's where secrets live.</p>
+</div>
+
+<div class="callout gd reveal">
+  <p style="margin:.2em 0"><span class="t"><svg class="ico"><use href="#i-repeat"/></svg> <code>restart:</code> — keep a service up without babysitting it</span></p>
+  <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">A container is not a service manager: when its process exits, it stays exited. <code>restart:</code> (Compose) or <code>--restart</code> (<code>docker run</code>) tells Docker to bring it back. The values: <code>no</code> (default), <code>on-failure[:N]</code> (only on a non-zero exit, optionally capped), <code>always</code> (even after a clean stop, and on daemon restart), and <code>unless-stopped</code> (like <code>always</code>, but respects a manual <code>docker stop</code>). Use <code>unless-stopped</code> for a database or a long-running worker; use <code>on-failure</code> for a batch job that should retry a crash but not loop forever. A <code>compose down</code> still removes everything regardless.</p>
 </div>
 
 <!-- 12 -->
@@ -1252,12 +1278,15 @@ docker build -t name:tag .                 <span class="c"># build (the "." is t
 docker build --platform linux/amd64 -t n .  <span class="c"># …for the cloud, from an M-series Mac</span>
 docker run --rm -it name:tag               <span class="c"># run, interactive, auto-delete</span>
 docker run -d -p 8080:80 --name web name   <span class="c"># detached, port published, named</span>
+docker run -d --restart unless-stopped name <span class="c"># keep it up across crashes / reboots</span>
+docker run --init --rm name                 <span class="c"># tiny init as PID 1: reaps zombies, forwards SIGTERM</span>
 docker run --rm --entrypoint bash name     <span class="c"># get a shell instead of the app</span>
 
 <span class="c">── inspect &amp; debug ───────────────────────────────────</span>
 docker ps  /  docker ps -a                 <span class="c"># running / all (incl. exited)</span>
-docker logs -f &lt;name&gt;                      <span class="c"># follow the logs   ← START HERE</span>
+docker logs -f --tail 100 &lt;name&gt;           <span class="c"># follow the logs   ← START HERE</span>
 docker exec -it &lt;name&gt; bash                <span class="c"># shell inside it   ← THEN HERE</span>
+docker cp &lt;name&gt;:/app/out.parquet ./        <span class="c"># copy a file out of (or into) a container</span>
 docker inspect &lt;name&gt;                      <span class="c"># mounts, env, network, exit code</span>
 docker stats                               <span class="c"># live CPU / memory</span>
 
@@ -1268,6 +1297,7 @@ docker volume ls  /  docker volume rm X    <span class="c"># volumes are NOT rem
 
 <span class="c">── compose ───────────────────────────────────────────</span>
 docker compose up -d --build               <span class="c"># build + start the whole stack</span>
+docker compose config                      <span class="c"># render the file with every ${VAR} resolved</span>
 docker compose logs -f &lt;svc&gt;               <span class="c"># one service's logs</span>
 docker compose exec &lt;svc&gt; bash             <span class="c"># shell into a service</span>
 docker compose down                        <span class="c"># stop &amp; remove (volumes SURVIVE)</span>
@@ -1298,9 +1328,9 @@ registry   = where images live between machines</pre></div>
 <ul class="reveal">
   <li><strong>The flow:</strong> Dockerfile → <code>docker build</code> → image → <code>docker run</code> → container.</li>
   <li><strong>Image vs container</strong>, and why deleting a container loses only its writable layer.</li>
-  <li><strong>The Dockerfile</strong> (<code>FROM</code>, <code>WORKDIR</code>, <code>ENV</code>, <code>RUN</code>, <code>COPY</code>, <code>EXPOSE</code>, <code>ENTRYPOINT</code>/<code>CMD</code>, <code>USER</code>) and the layer-cache ordering rule.</li>
-  <li><strong>The commands:</strong> <code>build</code>, <code>run</code>, <code>ps</code>, <code>logs</code>, <code>exec</code>, <code>stop</code>, plus <code>docker compose up / down / logs</code>.</li>
-  <li><strong>Port mapping</strong> (<code>-p 8000:8000</code>), <strong>environment variables</strong> (<code>-e</code> / <code>--env-file</code>), <strong>volumes</strong> vs bind mounts, <strong>container networking</strong> (service names, not <code>localhost</code>), and a <strong>registry</strong> (<code>push</code>/<code>pull</code>).</li>
+  <li><strong>The Dockerfile</strong> (<code>FROM</code>, <code>WORKDIR</code>, <code>ENV</code>, <code>RUN</code>, <code>COPY</code>, <code>EXPOSE</code>, <code>ENTRYPOINT</code>/<code>CMD</code> in <em>exec form</em>, <code>USER</code>) and the layer-cache ordering rule.</li>
+  <li><strong>The commands:</strong> <code>build</code>, <code>run</code>, <code>ps</code>, <code>logs</code>, <code>exec</code>, <code>stop</code>, <code>cp</code>, plus <code>docker compose up / down / logs / config</code>.</li>
+  <li><strong>Port mapping</strong> (<code>-p 8000:8000</code>), <strong>environment variables</strong> (<code>-e</code> / <code>--env-file</code>, and Compose's <code>.env</code> <code>${VAR}</code> substitution), <strong>volumes</strong> vs bind mounts, <strong>container networking</strong> (service names, not <code>localhost</code>), a <strong>registry</strong> (<code>login</code> / <code>push</code> / <code>pull</code>), and <code>restart:</code> policies for anything long-running.</li>
   <li><strong>You should be able to</strong> take a Python or FastAPI app, write a Dockerfile, and get it answering at <code>localhost:8000</code> (<a href="#loop">§05</a>). That's the bar.</li>
 </ul>
 
