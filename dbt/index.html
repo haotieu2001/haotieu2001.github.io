@@ -562,6 +562,20 @@ FROM {{ ref('stg_events') }}
   WHERE event_time >= (SELECT MAX(event_time) FROM {{ this }}) - INTERVAL '3 days'
 {% endif %}</code></pre>
 
+<div class="callout gd reveal">
+<p><b>Parameterised runs: backfilling with <code>vars</code>.</b> <code>{{ var('name', default) }}</code> reads a value passed at the command line — <code>dbt run --select fct_events --vars '{"start_date": "2026-01-01", "end_date": "2026-01-31"}'</code>. In an incremental model you branch on it: use the watermark filter for normal runs, and a <code>start_date</code>/<code>end_date</code> range (with <code>--full-refresh</code> off) to re-load one specific slice after a source fix, without rebuilding all of history. Set project-wide defaults under <code>vars:</code> in <code>dbt_project.yml</code>. (For secrets and connection details, the equivalent is <code>{{ env_var('DBT_SOMETHING') }}</code>, read from the environment, never committed.)</p>
+</div>
+
+<pre><code>-- a model that supports both a normal incremental run and a targeted backfill
+{% if is_incremental() %}
+  {% if var('start_date', none) %}
+    WHERE event_time &gt;= '{{ var("start_date") }}'
+      AND event_time &lt;  '{{ var("end_date") }}'     -- backfill just this range
+  {% else %}
+    WHERE event_time &gt;= (SELECT MAX(event_time) FROM {{ this }}) - INTERVAL '3 days'
+  {% endif %}
+{% endif %}</code></pre>
+
 <figure class="diagram reveal">
 <svg viewBox="45 0 510 215" role="img" aria-label="A full refresh rebuilds the whole table; an incremental run only selects and merges rows newer than the table's current maximum timestamp">
 <text x="300" y="18" text-anchor="middle" font-size="10" fill="#E7E7EE" font-family="var(--font)">is_incremental() switches between these two SQL bodies from the same file</text>
@@ -584,7 +598,7 @@ FROM {{ ref('stg_events') }}
 
 <div class="tldr reveal">
 <h4>❯ Short version</h4>
-<p><code>is_incremental()</code> lets one model file behave differently on a full refresh vs. a normal run — normally filtering to only new/changed rows via a watermark on <code>updated_at</code>. The <b>incremental_strategy</b> (append, merge, delete+insert, microbatch) decides how those rows combine with what's there — use <code>merge</code> on a <code>unique_key</code> for anything that can change. Handle <b>historical corrections</b> with a periodic <code>--full-refresh</code> or a source that bumps <code>updated_at</code>; handle <b>late-arriving data</b> with a lookback window. Always set <code>on_schema_change</code> deliberately — the default can silently corrupt a table when an upstream schema changes.</p>
+<p><code>is_incremental()</code> lets one model file behave differently on a full refresh vs. a normal run — normally filtering to only new/changed rows via a watermark on <code>updated_at</code>. The <b>incremental_strategy</b> (append, merge, delete+insert, microbatch) decides how those rows combine with what's there — use <code>merge</code> on a <code>unique_key</code> for anything that can change. Handle <b>historical corrections</b> with a periodic <code>--full-refresh</code>, a source that bumps <code>updated_at</code>, or a targeted <code>--vars</code> backfill of one date range; handle <b>late-arriving data</b> with a lookback window. Always set <code>on_schema_change</code> deliberately — the default can silently corrupt a table when an upstream schema changes.</p>
 </div>
 <hr/>
 <!-- END s07 -->
@@ -933,6 +947,10 @@ models:
 <p><b>Production runs <code>dbt build</code>, not <code>dbt run</code>.</b> It interleaves models, tests, snapshots and seeds in one DAG-ordered pass and stops <em>downstream</em> of anything that fails a test, so bad data never reaches a dependent model. Running <code>dbt run</code> then <code>dbt test</code> as two steps lets a broken model's children build on bad data before the test step catches it. Full command breakdown in section 12.</p>
 </div>
 
+<div class="callout cy reveal">
+<p><b>Environments — how dev and prod stay separate.</b> <code>profiles.yml</code> holds one connection block per <strong>target</strong> — <code>dev</code>, <code>ci</code>, <code>prod</code> — and <code>dbt run --target prod</code> picks one. Each target points at its own <strong>schema</strong> (and often its own database or account), so a model you build locally lands in <code>dbt_yourname.fct_orders</code> and never touches <code>analytics.fct_orders</code>. dbt derives the target schema from a built-in <code>generate_schema_name</code> macro, which you override when your team wants a different convention (e.g. prod uses the bare schema, everything else gets a prefix). The usual flow: you develop against <code>dev</code>; a pull request runs Slim CI in a throwaway schema; merging to <code>main</code> triggers the orchestrator's <code>prod</code> job. Nothing writes to prod except that scheduled job.</p>
+</div>
+
 <div class="callout gd reveal">
 <p><b>Slim CI — don't rebuild the whole project on every PR.</b> A naive CI job runs every model and test on each pull request; past a few hundred models that is slow and expensive. <strong>Slim CI</strong> builds only what changed plus everything downstream: <code>dbt build --select state:modified+ --defer --state ./prod-artifacts</code>. <code>state:modified+</code> diffs the branch against saved production artifacts and selects changed models and their descendants; <code>--defer</code> lets their unchanged parents resolve <code>ref()</code> to production's already-built tables instead of rebuilding the upstream DAG in a throwaway schema. A one-model change in a thousand-model project then builds in seconds.</p>
 </div>
@@ -943,7 +961,7 @@ models:
 
 <div class="tldr reveal">
 <h4>❯ Short version</h4>
-<p>dbt has no scheduler — an <b>orchestrator</b> (dbt Cloud jobs, Airflow/Dagster/Prefect, or a scheduled CI job) triggers <code>dbt build</code>, which runs models + tests + snapshots + seeds in DAG order and halts downstream of a failure. <b>Slim CI</b> (<code>state:modified+ --defer</code>) builds only what a PR changed plus its descendants, deferring the rest to production's tables. Cost problems trace back to materialization choice, un-prunable incremental filters, over-used ephemerals, or missing clustering keys.</p>
+<p>dbt has no scheduler — an <b>orchestrator</b> (dbt Cloud jobs, Airflow/Dagster/Prefect, or a scheduled CI job) triggers <code>dbt build</code>, which runs models + tests + snapshots + seeds in DAG order and halts downstream of a failure. <b>Environments</b> are <code>profiles.yml</code> targets (<code>dev</code>/<code>ci</code>/<code>prod</code>), each writing to its own schema, so only the scheduled prod job touches prod. <b>Slim CI</b> (<code>state:modified+ --defer</code>) builds only what a PR changed plus its descendants, deferring the rest to production's tables. Cost problems trace back to materialization choice, un-prunable incremental filters, over-used ephemerals, or missing clustering keys.</p>
 </div>
 <hr/>
 <!-- END s14 -->
@@ -964,7 +982,8 @@ models:
 <p class="kv">• <b>Materializations:</b> <code>view</code>, <code>table</code>, <code>incremental</code>, <code>ephemeral</code> — when and why each (section 06).</p>
 <p class="kv">• <b>Dependencies:</b> <code>ref()</code>, <code>source()</code>, and that the DAG falls out of them for free (section 02).</p>
 <p class="kv">• <b>Data quality:</b> <code>unique</code>, <code>not_null</code>, <code>accepted_values</code>, <code>relationships</code>, plus singular/custom tests (section 09).</p>
-<p class="kv">• <b>Incremental models (the interview favourite):</b> how <code>is_incremental()</code> works, how you identify new/changed rows, what happens when historical data changes, and how you handle late-arriving data (section 07).</p>
+<p class="kv">• <b>Incremental models (the interview favourite):</b> how <code>is_incremental()</code> works, how you identify new/changed rows, what happens when historical data changes, how you handle late-arriving data, and a targeted <code>--vars</code> backfill (section 07).</p>
+<p class="kv">• <b>Environments:</b> <code>profiles.yml</code> targets (<code>dev</code>/<code>ci</code>/<code>prod</code>), schema-per-environment, and why only the scheduled job writes to prod (section 14).</p>
 <p class="kv">• <b>Snapshots:</b> SCD Type 2, and the <code>timestamp</code> vs <code>check</code> strategies (section 10).</p>
 <p class="kv">• <b>Macros:</b> enough to answer "why would you use one" — reuse a pattern across models, write a custom generic test (section 08). You do not need to be a Jinja expert.</p>
 <p class="kv">• <b>Commands:</b> <code>run</code>, <code>test</code>, <code>build</code>, <code>compile</code>, <code>seed</code>, <code>snapshot</code>, <code>docs</code>, and especially <code>build</code> vs <code>run</code> (section 12).</p>
