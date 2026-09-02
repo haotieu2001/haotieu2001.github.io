@@ -152,7 +152,7 @@
 <div class="page">
 
 <header>
-  <div class="kicker"><a class="back" href="../">❮ Data &amp; AI Engineering, Simply Explained</a></div>
+  <div class="kicker"><a class="back" href="../adjacent-skills.html">❮ Adjacent Skills</a></div>
   <h1>FastAPI Essentials</h1>
   <p class="dek"><strong>FastAPI</strong> is a Python framework for building web APIs. You write a normal Python function, add type hints to it, and FastAPI turns those hints into request parsing, validation, error messages and live documentation - for free. This page walks the whole path: the <strong>request lifecycle</strong>, <strong>Pydantic</strong> validation, <strong>async</strong>, <strong>dependencies</strong>, talking to <strong>PostgreSQL</strong> with SQLAlchemy and Alembic, <strong>JWT auth</strong>, <strong>testing</strong>, a <strong>React</strong> frontend, packaging with <strong>Docker</strong>, splitting into <strong>microservices</strong>, and deploying the finished stack on <strong>AWS</strong>.</p>
   <div class="byline">~55 min read · Essentials · Reference</div>
@@ -1423,15 +1423,19 @@ config.set_main_option(<span class="g">"sqlalchemy.url"</span>, <span class="p">
 
 <h3 class="reveal">The implementation, end to end</h3>
 
-<div class="cb reveal"><span class="lang">bash</span><pre><span class="k">pip</span> install <span class="g">"python-jose[cryptography]"</span> <span class="g">"passlib[bcrypt]"</span> python-multipart
-<span class="c"># python-multipart is required: the OAuth2 token endpoint takes form data, not JSON</span></pre></div>
+<div class="cb reveal"><span class="lang">bash</span><pre><span class="k">pip</span> install pyjwt <span class="g">"pwdlib[argon2]"</span> python-multipart
+<span class="c"># pyjwt + pwdlib are the maintained choices in 2026. The older</span>
+<span class="c"># python-jose / passlib pair that most tutorials still show is a trap:</span>
+<span class="c"># passlib has been unmaintained since 2020 and breaks on bcrypt >= 4.1,</span>
+<span class="c"># and python-jose barely ships fixes. Same concepts, different imports.</span>
+<span class="c"># python-multipart is required: the OAuth2 token endpoint takes form data, not JSON.</span></pre></div>
 
 <div class="cb reveal"><span class="lang">python</span><pre><span class="c"># app/security.py</span>
 <span class="k">from</span> datetime <span class="k">import</span> datetime, timedelta, timezone
-<span class="k">from</span> jose <span class="k">import</span> jwt, JWTError
-<span class="k">from</span> passlib.context <span class="k">import</span> CryptContext
+<span class="k">import</span> jwt                              <span class="c"># PyJWT: the module is named `jwt`</span>
+<span class="k">from</span> pwdlib <span class="k">import</span> PasswordHash
 
-pwd <span class="o">=</span> CryptContext(schemes<span class="o">=</span>[<span class="g">"bcrypt"</span>], deprecated<span class="o">=</span><span class="g">"auto"</span>)
+pwd <span class="o">=</span> PasswordHash.recommended()        <span class="c"># argon2 today; upgrades hashes on verify</span>
 ALGORITHM <span class="o">=</span> <span class="g">"HS256"</span>
 
 
@@ -1476,8 +1480,8 @@ oauth2_scheme <span class="o">=</span> OAuth2PasswordBearer(tokenUrl<span class=
             algorithms<span class="o">=</span>[ALGORITHM],     <span class="c"># a list, never "any" - see the warning below</span>
             issuer<span class="o">=</span><span class="g">"orders-api"</span>,
         )
-    <span class="k">except</span> JWTError:
-        <span class="k">raise</span> credentials_error       <span class="c"># covers bad signature AND expiry</span>
+    <span class="k">except</span> jwt.InvalidTokenError:
+        <span class="k">raise</span> credentials_error       <span class="c"># covers bad signature, wrong issuer AND expiry</span>
 
     user <span class="o">=</span> <span class="k">await</span> db.get(User, <span class="p">int</span>(payload[<span class="g">"sub"</span>]))
     <span class="k">if</span> user <span class="k">is</span> <span class="k">None</span> <span class="k">or</span> <span class="k">not</span> user.is_active:
@@ -1509,7 +1513,7 @@ AdminUser <span class="o">=</span> Annotated[User, Depends(require_admin)]</pre>
     user <span class="o">=</span> (<span class="k">await</span> db.execute(stmt)).scalar_one_or_none()
 
     <span class="c"># `or` short-circuits: writing `user is None or not verify_password(...)`</span>
-    <span class="c"># would skip the bcrypt work for an unknown email, and the faster reply</span>
+    <span class="c"># would skip the hashing work for an unknown email, and the faster reply</span>
     <span class="c"># would reveal that the address is not registered. Always do the same</span>
     <span class="c"># work, then decide. DUMMY_HASH = hash_password("*"), computed at import.</span>
     ok <span class="o">=</span> verify_password(
@@ -1920,14 +1924,14 @@ TEST_URL <span class="o">=</span> <span class="g">"postgresql+asyncpg://test:tes
 <p class="reveal lead">Two goals. One command that gives a new teammate a working database, API and frontend. And one image, built the same way every time, that runs in production and can be run on a laptop to reproduce a bug.</p>
 
 <div class="cb reveal"><span class="lang">dockerfile</span><pre><span class="c"># Dockerfile - multi-stage keeps the final image small and free of build tools</span>
-FROM python:3.12-slim AS builder
+FROM python:3.13-slim AS builder
 WORKDIR /app
 RUN pip install --no-cache-dir uv
 COPY pyproject.toml uv.lock ./
 RUN uv export --no-dev --no-emit-project --format requirements-txt &gt; req.txt \
  &amp;&amp; pip install --no-cache-dir --prefix=/install -r req.txt
 
-FROM python:3.12-slim AS runtime
+FROM python:3.13-slim AS runtime
 <span class="c"># never run as root: if the app is compromised, the blast radius is smaller</span>
 RUN useradd --create-home --uid 1001 appuser
 WORKDIR /app
@@ -1945,7 +1949,7 @@ CMD ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]</pre></di
 <div class="cb reveal"><span class="lang">yaml</span><pre><span class="c"># docker-compose.yml - the whole stack, one command</span>
 services:
   db:
-    image: postgres:16-alpine
+    image: postgres:17-alpine
     environment:
       POSTGRES_USER: app
       POSTGRES_PASSWORD: devpassword
@@ -2363,7 +2367,7 @@ jobs:
     runs-on: ubuntu-latest
     services:
       postgres:
-        image: postgres:16
+        image: postgres:17
         env: { POSTGRES_PASSWORD: test, POSTGRES_DB: test }
         options: &gt;-
           --health-cmd pg_isready --health-interval 5s --health-retries 10
@@ -2371,7 +2375,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
-        with: { python-version: "3.12" }
+        with: { python-version: "3.13" }
       - run: pip install -e ".[dev]"
       - run: ruff check . &amp;&amp; mypy app
       - run: pytest -q
