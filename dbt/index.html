@@ -708,9 +708,26 @@ unit_tests:
         - {order_id: 1, discount_tier: 'none'}
         - {order_id: 2, discount_tier: 'gold'}</code></pre>
 
+<div class="def reveal">
+<p class="t">Severity, thresholds, and keeping the failing rows</p>
+<p>A failing test <strong>stops the build</strong> by default. Often you don't want that — a handful of null emails is worth knowing about but shouldn't block the pipeline. Configure the test:</p>
+<pre><code>columns:
+  - name: email
+    tests:
+      - not_null:
+          config:
+            severity: warn            # log it, don't fail the run
+            error_if: "&gt;100"           # ...unless it's more than 100 rows
+            warn_if: "&gt;0"
+      - unique:
+          config:
+            store_failures: true       # write the failing rows to a table for triage</code></pre>
+<p><code>severity: warn</code> turns a failure into a logged warning; <code>error_if</code> / <code>warn_if</code> set row-count thresholds so a test escalates from warn to error only past a limit you choose. <code>store_failures: true</code> persists the offending rows to <code>&lt;schema&gt;_dbt_test__audit.&lt;test_name&gt;</code> so you can query "which 12 rows failed" instead of just knowing that 12 did. In CI you'll often run <code>dbt build</code> so a hard failure blocks the merge; in scheduled production runs, warn-level tests plus <code>store_failures</code> give you a data-quality signal without a 3am page for every minor blip.</p>
+</div>
+
 <div class="tldr reveal">
 <h4>❯ Short version</h4>
-<p>Every dbt test fails if its query returns any rows. <b>Generic tests</b> (not_null, unique, relationships, accepted_values) apply a reusable rule to a column via YAML. <b>Singular tests</b> are one-off SQL files for a specific business rule. Both run against real, already-built data. <b>Unit tests</b> are different in kind — they feed a model fabricated input rows and assert on the exact output, testing your SQL logic in isolation rather than your production data's health.</p>
+<p>Every dbt test fails if its query returns any rows. <b>Generic tests</b> (not_null, unique, relationships, accepted_values) apply a reusable rule to a column via YAML. <b>Singular tests</b> are one-off SQL files for a specific business rule. Both run against real, already-built data. <b>Unit tests</b> feed a model fabricated input rows and assert on the exact output, testing your SQL logic in isolation. Tune noise with <code>severity: warn</code>, <code>error_if</code>/<code>warn_if</code> thresholds, and <code>store_failures</code> to keep the offending rows.</p>
 </div>
 <hr/>
 <!-- END s09 -->
@@ -830,6 +847,26 @@ models:
 <tr><td><code>dbt snapshot</code></td><td>Runs the snapshots in <code>snapshots/</code>, capturing SCD Type 2 change history (section 10).</td></tr>
 <tr><td><code>dbt docs generate</code> / <code>dbt docs serve</code></td><td>Builds the documentation site and lineage graph from your project, then serves it locally (section 11).</td></tr>
 <tr><td><code>dbt deps</code></td><td>Installs packages listed in <code>packages.yml</code> into <code>dbt_packages/</code> (section 08).</td></tr>
+<tr><td><code>dbt retry</code></td><td>Re-runs only the nodes that failed (or were skipped) in the last invocation, picking up where it stopped instead of starting over.</td></tr>
+</tbody>
+</table>
+</div>
+
+<h3 class="reveal">Node selection — running a subset</h3>
+<p class="reveal">You almost never run the whole project. <code>--select</code> (short: <code>-s</code>) and <code>--exclude</code> take a mini-language for picking nodes; a schedule that runs "just the hourly models" is <code>dbt build --select tag:hourly</code>.</p>
+<div class="tablewrap reveal">
+<table>
+<thead><tr><th>Selector</th><th>Selects</th></tr></thead>
+<tbody>
+<tr><td><code>stg_orders</code></td><td>Just that one model.</td></tr>
+<tr><td><code>stg_orders+</code></td><td>That model and <strong>everything downstream</strong> of it.</td></tr>
+<tr><td><code>+dim_customers</code></td><td>That model and <strong>everything upstream</strong> it depends on.</td></tr>
+<tr><td><code>+fct_orders+</code></td><td>The model plus its full upstream <em>and</em> downstream lineage.</td></tr>
+<tr><td><code>@dim_customers</code></td><td>Everything needed to build the model's descendants (its downstream, plus <em>their</em> other parents).</td></tr>
+<tr><td><code>tag:hourly</code></td><td>Every node tagged <code>hourly</code> in its config — the usual way to split a project across schedules.</td></tr>
+<tr><td><code>path:models/staging</code></td><td>Every model in that folder.</td></tr>
+<tr><td><code>state:modified+</code></td><td>Nodes changed vs a saved <code>manifest.json</code>, plus their descendants — the basis of Slim CI (section 14).</td></tr>
+<tr><td><code>--exclude tag:slow</code></td><td>Subtract nodes from whatever <code>--select</code> matched.</td></tr>
 </tbody>
 </table>
 </div>
@@ -859,7 +896,7 @@ models:
 
 <div class="tldr reveal">
 <h4>❯ Short version</h4>
-<p><code>run</code> = models only. <code>test</code> = checks against built models. <code>build</code> = run + test + seed + snapshot in one DAG pass, skipping everything downstream of a failed test — what production uses. <code>compile</code> = render SQL without executing. <code>seed</code> / <code>snapshot</code> / <code>docs</code> / <code>deps</code> do exactly what their names say.</p>
+<p><code>run</code> = models only. <code>test</code> = checks against built models. <code>build</code> = run + test + seed + snapshot in one DAG pass, skipping everything downstream of a failed test — what production uses. <code>compile</code> = render SQL without executing. Every command takes <code>--select</code> / <code>--exclude</code> with graph operators (<code>model+</code>, <code>+model</code>, <code>tag:hourly</code>, <code>state:modified+</code>) to run a subset; <code>dbt retry</code> resumes a failed run.</p>
 </div>
 <hr/>
 <!-- END s12 -->
