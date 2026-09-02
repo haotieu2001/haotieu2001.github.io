@@ -3866,135 +3866,87 @@ Reach a service locally (through the bastion)
 <p class="promptline">~/kubernetes <b>❯</b></p>
 <h2 id="26-troubleshooting-playbook" class="reveal"><span class="hico"><svg class="ico"><use href="#i-blocks"/></svg></span><span class="n">19.</span> Troubleshooting Playbook</h2>
 <p>When a workload misbehaves, resist the urge to randomly restart things. Kubernetes problems almost always sit in one of a few layers, so debug <strong>bottom-up: Pod → Node → Service → Ingress</strong>. Confirm the pods are actually running and ready first (and that their node is healthy); only then check whether the Service routes to them; only then check the Ingress.</p>
-<p><figure class="fig reveal"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 720">
+<p><figure class="fig reveal"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 840 620">
   <defs>
-    <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+    <marker id="tarrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
       <path d="M0,0 L10,5 L0,10 z" fill="#5AC8FF"/>
     </marker>
-    <marker id="arrowblue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
-      <path d="M0,0 L10,5 L0,10 z" fill="#5C78FF"/>
+    <marker id="tarrowr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#FF6B9D"/>
     </marker>
     <style>
-      .title{font:700 19px system-ui,Segoe UI,Roboto,Arial,sans-serif;fill:#E7E7EE;text-anchor:middle}
-      text{font-family:system-ui,Segoe UI,Roboto,Arial,sans-serif;fill:#E7E7EE}
-      .lbl{font-size:13px;text-anchor:middle}
-      .lbl-s{font-size:11px;text-anchor:middle;fill:#E7E7EE}
-      .lbl-l{font-size:15px;font-weight:600;text-anchor:middle}
-      .grp{fill:#191921;stroke:#3C4356;stroke-width:1.5;rx:12}
-      .cp{fill:#191921;stroke:#5C78FF;stroke-width:1.5;rx:10}
-      .node{fill:#191921;stroke:#5AC8FF;stroke-width:1.5;rx:10}
-      .pod{fill:#191921;stroke:#28B9FF;stroke-width:1.5;rx:9}
-      .store{fill:#191921;stroke:#FFB454;stroke-width:1.5;rx:9}
-      .sec{fill:#191921;stroke:#FF6B9D;stroke-width:1.5;rx:9}
-      .net{fill:#191921;stroke:#5AC8FF;stroke-width:1.5;rx:9}
-      .ext{fill:#191921;stroke:#9aa0b4;stroke-width:1.5;rx:9}
-      .obj{fill:#191921;stroke:#A56BFF;stroke-width:1.5;rx:9}
-      .edge{fill:none;stroke:#5AC8FF;stroke-width:2;marker-end:url(#arrow)}
-      .edge-b{fill:none;stroke:#5C78FF;stroke-width:2;marker-end:url(#arrowblue)}
-      .dash{stroke-dasharray:5 4}
-      .dia{fill:#191921;stroke:#A56BFF;stroke-width:1.5}
+      .t-title{font:700 18px system-ui,Segoe UI,Roboto,Arial,sans-serif;fill:#E7E7EE;text-anchor:middle}
+      .t-txt{font-family:system-ui,Segoe UI,Roboto,Arial,sans-serif;fill:#E7E7EE;font-size:13px;text-anchor:middle}
+      .t-sm{font-family:system-ui,Segoe UI,Roboto,Arial,sans-serif;fill:#E7E7EE;font-size:11px;text-anchor:middle}
+      .t-tag{font-family:system-ui,Segoe UI,Roboto,Arial,sans-serif;fill:#FFB0CB;font-size:12px;font-weight:700;text-anchor:middle}
+      .t-dia{fill:#191921;stroke:#5AC8FF;stroke-width:1.6}
+      .t-diag{fill:#191921;stroke:#FF6B9D;stroke-width:1.5;rx:9}
+      .t-end{fill:#191921;stroke:#5C78FF;stroke-width:1.6;rx:9}
+      .t-yes{fill:none;stroke:#5AC8FF;stroke-width:2;marker-end:url(#tarrow)}
+      .t-no{fill:none;stroke:#FF6B9D;stroke-width:2;marker-end:url(#tarrowr)}
+      .t-lyes{font-family:system-ui,Segoe UI,Roboto,Arial,sans-serif;fill:#9FE1FF;font-size:11px;text-anchor:start}
+      .t-lno{font-family:system-ui,Segoe UI,Roboto,Arial,sans-serif;fill:#FFB0CB;font-size:11px;text-anchor:middle}
     </style>
   </defs>
 
-  <text class="title" x="450" y="30">Pod Troubleshooting Decision Tree</text>
+  <text class="t-title" x="420" y="26">Debug bottom-up — Pod → Node → Service → Ingress</text>
 
-  <!-- Start diamond -->
-  <polygon class="dia" points="450,52 560,98 450,144 340,98"/>
-  <text class="lbl" x="450" y="94">Pod not</text>
-  <text class="lbl" x="450" y="110">working?</text>
+  <!-- Stage 1: Pod -->
+  <polygon class="t-dia" points="220,46 336,92 220,138 104,92"/>
+  <text class="t-txt" x="220" y="88">Pods Running</text>
+  <text class="t-txt" x="220" y="105">&amp; Ready? (1/1)</text>
+  <rect class="t-diag" x="436" y="58" width="384" height="70"/>
+  <text class="t-tag" x="628" y="80">§19.2 · Diagnose the POD</text>
+  <text class="t-sm" x="628" y="99">Pending · ImagePullBackOff · CrashLoopBackOff</text>
+  <text class="t-sm" x="628" y="116">OOMKilled — describe pod, then logs --previous</text>
+  <path class="t-no" d="M336 92 L434 92"/>
+  <text class="t-lno" x="385" y="84">no</text>
 
-  <!-- get pod status hint -->
-  <text class="lbl-s" x="462" y="166" style="text-anchor:start">kubectl get pod — branch by STATUS</text>
+  <!-- Stage 2: Node -->
+  <polygon class="t-dia" points="220,180 336,226 220,272 104,226"/>
+  <text class="t-txt" x="220" y="222">Node Ready?</text>
+  <text class="t-sm" x="220" y="239">(no pressure)</text>
+  <rect class="t-diag" x="436" y="192" width="384" height="70"/>
+  <text class="t-tag" x="628" y="214">§19.3 · Diagnose the NODE</text>
+  <text class="t-sm" x="628" y="233">NotReady · memory / disk / PID pressure</text>
+  <text class="t-sm" x="628" y="250">pods stuck Terminating / Unknown — describe node</text>
+  <path class="t-no" d="M336 226 L434 226"/>
+  <text class="t-lno" x="385" y="218">no</text>
+  <path class="t-yes" d="M220 138 L220 178"/>
+  <text class="t-lyes" x="230" y="163">yes</text>
 
-  <!-- Four status branches: Pending, ImagePullBackOff, CrashLoopBackOff, Running not Ready -->
-  <!-- column x centers: 120, 340, 560, 780 -->
+  <!-- Stage 3: Service -->
+  <polygon class="t-dia" points="220,314 336,360 220,406 104,360"/>
+  <text class="t-txt" x="220" y="356">Service has</text>
+  <text class="t-txt" x="220" y="373">endpoints?</text>
+  <rect class="t-diag" x="436" y="326" width="384" height="70"/>
+  <text class="t-tag" x="628" y="348">§19.4 · Diagnose the SERVICE</text>
+  <text class="t-sm" x="628" y="367">selector must match pod labels · targetPort</text>
+  <text class="t-sm" x="628" y="384">pods must be Ready — get endpointslices</text>
+  <path class="t-no" d="M336 360 L434 360"/>
+  <text class="t-lno" x="385" y="352">no</text>
+  <path class="t-yes" d="M220 272 L220 312"/>
+  <text class="t-lyes" x="230" y="297">yes</text>
 
-  <!-- connectors from start down to a bus line -->
-  <path class="edge" d="M450 144 L450 184"/>
-  <path d="M120 184 L780 184" fill="none" stroke="#5AC8FF" stroke-width="2"/>
-  <path class="edge" d="M120 184 L120 214"/>
-  <path class="edge" d="M340 184 L340 214"/>
-  <path class="edge" d="M560 184 L560 214"/>
-  <path class="edge" d="M780 184 L780 214"/>
+  <!-- Stage 4: Ingress -->
+  <polygon class="t-dia" points="220,448 336,494 220,540 104,494"/>
+  <text class="t-txt" x="220" y="490">Ingress / LB</text>
+  <text class="t-txt" x="220" y="507">routes OK?</text>
+  <rect class="t-diag" x="436" y="460" width="384" height="70"/>
+  <text class="t-tag" x="628" y="482">§19.5 · Diagnose INGRESS / ALB</text>
+  <text class="t-sm" x="628" y="501">404 → host / path rule · 502 / 503 → no healthy targets</text>
+  <text class="t-sm" x="628" y="518">504 → slow backend / ALB idle timeout</text>
+  <path class="t-no" d="M336 494 L434 494"/>
+  <text class="t-lno" x="385" y="486">no</text>
+  <path class="t-yes" d="M220 406 L220 446"/>
+  <text class="t-lyes" x="230" y="431">yes</text>
 
-  <!-- status boxes -->
-  <rect class="store" x="40" y="214" width="160" height="50" rx="9"/>
-  <text class="lbl" x="120" y="245">Pending</text>
-
-  <rect class="sec" x="260" y="214" width="160" height="50" rx="9"/>
-  <text class="lbl" x="340" y="240" style="fill:#FF6B9D">ImagePull-</text>
-  <text class="lbl" x="340" y="256" style="fill:#FF6B9D">BackOff</text>
-
-  <rect class="sec" x="480" y="214" width="160" height="50" rx="9"/>
-  <text class="lbl" x="560" y="240" style="fill:#FF6B9D">CrashLoop-</text>
-  <text class="lbl" x="560" y="256" style="fill:#FF6B9D">BackOff</text>
-
-  <rect class="pod" x="700" y="214" width="160" height="50" rx="9"/>
-  <text class="lbl" x="780" y="240">Running but</text>
-  <text class="lbl" x="780" y="256">not Ready</text>
-
-  <!-- action boxes -->
-  <path class="edge" d="M120 264 L120 290"/>
-  <rect class="grp" x="30" y="290" width="180" height="78" rx="10"/>
-  <text class="lbl-s" x="120" y="313">kubectl describe pod</text>
-  <text class="lbl-s" x="120" y="329">check events:</text>
-  <text class="lbl-s" x="120" y="345">scheduling / quota</text>
-  <text class="lbl-s" x="120" y="361">/ PVC unbound</text>
-
-  <path class="edge" d="M340 264 L340 290"/>
-  <rect class="grp" x="250" y="290" width="180" height="78" rx="10"/>
-  <text class="lbl-s" x="340" y="313">verify image name</text>
-  <text class="lbl-s" x="340" y="329">&amp; tag</text>
-  <text class="lbl-s" x="340" y="345">registry creds</text>
-  <text class="lbl-s" x="340" y="361">(imagePullSecret)</text>
-
-  <path class="edge" d="M560 264 L560 290"/>
-  <rect class="grp" x="470" y="290" width="180" height="78" rx="10"/>
-  <text class="lbl-s" x="560" y="313">kubectl logs</text>
-  <text class="lbl-s" x="560" y="329">--previous</text>
-  <text class="lbl-s" x="560" y="345">OOMKilled?</text>
-  <text class="lbl-s" x="560" y="361">bad command / config</text>
-
-  <path class="edge" d="M780 264 L780 290"/>
-  <rect class="grp" x="690" y="290" width="180" height="78" rx="10"/>
-  <text class="lbl-s" x="780" y="313">check readiness</text>
-  <text class="lbl-s" x="780" y="329">probe</text>
-  <text class="lbl-s" x="780" y="345">&amp; Service</text>
-  <text class="lbl-s" x="780" y="361">endpoints</text>
-
-  <!-- converge to Service decision -->
-  <path class="edge" d="M120 368 L120 410 L450 410 L450 432"/>
-  <path d="M340 368 L340 410" fill="none" stroke="#5AC8FF" stroke-width="2"/>
-  <path d="M560 368 L560 410" fill="none" stroke="#5AC8FF" stroke-width="2"/>
-  <path d="M780 368 L780 410" fill="none" stroke="#5AC8FF" stroke-width="2"/>
-
-  <!-- Service decision diamond -->
-  <polygon class="dia" points="450,432 580,484 450,536 320,484"/>
-  <text class="lbl" x="450" y="478">Service has no</text>
-  <text class="lbl" x="450" y="496">endpoints?</text>
-
-  <rect class="net" x="610" y="458" width="240" height="52" rx="9"/>
-  <text class="lbl-s" x="730" y="480">selector must match pod labels;</text>
-  <text class="lbl-s" x="730" y="498">pods must be Ready</text>
-  <path class="edge" d="M580 484 L605 484"/>
-  <text class="lbl-s" x="595" y="474">yes</text>
-
-  <!-- Ingress decision -->
-  <path class="edge" d="M450 536 L450 568"/>
-  <text class="lbl-s" x="495" y="558">no / fixed</text>
-  <polygon class="dia" points="450,568 580,620 450,672 320,620"/>
-  <text class="lbl" x="450" y="614">Ingress returns</text>
-  <text class="lbl" x="450" y="632">404 / 502?</text>
-
-  <rect class="net" x="610" y="594" width="250" height="52" rx="9"/>
-  <text class="lbl-s" x="735" y="616">404 → host/path rule;</text>
-  <text class="lbl-s" x="735" y="634">502 → backend Service / port</text>
-  <path class="edge" d="M580 620 L605 620"/>
-
-  <!-- resolved -->
-  <rect class="node" x="320" y="688" width="260" height="26" rx="9"/>
-  <text class="lbl-s" x="450" y="705" style="fill:#5AC8FF">no → traffic should now reach the pod</text>
-</svg><figcaption>Troubleshooting decision tree: pod not working then check Pending, ImagePullBackOff, CrashLoopBackOff, not-Ready, then Service, then Ingress</figcaption></figure></p>
+  <!-- End -->
+  <path class="t-yes" d="M220 540 L220 556"/>
+  <rect class="t-end" x="40" y="558" width="360" height="48"/>
+  <text class="t-txt" x="220" y="579">Traffic reaches the Pod</text>
+  <text class="t-sm" x="220" y="596">still failing? look upstream — DNS, client, firewall</text>
+</svg><figcaption>Bottom-up troubleshooting: check Pod readiness, then Node health, then Service endpoints, then Ingress/LB routing — each "no" branches to the subsection that diagnoses that layer.</figcaption></figure></p>
 <h3 id="261-the-decision-tree" class="reveal">19.1 The decision tree</h3>
 <pre class="code reveal"><code>START
   │
