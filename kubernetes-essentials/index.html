@@ -178,12 +178,6 @@ h2 .n{color:var(--blue2,#5C78FF)}
 </ul>
 <hr>
 <p class="promptline">~/kubernetes <b>❯</b></p>
-<h2 id="kubernetes-in-2026-at-a-glance-what-changed-since-2024" class="reveal">Kubernetes in 2026 — at a glance (what changed since 2024)</h2>
-<p>If you learned Kubernetes from a 2023/2024 tutorial, these are the headlines that are now different:</p>
-<div class="tablewrap reveal"><table><thead><tr><th>Topic</th><th>Old (2023/24)</th><th>Now (2026)</th></tr></thead><tbody><tr><td><strong>Latest stable</strong></td><td>~v1.28</td><td><strong>~v1.33–v1.36</strong>, ~3 releases/year, ~14-month support (N-2)</td></tr><tr><td><strong>Docker runtime</strong></td><td>"dockershim is being removed"</td><td><strong>dockershim is gone</strong> (since v1.24) — use <strong>containerd/CRI-O</strong> via CRI; Docker is just build tooling</td></tr><tr><td><strong>Pod security</strong></td><td>PodSecurityPolicy (PSP)</td><td><strong>PSP removed</strong> (v1.25) → <strong>Pod Security Admission</strong> + Pod Security Standards (your platform team sets this; you consume it)</td></tr><tr><td><strong>Sidecars</strong></td><td>hacky extra container</td><td><strong>native restartable sidecars</strong> (GA v1.33)</td></tr><tr><td><strong>Node autoscaling (AWS)</strong></td><td>Cluster Autoscaler</td><td><strong>Karpenter</strong> / <strong>EKS Auto Mode</strong> preferred</td></tr><tr><td><strong>AWS pod IAM</strong></td><td>IRSA only</td><td><strong>EKS Pod Identity</strong> (IRSA still valid)</td></tr><tr><td><strong>Storage</strong></td><td>in-tree volume plugins</td><td><strong>CSI</strong> is the standard; in-tree plugins removed</td></tr><tr><td><strong>Endpoints</strong></td><td><code>Endpoints</code> object</td><td><strong>EndpointSlices</strong> (Endpoints API deprecated v1.33)</td></tr><tr><td><strong>Metrics</strong></td><td>Heapster</td><td><strong>metrics-server + kube-state-metrics + Prometheus</strong>; <strong>OpenTelemetry</strong> for traces</td></tr></tbody></table></div>
-<p>Each of these is explained in context with a <strong>2026 Update</strong> callout where it matters.</p>
-<hr>
-<p class="promptline">~/kubernetes <b>❯</b></p>
 <h2 id="table-of-contents" class="reveal">Table of Contents</h2>
 <div class="toc reveal">
   <strong>Contents</strong>
