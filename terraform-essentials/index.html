@@ -165,7 +165,7 @@
 <div class="page">
 
 <header>
-  <div class="kicker"><a class="back" href="../">❮ Data &amp; AI Engineering, Simply Explained</a></div>
+  <div class="kicker"><a class="back" href="../adjacent-skills.html">❮ Adjacent Skills</a></div>
   <h1>Terraform Essentials for Data Engineers</h1>
   <p class="dek"><strong>Terraform</strong> lets you describe your cloud — buckets, warehouses, clusters, permissions — as text files you keep in Git, then builds it for you. No more clicking through a console and hoping you remember what you did. Starts from the <strong>three worlds</strong> (your config, Terraform's state, and reality), makes it concrete with <strong>HCL</strong> you can copy, then covers the parts that actually bite: <strong>state and locking</strong>, the <strong>dependency graph</strong>, <strong>count vs for_each</strong>, <strong>modules</strong>, <strong>environments</strong> and Terraform in <strong>CI/CD</strong> — finishing with how data engineers really use it: S3, IAM, Databricks, Snowflake, Airflow.</p>
   <div class="byline">~25 min read · Essentials · Reference</div>
@@ -429,11 +429,11 @@ Plan: <span class="g">2 to add</span>, <span class="y">1 to change</span>, <span
 <p class="reveal">Here is a small but genuinely usable configuration — a raw-data bucket and an IAM role your ETL job can assume. Every block type is labelled; the rest of the section explains each one.</p>
 <div class="cb reveal"><span class="lang">main.tf</span><pre><span class="c"># ── 1. TERRAFORM block: settings for Terraform itself ──</span>
 <span class="p">terraform</span> {
-  <span class="k">required_version</span> = <span class="g">"&gt;= 1.6"</span>
+  <span class="k">required_version</span> = <span class="g">"&gt;= 1.11"</span>
   <span class="k">required_providers</span> {
     <span class="k">aws</span> = {
       <span class="k">source</span>  = <span class="g">"hashicorp/aws"</span>
-      <span class="k">version</span> = <span class="g">"~&gt; 5.0"</span>            <span class="c"># any 5.x, but not 6.0 — see §05</span>
+      <span class="k">version</span> = <span class="g">"~&gt; 6.0"</span>            <span class="c"># any 6.x, but not 7.0 — see §05</span>
     }
   }
   <span class="k">backend</span> <span class="g">"s3"</span> {                     <span class="c"># where the STATE lives — see §06</span>
@@ -534,7 +534,7 @@ Plan: <span class="g">2 to add</span>, <span class="y">1 to change</span>, <span
 
 <div class="cb reveal"><span class="lang">a multi-provider data platform</span><pre><span class="p">terraform</span> {
   <span class="k">required_providers</span> {
-    <span class="k">aws</span>        = { <span class="k">source</span> = <span class="g">"hashicorp/aws"</span>,          <span class="k">version</span> = <span class="g">"~&gt; 5.0"</span> }
+    <span class="k">aws</span>        = { <span class="k">source</span> = <span class="g">"hashicorp/aws"</span>,          <span class="k">version</span> = <span class="g">"~&gt; 6.0"</span> }
     <span class="k">databricks</span> = { <span class="k">source</span> = <span class="g">"databricks/databricks"</span>,  <span class="k">version</span> = <span class="g">"~&gt; 1.50"</span> }
     <span class="k">snowflake</span>  = { <span class="k">source</span> = <span class="g">"snowflakedb/snowflake"</span>,  <span class="k">version</span> = <span class="g">"~&gt; 0.95"</span> }
   }
@@ -558,15 +558,15 @@ Plan: <span class="g">2 to add</span>, <span class="y">1 to change</span>, <span
 <p class="reveal">Providers ship breaking changes. If you don't pin a version, a colleague running <code>init</code> next month can pull a newer provider that renames an attribute — and suddenly the plan wants to replace your bucket. The <code>~&gt;</code> operator (the "pessimistic constraint") is the usual answer:</p>
 <table class="reveal">
   <tr><th>Constraint</th><th>Means</th><th>Use when</th></tr>
-  <tr><td><code>version = "5.31.0"</code></td><td>Exactly this. Nothing else.</td><td>Maximum paranoia (prod, regulated)</td></tr>
-  <tr><td><code>version = "~&gt; 5.31"</code></td><td>≥ 5.31, &lt; 6.0 — patches and minors, no major</td><td><strong>The sane default</strong></td></tr>
-  <tr><td><code>version = "~&gt; 5.31.0"</code></td><td>≥ 5.31.0, &lt; 5.32.0 — patches only</td><td>Conservative</td></tr>
-  <tr><td><code>version = "&gt;= 5.0"</code></td><td>Anything newer. Includes 6.0's breaking changes.</td><td>Almost never — this is how you get ambushed</td></tr>
+  <tr><td><code>version = "6.2.0"</code></td><td>Exactly this. Nothing else.</td><td>Maximum paranoia (prod, regulated)</td></tr>
+  <tr><td><code>version = "~&gt; 6.2"</code></td><td>≥ 6.2, &lt; 7.0 — patches and minors, no major</td><td><strong>The sane default</strong></td></tr>
+  <tr><td><code>version = "~&gt; 6.2.0"</code></td><td>≥ 6.2.0, &lt; 6.3.0 — patches only</td><td>Conservative</td></tr>
+  <tr><td><code>version = "&gt;= 6.0"</code></td><td>Anything newer. Includes 7.0's breaking changes.</td><td>Almost never — this is how you get ambushed</td></tr>
 </table>
 
 <div class="callout gr reveal">
   <p style="margin:.2em 0"><span class="t"><svg class="ico"><use href="#i-check"/></svg> Commit <code>.terraform.lock.hcl</code></span></p>
-  <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">Your constraint says "any 5.x". The <strong>lock file</strong> records which exact 5.x <em>you</em> resolved to, plus checksums. Commit it, and every teammate — and CI — gets byte-identical providers, so "works on my machine" can't happen. It's the same idea as <code>package-lock.json</code> or <code>poetry.lock</code>. Upgrade deliberately with <code>terraform init -upgrade</code>, and review the resulting plan.</p>
+  <p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">Your constraint says "any 6.x". The <strong>lock file</strong> records which exact 6.x <em>you</em> resolved to, plus checksums. Commit it, and every teammate — and CI — gets byte-identical providers, so "works on my machine" can't happen. It's the same idea as <code>package-lock.json</code> or <code>poetry.lock</code>. Upgrade deliberately with <code>terraform init -upgrade</code>, and review the resulting plan.</p>
 </div>
 
 <!-- 06 -->
@@ -1392,15 +1392,15 @@ cd envs/prod &amp;&amp; terraform init &amp;&amp; terraform plan</pre></div>
 
 <h4 class="reveal">modules/data-lake/versions.tf — what it needs, not how to reach it</h4>
 <div class="cb reveal"><span class="lang">modules/data-lake/versions.tf</span><pre><span class="p">terraform</span> {
-  <span class="k">required_version</span> = <span class="g">"&gt;= 1.6"</span>
+  <span class="k">required_version</span> = <span class="g">"&gt;= 1.11"</span>
   <span class="k">required_providers</span> {
     <span class="k">aws</span> = {
       <span class="k">source</span>  = <span class="g">"hashicorp/aws"</span>
-      <span class="k">version</span> = <span class="g">"&gt;= 5.0"</span>          <span class="c"># a RANGE, not a pin — see the note below</span>
+      <span class="k">version</span> = <span class="g">"&gt;= 6.0"</span>          <span class="c"># a RANGE, not a pin — see the note below</span>
     }
   }
 }</pre></div>
-<p class="reveal">Two things to notice, and both are subtle. First: there is <strong>no <code>provider "aws" { }</code> block</strong> here. The module declares that it <em>needs</em> the AWS provider, but the <em>configuration</em> of that provider (which region, which credentials) is inherited from whichever root calls it. Put a provider block in a shared module and you can never use it twice in one config — no multi-region, no multi-account. Second: a module declares a <strong>permissive range</strong> (<code>&gt;= 5.0</code>), while a <em>root</em> declares a <strong>tight constraint</strong> (<code>~&gt; 5.31</code>). The module is saying "I work with anything from 5.0 up"; the root decides what actually gets installed. If a module pinned an exact version, two modules could demand different versions and your config would be unresolvable.</p>
+<p class="reveal">Two things to notice, and both are subtle. First: there is <strong>no <code>provider "aws" { }</code> block</strong> here. The module declares that it <em>needs</em> the AWS provider, but the <em>configuration</em> of that provider (which region, which credentials) is inherited from whichever root calls it. Put a provider block in a shared module and you can never use it twice in one config — no multi-region, no multi-account. Second: a module declares a <strong>permissive range</strong> (<code>&gt;= 6.0</code>), while a <em>root</em> declares a <strong>tight constraint</strong> (<code>~&gt; 6.2</code>). The module is saying "I work with anything from 6.0 up"; the root decides what actually gets installed. If a module pinned an exact version, two modules could demand different versions and your config would be unresolvable.</p>
 
 <h4 class="reveal">modules/data-lake/variables.tf — the module's contract</h4>
 <div class="cb reveal"><span class="lang">modules/data-lake/variables.tf</span><pre><span class="p">variable</span> <span class="g">"env"</span> {
@@ -1516,11 +1516,11 @@ cd envs/prod &amp;&amp; terraform init &amp;&amp; terraform plan</pre></div>
 <p class="reveal">The one line that matters is <code>key</code>. Dev and prod point at the same bucket but different objects, so they have <strong>separate state files</strong> and separate locks — an apply in dev can't corrupt or block prod. (Backend blocks can't use variables, which is exactly why this is a per-environment file rather than something clever and shared.)</p>
 
 <div class="cb reveal"><span class="lang">envs/prod/providers.tf</span><pre><span class="p">terraform</span> {
-  <span class="k">required_version</span> = <span class="g">"&gt;= 1.6"</span>
+  <span class="k">required_version</span> = <span class="g">"&gt;= 1.11"</span>
   <span class="k">required_providers</span> {
     <span class="k">aws</span> = {
       <span class="k">source</span>  = <span class="g">"hashicorp/aws"</span>
-      <span class="k">version</span> = <span class="g">"~&gt; 5.31"</span>      <span class="c"># the ROOT pins tightly (the module only ranged)</span>
+      <span class="k">version</span> = <span class="g">"~&gt; 6.2"</span>      <span class="c"># the ROOT pins tightly (the module only ranged)</span>
     }
   }
 }
