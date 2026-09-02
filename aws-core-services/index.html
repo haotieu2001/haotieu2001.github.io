@@ -1,0 +1,1378 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Core AWS Services for Data Engineers — S3, Glue, EMR, IAM, MWAA, Lambda, Athena, Redshift in Depth</title>
+<style>
+  :root{
+    --bg:#111117; --bg2:#16161D; --panel:#191921; --panel2:#16161d;
+    --ink:#F1F1F1; --muted:#9aa0b4; --dim:#6b6b78;
+    --blue:#5C78FF; --blue2:#5C78FF; --cyan:#28B9FF; --cyan2:#5AC8FF;
+    --purple:#A56BFF; --magenta:#A56BFF; --magenta2:#A56BFF;
+    --warn:#FFB454; --good:#5AC8FF;
+    --aws:#FF9900; --aws2:#FFAC31; --awsblue:#5C78FF; --orch:#A56BFF; --data:#5AC8FF; --sec:#FF6B9D;
+    --grad:linear-gradient(90deg,#28B9FF,#5C78FF);
+    --font:"JetBrainsMono Nerd Font","JetBrains Mono","Symbols Nerd Font",ui-monospace,"Cascadia Code",Menlo,Consolas,monospace;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font);font-size:16px;line-height:1.85;-webkit-font-smoothing:antialiased}
+  #bar{position:fixed;top:0;left:0;height:3px;width:0;z-index:50;background:var(--grad);box-shadow:0 0 12px #FF990099;transition:width .1s linear}
+  .wrap{max-width:820px;margin:0 auto;padding:0 22px 120px}
+  .wrap > *{max-width:none !important;margin-left:0 !important;margin-right:0 !important}
+  .prose{max-width:760px;margin-left:auto;margin-right:auto}
+  p,li{color:#dcdce4}
+  a{color:var(--cyan2);text-decoration:none;border-bottom:1px dotted #5AC8FF66}
+  a:hover{color:#fff;border-bottom-color:#fff}
+  code{font-family:var(--font);background:#23232b;color:#5AC8FF;padding:1px 7px;border-radius:5px;font-size:.9em;border:1px solid #3C4356}
+  pre{background:#1D1D26;border:1px solid #3C4356;border-radius:12px;padding:16px 20px;margin:20px auto;max-width:820px;overflow-x:auto}
+  pre code{background:none;border:none;padding:0;color:#dcdce4;font-size:12.5px;line-height:1.65;white-space:pre}
+  pre .c1{color:var(--muted)}
+  header.hero{padding:64px 22px 30px;text-align:center;position:relative;overflow:hidden}
+  .kicker{font-size:12.5px;letter-spacing:.32em;text-transform:uppercase;color:var(--muted)}
+  h1{font-size:clamp(26px,4.6vw,46px);line-height:1.15;margin:14px auto 12px;max-width:24ch;font-weight:800;
+     color:#5AC8FF}
+  @keyframes sheen{to{background-position:220% center}}
+  .dek{max-width:64ch;margin:0 auto;color:var(--muted);font-size:17px}
+  .byline{margin-top:18px;font-size:13px;color:var(--dim)}
+  .logos{display:flex;gap:26px;justify-content:center;align-items:center;margin:30px 0 8px;flex-wrap:wrap}
+  .logos figure{margin:0;text-align:center}
+  .logos svg{width:60px;height:60px;display:block;margin:0 auto}
+  .logos figcaption{font-size:11.5px;color:var(--muted);margin-top:6px}
+  h2{font-size:clamp(22px,3.2vw,30px);margin:64px 0 6px;font-weight:800;line-height:1.25}
+  h2 .pfx{color:var(--blue2)}
+  h3{font-size:19px;margin:32px 0 8px;font-weight:700;color:#fff}
+  .lead{font-size:18px;color:#e7e7ee}
+  .sectionsub{color:var(--muted);margin-top:0}
+  figure.fig{margin:30px auto;text-align:center;max-width:960px}
+  figure.diagram{margin:30px auto;text-align:center;max-width:960px}
+  figure.diagram svg{width:100%;height:auto;display:block;background:#16161D;border:1px solid #3C4356;border-radius:16px;box-shadow:0 18px 50px rgba(0,0,0,.45)}
+  figure.diagram figcaption{font-size:12.5px;color:var(--muted);margin-top:10px;font-style:italic}
+  .tldr{border:1px solid #191921;background:linear-gradient(180deg,#191921,#16161D);border-radius:16px;padding:22px 26px;margin:30px auto;max-width:820px}
+  .tldr h4{margin:0 0 8px;font-size:13px;letter-spacing:.2em;text-transform:uppercase;color:var(--aws2)}
+  .callout{border-left:4px solid var(--blue2);background:#191921;border-radius:0 12px 12px 0;padding:14px 20px;margin:24px auto;max-width:780px}
+  .callout.cy{border-color:var(--cyan)} .callout.mg{border-color:var(--magenta2)} .callout.gd{border-color:#5AC8FF}
+  .callout.wn{border-color:var(--warn);background:#191921}
+  .callout.ok{border-color:var(--good);background:#191921}
+
+  .pull{font-size:22px;line-height:1.45;font-weight:700;color:#fff;margin:34px auto;max-width:760px;padding-left:18px;border-left:4px solid transparent;border-image:var(--grad) 1;}
+  .def{border:1px solid #3C4356;background:#1D1D26;border-radius:12px;padding:14px 18px;margin:16px auto;max-width:780px}
+  .def .t{font-weight:700;color:#fff}
+  .def .ex{color:var(--muted);font-size:14px;margin-top:6px}
+  .def .ex b{color:#FFAC31}
+  .tag{display:inline-flex;align-items:center;gap:9px;padding:4px 12px;border-radius:999px;font-size:13px;font-weight:700;border:1px solid;white-space:nowrap}
+  .tag.aws{color:var(--aws);border-color:#FF990055;background:#FF990014}
+  .tag.blue{color:var(--awsblue);border-color:#5C78FF55;background:#5C78FF14}
+  .tag.orc{color:var(--orch);border-color:#A56BFF55;background:#A56BFF14}
+  .tag.alt{color:var(--good);border-color:#5AC8FF55;background:#5AC8FF14}
+  .profile{border:1px solid #3C4356;border-radius:16px;padding:22px 26px;margin:22px auto;max-width:820px;background:#1D1D26}
+  .profile.aws{border-top:3px solid var(--aws)} .profile.blue{border-top:3px solid var(--awsblue)} .profile.orc{border-top:3px solid var(--orch)} .profile.int{border-top:3px solid transparent;border-image:var(--grad) 1}
+  .profile .one{font-size:17px;color:#fff;font-weight:700;margin:10px 0 12px}
+  .kv{font-size:14.5px;color:#cdd0dd;margin:5px 0}
+  .kv b{color:#fff}
+  .tablewrap{overflow-x:auto;margin:22px auto;max-width:900px}
+  table{border-collapse:collapse;width:100%;font-size:13.5px;min-width:600px}
+  th,td{border:1px solid #3C4356;padding:10px 12px;text-align:left;vertical-align:top}
+  th{background:#1D1D26;color:#fff;font-weight:700}
+  tr:nth-child(even) td{background:#17171E}
+  .cell-aws{color:var(--aws);font-weight:700}.cell-blue{color:var(--awsblue);font-weight:700}.cell-orc{color:var(--orch);font-weight:700}
+  .promptline{color:var(--dim);font-size:13px;margin:54px 0 -6px}
+  .promptline b{color:var(--cyan2)}
+  .js .reveal{opacity:0;transform:translateY(22px);transition:opacity .7s ease,transform .7s ease}
+  .js .reveal.in{opacity:1;transform:none}
+  @media (prefers-reduced-motion: reduce){.js .reveal{opacity:1;transform:none;transition:none}}
+  details{border:1px solid #3C4356;border-radius:12px;padding:6px 16px;margin:16px auto;max-width:780px;background:#191921}
+  summary{cursor:pointer;font-weight:700;color:var(--cyan2);padding:8px 0}
+  .toc{border:1px solid #3C4356;border-radius:16px;padding:8px 24px 18px;margin:30px auto;max-width:820px;background:#1D1D26}
+  .toc summary{font-size:14px;letter-spacing:.15em;text-transform:uppercase}
+  .toc ol{columns:2;gap:28px;padding-left:20px;margin:8px 0 0;list-style:none}
+  .toc li{margin:6px 0;font-size:14px;list-style:none}
+  .toc a{color:#dcdce4;border-bottom:none}
+  .toc a:hover{color:var(--cyan2)}
+  @media (max-width:640px){.toc ol{columns:1}}
+  hr{border:0;border-top:1px solid #3C4356;margin:48px auto;max-width:760px}
+  .end{color:var(--muted);font-size:13px;max-width:760px;margin:28px auto}
+  .footnav a{margin-right:18px}
+.nav{position:sticky;top:0;z-index:60;background:rgba(25,25,33,.82);backdrop-filter:blur(10px);border-bottom:1px solid #3C4356}.nav-inner{max-width:1040px;margin:0 auto;padding:12px 24px;display:flex;align-items:center;gap:18px;flex-wrap:wrap}.nav-brand{font-weight:800;letter-spacing:.16em;font-size:15px;text-decoration:none;border:0;color:#5AC8FF}.nav-links{display:flex;gap:6px;flex-wrap:wrap;margin-left:auto}.nav-links a{text-decoration:none;border:1px solid transparent;color:#9aa0b4;font-weight:700;font-size:13.5px;padding:6px 14px;border-radius:999px;transition:.2s}.nav-links a:hover{color:#fff;border-color:#3C4356;background:#242739}.nav-links a.active{color:#5AC8FF;border-color:#28B9FF55;background:#28B9FF14}
+
+/* docker-standard structure */
+h2{font-size:clamp(21px,3.2vw,28px);margin:52px 0 6px;font-weight:800;line-height:1.22;padding-top:14px;border-top:1px solid #3C4356;display:flex;align-items:center;gap:10px}
+h2 .n{color:var(--blue2,#5C78FF)}
+.toc{background:#242739;border:1px solid #3C4356;border-radius:14px;padding:16px 22px;margin:24px 0;column-count:2;column-gap:28px}
+.toc>strong{column-span:all;display:block;margin-bottom:6px;color:#fff}
+.toc a{display:block;color:#5AC8FF;text-decoration:none;font-size:13.5px;line-height:1.9;break-inside:avoid;border:0}
+.toc a:hover{color:#fff}
+.toc details,.toc summary,.toc ol,.toc li{all:unset;display:block}
+.ico{width:1em;height:1em;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round}
+.hico{display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;border-radius:11px;flex:0 0 36px;background:#0e2740;border:1px solid #2b4a80;color:#5AC8FF}
+.hico .ico{width:19px;height:19px}
+.toc a .ico{width:14px;height:14px;margin-right:9px;vertical-align:-2px;opacity:.85}
+</style>
+<script>document.documentElement.classList.add('js');</script>
+</head>
+<body>
+<div id="bar"></div>
+<nav class="nav"><div class="nav-inner"><a class="nav-brand" href="../index.html">HAO TIEU KIM</a><div class="nav-links"><a href="../index.html">Portfolio</a><a href="../blogs.html">Blogs</a><a href="../essentials.html" class="active">Data Engineer Essentials</a><a href="../adjacent-skills.html">Adjacent Skills</a></div></div></nav>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs>
+<symbol id="i-question" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.6 9.4a2.5 2.5 0 1 1 3.3 2.4c-.6.2-.9.8-.9 1.5v.6M12 17h.01"/></symbol>
+<symbol id="i-layers" viewBox="0 0 24 24"><path d="m12 3 9 4.8-9 4.8-9-4.8 9-4.8Z"/><path d="m3 12.6 9 4.8 9-4.8M3 17.2l9 4.8 9-4.8"/></symbol>
+<symbol id="i-workflow" viewBox="0 0 24 24"><rect x="3" y="3.5" width="7" height="6" rx="1.5"/><rect x="14" y="14.5" width="7" height="6" rx="1.5"/><path d="M6.5 9.5v5a3 3 0 0 0 3 3H14"/></symbol>
+<symbol id="i-check" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="m8 12.2 2.7 2.7L16.2 9"/></symbol>
+<symbol id="i-rocket" viewBox="0 0 24 24"><path d="M12 2.5c3 2.6 4.8 6.4 4.8 10.6L12 16.4l-4.8-3.3C7.2 8.9 9 5.1 12 2.5Z"/><path d="M7.2 13.1 4.4 15v4.2l3-1.9M16.8 13.1l2.8 1.9v4.2l-3-1.9M12 19.5v2.3"/><circle cx="12" cy="10" r="1.7"/></symbol>
+<symbol id="i-terminal" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2.5"/><path d="m7.5 9.5 3 2.5-3 2.5M13.5 15h3.5"/></symbol>
+<symbol id="i-package" viewBox="0 0 24 24"><path d="m12 2.8 8.2 4.6v9.2L12 21.2l-8.2-4.6V7.4L12 2.8Z"/><path d="m3.8 7.4 8.2 4.6 8.2-4.6M12 12v9.2"/></symbol>
+<symbol id="i-globe" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18"/><path d="M12 3c2.4 2.7 3.6 5.7 3.6 9s-1.2 6.3-3.6 9c-2.4-2.7-3.6-5.7-3.6-9S9.6 5.7 12 3Z"/></symbol>
+<symbol id="i-repeat" viewBox="0 0 24 24"><path d="M16.5 3 20 6.5 16.5 10"/><path d="M4 11.5V9a2.5 2.5 0 0 1 2.5-2.5H20"/><path d="M7.5 21 4 17.5 7.5 14"/><path d="M20 12.5V15a2.5 2.5 0 0 1-2.5 2.5H4"/></symbol>
+<symbol id="i-database" viewBox="0 0 24 24"><ellipse cx="12" cy="6" rx="8" ry="3.2"/><path d="M4 6v12c0 1.8 3.6 3.2 8 3.2s8-1.4 8-3.2V6"/><path d="M20 12c0 1.8-3.6 3.2-8 3.2S4 13.8 4 12"/></symbol>
+<symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 2.8 4.8 5.6v5.2c0 4.4 3 8.4 7.2 9.8 4.2-1.4 7.2-5.4 7.2-9.8V5.6L12 2.8Z"/><path d="m9 12 2.2 2.2L15.4 10"/></symbol>
+<symbol id="i-list" viewBox="0 0 24 24"><path d="M8.5 6h12M8.5 12h12M8.5 18h12M3.7 6h.01M3.7 12h.01M3.7 18h.01"/></symbol>
+<symbol id="i-book" viewBox="0 0 24 24"><path d="M4 5a3 3 0 0 1 3-3h13v18H7a3 3 0 0 0-3 3V5Z"/><path d="M8 2v18"/></symbol>
+<symbol id="i-key" viewBox="0 0 24 24"><circle cx="7.2" cy="16.3" r="3.4"/><path d="m9.7 13.9 9.6-9.6M16.6 6.9l2.3 2.3M14 9.5l2.3 2.3"/></symbol>
+<symbol id="i-bulb" viewBox="0 0 24 24"><path d="M9.2 18h5.6M10.4 21h3.2"/><path d="M12 3a6 6 0 0 0-3.4 10.9c.5.4.8 1 .8 1.7v.4h5.2v-.4c0-.7.3-1.3.8-1.7A6 6 0 0 0 12 3Z"/></symbol>
+<symbol id="i-warn" viewBox="0 0 24 24"><path d="M12 3.2 2.8 19.6h18.4L12 3.2Z"/><path d="M12 9.5v4.2M12 16.8h.01"/></symbol>
+<symbol id="i-alert" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7.2v5.4M12 16.4h.01"/></symbol>
+<symbol id="i-compass" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="m15.6 8.4-2.1 5.1-5.1 2.1 2.1-5.1 5.1-2.1Z"/></symbol>
+<symbol id="i-blocks" viewBox="0 0 24 24"><rect x="3.5" y="3.5" width="7" height="7" rx="1.6"/><rect x="13.5" y="3.5" width="7" height="7" rx="1.6"/><rect x="3.5" y="13.5" width="7" height="7" rx="1.6"/><rect x="13.5" y="13.5" width="7" height="7" rx="1.6"/></symbol>
+<symbol id="i-search" viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m15.2 15.2 4.3 4.3"/></symbol>
+<symbol id="i-code" viewBox="0 0 24 24"><path d="m8 8.5-4 3.5 4 3.5M16 8.5l4 3.5-4 3.5M13.6 5l-3.2 14"/></symbol>
+<symbol id="i-plug" viewBox="0 0 24 24"><path d="M9 3v5.5M15 3v5.5"/><path d="M6.5 8.5h11V12a5.5 5.5 0 0 1-11 0V8.5Z"/><path d="M12 17.5V21"/></symbol>
+<symbol id="i-file" viewBox="0 0 24 24"><path d="M14 3H7.5A2.5 2.5 0 0 0 5 5.5v13A2.5 2.5 0 0 0 7.5 21h9a2.5 2.5 0 0 0 2.5-2.5V8l-5-5Z"/><path d="M14 3v5h5"/></symbol>
+<symbol id="i-network" viewBox="0 0 24 24"><circle cx="5.5" cy="6" r="2.5"/><circle cx="5.5" cy="18" r="2.5"/><circle cx="18.5" cy="12" r="2.5"/><path d="m7.9 7.2 8.2 3.7M7.9 16.8l8.2-3.7"/></symbol>
+<symbol id="i-disk" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2.5"/><path d="M3 12h18"/><path d="M7 16.5h.01M11 16.5h3"/><path d="M7 7.5h6"/></symbol>
+<symbol id="i-lock" viewBox="0 0 24 24"><rect x="4.5" y="10" width="15" height="10.5" rx="2.4"/><path d="M8 10V7.2a4 4 0 0 1 8 0V10"/></symbol>
+<symbol id="i-cloud" viewBox="0 0 24 24"><path d="M6.8 19.2h10.6a3.9 3.9 0 0 0 .4-7.8 6.1 6.1 0 0 0-11.7-1.7 3.8 3.8 0 0 0 .7 9.5Z"/></symbol>
+<symbol id="i-eye" viewBox="0 0 24 24"><path d="M2.6 12S6.2 5.8 12 5.8 21.4 12 21.4 12 17.8 18.2 12 18.2 2.6 12 2.6 12Z"/><circle cx="12" cy="12" r="3.1"/></symbol>
+<symbol id="i-zap" viewBox="0 0 24 24"><path d="M13.2 2.5 4.5 14h6.6l-1.3 7.5L19 10h-6.6l.8-7.5Z"/></symbol>
+<symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="3.6"/><path d="M4.8 20.2a7.2 7.2 0 0 1 14.4 0"/></symbol>
+<symbol id="i-whale" viewBox="0 0 24 24"><path d="M1.5 14h21c0 3.6-2.9 6.5-6.5 6.5H8.5C4.9 20.5 1.5 17.6 1.5 14Z"/><rect x="5.6" y="9.6" width="3.4" height="3.6" rx=".6"/><rect x="10.3" y="9.6" width="3.4" height="3.6" rx=".6"/><rect x="15" y="9.6" width="3.4" height="3.6" rx=".6"/><rect x="10.3" y="5.4" width="3.4" height="3.6" rx=".6"/><path d="M20.5 11.5c1.2-1.2 2.4-.6 2.4-.6"/></symbol>
+</defs></svg>
+
+<header class="hero">
+  <div class="kicker">Data Engineering · AWS Deep Dive</div>
+  <h1>Core AWS Services for Data Engineers</h1>
+  <p class="dek">Eight services, in depth: <strong>S3</strong> stores the data, <strong>Glue</strong> and <strong>EMR</strong> transform it, <strong>MWAA</strong> orchestrates, <strong>Lambda</strong> handles the small event-driven jobs, <strong>Athena</strong> and <strong>Redshift</strong> serve it back — and <strong>IAM</strong> decides who is allowed to do any of it. Explained in plain English, with the details an interview or a real project actually asks about.</p>
+  <div class="logos">
+    <figure><svg viewBox="0 0 100 100" role="img" aria-label="S3 storage icon"><circle cx="50" cy="50" r="44" fill="#1D1D26" stroke="#FF9900" stroke-width="2"/><ellipse cx="50" cy="34" rx="24" ry="9" fill="none" stroke="#FF9900" stroke-width="2.5"/><path d="M26 34v24a24 9 0 0 0 48 0V34" fill="none" stroke="#FF9900" stroke-width="2.5"/><path d="M26 46a24 9 0 0 0 48 0" fill="none" stroke="#FFAC31" stroke-width="2"/></svg><figcaption>S3 · the lake</figcaption></figure>
+    <figure><svg viewBox="0 0 100 100" role="img" aria-label="Compute icon"><circle cx="50" cy="50" r="44" fill="#1D1D26" stroke="#5AC8FF" stroke-width="2"/><rect x="30" y="30" width="40" height="40" rx="6" fill="none" stroke="#5AC8FF" stroke-width="2.5"/><path d="M40 22v8M60 22v8M40 70v8M60 70v8M22 40h8M22 60h8M70 40h8M70 60h8" stroke="#5AC8FF" stroke-width="2.5"/></svg><figcaption>Glue · EMR</figcaption></figure>
+    <figure><svg viewBox="0 0 100 100" role="img" aria-label="Orchestration icon"><circle cx="50" cy="50" r="44" fill="#1D1D26" stroke="#A56BFF" stroke-width="2"/><rect x="42" y="20" width="16" height="14" rx="3" fill="#A56BFF"/><rect x="22" y="60" width="16" height="14" rx="3" fill="#A56BFF"/><rect x="42" y="60" width="16" height="14" rx="3" fill="#A56BFF"/><rect x="62" y="60" width="16" height="14" rx="3" fill="#A56BFF"/><path d="M50 34v12M50 46H30v14M50 46h30v14M50 46v14" stroke="#A56BFF" stroke-width="2" fill="none"/></svg><figcaption>MWAA · orchestrates</figcaption></figure>
+  </div>
+  <div class="byline">~75 min read · updated 2026 · plain English · S3 · Glue · EMR · IAM · MWAA · Lambda · Athena · Redshift</div>
+</header>
+
+<div class="wrap">
+
+<div class="prose reveal">
+<p class="lead">A data pipeline on AWS is almost always the same shape. Raw files land in <strong>S3</strong>. A compute engine — <strong>Glue</strong> for most jobs, <strong>EMR</strong> when you need a full Spark cluster — reads them, cleans and joins them, and writes the results back to S3 in a query-friendly layout. <strong>MWAA</strong> (managed Airflow) decides the order and reruns anything that fails; <strong>Lambda</strong> covers the tiny event-driven bits in between. Then <strong>Athena</strong> queries the S3 data directly with SQL, or you load it into <strong>Redshift</strong> for a fast warehouse. Under all of it, <strong>IAM</strong> is the permission fabric: every service assumes a <em>role</em>, and that role is the only thing standing between "the job runs" and "Access Denied".</p>
+<p>This guide takes those eight services one at a time, in that order, and goes past the marketing bullets into how each one actually behaves — the settings that matter, the mistakes that cost money, and the "how are these two connected?" questions.</p>
+</div>
+
+<figure class="diagram reveal">
+<svg viewBox="0 0 900 300" role="img" aria-label="Left to right: raw files land in S3; Glue or EMR read and transform them; the results go back to S3; Athena and Redshift serve them. Below, MWAA orchestrates the compute steps and can invoke Lambda. A full-width IAM band underneath grants every box its role.">
+<defs>
+  <marker id="ah" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#5AC8FF"/></marker>
+  <marker id="ap" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#A56BFF"/></marker>
+</defs>
+<g font-family="var(--font)" font-size="10.5" fill="#E7E7EE">
+  <text x="450" y="24" text-anchor="middle" font-size="12" fill="#E7E7EE">Storage &rarr; Compute &rarr; Serving, with MWAA orchestrating and IAM underneath</text>
+
+  <rect x="30" y="52" width="120" height="52" rx="8" fill="#191921" stroke="#5C78FF" stroke-width="1.6"/>
+  <text x="90" y="74" text-anchor="middle" fill="#E7E7EE">Raw files</text>
+  <text x="90" y="90" text-anchor="middle" font-size="8.5" fill="#E7E7EE">CSV / JSON in</text>
+
+  <rect x="184" y="52" width="128" height="52" rx="8" fill="#191921" stroke="#FF9900" stroke-width="2.2"/>
+  <text x="248" y="74" text-anchor="middle" fill="#FFAC31" font-size="11">Amazon S3</text>
+  <text x="248" y="90" text-anchor="middle" font-size="8.5" fill="#E7E7EE">the data lake</text>
+
+  <rect x="346" y="52" width="150" height="52" rx="8" fill="#191921" stroke="#5AC8FF" stroke-width="1.8"/>
+  <text x="421" y="72" text-anchor="middle" fill="#5AC8FF">Glue&nbsp;/&nbsp;EMR</text>
+  <text x="421" y="88" text-anchor="middle" font-size="8.5" fill="#E7E7EE">read, clean, join, write</text>
+
+  <rect x="530" y="52" width="128" height="52" rx="8" fill="#191921" stroke="#FF9900" stroke-width="2.2"/>
+  <text x="594" y="74" text-anchor="middle" fill="#FFAC31" font-size="11">Amazon S3</text>
+  <text x="594" y="90" text-anchor="middle" font-size="8.5" fill="#E7E7EE">curated Parquet</text>
+
+  <rect x="692" y="40" width="178" height="34" rx="7" fill="#191921" stroke="#5AC8FF" stroke-width="1.7"/>
+  <text x="781" y="61" text-anchor="middle" fill="#5AC8FF">Amazon Athena</text>
+  <rect x="692" y="82" width="178" height="34" rx="7" fill="#191921" stroke="#5AC8FF" stroke-width="1.7"/>
+  <text x="781" y="103" text-anchor="middle" fill="#5AC8FF">Amazon Redshift</text>
+
+  <path d="M150 78 L180 78" stroke="#5AC8FF" stroke-width="1.7" marker-end="url(#ah)"/>
+  <path d="M312 78 L342 78" stroke="#5AC8FF" stroke-width="1.7" marker-end="url(#ah)"/>
+  <path d="M496 78 L526 78" stroke="#5AC8FF" stroke-width="1.7" marker-end="url(#ah)"/>
+  <path d="M658 70 L688 58" stroke="#5AC8FF" stroke-width="1.7" marker-end="url(#ah)"/>
+  <path d="M658 88 L688 98" stroke="#5AC8FF" stroke-width="1.7" marker-end="url(#ah)"/>
+
+  <rect x="330" y="160" width="176" height="48" rx="8" fill="#191921" stroke="#A56BFF" stroke-width="1.9"/>
+  <text x="418" y="181" text-anchor="middle" fill="#C79BFF">Amazon MWAA</text>
+  <text x="418" y="197" text-anchor="middle" font-size="8.5" fill="#E7E7EE">runs steps in order, retries</text>
+
+  <rect x="558" y="160" width="176" height="48" rx="8" fill="#191921" stroke="#C79BFF" stroke-width="1.6"/>
+  <text x="646" y="181" text-anchor="middle" fill="#C79BFF">AWS Lambda</text>
+  <text x="646" y="197" text-anchor="middle" font-size="8.5" fill="#E7E7EE">reacts to S3 events, alerts</text>
+
+  <path d="M418 158 L418 106" stroke="#A56BFF" stroke-width="1.6" stroke-dasharray="5 3" marker-end="url(#ap)"/>
+  <path d="M506 184 L554 184" stroke="#A56BFF" stroke-width="1.6" stroke-dasharray="5 3" marker-end="url(#ap)"/>
+
+  <rect x="30" y="236" width="840" height="42" rx="8" fill="#191921" stroke="#FFB454" stroke-width="1.6"/>
+  <text x="450" y="253" text-anchor="middle" font-size="10.5" fill="#FFB454">IAM</text>
+  <text x="450" y="269" text-anchor="middle" font-size="9" fill="#E7E7EE">every box above assumes a role; STS issues the short-lived credentials it runs with</text>
+</g>
+</svg>
+<figcaption>The dashed purple arrows are control ("run this now"); the solid cyan arrows are data moving in and out of S3.</figcaption>
+</figure>
+
+<div class="toc reveal">
+  <strong>Contents</strong>
+  <a href="#s01"><svg class="ico"><use href="#i-disk"/></svg>01 · Amazon S3 — the storage layer</a>
+  <a href="#s02"><svg class="ico"><use href="#i-package"/></svg>02 · AWS Glue — catalog, crawlers &amp; Spark ETL</a>
+  <a href="#s03"><svg class="ico"><use href="#i-zap"/></svg>03 · Amazon EMR — a real Spark cluster</a>
+  <a href="#s04"><svg class="ico"><use href="#i-lock"/></svg>04 · IAM — users, roles, policies &amp; AssumeRole</a>
+  <a href="#s05"><svg class="ico"><use href="#i-workflow"/></svg>05 · Amazon MWAA — managed Airflow</a>
+  <a href="#s06"><svg class="ico"><use href="#i-code"/></svg>06 · AWS Lambda — event-driven glue code</a>
+  <a href="#s07"><svg class="ico"><use href="#i-search"/></svg>07 · Amazon Athena — serverless SQL on S3</a>
+  <a href="#s08"><svg class="ico"><use href="#i-database"/></svg>08 · Amazon Redshift — the loaded warehouse</a>
+  <a href="#s09"><svg class="ico"><use href="#i-network"/></svg>09 · Putting it together &amp; the IAM auth trace</a>
+  <a href="#s10"><svg class="ico"><use href="#i-book"/></svg>10 · Decision tables &amp; glossary</a>
+</div>
+
+
+<!-- START s01 -->
+<p class="promptline">~/aws <b>❯</b> where the data lives</p>
+<h2 id="s01" class="reveal"><span class="hico"><svg class="ico"><use href="#i-disk"/></svg></span><span class="n">01.</span> Amazon S3 — the storage layer</h2>
+<p class="sectionsub reveal">Every AWS data platform starts here. Get the layout and permissions right and everything downstream is easy; get them wrong and every query pays for it forever.</p>
+
+<div class="prose reveal">
+<p><strong>S3</strong> (Simple Storage Service) stores <strong>objects</strong> — a file plus its metadata — inside a <strong>bucket</strong>. Each object is addressed by a <strong>key</strong>, which is the whole path string after the bucket name. S3 has <em>no real folders</em>: <code>data/sales/2026/01/file.parquet</code> is one flat key; the slashes are just characters, and tools draw a folder tree from them. A leading chunk of the key shared by many objects is a <strong>prefix</strong> (<code>data/sales/2026/</code>) — that word comes up constantly in permissions and performance.</p>
+</div>
+
+<h3>Storage classes — a cost vs. retrieval-speed dial</h3>
+<div class="tablewrap reveal"><table>
+<thead><tr><th>Class</th><th>Read speed</th><th>When a data engineer uses it</th></tr></thead>
+<tbody>
+<tr><td>S3 Standard</td><td>Instant</td><td>Bronze / Silver / Gold data that jobs and queries touch regularly</td></tr>
+<tr><td>S3 Intelligent-Tiering</td><td>Instant (auto-moves cold objects down)</td><td>The safe default when you don't know the access pattern — no rules to hand-tune</td></tr>
+<tr><td>Standard-IA / One Zone-IA</td><td>Instant, cheaper to store, pricier to read</td><td>Older partitions queried a few times a month</td></tr>
+<tr><td>Glacier Instant / Flexible / Deep Archive</td><td>Instant, or minutes-to-hours for the deep tiers</td><td>Compliance retention, raw archives you keep "just in case"</td></tr>
+</tbody></table></div>
+
+<h3>Versioning, lifecycle, encryption</h3>
+<ul class="reveal">
+<li><strong>Versioning</strong> keeps every past version of an object instead of overwriting. A "delete" just adds a <em>delete marker</em>; the old bytes are still there. It protects against a bad job or a fat-fingered <code>aws s3 rm</code>, but old versions keep costing money until a lifecycle rule removes them.</li>
+<li><strong>Lifecycle policies</strong> are per-prefix rules that run daily: "move <code>raw/</code> objects to Glacier after 30 days", "delete noncurrent versions after 7 days", "delete incomplete multipart uploads after 3 days". This is your main cost lever.</li>
+<li><strong>Encryption</strong> at rest is on by default (SSE-S3). Use <strong>SSE-KMS</strong> when you need an audit trail of who decrypted what, or key-level access control — the trade-off is a small per-request cost and a KMS permission every reader also needs.</li>
+</ul>
+
+<h3>Who can touch what: IAM policies vs. bucket policies</h3>
+<p>Two policy types both grant S3 access and are frequently confused:</p>
+<div class="tablewrap reveal"><table>
+<thead><tr><th></th><th>IAM policy (identity-based)</th><th>Bucket policy (resource-based)</th></tr></thead>
+<tbody>
+<tr><td>Attached to</td><td>A user, group, or role</td><td>The bucket itself</td></tr>
+<tr><td>Answers</td><td>"What can <em>this identity</em> do?"</td><td>"Who can touch <em>this bucket</em>?"</td></tr>
+<tr><td>Typical use</td><td>"The Glue role may read <code>s3://lake/silver/*</code>"</td><td>"Deny any request not using TLS"; grant another AWS account access</td></tr>
+</tbody></table></div>
+<p>A request is allowed only if <em>nothing</em> denies it and <em>something</em> allows it. Both policy types are evaluated together.</p>
+
+<div class="def reveal">
+<p class="t">Multipart upload</p>
+<p>Any upload over ~100&nbsp;MB should be split into parts (5&nbsp;MB–5&nbsp;GB each), uploaded in parallel, and reassembled by S3. The SDKs and <code>aws s3 cp</code> do this automatically. Two things follow: a failed big upload leaves <em>orphan parts</em> that still cost storage until a lifecycle rule cleans them up, and Spark/Glue writing many files uses multipart under the hood — which is why thousands of tiny output files are slow and expensive to produce, not just to read.</p>
+</div>
+
+<h3>Layout: partitions, file format, and the small-file problem</h3>
+<p>A <strong>partition</strong> is a column encoded into the key path, almost always date first:</p>
+<pre><code>s3://lake/silver/orders/order_date=2026-04-01/part-0000.parquet
+s3://lake/silver/orders/order_date=2026-04-02/part-0000.parquet</code></pre>
+<p>Athena, Redshift Spectrum, Glue and Spark all read the partition value straight from the path and skip folders a query's <code>WHERE</code> clause can't match. Rules that hold everywhere:</p>
+<ul class="reveal">
+<li><strong>Partition by what you filter on</strong> — usually <code>date</code>, occasionally one more low-cardinality column (region, event type). Never by something high-cardinality like <code>user_id</code>: you get millions of one-row folders and zero speed-up.</li>
+<li><strong>Use a columnar format</strong> — <strong>Parquet</strong> (or ORC). It compresses ~5&times; better than CSV/JSON and lets engines read only the columns a query needs. Keep CSV/JSON for raw landing only, and convert to Parquet in the first transform.</li>
+<li><strong>Aim for 128&nbsp;MB–1&nbsp;GB files.</strong> Thousands of tiny files ("the small-file problem") make every listing and every job slow because each file is a separate open, read, and close. Compact them on write (<code>coalesce</code> / <code>repartition</code>) or with a scheduled compaction job.</li>
+</ul>
+
+<figure class="diagram reveal">
+<svg viewBox="0 0 900 210" role="img" aria-label="A lakehouse on S3 in three zones: Bronze holds raw files exactly as received, Silver holds cleaned and conformed Parquet partitioned by date, Gold holds business-ready aggregate tables">
+<g font-family="var(--font)" font-size="10.5" fill="#E7E7EE">
+  <rect x="35" y="50" width="215" height="110" rx="10" fill="#191921" stroke="#FFB454" stroke-width="2"/>
+  <text x="142" y="74" text-anchor="middle" fill="#FFB454" font-size="12">BRONZE / raw</text>
+  <text x="142" y="96" text-anchor="middle" font-size="9">exactly as received</text>
+  <text x="142" y="112" text-anchor="middle" font-size="9">JSON, CSV, no changes</text>
+  <text x="142" y="128" text-anchor="middle" font-size="9">immutable, append-only</text>
+  <text x="142" y="144" text-anchor="middle" font-size="9">Standard-IA &rarr; Glacier</text>
+
+  <rect x="343" y="50" width="215" height="110" rx="10" fill="#191921" stroke="#9FE1FF" stroke-width="2"/>
+  <text x="450" y="74" text-anchor="middle" fill="#9FE1FF" font-size="12">SILVER / cleaned</text>
+  <text x="450" y="96" text-anchor="middle" font-size="9">typed, deduped, conformed</text>
+  <text x="450" y="112" text-anchor="middle" font-size="9">Parquet, partitioned by date</text>
+  <text x="450" y="128" text-anchor="middle" font-size="9">one row per business entity</text>
+  <text x="450" y="144" text-anchor="middle" font-size="9">most jobs read from here</text>
+
+  <rect x="651" y="50" width="215" height="110" rx="10" fill="#191921" stroke="#5AC8FF" stroke-width="2"/>
+  <text x="758" y="74" text-anchor="middle" fill="#5AC8FF" font-size="12">GOLD / serving</text>
+  <text x="758" y="96" text-anchor="middle" font-size="9">business-ready aggregates</text>
+  <text x="758" y="112" text-anchor="middle" font-size="9">dimensional / wide tables</text>
+  <text x="758" y="128" text-anchor="middle" font-size="9">read by Athena, Redshift, BI</text>
+  <text x="758" y="144" text-anchor="middle" font-size="9">small, fast, denormalised</text>
+
+  <path d="M252 105 L341 105" stroke="#5AC8FF" stroke-width="2" fill="none" marker-end="url(#s3a)"/>
+  <path d="M560 105 L649 105" stroke="#5AC8FF" stroke-width="2" fill="none" marker-end="url(#s3a)"/>
+  <text x="296" y="93" text-anchor="middle" font-size="8.5" fill="#9FE1FF">clean &amp; type</text>
+  <text x="604" y="93" text-anchor="middle" font-size="8.5" fill="#9FE1FF">aggregate</text>
+  <text x="450" y="190" text-anchor="middle" font-size="10" fill="#FFB454">One bucket, three prefixes. Bronze is cheap and huge; Gold is small and hot.</text>
+</g>
+<defs><marker id="s3a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#5AC8FF"/></marker></defs>
+</svg>
+<figcaption>The Bronze / Silver / Gold ("medallion") layout: raw in, cleaned in the middle, business-ready out — all just prefixes in the same S3 bucket.</figcaption>
+</figure>
+
+<h3>Consistency, performance, and two "conceptual" features</h3>
+<ul class="reveal">
+<li><strong>Consistency:</strong> S3 is now <em>strongly consistent</em> — a <code>PUT</code> is immediately visible to the next <code>GET</code> or <code>LIST</code>. The old "eventual consistency" workarounds in tutorials are obsolete.</li>
+<li><strong>Performance:</strong> S3 scales per <em>prefix</em> — thousands of requests per second per prefix, effectively unlimited if the load spreads across many prefixes. A date-partitioned layout spreads it naturally. There is no benefit anymore to hashing random characters into the key.</li>
+<li><strong>Cross-Region Replication (CRR):</strong> a rule that copies new objects to a bucket in another Region, for disaster recovery or to put data near a second team. Asynchronous; adds transfer and storage cost.</li>
+<li><strong>Event notifications:</strong> S3 can fire an event on <code>s3:ObjectCreated:*</code> to Lambda, SQS, or EventBridge. This is how "a file landed &rarr; start processing" pipelines begin (see <a href="#s06">&sect;06</a>).</li>
+</ul>
+
+<div class="callout wn reveal">
+<p><b>Securing a bucket, the short checklist:</b> Block Public Access on (account-wide and per-bucket); default encryption on; a bucket policy that <code>Deny</code>s any request where <code>aws:SecureTransport</code> is false; access granted only through IAM roles with a specific prefix (<code>arn:aws:s3:::lake/silver/*</code>), never <code>s3:*</code> on <code>*</code>; versioning on for anything you can't rebuild; CloudTrail data events on if you need an audit log of object access.</p>
+</div>
+
+<h3>What you actually pay for</h3>
+<p>The S3 bill has four parts, and the one that surprises people is the third:</p>
+<div class="tablewrap reveal"><table>
+<thead><tr><th>Charge</th><th>Notes</th></tr></thead>
+<tbody>
+<tr><td><strong>Storage</strong> — $/GB-month</td><td>Varies ~4&times; across classes. This is what lifecycle rules attack.</td></tr>
+<tr><td><strong>Requests</strong> — $/1,000 <code>PUT</code>/<code>GET</code>/<code>LIST</code></td><td>Cheap each, brutal in aggregate. <strong>A job that reads a million 10&nbsp;KB files pays a million GET charges</strong> — another reason the small-file problem costs money, not just time. <code>LIST</code> on a huge prefix is its own line item.</td></tr>
+<tr><td><strong>Data transfer out</strong> — $/GB</td><td>Free to other AWS services <em>in the same Region</em>. Cross-Region and internet egress cost real money; keep compute and data in one Region.</td></tr>
+<tr><td><strong>Management</strong></td><td>Inventory, Storage Lens, S3 Select, replication — small, but on.</td></tr>
+</tbody></table></div>
+<p><strong>Optimising cost:</strong> Intelligent-Tiering (or lifecycle) to push cold partitions to IA/Glacier; compact small files so request counts drop; delete old object versions and incomplete multipart uploads with lifecycle rules; use <strong>S3 Storage Lens</strong> (free dashboard) to see which prefixes are growing and how many small objects you have.</p>
+
+<h3>How a query engine actually reads S3</h3>
+<p>Spark, Athena and Trino do <em>not</em> download whole files. For a Parquet file they issue <strong>byte-range GETs</strong>: first read the footer (schema + row-group offsets + column min/max), decide which row groups and columns the query needs, then range-GET only those byte spans. This is why Parquet + partitioning + column selection cut cost so sharply — the engine skips folders (partition pruning), skips files (row-group stats), and skips columns (columnar layout) before reading a byte of data. It is also why a 1&nbsp;GB Parquet file is fine but 10,000&times;100&nbsp;KB files are slow: each tiny file still costs a footer read, a GET, and an open/close.</p>
+
+<h3>A few features worth recognising</h3>
+<ul class="reveal">
+<li><strong>Access Points</strong> — a named endpoint with its own policy on top of one bucket, so each team or app gets a scoped door instead of everyone sharing one giant bucket policy.</li>
+<li><strong>Object Lock (WORM)</strong> — write-once-read-many retention a compliance team asks for; an object literally cannot be deleted or overwritten until its retention date.</li>
+<li><strong>Presigned URLs</strong> — a time-limited signed link that lets someone without AWS credentials <code>PUT</code> or <code>GET</code> one specific object; how upload forms and "download your export" links work.</li>
+<li><strong>Requester Pays</strong> — flips the data-transfer bill to whoever reads the bucket; used for shared public datasets.</li>
+<li><strong>Directory markers</strong> — some tools write a zero-byte <code>prefix/</code> object to fake an empty folder. Harmless, but it can confuse a crawler or a naive <code>list</code>; know it when you see <code>_$folder$</code> or a stray 0-byte key.</li>
+</ul>
+
+<div class="tldr reveal">
+<h4>❯ Short version</h4>
+<p>S3 = objects in a bucket, addressed by a flat key; prefixes are the unit of both permissions and scaling. Storage classes and lifecycle rules control cost. Lay data out as <strong>Bronze/Silver/Gold prefixes</strong>, <strong>Parquet</strong>, <strong>partitioned by date</strong>, in <strong>128&nbsp;MB–1&nbsp;GB files</strong>. Grant access with narrow IAM policies on specific prefixes plus a bucket policy that enforces TLS; block public access always.</p>
+</div>
+<hr/>
+<!-- END s01 -->
+
+
+<!-- START s02 -->
+<p class="promptline">~/aws <b>❯</b> the default ETL engine</p>
+<h2 id="s02" class="reveal"><span class="hico"><svg class="ico"><use href="#i-package"/></svg></span><span class="n">02.</span> AWS Glue — catalog, crawlers &amp; Spark ETL</h2>
+<p class="sectionsub reveal">Two separate things share the name "Glue": a <em>metadata catalog</em> that makes S3 files queryable as tables, and a <em>serverless Spark service</em> that runs your ETL jobs.</p>
+
+<h3>The Glue Data Catalog</h3>
+<div class="prose reveal">
+<p>The <strong>Data Catalog</strong> is a metastore: it holds <strong>databases</strong> (namespaces), <strong>tables</strong> (a schema plus the S3 location and file format), and each table's <strong>partitions</strong> (the list of <code>date=2026-04-01</code> folders that exist and where they are). It stores <em>no data</em> — only "there is a table called <code>orders</code>, it's Parquet, it lives at <code>s3://lake/silver/orders/</code>, and here are its 400 date partitions." Athena, Redshift Spectrum, EMR and Glue jobs all read this same catalog, so one table definition works everywhere. It is API-compatible with the Hive metastore.</p>
+</div>
+
+<h3>Crawlers</h3>
+<p>A <strong>crawler</strong> points at an S3 prefix (or a JDBC source), samples the files, infers a schema and the partition columns, and writes or updates the table in the catalog. Run it on a schedule or after each load so newly added date partitions become visible. Caveats: a crawler can guess a type wrong (a ZIP code as <code>bigint</code>), it will happily create a hundred tables if your prefix layout is inconsistent, and for a table whose schema you control it is often cleaner to <code>CREATE TABLE</code> once and just call <code>MSCK REPAIR TABLE</code> / <code>ALTER TABLE ADD PARTITION</code> (or enable <strong>partition projection</strong>, see <a href="#s07">&sect;07</a>) instead of crawling repeatedly.</p>
+
+<h3>Glue Jobs — serverless Spark</h3>
+<div class="prose reveal">
+<p>A <strong>Glue job</strong> is a PySpark (or Scala) script that AWS runs on a Spark cluster it provisions for the run and tears down after. You choose a <strong>worker type</strong> (<code>G.1X</code>, <code>G.2X</code>, ...) and a <strong>number of workers</strong>; you pay per second of DPU (data processing unit) time. There is nothing to keep running between jobs.</p>
+</div>
+<div class="tablewrap reveal"><table>
+<thead><tr><th>Piece</th><th>What it is</th></tr></thead>
+<tbody>
+<tr><td><code>GlueContext</code></td><td>A wrapper around Spark's <code>SparkContext</code> that adds catalog-aware readers/writers and bookmark tracking. You still have full <code>SparkSession</code> access underneath.</td></tr>
+<tr><td><strong>DynamicFrame</strong></td><td>Glue's own distributed table type. Like a Spark DataFrame but with a <em>flexible schema</em> — it can hold a column that is a string in some rows and an int in others (a "choice" type) and resolve it later. Handy for messy JSON; convert to a normal DataFrame with <code>.toDF()</code> the moment the data is clean, because DataFrames are faster and every Spark tutorial assumes them.</td></tr>
+<tr><td><strong>Job bookmark</strong></td><td>State Glue persists between runs so a job processes <em>only new data</em>. It remembers which S3 files (by path + timestamp) or which JDBC key range it already read. Turn it on for incremental jobs; it is the built-in answer to "don't reprocess everything every night."</td></tr>
+<tr><td><strong>Connection</strong></td><td>A stored, reusable set of connection details + credentials (via Secrets Manager) for a JDBC database, Kafka, or a VPC. A job that reads Postgres or writes Redshift references a Connection so it lands in the right network and gets the right secret.</td></tr>
+<tr><td><strong>Glue Studio</strong></td><td>A visual editor that generates the PySpark script from drag-and-drop boxes (source &rarr; transform &rarr; target). Fine for simple jobs and for learning the API; teams usually switch to hand-written scripts in Git once logic gets real.</td></tr>
+<tr><td><strong>Triggers &amp; Workflows</strong></td><td>A <strong>trigger</strong> starts a job on a schedule, on demand, or when another job succeeds. A <strong>workflow</strong> chains crawlers and jobs into one monitored DAG. Both exist, but for anything non-trivial teams orchestrate Glue from <strong>MWAA</strong> or Step Functions instead — more visibility, retries, and backfill.</p></td></tr>
+</tbody></table></div>
+
+<h3>A minimal S3 &rarr; Glue &rarr; S3 job</h3>
+<pre><code><span class="c1"># read Silver, aggregate, write Gold — partitioned Parquet, bookmark on</span>
+import sys
+from awsglue.context import GlueContext
+from awsglue.job import Job
+from pyspark.context import SparkContext
+from pyspark.sql import functions as F
+
+gc  = GlueContext(SparkContext.getOrCreate())
+job = Job(gc); job.init(sys.argv[0])
+
+orders = gc.create_dynamic_frame.from_catalog(
+    database="silver", table_name="orders",
+    transformation_ctx="orders")            <span class="c1"># ctx name = bookmark key</span>
+
+df = orders.toDF()
+daily = (df.groupBy("order_date", "country")
+           .agg(F.sum("amount").alias("revenue"),
+                F.countDistinct("customer_id").alias("buyers")))
+
+(daily.repartition("order_date")             <span class="c1"># one file per date, not thousands</span>
+      .write.mode("overwrite")
+      .partitionBy("order_date")
+      .parquet("s3://lake/gold/daily_revenue/"))
+
+job.commit()                                 <span class="c1"># saves the bookmark</span></code></pre>
+
+<h3>Reading a JDBC source, writing Redshift</h3>
+<pre><code><span class="c1"># JDBC -> S3 ingestion (a Glue Connection supplies host + secret + VPC)</span>
+src = gc.create_dynamic_frame.from_options(
+    connection_type="postgresql",
+    connection_options={"useConnectionProperties": "true",
+                        "connectionName": "prod-postgres",
+                        "dbtable": "public.customers"})
+src.toDF().write.mode("overwrite").parquet("s3://lake/bronze/customers/")
+
+<span class="c1"># DataFrame -> Redshift (Glue stages to S3 then runs COPY for you)</span>
+(gold_df.write.format("io.github.spark_redshift_community.spark.redshift")
+        .option("url", "jdbc:redshift://cluster:5439/db")
+        .option("dbtable", "analytics.daily_revenue")
+        .option("tempdir", "s3://lake/tmp/redshift-staging/")
+        .option("aws_iam_role", "arn:aws:iam::111122223333:role/RedshiftCopyRole")
+        .mode("append").save())</code></pre>
+
+<h3>IAM, monitoring, and tuning a slow job</h3>
+<ul class="reveal">
+<li><strong>The Glue IAM role</strong> (a service role Glue assumes) needs: <code>s3:GetObject</code>/<code>PutObject</code> on the job's input and output prefixes, <code>glue:*Table</code>/<code>*Partition</code> on the catalog, <code>logs:*</code> for CloudWatch, <code>secretsmanager:GetSecretValue</code> if it uses a Connection, and (for Redshift) <code>sts:AssumeRole</code> or a pass-role on the Redshift COPY role. See <a href="#s04">&sect;04</a>.</li>
+<li><strong>Monitoring:</strong> the job run page shows DPU-hours, duration, and a link to CloudWatch logs; enable the <strong>Spark UI</strong> and <strong>job metrics</strong> options to get the same stage/shuffle/skew view as any Spark job.</li>
+<li><strong>A slow Glue Spark job</strong> is a slow Spark job — the fixes are the same: partition pruning and Parquet on the input, <code>broadcast()</code> the small side of a join, raise workers if it's genuinely CPU/shuffle-bound (not if it's waiting on a skewed key), fix skew with salting or AQE, and stop writing thousands of tiny files. Job bookmarks fix the "reprocessing everything" flavour of slow.</li>
+<li><strong>Handling failures:</strong> a Glue job that fails part-way has usually written <em>some</em> output. Design writes to be idempotent — <code>mode("overwrite")</code> on a single date partition, or write to a temp prefix and atomically swap — so a retry is safe. Set <code>--max-retries</code>, alert on the failed-run CloudWatch metric, and let MWAA rerun the task.</li>
+</ul>
+
+<div class="callout cy reveal">
+<p><b>Glue vs EMR vs Lambda.</b> <strong>Lambda</strong>: tiny, short (&lt;15&nbsp;min), event-driven — reformat one file, kick off a job, call an API. <strong>Glue</strong>: the default for scheduled Spark ETL — no cluster to manage, scales to hundreds of GB, per-second billing. <strong>EMR</strong>: reach for it when you need a long-lived cluster, non-default Spark/Hadoop config, other frameworks (Hive, HBase, Presto, Flink), custom bootstrap software, or the lowest cost on very large sustained workloads with Spot.</p>
+</div>
+
+<h3>Glue versions, workers &amp; the DPU bill</h3>
+<p>A Glue job pins a <strong>Glue version</strong>, which fixes the Spark and Python versions (Glue 5.0 &rarr; Spark 3.5, Python 3.11; Glue 4.0 &rarr; Spark 3.3). Pin it explicitly and upgrade deliberately &mdash; a bump can change Spark behaviour under you.</p>
+<div class="tablewrap reveal"><table>
+<thead><tr><th>Setting</th><th>What it controls</th></tr></thead>
+<tbody>
+<tr><td><strong>Worker type</strong> (<code>G.1X</code>, <code>G.2X</code>, <code>G.4X</code>, <code>G.8X</code>)</td><td>Memory/CPU per worker. <code>G.1X</code> = 4 vCPU / 16&nbsp;GB / 1 DPU; each step up doubles it. Use bigger workers for wide shuffles and joins that spill.</td></tr>
+<tr><td><strong>Number of workers</strong></td><td>Parallelism. More workers = more tasks in flight = shorter wall-clock, up to the point the job stops being parallel (skew, one huge file).</td></tr>
+<tr><td><strong>Auto scaling</strong> (<code>--enable-auto-scaling</code>)</td><td>Glue adds/removes workers during the run based on pending Spark tasks; you set only a max. Good default &mdash; you stop guessing the worker count.</td></tr>
+</tbody></table></div>
+<p><strong>The bill</strong> = DPU-hours &times; the DPU rate, per second, with a 1-minute minimum. A <code>G.2X</code> job with 10 workers is 20 DPU; run it 6 minutes and you pay 2 DPU-hours. The lever is total DPU-seconds &mdash; a right-sized job that finishes in 6 minutes beats an over-provisioned one that finishes in 5.</p>
+
+<h3>Push the filter into the read</h3>
+<p>Don't read a whole table and then <code>filter</code>. Pass a <strong>pushdown predicate</strong> so Glue only lists and reads the partitions you need &mdash; the same idea as a <code>WHERE</code> on a partition column, applied at the catalog level:</p>
+<pre><code>dyf = gc.create_dynamic_frame.from_catalog(
+    database="silver", table_name="orders",
+    push_down_predicate="year='2026' and month='04'",   <span class="c1"># partition columns only</span>
+    additional_options={"boundedFiles": "5000"})          <span class="c1"># cap files per run for incremental control</span></code></pre>
+<p>For DataFrame reads, the equivalent is a normal <code>.where()</code> on partition columns before any wide operation &mdash; Spark's Catalyst prunes it. Job bookmarks and pushdown predicates solve different halves of "read less": bookmarks skip files already processed, predicates skip partitions the query doesn't want.</p>
+
+<h3>Register new partitions as you write</h3>
+<p>A common bug: a job writes <code>s3://lake/silver/orders/order_date=2026-04-02/</code> but Athena still can't see it because the catalog wasn't told. Fix it in the write itself:</p>
+<pre><code>sink = gc.getSink(path="s3://lake/silver/orders/", connection_type="s3",
+                  updateBehavior="UPDATE_IN_DATABASE",
+                  partitionKeys=["order_date"], enableUpdateCatalog=True)
+sink.setCatalogInfo(catalogDatabase="silver", catalogTableName="orders")
+sink.setFormat("glueparquet")
+sink.writeFrame(dyf)</code></pre>
+<p>Now the new partition appears in the catalog automatically &mdash; no crawler, no <code>MSCK REPAIR</code>. For catalogs with tens of thousands of partitions, also add a <strong>partition index</strong> on the table so partition lookups stay fast.</p>
+
+<h3>Interactive sessions &amp; getResolvedOptions</h3>
+<p><strong>Glue interactive sessions</strong> give you a Jupyter kernel backed by real Glue workers &mdash; develop the script line by line, then paste it into a job. Job arguments come in via <code>getResolvedOptions(sys.argv, ["JOB_NAME", "date"])</code>, and you pass them from MWAA's <code>GlueJobOperator(script_args={"--date": "{{ ds }}"})</code>. The <code>--</code> prefix on the AWS side maps to the bare name in <code>getResolvedOptions</code>.</p>
+
+<div class="tldr reveal">
+<h4>❯ Short version</h4>
+<p>The <strong>Data Catalog</strong> makes S3 files look like tables to every engine; <strong>crawlers</strong> populate it. A <strong>Glue job</strong> is serverless PySpark: <code>GlueContext</code> for catalog-aware I/O, <strong>DynamicFrame</strong> for messy schemas (convert to DataFrame fast), <strong>job bookmarks</strong> for incremental runs, <strong>Connections</strong> for JDBC/VPC. Give the job a tight IAM role, monitor it through the Spark UI, and tune it exactly like any Spark job.</p>
+</div>
+<hr/>
+<!-- END s02 -->
+
+
+<!-- START s03 -->
+<p class="promptline">~/aws <b>❯</b> when Glue isn't enough</p>
+<h2 id="s03" class="reveal"><span class="hico"><svg class="ico"><use href="#i-zap"/></svg></span><span class="n">03.</span> Amazon EMR — a real Spark cluster</h2>
+<p class="sectionsub reveal">EMR (Elastic MapReduce) is managed Hadoop &amp; Spark on EC2: you get an actual cluster you can configure, keep alive, and pack with other frameworks.</p>
+
+<div class="prose reveal">
+<p>Where Glue hides the cluster, <strong>EMR</strong> gives you one. AWS installs Spark, Hadoop, Hive, Presto/Trino, HBase, Flink and more on a fleet of EC2 instances, wires them together, and lets you SSH in, change configs, add software with <strong>bootstrap actions</strong>, and scale nodes up and down. You run it when you need control Glue doesn't offer, or the lowest cost on very large, steady workloads.</p>
+</div>
+
+<h3>The three node roles</h3>
+<div class="tablewrap reveal"><table>
+<thead><tr><th>Node</th><th>Runs</th><th>If you lose it</th></tr></thead>
+<tbody>
+<tr><td><strong>Primary</strong> (master)</td><td>The YARN ResourceManager, the HDFS NameNode, the Spark driver (in cluster mode), job coordination</td><td>The cluster is down. Usually 1 node; can be 3 for high availability.</td></tr>
+<tr><td><strong>Core</strong></td><td>YARN NodeManagers <em>and</em> HDFS DataNodes — they run tasks <em>and</em> hold the local distributed filesystem</td><td>You can lose data-in-flight and running tasks. Don't run Core on Spot.</td></tr>
+<tr><td><strong>Task</strong></td><td>YARN NodeManagers only — pure compute, no HDFS storage</td><td>Nothing permanent. <strong>Perfect for Spot Instances</strong> — cheap, interruptible extra horsepower.</td></tr>
+</tbody></table></div>
+
+<h3>Hadoop &amp; YARN, the minimum you need</h3>
+<ul class="reveal">
+<li><strong>HDFS</strong> — Hadoop's distributed filesystem across the Core nodes' local disks. On EMR you mostly ignore it and read/write <strong>S3 directly</strong> via the <code>s3://</code> connector (EMRFS); HDFS is just fast scratch space for shuffle and temp files.</li>
+<li><strong>YARN</strong> — the cluster resource manager. It hands out "containers" (chunks of CPU + memory on a node) to applications. When you <code>spark-submit</code>, YARN finds room for the driver and executors and launches them. Spark's own executor/core/memory settings are requests YARN fulfils.</li>
+</ul>
+
+<h3>Running a job</h3>
+<pre><code><span class="c1"># SSH to the primary node, or add a "Step" to the cluster:</span>
+spark-submit --deploy-mode cluster \
+  --conf spark.sql.shuffle.partitions=400 \
+  s3://lake/code/daily_revenue.py --date 2026-04-01
+
+<span class="c1"># EMR uses the Glue Data Catalog as its metastore when you set:</span>
+<span class="c1">#   hive.metastore.client.factory.class = ...AWSGlueDataCatalogHiveClientFactory</span>
+<span class="c1"># -> the same tables Athena and Glue see, no separate metastore to run</span></code></pre>
+<p>An EMR job is submitted as a <strong>Step</strong> (a queued command on the cluster) or via <code>spark-submit</code> over SSH, or from Airflow with <code>EmrAddStepsOperator</code>. <strong>Cluster lifecycle</strong>: a <em>transient</em> cluster is created for one batch and auto-terminates when its steps finish (cheapest for scheduled jobs); a <em>long-running</em> cluster stays up for interactive or streaming use. <strong>Auto Scaling</strong> / managed scaling adds and removes Task nodes based on YARN pending work. <strong>Bootstrap actions</strong> are scripts that run on every node at launch to install extra packages or drop in config.</p>
+
+<div class="callout mg reveal">
+<p><b>EMR Serverless</b> (conceptual): the same Spark/Hive runtime with <em>no cluster to size or launch</em> — you submit a job to an "application", it scales workers automatically and bills per vCPU-second used. It sits between Glue and classic EMR: more Spark control than Glue, none of the EC2/YARN management of EMR. Reach for it when you've outgrown Glue's knobs but don't want to run a cluster.</p>
+</div>
+
+<h3>IAM, logging, cost</h3>
+<ul class="reveal">
+<li><strong>Two roles minimum:</strong> the <em>EMR service role</em> (lets EMR create EC2, security groups, etc.) and the <em>EC2 instance profile</em> (the role every node assumes — this is what needs <code>s3:GetObject</code>/<code>PutObject</code> on your prefixes and <code>glue:Get*</code> on the catalog). EMR Serverless uses a single <em>job execution role</em>.</li>
+<li><strong>Logging:</strong> point the cluster at a <code>s3://.../emr-logs/</code> path at launch — step stderr/stdout, YARN container logs and the Spark event log all land there and survive termination. The <strong>persistent Spark History Server</strong> in the console reads that event log.</li>
+<li><strong>Cost levers:</strong> transient clusters (pay only for the batch); Task nodes on <strong>Spot</strong> (50–90% off, and losing one just reruns a few tasks); managed scaling with a sane max; right-size instance families to the workload (memory-heavy shuffles &rarr; <code>r</code> family); and use S3, not oversized HDFS.</li>
+</ul>
+
+<div class="callout cy reveal">
+<p><b>EMR vs Glue vs Databricks.</b> <strong>Glue</strong>: least ops, great default, per-second billing, limited config. <strong>EMR</strong>: full cluster control, many frameworks, cheapest at large steady scale with Spot — but you own tuning and lifecycle. <strong>Databricks</strong>: a managed lakehouse platform (notebooks, Delta Lake, Unity Catalog, Photon engine, collaboration) that runs its own compute on your AWS account — more productivity and performance features than either, at a platform fee on top of the EC2 cost.</p>
+</div>
+
+<h3>Release labels &amp; configuration classifications</h3>
+<p>An EMR cluster pins a <strong>release label</strong> (<code>emr-7.5.0</code>) that fixes the versions of Spark, Hadoop, Hive and everything else on the box. You set engine config at launch with <strong>configuration classifications</strong> &mdash; JSON blocks that land in the right config file on every node:</p>
+<pre><code>[
+  { "Classification": "spark-defaults",
+    "Properties": {
+      "spark.sql.shuffle.partitions": "400",
+      "spark.dynamicAllocation.enabled": "true",
+      "spark.sql.adaptive.enabled": "true" } },
+  { "Classification": "spark-hive-site",
+    "Properties": {
+      "hive.metastore.client.factory.class":
+        "com.amazonaws.glue.catalog.metastore.AWSGlueDataCatalogHiveClientFactory" } }
+]</code></pre>
+<p>That second block is what makes EMR use the <strong>Glue Data Catalog</strong> as its metastore &mdash; the same tables Athena and Glue see, with no metastore of your own to run.</p>
+
+<h3>Instance fleets, Spot, and managed scaling</h3>
+<ul class="reveal">
+<li><strong>Instance fleets</strong> let one node group draw from several instance types and both On-Demand and Spot, with a target capacity and an allocation strategy (<code>capacity-optimized</code> picks the Spot pool least likely to be reclaimed). This is how you get cheap, resilient Task capacity.</li>
+<li><strong>Managed scaling</strong> adds and removes Task (and optionally Core) nodes between a min and max based on YARN pending/allocated memory. Set a sane max so a runaway job can't scale to a fortune.</li>
+<li>Keep <strong>Core nodes On-Demand</strong> (they hold HDFS and shuffle data); put <strong>Task nodes on Spot</strong>. A reclaimed Task node just loses its running tasks, which Spark reruns.</li>
+</ul>
+
+<h3>EMR Serverless &amp; EMR on EKS, in one line each</h3>
+<ul class="reveal">
+<li><strong>EMR Serverless</strong> &mdash; submit a job to an <em>application</em>; it scales workers automatically and bills per vCPU/GB-second used, with optional pre-initialised capacity to kill cold-start. No EC2, no YARN, no cluster lifecycle. The middle ground between Glue and classic EMR.</li>
+<li><strong>EMR on EKS</strong> &mdash; run Spark jobs as pods on a Kubernetes cluster you already operate, so data and services share one platform. For teams already deep in EKS.</li>
+</ul>
+
+<h3>A cost worked example</h3>
+<p>Nightly job: read 400&nbsp;GB, join, aggregate, write 60&nbsp;GB. ~35&nbsp;min of real Spark work.</p>
+<div class="tablewrap reveal"><table>
+<thead><tr><th>Option</th><th>Rough shape</th><th>When it wins</th></tr></thead>
+<tbody>
+<tr><td><strong>Glue 4.0</strong>, 10&times;<code>G.2X</code>, auto-scaling</td><td>~20 DPU, ~40&nbsp;min incl. startup, per-second billing, zero ops</td><td>The default. Cheapest total cost once you count engineer time.</td></tr>
+<tr><td><strong>EMR transient</strong>, Core On-Demand + Task Spot fleet</td><td>~40&nbsp;min incl. ~7&nbsp;min provisioning; EC2 + Spot pricing; you tune it</td><td>Runs many times a day, or needs Spark config Glue won't allow. Spot can beat Glue on raw compute by a wide margin.</td></tr>
+<tr><td><strong>EMR Serverless</strong></td><td>Pay per vCPU-second, auto-scaled, no provisioning wait</td><td>Spiky schedule; want EMR's engine control without the cluster.</td></tr>
+</tbody></table></div>
+
+<h3>Troubleshooting a slow or failing EMR job</h3>
+<ul class="reveal">
+<li><strong><code>Container killed by YARN for exceeding memory limits</code></strong> &mdash; executor asked for more than its container. Raise <code>spark.executor.memoryOverhead</code>, or use fewer cores per executor, or a memory-heavy instance family (<code>r</code>).</li>
+<li><strong><code>ExecutorLostFailure</code> / tasks retrying</strong> &mdash; often a reclaimed Spot node; usually self-heals. If it's on Core nodes, you put Core on Spot &mdash; don't.</li>
+<li><strong>One stage runs forever, most tasks done</strong> &mdash; skew. Salt the key or enable AQE skew join (<code>spark.sql.adaptive.skewJoin.enabled</code>).</li>
+<li><strong>Cluster idle but not terminating</strong> &mdash; you launched a long-running cluster and forgot auto-termination; add <code>--auto-terminate</code> for batch, or an idle-timeout rule.</li>
+<li>Read the <strong>persistent Spark History Server</strong> in the console (backed by the event log in your S3 log path) exactly as you'd read any Spark UI.</li>
+</ul>
+
+<div class="tldr reveal">
+<h4>❯ Short version</h4>
+<p>EMR = managed Spark/Hadoop on EC2 you can actually configure. <strong>Primary</strong> coordinates, <strong>Core</strong> runs tasks + holds HDFS (never on Spot), <strong>Task</strong> is pure compute (put it on Spot). Read S3 directly; use the Glue Catalog as the metastore; submit jobs as Steps or via Airflow. Save money with transient clusters, Spot Task nodes, and managed scaling. Choose EMR over Glue when you need control, extra frameworks, or lowest cost at large steady scale.</p>
+</div>
+<hr/>
+<!-- END s03 -->
+
+<!-- START s04 -->
+<p class="promptline">~/aws <b>❯</b> who is allowed to do this</p>
+<h2 id="s04" class="reveal"><span class="hico"><svg class="ico"><use href="#i-lock"/></svg></span><span class="n">04.</span> IAM — users, roles, policies &amp; AssumeRole</h2>
+<p class="sectionsub reveal">Every AWS call — a Glue job reading S3, Airflow starting that job — is authorised by IAM. Understand roles and <code>AssumeRole</code> and most "Access Denied" mysteries solve themselves.</p>
+
+<h3>The building blocks</h3>
+<div class="tablewrap reveal"><table>
+<thead><tr><th>Term</th><th>Plain meaning</th></tr></thead>
+<tbody>
+<tr><td><strong>User</strong></td><td>A permanent identity for a human or a legacy script. Has long-lived <strong>access keys</strong> (an ID + secret). Minimise these.</td></tr>
+<tr><td><strong>Group</strong></td><td>A bucket of users that share policies (<code>DataEngineers</code>). Purely for convenience; you can't assign a role to a group.</td></tr>
+<tr><td><strong>Role</strong></td><td>An identity with permissions but <em>no</em> permanent credentials. A service (Glue, EMR, Lambda, MWAA) or a user <em>assumes</em> it and gets <strong>temporary credentials</strong>. This is how almost everything in a data platform authenticates.</td></tr>
+<tr><td><strong>Policy</strong></td><td>A JSON document listing <code>Allow</code>/<code>Deny</code> on <code>Action</code>s for <code>Resource</code>s, optionally with <code>Condition</code>s. Attached to an identity or a resource.</td></tr>
+</tbody></table></div>
+
+<h3>Two directions a policy can face</h3>
+<ul class="reveal">
+<li><strong>Identity-based policy</strong> — attached to a user/group/role. "This role may call <code>glue:StartJobRun</code> and read <code>s3://lake/silver/*</code>."</li>
+<li><strong>Resource-based policy</strong> — attached to the resource itself (an S3 bucket policy, an SQS queue policy, a KMS key policy, a Lambda resource policy). "Account 4444 may read this bucket." Resource-based policies are what make <strong>cross-account access</strong> possible.</li>
+</ul>
+<p>Evaluation: a request is allowed only if there is an explicit <code>Allow</code> and no explicit <code>Deny</code>, across every policy that applies. A <code>Deny</code> always wins.</p>
+
+<div class="def reveal">
+<p class="t">Role, trust policy, AssumeRole, STS</p>
+<p>A role has two policies. Its <strong>permissions policy</strong> says <em>what the role can do</em>. Its <strong>trust policy</strong> says <em>who is allowed to assume it</em> — e.g. "the Glue service" (<code>glue.amazonaws.com</code>) or "account 1111's <code>AirflowRole</code>". When something assumes the role, it calls <strong>STS</strong> (Security Token Service) <code>AssumeRole</code>; STS checks the trust policy and hands back <strong>temporary credentials</strong> (access key + secret + session token) that expire in an hour or so. Those creds carry the role's permissions. Nothing long-lived is stored anywhere.</p>
+</div>
+
+<h3>Least privilege, in practice</h3>
+<p><strong>Least privilege</strong> = grant exactly the actions and resources a job needs, nothing wider. Concretely: never <code>"Action": "s3:*"</code> on <code>"Resource": "*"</code>; scope to <code>s3:GetObject</code> on <code>arn:aws:s3:::lake/silver/*</code>. One role per job or per pipeline, not one shared "data role". Use <code>Condition</code> keys (source VPC, a tag, TLS-only) to tighten further.</p>
+
+<h3>The roles a data platform needs</h3>
+<div class="tablewrap reveal"><table>
+<thead><tr><th>Service</th><th>Role it assumes</th><th>Core permissions</th></tr></thead>
+<tbody>
+<tr><td>Glue job</td><td>Glue service role</td><td>S3 on job prefixes, <code>glue:*Table/*Partition</code>, <code>logs:*</code>, <code>secretsmanager:GetSecretValue</code></td></tr>
+<tr><td>EMR</td><td>EMR service role + EC2 instance profile</td><td>EC2/VPC management (service role); S3 + <code>glue:Get*</code> + <code>logs:*</code> (instance profile)</td></tr>
+<tr><td>Lambda</td><td>Lambda execution role</td><td><code>logs:CreateLogStream/PutLogEvents</code> + whatever the function calls (S3, <code>glue:StartJobRun</code>, ...)</td></tr>
+<tr><td>MWAA</td><td>MWAA execution role</td><td>S3 (the DAG bucket), <code>logs:*</code>/CloudWatch, and every action any DAG performs — <code>glue:StartJobRun</code>, <code>elasticmapreduce:*</code>, <code>lambda:InvokeFunction</code>, <code>iam:PassRole</code></td></tr>
+</tbody></table></div>
+
+<div class="callout wn reveal">
+<p><b><code>iam:PassRole</code> — the permission everyone forgets.</b> When service A hands service B a role to use ("Glue, run this job <em>as</em> <code>GlueJobRole</code>"; "EMR, launch nodes <em>with</em> this instance profile"), A needs <code>iam:PassRole</code> for that specific role ARN. Missing it is the most common "why can't my orchestrator start this job" error.</p>
+</div>
+
+<figure class="diagram reveal">
+<svg viewBox="0 0 900 250" role="img" aria-label="Trace of an Airflow DAG starting a Glue job. Step 1: the MWAA task runs as the MWAA execution role. Step 2: it calls glue StartJobRun, allowed by that role's identity policy plus iam PassRole. Step 3: Glue assumes GlueJobRole, permitted by that role's trust policy. Step 4: STS issues temporary credentials. The job then calls S3 GetObject and PutObject, allowed only if GlueJobRole's S3 policy allows it and the bucket policy does not deny it.">
+<defs><marker id="iam1" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#5AC8FF"/></marker></defs>
+<g font-family="var(--font)" font-size="10" fill="#E7E7EE">
+  <text x="450" y="22" text-anchor="middle" font-size="11.5" fill="#E7E7EE">"My Airflow DAG starts a Glue job" &mdash; how AWS authorises it</text>
+
+  <rect x="24" y="54" width="180" height="56" rx="7" fill="#191921" stroke="#A56BFF" stroke-width="1.8"/>
+  <text x="114" y="72" text-anchor="middle" fill="#C79BFF" font-size="9">1 &middot; MWAA task</text>
+  <text x="114" y="88" text-anchor="middle" font-size="8.5">runs with the MWAA</text>
+  <text x="114" y="100" text-anchor="middle" font-size="8.5">execution role's creds</text>
+
+  <rect x="244" y="54" width="180" height="56" rx="7" fill="#191921" stroke="#5AC8FF" stroke-width="1.8"/>
+  <text x="334" y="72" text-anchor="middle" fill="#5AC8FF" font-size="9">2 &middot; glue:StartJobRun</text>
+  <text x="334" y="88" text-anchor="middle" font-size="8.5">role's identity policy</text>
+  <text x="334" y="100" text-anchor="middle" font-size="8.5">allows it + iam:PassRole</text>
+
+  <rect x="464" y="54" width="180" height="56" rx="7" fill="#191921" stroke="#FFB454" stroke-width="1.8"/>
+  <text x="554" y="72" text-anchor="middle" fill="#FFB454" font-size="9">3 &middot; Glue assumes</text>
+  <text x="554" y="86" text-anchor="middle" fill="#FFB454" font-size="9">GlueJobRole</text>
+  <text x="554" y="100" text-anchor="middle" font-size="8.5">its trust policy permits Glue</text>
+
+  <rect x="684" y="54" width="180" height="56" rx="7" fill="#191921" stroke="#5AC8FF" stroke-width="1.8"/>
+  <text x="774" y="72" text-anchor="middle" fill="#5AC8FF" font-size="9">4 &middot; STS temp creds</text>
+  <text x="774" y="88" text-anchor="middle" font-size="8.5">key + secret + token</text>
+  <text x="774" y="100" text-anchor="middle" font-size="8.5">~1 hour, role's perms</text>
+
+  <path d="M204 82 L242 82" stroke="#5AC8FF" stroke-width="1.7" marker-end="url(#iam1)"/>
+  <path d="M424 82 L462 82" stroke="#5AC8FF" stroke-width="1.7" marker-end="url(#iam1)"/>
+  <path d="M644 82 L682 82" stroke="#5AC8FF" stroke-width="1.7" marker-end="url(#iam1)"/>
+
+  <rect x="270" y="164" width="360" height="52" rx="7" fill="#191921" stroke="#FF9900" stroke-width="2"/>
+  <text x="450" y="184" text-anchor="middle" fill="#FFAC31" font-size="9.5">5 &middot; the job calls S3 GetObject / PutObject</text>
+  <text x="450" y="200" text-anchor="middle" font-size="8.5">allowed only if GlueJobRole's S3 policy allows it</text>
+  <text x="450" y="211" text-anchor="middle" font-size="8.5">AND the bucket policy does not Deny it</text>
+
+  <path d="M774 112 L636 162" stroke="#5AC8FF" stroke-width="1.7" marker-end="url(#iam1)"/>
+
+  <text x="450" y="238" text-anchor="middle" font-size="9.5" fill="#FFB454">No stored passwords. Every hop is a role + a short-lived STS token.</text>
+</g>
+</svg>
+<figcaption>The full chain: <strong>MWAA execution role</strong> &rarr; <code>glue:StartJobRun</code> (+ <code>iam:PassRole</code>) &rarr; Glue <strong>assumes GlueJobRole</strong> (allowed by its trust policy) &rarr; <strong>STS</strong> issues temporary credentials &rarr; the job uses them for <strong>S3</strong>, checked against both the role's S3 policy and the bucket policy.</figcaption>
+</figure>
+
+<h3>The anatomy of a policy</h3>
+<pre><code>{
+  "Version": "2012-10-17",
+  "Statement": [{
+    "Sid": "ReadSilver",
+    "Effect": "Allow",                       <span class="c1"># Allow or Deny</span>
+    "Action": ["s3:GetObject", "s3:ListBucket"],
+    "Resource": [
+      "arn:aws:s3:::lake",                    <span class="c1"># the bucket, for ListBucket</span>
+      "arn:aws:s3:::lake/silver/*"            <span class="c1"># objects under a prefix, for GetObject</span>
+    ],
+    "Condition": {
+      "Bool": { "aws:SecureTransport": "true" }
+    }
+  }]
+}</code></pre>
+<p><strong>Managed vs inline:</strong> an <em>AWS managed</em> policy is maintained by AWS (<code>AmazonS3ReadOnlyAccess</code>); a <em>customer managed</em> policy is your own reusable one; an <em>inline</em> policy is embedded in a single role and dies with it. Prefer customer-managed &mdash; you can see everywhere it's attached.</p>
+
+<h3>The full evaluation order</h3>
+<figure class="diagram reveal">
+<svg viewBox="0 0 900 150" role="img" aria-label="IAM decision order, left to right: an explicit Deny anywhere ends in denied; otherwise an Organizations SCP must allow; otherwise a permission boundary must allow; otherwise a session policy must allow; otherwise an identity or resource policy must allow; only then is the request allowed.">
+<defs><marker id="ev" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#5AC8FF"/></marker></defs>
+<g font-family="var(--font)" font-size="9.5" fill="#E7E7EE">
+  <rect x="20" y="50" width="150" height="46" rx="7" fill="#191921" stroke="#FF6B9D" stroke-width="1.8"/>
+  <text x="95" y="70" text-anchor="middle" fill="#FF8FB0">Explicit Deny?</text>
+  <text x="95" y="85" text-anchor="middle" font-size="8">anywhere &rarr; DENIED</text>
+
+  <rect x="210" y="50" width="150" height="46" rx="7" fill="#191921" stroke="#5AC8FF" stroke-width="1.6"/>
+  <text x="285" y="70" text-anchor="middle" fill="#5AC8FF">SCP allows?</text>
+  <text x="285" y="85" text-anchor="middle" font-size="8">org guardrail</text>
+
+  <rect x="400" y="50" width="150" height="46" rx="7" fill="#191921" stroke="#5AC8FF" stroke-width="1.6"/>
+  <text x="475" y="70" text-anchor="middle" fill="#5AC8FF">Boundary allows?</text>
+  <text x="475" y="85" text-anchor="middle" font-size="8">max for this role</text>
+
+  <rect x="590" y="50" width="150" height="46" rx="7" fill="#191921" stroke="#5AC8FF" stroke-width="1.6"/>
+  <text x="665" y="70" text-anchor="middle" fill="#5AC8FF">Identity / resource</text>
+  <text x="665" y="85" text-anchor="middle" font-size="8">policy allows?</text>
+
+  <rect x="780" y="50" width="100" height="46" rx="7" fill="#191921" stroke="#5AC8FF" stroke-width="2"/>
+  <text x="830" y="76" text-anchor="middle" fill="#5AC8FF">ALLOWED</text>
+
+  <path d="M170 73 L206 73" stroke="#5AC8FF" stroke-width="1.6" marker-end="url(#ev)"/>
+  <path d="M360 73 L396 73" stroke="#5AC8FF" stroke-width="1.6" marker-end="url(#ev)"/>
+  <path d="M550 73 L586 73" stroke="#5AC8FF" stroke-width="1.6" marker-end="url(#ev)"/>
+  <path d="M740 73 L776 73" stroke="#5AC8FF" stroke-width="1.6" marker-end="url(#ev)"/>
+  <text x="450" y="128" text-anchor="middle" font-size="9" fill="#FFB454">A single Deny beats every Allow. If nothing allows, the default is deny.</text>
+</g>
+</svg>
+<figcaption>Request &rarr; is there an explicit <code>Deny</code>? &rarr; do the org SCP, the permission boundary, and an identity <em>or</em> resource policy all allow it? Only then: allowed.</figcaption>
+</figure>
+
+<h3>Condition keys a data engineer actually uses</h3>
+<div class="tablewrap reveal"><table>
+<tbody>
+<tr><td><code>aws:SecureTransport</code></td><td><code>Deny</code> when false &rarr; force TLS on a bucket.</td></tr>
+<tr><td><code>aws:SourceVpce</code> / <code>aws:SourceVpc</code></td><td>Only allow S3 access through a specific VPC endpoint &mdash; data can't leave the network.</td></tr>
+<tr><td><code>s3:prefix</code></td><td>Restrict <code>ListBucket</code> to one prefix so a role can't enumerate the whole bucket.</td></tr>
+<tr><td><code>aws:PrincipalTag</code> / <code>aws:ResourceTag</code></td><td>"A role tagged <code>team=finance</code> may only touch resources tagged <code>team=finance</code>" &mdash; attribute-based access control.</td></tr>
+<tr><td><code>kms:ViaService</code></td><td>Only allow a KMS key to be used <em>through</em> S3 (or Redshift), not directly.</td></tr>
+</tbody></table></div>
+
+<h3>Cross-account, concretely</h3>
+<p>Account&nbsp;A's Glue job needs to read Account&nbsp;B's bucket. Both sides act: <strong>B</strong> adds a bucket policy allowing <code>arn:aws:iam::A:role/GlueJobRole</code>; <strong>A</strong> adds <code>s3:GetObject</code> on that bucket to <code>GlueJobRole</code>'s identity policy. Cross-account always needs the grant on <em>both</em> ends &mdash; the resource policy opens the door, the identity policy lets the caller walk through. For a third-party vendor assuming a role in your account, also require an <code>sts:ExternalId</code> so a confused-deputy can't reuse the ARN.</p>
+
+<h3>Debugging "Access Denied"</h3>
+<ul class="reveal">
+<li>Run <code>aws sts get-caller-identity</code> inside the job &mdash; confirm <em>which</em> role you actually are.</li>
+<li>Read the error: it usually names the action and resource. Missing <code>s3:ListBucket</code> when you have <code>s3:GetObject</code> is the classic (they're separate actions on separate ARNs).</li>
+<li>Missing <code>iam:PassRole</code>? The error mentions the role you tried to pass.</li>
+<li>Denied despite an <code>Allow</code>? Something has an explicit <code>Deny</code> &mdash; often an SCP or a bucket policy TLS/VPC condition.</li>
+</ul>
+
+<div class="tldr reveal">
+<h4>❯ Short version</h4>
+<p><strong>Roles</strong>, not users, run your platform. A role has a <strong>permissions policy</strong> (what it can do) and a <strong>trust policy</strong> (who may assume it). Assuming a role means calling <strong>STS</strong> and getting <strong>temporary credentials</strong>. Grant <strong>least privilege</strong> — narrow actions, specific resource ARNs, one role per job. Remember <code>iam:PassRole</code> whenever one service launches another. Resource-based policies (bucket, KMS, queue) enable cross-account access.</p>
+</div>
+<hr/>
+<!-- END s04 -->
+
+
+<!-- START s05 -->
+<p class="promptline">~/aws <b>❯</b> managed Airflow</p>
+<h2 id="s05" class="reveal"><span class="hico"><svg class="ico"><use href="#i-workflow"/></svg></span><span class="n">05.</span> Amazon MWAA — managed Airflow</h2>
+<p class="sectionsub reveal">You already know Airflow &mdash; the DAG model, operators, sensors, TaskFlow, retries, catchup, XCom, Connections and Variables. MWAA is those same concepts with AWS running the scheduler, webserver, workers and database for you. Focus on what changes.</p>
+
+<div class="prose reveal">
+<p><strong>MWAA</strong> (Managed Workflows for Apache Airflow) provisions an Airflow deployment inside a VPC you designate, patches and scales it, and ships its logs to CloudWatch. You never touch the <a href="../airflow-essentials/">scheduler / metadata DB / executor</a>; you hand MWAA an S3 bucket of DAGs and it runs them.</p>
+</div>
+
+<h3>What's the same, what's different</h3>
+<div class="tablewrap reveal"><table>
+<thead><tr><th>Same as any Airflow (see the Airflow guide)</th><th>MWAA-specific</th></tr></thead>
+<tbody>
+<tr><td>DAGs, tasks, operators, sensors, TaskFlow API</td><td>DAGs, <code>plugins.zip</code> and <code>requirements.txt</code> are <strong>synced from an S3 bucket</strong> — deploy = <code>aws s3 cp</code>, no server to push to</td></tr>
+<tr><td>Scheduling (cron / timetable), retries, <code>execution_timeout</code></td><td>Editing <code>requirements.txt</code> or <code>plugins.zip</code> triggers an <strong>environment rebuild</strong> and a short scheduling pause &mdash; validate them with the AWS "local-runner" image first</td></tr>
+<tr><td>Catchup &amp; backfill semantics</td><td>The <strong>executor is a fixed managed Celery fleet</strong>; you set <strong>min/max workers</strong> and an <strong>environment class</strong> (size tier), not an executor type &mdash; autoscaling is on queue depth</td></tr>
+<tr><td>Airflow <strong>Connections</strong> &amp; <strong>Variables</strong> (in the UI or CLI)</td><td>Can be backed by <strong>AWS Secrets Manager</strong> so secrets never live in the metadata DB; AWS API calls need <strong>no</strong> stored credentials at all &mdash; the tasks use the environment's IAM role</td></tr>
+<tr><td>XCom for small values between tasks</td><td>The Airflow UI is reached over a <strong>private</strong> or <strong>public</strong> endpoint you choose; component logs go to <strong>CloudWatch Logs</strong>, not local files</td></tr>
+</tbody></table></div>
+
+<h3>The one IAM role that matters</h3>
+<p>The <strong>MWAA execution role</strong> is what every task runs as. Because there is exactly one per environment, it must carry <em>every</em> permission any DAG needs:</p>
+<pre><code><span class="c1"># the execution role's policy, in spirit</span>
+s3:GetObject                 on the DAG bucket
+logs:CreateLogStream, PutLogEvents, GetLogEvents   (CloudWatch)
+glue:StartJobRun, glue:GetJobRun                   (GlueJobOperator)
+elasticmapreduce:RunJobFlow, AddJobFlowSteps, ...  (EMR operators)
+lambda:InvokeFunction                              (LambdaInvokeFunctionOperator)
+iam:PassRole   on GlueJobRole, EmrInstanceProfile  <span class="c1"># &lt;- always needed</span>
+sqs:*  (internal), kms:Decrypt (if the DAG bucket is SSE-KMS)</code></pre>
+<p>Because the tasks already have this role, an <code>aws_conn_id</code> with no credentials "just works" — boto3 picks up the role automatically.</p>
+
+<h3>The operators a data DAG actually uses</h3>
+<pre><code>from airflow.providers.amazon.aws.operators.glue import GlueJobOperator
+from airflow.providers.amazon.aws.operators.emr import (
+    EmrCreateJobFlowOperator, EmrAddStepsOperator)
+from airflow.providers.amazon.aws.sensors.emr import EmrStepSensor
+from airflow.providers.amazon.aws.operators.lambda_function import (
+    LambdaInvokeFunctionOperator)
+from airflow.providers.amazon.aws.sensors.s3 import S3KeySensor
+
+wait  = S3KeySensor(task_id="wait_raw",
+                    bucket_key="s3://lake/bronze/orders/dt={{ ds }}/_SUCCESS")
+clean = GlueJobOperator(task_id="clean", job_name="orders_clean",
+                        script_args={"--date": "{{ ds }}"})
+report = LambdaInvokeFunctionOperator(task_id="notify",
+                        function_name="pipeline_notify")
+
+wait &gt;&gt; clean &gt;&gt; report</code></pre>
+
+<div class="callout cy reveal">
+<p><b>MWAA vs Step Functions vs Glue Workflows.</b> <strong>Glue Workflows</strong>: fine for chaining a few Glue crawlers/jobs, weak on visibility and backfill. <strong>Step Functions</strong>: AWS-native state machine (JSON), pay-per-transition, great for event-driven AWS-only flows, no built-in backfill. <strong>MWAA</strong>: Python DAGs, a huge provider ecosystem, mature scheduling / retries / <strong>backfill</strong>, one UI for everything — the default when a team already thinks in Airflow or the pipeline spans more than AWS.</p>
+</div>
+
+<h3>Troubleshooting</h3>
+<ul class="reveal">
+<li><strong>A DAG doesn't appear:</strong> it failed to <em>parse</em>. Check the <code>DAGProcessing</code> CloudWatch log group — the Airflow UI can't show you a file it never loaded.</li>
+<li><strong>Tasks stuck queued:</strong> workers are maxed. Raise <code>max workers</code> or the environment class; check for long <code>poke</code>-mode sensors eating slots (use <code>reschedule</code> or deferrable).</li>
+<li><strong>Import errors:</strong> a package in <code>requirements.txt</code> didn't install or conflicts — reproduce with the local-runner image before shipping.</li>
+<li><strong>Access Denied inside a task:</strong> add the missing action (or <code>iam:PassRole</code>) to the execution role.</li>
+</ul>
+
+<h3>The S3 bucket layout</h3>
+<pre><code>s3://my-mwaa-bucket/
+├── dags/                     <span class="c1"># every .py DAG; synced every ~30s</span>
+│   └── nightly_pipeline.py
+├── plugins.zip               <span class="c1"># custom operators/hooks/macros (optional)</span>
+├── requirements.txt          <span class="c1"># extra pip packages, each pinned ==</span>
+└── startup.sh                <span class="c1"># optional: shell run on every worker at boot</span></code></pre>
+<p><strong>Deploy a DAG</strong> = <code>aws s3 cp nightly_pipeline.py s3://my-mwaa-bucket/dags/</code>. No restart. Editing <code>requirements.txt</code> or <code>plugins.zip</code>, though, forces an <strong>environment update</strong> (a few minutes, scheduling pauses) &mdash; version those, and validate with the public <em>aws-mwaa-local-runner</em> Docker image before you ship. <code>startup.sh</code> can export env vars or install an OS package that a provider needs.</p>
+
+<h3>Sizing &amp; scaling</h3>
+<div class="tablewrap reveal"><table>
+<thead><tr><th>Knob</th><th>What it does</th></tr></thead>
+<tbody>
+<tr><td><strong>Environment class</strong> (<code>mw1.small</code> &rarr; <code>mw1.large</code>)</td><td>Scheduler + webserver capacity, and how many DAGs/tasks it can parse and track. Size up when the scheduler falls behind (rising <code>SchedulerHeartbeat</code> gaps).</td></tr>
+<tr><td><strong>Min / max workers</strong></td><td>Autoscaling bounds for the Celery worker fleet; MWAA adds workers when the task queue grows, removes them when idle.</td></tr>
+<tr><td><strong>Max webserver count / scheduler count</strong></td><td>Extra webservers for a busy UI; 2+ schedulers for redundancy on larger classes.</td></tr>
+</tbody></table></div>
+<p>Watch these CloudWatch metrics: <code>QueuedTasks</code> (persistently &gt; 0 &rarr; raise max workers or class), <code>SchedulerHeartbeat</code>, <code>*.open_slots</code>, and per-DAG <code>TaskInstanceFailures</code>.</p>
+
+<h3>Overriding airflow.cfg</h3>
+<p>You can't edit <code>airflow.cfg</code> directly, but any setting maps to an environment variable you set in the MWAA config: <code>core.parallelism</code> &rarr; <code>AIRFLOW__CORE__PARALLELISM</code>, <code>celery.worker_autoscale</code>, <code>core.dagbag_import_timeout</code>, etc. This is how you raise concurrency limits or the DAG parse timeout.</p>
+
+<h3>Reaching a private UI</h3>
+<p>If you chose the <strong>private</strong> webserver endpoint, the Airflow UI is only reachable from inside the VPC. Options: a bastion host with SSH port-forwarding, AWS Client VPN, or an internal load balancer / VPN back to the corporate network. Generate a login token from the CLI with <code>aws mwaa create-web-login-token</code>.</p>
+
+<h3>The wait pattern for long AWS jobs</h3>
+<p>An operator that starts a Glue or EMR job returns immediately. To make the DAG actually wait for it, either set <code>wait_for_completion=True</code> on the operator, or start it and follow with a <strong>sensor</strong> (<code>GlueJobSensor</code>, <code>EmrStepSensor</code>). Prefer the <strong>deferrable</strong> variants (<code>deferrable=True</code>) &mdash; they hand the wait to the triggerer and don't hold a worker slot for the hour the Spark job runs. A dozen non-deferrable job-sensors polling in parallel can eat every worker and stall the whole environment.</p>
+
+<div class="tldr reveal">
+<h4>❯ Short version</h4>
+<p>MWAA = Airflow you don't operate. Deploy DAGs by copying to an <strong>S3 bucket</strong>; <code>requirements.txt</code>/<code>plugins.zip</code> changes rebuild the environment. There's one <strong>execution role</strong> that must hold every permission any DAG needs (plus <code>iam:PassRole</code>). Tasks call AWS with no stored credentials. Logs are in CloudWatch. Use the Amazon provider's Glue / EMR / Lambda operators to orchestrate the compute; choose MWAA over Step Functions / Glue Workflows when you want real backfill and a rich ecosystem.</p>
+</div>
+<hr/>
+<!-- END s05 -->
+
+<!-- START s06 -->
+<p class="promptline">~/aws <b>❯</b> the small stuff between the big stuff</p>
+<h2 id="s06" class="reveal"><span class="hico"><svg class="ico"><use href="#i-code"/></svg></span><span class="n">06.</span> AWS Lambda — event-driven glue code</h2>
+<p class="sectionsub reveal">A function that runs on an event, for up to 15 minutes, with no server. For a data engineer it's the trigger and the wiring — <em>not</em> the ETL engine.</p>
+
+<div class="prose reveal">
+<p><strong>Lambda</strong> runs a single function in response to an <strong>event</strong>: an object landing in S3, a message on a queue, an EventBridge schedule, an API call, an Airflow task. You upload the code (or a container image); AWS runs it on demand, scales out to thousands of concurrent copies automatically, and bills per millisecond. You never see the machine.</p>
+</div>
+
+<h3>The anatomy</h3>
+<div class="tablewrap reveal"><table>
+<thead><tr><th>Piece</th><th>Meaning</th></tr></thead>
+<tbody>
+<tr><td><strong>Handler</strong></td><td>The function AWS calls: <code>def handler(event, context)</code>. <code>event</code> is the trigger payload (which bucket/key, which message); <code>context</code> has the request ID and time left.</td></tr>
+<tr><td><strong>Runtime</strong></td><td>The language environment — Python 3.13, Node, Java, or your own container image.</td></tr>
+<tr><td><strong>Memory</strong></td><td>128&nbsp;MB–10&nbsp;GB. CPU scales <em>with</em> memory, so raising memory often makes a function both faster and cheaper per run.</td></tr>
+<tr><td><strong>Timeout</strong></td><td>1&nbsp;s–<strong>900&nbsp;s (15&nbsp;min) hard max</strong>. If your task can exceed that, it isn't a Lambda job.</td></tr>
+<tr><td><strong>Concurrency</strong></td><td>How many copies run at once. Default account limit ~1000; you can <em>reserve</em> some for a critical function or cap one that would overwhelm a database.</td></tr>
+<tr><td><strong>Environment variables</strong></td><td>Config passed in without code changes (target bucket, Glue job name). Secrets via Secrets Manager, not plaintext.</td></tr>
+<tr><td><strong>Execution role</strong></td><td>The IAM role the function runs as — always <code>logs:*</code> for CloudWatch, plus exactly what it calls (S3, <code>glue:StartJobRun</code>, ...).</td></tr>
+<tr><td><strong>Layers</strong> (conceptual)</td><td>A shared zip of libraries mounted into many functions, so common dependencies aren't packaged into every one.</td></tr>
+<tr><td><strong>Cold start</strong> (conceptual)</td><td>The first call after idle pays a startup delay (a few hundred ms for Python; seconds for a big Java or heavy-dependency function). Irrelevant for batch data work; matters for user-facing APIs.</td></tr>
+</tbody></table></div>
+
+<h3>Where it fits in a pipeline</h3>
+<pre><code><span class="c1"># S3 -> Lambda -> Glue : "a file landed, kick off the ETL"</span>
+def handler(event, context):
+    rec = event["Records"][0]["s3"]
+    bucket, key = rec["bucket"]["name"], rec["object"]["key"]
+    if key.endswith("/_SUCCESS"):
+        boto3.client("glue").start_job_run(
+            JobName="orders_clean",
+            Arguments={"--date": key.split("dt=")[1][:10]})
+    <span class="c1"># also common: Lambda -&gt; S3 (rename/repartition one small file),</span>
+    <span class="c1"># Lambda -&gt; SNS/Slack (alerts), MWAA -&gt; Lambda (a quick validation step)</span></code></pre>
+
+<div class="callout wn reveal">
+<p><b>What Lambda is not.</b> Not an ETL engine. 15-minute cap, limited memory, no distributed compute — trying to process a large dataset in Lambda means either it times out or you build a fragile fan-out of thousands of functions. The moment the work is "read a big table, join, aggregate," it belongs in <strong>Glue</strong> or <strong>EMR</strong>. Lambda's job is to <em>start</em> those and react to their results.</p>
+</div>
+
+<h3>Errors &amp; logs</h3>
+<p>Uncaught exceptions are retried automatically for async invokes (twice, then to a <strong>dead-letter queue</strong> or <strong>on-failure destination</strong> if configured). Every invocation writes to a CloudWatch log stream; log structured JSON with the S3 key / job run ID so a failure is traceable. Set an alarm on the <code>Errors</code> and <code>Throttles</code> metrics.</p>
+
+<div class="callout cy reveal">
+<p><b>Lambda vs Glue vs EMR.</b> <strong>Lambda</strong>: event-driven, &lt;15&nbsp;min, small data, no cluster — triggers and wiring. <strong>Glue</strong>: scheduled Spark ETL, GBs–hundreds of GBs, serverless. <strong>EMR</strong>: TB-scale or multi-hour Spark, full cluster control. If you're asking "can Lambda do this ETL?", the answer is almost always "use Glue."</p>
+</div>
+
+<h3>Package types &amp; limits</h3>
+<div class="tablewrap reveal"><table>
+<tbody>
+<tr><td><strong>Zip package</strong></td><td>Up to 50&nbsp;MB zipped / 250&nbsp;MB unzipped (code + <strong>layers</strong>). boto3 is already on the runtime.</td></tr>
+<tr><td><strong>Container image</strong></td><td>Up to 10&nbsp;GB. Use it when dependencies (pandas + pyarrow + numpy) blow the zip limit, or you want the same image locally.</td></tr>
+<tr><td><strong>Ephemeral storage</strong> (<code>/tmp</code>)</td><td>512&nbsp;MB default, up to 10&nbsp;GB. Scratch space for a downloaded file you reshape and re-upload.</td></tr>
+<tr><td><strong>Memory / CPU</strong></td><td>128&nbsp;MB&ndash;10&nbsp;GB; CPU (and network) scale with memory. A CPU-bound function is often <em>cheaper</em> at higher memory because it finishes faster.</td></tr>
+</tbody></table></div>
+
+<h3>How it's triggered: three models</h3>
+<ul class="reveal">
+<li><strong>Synchronous</strong> &mdash; caller waits for the return (API Gateway, a direct <code>Invoke</code>, an MWAA <code>LambdaInvokeFunctionOperator</code>). Errors go back to the caller; no automatic retry.</li>
+<li><strong>Asynchronous</strong> &mdash; the event is queued and the caller gets a 202 (S3 notifications, EventBridge). Lambda retries a failure <strong>twice</strong>, then sends it to a <strong>dead-letter queue</strong> or an <strong>on-failure destination</strong>.</li>
+<li><strong>Event source mapping</strong> &mdash; Lambda polls a stream/queue for you (SQS, Kinesis, DynamoDB Streams). You tune <em>batch size</em> and <em>batch window</em>; a whole batch fails and retries together unless you return a <strong>partial batch response</strong> naming just the bad records.</li>
+</ul>
+
+<h3>Concurrency: reserved vs provisioned</h3>
+<ul class="reveal">
+<li><strong>Reserved concurrency</strong> &mdash; a cap <em>and</em> a guarantee: this function can use at most N, and those N are always available to it. Use it to protect a downstream database from a fan-out spike.</li>
+<li><strong>Provisioned concurrency</strong> &mdash; keep N instances warm so there's no cold start. Costs money while idle; only worth it for latency-critical, user-facing functions &mdash; almost never for batch data work.</li>
+</ul>
+
+<h3>The S3 fan-out anti-pattern</h3>
+<p>"An S3 event per file &rarr; one Lambda per file" looks clean until 50,000 files land at once: you hit the concurrency limit, throttle, retry, and hammer whatever the function calls. Fixes: route S3 events to an <strong>SQS queue</strong> and let one Lambda process them in batches; or aggregate with a scheduled Lambda that lists new keys and starts <em>one</em> Glue job; or use a <strong>Step Functions Map</strong> state with a concurrency limit. The rule holds: Lambda reacts and dispatches, it doesn't do the bulk work.</p>
+
+<h3>VPC-attached Lambda</h3>
+<p>A function that needs to reach a private RDS or Redshift runs <em>in your VPC</em>. Modern Lambda attaches the network interface almost instantly (the old multi-second penalty is gone), but the function still needs a route to the internet or a VPC endpoint to reach S3/other AWS APIs &mdash; a NAT gateway or an S3 gateway endpoint.</p>
+
+<h3>Cost</h3>
+<p>Bill = <strong>requests</strong> ($0.20 / million) + <strong>GB-seconds</strong> (memory &times; duration). A 512&nbsp;MB function running 2&nbsp;s costs ~1 GB-s. The free tier (1M requests + 400,000 GB-s per month) covers most glue-code workloads outright &mdash; which is part of why Lambda is the right tool for the <em>small</em> stuff.</p>
+
+<div class="tldr reveal">
+<h4>❯ Short version</h4>
+<p>Lambda = one function, one event, &le;15&nbsp;minutes, no server, scales itself. Handler + runtime + memory (which also sets CPU) + timeout + concurrency + an execution role. In a data platform it does the <strong>triggering and glue</strong>: S3-event &rarr; start a Glue job, MWAA &rarr; a quick check, job-done &rarr; Slack. Anything that reads a big dataset is Glue or EMR, not Lambda.</p>
+</div>
+<hr/>
+<!-- END s06 -->
+
+
+<!-- START s07 -->
+<p class="promptline">~/aws <b>❯</b> SQL without a database</p>
+<h2 id="s07" class="reveal"><span class="hico"><svg class="ico"><use href="#i-search"/></svg></span><span class="n">07.</span> Amazon Athena — serverless SQL on S3</h2>
+<p class="sectionsub reveal">Point SQL at files in S3 and get results. No servers, no loading. You pay for the bytes each query scans — so the whole game is scanning less.</p>
+
+<div class="prose reveal">
+<p><strong>Athena</strong> is a serverless query engine (Trino/Presto under the hood) that runs SQL directly against S3. It reads table definitions from the <strong>Glue Data Catalog</strong> — the same tables Glue and Redshift Spectrum use — so a table is just "schema + S3 location + format + partitions". Nothing is copied into Athena; it opens the S3 files, filters, joins and aggregates on the fly, and drops the result set into an S3 <strong>query result location</strong> you configure.</p>
+</div>
+
+<h3>Tables are external; partitions must be known</h3>
+<pre><code>CREATE EXTERNAL TABLE silver.orders (
+  order_id string, customer_id string, amount double)
+PARTITIONED BY (order_date string)
+STORED AS PARQUET
+LOCATION 's3://lake/silver/orders/';
+
+<span class="c1"># Athena only reads partitions it knows about. Three ways to register them:</span>
+MSCK REPAIR TABLE silver.orders;                 <span class="c1"># scan S3 for date=... folders (slow on big tables)</span>
+ALTER TABLE silver.orders ADD PARTITION (order_date='2026-04-01')
+  LOCATION 's3://lake/silver/orders/order_date=2026-04-01/';
+<span class="c1"># or partition projection: tell Athena the pattern and it computes partitions, no registration</span>
+TBLPROPERTIES (
+  'projection.enabled'='true',
+  'projection.order_date.type'='date',
+  'projection.order_date.range'='2024-01-01,NOW',
+  'projection.order_date.format'='yyyy-MM-dd');</code></pre>
+<p><strong>Partition projection</strong> (conceptual): instead of storing a partition list, Athena is told the naming pattern and range and derives the folder paths per query. It removes the "run a crawler / <code>MSCK</code> after every load" chore and makes planning instant on tables with tens of thousands of partitions.</p>
+
+<h3>The cost model — one idea, everything follows from it</h3>
+<figure class="diagram reveal">
+<svg viewBox="0 0 900 170" role="img" aria-label="Athena cost chain: more data scanned leads to higher cost and slower queries; the fix is partitioning plus Parquet plus compression so a query reads only the columns and folders it needs">
+<g font-family="var(--font)" font-size="10.5" fill="#E7E7EE">
+  <rect x="40" y="60" width="150" height="46" rx="7" fill="#191921" stroke="#FF6B9D" stroke-width="1.8"/>
+  <text x="115" y="80" text-anchor="middle" fill="#FF8FB0">More bytes scanned</text>
+  <text x="115" y="96" text-anchor="middle" font-size="9">$5 per TB</text>
+
+  <rect x="240" y="60" width="150" height="46" rx="7" fill="#191921" stroke="#FF6B9D" stroke-width="1.8"/>
+  <text x="315" y="84" text-anchor="middle" fill="#FF8FB0">Higher cost + slower</text>
+
+  <rect x="470" y="40" width="390" height="90" rx="9" fill="#191921" stroke="#5AC8FF" stroke-width="1.8"/>
+  <text x="665" y="62" text-anchor="middle" fill="#5AC8FF" font-size="11">The fix: read less</text>
+  <text x="665" y="82" text-anchor="middle" font-size="9.5">partition by date &rarr; skip whole folders</text>
+  <text x="665" y="98" text-anchor="middle" font-size="9.5">Parquet &rarr; read only the columns in SELECT</text>
+  <text x="665" y="114" text-anchor="middle" font-size="9.5">Snappy/Zstd &rarr; fewer bytes on the wire</text>
+
+  <path d="M190 83 L236 83" stroke="#FF6B9D" stroke-width="1.6" marker-end="url(#at1)"/>
+  <path d="M390 83 L466 85" stroke="#5AC8FF" stroke-width="1.6" marker-end="url(#at2)"/>
+  <text x="428" y="76" text-anchor="middle" font-size="9" fill="#9FE1FF">so</text>
+</g>
+<defs>
+<marker id="at1" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#FF6B9D"/></marker>
+<marker id="at2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#5AC8FF"/></marker>
+</defs>
+</svg>
+<figcaption>Athena bills per byte scanned. Partitioning skips folders, Parquet skips columns, compression shrinks what's left — the same three moves that speed the query up.</figcaption>
+</figure>
+<ul class="reveal">
+<li><strong>Partition pruning</strong> — a <code>WHERE order_date = '2026-04-01'</code> reads one folder, not the table. Requires the filter column to be a partition column.</li>
+<li><strong>Columnar formats</strong> — Parquet/ORC let Athena read only the columns your <code>SELECT</code> names. A <code>SELECT sum(amount)</code> over a 60-column table reads one column's bytes. CSV/JSON force a full-row read every time.</li>
+<li><strong>Compression</strong> — Snappy (fast) or Zstd (smaller). Always compress; it cuts scanned bytes and speeds I/O.</li>
+<li><strong>Avoid <code>SELECT *</code></strong>, and use <code>LIMIT</code> only <em>after</em> filters (it doesn't reduce scan on its own).</li>
+</ul>
+
+<h3>CTAS, views, workgroups</h3>
+<ul class="reveal">
+<li><strong>CTAS</strong> (<code>CREATE TABLE AS SELECT</code>) — runs a query and writes the result to S3 as a new Parquet, partitioned table. The standard way to build a Gold table or convert raw CSV to Parquet with pure SQL.</li>
+<li><strong>Views</strong> — saved query text, no storage; handy for a canonical join or a security filter.</li>
+<li><strong>Workgroups</strong> (conceptual) — isolate teams: separate result locations, a per-query or per-workgroup <strong>data-scanned limit</strong> (a hard cost guardrail), and separate cost reporting.</li>
+</ul>
+
+<div class="callout cy reveal">
+<p><b>Athena vs Redshift vs Spark.</b> <strong>Athena</strong>: ad-hoc SQL over the lake, zero infra, pay-per-scan — best for exploration, light BI, and "query the S3 data as-is." <strong>Redshift</strong>: a loaded warehouse with indexes-by-design (dist/sort keys), consistently low latency, high concurrency — best for dashboards and heavy repeated analytics. <strong>Spark</strong> (Glue/EMR): when the work is transformation and pipelines, not interactive queries, or needs Python/ML, not just SQL.</p>
+</div>
+
+<h3>Engine v3 and Iceberg tables</h3>
+<p>Athena's current engine (<strong>v3</strong>, based on Trino) adds <code>INSERT INTO</code>, <code>UNLOAD</code>, <code>MERGE</code>, and full support for <strong>Apache Iceberg</strong> tables. Iceberg turns the read-only lake into something transactional:</p>
+<pre><code>CREATE TABLE silver.orders (order_id string, customer_id string, amount double, order_date date)
+PARTITIONED BY (order_date)
+LOCATION 's3://lake/silver/orders/'
+TBLPROPERTIES ('table_type'='ICEBERG', 'format'='parquet');
+
+<span class="c1">-- now these work, on the lake, with ACID guarantees:</span>
+MERGE INTO silver.orders t USING staging.orders s ON t.order_id = s.order_id
+  WHEN MATCHED THEN UPDATE SET amount = s.amount
+  WHEN NOT MATCHED THEN INSERT VALUES (s.order_id, s.customer_id, s.amount, s.order_date);
+
+SELECT * FROM silver.orders FOR TIMESTAMP AS OF (current_timestamp - interval '1' day);  <span class="c1">-- time travel</span></code></pre>
+<p>Iceberg also removes the "register the partition" chore &mdash; it tracks its own file list in a metadata layer, so new data is visible immediately and partition evolution is safe.</p>
+
+<h3>CTAS options in full</h3>
+<pre><code>CREATE TABLE gold.daily_revenue
+WITH (
+  format = 'PARQUET',
+  parquet_compression = 'SNAPPY',
+  external_location = 's3://lake/gold/daily_revenue/',
+  partitioned_by = ARRAY['order_date'],
+  bucketed_by = ARRAY['country'], bucket_count = 16      <span class="c1">-- optional: co-locates joins</span>
+) AS
+SELECT order_date, country, sum(amount) revenue FROM silver.orders GROUP BY 1, 2;</code></pre>
+<p>CTAS is the standard way to convert raw CSV/JSON to partitioned Parquet, or to build a Gold table &mdash; pure SQL, no Spark. Note a plain <code>CREATE TABLE ... AS</code> write is capped at 100 partitions per statement; loop by date, or use Iceberg.</p>
+
+<h3>Result reuse, EXPLAIN, and approximate functions</h3>
+<ul class="reveal">
+<li><strong>Query result reuse</strong> &mdash; enable it on the workgroup and Athena returns a cached result (up to an age you set) for an identical query, for <strong>zero scan cost</strong>. Huge for dashboards that re-run the same query.</li>
+<li><strong><code>EXPLAIN</code></strong> / <code>EXPLAIN ANALYZE</code> &mdash; shows the plan and, with ANALYZE, real rows and bytes per operator; use it to confirm a filter actually pruned partitions.</li>
+<li><strong><code>approx_distinct()</code></strong>, <code>approx_percentile()</code> &mdash; when "roughly" is fine, they're far cheaper than exact <code>count(distinct)</code> on a big table.</li>
+</ul>
+
+<h3>Cost guardrails</h3>
+<p>Set a <strong>per-query data-scanned limit</strong> and a <strong>per-workgroup limit</strong> so one bad <code>SELECT *</code> can't scan a petabyte. Route each team to its own workgroup for separate result locations and separate cost reporting. Tag workgroups for cost allocation.</p>
+
+<h3>Errors you'll actually see</h3>
+<div class="tablewrap reveal"><table>
+<tbody>
+<tr><td><code>HIVE_PARTITION_SCHEMA_MISMATCH</code></td><td>A partition's Parquet schema differs from the table's (a column added/renamed). Fix the files, or drop and re-add the partition, or use Iceberg.</td></tr>
+<tr><td><code>HIVE_BAD_DATA</code> / <code>GENERIC_INTERNAL_ERROR</code></td><td>A corrupt or wrong-format file under the location. Find it with <code>"$path"</code> in the SELECT and quarantine it.</td></tr>
+<tr><td>Query returns 0 rows but data exists</td><td>Partitions not registered. Run <code>MSCK REPAIR</code>, add them, or switch to partition projection.</td></tr>
+<tr><td><code>SYNTAX_ERROR ... exceeded partition limit</code></td><td>A CTAS/INSERT writing &gt; 100 partitions at once. Batch it.</td></tr>
+</tbody></table></div>
+
+<div class="tldr reveal">
+<h4>❯ Short version</h4>
+<p>Athena = serverless SQL on S3 via the Glue Catalog. Tables are external (schema + location + format). Cost = <strong>bytes scanned</strong> ($5/TB), so: <strong>partition</strong> by what you filter on (or use projection), store <strong>Parquet</strong>, <strong>compress</strong>, and never <code>SELECT *</code>. Use <strong>CTAS</strong> to build tables, <strong>workgroups</strong> to cap spend. It's for ad-hoc and light BI; Redshift is for heavy repeated dashboards.</p>
+</div>
+<hr/>
+<!-- END s07 -->
+
+<!-- START s08 -->
+<p class="promptline">~/aws <b>❯</b> the fast warehouse</p>
+<h2 id="s08" class="reveal"><span class="hico"><svg class="ico"><use href="#i-database"/></svg></span><span class="n">08.</span> Amazon Redshift — the loaded warehouse</h2>
+<p class="sectionsub reveal">A columnar MPP (massively parallel) database. You load data into it, and its speed depends almost entirely on two choices: how rows are <em>distributed</em> across nodes and how they're <em>sorted</em> inside each node.</p>
+
+<div class="prose reveal">
+<p><strong>Redshift</strong> is a data warehouse built for analytics: <strong>columnar storage</strong> (only the columns a query needs are read), <strong>compression</strong> on every column, and query work split across many nodes running in parallel. Unlike Athena, data lives <em>in</em> Redshift after a load — which is what buys the consistent low latency and high concurrency dashboards need.</p>
+</div>
+
+<h3>Architecture</h3>
+<ul class="reveal">
+<li><strong>Leader node</strong> (conceptual) — parses SQL, builds the plan, coordinates, and merges results. Runs no user data.</li>
+<li><strong>Compute nodes</strong> — hold the data (split into <em>slices</em>, one per core) and do the scanning, joining and aggregating. More nodes = more parallelism.</li>
+<li><strong>RA3 nodes</strong> (conceptual) — compute with <strong>managed storage</strong>: hot data on local SSD, the rest transparently on S3, so you size compute and storage independently. The current default node type.</li>
+<li><strong>Redshift Serverless</strong> (conceptual) — no cluster to manage; capacity is measured in <strong>RPUs</strong> and scales with load, billed per second. Good for spiky or unpredictable usage.</li>
+</ul>
+
+<h3>Distribution styles — where each row lives</h3>
+<div class="tablewrap reveal"><table>
+<thead><tr><th>Style</th><th>What it does</th><th>Use when</th></tr></thead>
+<tbody>
+<tr><td><strong>KEY</strong> (<code>DISTKEY</code>)</td><td>Rows with the same key value go to the same slice</td><td>The big fact table and the table it's most often joined to — set the <em>same</em> <code>DISTKEY</code> (e.g. <code>customer_id</code>) on both so the join happens locally, no data movement</td></tr>
+<tr><td><strong>EVEN</strong></td><td>Round-robin, evenly spread</td><td>A table with no dominant join column, or staging data</td></tr>
+<tr><td><strong>ALL</strong></td><td>A full copy of the table on every node</td><td>Small dimension tables (a few million rows max) joined to everything — every join is local</td></tr>
+<tr><td><strong>AUTO</strong></td><td>Redshift picks and may switch as the table grows</td><td>The sensible default until you have a measured reason to pin one</td></tr>
+</tbody></table></div>
+<p>A bad <code>DISTKEY</code> causes two problems: <strong>skew</strong> (one slice holds most rows and becomes the bottleneck) or a <strong>broadcast/redistribute</strong> step on every join (rows shipped across the network mid-query). Both show up in <code>EXPLAIN</code> as <code>DS_BCAST_INNER</code> / <code>DS_DIST_BOTH</code>.</p>
+
+<h3>Sort keys, compression, maintenance</h3>
+<ul class="reveal">
+<li><strong><code>SORTKEY</code></strong> — the column data is physically ordered by on disk, almost always a timestamp. Redshift stores min/max per block, so <code>WHERE event_date &gt; ...</code> skips blocks entirely (same idea as partition pruning). Compound sort key for filter-then-filter patterns.</li>
+<li><strong>Compression (encoding)</strong> — per-column; <code>COPY</code> picks good encodings automatically on first load. Smaller blocks = fewer reads.</li>
+<li><strong><code>VACUUM</code></strong> (conceptual) — reclaims space from deleted rows and re-sorts new rows into <code>SORTKEY</code> order. <strong><code>ANALYZE</code></strong> (conceptual) — refreshes the statistics the planner uses. Modern Redshift runs both automatically in the background; you rarely call them by hand.</li>
+<li><strong>WLM</strong> (Workload Management, conceptual) — query queues with memory and concurrency limits so a heavy report can't starve the dashboards. Auto WLM handles this for most clusters.</li>
+</ul>
+
+<h3>Getting data in and out</h3>
+<pre><code><span class="c1"># COPY: the ONLY fast way to load — parallel read from S3 across all slices</span>
+COPY analytics.orders FROM 's3://lake/gold/orders/'
+IAM_ROLE 'arn:aws:iam::111122223333:role/RedshiftCopyRole'
+FORMAT AS PARQUET;
+
+<span class="c1"># UNLOAD: parallel export back to S3 (Parquet, partitioned)</span>
+UNLOAD ('SELECT * FROM analytics.daily_revenue')
+TO 's3://lake/exports/daily_revenue/'
+IAM_ROLE '...' FORMAT PARQUET PARTITION BY (order_date);
+
+<span class="c1"># Spectrum: query S3 without loading, via an external schema on the Glue Catalog</span>
+CREATE EXTERNAL SCHEMA lake FROM DATA CATALOG DATABASE 'silver' IAM_ROLE '...';
+SELECT * FROM lake.orders WHERE order_date = '2026-04-01';   <span class="c1"># joins to native tables too</span></code></pre>
+<p>Never <code>INSERT</code> row by row. <strong><code>COPY</code></strong> from S3 is the load path; single-row inserts are orders of magnitude slower. <strong>Redshift Spectrum</strong> lets a query reach into S3 (through the same Glue Catalog Athena uses) for cold data, and join it to loaded tables in one statement — the practical bridge between the warehouse and the lake.</p>
+
+<div class="callout cy reveal">
+<p><b>Redshift vs Athena vs Snowflake vs Databricks.</b> <strong>Athena</strong>: no infra, pay-per-scan, best for ad-hoc. <strong>Redshift</strong>: loaded, tuned by dist/sort keys, best for steady high-concurrency dashboards on AWS. <strong>Snowflake</strong>: a warehouse with near-zero tuning (no dist/sort keys), instant elastic "virtual warehouses", multi-cloud — trades AWS-nativeness and some cost control for simplicity. <strong>Databricks</strong>: a Spark-based lakehouse — one platform for ETL, SQL, and ML on open Delta tables, strongest when pipelines and data science share the stack.</p>
+</div>
+
+<h3>COPY, in detail</h3>
+<pre><code>COPY analytics.orders
+FROM 's3://lake/gold/orders/'
+IAM_ROLE 'arn:aws:iam::111122223333:role/RedshiftLoadRole'
+FORMAT AS PARQUET;                <span class="c1"># Parquet: schema + types come from the files</span>
+
+<span class="c1"># CSV/JSON load with the options that matter:</span>
+COPY analytics.events FROM 's3://lake/raw/events/'
+IAM_ROLE '...'
+CSV GZIP DELIMITER ','
+DATEFORMAT 'auto' TIMEFORMAT 'auto'
+MAXERROR 100                      <span class="c1"># tolerate up to 100 bad rows, log them</span>
+COMPUPDATE ON STATUPDATE ON       <span class="c1"># pick column encodings + refresh stats during load</span>
+MANIFEST;                         <span class="c1"># the S3 path is a manifest file listing the data files</span></code></pre>
+<p>Every <code>COPY</code> reads from S3 <strong>in parallel across all slices</strong> and commits as one transaction &mdash; it either all lands or none does. Load errors land in <code>STL_LOAD_ERRORS</code> with the row and reason. Never load with row-by-row <code>INSERT</code>; it's single-threaded and orders of magnitude slower.</p>
+
+<h3>Reading an EXPLAIN plan</h3>
+<p>The one thing to look for is <strong>data movement</strong> between nodes mid-query:</p>
+<div class="tablewrap reveal"><table>
+<tbody>
+<tr><td><code>DS_DIST_NONE</code></td><td>No movement &mdash; both sides already co-located on the join key. This is the goal.</td></tr>
+<tr><td><code>DS_DIST_ALL_NONE</code></td><td>One side is <code>DISTSTYLE ALL</code> (copied everywhere) &mdash; also fine, for small dimensions.</td></tr>
+<tr><td><code>DS_BCAST_INNER</code></td><td>The inner table is broadcast to every node for this query. OK if it's small; a warning if it isn't &mdash; consider <code>DISTSTYLE ALL</code>.</td></tr>
+<tr><td><code>DS_DIST_INNER</code> / <code>DS_DIST_BOTH</code></td><td>Rows redistributed across the network mid-query &mdash; the expensive case. Usually means the join key isn't the <code>DISTKEY</code> on one or both tables.</td></tr>
+</tbody></table></div>
+<p>Diagnostics live in the system tables: <code>SVV_TABLE_INFO</code> (size, skew, unsorted %, whether stats are stale), <code>SVL_QUERY_SUMMARY</code> / <code>SYS_QUERY_HISTORY</code> (per-step rows, bytes, time, <em>is_diskbased</em> for a step that spilled).</p>
+
+<h3>AUTO optimization &amp; materialized views</h3>
+<ul class="reveal">
+<li><strong>AUTO dist/sort</strong> &mdash; leave a table at <code>DISTSTYLE AUTO</code> and Redshift starts it <code>ALL</code>, switches to <code>EVEN</code> or <code>KEY</code> as it grows and as it observes your joins, and maintains the sort order in the background. Pin a specific style only when you have a measured reason.</li>
+<li><strong>Automatic table optimization</strong> also runs <code>VACUUM</code>, <code>ANALYZE</code> and encoding changes for you during low-load windows &mdash; the manual maintenance from older Redshift is mostly gone.</li>
+<li><strong>Materialized views</strong> precompute a heavy join/aggregate and can <strong>auto-refresh</strong> incrementally; the optimizer can even rewrite a matching query to use one transparently.</li>
+<li><strong>Concurrency Scaling</strong> &mdash; spins up transient extra clusters to absorb a spike of read queries so dashboards don't queue; billed per second used, with a monthly free credit.</li>
+</ul>
+
+<h3>Spectrum external tables</h3>
+<pre><code>CREATE EXTERNAL SCHEMA lake
+FROM DATA CATALOG DATABASE 'silver'
+IAM_ROLE 'arn:aws:iam::111122223333:role/RedshiftSpectrumRole';
+
+<span class="c1"># cold data stays in S3; join it to loaded tables in one query</span>
+SELECT d.region, sum(f.amount)
+FROM   analytics.orders_recent f          <span class="c1"># loaded, hot</span>
+JOIN   lake.orders_archive a ON a.id = f.id   <span class="c1"># S3, cold, via Spectrum</span>
+JOIN   analytics.dim_region d ON d.k = f.region_k
+GROUP  BY 1;</code></pre>
+<p>Spectrum bills per <strong>byte scanned in S3</strong> (like Athena), so the same rules apply &mdash; partition and use Parquet. Add partitions with <code>ALTER TABLE ... ADD PARTITION</code> or let the shared Glue crawler do it. The usual design: keep the last N months loaded for speed, leave the rest in S3, and union them through a view.</p>
+
+<h3>UNLOAD</h3>
+<pre><code>UNLOAD ('SELECT * FROM analytics.daily_revenue WHERE order_date &gt;= ''2026-01-01''')
+TO 's3://lake/exports/daily_revenue/'
+IAM_ROLE '...'
+FORMAT PARQUET
+PARTITION BY (order_date)
+PARALLEL ON              <span class="c1"># one file per slice — fast, many files</span>
+MANIFEST;               <span class="c1"># write a manifest the downstream job can read</span></code></pre>
+
+<div class="tldr reveal">
+<h4>❯ Short version</h4>
+<p>Redshift = columnar MPP warehouse; you <strong><code>COPY</code></strong> data in from S3. Performance is <strong>distribution</strong> (co-locate the big join &mdash; same <code>DISTKEY</code> on fact + main dimension; <code>ALL</code> for tiny dimensions; <code>EVEN</code> otherwise) plus <strong><code>SORTKEY</code></strong> (usually a date, for block skipping). <code>VACUUM</code>/<code>ANALYZE</code>/WLM are mostly automatic now. <strong>Spectrum</strong> queries S3 via the Glue Catalog and joins it to native tables. Pick Redshift over Athena for repeated, concurrent, latency-sensitive analytics.</p>
+</div>
+<hr/>
+<!-- END s08 -->
+
+
+<!-- START s09 -->
+<p class="promptline">~/aws <b>❯</b> one pipeline, all eight</p>
+<h2 id="s09" class="reveal"><span class="hico"><svg class="ico"><use href="#i-network"/></svg></span><span class="n">09.</span> Putting it together &amp; the IAM auth trace</h2>
+<p class="sectionsub reveal">A concrete nightly pipeline that uses every service, and the exact permission chain that lets it run.</p>
+
+<h3>A nightly batch pipeline</h3>
+<div class="prose reveal">
+<p>Vendors drop CSV extracts into <code>s3://lake/bronze/</code> through the day. Every night the platform turns them into a clean warehouse and a queryable lake.</p>
+</div>
+<figure class="diagram reveal">
+<svg viewBox="0 0 900 300" role="img" aria-label="Nightly pipeline. Top row, left to right: S3 Bronze, then a Glue job that writes S3 Silver, then an EMR step that writes S3 Gold, then a Redshift COPY, then a Lambda that sends a done notification. A wide MWAA box below drives the Glue, EMR and Redshift steps with dashed control arrows, and a Lambda on the far left forwards the S3 upload event to MWAA. An Athena box at the bottom reads S3 Silver and Gold directly.">
+<defs>
+<marker id="e3" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#5AC8FF"/></marker>
+<marker id="e2" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" fill="#A56BFF"/></marker>
+</defs>
+<g font-family="var(--font)" font-size="10" fill="#E7E7EE">
+  <text x="450" y="22" text-anchor="middle" font-size="11.5" fill="#E7E7EE">One nightly pipeline &mdash; data flow on top, MWAA driving it below</text>
+
+  <rect x="24" y="52" width="120" height="48" rx="7" fill="#191921" stroke="#FF9900" stroke-width="2"/>
+  <text x="84" y="73" text-anchor="middle" fill="#FFAC31">S3 Bronze</text>
+  <text x="84" y="89" text-anchor="middle" font-size="8.5">raw CSV lands</text>
+
+  <rect x="196" y="52" width="150" height="48" rx="7" fill="#191921" stroke="#5AC8FF" stroke-width="1.8"/>
+  <text x="271" y="73" text-anchor="middle" fill="#5AC8FF">Glue job</text>
+  <text x="271" y="89" text-anchor="middle" font-size="8.5">Bronze &rarr; Silver Parquet</text>
+
+  <rect x="398" y="52" width="150" height="48" rx="7" fill="#191921" stroke="#5AC8FF" stroke-width="1.8"/>
+  <text x="473" y="73" text-anchor="middle" fill="#5AC8FF">EMR Spark step</text>
+  <text x="473" y="89" text-anchor="middle" font-size="8.5">Silver &rarr; Gold aggregates</text>
+
+  <rect x="600" y="52" width="150" height="48" rx="7" fill="#191921" stroke="#5AC8FF" stroke-width="1.8"/>
+  <text x="675" y="73" text-anchor="middle" fill="#5AC8FF">Redshift COPY</text>
+  <text x="675" y="89" text-anchor="middle" font-size="8.5">Gold &rarr; warehouse</text>
+
+  <rect x="802" y="52" width="74" height="48" rx="7" fill="#191921" stroke="#C79BFF" stroke-width="1.6"/>
+  <text x="839" y="73" text-anchor="middle" fill="#C79BFF" font-size="9">Lambda</text>
+  <text x="839" y="88" text-anchor="middle" font-size="8">notify</text>
+
+  <path d="M144 76 L192 76" stroke="#5AC8FF" stroke-width="1.7" marker-end="url(#e3)"/>
+  <path d="M346 76 L394 76" stroke="#5AC8FF" stroke-width="1.7" marker-end="url(#e3)"/>
+  <path d="M548 76 L596 76" stroke="#5AC8FF" stroke-width="1.7" marker-end="url(#e3)"/>
+  <path d="M750 76 L798 76" stroke="#5AC8FF" stroke-width="1.7" marker-end="url(#e3)"/>
+
+  <rect x="196" y="170" width="554" height="46" rx="7" fill="#191921" stroke="#A56BFF" stroke-width="1.9"/>
+  <text x="473" y="190" text-anchor="middle" fill="#C79BFF">Amazon MWAA &mdash; the DAG</text>
+  <text x="473" y="206" text-anchor="middle" font-size="8.5">starts each step in order, waits for it, retries on failure</text>
+
+  <path d="M271 168 L271 104" stroke="#A56BFF" stroke-width="1.5" stroke-dasharray="5 3" marker-end="url(#e2)"/>
+  <path d="M473 168 L473 104" stroke="#A56BFF" stroke-width="1.5" stroke-dasharray="5 3" marker-end="url(#e2)"/>
+  <path d="M675 168 L675 104" stroke="#A56BFF" stroke-width="1.5" stroke-dasharray="5 3" marker-end="url(#e2)"/>
+
+  <rect x="24" y="170" width="130" height="46" rx="7" fill="#191921" stroke="#C79BFF" stroke-width="1.6"/>
+  <text x="89" y="190" text-anchor="middle" fill="#C79BFF" font-size="9">Lambda</text>
+  <text x="89" y="205" text-anchor="middle" font-size="8">S3 event &rarr; start DAG</text>
+  <path d="M154 193 L192 193" stroke="#A56BFF" stroke-width="1.5" stroke-dasharray="5 3" marker-end="url(#e2)"/>
+
+  <rect x="196" y="248" width="360" height="40" rx="7" fill="#191921" stroke="#9FE1FF" stroke-width="1.7"/>
+  <text x="376" y="266" text-anchor="middle" fill="#9FE1FF">Amazon Athena</text>
+  <text x="376" y="281" text-anchor="middle" font-size="8.5">ad-hoc SQL straight on S3 Silver &amp; Gold &mdash; no load step</text>
+  <path d="M271 216 L285 246" stroke="#9FE1FF" stroke-width="1.4" stroke-dasharray="3 3" marker-end="url(#e3)"/>
+
+  <text x="700" y="270" text-anchor="middle" font-size="9" fill="#FFB454">solid cyan = data via S3</text>
+  <text x="700" y="284" text-anchor="middle" font-size="9" fill="#C79BFF">dashed purple = "run this now"</text>
+</g>
+</svg>
+<figcaption>S3 is the spine. Glue and EMR are compute. MWAA sequences and retries. Lambda handles the event and the alert. Athena and Redshift serve.</figcaption>
+</figure>
+
+<h3>Why each choice</h3>
+<ul class="reveal">
+<li><strong>Glue</strong> for Bronze&rarr;Silver: scheduled, a few hundred GB, no cluster to babysit — the default.</li>
+<li><strong>EMR</strong> for Silver&rarr;Gold: this step joins five years of history and runs 40 minutes on a big Spot fleet; a transient EMR cluster is cheaper and more tunable than scaling Glue up.</li>
+<li><strong>Redshift</strong> for serving the exec dashboards: 300 concurrent users, sub-second, every morning.</li>
+<li><strong>Athena</strong> for the analysts poking at Silver during the day: no load step, pay only for what they scan.</li>
+<li><strong>MWAA</strong> because the DAG has branching, retries, and a monthly backfill; Step Functions would work but backfill is manual.</li>
+<li><strong>Lambda</strong> for the S3 trigger and the Slack ping — seconds of work, no reason to spin up anything bigger.</li>
+</ul>
+
+<h3>The interview question, answered end to end</h3>
+<div class="def reveal">
+<p class="t">"My Airflow DAG starts a Glue job. How does AWS authenticate and authorise that?"</p>
+<p><strong>1.</strong> The MWAA task runs boto3 with <em>no stored keys</em> — it picks up the <strong>MWAA execution role</strong>'s temporary credentials from the environment.<br/>
+<strong>2.</strong> Those credentials call <code>glue:StartJobRun</code>. IAM checks the execution role's <em>identity policy</em> allows that action, and that it has <code>iam:PassRole</code> for <code>GlueJobRole</code> (because the DAG tells Glue to run the job <em>as</em> that role).<br/>
+<strong>3.</strong> Glue starts the run and <strong>assumes <code>GlueJobRole</code></strong>. STS checks that role's <em>trust policy</em> permits <code>glue.amazonaws.com</code>, then issues fresh temporary credentials carrying <code>GlueJobRole</code>'s permissions.<br/>
+<strong>4.</strong> The job script uses those credentials to read <code>s3://lake/bronze/*</code> and write <code>s3://lake/silver/*</code>. Each S3 call is allowed only if <code>GlueJobRole</code>'s <em>S3 policy</em> permits it <strong>and</strong> the bucket's <em>resource policy</em> doesn't <code>Deny</code> it (e.g. non-TLS).<br/>
+<strong>5.</strong> Writing to the SSE-KMS bucket also needs <code>kms:GenerateDataKey</code> on the key. Reading the JDBC secret needs <code>secretsmanager:GetSecretValue</code>.<br/>
+Every hop is <em>role &rarr; STS temporary credentials &rarr; API call &rarr; policy check</em>. Nothing long-lived, nothing shared.</p>
+</div>
+<hr/>
+<!-- END s09 -->
+
+<!-- START s10 -->
+<p class="promptline">~/aws <b>❯</b> the one-page recap</p>
+<h2 id="s10" class="reveal"><span class="hico"><svg class="ico"><use href="#i-book"/></svg></span><span class="n">10.</span> Decision tables &amp; glossary</h2>
+<p class="sectionsub reveal">The "which one?" calls and the vocabulary, in one place.</p>
+
+<h3>Compute: which engine?</h3>
+<div class="tablewrap reveal"><table>
+<thead><tr><th>Need</th><th>Reach for</th></tr></thead>
+<tbody>
+<tr><td>React to an event; small; &lt; 15 min; no big data</td><td><strong>Lambda</strong></td></tr>
+<tr><td>Scheduled Spark ETL, GBs–hundreds of GBs, no cluster ops</td><td><strong>Glue</strong></td></tr>
+<tr><td>TB-scale or multi-hour Spark; custom config; extra frameworks; Spot savings</td><td><strong>EMR</strong> (or EMR Serverless for the middle ground)</td></tr>
+<tr><td>Notebooks + ETL + ML on open Delta tables, teams sharing a platform</td><td><strong>Databricks</strong></td></tr>
+</tbody></table></div>
+
+<h3>Query: which surface?</h3>
+<div class="tablewrap reveal"><table>
+<thead><tr><th>Need</th><th>Reach for</th></tr></thead>
+<tbody>
+<tr><td>Ad-hoc SQL over the lake, occasional, no infra</td><td><strong>Athena</strong></td></tr>
+<tr><td>High-concurrency dashboards, steady load, low latency</td><td><strong>Redshift</strong></td></tr>
+<tr><td>Query cold S3 data and join it to warehouse tables</td><td><strong>Redshift Spectrum</strong></td></tr>
+<tr><td>Transformation pipelines, Python, ML — not interactive SQL</td><td><strong>Spark</strong> on Glue/EMR</td></tr>
+</tbody></table></div>
+
+<h3>Orchestration: which?</h3>
+<div class="tablewrap reveal"><table>
+<thead><tr><th>Need</th><th>Reach for</th></tr></thead>
+<tbody>
+<tr><td>Chain a couple of Glue jobs/crawlers, minimal</td><td><strong>Glue Workflows</strong></td></tr>
+<tr><td>Event-driven, AWS-only state machine, pay-per-step</td><td><strong>Step Functions</strong></td></tr>
+<tr><td>Python DAGs, real backfill, retries, big ecosystem, multi-system</td><td><strong>MWAA</strong></td></tr>
+</tbody></table></div>
+
+<h3>Glossary</h3>
+<div class="tablewrap reveal"><table>
+<tbody>
+<tr><td><strong>Object / key / prefix</strong></td><td>A file in S3; its full path string; a shared leading path segment (the unit of permissions and scaling).</td></tr>
+<tr><td><strong>Storage class</strong></td><td>A cost/retrieval-speed setting per object (Standard, Intelligent-Tiering, IA, Glacier).</td></tr>
+<tr><td><strong>Lifecycle policy</strong></td><td>Per-prefix rules that transition or expire objects on a schedule — the main S3 cost lever.</td></tr>
+<tr><td><strong>Partition</strong></td><td>A column encoded into the S3 key path (usually date) so engines skip non-matching folders.</td></tr>
+<tr><td><strong>Bronze / Silver / Gold</strong></td><td>Lake zones: raw as-received / cleaned &amp; conformed / business-ready aggregates.</td></tr>
+<tr><td><strong>Glue Data Catalog</strong></td><td>A Hive-compatible metastore: databases, tables (schema + S3 location + format), partitions. Shared by Athena, Redshift Spectrum, EMR, Glue.</td></tr>
+<tr><td><strong>Crawler</strong></td><td>A Glue process that samples a source and creates/updates a catalog table and its partitions.</td></tr>
+<tr><td><strong>Glue job</strong></td><td>Serverless PySpark/Scala ETL; billed per DPU-second.</td></tr>
+<tr><td><strong>GlueContext / DynamicFrame</strong></td><td>Glue's Spark wrapper; a flexible-schema distributed table (convert to DataFrame once clean).</td></tr>
+<tr><td><strong>Job bookmark</strong></td><td>State Glue keeps so a job processes only new data on each run.</td></tr>
+<tr><td><strong>EMR node roles</strong></td><td>Primary (coordinates), Core (tasks + HDFS, not on Spot), Task (compute only, ideal on Spot).</td></tr>
+<tr><td><strong>YARN</strong></td><td>The cluster resource manager that hands CPU/memory containers to Spark.</td></tr>
+<tr><td><strong>Bootstrap action</strong></td><td>A script run on every EMR node at launch to install software or config.</td></tr>
+<tr><td><strong>Transient cluster</strong></td><td>An EMR cluster that runs one batch and auto-terminates — cheapest for scheduled jobs.</td></tr>
+<tr><td><strong>IAM role</strong></td><td>An identity with permissions but no permanent credentials; assumed to get temporary ones.</td></tr>
+<tr><td><strong>Trust policy</strong></td><td>The part of a role that says <em>who</em> may assume it.</td></tr>
+<tr><td><strong>AssumeRole / STS</strong></td><td>The call that swaps a role for short-lived credentials (key + secret + session token).</td></tr>
+<tr><td><strong>Identity-based vs resource-based policy</strong></td><td>Attached to a user/role ("what can this do?") vs attached to a resource ("who can touch this?"; enables cross-account).</td></tr>
+<tr><td><strong>iam:PassRole</strong></td><td>The permission to hand a role to another service to run as — needed whenever one service launches another.</td></tr>
+<tr><td><strong>MWAA execution role</strong></td><td>The single IAM role every MWAA task runs as; must hold every permission any DAG uses.</td></tr>
+<tr><td><strong>Lambda handler / execution role / cold start</strong></td><td>The entry function; the IAM role it runs as; the first-call startup delay after idle.</td></tr>
+<tr><td><strong>Partition projection</strong></td><td>Telling Athena a partition naming pattern so it computes paths instead of storing a partition list.</td></tr>
+<tr><td><strong>CTAS</strong></td><td><code>CREATE TABLE AS SELECT</code> — run a query, write the result to S3 as a new Parquet table.</td></tr>
+<tr><td><strong>DISTKEY / SORTKEY</strong></td><td>Redshift: which column decides a row's node (co-locate joins); which column data is sorted by on disk (block skipping).</td></tr>
+<tr><td><strong>COPY / UNLOAD</strong></td><td>Redshift's parallel bulk load from S3 / parallel export to S3. Never <code>INSERT</code> row-by-row.</td></tr>
+<tr><td><strong>Redshift Spectrum</strong></td><td>Query S3 data from Redshift via the Glue Catalog, joinable to native tables.</td></tr>
+<tr><td><strong>VACUUM / ANALYZE / WLM</strong></td><td>Reclaim + re-sort space; refresh planner stats; queue queries by priority. Mostly automatic now.</td></tr>
+</tbody></table></div>
+
+<div class="tldr reveal">
+<h4>❯ The whole guide in five lines</h4>
+<p>S3 holds everything as Parquet in date-partitioned Bronze/Silver/Gold prefixes. Glue runs the everyday Spark ETL; EMR runs the big or specialised jobs. MWAA sequences them and retries; Lambda catches events and sends alerts. Athena queries the lake ad-hoc; Redshift serves the heavy dashboards. IAM roles + STS temporary credentials authorise every step — least privilege, and don't forget <code>iam:PassRole</code>.</p>
+</div>
+<!-- END s10 -->
+
+<footer class="reveal" style="text-align:center;padding:34px 0 8px;border-top:1px solid #3C4356;margin-top:44px"><p style="margin-bottom:8px"><a href="../essentials.html">← Back to all articles</a></p><p style="color:#9aa0b4">© 2026 · Hao Tieu Kim · Built with GitHub Pages</p></footer>
+</div><!-- /wrap -->
+
+<script>
+  var bar=document.getElementById('bar');
+  function prog(){var h=document.documentElement;var s=h.scrollTop||document.body.scrollTop;var max=(h.scrollHeight-h.clientHeight)||1;bar.style.width=(s/max*100)+'%';}
+  document.addEventListener('scroll',prog,{passive:true});prog();
+  function revealAll(){document.querySelectorAll('.reveal').forEach(function(el){el.classList.add('in');});}
+  try{
+    var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}});},{threshold:.08});
+    document.querySelectorAll('.reveal').forEach(function(el){io.observe(el);});
+    window.addEventListener('load',function(){setTimeout(revealAll,2000);});
+    setTimeout(revealAll,2500);
+  }catch(e){revealAll();}
+</script>
+</body>
+</html>
