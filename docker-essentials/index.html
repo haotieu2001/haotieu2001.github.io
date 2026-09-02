@@ -1292,26 +1292,39 @@ volume     = storage that OUTLIVES containers (your data)
 registry   = where images live between machines</pre></div>
 
 <h2 id="scope" class="reveal"><span class="hico"><svg class="ico"><use href="#i-compass"/></svg></span><span class="n">＊</span> How deep to go</h2>
-<p class="reveal lead">You do not need Docker expertise for a normal data-engineering role. You need to be fluent with the everyday loop and comfortable reading a <code>docker-compose.yml</code> — nothing more.</p>
+<p class="reveal lead">You do not need Docker expertise for a normal data-engineering role. You need to be fluent with the everyday loop and comfortable reading a <code>docker-compose.yml</code>. Nothing more.</p>
 
 <h4 class="reveal">Know these cold</h4>
 <ul class="reveal">
   <li><strong>The flow:</strong> Dockerfile → <code>docker build</code> → image → <code>docker run</code> → container.</li>
   <li><strong>Image vs container</strong>, and why deleting a container loses only its writable layer.</li>
-  <li><strong>The Dockerfile</strong> — <code>FROM</code>, <code>WORKDIR</code>, <code>ENV</code>, <code>RUN</code>, <code>COPY</code>, <code>EXPOSE</code>, <code>ENTRYPOINT</code>/<code>CMD</code>, <code>USER</code> — and the layer-cache ordering rule.</li>
+  <li><strong>The Dockerfile</strong> (<code>FROM</code>, <code>WORKDIR</code>, <code>ENV</code>, <code>RUN</code>, <code>COPY</code>, <code>EXPOSE</code>, <code>ENTRYPOINT</code>/<code>CMD</code>, <code>USER</code>) and the layer-cache ordering rule.</li>
   <li><strong>The commands:</strong> <code>build</code>, <code>run</code>, <code>ps</code>, <code>logs</code>, <code>exec</code>, <code>stop</code>, plus <code>docker compose up / down / logs</code>.</li>
   <li><strong>Port mapping</strong> (<code>-p 8000:8000</code>), <strong>environment variables</strong> (<code>-e</code> / <code>--env-file</code>), <strong>volumes</strong> vs bind mounts, <strong>container networking</strong> (service names, not <code>localhost</code>), and a <strong>registry</strong> (<code>push</code>/<code>pull</code>).</li>
   <li><strong>You should be able to</strong> take a Python or FastAPI app, write a Dockerfile, and get it answering at <code>localhost:8000</code> (<a href="#loop">§05</a>). That's the bar.</li>
 </ul>
 
-<h4 class="reveal">You do <em>not</em> need (yet)</h4>
-<ul class="reveal">
-  <li>Advanced networking: bridges, veth pairs, NAT/iptables, <code>overlay</code>/<code>macvlan</code> drivers.</li>
-  <li>Docker Swarm, or any multi-host orchestration that isn't Kubernetes.</li>
-  <li>A container-security deep dive — capabilities, seccomp/AppArmor profiles, rootless internals, user namespaces.</li>
-  <li>Docker and Kubernetes internals — containerd/runc call paths, CRI, image manifest/digest formats, OverlayFS mechanics.</li>
-  <li>Building complex multi-container infrastructure. A local <code>compose</code> stack of three or four services is plenty.</li>
-</ul>
+<h4 class="reveal">You do <em>not</em> need to go deep on these yet, but here's the gist</h4>
+<p class="reveal">Each of these had its own section in a longer version of this guide. For a data-engineering role, know the name and the one-line idea; learn the rest when a task actually forces you to.</p>
+<div class="gloss reveal">
+  <dl>
+    <dt>Namespaces &amp; cgroups</dt>
+    <dd>A container is not a kernel object, it is an ordinary Linux process started with two features applied. <strong>Namespaces</strong> control what it can <em>see</em> (its own process list, filesystem, network, hostname); <strong>cgroups</strong> control what it can <em>use</em> (CPU, memory, I/O). cgroups are why <code>--memory=4g</code> is enforced and why an over-limit container is OOM-killed with exit code 137. Add capabilities and a seccomp filter (what it may <em>do</em>) and that is the whole of container isolation. Go deeper only if you are hardening a shared host or investigating a container escape.</dd>
+
+    <dt>BuildKit, cache mounts &amp; build secrets</dt>
+    <dd>BuildKit (the default builder since Docker 23) reads the whole Dockerfile, builds a dependency graph, and runs independent steps in parallel. <code>RUN --mount=type=cache</code> keeps a directory (say the pip download cache) <em>between</em> builds without baking it into a layer; <code>RUN --mount=type=secret</code> exposes a credential for one command without it landing in a layer or <code>docker history</code>. <code>docker buildx build --platform linux/amd64,linux/arm64</code> builds a multi-arch image. Reach for these when builds are slow or a build needs a private token.</dd>
+
+    <dt>Image internals: digests &amp; manifests</dt>
+    <dd>An image is not a file, it is a small JSON <strong>manifest</strong> that points, by SHA-256 hash, at a config blob and a list of layer blobs. Everything is content-addressed, so identical layers are stored once across images. A <code>:tag</code> is a movable label; a <code>@sha256:…</code> <strong>digest</strong> is the content itself and cannot be moved, so pin the digest for reproducible production builds. A "manifest list" maps one name to several per-architecture manifests, which is how one <code>python:3.12-slim</code> reference works on both amd64 and arm64.</dd>
+
+    <dt>OverlayFS &amp; copy-on-write</dt>
+    <dd>Ten containers from one image do not cost ten times the disk: they share the image's read-only layers and stack one thin writable layer on top, merged by the kernel's <strong>OverlayFS</strong>. Reads fall through the stack; the first <em>write</em> to a file copies the whole file up first (editing one byte of a 2 GB file copies 2 GB, which is why heavy-write workloads belong on a volume, which bypasses OverlayFS). Deleting a file just writes a "hidden" marker in the top layer; the bytes stay in the layer below, which is why a secret <code>COPY</code>-d in and <code>rm</code>-d later is still in the image.</dd>
+
+    <dt>Networking internals: bridges, veth pairs &amp; NAT</dt>
+    <dd>Each container gets its own network namespace and a <strong>veth pair</strong>: a virtual cable with one end in the container (its <code>eth0</code>) and one end in a virtual switch (a bridge). Containers on the same user-defined bridge reach each other by name via Docker's embedded DNS. <code>-p 8080:80</code> is not a tunnel, it is one iptables DNAT rule (<code>host:8080 → 172.17.0.2:80</code>), which is why "port already in use" is a host problem and why two containers can both listen on 80. Other drivers: <code>host</code> (share the host's stack), <code>none</code> (loopback only), <code>overlay</code> (multi-host, for Swarm), <code>macvlan</code> (a real LAN IP).</dd>
+  </dl>
+</div>
+<p class="reveal">Skip entirely for now: <strong>Docker Swarm</strong> and any multi-host orchestration that isn't Kubernetes, and <strong>building large multi-container infrastructure</strong>. A local Compose stack of a few services is plenty.</p>
 
 <!-- glossary -->
 <h2 id="glossary" class="reveal"><span class="hico"><svg class="ico"><use href="#i-book"/></svg></span><span class="n">＊</span> Glossary</h2>
