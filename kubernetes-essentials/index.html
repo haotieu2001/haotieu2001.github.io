@@ -524,7 +524,7 @@ ENTRYPOINT ["/myapp"]</code></pre>
 <p><figure class="fig reveal"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 600">
 <defs>
   <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
-    <path d="M0,0 L10,5 L0,10 z" fill="#9aa0b4"/>
+    <path d="M0,0 L10,5 L0,10 z" fill="#5AC8FF"/>
   </marker>
   <marker id="arrowblue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
     <path d="M0,0 L10,5 L0,10 z" fill="#5C78FF"/>
@@ -544,7 +544,7 @@ ENTRYPOINT ["/myapp"]</code></pre>
     .net{fill:#191921;stroke:#5AC8FF;stroke-width:1.5;rx:9}
     .ext{fill:#191921;stroke:#9aa0b4;stroke-width:1.5;rx:9}
     .obj{fill:#191921;stroke:#A56BFF;stroke-width:1.5;rx:9}
-    .edge{fill:none;stroke:#9aa0b4;stroke-width:2;marker-end:url(#arrow)}
+    .edge{fill:none;stroke:#5AC8FF;stroke-width:2;marker-end:url(#arrow)}
     .edge-b{fill:none;stroke:#5C78FF;stroke-width:2;marker-end:url(#arrowblue)}
     .dash{stroke-dasharray:5 4}
   </style>
@@ -648,82 +648,8 @@ ENTRYPOINT ["/myapp"]</code></pre>
 <ul><li><strong>API server (<code>kube-apiserver</code>)</strong> — the central hub and the <em>only</em> component that talks to the datastore. Every interaction — from <code>kubectl</code>, from other control-plane components, from the kubelet on each node — goes through the API server's RESTful API. It validates requests and reads/writes objects. If the API server is down, you can't change anything in the cluster.</li><li><strong>etcd</strong> — a consistent, distributed key-value store that holds <em>all</em> cluster state and configuration: every object's desired and current status. It's the cluster's database. It typically runs as a multi-member cluster for high availability (quorum), and <strong>you must back it up</strong> — losing etcd means losing the cluster's state.</li><li><strong>Scheduler (<code>kube-scheduler</code>)</strong> — watches for newly created Pods that have no node assigned, and picks the best node for each. It works in three steps: <strong>Filter</strong> (eliminate nodes that can't fit the Pod — not enough CPU/memory, failing taints/affinity rules), then <strong>Score</strong> (rank the feasible nodes), then <strong>Bind</strong> the Pod to the highest-scoring node. (Affinity, taints, and topology spread, which steer these decisions, are covered in the Scheduling section.)</li><li><strong>Controller manager (<code>kube-controller-manager</code>)</strong> — a single binary bundling <em>many</em> controllers (the Deployment controller, ReplicaSet controller, Node controller, Job controller, and more). Each controller runs a reconciliation loop (below) to drive some part of the cluster toward its desired state.</li><li><strong>Cloud controller manager (<code>cloud-controller-manager</code>)</strong> — the controllers that integrate with a specific cloud provider: creating cloud load balancers for <code>LoadBalancer</code> Services, attaching cloud disks, and managing node lifecycle against the cloud's API. Splitting these out lets cloud vendors ship and update their integration <strong>independently</strong> of core Kubernetes.</li></ul>
 <blockquote class="callout callout-update reveal"><p><strong>2026 Update:</strong> Modern clusters use the <strong>out-of-tree</strong> cloud-controller-manager (the provider's code lives in its own repo and is deployed separately), and storage runs through <strong>CSI drivers</strong> rather than the old built-in ("in-tree") cloud/volume plugins, which have been removed. If a guide shows in-tree volume plugins like <code>awsElasticBlockStore</code> baked into the core, that's outdated — use the provider's CSI driver instead (see the Storage section).</p></blockquote>
 <blockquote class="callout callout-key reveal"><p><strong>Key idea:</strong> The API server is the single front door; <strong>etcd is the source of truth.</strong> Every other component reads desired state from, and writes status back to, the API server — they never talk to etcd directly or to each other point-to-point.</p></blockquote>
-<h3 id="what-happens-when-you-submit-a-request-the-api-request-flow" class="reveal">What happens when you submit a request: the API request flow</h3>
-<p>Every change — <code>kubectl apply</code>, a controller creating a Pod, anything — flows through the API server in a fixed pipeline before it's persisted:</p>
-<ol><li><strong>Authentication</strong> — <em>Who are you?</em> The API server verifies your identity (client certificate, token, OIDC, etc.).</li><li><strong>Authorization</strong> — <em>Are you allowed to do this?</em> Checked via <strong>RBAC (Role-Based Access Control)</strong> — does this user/ServiceAccount have permission for this verb (get/create/delete) on this resource? (Details in the Security section.)</li><li><strong>Admission control</strong> — <em>Is the request well-formed and policy-compliant?</em> <strong>Mutating</strong> admission can modify the object (e.g. inject defaults or a sidecar), then <strong>validating</strong> admission can accept or reject it (e.g. enforce a policy).</li><li><strong>Persisted to etcd</strong> — only now is the object stored as the new desired state.</li></ol>
-<p><figure class="fig reveal"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 460">
-<defs>
-  <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
-    <path d="M0,0 L10,5 L0,10 z" fill="#9aa0b4"/>
-  </marker>
-  <marker id="arrowblue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
-    <path d="M0,0 L10,5 L0,10 z" fill="#5C78FF"/>
-  </marker>
-  <style>
-    .title{font:700 19px system-ui,Segoe UI,Roboto,Arial,sans-serif;fill:#E7E7EE;text-anchor:middle}
-    text{font-family:system-ui,Segoe UI,Roboto,Arial,sans-serif;fill:#E7E7EE}
-    .lbl{font-size:13px;text-anchor:middle}
-    .lbl-s{font-size:11px;text-anchor:middle;fill:#E7E7EE}
-    .lbl-l{font-size:15px;font-weight:600;text-anchor:middle}
-    .grp{fill:#191921;stroke:#3C4356;stroke-width:1.5;rx:12}
-    .cp{fill:#191921;stroke:#5C78FF;stroke-width:1.5;rx:10}
-    .node{fill:#191921;stroke:#5AC8FF;stroke-width:1.5;rx:10}
-    .pod{fill:#191921;stroke:#28B9FF;stroke-width:1.5;rx:9}
-    .store{fill:#191921;stroke:#FFB454;stroke-width:1.5;rx:9}
-    .sec{fill:#191921;stroke:#FF6B9D;stroke-width:1.5;rx:9}
-    .net{fill:#191921;stroke:#5AC8FF;stroke-width:1.5;rx:9}
-    .ext{fill:#191921;stroke:#9aa0b4;stroke-width:1.5;rx:9}
-    .obj{fill:#191921;stroke:#A56BFF;stroke-width:1.5;rx:9}
-    .edge{fill:none;stroke:#9aa0b4;stroke-width:2;marker-end:url(#arrow)}
-    .edge-b{fill:none;stroke:#5C78FF;stroke-width:2;marker-end:url(#arrowblue)}
-    .dash{stroke-dasharray:5 4}
-  </style>
-</defs>
-
-<text class="title" x="450" y="28">API Server Request Flow</text>
-
-<!-- client -->
-<rect class="ext" x="24" y="170" width="120" height="64" rx="10"/>
-<text class="lbl" x="84" y="198">kubectl /</text>
-<text class="lbl" x="84" y="216">client</text>
-
-<!-- Authentication -->
-<rect class="sec" x="184" y="160" width="148" height="84" rx="9"/>
-<text class="lbl" x="258" y="186">Authentication</text>
-<text class="lbl-s" x="258" y="206">who are you?</text>
-<text class="lbl-s" x="258" y="224">certs / tokens / OIDC</text>
-<text class="lbl" x="258" y="286" fill="#FF6B9D">401 if no identity</text>
-
-<!-- Authorization -->
-<rect class="sec" x="372" y="160" width="148" height="84" rx="9"/>
-<text class="lbl" x="446" y="186">Authorization</text>
-<text class="lbl-s" x="446" y="206">RBAC: allowed?</text>
-<text class="lbl-s" x="446" y="224">verb on resource</text>
-<text class="lbl" x="446" y="286" fill="#FF6B9D">403 if not permitted</text>
-
-<!-- Admission -->
-<rect class="cp" x="560" y="150" width="170" height="104" rx="10"/>
-<text class="lbl" x="645" y="174">Admission</text>
-<text class="lbl-s" x="645" y="196">1. Mutating webhooks</text>
-<text class="lbl-s" x="645" y="214">(inject / default)</text>
-<text class="lbl-s" x="645" y="232">2. Validating webhooks</text>
-<text class="lbl-s" x="645" y="248">/ policies</text>
-
-<!-- etcd -->
-<rect class="store" x="766" y="170" width="110" height="64" rx="9"/>
-<text class="lbl" x="821" y="196">etcd</text>
-<text class="lbl-s" x="821" y="216">persist</text>
-
-<!-- arrows -->
-<path class="edge-b" d="M144 202 L180 202"/>
-<path class="edge-b" d="M332 202 L368 202"/>
-<path class="edge-b" d="M520 202 L556 202"/>
-<path class="edge-b" d="M730 202 L762 202"/>
-
-<!-- pipeline caption -->
-<text class="lbl-s" x="450" y="350">Each request passes the gates in order; only after admission is the object written to etcd.</text>
-</svg><figcaption>kubectl/API request flows through authentication, authorization (RBAC), admission (mutating then validating), then etcd</figcaption></figure></p>
-<blockquote class="callout callout-update reveal"><p><strong>2026 Update:</strong> The old <strong>PodSecurityPolicy (PSP)</strong> admission mechanism was <strong>removed in v1.25</strong>. Pod security is now enforced by <strong>Pod Security Admission (PSA)</strong> using namespace labels at three levels (privileged / baseline / restricted). For richer rules, in-process <strong>ValidatingAdmissionPolicy</strong> using CEL expressions (GA in v1.30) or tools like Kyverno/OPA Gatekeeper are used. Don't write PSP examples (see the Security section).</p></blockquote>
+<h3 id="what-happens-when-you-submit-a-request-the-api-request-flow" class="reveal">What happens when you submit a request</h3>
+<p>Every change — <code>kubectl apply</code>, a controller creating a Pod, anything — flows through the API server in a fixed pipeline before it is persisted: <strong>authentication</strong> (who are you?) → <strong>authorization</strong> (are you allowed?) → <strong>admission</strong> (mutating webhooks can inject defaults or a sidecar, then validating webhooks/policies accept or reject) → <strong>written to etcd</strong> as the new desired state. As a data engineer you rarely configure these gates — your platform team does — but knowing the order explains most "forbidden" and "admission webhook denied" errors you will hit (see <a href="#26-troubleshooting-playbook">§19</a> and <a href="#how-deep-to-go">How Deep to Go</a>).</p>
 <h3 id="the-worker-nodes" class="reveal">The worker nodes</h3>
 <p>Worker nodes are where your containers actually run. Each node runs three things:</p>
 <ul><li><strong>kubelet</strong> — the node's agent. It registers the node with the API server, watches for Pods assigned to its node, and tells the container runtime (over the CRI) to pull images and start/stop containers. It also runs the <strong>liveness/readiness/startup probes</strong> and reports Pod and node status back to the API server. The kubelet is the bridge between the control plane's decisions and the actual containers.</li><li><strong>Container runtime</strong> — containerd or CRI-O (reached via the CRI, as covered in Section 3). This is what actually creates the containers using namespaces and cgroups.</li><li><strong>kube-proxy</strong> — implements the <strong>Service</strong> abstraction on each node. It watches Services and their endpoints and programs the node's networking (iptables or IPVS rules) so a Service's stable virtual IP load-balances to the right backend Pods. It typically runs as a <strong>DaemonSet</strong> (one copy per node).</li></ul>
@@ -735,7 +661,7 @@ ENTRYPOINT ["/myapp"]</code></pre>
 <p><figure class="fig reveal"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 600">
 <defs>
   <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
-    <path d="M0,0 L10,5 L0,10 z" fill="#9aa0b4"/>
+    <path d="M0,0 L10,5 L0,10 z" fill="#5AC8FF"/>
   </marker>
   <marker id="arrowblue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
     <path d="M0,0 L10,5 L0,10 z" fill="#5C78FF"/>
@@ -755,7 +681,7 @@ ENTRYPOINT ["/myapp"]</code></pre>
     .net{fill:#191921;stroke:#5AC8FF;stroke-width:1.5;rx:9}
     .ext{fill:#191921;stroke:#9aa0b4;stroke-width:1.5;rx:9}
     .obj{fill:#191921;stroke:#A56BFF;stroke-width:1.5;rx:9}
-    .edge{fill:none;stroke:#9aa0b4;stroke-width:2;marker-end:url(#arrow)}
+    .edge{fill:none;stroke:#5AC8FF;stroke-width:2;marker-end:url(#arrow)}
     .edge-b{fill:none;stroke:#5C78FF;stroke-width:2;marker-end:url(#arrowblue)}
     .dash{stroke-dasharray:5 4}
   </style>
@@ -794,7 +720,7 @@ ENTRYPOINT ["/myapp"]</code></pre>
 <text class="lbl-s" x="110" y="410">(live cluster)</text>
 
 <!-- node 6 visual: feed back observe (left top) -->
-<rect class="ext" x="20" y="170" width="180" height="64" rx="9"/>
+<rect class="obj" x="20" y="170" width="180" height="64" rx="9"/>
 <text class="lbl" x="110" y="196">Watch / re-read</text>
 <text class="lbl-s" x="110" y="214">events &amp; status</text>
 
@@ -1948,7 +1874,7 @@ spec:
 <p><figure class="fig reveal"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 470">
 <defs>
   <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
-    <path d="M0,0 L10,5 L0,10 z" fill="#9aa0b4"/>
+    <path d="M0,0 L10,5 L0,10 z" fill="#5AC8FF"/>
   </marker>
   <marker id="arrowblue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
     <path d="M0,0 L10,5 L0,10 z" fill="#5C78FF"/>
@@ -1968,7 +1894,7 @@ spec:
     .net{fill:#191921;stroke:#5AC8FF;stroke-width:1.5;rx:9}
     .ext{fill:#191921;stroke:#9aa0b4;stroke-width:1.5;rx:9}
     .obj{fill:#191921;stroke:#A56BFF;stroke-width:1.5;rx:9}
-    .edge{fill:none;stroke:#9aa0b4;stroke-width:2;marker-end:url(#arrow)}
+    .edge{fill:none;stroke:#5AC8FF;stroke-width:2;marker-end:url(#arrow)}
     .edge-b{fill:none;stroke:#5C78FF;stroke-width:2;marker-end:url(#arrowblue)}
     .dash{stroke-dasharray:5 4}
   </style>
@@ -2009,7 +1935,7 @@ spec:
 <path class="edge" d="M155 144 L155 218"/>
 <text class="lbl-s" x="164" y="186" style="text-anchor:start">dynamic</text>
 <!-- CSI -> PV creates -->
-<path class="edge" d="M250 250 Q330 250 360 175"/>
+<path class="edge" d="M250 250 Q330 250 356 184"/>
 <text class="lbl-s" x="312" y="208">creates</text>
 <!-- PV <-> PVC bound -->
 <path class="edge" d="M450 112 L608 112"/>
@@ -2019,7 +1945,7 @@ spec:
 <text class="lbl-s" x="745" y="194">mounted</text>
 
 <!-- access modes -->
-<rect class="ext" x="340" y="240" width="200" height="64" rx="9"/>
+<rect class="store" x="340" y="240" width="200" height="64" rx="9"/>
 <text class="lbl" x="440" y="266">Access Modes</text>
 <text class="lbl-s" x="440" y="288">RWO · RWX · ROX</text>
 
@@ -3943,7 +3869,7 @@ Reach a service locally (through the bastion)
 <p><figure class="fig reveal"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 720">
   <defs>
     <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
-      <path d="M0,0 L10,5 L0,10 z" fill="#9aa0b4"/>
+      <path d="M0,0 L10,5 L0,10 z" fill="#5AC8FF"/>
     </marker>
     <marker id="arrowblue" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
       <path d="M0,0 L10,5 L0,10 z" fill="#5C78FF"/>
@@ -3963,7 +3889,7 @@ Reach a service locally (through the bastion)
       .net{fill:#191921;stroke:#5AC8FF;stroke-width:1.5;rx:9}
       .ext{fill:#191921;stroke:#9aa0b4;stroke-width:1.5;rx:9}
       .obj{fill:#191921;stroke:#A56BFF;stroke-width:1.5;rx:9}
-      .edge{fill:none;stroke:#9aa0b4;stroke-width:2;marker-end:url(#arrow)}
+      .edge{fill:none;stroke:#5AC8FF;stroke-width:2;marker-end:url(#arrow)}
       .edge-b{fill:none;stroke:#5C78FF;stroke-width:2;marker-end:url(#arrowblue)}
       .dash{stroke-dasharray:5 4}
       .dia{fill:#191921;stroke:#A56BFF;stroke-width:1.5}
@@ -3985,7 +3911,7 @@ Reach a service locally (through the bastion)
 
   <!-- connectors from start down to a bus line -->
   <path class="edge" d="M450 144 L450 184"/>
-  <path d="M120 184 L780 184" fill="none" stroke="#9aa0b4" stroke-width="2"/>
+  <path d="M120 184 L780 184" fill="none" stroke="#5AC8FF" stroke-width="2"/>
   <path class="edge" d="M120 184 L120 214"/>
   <path class="edge" d="M340 184 L340 214"/>
   <path class="edge" d="M560 184 L560 214"/>
@@ -4038,9 +3964,9 @@ Reach a service locally (through the bastion)
 
   <!-- converge to Service decision -->
   <path class="edge" d="M120 368 L120 410 L450 410 L450 432"/>
-  <path d="M340 368 L340 410" fill="none" stroke="#9aa0b4" stroke-width="2"/>
-  <path d="M560 368 L560 410" fill="none" stroke="#9aa0b4" stroke-width="2"/>
-  <path d="M780 368 L780 410" fill="none" stroke="#9aa0b4" stroke-width="2"/>
+  <path d="M340 368 L340 410" fill="none" stroke="#5AC8FF" stroke-width="2"/>
+  <path d="M560 368 L560 410" fill="none" stroke="#5AC8FF" stroke-width="2"/>
+  <path d="M780 368 L780 410" fill="none" stroke="#5AC8FF" stroke-width="2"/>
 
   <!-- Service decision diamond -->
   <polygon class="dia" points="450,432 580,484 450,536 320,484"/>
@@ -4073,16 +3999,16 @@ Reach a service locally (through the bastion)
 <pre class="code reveal"><code>START
   │
   ↓
-Are the Pods Running AND Ready (e.g. 1/1)? ──No──→ Diagnose the POD → 26.2
+Are the Pods Running AND Ready (e.g. 1/1)? ──No──→ Diagnose the POD → 19.2
   │ Yes                                             (Pending, ImagePullBackOff,
   ↓                                                  CrashLoopBackOff, OOMKilled,
-Is the NODE Ready (not NotReady/pressure)? ──No──→ Diagnose the NODE → 26.3
+Is the NODE Ready (not NotReady/pressure)? ──No──→ Diagnose the NODE → 19.3
   │ Yes                                             (NotReady, Mem/Disk/PID
   ↓                                                  pressure, Terminating/Unknown)
-Does the Service have endpoints? ──────────No──→   Diagnose the SERVICE → 26.4
+Does the Service have endpoints? ──────────No──→   Diagnose the SERVICE → 19.4
   │ Yes                                             (selector/targetPort/readiness)
   ↓
-Does the Ingress/Gateway route correctly? ─No──→   Diagnose the INGRESS → 26.5
+Does the Ingress/Gateway route correctly? ─No──→   Diagnose the INGRESS → 19.5
   │ Yes                                             (404 / 502 / 503 / 504)
   ↓
 END — it works (look upstream: DNS, client, firewall)</code></pre>
@@ -4233,7 +4159,7 @@ kubectl describe node &lt;node&gt;           # confirm NotReady / unreachable</c
 # Faster to type (still works): the short Endpoints form
 kubectl get endpoints my-svc           # Endpoints is deprecated, not yet removed</code></pre>
 <p>Checklist:</p>
-<ol><li><strong>Selector mismatch</strong> — the Service <code>spec.selector</code> labels must match the <strong>pod template labels</strong> exactly. This is the #1 cause of empty endpoints.</li><li><strong>targetPort mismatch</strong> — the Service <code>targetPort</code> must equal the container's <code>containerPort</code> (by number or name). The Service <code>port</code> (front door) can be anything.</li><li><strong>No ready pods</strong> — readiness failing means pods are excluded from endpoints (see 26.2).</li></ol>
+<ol><li><strong>Selector mismatch</strong> — the Service <code>spec.selector</code> labels must match the <strong>pod template labels</strong> exactly. This is the #1 cause of empty endpoints.</li><li><strong>targetPort mismatch</strong> — the Service <code>targetPort</code> must equal the container's <code>containerPort</code> (by number or name). The Service <code>port</code> (front door) can be anything.</li><li><strong>No ready pods</strong> — readiness failing means pods are excluded from endpoints (see 19.2).</li></ol>
 <pre class="code reveal"><code>kubectl describe svc my-svc                       # confirm selector + ports
 kubectl get pods -l app=myapp --show-labels       # do labels match the selector?
 # Quick reachability test from inside the cluster:
@@ -4241,7 +4167,7 @@ kubectl run tmp --rm -it --image=busybox -- wget -qO- my-svc:80</code></pre>
 <blockquote class="callout callout-key reveal"><p><strong>Key idea — the alignment rules.</strong> Service selector → matches pod labels; Service targetPort → matches container port; Service port → arbitrary; Ingress <code>service.name</code>/<code>service.port</code> → match the Service's name/port. When connectivity breaks, these four lines are almost always where the typo is.</p></blockquote>
 <h3 id="265-ingress-problems-404-502-and-504" class="reveal">19.5 Ingress problems — 404, 502 and 504</h3>
 <p>Pods Ready, Service has endpoints, but the external URL fails. Now check the Ingress/Gateway layer.</p>
-<div class="tablewrap reveal"><table><thead><tr><th>Symptom</th><th>Likely cause</th><th>How to check</th></tr></thead><tbody><tr><td><strong>404 Not Found</strong></td><td>Ingress rule doesn't match the host/path; or wrong <code>ingressClassName</code>; or backend <code>service.name</code>/<code>port</code> typo.</td><td><code>kubectl describe ingress my-ing</code> — verify rules, class, and backend name/port match the Service.</td></tr><tr><td><strong>502 Bad Gateway</strong></td><td>The controller reached a target but got an invalid/broken response — pod crashed mid-request, or the Service has <strong>no healthy endpoints</strong> (back to 26.4). On AWS ALB see the ALB-specific row below.</td><td>Re-check endpoints + readiness; check the ingress controller's logs.</td></tr><tr><td><strong>503 Service Unavailable</strong></td><td>The load balancer has <strong>zero healthy targets</strong> (all pods unready/scaled to 0) or is throttling.</td><td>Confirm at least one Ready pod and that the Service has endpoints (26.4).</td></tr><tr><td><strong>504 Gateway Timeout</strong></td><td>Backend too slow, or the LB <strong>idle timeout</strong> is shorter than the request.</td><td>Check pod latency; raise the controller/ALB idle-timeout annotation.</td></tr><tr><td><strong>502 (ALB specific)</strong></td><td>ALB <strong>target group is unhealthy</strong> — usually a wrong health-check path annotation, target port the pod doesn't listen on, or the <strong>node/pod security group doesn't allow ALB → pod port</strong>. Also <code>target-type: ip</code> vs <code>instance</code> mismatch (IP mode needs SG to allow the ALB SG to the pod port directly).</td><td>In the EC2 console check the target group <strong>Targets → health</strong>; verify <code>alb.ingress.kubernetes.io/healthcheck-path</code> matches a real 200 route; check SG rules ALB→nodes/pods.</td></tr><tr><td><strong>504 Gateway Timeout (ALB)</strong></td><td>Backend too slow / hung, or the request exceeded the ALB <strong>idle timeout</strong> (default 60s).</td><td>Speed up / fix the backend; raise idle timeout via <code>alb.ingress.kubernetes.io/load-balancer-attributes: idle_timeout.timeout_seconds=120</code>; check pod isn't blocked on a dependency.</td></tr><tr><td><strong><code>EXTERNAL-IP &lt;pending&gt;</code> forever</strong></td><td>Missing <strong>subnet tags</strong> / no load balancer controller.</td><td>On EKS: confirm <code>kubernetes.io/role/elb</code> tags + AWS LB Controller installed (see EKS section).</td></tr></tbody></table></div>
+<div class="tablewrap reveal"><table><thead><tr><th>Symptom</th><th>Likely cause</th><th>How to check</th></tr></thead><tbody><tr><td><strong>404 Not Found</strong></td><td>Ingress rule doesn't match the host/path; or wrong <code>ingressClassName</code>; or backend <code>service.name</code>/<code>port</code> typo.</td><td><code>kubectl describe ingress my-ing</code> — verify rules, class, and backend name/port match the Service.</td></tr><tr><td><strong>502 Bad Gateway</strong></td><td>The controller reached a target but got an invalid/broken response — pod crashed mid-request, or the Service has <strong>no healthy endpoints</strong> (back to 19.4). On AWS ALB see the ALB-specific row below.</td><td>Re-check endpoints + readiness; check the ingress controller's logs.</td></tr><tr><td><strong>503 Service Unavailable</strong></td><td>The load balancer has <strong>zero healthy targets</strong> (all pods unready/scaled to 0) or is throttling.</td><td>Confirm at least one Ready pod and that the Service has endpoints (19.4).</td></tr><tr><td><strong>504 Gateway Timeout</strong></td><td>Backend too slow, or the LB <strong>idle timeout</strong> is shorter than the request.</td><td>Check pod latency; raise the controller/ALB idle-timeout annotation.</td></tr><tr><td><strong>502 (ALB specific)</strong></td><td>ALB <strong>target group is unhealthy</strong> — usually a wrong health-check path annotation, target port the pod doesn't listen on, or the <strong>node/pod security group doesn't allow ALB → pod port</strong>. Also <code>target-type: ip</code> vs <code>instance</code> mismatch (IP mode needs SG to allow the ALB SG to the pod port directly).</td><td>In the EC2 console check the target group <strong>Targets → health</strong>; verify <code>alb.ingress.kubernetes.io/healthcheck-path</code> matches a real 200 route; check SG rules ALB→nodes/pods.</td></tr><tr><td><strong>504 Gateway Timeout (ALB)</strong></td><td>Backend too slow / hung, or the request exceeded the ALB <strong>idle timeout</strong> (default 60s).</td><td>Speed up / fix the backend; raise idle timeout via <code>alb.ingress.kubernetes.io/load-balancer-attributes: idle_timeout.timeout_seconds=120</code>; check pod isn't blocked on a dependency.</td></tr><tr><td><strong><code>EXTERNAL-IP &lt;pending&gt;</code> forever</strong></td><td>Missing <strong>subnet tags</strong> / no load balancer controller.</td><td>On EKS: confirm <code>kubernetes.io/role/elb</code> tags + AWS LB Controller installed (see EKS section).</td></tr></tbody></table></div>
 <pre class="code reveal"><code>kubectl describe ingress my-ing
 kubectl logs -n &lt;controller-ns&gt; deploy/&lt;ingress-controller&gt;   # e.g. aws-load-balancer-controller</code></pre>
 <blockquote class="callout callout-update reveal"><p><strong>2026 Update:</strong> Many older guides assume community ingress-nginx; it's EOL as of 2026-03-24. On EKS use the AWS Load Balancer Controller (ALB), and prefer the <strong>Gateway API</strong> (<code>Gateway</code> + <code>HTTPRoute</code>) over Ingress for new work — the same bottom-up debugging applies (Route → Gateway → Service → endpoints).</p></blockquote>
