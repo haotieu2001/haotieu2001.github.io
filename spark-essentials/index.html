@@ -267,7 +267,7 @@ h1{color:#5AC8FF !important;background:none !important;-webkit-text-fill-color:#
 <header class="hero">
   <div class="kicker">Apache Spark &middot; Zero-to-Interview Guide</div>
   <h1>Apache Spark — The Complete Guide</h1>
-  <p class="dek">Every core Apache Spark concept in plain language: why Spark left Hadoop MapReduce behind, the driver/executor/cluster-manager architecture layer by layer, lazy transformations vs actions, narrow vs wide shuffles, how Catalyst turns your PySpark or SQL into a running job, the DataFrame API, the unified executor memory model, and how to tune a real cluster.</p>
+  <p class="dek">Every core Apache Spark concept in plain language: why Spark left Hadoop MapReduce behind, the driver/executor/cluster-manager architecture layer by layer, lazy transformations vs actions, narrow vs wide shuffles, how Catalyst turns your PySpark or SQL into a running job, the DataFrame API, window functions, UDFs vs built-ins, the unified executor memory model, how to tune a real cluster, and a PySpark quick-reference to code from.</p>
   <div class="logos">
     <figure><svg viewBox="0 0 100 100" role="img" aria-label="Spark engine icon"><circle cx="50" cy="50" r="44" fill="#191921" stroke="#a56bff" stroke-width="2"/><use href="#ic-spark" x="28" y="28" width="44" height="44" style="color:#a56bff"/></svg><figcaption>Spark Core</figcaption></figure>
     <figure><svg viewBox="0 0 100 100" role="img" aria-label="DAG icon"><circle cx="50" cy="50" r="44" fill="#191921" stroke="#5ac8ff" stroke-width="2"/><use href="#ic-dag" x="28" y="28" width="44" height="44" style="color:#5ac8ff"/></svg><figcaption>DAG Engine</figcaption></figure>
@@ -275,7 +275,7 @@ h1{color:#5AC8FF !important;background:none !important;-webkit-text-fill-color:#
     <figure><svg viewBox="0 0 100 100" role="img" aria-label="Catalyst icon"><circle cx="50" cy="50" r="44" fill="#191921" stroke="#ff6b9d" stroke-width="2"/><use href="#ic-code" x="28" y="28" width="44" height="44" style="color:#ff6b9d"/></svg><figcaption>Catalyst</figcaption></figure>
     <figure><svg viewBox="0 0 100 100" role="img" aria-label="Tuning icon"><circle cx="50" cy="50" r="44" fill="#191921" stroke="#5ac8ff" stroke-width="2"/><use href="#ic-gauge" x="28" y="28" width="44" height="44" style="color:#5ac8ff"/></svg><figcaption>Tuning</figcaption></figure>
   </div>
-  <div class="byline">~159 min read &middot; reference guide &middot; Python / PySpark focus &middot; current to Spark 4.0</div>
+  <div class="byline">~170 min read &middot; reference guide &middot; Python / PySpark focus &middot; current to Spark 4.0</div>
 </header>
 
 <div class="wrap">
@@ -287,34 +287,37 @@ h1{color:#5AC8FF !important;background:none !important;-webkit-text-fill-color:#
   <a href="#sec02"><svg class="ico"><use href="#i-blocks"/></svg>02 &middot; Architecture: Driver, Executors &amp; Deployment Modes</a>
   <a href="#sec03"><svg class="ico"><use href="#i-repeat"/></svg>03 &middot; Transformations, Actions, Stages &amp; the Shuffle</a>
   <a href="#sec04"><svg class="ico"><use href="#i-code"/></svg>04 &middot; The DataFrame API, Spark SQL &amp; What's New in 4.0</a>
+  <a href="#sec05"><svg class="ico"><use href="#i-workflow"/></svg>05 &middot; Window Functions</a>
+  <a href="#sec06"><svg class="ico"><use href="#i-code"/></svg>06 &middot; UDFs &amp; pandas UDFs</a>
   <strong class="toc-grp">Part II &middot; How Spark Runs Your Code</strong>
-  <a href="#sec05"><svg class="ico"><use href="#i-search"/></svg>05 &middot; The Catalyst Pipeline: From Code to Stages</a>
-  <a href="#sec06"><svg class="ico"><use href="#i-search"/></svg>06 &middot; Reading Query Plans: How to Read an explain() Tree</a>
-  <a href="#sec07"><svg class="ico"><use href="#i-eye"/></svg>07 &middot; Reading the DAG, the Spark UI &amp; the History Server</a>
-  <a href="#sec08"><svg class="ico"><use href="#i-workflow"/></svg>08 &middot; Plan &amp; DAG Shapes: Narrow, Wide, Joins &amp; Aggregations</a>
-  <a href="#sec09"><svg class="ico"><use href="#i-workflow"/></svg>09 &middot; A Full Query End to End: Plan &amp; DAG</a>
-  <a href="#sec10"><svg class="ico"><use href="#i-bulb"/></svg>10 &middot; Adaptive Query Execution (AQE)</a>
+  <a href="#sec07"><svg class="ico"><use href="#i-search"/></svg>07 &middot; The Catalyst Pipeline: From Code to Stages</a>
+  <a href="#sec08"><svg class="ico"><use href="#i-search"/></svg>08 &middot; Reading Query Plans: How to Read an explain() Tree</a>
+  <a href="#sec09"><svg class="ico"><use href="#i-eye"/></svg>09 &middot; Reading the DAG, the Spark UI &amp; the History Server</a>
+  <a href="#sec10"><svg class="ico"><use href="#i-workflow"/></svg>10 &middot; Plan &amp; DAG Shapes: Narrow, Wide, Joins &amp; Aggregations</a>
+  <a href="#sec11"><svg class="ico"><use href="#i-workflow"/></svg>11 &middot; A Full Query End to End: Plan &amp; DAG</a>
+  <a href="#sec12"><svg class="ico"><use href="#i-bulb"/></svg>12 &middot; Adaptive Query Execution (AQE)</a>
   <strong class="toc-grp">Part III &middot; Partitioning, Shuffle &amp; Data Layout</strong>
-  <a href="#sec11"><svg class="ico"><use href="#i-layers"/></svg>11 &middot; Partitions: Input, Shuffle &amp; Reshaping</a>
-  <a href="#sec12"><svg class="ico"><use href="#i-layers"/></svg>12 &middot; Disk Partitioning &amp; Partition Pruning</a>
-  <a href="#sec13"><svg class="ico"><use href="#i-package"/></svg>13 &middot; Bucketing: Joins, Aggregations &amp; Bucket Pruning</a>
-  <a href="#sec14"><svg class="ico"><use href="#i-layers"/></svg>14 &middot; Dynamic Partition Pruning</a>
+  <a href="#sec13"><svg class="ico"><use href="#i-layers"/></svg>13 &middot; Partitions: Input, Shuffle &amp; Reshaping</a>
+  <a href="#sec14"><svg class="ico"><use href="#i-layers"/></svg>14 &middot; Disk Partitioning &amp; Partition Pruning</a>
+  <a href="#sec15"><svg class="ico"><use href="#i-package"/></svg>15 &middot; Bucketing: Joins, Aggregations &amp; Bucket Pruning</a>
+  <a href="#sec16"><svg class="ico"><use href="#i-layers"/></svg>16 &middot; Dynamic Partition Pruning</a>
   <strong class="toc-grp">Part IV &middot; Joins in Depth</strong>
-  <a href="#sec15"><svg class="ico"><use href="#i-repeat"/></svg>15 &middot; Join Types, Strategies &amp; Reading Them in the Plan</a>
-  <a href="#sec16"><svg class="ico"><use href="#i-bulb"/></svg>16 &middot; Choosing a Strategy: Hints, AQE &amp; Pitfalls</a>
+  <a href="#sec17"><svg class="ico"><use href="#i-repeat"/></svg>17 &middot; Join Types, Strategies &amp; Reading Them in the Plan</a>
+  <a href="#sec18"><svg class="ico"><use href="#i-bulb"/></svg>18 &middot; Choosing a Strategy: Hints, AQE &amp; Pitfalls</a>
   <strong class="toc-grp">Part V &middot; Data Skew &amp; How to Fix It</strong>
-  <a href="#sec17"><svg class="ico"><use href="#i-question"/></svg>17 &middot; Data Skew: What It Is &amp; How to Detect It</a>
-  <a href="#sec18"><svg class="ico"><use href="#i-bulb"/></svg>18 &middot; Fixing Skew with AQE &amp; Broadcast Joins</a>
-  <a href="#sec19"><svg class="ico"><use href="#i-plug"/></svg>19 &middot; Fixing Skew with Salting &mdash; and Which Fix, When</a>
+  <a href="#sec19"><svg class="ico"><use href="#i-question"/></svg>19 &middot; Data Skew: What It Is &amp; How to Detect It</a>
+  <a href="#sec20"><svg class="ico"><use href="#i-bulb"/></svg>20 &middot; Fixing Skew with AQE &amp; Broadcast Joins</a>
+  <a href="#sec21"><svg class="ico"><use href="#i-plug"/></svg>21 &middot; Fixing Skew with Salting &mdash; and Which Fix, When</a>
   <strong class="toc-grp">Part VI &middot; Memory &amp; Executor Tuning</strong>
-  <a href="#sec20"><svg class="ico"><use href="#i-disk"/></svg>20 &middot; Executor Memory: Layout, Calculations &amp; Spill</a>
-  <a href="#sec21"><svg class="ico"><use href="#i-zap"/></svg>21 &middot; Executor &amp; Core Sizing: Fat vs Thin &amp; Sizing a Cluster</a>
+  <a href="#sec22"><svg class="ico"><use href="#i-disk"/></svg>22 &middot; Executor Memory: Layout, Calculations &amp; Spill</a>
+  <a href="#sec23"><svg class="ico"><use href="#i-zap"/></svg>23 &middot; Executor &amp; Core Sizing: Fat vs Thin &amp; Sizing a Cluster</a>
   <strong class="toc-grp">Part VII &middot; Caching &amp; Storage</strong>
-  <a href="#sec22"><svg class="ico"><use href="#i-database"/></svg>22 &middot; Caching: Why, How, Storage Levels &amp; When Not To</a>
-  <a href="#sec23"><svg class="ico"><use href="#i-list"/></svg>23 &middot; Inside Parquet &amp; Delta Lake</a>
+  <a href="#sec24"><svg class="ico"><use href="#i-database"/></svg>24 &middot; Caching: Why, How, Storage Levels &amp; When Not To</a>
+  <a href="#sec25"><svg class="ico"><use href="#i-list"/></svg>25 &middot; Inside Parquet &amp; Delta Lake</a>
   <strong class="toc-grp">Part VIII &middot; Tuning End to End &amp; Reference</strong>
-  <a href="#sec24"><svg class="ico"><use href="#i-compass"/></svg>24 &middot; The Tuning Playbook &amp; a Worked Example</a>
-  <a href="#sec25"><svg class="ico"><use href="#i-book"/></svg>25 &middot; Glossary</a>
+  <a href="#sec26"><svg class="ico"><use href="#i-compass"/></svg>26 &middot; The Tuning Playbook &amp; a Worked Example</a>
+  <a href="#sec27"><svg class="ico"><use href="#i-list"/></svg>27 &middot; Common PySpark Code &mdash; Quick Reference</a>
+  <a href="#sec28"><svg class="ico"><use href="#i-book"/></svg>28 &middot; Glossary</a>
 </div>
 
 <div class="partbar">Part I &middot; Spark Foundations</div>
@@ -881,6 +884,19 @@ result.write.parquet(<span class="s">"s3://lake/out/"</span>)          <span cla
   </div>
 </div>
 
+<h3>RDDs: the layer beneath, and why you skip it</h3>
+<p>Everything above is expressed as a <strong>DataFrame</strong>, but underneath, Spark still schedules work as an <strong>RDD</strong> (Resilient Distributed Dataset): an immutable, partitioned collection of objects with a lineage of the transformations that built it. RDDs came first; DataFrame and its typed sibling Dataset are higher-level APIs layered on top.</p>
+<div class="table-wrap"><table>
+<thead><tr><th></th><th>RDD</th><th>DataFrame / Dataset</th></tr></thead>
+<tbody>
+<tr><td>Schema</td><td>None &mdash; opaque Python/JVM objects</td><td>Named, typed columns</td></tr>
+<tr><td>Optimizer</td><td>None &mdash; runs exactly what you wrote</td><td>Catalyst rewrites the plan (&sect;07); Tungsten manages memory in binary form</td></tr>
+<tr><td>Serialisation</td><td>Whole objects (pickle / Java)</td><td>Compact columnar / Arrow</td></tr>
+<tr><td>Pushdown, pruning</td><td>No</td><td>Yes</td></tr>
+<tr><td>You write</td><td><code>rdd.map</code>, <code>reduceByKey</code>, <code>filter</code>; actions <code>collect</code>, <code>count</code>, <code>reduce</code></td><td><code>select</code>, <code>groupBy</code>, <code>join</code>, SQL</td></tr>
+</tbody></table></div>
+<p>The lineage / narrow-vs-wide / stage model in this section is really the <em>RDD</em> model &mdash; a DataFrame just gets compiled down to it. <strong>Prefer DataFrame/Spark SQL for essentially all data-engineering work:</strong> it is less code and Catalyst makes it faster. Drop to <code>df.rdd</code> only for genuinely non-tabular logic, a custom partitioner, or an old library that speaks RDDs &mdash; and know that doing so blinds the optimizer to whatever you do there.</p>
+
 </section>
 
 <section class="reveal">
@@ -1009,9 +1025,137 @@ spark.sql(<span class="s">"SELECT * FROM parquet.`s3://lake/orders/`"</span>)</c
 </div>
 </section>
 
+<section class="reveal">
+<h2 id="sec05" class="reveal"><span class="hico"><svg class="ico"><use href="#i-workflow"/></svg></span><span class="n">05.</span> Window Functions</h2>
+<p class="lede">A <strong>window function</strong> computes a value for each row from a <em>group of related rows</em> &mdash; the row's "window" &mdash; without collapsing the group the way <code>groupBy</code> does. Every row survives; each just gains a column derived from its neighbours. This is how you write running totals, "rank within category", "compared to the previous row", and "keep only the latest record per key" &mdash; and it is one of the most common things an interviewer will ask you to code.</p>
+
+<h3>The shape: partitionBy &rarr; orderBy &rarr; over</h3>
+<p>You define a window with <code>Window.partitionBy(...)</code> (which rows belong together), optionally <code>.orderBy(...)</code> (their order inside the window), and optionally a <em>frame</em> (which slice of the ordered window this row sees). Then you apply a function <code>.over(w)</code>.</p>
+<pre><code><span class="k">from</span> pyspark.sql <span class="k">import</span> functions <span class="k">as</span> F, Window
+
+w = Window.partitionBy(<span class="s">"country"</span>).orderBy(F.col(<span class="s">"order_ts"</span>))
+
+df = (df
+  .withColumn(<span class="s">"row_num"</span>,   F.row_number().over(w))              <span class="c"># 1,2,3,... no ties</span>
+  .withColumn(<span class="s">"rnk"</span>,       F.rank().over(w))                    <span class="c"># 1,2,2,4  (gaps after ties)</span>
+  .withColumn(<span class="s">"dense_rnk"</span>, F.dense_rank().over(w))              <span class="c"># 1,2,2,3  (no gaps)</span>
+  .withColumn(<span class="s">"prev_amt"</span>,  F.lag(<span class="s">"amount"</span>, <span class="n">1</span>).over(w))          <span class="c"># previous row's amount (null for row 1)</span>
+  .withColumn(<span class="s">"next_amt"</span>,  F.lead(<span class="s">"amount"</span>, <span class="n">1</span>).over(w))         <span class="c"># next row's amount</span>
+  .withColumn(<span class="s">"run_total"</span>, F.sum(<span class="s">"amount"</span>).over(w)))            <span class="c"># running sum within country</span></code></pre>
+
+<div class="table-wrap"><table>
+<thead><tr><th>Function</th><th>Needs orderBy?</th><th>What it gives you</th></tr></thead>
+<tbody>
+<tr><td><code>row_number()</code></td><td>yes</td><td>Strict 1..N. Ties broken arbitrarily. The go-to for "top-N per group" and dedup.</td></tr>
+<tr><td><code>rank()</code></td><td>yes</td><td>Ties share a rank; the next rank <em>skips</em> (1,2,2,4).</td></tr>
+<tr><td><code>dense_rank()</code></td><td>yes</td><td>Ties share a rank; no skip (1,2,2,3).</td></tr>
+<tr><td><code>ntile(n)</code></td><td>yes</td><td>Buckets rows into <code>n</code> roughly equal groups (quartiles, deciles).</td></tr>
+<tr><td><code>lag(c, k)</code> / <code>lead(c, k)</code></td><td>yes</td><td>Value from the row <code>k</code> positions back / ahead. Day-over-day deltas, sessionisation.</td></tr>
+<tr><td><code>sum / avg / count / min / max</code> <code>.over(w)</code></td><td>optional</td><td>Aggregate over the frame. With <code>orderBy</code> and no explicit frame &rarr; a <strong>running</strong> aggregate.</td></tr>
+</tbody></table></div>
+
+<h3>Frames: rowsBetween and rangeBetween</h3>
+<p>A frame bounds which rows the aggregate actually sees. Two ways to express it:</p>
+<pre><code><span class="c"># running total: start of partition -&gt; this row  (this is the DEFAULT when you add orderBy)</span>
+w_run = Window.partitionBy(<span class="s">"acct"</span>).orderBy(<span class="s">"ts"</span>) \
+              .rowsBetween(Window.unboundedPreceding, Window.currentRow)
+
+<span class="c"># 7-row moving average: this row and the 6 before it</span>
+w_ma  = Window.partitionBy(<span class="s">"acct"</span>).orderBy(<span class="s">"ts"</span>).rowsBetween(-<span class="n">6</span>, <span class="n">0</span>)
+
+<span class="c"># whole-partition total on every row (no orderBy, or unbounded both ways)</span>
+w_all = Window.partitionBy(<span class="s">"acct"</span>) \
+              .rowsBetween(Window.unboundedPreceding, Window.unboundedFollowing)
+
+df.withColumn(<span class="s">"ma7"</span>, F.avg(<span class="s">"amount"</span>).over(w_ma))</code></pre>
+<ul>
+<li><code>rowsBetween</code> counts <em>physical rows</em> (&minus;6 = "six rows earlier").</li>
+<li><code>rangeBetween</code> counts <em>values of the orderBy column</em> ("all rows within 7 days") &mdash; the ordering column must be numeric or a timestamp cast to long.</li>
+<li>Ranking functions (<code>row_number</code>, <code>rank</code>, ...) ignore any frame you set &mdash; they always operate over the whole ordered partition.</li>
+</ul>
+
+<h3>The two patterns you will actually be asked to write</h3>
+<pre><code><span class="c"># 1. Top-N per group: highest 3 orders per customer</span>
+w = Window.partitionBy(<span class="s">"cust_id"</span>).orderBy(F.desc(<span class="s">"amount"</span>))
+top3 = (df.withColumn(<span class="s">"rn"</span>, F.row_number().over(w))
+          .filter(F.col(<span class="s">"rn"</span>) &lt;= <span class="n">3</span>)
+          .drop(<span class="s">"rn"</span>))
+
+<span class="c"># 2. Deduplicate, keeping the most recent row per key</span>
+w = Window.partitionBy(<span class="s">"user_id"</span>).orderBy(F.desc(<span class="s">"updated_at"</span>))
+latest = (df.withColumn(<span class="s">"rn"</span>, F.row_number().over(w))
+            .filter(<span class="s">"rn = 1"</span>)
+            .drop(<span class="s">"rn"</span>))</code></pre>
+
+<h3>In SQL, and in the plan</h3>
+<pre><code>SELECT *,
+       row_number() OVER (PARTITION BY cust_id ORDER BY amount DESC) AS rn
+FROM   orders</code></pre>
+<p>A window always produces an <code>Exchange hashpartitioning(<em>partitionBy&nbsp;cols</em>)</code> &rarr; <code>Sort</code> &rarr; <code>Window</code> in the physical plan (unless the data is already partitioned and sorted that way, e.g. by a preceding aggregation). That is a full shuffle: window functions cost the same as a <code>groupBy</code> or a join. Consecutive windows that share the same <code>partitionBy</code> and <code>orderBy</code> reuse the one shuffle.</p>
+
+<div class="callout warn">
+  <strong class="label">Window.partitionBy() with no partition column = OOM</strong>
+  A window with an <code>orderBy</code> but <strong>no</strong> <code>partitionBy</code> (or one grouping every row together) puts the <em>entire DataFrame into a single partition</em> on one executor to sort it. Spark even logs <code>WARN WindowExec: No Partition Defined for Window operation! Moving all data to a single partition</code>. Fine on a demo table, fatal at scale. Always partition by something, or pre-aggregate first.
+</div>
+</section>
+
+<section class="reveal">
+<h2 id="sec06" class="reveal"><span class="hico"><svg class="ico"><use href="#i-code"/></svg></span><span class="n">06.</span> UDFs &amp; pandas UDFs</h2>
+<p class="lede">A <strong>UDF</strong> (user-defined function) lets you run arbitrary Python inside a query. It is also the single easiest way to make a fast Spark job slow, because a plain Python UDF is a <em>black box</em> to Catalyst and runs <em>one row at a time</em> in a separate Python process. The rule interviewers want to hear: <strong>reach for a built-in first, a pandas UDF second, a plain Python UDF last.</strong></p>
+
+<h3>Why a plain Python UDF is expensive</h3>
+<p>For every row, Spark serialises the input columns, ships them from the JVM to a Python worker process, deserialises, runs your function, then serialises the result back. On top of that per-row round trip, Catalyst <em>cannot see inside the function</em>: a filter or projection that would normally be pushed into the Parquet scan is blocked once a UDF touches those columns. You lose predicate pushdown, column pruning, and whole-stage codegen for that part of the plan.</p>
+<pre><code><span class="k">from</span> pyspark.sql <span class="k">import</span> functions <span class="k">as</span> F
+<span class="k">from</span> pyspark.sql.types <span class="k">import</span> StringType
+
+<span class="c"># SLOW: row-at-a-time Python, opaque to Catalyst</span>
+<span class="k">@F.udf</span>(StringType())
+<span class="k">def</span> <span class="n">domain</span>(email):
+    <span class="k">return</span> email.split(<span class="s">"@"</span>)[<span class="n">1</span>].lower() <span class="k">if</span> email <span class="k">and</span> <span class="s">"@"</span> <span class="k">in</span> email <span class="k">else</span> <span class="k">None</span>
+
+df.withColumn(<span class="s">"domain"</span>, domain(<span class="s">"email"</span>))
+
+<span class="c"># FAST: the same logic in built-ins &mdash; stays in the JVM, fully optimisable</span>
+df.withColumn(<span class="s">"domain"</span>, F.lower(F.split(F.col(<span class="s">"email"</span>), <span class="s">"@"</span>).getItem(<span class="n">1</span>)))</code></pre>
+<p>Before writing any UDF, check <code>pyspark.sql.functions</code> (300+ functions), <code>F.expr("...")</code> for SQL you already know, and the array higher-order functions <code>F.transform</code>, <code>F.filter</code>, <code>F.aggregate</code>, <code>F.exists</code> for per-element logic on <code>ArrayType</code> columns.</p>
+
+<h3>pandas UDFs: vectorised, Arrow-backed</h3>
+<p>A <strong>pandas UDF</strong> still runs your Python, but Spark hands it data in <em>Arrow batches</em> as a <code>pandas.Series</code> instead of one row at a time. You operate on the whole batch with vectorised pandas/NumPy, and the serialisation is columnar and zero-copy. Typical speed-up over a plain UDF is <strong>10&ndash;100&times;</strong>.</p>
+<pre><code><span class="k">from</span> pyspark.sql.functions <span class="k">import</span> pandas_udf
+<span class="k">import</span> pandas <span class="k">as</span> pd
+
+<span class="c"># Series -&gt; Series: one column in, one column out</span>
+<span class="k">@pandas_udf</span>(<span class="s">"double"</span>)
+<span class="k">def</span> <span class="n">celsius_to_f</span>(c: pd.Series) -&gt; pd.Series:
+    <span class="k">return</span> c * <span class="n">9</span> / <span class="n">5</span> + <span class="n">32</span>
+
+df.withColumn(<span class="s">"temp_f"</span>, celsius_to_f(<span class="s">"temp_c"</span>))
+
+<span class="c"># Grouped map: whole group in as a DataFrame, whole DataFrame out (schema must match)</span>
+<span class="k">def</span> <span class="n">subtract_group_mean</span>(pdf: pd.DataFrame) -&gt; pd.DataFrame:
+    pdf[<span class="s">"amount"</span>] = pdf[<span class="s">"amount"</span>] - pdf[<span class="s">"amount"</span>].mean()
+    <span class="k">return</span> pdf
+
+df.groupBy(<span class="s">"country"</span>).applyInPandas(subtract_group_mean, schema=df.schema)</code></pre>
+
+<div class="callout tip">
+  <strong class="label">Spark 4.0: Arrow-optimised plain UDFs</strong>
+  Spark 4.0 can serialise the input/output of an <em>ordinary</em> <code>@F.udf</code> with Arrow instead of pickle, removing much of the per-row cost without you rewriting to <code>pandas_udf</code>. Turn it on with <code>spark.conf.set("spark.sql.execution.pythonUDF.arrow.enabled", "true")</code>. It helps serialisation; it does <strong>not</strong> make the function visible to Catalyst, so pushdown is still blocked.
+</div>
+
+<h3>When a UDF is the right call, and how to keep it honest</h3>
+<ul>
+<li><strong>Legitimate uses:</strong> a call into a Python library with no SQL equivalent (a geo lookup, a tokenizer, a model's <code>predict</code>), or genuinely row-local logic too awkward to express in <code>expr</code>.</li>
+<li><strong>Filter with built-ins first, UDF last</strong> &mdash; so the scan still prunes rows and columns before the expensive function ever runs.</li>
+<li><strong>Declare the return type</strong> exactly; a wrong type silently yields <code>null</code>s.</li>
+<li>A UDF is assumed <strong>deterministic</strong> (Spark may cache/re-order it). If it isn't &mdash; it calls <code>random()</code> or the clock &mdash; mark it <code>udf(...).asNondeterministic()</code>.</li>
+<li>Your UDF must handle <code>None</code> itself; Spark passes nulls straight through to it.</li>
+</ul>
+</section>
+
 <div class="partbar">Part II &middot; How Spark Runs Your Code</div>
 <section class="reveal">
-<h2 id="sec05" class="reveal"><span class="hico"><svg class="ico"><use href="#i-search"/></svg></span><span class="n">05.</span> The Catalyst Pipeline: From Code to Stages</h2>
+<h2 id="sec07" class="reveal"><span class="hico"><svg class="ico"><use href="#i-search"/></svg></span><span class="n">07.</span> The Catalyst Pipeline: From Code to Stages</h2>
 <p class="lede">Spark never runs your code line by line. It <em>compiles</em> it. Whether you write a DataFrame chain or a SQL string, the <strong>Catalyst optimizer</strong> turns it into a query plan, rewrites that plan into a cheaper one, picks concrete algorithms for it, and only then runs it as stages and tasks on the cluster. Every tuning skill in this guide rests on that one idea: <strong>the code you wrote is not the work Spark does</strong>. This section is the map of that translation, so the plans and DAGs in the next sections have somewhere to hang.</p>
 
   <figure class="diagram-wrap">
@@ -1127,7 +1271,7 @@ df.explain(<span class="s">"cost"</span>)             <span class="c"># optimize
 </section>
 
 <section class="reveal">
-<h2 id="sec06" class="reveal"><span class="hico"><svg class="ico"><use href="#i-search"/></svg></span><span class="n">06.</span> Reading Query Plans: How to Read an explain() Tree</h2>
+<h2 id="sec08" class="reveal"><span class="hico"><svg class="ico"><use href="#i-search"/></svg></span><span class="n">08.</span> Reading Query Plans: How to Read an explain() Tree</h2>
 <p class="lede">A physical plan is a tree printed as indented text, and it is read <strong>bottom-up</strong>: the leaves (the scans) run first, and data flows upward to the root, which produces your output. That is the only structural rule. The rest is knowing which three things to look for &mdash; the shuffles, the pushdowns, and the join strategy &mdash; and what each operator name means.</p>
 
   <figure class="diagram-wrap">
@@ -1258,7 +1402,7 @@ df.filter(<span class="s">"amount &gt; 100"</span>).explain()      <span class="
       <tr><td><code>HashAggregate</code> (partial / final)</td><td><code>groupBy(...).agg()</code></td><td>Two-phase aggregation. The <code>partial_</code> one pre-aggregates <em>before</em> the shuffle, which is why group-bys scale.</td></tr>
       <tr><td><code>Expand</code></td><td>several <code>distinct</code> aggregates, <code>cube</code>/<code>rollup</code></td><td>Rows being duplicated to compute multiple groupings at once. A cost multiplier.</td></tr>
       <tr><td><code>ReusedExchange</code></td><td>the optimizer</td><td>A shuffle Spark computed once and reused for a second branch. Good news &mdash; work avoided.</td></tr>
-      <tr><td><code>AdaptiveSparkPlan</code></td><td>AQE</td><td>The plan is under Adaptive Query Execution and may change at runtime (section 10).</td></tr>
+      <tr><td><code>AdaptiveSparkPlan</code></td><td>AQE</td><td>The plan is under Adaptive Query Execution and may change at runtime (section 12).</td></tr>
       <tr><td><code>*(n)</code> prefix</td><td>whole-stage codegen</td><td>Fused operators. No star means a fusion boundary.</td></tr>
     </tbody>
   </table>
@@ -1266,7 +1410,7 @@ df.filter(<span class="s">"amount &gt; 100"</span>).explain()      <span class="
 </section>
 
 <section class="reveal">
-<h2 id="sec07" class="reveal"><span class="hico"><svg class="ico"><use href="#i-eye"/></svg></span><span class="n">07.</span> Reading the DAG, the Spark UI &amp; the History Server</h2>
+<h2 id="sec09" class="reveal"><span class="hico"><svg class="ico"><use href="#i-eye"/></svg></span><span class="n">09.</span> Reading the DAG, the Spark UI &amp; the History Server</h2>
 <p class="lede">The plan is what Spark <em>intends</em> to do. The <strong>DAG</strong> in the Spark UI is that same plan drawn as a graph, annotated with what actually happened: rows, bytes, spill, time. An <em>action</em> triggers a <strong>job</strong>; the job is cut into <strong>stages</strong> at every shuffle; each stage runs as <strong>tasks</strong>, one per partition. Learning to read that picture, plus the handful of numbers beside it, is how you find where a job spends its time instead of guessing.</p>
 
 
@@ -1323,7 +1467,7 @@ df.filter(<span class="s">"amount &gt; 100"</span>).explain()      <span class="
     <li>Compare <strong>max against median</strong> on every row. A healthy stage is boring: the two are close. Every diagnosis in this guide starts from a row where they diverge.</li>
   </ol>
 
-  <p>A stage after a shuffle defaults to <strong>200 tasks</strong> (<code>spark.sql.shuffle.partitions</code>) &mdash; which is why 200 shows up in almost every DAG you will ever open. It is a fixed number applied to data of any size, so it is wrong more often than right; section 11 is devoted to sizing it, and section 10 covers how AQE fixes it at runtime.</p>
+  <p>A stage after a shuffle defaults to <strong>200 tasks</strong> (<code>spark.sql.shuffle.partitions</code>) &mdash; which is why 200 shows up in almost every DAG you will ever open. It is a fixed number applied to data of any size, so it is wrong more often than right; section 13 is devoted to sizing it, and section 12 covers how AQE fixes it at runtime.</p>
 
   <h4>The metrics that matter, and their red flags</h4>
 
@@ -1396,7 +1540,7 @@ spark.conf.set(<span class="s">"spark.eventLog.dir"</span>, <span class="s">"s3:
 </section>
 
 <section class="reveal">
-<h2 id="sec08" class="reveal"><span class="hico"><svg class="ico"><use href="#i-workflow"/></svg></span><span class="n">08.</span> Plan &amp; DAG Shapes: Narrow, Wide, Joins &amp; Aggregations</h2>
+<h2 id="sec10" class="reveal"><span class="hico"><svg class="ico"><use href="#i-workflow"/></svg></span><span class="n">10.</span> Plan &amp; DAG Shapes: Narrow, Wide, Joins &amp; Aggregations</h2>
 <p class="lede">Now the operations themselves. Everything Spark does falls into one of two buckets, and the difference is the single most important cost distinction in the engine. A <strong>narrow</strong> transformation computes each output partition from one input partition &mdash; no data moves between machines. A <strong>wide</strong> transformation has to regroup data across partitions, which means a <strong>shuffle</strong>. In a plan and in a DAG, that shuffle has one name: <code>Exchange</code>.</p>
 
   <h3>Narrow transformations: one stage, fully pipelined</h3>
@@ -1427,7 +1571,7 @@ df.explain()</code></pre>
   </figure>
 
 
-  <p>One detail about the read itself: the number of input partitions &mdash; and therefore tasks &mdash; is not one per file. Spark packs file <em>splits</em> into partitions of at most <code>spark.sql.files.maxPartitionBytes</code> (128&nbsp;MB), so one 1&nbsp;GB file becomes several partitions while a thousand tiny files become a handful. Section 11 covers the exact rule; for reading a DAG, it is enough to know that <strong>tasks in the first stage = input partitions</strong>.</p>
+  <p>One detail about the read itself: the number of input partitions &mdash; and therefore tasks &mdash; is not one per file. Spark packs file <em>splits</em> into partitions of at most <code>spark.sql.files.maxPartitionBytes</code> (128&nbsp;MB), so one 1&nbsp;GB file becomes several partitions while a thousand tiny files become a handful. Section 13 covers the exact rule; for reading a DAG, it is enough to know that <strong>tasks in the first stage = input partitions</strong>.</p>
 
   <h3>Wide transformations: the <code>Exchange</code> is the stage boundary</h3>
   <p>A join, <code>groupBy</code>, <code>distinct</code>, <code>orderBy</code> or <code>repartition</code> needs rows regrouped across the cluster. That is a shuffle: every task writes its rows into buckets by key, and the tasks of the next stage each fetch their bucket from every writer. It touches disk on both sides and the network in between, which is why it dominates the cost of most jobs.</p>
@@ -1452,13 +1596,13 @@ df.coalesce(<span class="n">2</span>).explain()                <span class="c">#
 
   <div class="callout warn">
     <strong class="label">A shuffle you did not ask for is free money</strong>
-    Every <code>Exchange</code> costs. A deliberate <code>repartition</code> can be worth it &mdash; to raise parallelism or spread a skewed key &mdash; but a stray one left over from an earlier version of the code is pure overhead. If you spot an <code>Exchange RoundRobinPartitioning</code> you did not intend, deleting that line is the easiest win in this guide. Note also the last line above: <code>coalesce</code> reduces partitions with <em>no</em> <code>Exchange</code>, merging neighbours on the same executor instead. Section 11 covers when to reach for which.
+    Every <code>Exchange</code> costs. A deliberate <code>repartition</code> can be worth it &mdash; to raise parallelism or spread a skewed key &mdash; but a stray one left over from an earlier version of the code is pure overhead. If you spot an <code>Exchange RoundRobinPartitioning</code> you did not intend, deleting that line is the easiest win in this guide. Note also the last line above: <code>coalesce</code> reduces partitions with <em>no</em> <code>Exchange</code>, merging neighbours on the same executor instead. Section 13 covers when to reach for which.
   </div>
   <h3>Joins in Plans &amp; DAGs</h3>
 <p>A join is the clearest thing to read in a plan, because its <em>shape</em> tells you the strategy and the strategy tells you the cost. Two large tables joined on a key become a <strong>sort-merge join</strong>: both sides shuffled, both sides sorted, three stages. When one side is small enough, a <strong>broadcast hash join</strong> ships that side to every executor and the big side is never shuffled at all. Recognising which one you got, at a glance, is the highest-value plan-reading skill there is.</p>
 
   <h4>Sort-merge join: two shuffles, three stages</h4>
-  <p>You saw this plan text back in section 6: a <code>SortMergeJoin</code> at the root, and beneath <em>each</em> branch an <code>Exchange hashpartitioning</code> and a <code>Sort</code>. Both sides use the <em>same</em> partitioning &mdash; that is precisely what makes matching keys land in the same task, where they can be merged. In the DAG it is two symmetric branches feeding the join.</p>
+  <p>You saw this plan text back in section 8: a <code>SortMergeJoin</code> at the root, and beneath <em>each</em> branch an <code>Exchange hashpartitioning</code> and a <code>Sort</code>. Both sides use the <em>same</em> partitioning &mdash; that is precisely what makes matching keys land in the same task, where they can be merged. In the DAG it is two symmetric branches feeding the join.</p>
 
   <pre><code>orders.join(customers, <span class="s">"cust_id"</span>).explain()
 <span class="c"># *(5) SortMergeJoin [cust_id#2], [cust_id#20], Inner</span>
@@ -1472,7 +1616,7 @@ df.coalesce(<span class="n">2</span>).explain()                <span class="c">#
 
   <div class="callout warn">
     <strong class="label">Where a sort-merge join actually hurts: the <code>Sort</code></strong>
-    The two <code>Exchange</code> nodes get the blame, but the <code>Sort</code> above each one is often the real cost. Sorting a partition that does not fit in memory <strong>spills to disk</strong>, which shows up as <em>spill (memory)</em> and <em>spill (disk)</em> on the join stage. And if one key is far more common than the others, its partition's sort is enormous while every other task idles &mdash; the classic sort-merge straggler. Two useful consequences: if both inputs are already <em>bucketed</em> and sorted on the join key, the <code>Exchange</code> and <code>Sort</code> disappear entirely (section 13); and if the skew is what is hurting, Part V is the fix.
+    The two <code>Exchange</code> nodes get the blame, but the <code>Sort</code> above each one is often the real cost. Sorting a partition that does not fit in memory <strong>spills to disk</strong>, which shows up as <em>spill (memory)</em> and <em>spill (disk)</em> on the join stage. And if one key is far more common than the others, its partition's sort is enormous while every other task idles &mdash; the classic sort-merge straggler. Two useful consequences: if both inputs are already <em>bucketed</em> and sorted on the join key, the <code>Exchange</code> and <code>Sort</code> disappear entirely (section 15); and if the skew is what is hurting, Part V is the fix.
   </div>
 
   <h4>The three equi-join operators</h4>
@@ -1592,7 +1736,7 @@ df.groupBy(<span class="s">"country"</span>).agg(F.approx_count_distinct(<span c
 </section>
 
 <section class="reveal">
-<h2 id="sec09" class="reveal"><span class="hico"><svg class="ico"><use href="#i-workflow"/></svg></span><span class="n">09.</span> A Full Query End to End: Plan &amp; DAG</h2>
+<h2 id="sec11" class="reveal"><span class="hico"><svg class="ico"><use href="#i-workflow"/></svg></span><span class="n">11.</span> A Full Query End to End: Plan &amp; DAG</h2>
 <p class="lede">Time to stack the shapes. A real query combines scans, filters, joins and aggregations, so its plan gets long &mdash; but it is nothing more than the shapes above, wired together. We will read one query as a four-plan <code>explain(True)</code>, then a bigger one as a four-stage DAG, and finish by diagnosing a genuinely slow job across the UI tabs.</p>
 
   <h3>One query, four plans</h3>
@@ -1758,7 +1902,7 @@ result2.explain(<span class="s">"formatted"</span>)   <span class="c"># now: Bro
 </section>
 
 <section class="reveal">
-<h2 id="sec10" class="reveal"><span class="hico"><svg class="ico"><use href="#i-bulb"/></svg></span><span class="n">10.</span> Adaptive Query Execution (AQE)</h2>
+<h2 id="sec12" class="reveal"><span class="hico"><svg class="ico"><use href="#i-bulb"/></svg></span><span class="n">12.</span> Adaptive Query Execution (AQE)</h2>
 <p class="lede">Catalyst optimizes <em>before</em> the query runs, using estimates &mdash; and estimates are often wrong. <strong>Adaptive Query Execution</strong> fixes that by re-optimizing the plan <em>during</em> execution, using the real statistics Spark measures after each shuffle. It has been <strong>on by default since Spark 3.2</strong>, and it is the largest free performance win in modern Spark: it repairs at runtime the two mistakes you would otherwise tune by hand.</p>
 
   <h3>The three things AQE does</h3>
@@ -1803,13 +1947,13 @@ spark.conf.set(<span class="s">"spark.sql.adaptive.skewJoin.enabled"</span>, <sp
 
   <div class="callout ok">
     <strong class="label">What this means in practice</strong>
-    On Spark 3.2+ you get AQE for free, and it is the reason the old advice to hand-tune <code>spark.sql.shuffle.partitions</code> per job matters much less than it used to. One trap survives, though: AQE can only coalesce partitions <em>down</em> from the configured number &mdash; it never raises it. So on big jobs, set the ceiling <em>high</em> (say 2000) and let AQE shrink it, rather than leaving 200 and wondering why partitions are huge. Related and also on by default: <em>dynamic partition pruning</em>, which prunes fact-table partitions at runtime from a dimension-table filter (section 14).
+    On Spark 3.2+ you get AQE for free, and it is the reason the old advice to hand-tune <code>spark.sql.shuffle.partitions</code> per job matters much less than it used to. One trap survives, though: AQE can only coalesce partitions <em>down</em> from the configured number &mdash; it never raises it. So on big jobs, set the ceiling <em>high</em> (say 2000) and let AQE shrink it, rather than leaving 200 and wondering why partitions are huge. Related and also on by default: <em>dynamic partition pruning</em>, which prunes fact-table partitions at runtime from a dimension-table filter (section 16).
   </div>
 </section>
 
 <div class="partbar">Part III &middot; Partitioning, Shuffle &amp; Data Layout</div>
 <section class="reveal">
-<h2 id="sec11" class="reveal"><span class="hico"><svg class="ico"><use href="#i-layers"/></svg></span><span class="n">11.</span> Partitions: Input, Shuffle &amp; Reshaping</h2>
+<h2 id="sec13" class="reveal"><span class="hico"><svg class="ico"><use href="#i-layers"/></svg></span><span class="n">13.</span> Partitions: Input, Shuffle &amp; Reshaping</h2>
 <p class="lede">A <em>partition</em> is Spark's unit of parallelism: one partition becomes one task, run by one core. The first place partitions are created is on <em>read</em>. When Spark opens files, it doesn't hand a whole file to one task &mdash; it packs the bytes into chunks of at most <code>spark.sql.files.maxPartitionBytes</code> (default <strong>128 MB</strong>) and each chunk becomes one <em>input partition</em>, which becomes one <em>task</em>. So this config directly sets how many tasks read your data, and therefore how parallel that read is.</p>
 
   <figure class="diagram-wrap">
@@ -2388,7 +2532,7 @@ compact = df.coalesce(<span class="n">10</span>)</code></pre>
 </section>
 
 <section class="reveal">
-<h2 id="sec12" class="reveal"><span class="hico"><svg class="ico"><use href="#i-layers"/></svg></span><span class="n">12.</span> Disk Partitioning &amp; Partition Pruning</h2>
+<h2 id="sec14" class="reveal"><span class="hico"><svg class="ico"><use href="#i-layers"/></svg></span><span class="n">14.</span> Disk Partitioning &amp; Partition Pruning</h2>
 <p class="lede">Disk partitioning is a <em>physical layout</em> decision made at write time. When you call <code>df.write.partitionBy("order_date")</code>, Spark does not write one flat pile of files &mdash; it splits the rows by the distinct values of <code>order_date</code> and writes each group into its own directory named <code>order_date=&lt;value&gt;</code>. The column value becomes part of the <em>path</em>, so it isn't even stored inside the Parquet files any more; it's encoded in the folder name.</p>
 
   <figure class="diagram-wrap">
@@ -2782,7 +2926,7 @@ by_id = spark.read.parquet(<span class="s">"/warehouse/orders_by_id"</span>)
 </section>
 
 <section class="reveal">
-<h2 id="sec13" class="reveal"><span class="hico"><svg class="ico"><use href="#i-package"/></svg></span><span class="n">13.</span> Bucketing: Joins, Aggregations &amp; Bucket Pruning</h2>
+<h2 id="sec15" class="reveal"><span class="hico"><svg class="ico"><use href="#i-package"/></svg></span><span class="n">15.</span> Bucketing: Joins, Aggregations &amp; Bucket Pruning</h2>
 <p class="lede">Bucketing is a <strong>write-time</strong> layout. When you write a table with <code>bucketBy(N, key)</code>, Spark hashes each row's key and pre-partitions the rows into a fixed number <em>N</em> of buckets, then persists that layout into the table on disk. The all-to-all shuffle that a join or group-by would normally do at query time is done <em>once</em>, here, at write time &mdash; a one-time cost that every later read gets to skip.</p>
 
   <figure class="diagram-wrap">
@@ -3245,7 +3389,7 @@ o.join(c, <span class="s">"cust_id"</span>).explain()
 </section>
 
 <section class="reveal">
-<h2 id="sec14" class="reveal"><span class="hico"><svg class="ico"><use href="#i-layers"/></svg></span><span class="n">14.</span> Dynamic Partition Pruning</h2>
+<h2 id="sec16" class="reveal"><span class="hico"><svg class="ico"><use href="#i-layers"/></svg></span><span class="n">16.</span> Dynamic Partition Pruning</h2>
 <p class="lede">Static partition pruning fires only on a <em>literal</em> filter against the partition column &mdash; but real analytics rarely filter the fact table directly; they filter a <em>dimension</em> table and join. Dynamic Partition Pruning (DPP) closes that gap: it evaluates the filtered dimension at runtime, broadcasts the surviving join-key values, and uses them to prune the fact scan &mdash; so a star-schema query reads only the fact partitions it actually needs. DPP is on by default since Spark 3.0.</p>
 
   <h3>Recap &mdash; static partition pruning</h3>
@@ -3564,7 +3708,7 @@ spark.conf.set(<span class="s">"spark.sql.optimizer.dynamicPartitionPruning.enab
 
 <div class="partbar">Part IV &middot; Joins in Depth</div>
 <section class="reveal">
-<h2 id="sec15" class="reveal"><span class="hico"><svg class="ico"><use href="#i-repeat"/></svg></span><span class="n">15.</span> Join Types, Strategies &amp; Reading Them in the Plan</h2>
+<h2 id="sec17" class="reveal"><span class="hico"><svg class="ico"><use href="#i-repeat"/></svg></span><span class="n">17.</span> Join Types, Strategies &amp; Reading Them in the Plan</h2>
 <p class="lede">A join matches rows from two tables on a key. On one machine that's easy. Across a cluster it's the hard part of Spark, because the two rows you need to match almost never start on the same machine. To join them, Spark must first get every row with the same key <em>onto the same executor</em> &mdash; and that movement (a shuffle, or a broadcast) is what every join strategy is really about.</p>
 
 <figure class="diagram-wrap">
@@ -4022,7 +4166,7 @@ df.explain(<span class="k">True</span>)             <span class="c"># parsed -> 
 </section>
 
 <section class="reveal">
-<h2 id="sec16" class="reveal"><span class="hico"><svg class="ico"><use href="#i-bulb"/></svg></span><span class="n">16.</span> Choosing a Strategy: Hints, AQE &amp; Pitfalls</h2>
+<h2 id="sec18" class="reveal"><span class="hico"><svg class="ico"><use href="#i-bulb"/></svg></span><span class="n">18.</span> Choosing a Strategy: Hints, AQE &amp; Pitfalls</h2>
 <p class="lede">Spark's <code>JoinSelection</code> rule decides the strategy by walking a fixed checklist and taking the first option that fits &mdash; first honouring any hint, then splitting on whether it's an equi-join, then on sizes and config. Learn this path, then learn the two ways to steer it: an explicit <em>hint</em> when the size estimate is wrong, and Adaptive Query Execution, which re-runs the choice at runtime on real data.</p>
 
 <figure class="diagram-wrap">
@@ -4347,7 +4491,7 @@ shj.explain()
 
 <div class="partbar">Part V &middot; Data Skew &amp; How to Fix It</div>
 <section class="reveal">
-<h2 id="sec17" class="reveal"><span class="hico"><svg class="ico"><use href="#i-question"/></svg></span><span class="n">17.</span> Data Skew: What It Is &amp; How to Detect It</h2>
+<h2 id="sec19" class="reveal"><span class="hico"><svg class="ico"><use href="#i-question"/></svg></span><span class="n">19.</span> Data Skew: What It Is &amp; How to Detect It</h2>
 <p class="lede">Data skew is when your data is spread <em>unevenly</em> across partitions. Spark's whole model assumes work divides roughly equally into tasks &mdash; but if one key is far more common than the rest, then after a shuffle all of its rows pile into a single partition, and the one task handling it runs long after every other task has finished. That straggler <em>is</em> the slowdown.</p>
 
   <figure class="diagram-wrap">
@@ -4648,7 +4792,7 @@ joined.write.format(<span class="s">"noop"</span>).mode(<span class="s">"overwri
 </section>
 
 <section class="reveal">
-<h2 id="sec18" class="reveal"><span class="hico"><svg class="ico"><use href="#i-bulb"/></svg></span><span class="n">18.</span> Fixing Skew with AQE &amp; Broadcast Joins</h2>
+<h2 id="sec20" class="reveal"><span class="hico"><svg class="ico"><use href="#i-bulb"/></svg></span><span class="n">20.</span> Fixing Skew with AQE &amp; Broadcast Joins</h2>
 <p class="lede">Catalyst plans a query <em>before</em> it runs, using size estimates that are often wrong. <strong>Adaptive Query Execution</strong> (introduced in Spark 3.0, on by default since 3.2) re-optimises the plan <em>during</em> the run, using the real statistics Spark observes after each shuffle. It makes three runtime moves &mdash; and the third, splitting a skewed partition, is the one that fixes skew with zero code.</p>
 
   <figure class="diagram-wrap">
@@ -4869,7 +5013,7 @@ spark.conf.set(<span class="s">"spark.sql.autoBroadcastJoinThreshold"</span>, <s
 </section>
 
 <section class="reveal">
-<h2 id="sec19" class="reveal"><span class="hico"><svg class="ico"><use href="#i-plug"/></svg></span><span class="n">19.</span> Fixing Skew with Salting &mdash; and Which Fix, When</h2>
+<h2 id="sec21" class="reveal"><span class="hico"><svg class="ico"><use href="#i-plug"/></svg></span><span class="n">21.</span> Fixing Skew with Salting &mdash; and Which Fix, When</h2>
 <p class="lede">Skew has a single root cause: a <em>hot key</em> whose rows, after a shuffle, all land on one partition and one task &mdash; the straggler that defines your runtime. Salting attacks that directly. You append a random integer <code>0..N-1</code> to the key, turning one over-loaded value like <code>'US'</code> into <code>N</code> synthetic sub-keys (<code>US_0</code>, <code>US_1</code>, &hellip;). Because the shuffle now spreads those sub-keys over <code>N</code> partitions, the one giant task becomes <code>N</code> balanced ones.</p>
 
   <figure class="diagram-wrap">
@@ -5324,7 +5468,7 @@ orphans = transactions.filter(F.col(<span class="s">"cust_id"</span>).isNull()) 
 
 <div class="partbar">Part VI &middot; Memory &amp; Executor Tuning</div>
 <section class="reveal">
-<h2 id="sec20" class="reveal"><span class="hico"><svg class="ico"><use href="#i-disk"/></svg></span><span class="n">20.</span> Executor Memory: Layout, Calculations &amp; Spill</h2>
+<h2 id="sec22" class="reveal"><span class="hico"><svg class="ico"><use href="#i-disk"/></svg></span><span class="n">22.</span> Executor Memory: Layout, Calculations &amp; Spill</h2>
 <p class="lede">When a Spark job dies with <code>java.lang.OutOfMemoryError</code>, or crawls because it keeps spilling to disk, the root cause is almost never "not enough RAM." It's that the executor's heap is carved into <em>fixed regions</em> with <em>fixed rules</em>, and your data landed in the wrong one &mdash; or the region it needed was capped smaller than you thought. Understand the layout and both problems become predictable.</p>
 
 <p>An <strong>executor</strong> is a single JVM process running on a worker node; it runs the tasks of your job and holds their data in memory. The number you set with <code>spark.executor.memory</code> is <em>not</em> a free-for-all pool &mdash; the JVM heap it requests is split into four purposes before your first row is read. Two failure modes follow directly:</p>
@@ -5852,7 +5996,7 @@ spark = (SparkSession.builder
 </section>
 
 <section class="reveal">
-<h2 id="sec21" class="reveal"><span class="hico"><svg class="ico"><use href="#i-zap"/></svg></span><span class="n">21.</span> Executor &amp; Core Sizing: Fat vs Thin &amp; Sizing a Cluster</h2>
+<h2 id="sec23" class="reveal"><span class="hico"><svg class="ico"><use href="#i-zap"/></svg></span><span class="n">23.</span> Executor &amp; Core Sizing: Fat vs Thin &amp; Sizing a Cluster</h2>
 <p class="lede">A Spark cluster is a set of <strong>worker nodes</strong>. On each node, Spark launches one or more <strong>executors</strong> &mdash; JVM processes that actually run your tasks and hold data in memory. Each executor is given a slice of the node's <strong>cores</strong> (its task <em>slots</em>) and a slice of its <strong>RAM</strong>. The number of tasks that can run at the same instant is simply <em>executors &times; cores-per-executor</em>. How you carve a node into executors has a large effect on shuffle throughput, garbage collection, and memory safety &mdash; and the same hardware can be split many ways.</p>
 
 <figure class="diagram-wrap">
@@ -6237,7 +6381,7 @@ spark-submit \
 
 <div class="partbar">Part VII &middot; Caching &amp; Storage</div>
 <section class="reveal">
-<h2 id="sec22" class="reveal"><span class="hico"><svg class="ico"><use href="#i-database"/></svg></span><span class="n">22.</span> Caching: Why, How, Storage Levels &amp; When Not To</h2>
+<h2 id="sec24" class="reveal"><span class="hico"><svg class="ico"><use href="#i-database"/></svg></span><span class="n">24.</span> Caching: Why, How, Storage Levels &amp; When Not To</h2>
 <p class="lede">A Spark DataFrame is not a table sitting in memory &mdash; it is a <em>recipe</em>: the chain of transformations (its lineage) needed to produce it from the source. Every time you call an action, Spark cooks that recipe from scratch. If you reuse the same DataFrame across several actions, you pay for the full scan-and-transform <em>each time</em>. Caching cooks it <strong>once</strong>, keeps the result, and lets later actions eat from the fridge.</p>
 
 <figure class="diagram-wrap">
@@ -6618,8 +6762,21 @@ report.unpersist()      <span class="c"># release it -- give the memory back</sp
 </section>
 
 <section class="reveal">
-<h2 id="sec23" class="reveal"><span class="hico"><svg class="ico"><use href="#i-list"/></svg></span><span class="n">23.</span> Inside Parquet &amp; Delta Lake</h2>
+<h2 id="sec25" class="reveal"><span class="hico"><svg class="ico"><use href="#i-list"/></svg></span><span class="n">25.</span> Inside Parquet &amp; Delta Lake</h2>
 <p class="lede">This is the lowest level of the read path: what is actually inside one <code>part-*.parquet</code> file, how Spark narrows a whole table down to the handful of files a query needs, and what a single task does when it finally opens one of those files. Every layer here is designed to do one thing &mdash; <strong>read less</strong> &mdash; and it all rests on Parquet being a columnar format with statistics baked into each file.</p>
+
+<h3>The formats, compared</h3>
+<p>Spark reads and writes all of these; for an analytics pipeline the answer is almost always <strong>Parquet</strong> (or a table format &mdash; Delta / Iceberg / Hudi &mdash; built on top of it).</p>
+<div class="table-wrap"><table>
+<thead><tr><th>Format</th><th>Layout</th><th>Splittable</th><th>Schema in file</th><th>Column pruning</th><th>Predicate pushdown</th><th>Use for</th></tr></thead>
+<tbody>
+<tr><td><strong>Parquet</strong></td><td>Columnar</td><td>Yes</td><td>Yes + per-row-group min/max</td><td>Yes</td><td>Yes (stats + dictionary)</td><td>The default for lakes &amp; warehouses. Great compression, fast scans.</td></tr>
+<tr><td><strong>ORC</strong></td><td>Columnar</td><td>Yes</td><td>Yes + stripe indexes</td><td>Yes</td><td>Yes</td><td>Equivalent to Parquet; common in Hive-heritage stacks.</td></tr>
+<tr><td><strong>Avro</strong></td><td>Row</td><td>Yes</td><td>Yes (embedded)</td><td>No</td><td>No</td><td>Row-by-row writes, streaming sinks, Kafka; strong schema evolution.</td></tr>
+<tr><td><strong>JSON</strong></td><td>Row, text</td><td>Line-delimited only</td><td>No &mdash; inferred</td><td>No</td><td>No</td><td>Raw landing / interchange. Convert to Parquet on ingest.</td></tr>
+<tr><td><strong>CSV</strong></td><td>Row, text</td><td>Yes (uncompressed)</td><td>No &mdash; inferred</td><td>No</td><td>No</td><td>Exports and partner feeds only. No types, no nesting, quoting bugs.</td></tr>
+</tbody></table></div>
+<p>The split that matters: <strong>columnar</strong> formats (Parquet, ORC) let a query touch only the columns and row groups it needs, so <code>SELECT sum(amount)</code> over a 200-column table reads one column's worth of bytes. <strong>Row</strong> formats (Avro, JSON, CSV) must read every field of every row. Also avoid a non-splittable codec &mdash; a single <code>.json.gz</code> or <code>.csv.gz</code> file is read by <em>one</em> task no matter its size; use Parquet (Snappy/Zstd, splittable) or at least a splittable codec.</p>
 
 <h3>The anatomy of a Parquet file</h3>
 <p>Parquet is <strong>columnar</strong> &mdash; instead of storing row after row, it stores each column's values together. A file is a stack of <em>row groups</em>; each row group holds one <em>column chunk</em> per column; each column chunk is a series of <em>pages</em>; and a <em>footer</em> at the end carries the schema plus per-row-group statistics. This layout is the whole reason column pruning and data skipping are possible.</p>
@@ -6832,7 +6989,7 @@ old = spark.read.format(<span class="s">"delta"</span>).option(<span class="s">"
 
 <div class="partbar">Part VIII &middot; Tuning End to End &amp; Reference</div>
 <section class="reveal">
-<h2 id="sec24" class="reveal"><span class="hico"><svg class="ico"><use href="#i-compass"/></svg></span><span class="n">24.</span> The Tuning Playbook &amp; a Worked Example</h2>
+<h2 id="sec26" class="reveal"><span class="hico"><svg class="ico"><use href="#i-compass"/></svg></span><span class="n">26.</span> The Tuning Playbook &amp; a Worked Example</h2>
 <p class="lede">Spark tuning is not a bag of magic configs. It's a loop: <em>measure &rarr; find the bottleneck &rarr; remove it &rarr; measure again.</em> Ninety percent of the wins come from attacking three specific enemies &mdash; and the only way to know which one is hurting you is to read the Spark UI, not to guess. Before you can tune a job, though, you need one mental model of what it actually <em>does</em>, end to end &mdash; so this capstone opens with the cost ladder and the full query lifecycle, then hands you the playbook and a worked walkthrough.</p>
 
   <h3>Why Spark Jobs Are Slow: a Cost Hierarchy</h3>
@@ -7157,7 +7314,149 @@ report.unpersist()
 </section>
 
 <section class="reveal">
-<h2 id="sec25" class="reveal"><span class="hico"><svg class="ico"><use href="#i-book"/></svg></span><span class="n">25.</span> Glossary</h2>
+<h2 id="sec27" class="reveal"><span class="hico"><svg class="ico"><use href="#i-list"/></svg></span><span class="n">27.</span> Common PySpark Code &mdash; Quick Reference</h2>
+<p class="lede">The snippets a data engineer types most days, grouped by task. Everything assumes <code>from pyspark.sql import functions as F, Window</code> and an active <code>spark</code> session. Prefer these built-ins over UDFs (&sect;06); prefer <code>selectExpr</code>/<code>F.expr</code> when you already know the SQL.</p>
+
+<h3>Session, read, inspect</h3>
+<pre><code><span class="k">from</span> pyspark.sql <span class="k">import</span> SparkSession
+spark = SparkSession.builder.appName(<span class="s">"job"</span>).getOrCreate()
+
+<span class="c"># --- read ---</span>
+df = spark.read.parquet(<span class="s">"s3://bucket/orders/"</span>)                 <span class="c"># schema inferred from footer</span>
+df = spark.read.option(<span class="s">"header"</span>, <span class="k">True</span>).option(<span class="s">"inferSchema"</span>, <span class="k">True</span>).csv(<span class="s">"path.csv"</span>)
+df = spark.read.schema(my_schema).json(<span class="s">"path/*.json"</span>)             <span class="c"># give a schema: faster + safe</span>
+df = spark.read.format(<span class="s">"delta"</span>).load(<span class="s">"s3://bucket/tbl"</span>)
+df = spark.table(<span class="s">"catalog.schema.orders"</span>)
+df = (spark.read.format(<span class="s">"jdbc"</span>).option(<span class="s">"url"</span>, url)
+        .option(<span class="s">"dbtable"</span>, <span class="s">"public.orders"</span>).option(<span class="s">"user"</span>, u).option(<span class="s">"password"</span>, pw).load())
+
+<span class="c"># --- inspect ---</span>
+df.printSchema(); df.columns; df.dtypes; df.rdd.getNumPartitions()
+df.show(<span class="n">20</span>, truncate=<span class="k">False</span>); df.count()
+df.summary().show()                    <span class="c"># count, mean, stddev, min, 25/50/75%, max</span>
+df.explain(<span class="s">"formatted"</span>)                 <span class="c"># the physical plan (&sect;08)</span></code></pre>
+
+<h3>Select, rename, cast, derive</h3>
+<pre><code>df.select(<span class="s">"id"</span>, <span class="s">"country"</span>, F.col(<span class="s">"amount"</span>).alias(<span class="s">"amt"</span>))
+df.selectExpr(<span class="s">"id"</span>, <span class="s">"amount * 1.1 AS with_tax"</span>, <span class="s">"upper(country) AS c"</span>)
+df.withColumn(<span class="s">"amt_usd"</span>, F.col(<span class="s">"amount"</span>) * lit_rate)
+df.withColumn(<span class="s">"ymd"</span>, F.col(<span class="s">"ts"</span>).cast(<span class="s">"date"</span>))
+df.withColumnRenamed(<span class="s">"amount"</span>, <span class="s">"amt"</span>)
+df.withColumnsRenamed({<span class="s">"a"</span>: <span class="s">"x"</span>, <span class="s">"b"</span>: <span class="s">"y"</span>})     <span class="c"># Spark 3.4+</span>
+df.drop(<span class="s">"tmp_col"</span>, <span class="s">"_corrupt_record"</span>)
+df.withColumn(<span class="s">"flag"</span>, F.lit(<span class="k">True</span>))                <span class="c"># constant column</span></code></pre>
+
+<h3>Filter, conditionals, null handling</h3>
+<pre><code>df.filter(F.col(<span class="s">"amount"</span>) &gt; <span class="n">100</span>)
+df.where(<span class="s">"status = 'paid' AND amount &gt; 0"</span>)          <span class="c"># SQL string form</span>
+df.filter(F.col(<span class="s">"country"</span>).isin(<span class="s">"US"</span>, <span class="s">"CA"</span>, <span class="s">"MX"</span>))
+df.filter(F.col(<span class="s">"ts"</span>).between(<span class="s">"2026-01-01"</span>, <span class="s">"2026-03-31"</span>))
+df.filter(F.col(<span class="s">"email"</span>).rlike(<span class="s">r"@example\.com$"</span>))
+df.filter(F.col(<span class="s">"x"</span>).isNull() | ~F.col(<span class="s">"active"</span>))
+
+df.withColumn(<span class="s">"tier"</span>,
+    F.when(F.col(<span class="s">"amt"</span>) &gt;= <span class="n">1000</span>, <span class="s">"gold"</span>)
+     .when(F.col(<span class="s">"amt"</span>) &gt;= <span class="n">100</span>, <span class="s">"silver"</span>)
+     .otherwise(<span class="s">"bronze"</span>))
+
+df.withColumn(<span class="s">"name"</span>, F.coalesce(<span class="s">"name"</span>, <span class="s">"fallback_name"</span>, F.lit(<span class="s">"unknown"</span>)))
+df.na.fill({<span class="s">"amount"</span>: <span class="n">0</span>, <span class="s">"country"</span>: <span class="s">"NA"</span>})
+df.na.drop(subset=[<span class="s">"id"</span>, <span class="s">"ts"</span>])                    <span class="c"># drop rows null in these cols</span>
+df.dropDuplicates([<span class="s">"id"</span>])                          <span class="c"># or use row_number (&sect;05) to keep the latest</span></code></pre>
+
+<h3>Aggregations &amp; pivot</h3>
+<pre><code>(df.groupBy(<span class="s">"country"</span>, <span class="s">"day"</span>)
+   .agg(F.sum(<span class="s">"amount"</span>).alias(<span class="s">"rev"</span>),
+        F.countDistinct(<span class="s">"cust_id"</span>).alias(<span class="s">"buyers"</span>),
+        F.avg(<span class="s">"amount"</span>).alias(<span class="s">"aov"</span>),
+        F.collect_set(<span class="s">"channel"</span>).alias(<span class="s">"channels"</span>)))
+
+df.agg(F.min(<span class="s">"ts"</span>), F.max(<span class="s">"ts"</span>)).show()               <span class="c"># whole-DataFrame aggregate</span>
+df.groupBy(<span class="s">"country"</span>).pivot(<span class="s">"quarter"</span>, [<span class="s">"Q1"</span>, <span class="s">"Q2"</span>, <span class="s">"Q3"</span>, <span class="s">"Q4"</span>]).sum(<span class="s">"amount"</span>)
+df.groupBy(<span class="s">"country"</span>).count().orderBy(F.desc(<span class="s">"count"</span>))</code></pre>
+
+<h3>Joins</h3>
+<pre><code>a.join(b, on=<span class="s">"cust_id"</span>, how=<span class="s">"inner"</span>)                <span class="c"># single key: no duplicate column</span>
+a.join(b, on=[<span class="s">"cust_id"</span>, <span class="s">"day"</span>], how=<span class="s">"left"</span>)      <span class="c"># composite key</span>
+a.join(b, a.cid == b.id, how=<span class="s">"left"</span>).drop(b.id)  <span class="c"># expression: drop the dup key</span>
+a.join(F.broadcast(dim), <span class="s">"country"</span>)                <span class="c"># force a broadcast hash join (&sect;17)</span>
+a.join(b, <span class="s">"id"</span>, <span class="s">"left_semi"</span>)                       <span class="c"># rows of a that HAVE a match (a filter)</span>
+a.join(b, <span class="s">"id"</span>, <span class="s">"left_anti"</span>)                       <span class="c"># rows of a with NO match (an anti-filter)</span>
+<span class="c"># how: inner | left | right | full | left_semi | left_anti | cross</span>
+<span class="c"># NULL keys never match &mdash; filter them or use eqNullSafe: a[&quot;k&quot;].eqNullSafe(b[&quot;k&quot;])</span></code></pre>
+
+<h3>Windows (recap from &sect;05)</h3>
+<pre><code>w = Window.partitionBy(<span class="s">"cust_id"</span>).orderBy(F.desc(<span class="s">"ts"</span>))
+df.withColumn(<span class="s">"rn"</span>, F.row_number().over(w)).filter(<span class="s">"rn = 1"</span>)          <span class="c"># latest per key</span>
+df.withColumn(<span class="s">"run"</span>, F.sum(<span class="s">"amt"</span>).over(w.rowsBetween(Window.unboundedPreceding, <span class="n">0</span>)))
+df.withColumn(<span class="s">"dod"</span>, F.col(<span class="s">"amt"</span>) - F.lag(<span class="s">"amt"</span>).over(w))              <span class="c"># day-over-day delta</span></code></pre>
+
+<h3>Sort, set ops, sampling, limit</h3>
+<pre><code>df.orderBy(F.col(<span class="s">"amt"</span>).desc_nulls_last(), <span class="s">"id"</span>)
+a.unionByName(b, allowMissingColumns=<span class="k">True</span>)         <span class="c"># match on names, not position</span>
+a.subtract(b)                                       <span class="c"># rows in a not in b (distinct)</span>
+a.intersect(b)
+df.sample(fraction=<span class="n">0.01</span>, seed=<span class="n">42</span>)
+df.limit(<span class="n">1000</span>)</code></pre>
+
+<h3>Strings, dates, arrays &amp; structs</h3>
+<pre><code><span class="c"># strings</span>
+F.concat_ws(<span class="s">"-"</span>, <span class="s">"y"</span>, <span class="s">"m"</span>, <span class="s">"d"</span>); F.trim(F.upper(<span class="s">"code"</span>)); F.length(<span class="s">"name"</span>)
+F.substring(<span class="s">"phone"</span>, <span class="n">1</span>, <span class="n">3</span>); F.lpad(<span class="s">"id"</span>, <span class="n">8</span>, <span class="s">"0"</span>)
+F.regexp_replace(<span class="s">"txt"</span>, <span class="s">r"\s+"</span>, <span class="s">" "</span>)
+F.regexp_extract(<span class="s">"url"</span>, <span class="s">r"//([^/]+)/"</span>, <span class="n">1</span>).alias(<span class="s">"host"</span>)
+
+<span class="c"># dates (store/compute in UTC)</span>
+F.current_date(); F.current_timestamp()
+F.to_date(<span class="s">"d"</span>, <span class="s">"yyyy-MM-dd"</span>); F.to_timestamp(<span class="s">"ts"</span>)
+F.date_format(<span class="s">"ts"</span>, <span class="s">"yyyy-MM"</span>); F.date_add(<span class="s">"d"</span>, <span class="n">7</span>); F.datediff(<span class="s">"end"</span>, <span class="s">"start"</span>)
+F.year(<span class="s">"d"</span>); F.month(<span class="s">"d"</span>); F.dayofweek(<span class="s">"d"</span>); F.date_trunc(<span class="s">"week"</span>, <span class="s">"ts"</span>)
+
+<span class="c"># arrays &amp; structs</span>
+df.withColumn(<span class="s">"tag"</span>, F.explode(<span class="s">"tags"</span>))                     <span class="c"># one row per element (drops empty)</span>
+df.select(F.posexplode(<span class="s">"tags"</span>).alias(<span class="s">"pos"</span>, <span class="s">"tag"</span>))
+F.split(<span class="s">"csv"</span>, <span class="s">","</span>); F.array_contains(<span class="s">"tags"</span>, <span class="s">"vip"</span>); F.size(<span class="s">"tags"</span>)
+F.transform(<span class="s">"nums"</span>, <span class="k">lambda</span> x: x * <span class="n">2</span>)                       <span class="c"># higher-order fn, not a UDF</span>
+F.from_json(<span class="s">"payload"</span>, schema); F.to_json(F.struct(<span class="s">"a"</span>, <span class="s">"b"</span>))
+df.select(<span class="s">"addr.city"</span>, <span class="s">"addr.zip"</span>)                       <span class="c"># dotted access into a struct</span></code></pre>
+
+<h3>Repartition, cache, write</h3>
+<pre><code>df.repartition(<span class="n">200</span>, <span class="s">"cust_id"</span>)          <span class="c"># shuffle to N partitions keyed by col (&sect;13)</span>
+df.coalesce(<span class="n">10</span>)                          <span class="c"># reduce partitions, NO shuffle</span>
+df.cache(); df.count()                    <span class="c"># materialise; then reuse (&sect;24)</span>
+df.unpersist()
+
+(df.write.mode(<span class="s">"overwrite"</span>)              <span class="c"># overwrite | append | error | ignore</span>
+   .partitionBy(<span class="s">"dt"</span>)                    <span class="c"># Hive-style dirs dt=2026-01-01/ (&sect;14)</span>
+   .format(<span class="s">"parquet"</span>)
+   .save(<span class="s">"s3://bucket/out/"</span>))
+
+df.write.mode(<span class="s">"overwrite"</span>).saveAsTable(<span class="s">"schema.summary"</span>)
+df.coalesce(<span class="n">1</span>).write.mode(<span class="s">"overwrite"</span>).csv(<span class="s">"one_file/"</span>, header=<span class="k">True</span>)
+
+<span class="c"># Delta upsert</span>
+<span class="k">from</span> delta.tables <span class="k">import</span> DeltaTable
+(DeltaTable.forName(spark, <span class="s">"schema.dim"</span>).alias(<span class="s">"t"</span>)
+  .merge(updates.alias(<span class="s">"s"</span>), <span class="s">"t.id = s.id"</span>)
+  .whenMatchedUpdateAll().whenNotMatchedInsertAll().execute())</code></pre>
+
+<h3>Spark SQL &amp; useful config</h3>
+<pre><code>df.createOrReplaceTempView(<span class="s">"orders"</span>)
+spark.sql(<span class="s">"SELECT country, sum(amount) FROM orders GROUP BY country"</span>)
+
+spark.conf.set(<span class="s">"spark.sql.shuffle.partitions"</span>, <span class="s">"400"</span>)          <span class="c"># &sect;13; AQE coalesces down</span>
+spark.conf.set(<span class="s">"spark.sql.adaptive.enabled"</span>, <span class="s">"true"</span>)             <span class="c"># AQE (&sect;12) &mdash; on by default in 3.2+</span>
+spark.conf.set(<span class="s">"spark.sql.autoBroadcastJoinThreshold"</span>, <span class="s">"64m"</span>)     <span class="c"># &sect;17</span>
+spark.conf.set(<span class="s">"spark.sql.files.maxPartitionBytes"</span>, <span class="s">"128m"</span>)        <span class="c"># input partition size (&sect;13)</span></code></pre>
+
+<div class="callout tip">
+  <strong class="label">Reflexes worth keeping</strong>
+  Give <code>read</code> an explicit <code>.schema(...)</code> in production &mdash; inference costs a pass and can guess wrong. Never <code>.collect()</code> a big DataFrame to the driver; use <code>.show()</code>, <code>.take(n)</code>, or write it out. Chain transformations and let one <code>action</code> trigger the whole plan. And check <code>.explain("formatted")</code> before blaming the cluster.
+</div>
+</section>
+
+<section class="reveal">
+<h2 id="sec28" class="reveal"><span class="hico"><svg class="ico"><use href="#i-book"/></svg></span><span class="n">28.</span> Glossary</h2>
 <p class="lede">Every core term from the fifteen source guides, merged and de-duplicated.</p>
 <dl class="glossary">
     <dt>Action</dt>
