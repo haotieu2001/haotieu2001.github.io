@@ -171,7 +171,7 @@
 <header>
   <div class="kicker"><a class="back" href="../essentials.html">❮ Data Engineer Essentials</a></div>
   <h1>Python for Data Engineers</h1>
-  <p class="dek">The Python you actually need to know well: not clever one-liners, but <strong>code you'd want to maintain</strong>. Data structures and their real costs, comprehensions and generators, decorators, context managers, classes and dataclasses, type hints, error handling and logging, strings and regular expressions, JSON/CSV/datetime, concurrency and the GIL, and packaging a script so a scheduler can run it. The interview-focused <strong>data-structures-and-algorithms</strong> slice now lives on its own page: <a href="../dsa-python/">DSA in Python</a>.</p>
+  <p class="dek">The Python you actually need to know well: not clever one-liners, but <strong>code you'd want to maintain</strong>. Data structures and their real costs, comprehensions and generators, decorators, context managers, classes and dataclasses, type hints, error handling and logging, strings and regular expressions, JSON/CSV/datetime, concurrency and the GIL, and packaging a script so a scheduler can run it.</p>
   <div class="stack">
     <span class="chip"><svg class="ico"><use href="#i-code"/></svg> Python 3.11+</span>
     <span class="chip"><svg class="ico"><use href="#i-book"/></svg> Fundamentals &#183; explained from zero</span>
@@ -198,10 +198,9 @@
   <a href="#concurrency"><svg class="ico"><use href="#i-network"/></svg>14 · Concurrency &amp; the GIL</a>
   <a href="#scripts"><svg class="ico"><use href="#i-terminal"/></svg>15 · Scripts, config &amp; dependencies</a>
   <a href="#glossary"><svg class="ico"><use href="#i-book"/></svg>＊ · Glossary</a>
-  <a href="../dsa-python/"><svg class="ico"><use href="#i-target"/></svg>→ Companion: DSA in Python</a>
 </div>
 <h2 id="why" class="reveal"><span class="hico"><svg class="ico"><use href="#i-rocket"/></svg></span><span class="n">01.</span> Why these fundamentals matter</h2>
-<p class="reveal lead">Python is easy to write badly and easy to write well, and the gap between the two comes down to a fairly short list of ideas. This page is a practical tour of those ideas. The interview-focused data-structures-and-algorithms slice has its own companion page: <a href="../dsa-python/">DSA in Python</a>.</p>
+<p class="reveal lead">Python is easy to write badly and easy to write well, and the gap between the two comes down to a fairly short list of ideas. This page is a practical tour of those ideas.</p>
 
 <p class="reveal">Start with a fact that surprises a lot of newcomers: Python is not a fast language for raw computation. There are three reasons for this:</p>
 
@@ -213,7 +212,7 @@
 
 <p class="reveal">Put those three together and here is what happens in practice: try to sort a dataset bigger than your computer's memory using a plain Python <code>list</code>, and the operating system runs out of memory and kills the process before it finishes.</p>
 
-<p class="reveal">None of this makes Python a bad language. It makes Python a language where knowing what a tool <em>costs</em> matters as much as knowing what it does. That is the real subject of this page. Sections 02 through 15 cover the Python features that separate a quick script from code you would actually want to maintain: picking the right container for the job, comprehensions and generators, decorators, context managers, classes and dataclasses, type hints, error handling and logging, text and regular expressions, serialization, concurrency, and packaging a job so a scheduler can run it. The data structures and algorithms that come up again and again in coding interviews (arrays and two pointers, hashmaps, sorting and binary search, trees and graphs, sliding windows, heaps, a little DP) are on the companion page, <a href="../dsa-python/">DSA in Python</a>, which builds directly on the containers and costs covered here.</p>
+<p class="reveal">None of this makes Python a bad language. It makes Python a language where knowing what a tool <em>costs</em> matters as much as knowing what it does. That is the real subject of this page. Sections 02 through 15 cover the Python features that separate a quick script from code you would actually want to maintain: picking the right container for the job, comprehensions and generators, decorators, context managers, classes and dataclasses, type hints, error handling and logging, text and regular expressions, serialization, concurrency, and packaging a job so a scheduler can run it.</p>
 
 <div class="callout gd reveal">
   <p style="margin:.2em 0"><span class="t"><svg class="ico"><use href="#i-bulb"/></svg> The habit worth building</span></p>
@@ -1442,7 +1441,6 @@ result = subprocess.<span class="p">run</span>(
 </dl>
 </div>
 <footer class="reveal">
-  <p style="margin-bottom:8px"><a href="../dsa-python/">Next: DSA in Python →</a></p>
   <p style="margin-bottom:8px"><a href="../essentials.html">← Back to all articles</a></p>
   <p>© 2026 · Hao Tieu Kim · Built with GitHub Pages</p>
 </footer>
