@@ -4,10 +4,10 @@
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
 <title>Hao Tieu Kim — Data Engineer</title>
-<meta name="description" content="Hao Tieu Kim (Tieu Kim Hao) — Data Engineer. Building and automating data pipelines, LLM-powered data products and cloud-based data solutions."/>
+<meta name="description" content="Hao Tieu Kim (Tieu Kim Hao) — Data Engineer. Databricks and AWS lakehouse pipelines: ingestion, Delta Lake performance, reliability and cloud cost optimization."/>
 <meta property="og:type" content="website"/>
 <meta property="og:title" content="Hao Tieu Kim — Data Engineer"/>
-<meta property="og:description" content="Building and automating data pipelines, LLM-powered data products and cloud-based data solutions."/>
+<meta property="og:description" content="Databricks and AWS lakehouse pipelines: ingestion, Delta Lake performance, reliability and cloud cost optimization."/>
 <meta property="og:url" content="https://haotieu2001.github.io/"/>
 <meta property="og:image" content="https://haotieu2001.github.io/og-cover.png"/>
 <meta property="og:image:width" content="1200"/>
@@ -15,7 +15,7 @@
 <meta property="og:image:alt" content="Hao Tieu Kim — Data Engineer"/>
 <meta name="twitter:card" content="summary_large_image"/>
 <meta name="twitter:title" content="Hao Tieu Kim — Data Engineer"/>
-<meta name="twitter:description" content="Building and automating data pipelines, LLM-powered data products and cloud-based data solutions."/>
+<meta name="twitter:description" content="Databricks and AWS lakehouse pipelines: ingestion, Delta Lake performance, reliability and cloud cost optimization."/>
 <meta name="twitter:image" content="https://haotieu2001.github.io/og-cover.png"/>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -203,13 +203,13 @@
   <div>
     <div class="kicker">~/portfolio <b>❯</b> whoami</div>
     <h1>Hao Tieu Kim</h1>
-    <p class="role">Data Engineer <span class="accent">· pipelines, LLM data products &amp; cloud</span></p>
-    <p class="dek">Data Science graduate who builds and automates data pipelines end to end — from large-scale ingestion and web scraping to LLM-powered sentiment &amp; topic extraction, on cloud-based infrastructure that supports analytics and business insight.</p>
+    <p class="role">Data Engineer <span class="accent">· Databricks, Delta lakehouse &amp; AWS</span></p>
+    <p class="dek">Data Engineer with 3+ years in data pipelines, cloud infrastructure and CI/CD. Now on a commercial bank's Databricks and AWS platform — daily ingestion from 19 source domains into a multi-terabyte Delta lakehouse, plus the reliability, performance and cost optimization behind it.</p>
     <div class="facts">
-      <span class="fact">Python · SQL · PySpark</span>
-      <span class="fact">Airflow · AWS</span>
-      <span class="fact">LLM / OpenAI APIs</span>
-      <span class="fact">CI/CD · Docker · K8s</span>
+      <span class="fact">Databricks · Delta · Spark</span>
+      <span class="fact">dbt · Airflow · SQL</span>
+      <span class="fact">AWS · Terraform</span>
+      <span class="fact">Python · CI/CD</span>
     </div>
     <div class="herobar"></div>
     <div class="cta">
@@ -249,8 +249,8 @@
   <!-- ABOUT -->
   <section class="panel about reveal" id="about" style="--a:#28B9FF">
     <span class="tab"><span class="n">01</span> About</span>
-    <p>I'm <strong>Hao Tieu Kim</strong> (Tieu Kim Hao), a Data Engineer based in Vietnam. I hold a <strong>Bachelor of Data Science</strong> from the University of Information Technology (VNU-HCM), and I like turning messy, large-scale raw data into clean, reliable datasets that people can actually make decisions on.</p>
-    <p>Most recently at <strong>ConsensysAI</strong> I built weekly pipelines processing ~1 million product reviews and shipped <strong>LLM-based sentiment &amp; topic extraction</strong> with the OpenAI API. Before that, as a DevOps Engineer at <strong>OPSWAT</strong>, I ran CI/CD, Kubernetes and AWS environments for a malware-detection product. I care about pipelines that are automated, observable and reproducible — and I write long-form guides about data engineering in my <a href="blogs.html">blog</a> and <a href="essentials.html">essentials</a>.</p>
+    <p>I'm <strong>Hao Tieu Kim</strong> (Tieu Kim Hao), a Data Engineer based in Ho Chi Minh City with <strong>3+ years</strong> across data pipelines, cloud infrastructure and CI/CD. I hold a <strong>Bachelor of Data Science</strong> from the University of Information Technology (VNU-HCM), and I like turning messy, large-scale raw data into clean, reliable datasets that people can actually make decisions on.</p>
+    <p>Today I work on an enterprise <strong>Databricks Unity Catalog + Delta lakehouse on AWS</strong> at <strong>Vietnam International Bank</strong> — modelling source systems into the lakehouse, authoring the Workflows and freshness gating that run daily ingestion, and handling the Spark reliability, Delta layout and cloud-cost work underneath. Before that at <strong>ConsensysAI</strong> I built weekly pipelines over ~1 million product reviews with <strong>LLM-based sentiment &amp; topic extraction</strong>, and as a DevOps Engineer at <strong>OPSWAT</strong> I ran CI/CD, Kubernetes and AWS environments for a malware-detection product. I care about pipelines that are automated, observable and reproducible — and I write long-form guides about data engineering in my <a href="blogs.html">blog</a> and <a href="essentials.html">essentials</a>.</p>
   </section>
 
   <!-- EXPERIENCE -->
@@ -260,16 +260,38 @@
       <div class="tl-item">
         <div class="tl-head">
           <h3 class="tl-role">Data Engineer</h3>
-          <span class="tl-when">Apr 2024 – Jul 2025</span>
+          <span class="tl-when">Jan 2026 – Present</span>
+        </div>
+        <div class="tl-org">Vietnam International Bank (VIB) · Ho Chi Minh City, Vietnam</div>
+        <p class="tl-proj">Project: <b>NEDP — Next-gen Enterprise Data Platform</b> — Databricks Unity Catalog + Delta lakehouse on AWS.</p>
+        <ul>
+          <li>Delivered <b>145 source tables across 300 model files</b> from Oracle, PostgreSQL and SQL Server into the Delta lakehouse — 19 domains, roughly a quarter of a 1,200-model production estate.</li>
+          <li>Federated source databases into <b>Unity Catalog as foreign catalogs</b>, so Spark queries them directly without a staging copy.</li>
+          <li>Authored <b>21 Databricks Workflows</b>: split one large daily pipeline into separate light and heavy jobs, and isolated unreliable sources so one failure no longer blocks the rest.</li>
+          <li>Designed <b>source-freshness gating</b> for daily ingestion — fail / warn / non-blocking strategies plus upstream job-completion signals — so jobs wait on the real source SLA instead of a fixed clock.</li>
+          <li>Fixed a production <b>Spark outage on EMR</b> caused by reclaimed spot nodes: added executor exclusion so the driver stops sending work to dead executors, and moved shuffle data to S3 so it survives node loss.</li>
+          <li>Led a <b>Delta Liquid Clustering migration</b> on a multi-terabyte lakehouse, converting 90+ tables out of a 108-table pilot and raising average file size <b>7×</b> — from 5.4 MB to 37.2 MB.</li>
+          <li>Designed an <b>S3 cost program</b> targeting a 50% storage cut on four production buckets, built in Terraform with lifecycle rules and Intelligent-Tiering.</li>
+          <li>Cut <b>EMR cost</b> by capping on-demand fallback to the fleet baseline, and moved daily Databricks jobs onto right-sized job clusters.</li>
+          <li>Built <b>6 Azure DevOps pipelines</b> that validate and deploy Databricks jobs to dev, uat and prod.</li>
+        </ul>
+        <div class="tags">
+          <span class="tag">Databricks</span><span class="tag">Unity Catalog</span><span class="tag">Delta Lake</span><span class="tag">Asset Bundles</span><span class="tag">Spark</span><span class="tag">dbt</span><span class="tag">Python</span><span class="tag">SQL</span><span class="tag">Oracle</span><span class="tag">AWS S3 · EMR · Glue · IAM · MWAA</span><span class="tag">Terraform</span><span class="tag">Airflow</span><span class="tag">Azure DevOps</span>
+        </div>
+      </div>
+      <div class="tl-item">
+        <div class="tl-head">
+          <h3 class="tl-role">Data Engineer</h3>
+          <span class="tl-when">Mar 2024 – Dec 2025</span>
         </div>
         <div class="tl-org">ConsensysAI · Singapore (Remote)</div>
         <p class="tl-proj">Project: <b>Consensys World</b> — a platform analyzing millions of consumer reviews for global market insights.</p>
         <ul>
           <li>Processed and transformed <b>~1 million crawled product reviews per week</b> using Python &amp; Pandas, producing clean, structured datasets for downstream sentiment analysis.</li>
           <li>Developed <b>LLM-based sentiment &amp; topic-extraction pipelines</b> using the OpenAI API, improving accuracy and contextual understanding by <b>~30%</b> vs. pretrained Hugging Face models.</li>
-          <li>Built multi-process web-scraping scripts across the US, Brazil &amp; Australia, collecting <b>10K–20K review pages/day</b> with Playwright and Requests.</li>
-          <li>Hardened scraper resilience with retry mechanisms, proxy rotation and CAPTCHA-solving to keep data flowing under heavy traffic and site restrictions.</li>
-          <li>Partnered with product leadership on data-coverage requirements &amp; delivery timelines, and <b>supervised a 4-member crawling team</b> (task assignment, code review, weekly progress).</li>
+          <li>Built and ran a <b>multi-process collection pipeline</b> across the US, Brazil &amp; Australia, landing ~1M review records a week into <b>AWS S3</b> with Playwright and Requests.</li>
+          <li>Hardened pipeline resilience with retry mechanisms, proxy rotation and CAPTCHA handling to keep data flowing daily, even when sites slowed down or changed.</li>
+          <li>Partnered with product leadership on data-coverage requirements &amp; delivery timelines, and <b>led a 4-member data collection team</b> — task assignment, code review and weekly delivery tracking.</li>
         </ul>
         <div class="tags">
           <span class="tag">Python</span><span class="tag">Pandas</span><span class="tag">Playwright</span><span class="tag">BeautifulSoup</span><span class="tag">Requests</span><span class="tag">LLM / OpenAI APIs</span><span class="tag">AWS S3</span><span class="tag">Git</span><span class="tag">Linux</span>
@@ -278,7 +300,7 @@
       <div class="tl-item">
         <div class="tl-head">
           <h3 class="tl-role">DevOps Engineer</h3>
-          <span class="tl-when">Jul 2023 – Mar 2024</span>
+          <span class="tl-when">Jul 2023 – Feb 2024</span>
         </div>
         <div class="tl-org">OPSWAT · Ho Chi Minh City, Vietnam</div>
         <p class="tl-proj">Product: <b>MetaDefender Core</b> — enterprise malware detection &amp; file-sanitization engine.</p>
@@ -302,19 +324,19 @@
     <div class="skills">
       <div class="skillcard">
         <h3>Data Engineering</h3><div class="bar"></div>
-        <div class="tags"><span class="tag">SQL</span><span class="tag">PySpark</span><span class="tag">Apache Airflow</span><span class="tag">Pandas</span></div>
+        <div class="tags"><span class="tag">Databricks</span><span class="tag">Unity Catalog</span><span class="tag">Delta Lake</span><span class="tag">Spark / PySpark</span><span class="tag">dbt</span><span class="tag">SQL</span><span class="tag">Apache Airflow</span></div>
       </div>
       <div class="skillcard">
-        <h3>AWS Cloud</h3><div class="bar"></div>
-        <div class="tags"><span class="tag">S3</span><span class="tag">EC2</span><span class="tag">RDS</span><span class="tag">Lambda</span></div>
+        <h3>Data Quality &amp; Governance</h3><div class="bar"></div>
+        <div class="tags"><span class="tag">Source-freshness gating</span><span class="tag">Reconciliation</span><span class="tag">Pipeline monitoring</span><span class="tag">Unity Catalog grants</span><span class="tag">Cost tagging</span></div>
       </div>
       <div class="skillcard">
-        <h3>Programming</h3><div class="bar"></div>
-        <div class="tags"><span class="tag">Python</span><span class="tag">Bash Scripting</span><span class="tag">Git</span></div>
+        <h3>Cloud &amp; Infrastructure</h3><div class="bar"></div>
+        <div class="tags"><span class="tag">AWS S3</span><span class="tag">EMR</span><span class="tag">Glue</span><span class="tag">IAM</span><span class="tag">MWAA</span><span class="tag">EC2</span><span class="tag">Lambda</span><span class="tag">Terraform</span><span class="tag">Docker</span><span class="tag">Kubernetes</span></div>
       </div>
       <div class="skillcard">
-        <h3>DevOps &amp; AI</h3><div class="bar"></div>
-        <div class="tags"><span class="tag">Docker</span><span class="tag">Kubernetes</span><span class="tag">Terraform</span><span class="tag">Jenkins</span><span class="tag">LLM / OpenAI APIs</span></div>
+        <h3>Programming &amp; Tooling</h3><div class="bar"></div>
+        <div class="tags"><span class="tag">Python</span><span class="tag">Bash scripting</span><span class="tag">Git</span><span class="tag">Azure DevOps</span><span class="tag">Jenkins CI/CD</span><span class="tag">LLM / OpenAI APIs</span></div>
       </div>
     </div>
   </section>
@@ -372,6 +394,7 @@
     <span class="tab"><span class="n">06</span> Certifications &amp; Awards</span>
     <div class="facts-grid">
       <div class="box">
+        <div class="row"><span class="t">Databricks Certified Machine Learning Professional<small>Valid Jul 2026 – Jul 2028</small></span><span class="d">Jul 2026</span></div>
         <div class="row"><span class="t">IELTS 6.5</span><span class="d">Nov 2022</span></div>
         <div class="row"><span class="t">English<small>Professional working proficiency</small></span><span class="d">Language</span></div>
       </div>
