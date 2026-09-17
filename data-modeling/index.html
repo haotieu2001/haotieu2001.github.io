@@ -68,9 +68,9 @@
   .callout strong.label{display:block;font-size:11px;text-transform:uppercase;letter-spacing:.1em;margin-bottom:5px;color:var(--muted);}
   .callout.bad strong.label{color:#ff8fb0;}
 
-  .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
-  .grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;}
-  .grid-4{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:14px;}
+  .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin:0 0 16px;}
+  .grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;margin:0 0 16px;}
+  .grid-4{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:14px;margin:0 0 16px;}
   .mini-card{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:16px 18px;}
   .mini-card h4{margin-top:0;font-size:14px;}
   .mini-card p{font-size:13.5px;color:var(--muted);margin-bottom:0;}
@@ -151,7 +151,7 @@
 <header class="hero">
   <div class="kicker">Data Modeling &middot; Concepts &amp; Interview Prep</div>
   <h1>Data Modeling for Data Engineers</h1>
-  <p class="dek">How to turn a business process into a set of queryable tables: <strong>fact &amp; dimension tables</strong>, <strong>star schema vs. one big table</strong>, <strong>complex types</strong> (struct/array/map) as a compactness trade-off, <strong>cumulative table design</strong>, <strong>slowly changing dimensions</strong> and the <strong>idempotency</strong> discipline that makes them safe to backfill, <strong>additive dimensions</strong>, <strong>enums</strong>, modeling <strong>heterogeneous sources</strong>, and <strong>graph data modeling</strong> &mdash; closing with a repeatable interview framework and five worked interview questions.</p>
+  <p class="dek">How to turn a business process into a set of queryable tables: <strong>fact &amp; dimension tables</strong>, <strong>star schema vs. one big table</strong>, <strong>complex types</strong> (struct/array/map) as a compactness trade-off, <strong>cumulative table design</strong>, <strong>slowly changing dimensions</strong> and the <strong>idempotency</strong> discipline that makes them safe to backfill, <strong>additive dimensions</strong>, <strong>enums</strong>, modeling <strong>heterogeneous sources</strong>, and <strong>graph data modeling</strong> &mdash; closing with a repeatable interview framework and three worked interview examples.</p>
   <div class="byline">~45 min read &middot; concepts &amp; interview prep &middot; heavy on worked SQL</div>
   <div class="stack reveal">
     <span class="chip"><svg class="ico"><use href="#i-database"/></svg> Dimensional Modeling</span>
@@ -186,7 +186,7 @@
   <a href="#worked-example"><svg class="ico"><use href="#i-cpu"/></svg>14 &middot; Worked Example: A Player-Matchup Graph</a>
   <a href="#antipatterns"><svg class="ico"><use href="#i-warn"/></svg>15 &middot; Common Data Modeling Anti-Patterns</a>
   <a href="#framework"><svg class="ico"><use href="#i-workflow"/></svg>16 &middot; A Repeatable Interview Framework</a>
-  <a href="#qa"><svg class="ico"><use href="#i-question"/></svg>17 &middot; Interview Questions &amp; Model Answers</a>
+  <a href="#worked-interviews"><svg class="ico"><use href="#i-question"/></svg>17 &middot; Applying the Framework: Three Worked Examples</a>
   <a href="#glossary"><svg class="ico"><use href="#i-book"/></svg>18 &middot; Glossary</a>
 </div>
 
@@ -728,82 +728,50 @@ LIMIT 5;</code></pre>
   <p>The same framework applies whether the prompt is a ride-hailing app, a food-delivery platform, a video-streaming service, cloud file storage, or a social network — practicing across a variety of these builds pattern recognition for which facts/dimensions/SCDs each domain tends to need.</p>
 </section>
 
-<!-- ============ 17 INTERVIEW Q&A ============ -->
-<section class="reveal" id="qa">
-  <h2><span class="hico"><svg class="ico"><use href="#i-question"/></svg></span><span class="n">17.</span> Interview Questions &amp; Model Answers</h2>
-  <p class="lede">Five representative questions, spanning the breadth of this guide, each with a model answer structured the way you'd actually want to deliver it out loud.</p>
+<!-- ============ 17 WORKED EXAMPLES USING THE FRAMEWORK ============ -->
+<section class="reveal" id="worked-interviews">
+  <h2><span class="hico"><svg class="ico"><use href="#i-question"/></svg></span><span class="n">17.</span> Applying the Framework: Three Worked Examples</h2>
+  <p class="lede">The four-step framework from §16 only proves itself against real prompts. Three different interview-style scenarios below, each walked through <strong>scope &rarr; clarify &rarr; identify &rarr; enumerate &amp; stress-test</strong> end to end, deliberately chosen to land on three different fact table shapes from §03.</p>
 
   <div class="step">
-    <div class="step-head"><div class="step-num">Q1</div><h4>Design a data model for a ride-hailing app. Walk me through your approach.</h4></div>
+    <div class="step-head"><div class="step-num">1</div><h4>Design a data model for a ride-hailing app</h4></div>
     <div class="step-body">
-      <p><strong>Model answer:</strong> Start by scoping — "I'll model the core ride lifecycle: requesting, matching, completing, and paying for a ride; I'll leave promotions and support tickets out unless you want them in scope." Then ask clarifying questions: does the platform support pooled rides, scheduled/advance bookings, and can a driver operate more than one vehicle? Assume single-rider, on-demand rides with one vehicle per driver unless told otherwise.</p>
-      <p>Identify the events and entities: <code>fact_rides</code> (one row per completed ride — a transaction fact) and <code>fact_payments</code> (one row per payment, potentially split from rides to support tips or refunds as separate events) are the facts; <code>dim_rider</code>, <code>dim_driver</code>, <code>dim_vehicle</code>, and <code>dim_date</code> are the dimensions. State the grain explicitly: "one row in <code>fact_rides</code> per completed ride, not per ride request" — rejected or cancelled requests either get their own factless fact table or a status column, depending on whether you need to analyze the funnel.</p>
+      <p><strong>Scope:</strong> model the core ride lifecycle only — requesting, matching, completing, and paying for a ride. Leave promotions and support tickets out unless asked to extend.</p>
+      <p><strong>Clarify:</strong> does the platform support pooled rides, scheduled/advance bookings, and can a driver operate more than one vehicle? Assume single-rider, on-demand rides with one vehicle per driver unless told otherwise — and say that assumption out loud.</p>
+      <p><strong>Identify:</strong> <code>fact_rides</code> (one row per completed ride) and <code>fact_payments</code> (one row per payment, kept separate to cleanly support tips or refunds as their own events) are the facts — both <strong>transaction facts</strong>, since each row is a discrete event at the moment it happens. <code>dim_rider</code>, <code>dim_driver</code>, <code>dim_vehicle</code>, and <code>dim_date</code> are the dimensions. State the grain explicitly: "one row in <code>fact_rides</code> per completed ride, not per ride request" — rejected or cancelled requests either get their own factless fact table or a status column, depending on whether the funnel itself needs analysis.</p>
       <pre><code>fact_rides(ride_id, rider_id, driver_id, vehicle_id, pickup_date_key,
            pickup_location, dropoff_location, distance_km, fare_amount, status)
 dim_driver(driver_id, name, rating, signup_date, current_vehicle_id)  -- current_vehicle_id: SCD Type 2 if drivers switch vehicles</code></pre>
-      <p>Close by naming the SCD decision explicitly: a driver's assigned vehicle and a driver's rating both change over time, so <code>dim_driver</code> needs Type 2 history if you ever need to ask "what was this driver's rating at the time of this specific ride" — a detail many candidates miss until prompted.</p>
+      <p><strong>Enumerate &amp; stress-test:</strong> a driver's assigned vehicle and a driver's rating both change over time, so <code>dim_driver</code> needs Type 2 history (§07) the moment anyone asks "what was this driver's rating at the time of this specific ride" — a detail many candidates miss until prompted.</p>
     </div>
   </div>
 
   <div class="step">
-    <div class="step-head"><div class="step-num">Q2</div><h4>What's the difference between a fact table and a dimension table? Give an example of a factless fact table and explain why it's useful.</h4></div>
+    <div class="step-head"><div class="step-num">2</div><h4>Design a data model for a video streaming platform</h4></div>
     <div class="step-body">
-      <p><strong>Model answer:</strong> A fact table records something that happened — an event, usually with a numeric measure, growing continuously. A dimension table describes context around that event — who, what, when, where — and is comparatively small and stable. Most fact tables have an obvious measure (an order's dollar amount, a ride's distance), but a <strong>factless fact table</strong> has none: the row's existence itself is the fact.</p>
-      <p>Example: an <code>attendance</code> table with grain "one row per (student_id, class_id, date) if and only if that student attended that class that day," with no measure column at all. It answers questions a measure-bearing table can't cleanly express: "how many students attended class X" is a <code>COUNT(*)</code>, but "which enrolled students never attended a single session" requires a join against the enrollment dimension looking for students with <em>no</em> matching row — a coverage/absence question that only makes sense because the fact table's grain is "did this happen," not "how much."</p>
+      <p><strong>Scope:</strong> model what a subscriber watches and what they're billed — leave content licensing, recommendations, and encoding/CDN concerns out.</p>
+      <p><strong>Clarify:</strong> can one subscription cover multiple profiles under one household? Does a paused-and-resumed episode count as one watch session or several? Is live TV in scope alongside on-demand titles? Assume multiple profiles per subscription and on-demand only unless told otherwise.</p>
+      <p><strong>Identify:</strong> <code>fact_watch_sessions</code> (one row per continuous viewing session — a transaction fact) and <code>fact_subscription_payments</code> (one row per billing charge) are the facts. <code>dim_profile</code>, <code>dim_title</code> (a movie or episode), <code>dim_subscription_plan</code>, and <code>dim_date</code> are the dimensions. Grain, stated explicitly: "one row per profile per uninterrupted viewing session," not per title watched — a rewatched title produces multiple rows, which is exactly what "most-rewatched titles" analysis needs.</p>
+      <pre><code>fact_watch_sessions(session_id, profile_id, title_id, start_ts, end_ts, seconds_watched, device_type)
+dim_subscription_plan(plan_id, plan_name, monthly_price, start_date, end_date, is_current)  -- Type 2: price changes over time
+dim_title(title_id, name, genre, content_rating, release_year)</code></pre>
+      <p><strong>Enumerate &amp; stress-test:</strong> a plan's monthly price changes over time (Type 2 on <code>dim_subscription_plan</code>, so historical revenue reporting reflects the price actually charged, not today's price); a title's content rating or genre tag can be revised after release, raising the same Type 1 vs. Type 2 question as §07; and a cancelled-then-resubscribed household needs its subscription history modeled as multiple date ranges rather than a single boolean flag, or churn/reactivation analysis becomes impossible.</p>
     </div>
   </div>
 
   <div class="step">
-    <div class="step-head"><div class="step-num">Q3</div><h4>How would you model a customer's shipping address so historical orders always show the address that was correct at the time? Which SCD type, and why?</h4></div>
+    <div class="step-head"><div class="step-num">3</div><h4>Design a data model for an e-commerce order &amp; fulfillment system</h4></div>
     <div class="step-body">
-      <p><strong>Model answer:</strong> This is a Type 2 slowly changing dimension, not Type 1. If <code>dim_customer</code> simply overwrote the address column in place (Type 1), every past order would silently start showing the customer's <em>current</em> address the moment they moved — which is factually wrong for historical reporting and non-idempotent under a backfill.</p>
-      <pre><code>CREATE TABLE dim_customer_scd (
-  customer_id BIGINT,
-  address     STRING,
-  start_date  DATE,
-  end_date    DATE,      -- NULL, or a far-future sentinel, for the current row
-  is_current  BOOLEAN
-);
-
--- fact_orders joins on the address that was valid on the order's own date,
--- not on customer_id alone:
-SELECT o.order_id, o.order_date, c.address
-FROM fact_orders o
-JOIN dim_customer_scd c
-  ON o.customer_id = c.customer_id
- AND o.order_date BETWEEN c.start_date AND COALESCE(c.end_date, '9999-12-31');</code></pre>
-      <p>The join condition is the detail interviewers listen for: joining on <code>customer_id</code> alone would match every historical order to whichever SCD row happens to satisfy the join first, or fail outright with duplicate rows — the date-range join is what makes each historical order deterministically resolve to the one address that was actually correct on that date.</p>
-    </div>
-  </div>
-
-  <div class="step">
-    <div class="step-head"><div class="step-num">Q4</div><h4>Why can summing counts across a "breakdown by category" query give the wrong total? Give a concrete example.</h4></div>
-    <div class="step-body">
-      <p><strong>Model answer:</strong> It happens whenever the category being broken down by isn't <em>additive</em> — that is, whenever a single entity can belong to more than one category at once. Summing pre-aggregated counts then double-counts any entity that belongs to multiple categories.</p>
-      <p>Concrete example: counting customers by support channel used (email/chat/phone) and adding the three counts together overstates the real number of distinct customers, because a customer who contacted support through two channels gets counted in both buckets. The fix is either <code>COUNT(DISTINCT customer_id)</code> computed once across all channels for the true total, or being explicit that the per-channel counts are "channel touches," not "unique customers," if that's genuinely what's being reported. The general test to apply before trusting any such sub-total: can one entity hold two of these values simultaneously? If yes, the breakdown isn't additive and summing it is unsafe.</p>
-    </div>
-  </div>
-
-  <div class="step">
-    <div class="step-head"><div class="step-num">Q5</div><h4>When would you model something as a graph instead of a normal fact/dimension schema? Sketch a schema for "who follows whom" on a social platform.</h4></div>
-    <div class="step-body">
-      <p><strong>Model answer:</strong> Reach for a graph shape when the dominant access pattern is traversal and relationship structure — "who's connected to whom," "how many hops apart are these two users," "which users form a tight cluster" — rather than aggregation. A follows-relationship is a textbook case: the relationship itself, not any single user's attributes, is what's being queried.</p>
-      <pre><code>-- vertices: one row per user
-vertices(identifier, vertex_type, properties)   -- vertex_type = 'user'
-
--- edges: one row per follows relationship, directional
-edges(subject_identifier, subject_type, object_identifier, object_type, edge_type, properties)
--- edge_type = 'follows'; subject = the follower, object = the user being followed
-
--- "who does user_42 follow"
-SELECT object_identifier FROM edges WHERE edge_type = 'follows' AND subject_identifier = 'user_42';
-
--- "who follows user_42 back" (mutual follows)
-SELECT a.object_identifier
-FROM edges a
-JOIN edges b ON a.subject_identifier = b.object_identifier AND a.object_identifier = b.subject_identifier
-WHERE a.edge_type = 'follows' AND b.edge_type = 'follows' AND a.subject_identifier = 'user_42';</code></pre>
-      <p>Worth naming explicitly: unlike a follows-relationship modeled as a plain bridge table (which works fine too, for simple one-hop queries), the vertex/edge shape stays uniform as more relationship and entity types are added later — a "blocked," "liked a post from," or "shares a group with" edge is just a new <code>edge_type</code> value, not a schema change.</p>
+      <p><strong>Scope:</strong> model an order from placement through delivery. Leave returns, customer service, and marketing attribution out unless extended.</p>
+      <p><strong>Clarify:</strong> can a single order ship as multiple partial packages? Is this a single-seller store or a multi-seller marketplace? Assume a marketplace with partial shipments allowed, since that's the harder and more realistic case.</p>
+      <p><strong>Identify:</strong> this is a natural fit for an <strong>accumulating snapshot fact</strong> (§03) rather than a plain transaction fact, because one order moves through a known sequence of milestones and the same row should be updated in place as it progresses, instead of scattering one order across several disconnected event rows. <code>dim_customer</code>, <code>dim_product</code>, <code>dim_seller</code>, and <code>dim_date</code> round out the dimensions.</p>
+      <pre><code>fact_order_fulfillment(
+  order_id, customer_id, product_id, seller_id,
+  price_at_order_time,          -- snapshotted, not looked up from dim_product - see below
+  ordered_at, paid_at, shipped_at, delivered_at,   -- filled in as each milestone happens, NULL until then
+  status
+)</code></pre>
+      <p><strong>Enumerate &amp; stress-test:</strong> a product's price changes constantly, but an order must always show the price the customer actually paid — the fix is snapshotting <code>price_at_order_time</code> directly onto the fact row at insert time, rather than joining to <code>dim_product</code> for price (a plain SCD on <code>dim_product</code> would still lose the exact price if two orders land in the same validity window at different negotiated prices). A seller's fulfillment warehouse can also change over time, which is a straightforward Type 2 case on <code>dim_seller</code>. Naming <em>which</em> attributes get snapshotted onto the fact versus looked up from a Type 2 dimension — and why — is exactly the kind of judgment call this framework is built to surface.</p>
     </div>
   </div>
 </section>
