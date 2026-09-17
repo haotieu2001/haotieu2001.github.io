@@ -1,0 +1,867 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Data Modeling for Data Engineers</title>
+<style>
+  :root{
+    --bg:#111117; --bg2:#16161d; --panel:#191921; --panel2:#1d1d26;
+    --ink:#f1f1f1; --muted:#9aa0b4; --dim:#6b6b78; --border:#2c2c38;
+    --cyan:#28B9FF; --cyan2:#5AC8FF; --blue:#5C78FF;
+    --amber:#FFB454; --red:#FF5C8A;
+    --grad:linear-gradient(90deg,#28B9FF,#5C78FF);
+    --accent:#5AC8FF;
+    --font:"JetBrainsMono Nerd Font","JetBrains Mono","Symbols Nerd Font",ui-monospace,"Cascadia Code",Menlo,Consolas,monospace;
+    --radius:14px;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font);font-size:15.5px;line-height:1.8;-webkit-font-smoothing:antialiased;}
+  a{color:var(--accent);text-decoration:none;border-bottom:1px dotted #5AC8FF66;}
+  a:hover{color:#fff;border-bottom-color:#fff;}
+  img,svg{max-width:100%;}
+
+  #bar{position:fixed;top:0;left:0;height:3px;width:0;z-index:50;background:var(--grad);box-shadow:0 0 12px #5C78FF99;transition:width .1s linear;}
+
+  header.hero{padding:60px 22px 30px;text-align:center;position:relative;overflow:hidden;}
+  .kicker{font-size:12px;letter-spacing:.28em;text-transform:uppercase;color:var(--muted);}
+  header.hero h1{
+    font-size:clamp(26px,5vw,44px);line-height:1.2;margin:14px auto 12px;max-width:26ch;font-weight:800;
+    color:#5AC8FF;
+  }
+  .dek{max-width:72ch;margin:0 auto;color:var(--muted);font-size:16px;}
+  .byline{margin-top:16px;font-size:12.5px;color:var(--dim);}
+  .stack{margin-top:18px;display:flex;align-items:center;gap:10px;font-size:12px;color:var(--dim);flex-wrap:wrap;justify-content:center;}
+  .chip{display:inline-flex;align-items:center;gap:7px;padding:5px 12px;border-radius:999px;border:1px solid #2b4a80;background:#0e2740;color:#5AC8FF;font-weight:700;font-size:11.5px;}
+  .chip .ico{width:14px;height:14px;}
+
+  .wrap{max-width:940px;margin:0 auto;padding:0 22px 100px;}
+
+  .toc{background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:16px 22px;margin:30px auto 44px;column-count:2;column-gap:28px;}
+  .toc>strong{column-span:all;display:block;margin-bottom:8px;color:#fff;font-size:13px;letter-spacing:.12em;text-transform:uppercase;}
+  .toc a{display:block;color:var(--cyan2);text-decoration:none;font-size:13.5px;line-height:1.9;break-inside:avoid;border:0;}
+  .toc a:hover{color:#fff;}
+  .toc a .ico{width:14px;height:14px;margin-right:9px;vertical-align:-2px;opacity:.85;}
+  @media (max-width:640px){.toc{column-count:1;}}
+
+  section{margin-bottom:54px;scroll-margin-top:20px;}
+  h2{font-size:clamp(21px,3.2vw,28px);margin:52px 0 6px;font-weight:800;line-height:1.22;padding-top:14px;border-top:1px solid var(--border);display:flex;align-items:center;gap:10px;}
+  h2 .n{color:var(--blue);}
+  .hico{display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;border-radius:11px;flex:0 0 36px;background:#0e2740;border:1px solid #2b4a80;color:var(--cyan2);}
+  .hico .ico{width:19px;height:19px;}
+  .ico{width:1em;height:1em;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+  .lede{font-size:16px;color:#dcdce4;margin-top:12px;}
+
+  h3{font-size:17px;margin:30px 0 10px;font-weight:700;color:#fff;}
+  h4{font-size:14.5px;margin:18px 0 8px;color:#fff;}
+  h5{font-size:13.5px;margin:14px 0 6px;color:#cdd0dd;font-weight:700;}
+  p{margin:0 0 14px;color:#dcdce4;}
+  ul,ol{margin:0 0 16px;padding-left:22px;color:#dcdce4;}
+  li{margin-bottom:6px;}
+  em{color:#fff;font-style:italic;}
+
+  .callout{border-left:4px solid var(--cyan);background:var(--panel);border-radius:0 12px 12px 0;padding:14px 20px;margin:18px 0;font-size:14px;color:#dcdce4;}
+  .callout.def{border-left-color:var(--blue);}
+  .callout.warn{border-left-color:var(--amber);}
+  .callout.bad{border-left-color:var(--red);}
+  .callout strong.label{display:block;font-size:11px;text-transform:uppercase;letter-spacing:.1em;margin-bottom:5px;color:var(--muted);}
+  .callout.bad strong.label{color:#ff8fb0;}
+
+  .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+  .grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;}
+  .grid-4{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:14px;}
+  .mini-card{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:16px 18px;}
+  .mini-card h4{margin-top:0;font-size:14px;}
+  .mini-card p{font-size:13.5px;color:var(--muted);margin-bottom:0;}
+
+  table{width:100%;border-collapse:collapse;margin:16px 0;font-size:13.5px;}
+  thead th{text-align:left;background:var(--panel2);color:#fff;padding:10px 14px;font-size:12px;text-transform:uppercase;letter-spacing:.04em;border:1px solid var(--border);}
+  tbody td{padding:11px 14px;border:1px solid var(--border);color:#cdd0dd;vertical-align:top;}
+  tbody tr:nth-child(even) td{background:#1a1a22;}
+  tbody td strong{color:#fff;}
+  .table-wrap{overflow-x:auto;}
+
+  code{font-family:var(--font);background:#23232b;color:#5AC8FF;padding:1px 7px;border-radius:5px;font-size:.9em;border:1px solid var(--border);}
+  pre{background:#1D1D26;border:1px solid var(--border);border-radius:12px;padding:16px 20px;margin:0 0 16px;overflow-x:auto;}
+  pre code{background:none;border:none;padding:0;color:#dcdce4;font-size:13px;line-height:1.65;white-space:pre;}
+
+  .step{border:1px solid var(--border);border-radius:16px;background:var(--panel);margin:26px 0;padding:0;overflow:hidden;}
+  .step .step-head{display:flex;align-items:center;gap:14px;padding:16px 20px;background:var(--panel2);border-bottom:1px solid var(--border);}
+  .step .step-num{width:32px;height:32px;border-radius:50%;background:var(--grad);color:#16161D;font-weight:800;display:flex;align-items:center;justify-content:center;flex:0 0 32px;font-size:12.5px;}
+  .step .step-head h4{margin:0;font-size:15.5px;color:#fff;}
+  .step .step-body{padding:18px 22px 22px;}
+  .step .step-body p:last-child{margin-bottom:0;}
+  .step .step-body pre:last-child{margin-bottom:0;}
+
+  .glossary dt{font-weight:700;margin-top:14px;color:#fff;}
+  .glossary dd{margin:2px 0 0;color:var(--muted);font-size:14px;}
+
+  hr{border:0;border-top:1px solid var(--border);margin:40px auto;}
+  footer.end{color:var(--muted);font-size:12.5px;}
+
+  .back-top{position:fixed;bottom:24px;right:24px;width:42px;height:42px;border-radius:50%;background:var(--panel2);border:1px solid var(--border);color:var(--cyan2);display:flex;align-items:center;justify-content:center;box-shadow:0 8px 24px rgba(0,0,0,.5);opacity:0;pointer-events:none;transition:opacity .2s;text-decoration:none;font-size:18px;z-index:20;}
+  .back-top.show{opacity:1;pointer-events:auto;}
+
+  .reveal{opacity:0;transform:translateY(18px);transition:opacity .6s ease,transform .6s ease;}
+  .reveal.in{opacity:1;transform:none;}
+  @media (prefers-reduced-motion: reduce){.reveal{opacity:1;transform:none;transition:none;}}
+
+  @media (max-width: 720px){
+    .grid-2,.grid-3,.grid-4{grid-template-columns:1fr;}
+    header.hero{padding:44px 16px 22px;}
+  }
+
+  .nav{position:sticky;top:0;z-index:60;background:rgba(25,25,33,.82);backdrop-filter:blur(10px);border-bottom:1px solid var(--border);}
+  .nav-inner{max-width:1040px;margin:0 auto;padding:12px 24px;display:flex;align-items:center;gap:18px;flex-wrap:wrap;}
+  .nav-brand{font-weight:800;letter-spacing:.16em;font-size:15px;text-decoration:none;border:0;color:#5AC8FF;}
+  .nav-links{display:flex;gap:6px;flex-wrap:wrap;margin-left:auto;}
+  .nav-links a{text-decoration:none;border:1px solid transparent;color:#9aa0b4;font-weight:700;font-size:13.5px;padding:6px 14px;border-radius:999px;transition:.2s;}
+  .nav-links a:hover{color:#fff;border-color:var(--border);background:#242739;}
+  .nav-links a.active{color:#5AC8FF;border-color:#28B9FF55;background:#28B9FF14;}
+  :focus-visible{outline:2px solid #5AC8FF;outline-offset:3px;border-radius:6px;}
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs>
+<symbol id="i-compass" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="m15.6 8.4-2.1 5.1-5.1 2.1 2.1-5.1 5.1-2.1Z"/></symbol>
+<symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="3.6"/><path d="M4.8 20.2a7.2 7.2 0 0 1 14.4 0"/></symbol>
+<symbol id="i-database" viewBox="0 0 24 24"><ellipse cx="12" cy="6" rx="8" ry="3.2"/><path d="M4 6v12c0 1.8 3.6 3.2 8 3.2s8-1.4 8-3.2V6"/><path d="M20 12c0 1.8-3.6 3.2-8 3.2S4 13.8 4 12"/></symbol>
+<symbol id="i-layers" viewBox="0 0 24 24"><path d="m12 3 9 4.8-9 4.8-9-4.8 9-4.8Z"/><path d="m3 12.6 9 4.8 9-4.8M3 17.2l9 4.8 9-4.8"/></symbol>
+<symbol id="i-box" viewBox="0 0 24 24"><path d="M12 3 21 7.5v9L12 21 3 16.5v-9z"/><path d="M3 7.5 12 12l9-4.5M12 12v9"/></symbol>
+<symbol id="i-repeat" viewBox="0 0 24 24"><path d="M16.5 3 20 6.5 16.5 10"/><path d="M4 11.5V9a2.5 2.5 0 0 1 2.5-2.5H20"/><path d="M7.5 21 4 17.5 7.5 14"/><path d="M20 12.5V15a2.5 2.5 0 0 1-2.5 2.5H4"/></symbol>
+<symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.4"/><path d="M12 7.5V12l3.4 2"/></symbol>
+<symbol id="i-code" viewBox="0 0 24 24"><path d="m8 8.5-4 3.5 4 3.5M16 8.5l4 3.5-4 3.5M13.6 5l-3.2 14"/></symbol>
+<symbol id="i-check" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="m8 12.2 2.7 2.7L16.2 9"/></symbol>
+<symbol id="i-scale" viewBox="0 0 24 24"><path d="M12 4v16M6 20h12M4 9l3-4 3 4M14 9l3-4 3 4"/><path d="M4 9a3 3 0 0 0 6 0M14 9a3 3 0 0 0 6 0"/></symbol>
+<symbol id="i-list" viewBox="0 0 24 24"><path d="M8.5 6h12M8.5 12h12M8.5 18h12M3.7 6h.01M3.7 12h.01M3.7 18h.01"/></symbol>
+<symbol id="i-plug" viewBox="0 0 24 24"><path d="M9 3v5.5M15 3v5.5"/><path d="M6.5 8.5h11V12a5.5 5.5 0 0 1-11 0V8.5Z"/><path d="M12 17.5V21"/></symbol>
+<symbol id="i-network" viewBox="0 0 24 24"><circle cx="5.5" cy="6" r="2.5"/><circle cx="5.5" cy="18" r="2.5"/><circle cx="18.5" cy="12" r="2.5"/><path d="m7.9 7.2 8.2 3.7M7.9 16.8l8.2-3.7"/></symbol>
+<symbol id="i-cpu" viewBox="0 0 24 24"><rect x="6" y="6" width="12" height="12" rx="1.6"/><rect x="9.5" y="9.5" width="5" height="5" rx="1"/><path d="M9 3v2.4M15 3v2.4M9 18.6V21M15 18.6V21M3 9h2.4M3 15h2.4M18.6 9H21M18.6 15H21"/></symbol>
+<symbol id="i-warn" viewBox="0 0 24 24"><path d="M12 3.2 2.8 19.6h18.4L12 3.2Z"/><path d="M12 9.5v4.2M12 16.8h.01"/></symbol>
+<symbol id="i-workflow" viewBox="0 0 24 24"><rect x="3" y="3.5" width="7" height="6" rx="1.5"/><rect x="14" y="14.5" width="7" height="6" rx="1.5"/><path d="M6.5 9.5v5a3 3 0 0 0 3 3H14"/></symbol>
+<symbol id="i-question" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.6 9.4a2.5 2.5 0 1 1 3.3 2.4c-.6.2-.9.8-.9 1.5v.6M12 17h.01"/></symbol>
+<symbol id="i-book" viewBox="0 0 24 24"><path d="M4 5.5A2 2 0 0 1 6 4h5v15H6a2 2 0 0 0-2 1.4z"/><path d="M20 5.5A2 2 0 0 0 18 4h-5v15h5a2 2 0 0 1 2 1.4z"/></symbol>
+</defs></svg>
+
+<div id="bar"></div>
+<nav class="nav"><div class="nav-inner"><a class="nav-brand" href="../index.html">HAO TIEU KIM</a><div class="nav-links"><a href="../index.html">Portfolio</a><a href="../blogs.html">Blogs</a><a href="../essentials.html" class="active">Data Engineer Essentials</a><a href="../adjacent-skills.html">Adjacent Skills</a></div></div></nav>
+
+<header class="hero">
+  <div class="kicker">Data Modeling &middot; Concepts &amp; Interview Prep</div>
+  <h1>Data Modeling for Data Engineers</h1>
+  <p class="dek">How to turn a business process into a set of queryable tables: <strong>fact &amp; dimension tables</strong>, <strong>star schema vs. one big table</strong>, <strong>complex types</strong> (struct/array/map) as a compactness trade-off, <strong>cumulative table design</strong>, <strong>slowly changing dimensions</strong> and the <strong>idempotency</strong> discipline that makes them safe to backfill, <strong>additive dimensions</strong>, <strong>enums</strong>, modeling <strong>heterogeneous sources</strong>, and <strong>graph data modeling</strong> &mdash; closing with a repeatable interview framework and five worked interview questions.</p>
+  <div class="byline">~45 min read &middot; concepts &amp; interview prep &middot; heavy on worked SQL</div>
+  <div class="stack reveal">
+    <span class="chip"><svg class="ico"><use href="#i-database"/></svg> Dimensional Modeling</span>
+    <span class="chip"><svg class="ico"><use href="#i-repeat"/></svg> Cumulative Tables</span>
+    <span class="chip"><svg class="ico"><use href="#i-clock"/></svg> Slowly Changing Dimensions</span>
+    <span class="chip"><svg class="ico"><use href="#i-network"/></svg> Graph Modeling</span>
+  </div>
+</header>
+
+<div class="wrap">
+
+<div class="callout def reveal">
+  <strong class="label">Where this material comes from</strong>
+  The concepts here follow the classic Kimball dimensional-modeling tradition (<em>The Data Warehouse Toolkit</em>), plus the modern, production-tested patterns (cumulative tables, complex-type modeling, idempotent SCDs, graph modeling) popularized by Zach Wilson's DataExpert.io data engineering bootcamp and common data-modeling interview frameworks such as Afaque Ahmad's interview-prep material. Everything below is explained from scratch in original wording, with original worked examples &mdash; treat it as a from-zero learning reference, not a transcript.
+</div>
+
+<div class="toc reveal">
+  <strong>Contents</strong>
+  <a href="#what"><svg class="ico"><use href="#i-compass"/></svg>01 &middot; What Data Modeling Actually Means</a>
+  <a href="#dimensions"><svg class="ico"><use href="#i-user"/></svg>02 &middot; Dimensions &amp; Knowing Your Data Consumer</a>
+  <a href="#facts"><svg class="ico"><use href="#i-database"/></svg>03 &middot; Fact Tables &amp; Dimension Tables</a>
+  <a href="#schemas"><svg class="ico"><use href="#i-layers"/></svg>04 &middot; Star Schema, Snowflake &amp; One Big Table</a>
+  <a href="#complex-types"><svg class="ico"><use href="#i-box"/></svg>05 &middot; Complex Data Types: Struct, Array &amp; Map</a>
+  <a href="#cumulative"><svg class="ico"><use href="#i-repeat"/></svg>06 &middot; Cumulative Table Design</a>
+  <a href="#scd"><svg class="ico"><use href="#i-clock"/></svg>07 &middot; Slowly Changing Dimensions</a>
+  <a href="#scd-sql"><svg class="ico"><use href="#i-code"/></svg>08 &middot; Implementing SCD Type 2 in SQL</a>
+  <a href="#idempotency"><svg class="ico"><use href="#i-check"/></svg>09 &middot; Idempotent Pipeline Design</a>
+  <a href="#additive"><svg class="ico"><use href="#i-scale"/></svg>10 &middot; Additive vs. Non-Additive Dimensions</a>
+  <a href="#enums"><svg class="ico"><use href="#i-list"/></svg>11 &middot; Enums as a Modeling Tool</a>
+  <a href="#heterogeneous"><svg class="ico"><use href="#i-plug"/></svg>12 &middot; Modeling Heterogeneous Sources</a>
+  <a href="#graph"><svg class="ico"><use href="#i-network"/></svg>13 &middot; Graph Data Modeling</a>
+  <a href="#worked-example"><svg class="ico"><use href="#i-cpu"/></svg>14 &middot; Worked Example: A Player-Matchup Graph</a>
+  <a href="#antipatterns"><svg class="ico"><use href="#i-warn"/></svg>15 &middot; Common Data Modeling Anti-Patterns</a>
+  <a href="#framework"><svg class="ico"><use href="#i-workflow"/></svg>16 &middot; A Repeatable Interview Framework</a>
+  <a href="#qa"><svg class="ico"><use href="#i-question"/></svg>17 &middot; Interview Questions &amp; Model Answers</a>
+  <a href="#glossary"><svg class="ico"><use href="#i-book"/></svg>18 &middot; Glossary</a>
+</div>
+
+<!-- ============ 01 WHAT DATA MODELING MEANS ============ -->
+<section class="reveal" id="what">
+  <h2><span class="hico"><svg class="ico"><use href="#i-compass"/></svg></span><span class="n">01.</span> What Data Modeling Actually Means</h2>
+  <p class="lede">Strip away the jargon and data modeling is one skill: turning a business process into a set of tables that are fast and easy to query for the questions that process raises. Everything else in this guide &mdash; star schemas, complex types, SCDs, graphs &mdash; is a technique for doing that well at a specific scale or shape of data.</p>
+
+  <p>A useful way to picture the raw material you're modeling is a chain of four layers, each answering a different question about the same underlying data:</p>
+
+  <div class="grid-4">
+    <div class="mini-card"><h4>1. Transactional</h4><p>Normalized OLTP tables an application writes to directly &mdash; one row per real-world event, optimized for fast single-record reads/writes, not analysis.</p></div>
+    <div class="mini-card"><h4>2. Master data</h4><p>A consolidated, non-destructive merge of many transactional sources into one trustworthy table per business entity &mdash; the layer this guide spends the most time on.</p></div>
+    <div class="mini-card"><h4>3. OLAP cube</h4><p>Denormalized, population-level tables shaped for grouping and aggregation &mdash; the classic fact/dimension star schema.</p></div>
+    <div class="mini-card"><h4>4. Metrics</h4><p>A single number (or a small time series of them) rolled up from the cube &mdash; what actually lands on an executive dashboard.</p></div>
+  </div>
+
+  <h3>OLTP vs. OLAP: Two Different Jobs</h3>
+  <p>These two live at opposite ends of the chain above, and confusing them is the single most common data-modeling mistake:</p>
+  <div class="table-wrap"><table>
+    <thead><tr><th></th><th>OLTP (transactional)</th><th>OLAP (analytical)</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Shape</strong></td><td>Normalized (3NF) &mdash; minimal redundancy</td><td>Denormalized &mdash; redundancy traded for read speed</td></tr>
+      <tr><td><strong>Typical query</strong></td><td>"Fetch this one customer's order"</td><td>"Total revenue by region, last quarter"</td></tr>
+      <tr><td><strong>Optimized for</strong></td><td>Fast, safe single-row reads/writes; referential integrity</td><td>Scanning and aggregating millions of rows</td></tr>
+      <tr><td><strong>Who owns it</strong></td><td>Software/backend engineers, application constraints</td><td>Data engineers, analysts</td></tr>
+    </tbody>
+  </table></div>
+  <p>The <strong>master data</strong> layer exists precisely because jumping straight from a dozen normalized OLTP tables to an OLAP cube forces every analyst to re-derive the same joins, and re-litigate the same business logic, over and over. A well-built master table (say, a single consolidated view of "everything about a customer" merged from the accounts, billing, and support systems that each hold a piece of it) is what a data engineer builds once so downstream cubes and metrics can be derived from one clean source instead of five raw ones.</p>
+
+  <div class="callout def">
+    <strong class="label">Definition</strong>
+    <strong>Data modeling</strong> is the practice of deciding what tables exist, what a row in each one represents (its <em>grain</em>), and how those tables relate to each other &mdash; done in service of specific queries, not as an abstract exercise.
+  </div>
+</section>
+
+<!-- ============ 02 DIMENSIONS & CONSUMERS ============ -->
+<section class="reveal" id="dimensions">
+  <h2><span class="hico"><svg class="ico"><use href="#i-user"/></svg></span><span class="n">02.</span> Dimensions &amp; Knowing Your Data Consumer</h2>
+  <p class="lede">Before touching fact tables, it's worth building a precise vocabulary for the "context" columns that describe an entity &mdash; and for who's actually going to query the table you're about to build.</p>
+
+  <h3>Identifier vs. Attribute</h3>
+  <p>Every dimension is made of two kinds of column. An <strong>identifier</strong> uniquely names an entity (a customer ID, a device ID, a VIN) and never changes. An <strong>attribute</strong> describes that entity, and attributes split further into two kinds that matter a great deal once you reach <a href="#scd">slowly changing dimensions</a>:</p>
+  <div class="grid-2">
+    <div class="mini-card"><h4>Fixed attributes</h4><p>Genuinely immutable facts about an entity &mdash; a person's date of birth, the model year a car was manufactured. No history to track; store one value.</p></div>
+    <div class="mini-card"><h4>Slowly changing attributes</h4><p>Can legitimately change over the entity's lifetime &mdash; a customer's address, a product's price tier, an employee's job title. Whether and how to keep history for these is the entire subject of §07.</p></div>
+  </div>
+
+  <h3>Know Your Data Consumer</h3>
+  <p>The "right" shape for a table isn't universal &mdash; it depends entirely on who queries it next. Four consumer types show up again and again, and each wants something different:</p>
+  <div class="table-wrap"><table>
+    <thead><tr><th>Consumer</th><th>Wants</th><th>Implication for modeling</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Analysts / data scientists</strong></td><td>Flat, simple, one-value-per-column tables</td><td>Favor exploded, denormalized OLAP-shaped tables; avoid nested types here</td></tr>
+      <tr><td><strong>Other data engineers</strong></td><td>Complete, compact, reusable master data</td><td>Nested types (struct/array/map, §05) are welcome &mdash; they know how to unnest them</td></tr>
+      <tr><td><strong>ML models</strong></td><td>An identifier plus flat numeric/categorical feature columns</td><td>Similar to analysts, but every feature must already be numeric or encoded</td></tr>
+      <tr><td><strong>Executives / end customers</strong></td><td>A chart or a number, never a raw table</td><td>The table itself is invisible to them; it only has to correctly feed a metric or dashboard</td></tr>
+    </tbody>
+  </table></div>
+  <div class="callout">
+    <strong class="label">Why this matters</strong>
+    A table that's "wrong" for analysts (say, one packed with nested arrays) can be exactly right one layer upstream, feeding other engineers who build the flattened version analysts actually query. Ask "who reads this table next, and how" before optimizing its shape.
+  </div>
+</section>
+
+<!-- ============ 03 FACT & DIMENSION TABLES ============ -->
+<section class="reveal" id="facts">
+  <h2><span class="hico"><svg class="ico"><use href="#i-database"/></svg></span><span class="n">03.</span> Fact Tables &amp; Dimension Tables</h2>
+  <p class="lede">Dimensional modeling (Ralph Kimball's framework, still the industry default) splits a business process into exactly two kinds of table.</p>
+
+  <div class="grid-2">
+    <div class="mini-card"><h4>Fact table</h4><p>Records something that <em>happened</em>: an event or transaction. Rows are numeric/measurable and grow constantly &mdash; an order, a page view, a payment, a ride.</p></div>
+    <div class="mini-card"><h4>Dimension table</h4><p>Describes the <em>context</em> around a fact: who, what, when, where. Rows are relatively stable and much smaller in number &mdash; a customer, a product, a date, a store.</p></div>
+  </div>
+
+  <h3>Grain: the Single Most Important Decision</h3>
+  <p>The <strong>grain</strong> of a fact table is a precise statement of what one row represents &mdash; "one row per completed order," not "one row per order," which is ambiguous about whether cancelled or in-progress orders appear. Every downstream query, every join, and every aggregation bug traces back to whether the grain was stated precisely and held consistently. Decide the grain first, before adding a single column.</p>
+
+  <pre><code>-- Grain: one row per completed order line item
+CREATE TABLE fact_order_items (
+  order_item_id   BIGINT PRIMARY KEY,
+  order_id        BIGINT NOT NULL,
+  customer_id     BIGINT NOT NULL,   -- FK to dim_customer
+  product_id      BIGINT NOT NULL,   -- FK to dim_product
+  store_id        INT NOT NULL,      -- FK to dim_store
+  order_date_key  INT NOT NULL,      -- FK to dim_date
+  quantity        INT NOT NULL,
+  unit_price      DECIMAL(10,2) NOT NULL,
+  line_total      DECIMAL(10,2) NOT NULL
+);</code></pre>
+
+  <h3>Four Fact Table Shapes</h3>
+  <div class="table-wrap"><table>
+    <thead><tr><th>Type</th><th>Grain</th><th>Example</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Transaction fact</strong></td><td>One row per discrete event, at the moment it happens</td><td>One row per order placed</td></tr>
+      <tr><td><strong>Periodic snapshot</strong></td><td>One row per entity per fixed time interval, regardless of activity</td><td>One row per account per day, showing its end-of-day balance</td></tr>
+      <tr><td><strong>Accumulating snapshot</strong></td><td>One row per entity, updated in place as it moves through a multi-step process</td><td>One row per order, with columns for ordered_at/shipped_at/delivered_at filled in as each milestone happens</td></tr>
+      <tr><td><strong>Factless fact</strong></td><td>One row per event with no numeric measure at all &mdash; the row's existence <em>is</em> the fact</td><td>One row per (student, class, date) marking attendance &mdash; there's nothing to sum, only rows to count</td></tr>
+    </tbody>
+  </table></div>
+  <div class="callout">
+    <strong class="label">Interview-relevant detail: factless facts</strong>
+    These trip people up because there's no obvious "measure" column. The value is in what you can count or join against: "how many students attended class X" is <code>COUNT(*)</code>, and "which students never showed up to a required class" is a join against the roster looking for missing rows &mdash; a coverage question a measure-bearing fact table can't easily answer.
+  </div>
+
+  <h3>Table Relationships</h3>
+  <p>A fact table's foreign keys form the same three relationship types you'd recognize from any relational schema, just with fixed roles: a fact almost always sits on the "many" side.</p>
+  <ul>
+    <li><strong>Many-to-one</strong> (the common case): many <code>fact_order_items</code> rows reference one <code>dim_customer</code> row.</li>
+    <li><strong>One-to-one</strong>: rare between fact and dimension; more common between two dimensions extending each other (a <code>dim_employee</code> row extended by a one-to-one <code>dim_employee_payroll_details</code>).</li>
+    <li><strong>Many-to-many</strong>: needs a bridge (associative) table &mdash; e.g. students and classes, resolved through an enrollment table that itself often <em>is</em> the factless fact above.</li>
+  </ul>
+</section>
+
+<!-- ============ 04 STAR / SNOWFLAKE / OBT ============ -->
+<section class="reveal" id="schemas">
+  <h2><span class="hico"><svg class="ico"><use href="#i-layers"/></svg></span><span class="n">04.</span> Star Schema, Snowflake &amp; One Big Table</h2>
+  <p class="lede">Once you have facts and dimensions, three ways to physically arrange them cover almost every real system.</p>
+
+  <div class="grid-3">
+    <div class="mini-card"><h4>Star schema</h4><p>One fact table, surrounded directly by denormalized dimension tables. The default choice &mdash; fewer joins, easy to reason about, what most BI tools expect.</p></div>
+    <div class="mini-card"><h4>Snowflake schema</h4><p>Dimensions are further normalized into sub-dimensions (<code>dim_product</code> splits into <code>dim_product</code> + <code>dim_product_category</code>). Saves storage and centralizes updates, at the cost of extra joins.</p></div>
+    <div class="mini-card"><h4>One Big Table (OBT)</h4><p>Facts and dimension attributes are pre-joined and flattened into a single wide table. Fastest to query (zero joins), at the cost of storage, write amplification, and update complexity when a dimension attribute changes.</p></div>
+  </div>
+
+  <div class="table-wrap"><table>
+    <thead><tr><th></th><th>Star</th><th>Snowflake</th><th>OBT</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Query joins needed</strong></td><td>Few</td><td>More</td><td>None</td></tr>
+      <tr><td><strong>Storage</strong></td><td>Moderate</td><td>Lowest (normalized)</td><td>Highest (fully denormalized)</td></tr>
+      <tr><td><strong>Updating a shared attribute</strong></td><td>One row in one dimension table</td><td>One row in one sub-dimension table</td><td>Every fact row carrying that attribute</td></tr>
+      <tr><td><strong>Best fit</strong></td><td>General-purpose BI/analytics</td><td>Very large, slowly-changing reference dimensions shared across many facts</td><td>A single, well-known, latency-sensitive query pattern (a serving layer, an ML feature table)</td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="callout warn">
+    <strong class="label">Interview angle</strong>
+    "Why not just always use OBT?" is a favorite follow-up. The honest answer: OBT trades flexibility for speed on one specific query shape. It duplicates every dimension attribute onto every fact row, so a change to a shared attribute (a product's category, say) means rewriting every historical fact row that referenced it &mdash; expensive, and dangerous if that rewrite isn't done atomically. A star schema keeps that as a one-row update in the dimension table. Pick OBT deliberately, for a known serving pattern, not as a default.
+  </div>
+</section>
+
+<!-- ============ 05 COMPLEX TYPES ============ -->
+<section class="reveal" id="complex-types">
+  <h2><span class="hico"><svg class="ico"><use href="#i-box"/></svg></span><span class="n">05.</span> Complex Data Types: Struct, Array &amp; Map</h2>
+  <p class="lede">Modern lakehouse engines (Spark, Snowflake, BigQuery) support nested columns, which opens a middle ground between "fully flat" and "fully compact" that's worth understanding deliberately rather than reaching for by accident.</p>
+
+  <h3>The Compactness vs. Usability Spectrum</h3>
+  <p>Picture a spectrum with two ends. At the <strong>maximally usable</strong> end sits a fully flat table &mdash; every value in its own plain column, trivial to filter and group on, but verbose and sometimes duplicative. At the <strong>maximally compact</strong> end sits a single encoded blob column &mdash; smallest on disk, but unreadable without decoding logic that only the system that wrote it understands. Struct, array, and map sit in the middle: more compact than fully flat, still queryable with plain SQL.</p>
+
+  <h3>The Three Nested Types</h3>
+  <div class="grid-3">
+    <div class="mini-card"><h4>Struct</h4><p>A fixed set of named, independently-typed fields &mdash; effectively "a table inside a table." Use it to group attributes that always travel together and are known ahead of time.</p></div>
+    <div class="mini-card"><h4>Array</h4><p>An ordered list of values (which can themselves be structs). Use it for a variable-length, ordered collection tied to one parent row &mdash; a history, a set of tags, a sequence of events.</p></div>
+    <div class="mini-card"><h4>Map</h4><p>Homogeneously-typed key/value pairs where the keys aren't known in advance. Most engines cap practical key counts in the tens of thousands per row before performance degrades &mdash; it's for genuinely dynamic attributes, not a substitute for a proper schema.</p></div>
+  </div>
+
+  <pre><code>-- A product catalog row using all three nested types deliberately
+CREATE TABLE dim_product (
+  product_id     BIGINT,
+  name           STRING,
+  dimensions     STRUCT&lt;length_cm: DOUBLE, width_cm: DOUBLE, height_cm: DOUBLE&gt;,  -- fixed, known fields
+  image_urls     ARRAY&lt;STRING&gt;,                                                   -- variable-length, ordered
+  custom_attrs   MAP&lt;STRING, STRING&gt;                                              -- seller-defined, unpredictable keys
+);</code></pre>
+
+  <div class="callout">
+    <strong class="label">Tie this back to §02</strong>
+    Nested types are usually the wrong shape for analysts (who want flat columns to <code>GROUP BY</code>) and the right shape for a master-data table read by other data engineers, who can <code>explode</code>/<code>unnest</code> what they need. Choosing to nest a column is a statement about who reads the table next.
+  </div>
+
+  <h3>A Gotcha: Nested Arrays, Joins, and Compression</h3>
+  <p>Columnar formats like Parquet compress a sorted, repetitive column extremely well using run-length encoding &mdash; a column of mostly-identical adjacent values collapses to almost nothing on disk. This matters for a specific, easy-to-miss failure mode: imagine a "one row per entity per day" table, sorted by entity, so each entity's rows sit together and compress beautifully. The moment that table goes through a Spark <strong>shuffle</strong> &mdash; any join, any repartition &mdash; rows get physically reordered, that sort locality is destroyed, and file size can balloon even though the logical data didn't change.</p>
+  <p>The practical fix: keep the repeating, per-day values <em>inside an array on one row per entity</em> instead of exploded across many rows. An array survives a join untouched (the join key is still one row per entity), and only gets exploded back into row-per-day form as the very last step, right before whichever downstream consumer needs the flat shape &mdash; keeping the expensive, reorder-prone operation as late in the pipeline as possible.</p>
+</section>
+
+<!-- ============ 06 CUMULATIVE TABLE DESIGN ============ -->
+<section class="reveal" id="cumulative">
+  <h2><span class="hico"><svg class="ico"><use href="#i-repeat"/></svg></span><span class="n">06.</span> Cumulative Table Design</h2>
+  <p class="lede">A pattern for building one table that holds the complete history of every entity you've ever seen &mdash; active or not &mdash; that grows by one day's worth of work each day, forever.</p>
+
+  <h3>The Pattern</h3>
+  <p>Each day, take yesterday's version of the cumulative table and <code>FULL OUTER JOIN</code> it against today's new activity, keyed on the entity ID. A full outer join is essential, not a stylistic choice: it's the only join type that correctly keeps an entity present in yesterday's table but absent today (inactive, but still part of history) <em>and</em> an entity present today but absent from yesterday's table (brand new).</p>
+
+  <pre><code>-- dim_users_cumulated: one row per user, growing by one day each run
+INSERT OVERWRITE TABLE dim_users_cumulated
+SELECT
+  COALESCE(y.user_id, t.user_id)                         AS user_id,
+  COALESCE(y.signup_date, t.signup_date)                 AS signup_date,   -- fixed attribute, never re-derived
+  CASE
+    WHEN y.dates_active IS NULL THEN ARRAY(t.activity_date)                 -- brand new user, seen for the first time
+    WHEN t.activity_date IS NOT NULL THEN ARRAY_UNION(y.dates_active, ARRAY(t.activity_date))  -- active today, extend history
+    ELSE y.dates_active                                                     -- inactive today, carry history forward unchanged
+  END                                                     AS dates_active,
+  t.activity_date IS NOT NULL                             AS is_active_today
+FROM dim_users_cumulated y
+FULL OUTER JOIN daily_user_activity t
+  ON y.user_id = t.user_id
+WHERE t.activity_date = CURRENT_DATE() OR t.activity_date IS NULL;</code></pre>
+
+  <p>Every fixed attribute (§02) is carried forward with a simple <code>COALESCE</code>; every accumulating attribute (the activity-dates array here) gets its own three-way <code>CASE</code>: start it, extend it, or leave it untouched. Once the array exists, expensive historical questions collapse into index lookups instead of scans:</p>
+  <pre><code>-- "Was this user active at any point in the last 90 days?" - no scan, no GROUP BY
+SELECT user_id, EXISTS(dates_active, d -> d >= CURRENT_DATE() - INTERVAL 90 DAYS) AS active_last_90d
+FROM dim_users_cumulated;</code></pre>
+
+  <h3>Why Bother: State-Transition Analysis</h3>
+  <p>Because each row already knows "active today" and carries forward "active yesterday" implicitly (it's just whether the array's second-to-last entry is yesterday's date), classifying every user into new / retained / churned / resurrected for a given day becomes a single self-comparison against the table's own state, instead of a join across two separately-computed daily snapshots.</p>
+
+  <h3>The Trade-Offs</h3>
+  <div class="grid-2">
+    <div class="mini-card"><h4>Pro: cheap historical lookups</h4><p>"Active in the last N days" and growth-accounting metrics become array operations on one row, not aggregations over N rows.</p></div>
+    <div class="mini-card"><h4>Pro: nothing is ever lost</h4><p>An entity that goes inactive still has a row &mdash; useful for lifecycle and reactivation analysis that a table only containing "currently active" rows can't support.</p></div>
+    <div class="mini-card"><h4>Con: inherently sequential</h4><p>Day N's output depends on day N-1's output. You cannot backfill multiple days in parallel &mdash; each day must run after the previous one finishes. This directly threatens <a href="#idempotency">idempotency</a> if the chain runs out of order.</p></div>
+    <div class="mini-card"><h4>Con: deletion is a separate problem</h4><p>An entity that should be forgotten (a deleted account, a privacy request) doesn't just disappear &mdash; it keeps getting carried forward by the <code>COALESCE</code>/<code>CASE</code> logic. Deletion needs its own explicit pruning step run against this table.</p></div>
+  </div>
+</section>
+
+<!-- ============ 07 SCD ============ -->
+<section class="reveal" id="scd">
+  <h2><span class="hico"><svg class="ico"><use href="#i-clock"/></svg></span><span class="n">07.</span> Slowly Changing Dimensions</h2>
+  <p class="lede">A slowly changing dimension (SCD) is any dimension attribute from §02 that can legitimately change value over an entity's lifetime. The question an SCD strategy answers is simple to state and easy to get wrong: <em>when it changes, what happens to the old value?</em></p>
+
+  <div class="table-wrap"><table>
+    <thead><tr><th>Type</th><th>Strategy</th><th>Keeps history?</th><th>Notes</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Type 0</strong></td><td>Never changes; store it once</td><td>N/A</td><td>Only valid for genuinely fixed attributes (§02) &mdash; using Type 0 on something that actually changes silently corrupts data.</td></tr>
+      <tr><td><strong>Type 1</strong></td><td>Overwrite in place with the latest value</td><td>No</td><td>Simplest option, but dangerous for analytics: reprocessing (a backfill) pulls today's value into every historical row, quietly rewriting the past. Reasonable inside OLTP systems; risky as a source for historical reporting.</td></tr>
+      <tr><td><strong>Type 2</strong> &mdash; the default choice</td><td>Insert a new row per change, with validity dates</td><td>Full history</td><td>Any historical date maps deterministically to exactly one row, which is what makes it safe to backfill. The current row's <code>end_date</code> is either a far-future sentinel (e.g. <code>9999-12-31</code>) or <code>NULL</code> &mdash; both conventions are common; pick one and apply it consistently.</td></tr>
+      <tr><td><strong>Type 3</strong></td><td>Add an "original value" and a "current value" column</td><td>Only 2 values</td><td>One row, no extra joins &mdash; but silently breaks (loses everything before the second change) the moment a value changes a third time. Only safe when a maximum of one change is a guaranteed business rule.</td></tr>
+      <tr><td><strong>Types 4&ndash;7</strong></td><td>Various hybrids (a separate mini-dimension, a history table alongside a current-state table, combinations of the above)</td><td>Varies</td><td>Exist for specific high-cardinality or very-high-change-frequency edge cases; worth knowing the names exist, rarely worth implementing from scratch.</td></tr>
+    </tbody>
+  </table></div>
+
+  <div class="callout warn">
+    <strong class="label">A genuine debate worth knowing</strong>
+    Not everyone agrees SCDs should exist at all. An alternative school of thought argues for simply taking a full snapshot of every dimension every single day &mdash; guaranteed idempotent, trivially simple, at the cost of storing far more rows. SCD Type 2 is the storage-efficient middle ground; daily full snapshots are the simplicity-maximizing alternative. Knowing both positions, and being able to argue the storage/complexity trade-off either way, is a strong interview signal.
+  </div>
+
+  <p>In practice, Type 0 and Type 2 cover the overwhelming majority of real analytics needs: Type 0 for what truly never changes, Type 2 for everything that does and where history matters. Reach for Type 1 or Type 3 only when you have a specific, well-understood reason to accept their limitations.</p>
+</section>
+
+<!-- ============ 08 SCD SQL ============ -->
+<section class="reveal" id="scd-sql">
+  <h2><span class="hico"><svg class="ico"><use href="#i-code"/></svg></span><span class="n">08.</span> Implementing SCD Type 2 in SQL</h2>
+  <p class="lede">Two genuinely different strategies exist for building an SCD Type 2 table, and interviewers like probing which one you'd pick and why.</p>
+
+  <h3>Strategy A: Recompute From Full History</h3>
+  <p>Reprocess every historical row every run, using window functions to detect where a value changed and collapse consecutive unchanged rows into one validity range. Simple to reason about, and the whole table is always internally consistent because it's derived fresh each time.</p>
+  <pre><code>-- Example: tracking an employee's job_title and department over time
+WITH with_previous AS (
+  SELECT
+    employee_id, effective_date, job_title, department,
+    LAG(job_title)   OVER (PARTITION BY employee_id ORDER BY effective_date) AS prev_job_title,
+    LAG(department)  OVER (PARTITION BY employee_id ORDER BY effective_date) AS prev_department
+  FROM employee_history_snapshots
+),
+with_change_flag AS (
+  SELECT *,
+    CASE WHEN job_title  IS DISTINCT FROM prev_job_title
+       OR department IS DISTINCT FROM prev_department
+    THEN 1 ELSE 0 END AS is_change
+  FROM with_previous
+),
+with_streak AS (
+  SELECT *,
+    SUM(is_change) OVER (PARTITION BY employee_id ORDER BY effective_date) AS streak_id
+  FROM with_change_flag
+)
+SELECT
+  employee_id, job_title, department,
+  MIN(effective_date) AS start_date,
+  MAX(effective_date) AS end_date
+FROM with_streak
+GROUP BY employee_id, streak_id, job_title, department;</code></pre>
+  <p>The <code>streak_id</code> (a running total of the change flag) is the trick: it stays constant across consecutive rows where nothing changed, and increments the moment something does &mdash; giving the final <code>GROUP BY</code> exactly the buckets you want to collapse into validity ranges. Note the deliberate use of <code>IS DISTINCT FROM</code> instead of <code>!=</code>: plain inequality comparisons against <code>NULL</code> evaluate to <code>NULL</code> rather than <code>TRUE</code>, which silently fails to flag a change when a value goes from populated to <code>NULL</code> or vice versa. This is the single most common bug in hand-written SCD logic.</p>
+
+  <h3>Strategy B: Incremental (Yesterday's State + Today's Delta)</h3>
+  <p>Split the table into rows that are already closed (never change again), the one still-open row per entity from the prior run, and today's new data — then only touch entities that appear in today's data, unioning everything else through unchanged.</p>
+  <pre><code>WITH closed_rows AS (
+  SELECT * FROM employee_scd WHERE end_date IS NOT NULL
+),
+open_rows AS (
+  SELECT * FROM employee_scd WHERE end_date IS NULL
+),
+classified AS (
+  SELECT
+    o.employee_id, o.job_title AS old_job_title, o.department AS old_department,
+    t.job_title AS new_job_title, t.department AS new_department, t.effective_date
+  FROM open_rows o
+  LEFT JOIN today_snapshot t ON o.employee_id = t.employee_id
+)
+-- unchanged rows pass through untouched; changed rows emit a closed old row + a new open row;
+-- entities with no open row at all are brand new and simply get inserted
+SELECT * FROM closed_rows
+UNION ALL
+SELECT * FROM classified WHERE new_job_title IS NULL  -- no update today: keep the open row as-is
+-- ... plus the close-old-row / open-new-row logic for changed entities, and a plain INSERT for new ones</code></pre>
+  <p>This scans a fraction of the data Strategy A does &mdash; only the previously-open row plus today's delta, never the full closed history. The cost: it reintroduces the same "depends on yesterday's output" sequential dependency as <a href="#cumulative">cumulative table design</a>, so backfilling multiple days out of order isn't safe.</p>
+
+  <div class="callout">
+    <strong class="label">Which one to pick</strong>
+    Strategy A (full recompute) is the right default for dimension-sized data — it's simpler, easier to reason about, and a full rescan is genuinely cheap for anything short of enormous entity counts. Reach for Strategy B (incremental) only once profiling shows the full recompute is actually too slow — a deliberate trade of simplicity for scan cost, not a default.
+  </div>
+</section>
+
+<!-- ============ 09 IDEMPOTENCY ============ -->
+<section class="reveal" id="idempotency">
+  <h2><span class="hico"><svg class="ico"><use href="#i-check"/></svg></span><span class="n">09.</span> Idempotent Pipeline Design</h2>
+  <p class="lede">A pipeline is <strong>idempotent</strong> if running it twice (or ten times) against the same inputs produces exactly the same output as running it once. This single property is what makes backfills, retries, and reruns safe — and every SCD or cumulative table design choice above should be evaluated against whether it preserves it.</p>
+
+  <h3>Four Ways Idempotency Breaks</h3>
+  <div class="grid-2">
+    <div class="mini-card"><h4>1. Blind append</h4><p>A plain <code>INSERT INTO</code> with no truncate, overwrite, or merge duplicates every row on a rerun. Prefer <code>MERGE</code> or a partition-scoped <code>INSERT OVERWRITE</code>, which are safe to run any number of times.</p></div>
+    <div class="mini-card"><h4>2. An unbounded date filter</h4><p><code>WHERE event_date &gt; '2026-01-01'</code> with no upper bound returns a different row set depending on <em>when</em> you run it, not just what date you're processing. Always bound both ends of the window explicitly.</p></div>
+    <div class="mini-card"><h4>3. Missing partition sensors</h4><p>Starting a job before every upstream partition it depends on has actually landed means an early, incomplete run and a later, complete backfill silently disagree. Gate the job on an explicit check that all required upstream partitions exist.</p></div>
+    <div class="mini-card"><h4>4. A "depends on yesterday" chain</h4><p>Cumulative tables (§06) and incremental SCDs (§08) are inherently sequential. Running days out of order, or skipping a day, corrupts every day after it. If you need parallel backfills, this is the price you're paying for the cheaper incremental design.</p></div>
+  </div>
+
+  <div class="callout bad">
+    <strong class="label">A cautionary pattern worth internalizing</strong>
+    A common, well-documented failure mode at companies running large growth-analytics pipelines: a job reads "whatever the latest partition happens to be" from an upstream table instead of a fixed, dated partition. In production this is a bug waiting to happen — two runs on two different days silently see two different inputs, state-transition metrics stop reconciling, and by the time anyone notices, the root cause is buried under weeks of already-corrupted downstream history. The fix is structural, not a one-off patch: pipelines should be pure functions of an explicit, fixed set of dated input partitions. (The one defensible exception: intentionally reading the latest state of a properly-modeled SCD table during a backfill, where "latest" is itself the correct, well-defined input.)
+  </div>
+
+  <h3>Why Unit Tests Don't Catch This</h3>
+  <p>Idempotency bugs are almost invisible to conventional unit tests, because a unit test runs a pipeline exactly once against a fixed fixture and checks the output — which is precisely the case where a non-idempotent pipeline still produces a correct-looking result. The bug only appears on the <em>second</em> run, or on a run at a different wall-clock time, or during a backfill — none of which a typical single-execution test exercises. Treat "does this produce the same output if I run it twice, and if I run it out of calendar order" as its own explicit test, separate from correctness tests.</p>
+</section>
+
+<!-- ============ 10 ADDITIVE DIMENSIONS ============ -->
+<section class="reveal" id="additive">
+  <h2><span class="hico"><svg class="ico"><use href="#i-scale"/></svg></span><span class="n">10.</span> Additive vs. Non-Additive Dimensions</h2>
+  <p class="lede">A subtle but very commonly tested modeling bug: pre-aggregating a count by dimension, then summing those sub-counts, silently produces the wrong grand total whenever an entity can hold more than one value of that dimension at once.</p>
+
+  <h3>The Rule</h3>
+  <p>A dimension is <strong>additive</strong> (for counting purposes, over some window) exactly when an entity can only ever hold one value of it at a time. If it can hold two or more simultaneously, sub-counts by that dimension will double-count any entity that has more than one value, and summing them overstates the true total.</p>
+
+  <div class="callout bad">
+    <strong class="label">Worked counter-example</strong>
+    Suppose you want "total number of customers, broken down by which support channel they've used: email, chat, or phone." Count customers who used email, count customers who used chat, count customers who used phone, and add the three sub-totals together — the sum will be <em>larger</em> than the true number of distinct customers, because any customer who contacted support through two different channels gets counted once in each bucket. Channel-used is not additive: a customer can hold more than one value of it at once.
+  </div>
+  <p>Compare that to counting <em>support tickets</em> by channel instead of customers: a single ticket can only ever be associated with exactly one channel, so ticket counts by channel <em>do</em> sum correctly to the total ticket count. The dimension didn't change — what you're counting did. This is the practical test to apply before trusting any pre-aggregated sub-total: <strong>"can one entity hold two of these values at the same time?"</strong> If yes, don't sum pre-aggregated counts — compute <code>COUNT(DISTINCT entity_id)</code> at the ungrouped grain instead, or design the aggregation to dedupe entities across groups before summing.</p>
+
+  <div class="callout">
+    <strong class="label">SUM-based metrics are usually safe</strong>
+    This entire problem is specific to counting entities. A metric like "total revenue by channel" doesn't have it — a single dollar of revenue is attributable to exactly one transaction and one channel, so revenue sub-totals by channel always sum correctly to total revenue. Watch specifically for <code>COUNT</code> and count-based ratios (rates, percentages) built on a dimension where multi-membership is possible.
+  </div>
+</section>
+
+<!-- ============ 11 ENUMS ============ -->
+<section class="reveal" id="enums">
+  <h2><span class="hico"><svg class="ico"><use href="#i-list"/></svg></span><span class="n">11.</span> Enums as a Modeling Tool</h2>
+  <p class="lede">An enumerated type — a column constrained to a fixed, named set of values — is one of the cheapest, most underused tools in a data engineer's modeling toolkit.</p>
+
+  <h3>What an Enum Buys You</h3>
+  <div class="grid-3">
+    <div class="mini-card"><h4>Free data-quality enforcement</h4><p>A value outside the allowed set fails to load at all, instead of silently landing as an unrecognized string an analyst has to notice later.</p></div>
+    <div class="mini-card"><h4>A place to hang metadata</h4><p>Static, per-value metadata (is this order status a "terminal" state? is this transaction type revenue or cost?) can be attached to the type definition itself — cheaper and more reliable than a broadcast join against a tiny lookup table every query.</p></div>
+    <div class="mini-card"><h4>Free documentation</h4><p>The type declaration itself lists every valid value — a form of documentation that can't drift out of sync with the actual data the way a wiki page can.</p></div>
+  </div>
+
+  <pre><code>CREATE TYPE order_status AS ENUM ('placed', 'paid', 'shipped', 'delivered', 'cancelled', 'refunded');
+
+CREATE TABLE fact_orders (
+  order_id BIGINT,
+  status   order_status,   -- any other value fails to insert
+  ...
+);</code></pre>
+
+  <h3>When to Reach for One</h3>
+  <p>A practical rule of thumb: a column is a good enum candidate when its cardinality is small and stable — roughly 50 distinct values or fewer, and not growing on its own. A country column is the standard counter-example: it looks enum-shaped, but new countries/territories occasionally form or rename, and 190+ values is already past where the "documentation" benefit holds up well. Order status, transaction type, and subscription tier are typical good fits.</p>
+  <p>Enums also make excellent <strong>sub-partition columns</strong>: partitioning a notification-processing pipeline by channel (<code>sms</code> / <code>email</code> / <code>push</code>), for instance, lets a downstream job enumerate the known, finite set of expected partitions and confirm they've all landed before proceeding — directly supporting the partition-sensor idempotency practice from §09.</p>
+</section>
+
+<!-- ============ 12 HETEROGENEOUS SOURCES ============ -->
+<section class="reveal" id="heterogeneous">
+  <h2><span class="hico"><svg class="ico"><use href="#i-plug"/></svg></span><span class="n">12.</span> Modeling Heterogeneous Sources</h2>
+  <p class="lede">A recurring integration problem: you need one clean output table fed by dozens of upstream sources that each look slightly different — marketing platforms, payment processors, third-party data feeds. Bolting on a new <code>JOIN</code> and a new set of columns for every new source doesn't scale past a handful.</p>
+
+  <h3>The Source-Registry Pattern</h3>
+  <p>Centralize the list of known sources as an enum (§11), and pair each enum value with its own small, isolated mapping function that translates that source's raw shape into the shared output schema, plus its own source-specific data-quality checks. Adding source #41 means adding one enum value and one mapping function — the core pipeline logic never changes.</p>
+  <pre><code>CREATE TYPE marketing_source AS ENUM ('google_ads', 'meta_ads', 'linkedin_ads', 'tiktok_ads', ...);
+
+-- One mapping function per source, isolated and independently testable
+CREATE FUNCTION map_google_ads(raw JSON) RETURNS fact_ad_spend_row AS ...;
+CREATE FUNCTION map_meta_ads(raw JSON)   RETURNS fact_ad_spend_row AS ...;
+
+-- The pipeline itself just dispatches by source and unions the results
+INSERT INTO fact_ad_spend
+SELECT map_google_ads(raw) FROM raw_google_ads WHERE load_date = CURRENT_DATE()
+UNION ALL
+SELECT map_meta_ads(raw)   FROM raw_meta_ads   WHERE load_date = CURRENT_DATE();</code></pre>
+  <p>This pattern is common wherever a single reporting or unit-economics table has to reconcile many structurally different upstreams — ad platforms, payment processors, expense categories, infrastructure inventories drawn from many internal tools. The value is organizational as much as technical: the enum is a living, enforced list of "every source we currently support," and the pipeline stays self-documenting as it grows.</p>
+
+  <h3>Flexible Schema via MAP</h3>
+  <p>Sometimes even the shared output schema can't be fully fixed in advance — different sources genuinely carry different optional attributes. A catch-all <code>MAP&lt;STRING, STRING&gt;</code> column (or a raw JSON "other_properties" column) avoids a wide, mostly-<code>NULL</code>, constantly-<code>ALTER TABLE</code>-d table.</p>
+  <div class="callout warn">
+    <strong class="label">The real cost</strong>
+    Maps and JSON compress noticeably worse than typed columns, because the "column name" becomes per-row data instead of schema-level metadata that a columnar format can encode once. A table full of maps is often one of the worst-compressing shapes you can choose. Use a catch-all map only for attributes that are genuinely optional and unpredictable — promote anything that turns out to be common across most rows into a proper typed column.
+  </div>
+</section>
+
+<!-- ============ 13 GRAPH MODELING ============ -->
+<section class="reveal" id="graph">
+  <h2><span class="hico"><svg class="ico"><use href="#i-network"/></svg></span><span class="n">13.</span> Graph Data Modeling</h2>
+  <p class="lede">Every technique so far has modeled entities first and relationships as a side effect (a foreign key). Graph modeling flips that: relationships are the point, and the schema is deliberately generic so it can represent almost any kind of connection without a schema change.</p>
+
+  <h3>When to Reach for a Graph Shape</h3>
+  <p>Reach for graph modeling when the questions you need to answer are fundamentally about <em>connections</em> rather than individual entities: "who is connected to whom, how, and how strongly," "what's the shortest path between these two things," "which entities cluster together." A star schema can technically represent relationships too, but graph modeling makes traversal and relationship-centric queries far more natural, at the cost of being a worse fit for straightforward aggregation.</p>
+
+  <h3>A Universal Two-Table Schema</h3>
+  <p>Almost any graph can be represented with exactly two tables, deliberately schema-light so new entity and relationship types never require a migration:</p>
+  <pre><code>-- One row per entity, of any type
+CREATE TABLE vertices (
+  identifier  STRING,
+  vertex_type STRING,   -- an enum (§11): 'person', 'team', 'project', ...
+  properties  MAP&lt;STRING, STRING&gt;
+);
+
+-- One row per relationship, of any type, in one direction
+CREATE TABLE edges (
+  subject_identifier STRING,
+  subject_type        STRING,
+  object_identifier   STRING,
+  object_type         STRING,
+  edge_type           STRING,   -- an enum: 'works_with', 'manages', 'reports_to', ...
+  properties           MAP&lt;STRING, STRING&gt;
+);</code></pre>
+  <p>The mental shift: stop asking "what table does this entity belong in" and start asking "what is this entity connected to, and by what kind of relationship." A person, a team, and a project can all be vertices; "works on," "manages," and "belongs to" can all be edges — the same two tables hold all of it, and a new relationship type is just a new <code>edge_type</code> value, not a new table or column.</p>
+
+  <div class="callout">
+    <strong class="label">Interview angle</strong>
+    A strong signal in an interview is naming <em>why</em> you'd reach for this shape over a normal fact/dimension design: it's specifically the queries ("find everyone within two hops of this person," "find all projects two teams have both contributed to") that a relational join chain handles awkwardly and a graph traversal handles naturally. Don't reach for a graph model just because relationships exist — every schema has relationships. Reach for it when traversal, not aggregation, is the dominant access pattern.
+  </div>
+</section>
+
+<!-- ============ 14 WORKED EXAMPLE ============ -->
+<section class="reveal" id="worked-example">
+  <h2><span class="hico"><svg class="ico"><use href="#i-cpu"/></svg></span><span class="n">14.</span> Worked Example: An Employee Collaboration Graph</h2>
+  <p class="lede">Pulling §11–§13 together: given a raw table of project staffing (<code>project_id</code>, <code>employee_id</code>, <code>role</code>, <code>hours_logged</code>), build a graph that answers "who has worked with whom, and how much."</p>
+
+  <div class="step">
+    <div class="step-head"><div class="step-num">1</div><h4>Load the vertices</h4></div>
+    <div class="step-body">
+      <p>One row per employee, with career-level aggregates computed once and stored as properties rather than recomputed by every downstream query.</p>
+      <pre><code>INSERT INTO vertices
+SELECT
+  employee_id AS identifier,
+  'employee'  AS vertex_type,
+  MAP('total_projects', CAST(COUNT(DISTINCT project_id) AS STRING),
+      'total_hours',    CAST(SUM(hours_logged) AS STRING)) AS properties
+FROM project_staffing
+GROUP BY employee_id;</code></pre>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-head"><div class="step-num">2</div><h4>Build the "worked with" edges via a self-join</h4></div>
+    <div class="step-body">
+      <p>Two employees are connected whenever they share a <code>project_id</code>. A self-join on the staffing table, excluding an employee pairing with themselves, produces every co-staffing pair — aggregated once per pair rather than once per shared project, so the edge table stays small.</p>
+      <pre><code>INSERT INTO edges
+SELECT
+  a.employee_id AS subject_identifier, 'employee' AS subject_type,
+  b.employee_id AS object_identifier,  'employee' AS object_type,
+  'worked_with' AS edge_type,
+  MAP('shared_projects', CAST(COUNT(DISTINCT a.project_id) AS STRING)) AS properties
+FROM project_staffing a
+JOIN project_staffing b
+  ON a.project_id = b.project_id
+ AND a.employee_id > b.employee_id   -- keeps one direction only, avoids duplicate mirrored edges
+GROUP BY a.employee_id, b.employee_id;</code></pre>
+      <div class="callout warn">
+        <strong class="label">Why <code>&gt;</code>, not <code>!=</code></strong>
+        <code>a.employee_id != b.employee_id</code> alone still produces both (A, B) and (B, A) as separate rows — a symmetric relationship stored twice. Requiring one side to be strictly greater than the other keeps exactly one direction per pair, the same trick used to de-duplicate any symmetric self-join.
+      </div>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-head"><div class="step-num">3</div><h4>Query the graph</h4></div>
+    <div class="step-body">
+      <p>"Who has this person worked with the most, and on how many shared projects?" — a single join against the pre-aggregated edge table, with no need to touch the much larger raw staffing table again.</p>
+      <pre><code>SELECT
+  object_identifier AS coworker_id,
+  CAST(properties['shared_projects'] AS INT) AS shared_projects
+FROM edges
+WHERE edge_type = 'worked_with' AND subject_identifier = 'employee_123'
+ORDER BY shared_projects DESC
+LIMIT 5;</code></pre>
+      <p>Note the explicit cast pulling the value back out of the <code>properties</code> map — values stored in a map or JSON column compare and sort as strings unless cast back to their real type, an easy detail to forget.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 15 ANTI-PATTERNS ============ -->
+<section class="reveal" id="antipatterns">
+  <h2><span class="hico"><svg class="ico"><use href="#i-warn"/></svg></span><span class="n">15.</span> Common Data Modeling Anti-Patterns</h2>
+  <p class="lede">A recap, framed as things to actively watch for rather than as new concepts.</p>
+  <div class="table-wrap"><table>
+    <thead><tr><th>Anti-pattern</th><th>Why it's a problem</th><th>Fix</th></tr></thead>
+    <tbody>
+      <tr><td>Undefined grain</td><td>Every join and aggregation downstream inherits the ambiguity</td><td>State the grain in one precise sentence before adding a single column (§03)</td></tr>
+      <tr><td>Type 1 SCD on an analytics table</td><td>A backfill silently rewrites history</td><td>Use Type 2 for anything historical reporting depends on (§07)</td></tr>
+      <tr><td>Plain <code>INSERT INTO</code> in a scheduled job</td><td>A rerun duplicates every row</td><td><code>MERGE</code> or partition-scoped <code>INSERT OVERWRITE</code> (§09)</td></tr>
+      <tr><td>Summing pre-aggregated counts across a non-additive dimension</td><td>Overstates the true total</td><td>Check "can one entity hold two of these at once?" first (§10)</td></tr>
+      <tr><td>A 200-column, mostly-<code>NULL</code> table for heterogeneous sources</td><td>Unwieldy, constantly needs <code>ALTER TABLE</code></td><td>A source-registry pattern, or a bounded catch-all map (§12)</td></tr>
+      <tr><td>Nested types in an analyst-facing table</td><td>Most BI tools and SQL analysts can't easily query structs/arrays</td><td>Keep nested types one layer upstream; expose a flattened view downstream (§02, §05)</td></tr>
+      <tr><td>Choosing OBT by default</td><td>A single shared-attribute change means rewriting every fact row that referenced it</td><td>Default to star schema; reach for OBT deliberately for one known serving pattern (§04)</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<!-- ============ 16 INTERVIEW FRAMEWORK ============ -->
+<section class="reveal" id="framework">
+  <h2><span class="hico"><svg class="ico"><use href="#i-workflow"/></svg></span><span class="n">16.</span> A Repeatable Interview Framework</h2>
+  <p class="lede">Data modeling interview prompts ("design a data model for a ride-hailing app," "design a data model for a video streaming service") look open-ended, but the same four-step approach applies to nearly all of them.</p>
+
+  <div class="step">
+    <div class="step-head"><div class="step-num">1</div><h4>Scope the business process</h4></div>
+    <div class="step-body"><p>Decide, out loud, how much of the business you're actually modeling. "Ride-hailing" could mean just the ride lifecycle, or it could include payments, driver onboarding, promotions, and support tickets. Naming the boundary first prevents you from either over-scoping (running out of time) or under-scoping (missing what the interviewer actually wants to probe).</p></div>
+  </div>
+  <div class="step">
+    <div class="step-head"><div class="step-num">2</div><h4>Ask clarifying questions</h4></div>
+    <div class="step-body"><p>The answers materially change the model, so ask before designing: Does a ride support multiple stops or pooled riders? Can a booking be made in advance, or only on-demand? Can a driver operate multiple vehicles? Each answer can flip a relationship from one-to-many to many-to-many, or add a dimension you'd otherwise miss. Treat this step as part of what's being graded, not throat-clearing before the "real" answer.</p></div>
+  </div>
+  <div class="step">
+    <div class="step-head"><div class="step-num">3</div><h4>Identify events (facts) and entities (dimensions)</h4></div>
+    <div class="step-body"><p>Walk through the business process and sort every noun/verb into one of the two buckets from §03. For ride-hailing: rides, payments, and ratings are events (facts); riders, drivers, and vehicles are entities (dimensions). Say each classification out loud and justify it — this is where interviewers probe whether your dimensional-modeling fundamentals are solid.</p></div>
+  </div>
+  <div class="step">
+    <div class="step-head"><div class="step-num">4</div><h4>Enumerate attributes, then stress-test with change</h4></div>
+    <div class="step-body"><p>List the columns each table needs, then explicitly ask "what happens to this model if X changes?" — a driver switches vehicles, a rider's phone number updates, a promo code's terms change mid-campaign. Naming which attributes need an SCD strategy (§07) and which are safely fixed is exactly what separates a surface-level answer from one showing real judgment.</p></div>
+  </div>
+
+  <div class="callout">
+    <strong class="label">What's actually being evaluated</strong>
+    Not whether you land on "the" correct schema — there usually isn't one. Interviewers are watching whether you gather requirements before designing, whether your fact/dimension split is sound, whether you handle change (SCDs) correctly, and whether the queries your model would need to answer are actually simple to write against it. Narrate your reasoning, not just your final tables.
+  </div>
+
+  <h3>Prompts Worth Practicing</h3>
+  <p>The same framework applies whether the prompt is a ride-hailing app, a food-delivery platform, a video-streaming service, cloud file storage, or a social network — practicing across a variety of these builds pattern recognition for which facts/dimensions/SCDs each domain tends to need.</p>
+</section>
+
+<!-- ============ 17 INTERVIEW Q&A ============ -->
+<section class="reveal" id="qa">
+  <h2><span class="hico"><svg class="ico"><use href="#i-question"/></svg></span><span class="n">17.</span> Interview Questions &amp; Model Answers</h2>
+  <p class="lede">Five representative questions, spanning the breadth of this guide, each with a model answer structured the way you'd actually want to deliver it out loud.</p>
+
+  <div class="step">
+    <div class="step-head"><div class="step-num">Q1</div><h4>Design a data model for a ride-hailing app. Walk me through your approach.</h4></div>
+    <div class="step-body">
+      <p><strong>Model answer:</strong> Start by scoping — "I'll model the core ride lifecycle: requesting, matching, completing, and paying for a ride; I'll leave promotions and support tickets out unless you want them in scope." Then ask clarifying questions: does the platform support pooled rides, scheduled/advance bookings, and can a driver operate more than one vehicle? Assume single-rider, on-demand rides with one vehicle per driver unless told otherwise.</p>
+      <p>Identify the events and entities: <code>fact_rides</code> (one row per completed ride — a transaction fact) and <code>fact_payments</code> (one row per payment, potentially split from rides to support tips or refunds as separate events) are the facts; <code>dim_rider</code>, <code>dim_driver</code>, <code>dim_vehicle</code>, and <code>dim_date</code> are the dimensions. State the grain explicitly: "one row in <code>fact_rides</code> per completed ride, not per ride request" — rejected or cancelled requests either get their own factless fact table or a status column, depending on whether you need to analyze the funnel.</p>
+      <pre><code>fact_rides(ride_id, rider_id, driver_id, vehicle_id, pickup_date_key,
+           pickup_location, dropoff_location, distance_km, fare_amount, status)
+dim_driver(driver_id, name, rating, signup_date, current_vehicle_id)  -- current_vehicle_id: SCD Type 2 if drivers switch vehicles</code></pre>
+      <p>Close by naming the SCD decision explicitly: a driver's assigned vehicle and a driver's rating both change over time, so <code>dim_driver</code> needs Type 2 history if you ever need to ask "what was this driver's rating at the time of this specific ride" — a detail many candidates miss until prompted.</p>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-head"><div class="step-num">Q2</div><h4>What's the difference between a fact table and a dimension table? Give an example of a factless fact table and explain why it's useful.</h4></div>
+    <div class="step-body">
+      <p><strong>Model answer:</strong> A fact table records something that happened — an event, usually with a numeric measure, growing continuously. A dimension table describes context around that event — who, what, when, where — and is comparatively small and stable. Most fact tables have an obvious measure (an order's dollar amount, a ride's distance), but a <strong>factless fact table</strong> has none: the row's existence itself is the fact.</p>
+      <p>Example: an <code>attendance</code> table with grain "one row per (student_id, class_id, date) if and only if that student attended that class that day," with no measure column at all. It answers questions a measure-bearing table can't cleanly express: "how many students attended class X" is a <code>COUNT(*)</code>, but "which enrolled students never attended a single session" requires a join against the enrollment dimension looking for students with <em>no</em> matching row — a coverage/absence question that only makes sense because the fact table's grain is "did this happen," not "how much."</p>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-head"><div class="step-num">Q3</div><h4>How would you model a customer's shipping address so historical orders always show the address that was correct at the time? Which SCD type, and why?</h4></div>
+    <div class="step-body">
+      <p><strong>Model answer:</strong> This is a Type 2 slowly changing dimension, not Type 1. If <code>dim_customer</code> simply overwrote the address column in place (Type 1), every past order would silently start showing the customer's <em>current</em> address the moment they moved — which is factually wrong for historical reporting and non-idempotent under a backfill.</p>
+      <pre><code>CREATE TABLE dim_customer_scd (
+  customer_id BIGINT,
+  address     STRING,
+  start_date  DATE,
+  end_date    DATE,      -- NULL, or a far-future sentinel, for the current row
+  is_current  BOOLEAN
+);
+
+-- fact_orders joins on the address that was valid on the order's own date,
+-- not on customer_id alone:
+SELECT o.order_id, o.order_date, c.address
+FROM fact_orders o
+JOIN dim_customer_scd c
+  ON o.customer_id = c.customer_id
+ AND o.order_date BETWEEN c.start_date AND COALESCE(c.end_date, '9999-12-31');</code></pre>
+      <p>The join condition is the detail interviewers listen for: joining on <code>customer_id</code> alone would match every historical order to whichever SCD row happens to satisfy the join first, or fail outright with duplicate rows — the date-range join is what makes each historical order deterministically resolve to the one address that was actually correct on that date.</p>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-head"><div class="step-num">Q4</div><h4>Why can summing counts across a "breakdown by category" query give the wrong total? Give a concrete example.</h4></div>
+    <div class="step-body">
+      <p><strong>Model answer:</strong> It happens whenever the category being broken down by isn't <em>additive</em> — that is, whenever a single entity can belong to more than one category at once. Summing pre-aggregated counts then double-counts any entity that belongs to multiple categories.</p>
+      <p>Concrete example: counting customers by support channel used (email/chat/phone) and adding the three counts together overstates the real number of distinct customers, because a customer who contacted support through two channels gets counted in both buckets. The fix is either <code>COUNT(DISTINCT customer_id)</code> computed once across all channels for the true total, or being explicit that the per-channel counts are "channel touches," not "unique customers," if that's genuinely what's being reported. The general test to apply before trusting any such sub-total: can one entity hold two of these values simultaneously? If yes, the breakdown isn't additive and summing it is unsafe.</p>
+    </div>
+  </div>
+
+  <div class="step">
+    <div class="step-head"><div class="step-num">Q5</div><h4>When would you model something as a graph instead of a normal fact/dimension schema? Sketch a schema for "who follows whom" on a social platform.</h4></div>
+    <div class="step-body">
+      <p><strong>Model answer:</strong> Reach for a graph shape when the dominant access pattern is traversal and relationship structure — "who's connected to whom," "how many hops apart are these two users," "which users form a tight cluster" — rather than aggregation. A follows-relationship is a textbook case: the relationship itself, not any single user's attributes, is what's being queried.</p>
+      <pre><code>-- vertices: one row per user
+vertices(identifier, vertex_type, properties)   -- vertex_type = 'user'
+
+-- edges: one row per follows relationship, directional
+edges(subject_identifier, subject_type, object_identifier, object_type, edge_type, properties)
+-- edge_type = 'follows'; subject = the follower, object = the user being followed
+
+-- "who does user_42 follow"
+SELECT object_identifier FROM edges WHERE edge_type = 'follows' AND subject_identifier = 'user_42';
+
+-- "who follows user_42 back" (mutual follows)
+SELECT a.object_identifier
+FROM edges a
+JOIN edges b ON a.subject_identifier = b.object_identifier AND a.object_identifier = b.subject_identifier
+WHERE a.edge_type = 'follows' AND b.edge_type = 'follows' AND a.subject_identifier = 'user_42';</code></pre>
+      <p>Worth naming explicitly: unlike a follows-relationship modeled as a plain bridge table (which works fine too, for simple one-hop queries), the vertex/edge shape stays uniform as more relationship and entity types are added later — a "blocked," "liked a post from," or "shares a group with" edge is just a new <code>edge_type</code> value, not a schema change.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 18 GLOSSARY ============ -->
+<section class="reveal" id="glossary">
+  <h2><span class="hico"><svg class="ico"><use href="#i-book"/></svg></span><span class="n">18.</span> Glossary</h2>
+  <div class="glossary">
+    <dl>
+      <dt>Grain</dt><dd>A precise statement of what one row in a table represents. The first decision in any modeling exercise, and the root cause of most downstream bugs when left ambiguous.</dd>
+      <dt>OLTP</dt><dd>Online transaction processing — normalized, application-facing tables optimized for fast single-record reads and writes.</dd>
+      <dt>OLAP</dt><dd>Online analytical processing — denormalized, population-facing tables optimized for grouping and aggregation across many rows.</dd>
+      <dt>Master data</dt><dd>A consolidated, non-destructive merge of many transactional sources into one trustworthy table per business entity, sitting between OLTP and OLAP.</dd>
+      <dt>Fact table</dt><dd>Records an event or transaction; numeric/measurable, grows continuously.</dd>
+      <dt>Dimension table</dt><dd>Describes context (who/what/when/where) around a fact; comparatively small and stable.</dd>
+      <dt>Identifier vs. attribute</dt><dd>An identifier uniquely and permanently names an entity; an attribute describes it and may be fixed or slowly changing.</dd>
+      <dt>Transaction / periodic snapshot / accumulating snapshot / factless fact</dt><dd>The four fact table shapes: one row per event; one row per entity per fixed interval; one row per entity updated across a multi-step process; one row per event with no numeric measure.</dd>
+      <dt>Star / snowflake schema</dt><dd>A fact table surrounded by denormalized dimensions (star), or by further-normalized sub-dimensions (snowflake).</dd>
+      <dt>One Big Table (OBT)</dt><dd>Facts and dimension attributes pre-joined into one flat, wide table — fastest to query, most expensive to update.</dd>
+      <dt>Struct / array / map</dt><dd>Nested column types: a fixed heterogeneous bundle of fields; an ordered variable-length list; homogeneous key/value pairs with unpredictable keys.</dd>
+      <dt>Cumulative table design</dt><dd>Building a table via a daily full outer join of yesterday's state against today's new data, carrying every entity's complete history forward indefinitely.</dd>
+      <dt>Idempotency</dt><dd>The property that running a pipeline any number of times against the same inputs produces identical output — the property every SCD, backfill, and rerun strategy must preserve.</dd>
+      <dt>Slowly changing dimension (SCD)</dt><dd>A dimension attribute that can legitimately change over an entity's lifetime, and the strategy chosen for what happens to the old value when it does (Types 0–7).</dd>
+      <dt>SCD Type 1 / Type 2 / Type 3</dt><dd>Overwrite in place (no history); insert a new row with validity dates (full history); add an original-value and current-value column (exactly two values, breaks on a third change).</dd>
+      <dt>Additive dimension</dt><dd>A dimension where an entity can only ever hold one value at a time, making sub-counts by that dimension safe to sum to a correct grand total.</dd>
+      <dt>Enum</dt><dd>A column constrained to a fixed, named set of values — enforces data quality, documents valid values, and can carry static per-value metadata.</dd>
+      <dt>Source-registry pattern</dt><dd>Centralizing an enum of known upstream sources paired with one isolated mapping function per source, so integrating a new heterogeneous source doesn't require touching shared pipeline logic.</dd>
+      <dt>Vertex / edge</dt><dd>Graph modeling's two universal tables: one row per entity of any type (vertex), and one row per directional relationship of any type between two entities (edge).</dd>
+    </dl>
+  </div>
+</section>
+
+</div><!-- /wrap -->
+
+<a href="#top" class="back-top" id="backTop" aria-label="Back to top">&uarr;</a>
+
+<div class="wrap">
+<hr/>
+<footer class="end reveal">
+  <p><a href="../essentials.html">&larr; Back to all essentials</a></p>
+  <p>&copy; 2026 &middot; Hao Tieu Kim &middot; Built with GitHub Pages</p>
+</footer>
+</div>
+
+<script>
+  var bar=document.getElementById('bar');
+  function prog(){var h=document.documentElement;var s=h.scrollTop||document.body.scrollTop;var max=(h.scrollHeight-h.clientHeight)||1;bar.style.width=(s/max*100)+'%';}
+  document.addEventListener('scroll',prog,{passive:true});prog();
+  var backTop=document.getElementById('backTop');
+  function toggleBackTop(){if(window.scrollY>600){backTop.classList.add('show');}else{backTop.classList.remove('show');}}
+  document.addEventListener('scroll',toggleBackTop,{passive:true});toggleBackTop();
+  function revealAll(){document.querySelectorAll('.reveal').forEach(function(el){el.classList.add('in');});}
+  try{
+    var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}});},{threshold:.06});
+    document.querySelectorAll('.reveal').forEach(function(el){io.observe(el);});
+    window.addEventListener('load',function(){setTimeout(revealAll,1500);});
+    setTimeout(revealAll,2200);
+  }catch(e){revealAll();}
+</script>
+</body>
+</html>
