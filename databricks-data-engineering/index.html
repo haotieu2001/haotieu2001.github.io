@@ -1,0 +1,1296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Databricks for Data Engineers — Deep-Dive Reference &amp; Code Playbook</title>
+<style>
+  :root{
+    --bg:#111117; --bg2:#16161d; --panel:#191921; --panel2:#1d1d26;
+    --ink:#f1f1f1; --muted:#9aa0b4; --dim:#6b6b78; --border:#2c2c38;
+    --cyan:#28B9FF; --cyan2:#5AC8FF; --blue:#5C78FF;
+    --amber:#FFB454; --red:#FF5C8A;
+    --grad:linear-gradient(90deg,#28B9FF,#5C78FF);
+    --accent:#5AC8FF;
+    --font:"JetBrainsMono Nerd Font","JetBrains Mono","Symbols Nerd Font",ui-monospace,"Cascadia Code",Menlo,Consolas,monospace;
+    --radius:14px;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font);font-size:15.5px;line-height:1.8;-webkit-font-smoothing:antialiased;}
+  a{color:var(--accent);text-decoration:none;border-bottom:1px dotted #5AC8FF66;}
+  a:hover{color:#fff;border-bottom-color:#fff;}
+  img,svg{max-width:100%;}
+
+  #bar{position:fixed;top:0;left:0;height:3px;width:0;z-index:50;background:var(--grad);box-shadow:0 0 12px #5C78FF99;transition:width .1s linear;}
+
+  header.hero{padding:60px 22px 30px;text-align:center;position:relative;overflow:hidden;}
+  .kicker{font-size:12px;letter-spacing:.28em;text-transform:uppercase;color:var(--muted);}
+  header.hero h1{
+    font-size:clamp(26px,5vw,44px);line-height:1.2;margin:14px auto 12px;max-width:26ch;font-weight:800;
+    color:#5AC8FF;
+  }
+  .dek{max-width:72ch;margin:0 auto;color:var(--muted);font-size:16px;}
+  .byline{margin-top:16px;font-size:12.5px;color:var(--dim);}
+  .stack{margin-top:18px;display:flex;align-items:center;gap:10px;font-size:12px;color:var(--dim);flex-wrap:wrap;justify-content:center;}
+  .chip{display:inline-flex;align-items:center;gap:7px;padding:5px 12px;border-radius:999px;border:1px solid #2b4a80;background:#0e2740;color:#5AC8FF;font-weight:700;font-size:11.5px;}
+  .chip .ico{width:14px;height:14px;}
+
+  .wrap{max-width:940px;margin:0 auto;padding:0 22px 100px;}
+
+  .toc{background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:16px 22px;margin:30px auto 44px;column-count:2;column-gap:28px;}
+  .toc>strong{column-span:all;display:block;margin-bottom:8px;color:#fff;font-size:13px;letter-spacing:.12em;text-transform:uppercase;}
+  .toc .toc-grp{column-span:all;display:block;margin:14px 0 4px;font-size:11px;font-weight:800;letter-spacing:.12em;text-transform:uppercase;color:var(--cyan2);}
+  .toc a{display:block;color:var(--cyan2);text-decoration:none;font-size:13.5px;line-height:1.9;break-inside:avoid;border:0;}
+  .toc a:hover{color:#fff;}
+  .toc a .ico{width:14px;height:14px;margin-right:9px;vertical-align:-2px;opacity:.85;}
+  @media (max-width:640px){.toc{column-count:1;}}
+
+  section{margin-bottom:54px;scroll-margin-top:20px;}
+  h2{font-size:clamp(21px,3.2vw,28px);margin:52px 0 6px;font-weight:800;line-height:1.22;padding-top:14px;border-top:1px solid var(--border);display:flex;align-items:center;gap:10px;}
+  h2 .n{color:var(--blue);}
+  .hico{display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;border-radius:11px;flex:0 0 36px;background:#0e2740;border:1px solid #2b4a80;color:var(--cyan2);}
+  .hico .ico{width:19px;height:19px;}
+  .ico{width:1em;height:1em;fill:none;stroke:currentColor;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;}
+  .lede{font-size:16px;color:#dcdce4;margin-top:12px;}
+
+  h3{font-size:17px;margin:30px 0 10px;font-weight:700;color:#fff;}
+  h4{font-size:14.5px;margin:18px 0 8px;color:#fff;}
+  h5{font-size:13.5px;margin:14px 0 6px;color:#cdd0dd;font-weight:700;}
+  p{margin:0 0 14px;color:#dcdce4;}
+  ul,ol{margin:0 0 16px;padding-left:22px;color:#dcdce4;}
+  li{margin-bottom:6px;}
+  em{color:#fff;font-style:italic;}
+
+  .callout{border-left:4px solid var(--cyan);background:var(--panel);border-radius:0 12px 12px 0;padding:14px 20px;margin:18px 0;font-size:14px;color:#dcdce4;}
+  .callout.def{border-left-color:var(--blue);}
+  .callout.warn{border-left-color:var(--amber);}
+  .callout.bad{border-left-color:var(--red);}
+  .callout strong.label{display:block;font-size:11px;text-transform:uppercase;letter-spacing:.1em;margin-bottom:5px;color:var(--muted);}
+  .callout.bad strong.label{color:#ff8fb0;}
+
+  .qa{border:1px solid var(--border);background:var(--panel);border-radius:14px;padding:18px 22px;margin:18px 0;}
+  .qa .q{color:var(--cyan2);font-weight:700;margin-bottom:8px;display:flex;gap:9px;}
+  .qa .q::before{content:"Q·";color:var(--blue);font-weight:800;}
+  .qa .a{margin:0;}
+  .qa .a::before{content:"A· ";color:var(--blue);font-weight:800;}
+
+  .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+  .grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;}
+  .mini-card{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:16px 18px;}
+  .mini-card h4{margin-top:0;font-size:14px;}
+  .mini-card p{font-size:13.5px;color:var(--muted);margin-bottom:0;}
+
+  table{width:100%;border-collapse:collapse;margin:16px 0;font-size:13.5px;}
+  thead th{text-align:left;background:var(--panel2);color:#fff;padding:10px 14px;font-size:12px;text-transform:uppercase;letter-spacing:.04em;border:1px solid var(--border);}
+  tbody td{padding:11px 14px;border:1px solid var(--border);color:#cdd0dd;vertical-align:top;}
+  tbody tr:nth-child(even) td{background:#1a1a22;}
+  tbody td strong{color:#fff;}
+  .table-wrap{overflow-x:auto;}
+
+  .diagram-wrap{background:var(--bg2);border:1px solid var(--border);border-radius:16px;padding:20px 18px 14px;margin:20px 0;box-shadow:0 18px 40px rgba(0,0,0,.4);}
+  .diagram-wrap figcaption{text-align:center;font-size:12px;color:var(--muted);margin-top:10px;font-style:italic;}
+  .diagram-wrap svg{display:block;margin:0 auto;width:100%;height:auto;}
+
+  code{font-family:var(--font);background:#23232b;color:#5AC8FF;padding:1px 7px;border-radius:5px;font-size:.9em;border:1px solid var(--border);}
+  .cb{margin:16px 0;}
+  .cb .lang{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:#9aa0b4;background:#1b1b24;border:1px solid var(--border);border-bottom:none;border-radius:9px 9px 0 0;padding:4px 12px;}
+  pre{background:#1D1D26;border:1px solid var(--border);border-radius:0 12px 12px 12px;padding:16px 20px;margin:0;overflow-x:auto;}
+  .cb:not(:has(.lang)) pre{border-radius:12px;}
+  pre code{background:none;border:none;padding:0;color:#dcdce4;font-size:13px;line-height:1.65;white-space:pre;}
+  pre .c{color:#6B6B78;}
+  pre .k{color:#fff;}
+  pre .g{color:#5AC8FF;}
+  pre .p{color:#8AA4FF;}
+  pre .o{color:#fff;}
+
+  .step{border:1px solid var(--border);border-radius:16px;background:var(--panel);margin:26px 0;padding:0;overflow:hidden;}
+  .step .step-head{display:flex;align-items:center;gap:14px;padding:16px 20px;background:var(--panel2);border-bottom:1px solid var(--border);}
+  .step .step-num{width:32px;height:32px;border-radius:50%;background:var(--grad);color:#16161D;font-weight:800;display:flex;align-items:center;justify-content:center;flex:0 0 32px;font-size:14px;}
+  .step .step-head h4{margin:0;font-size:15.5px;color:#fff;}
+  .step .step-body{padding:18px 22px 22px;}
+  .step .step-body p:last-child{margin-bottom:0;}
+
+  .glossary dt{font-weight:700;margin-top:14px;color:#fff;}
+  .glossary dd{margin:2px 0 0;color:var(--muted);font-size:14px;}
+
+  hr{border:0;border-top:1px solid var(--border);margin:40px auto;}
+  footer.end{color:var(--muted);font-size:12.5px;}
+
+  .back-top{position:fixed;bottom:24px;right:24px;width:42px;height:42px;border-radius:50%;background:var(--panel2);border:1px solid var(--border);color:var(--cyan2);display:flex;align-items:center;justify-content:center;box-shadow:0 8px 24px rgba(0,0,0,.5);opacity:0;pointer-events:none;transition:opacity .2s;text-decoration:none;font-size:18px;z-index:20;}
+  .back-top.show{opacity:1;pointer-events:auto;}
+
+  .reveal{opacity:0;transform:translateY(18px);transition:opacity .6s ease,transform .6s ease;}
+  .reveal.in{opacity:1;transform:none;}
+  @media (prefers-reduced-motion: reduce){.reveal{opacity:1;transform:none;transition:none;}}
+
+  @media (max-width: 720px){
+    .grid-2,.grid-3{grid-template-columns:1fr;}
+    header.hero{padding:44px 16px 22px;}
+  }
+
+  .nav{position:sticky;top:0;z-index:60;background:rgba(25,25,33,.82);backdrop-filter:blur(10px);border-bottom:1px solid var(--border);}
+  .nav-inner{max-width:1040px;margin:0 auto;padding:12px 24px;display:flex;align-items:center;gap:18px;flex-wrap:wrap;}
+  .nav-brand{font-weight:800;letter-spacing:.16em;font-size:15px;text-decoration:none;border:0;color:#5AC8FF;}
+  .nav-links{display:flex;gap:6px;flex-wrap:wrap;margin-left:auto;}
+  .nav-links a{text-decoration:none;border:1px solid transparent;color:#9aa0b4;font-weight:700;font-size:13.5px;padding:6px 14px;border-radius:999px;transition:.2s;}
+  .nav-links a:hover{color:#fff;border-color:var(--border);background:#242739;}
+  .nav-links a.active{color:#5AC8FF;border-color:#28B9FF55;background:#28B9FF14;}
+  :focus-visible{outline:2px solid #5AC8FF;outline-offset:3px;border-radius:6px;}
+</style>
+</head>
+<body>
+
+<svg width="0" height="0" style="position:absolute" aria-hidden="true" focusable="false"><defs>
+<symbol id="i-compass" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="m15.6 8.4-2.1 5.1-5.1 2.1 2.1-5.1 5.1-2.1Z"/></symbol>
+<symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 2.8 4.8 5.6v5.2c0 4.4 3 8.4 7.2 9.8 4.2-1.4 7.2-5.4 7.2-9.8V5.6L12 2.8Z"/><path d="m9 12 2.2 2.2L15.4 10"/></symbol>
+<symbol id="i-funnel" viewBox="0 0 24 24"><path d="M4 4h16l-6 8v6l-4 2v-8z" fill="none"/></symbol>
+<symbol id="i-plug" viewBox="0 0 24 24"><path d="M9 3v5.5M15 3v5.5"/><path d="M6.5 8.5h11V12a5.5 5.5 0 0 1-11 0V8.5Z"/><path d="M12 17.5V21"/></symbol>
+<symbol id="i-repeat" viewBox="0 0 24 24"><path d="M16.5 3 20 6.5 16.5 10"/><path d="M4 11.5V9a2.5 2.5 0 0 1 2.5-2.5H20"/><path d="M7.5 21 4 17.5 7.5 14"/><path d="M20 12.5V15a2.5 2.5 0 0 1-2.5 2.5H4"/></symbol>
+<symbol id="i-layers" viewBox="0 0 24 24"><path d="m12 3 9 4.8-9 4.8-9-4.8 9-4.8Z"/><path d="m3 12.6 9 4.8 9-4.8M3 17.2l9 4.8 9-4.8"/></symbol>
+<symbol id="i-gauge" viewBox="0 0 24 24"><path d="M4 17a8 8 0 1 1 16 0" fill="none"/><path d="M12 17l4-5"/><circle cx="12" cy="17" r="1.3" fill="currentColor"/></symbol>
+<symbol id="i-merge" viewBox="0 0 24 24"><path d="M6 3v4c0 4 3 5 6 5s6-1 6-5V3M12 12v9" fill="none"/><path d="M9 18l3 3 3-3" fill="none"/></symbol>
+<symbol id="i-dag" viewBox="0 0 24 24"><circle cx="5" cy="6" r="2.1" fill="none"/><circle cx="19" cy="6" r="2.1" fill="none"/><circle cx="12" cy="13" r="2.1" fill="none"/><circle cx="12" cy="20" r="2.1" fill="none"/><path d="M6.6 7.4 10.2 11.8M17.4 7.4 13.8 11.8M12 15.1v2.8"/></symbol>
+<symbol id="i-bolt" viewBox="0 0 24 24"><path d="M13 3 5 13.5h5.6L10 21l8.5-10.6H12.8z" fill="none"/></symbol>
+<symbol id="i-workflow" viewBox="0 0 24 24"><rect x="3" y="3.5" width="7" height="6" rx="1.5"/><rect x="14" y="14.5" width="7" height="6" rx="1.5"/><path d="M6.5 9.5v5a3 3 0 0 0 3 3H14"/></symbol>
+<symbol id="i-box" viewBox="0 0 24 24"><path d="M12 3 21 7.5v9L12 21 3 16.5v-9z" fill="none"/><path d="M3 7.5 12 12l9-4.5M12 12v9" fill="none"/></symbol>
+<symbol id="i-check" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="m8 12.2 2.7 2.7L16.2 9"/></symbol>
+<symbol id="i-eye" viewBox="0 0 24 24"><path d="M2.6 12S6.2 5.8 12 5.8 21.4 12 21.4 12 17.8 18.2 12 18.2 2.6 12 2.6 12Z"/><circle cx="12" cy="12" r="3.1"/></symbol>
+<symbol id="i-lock" viewBox="0 0 24 24"><rect x="4.5" y="10" width="15" height="10.5" rx="2.4"/><path d="M8 10V7.2a4 4 0 0 1 8 0V10"/></symbol>
+<symbol id="i-scale" viewBox="0 0 24 24"><path d="M12 4v16M6 20h12M4 9l3-4 3 4M14 9l3-4 3 4" fill="none"/><path d="M4 9a3 3 0 0 0 6 0M14 9a3 3 0 0 0 6 0" fill="none"/></symbol>
+<symbol id="i-search" viewBox="0 0 24 24"><circle cx="10.5" cy="10.5" r="6.5"/><path d="m15.2 15.2 4.3 4.3"/></symbol>
+<symbol id="i-list" viewBox="0 0 24 24"><path d="M8.5 6h12M8.5 12h12M8.5 18h12M3.7 6h.01M3.7 12h.01M3.7 18h.01"/></symbol>
+<symbol id="i-book" viewBox="0 0 24 24"><path d="M4 5.5A2 2 0 0 1 6 4h5v15H6a2 2 0 0 0-2 1.4z" fill="none"/><path d="M20 5.5A2 2 0 0 0 18 4h-5v15h5a2 2 0 0 1 2 1.4z" fill="none"/></symbol>
+<symbol id="i-database" viewBox="0 0 24 24"><ellipse cx="12" cy="6" rx="8" ry="3.2"/><path d="M4 6v12c0 1.8 3.6 3.2 8 3.2s8-1.4 8-3.2V6"/><path d="M20 12c0 1.8-3.6 3.2-8 3.2S4 13.8 4 12"/></symbol>
+<symbol id="i-warn" viewBox="0 0 24 24"><path d="M12 3.2 2.8 19.6h18.4L12 3.2Z"/><path d="M12 9.5v4.2M12 16.8h.01"/></symbol>
+<symbol id="i-cloud" viewBox="0 0 24 24"><path d="M6.8 19.2h10.6a3.9 3.9 0 0 0 .4-7.8 6.1 6.1 0 0 0-11.7-1.7 3.8 3.8 0 0 0 .7 9.5Z"/></symbol>
+<symbol id="i-terminal" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2.5"/><path d="m7.5 9.5 3 2.5-3 2.5M13.5 15h3.5"/></symbol>
+</defs></svg>
+
+<div id="bar"></div>
+<nav class="nav"><div class="nav-inner"><a class="nav-brand" href="../index.html">HAO TIEU KIM</a><div class="nav-links"><a href="../index.html">Portfolio</a><a href="../blogs.html">Blogs</a><a href="../essentials.html" class="active">Data Engineer Essentials</a><a href="../adjacent-skills.html">Adjacent Skills</a></div></div></nav>
+
+<header class="hero">
+  <div class="kicker">Databricks &middot; Data Engineering Deep Dive</div>
+  <h1>Databricks for Data Engineers: Deep-Dive Reference &amp; Code Playbook</h1>
+  <p class="dek">The hands-on toolkit a working Databricks data engineer actually reaches for, in interview-ready depth: <strong>Unity Catalog</strong> governance mechanics, <strong>Auto Loader</strong> and CDC ingestion, <strong>Structured Streaming</strong> internals, <strong>Delta Lake</strong>'s transaction log and performance features, <strong>Lakeflow Declarative Pipelines</strong> (Delta Live Tables), <strong>MERGE</strong>/CDF/SCD patterns, <strong>Spark performance tuning</strong>, <strong>Jobs &amp; Workflows</strong> orchestration, <strong>Asset Bundles</strong> &amp; CI/CD, testing, monitoring, cost, and a curated set of troubleshooting scenarios interviewers love to ask &mdash; every concept paired with runnable PySpark/SQL.</p>
+  <div class="byline">~55 min read &middot; reference &amp; interview prep &middot; heavy on runnable code</div>
+  <div class="stack reveal">
+    <span class="chip"><svg class="ico"><use href="#i-database"/></svg> Delta Lake</span>
+    <span class="chip"><svg class="ico"><use href="#i-repeat"/></svg> Structured Streaming</span>
+    <span class="chip"><svg class="ico"><use href="#i-dag"/></svg> Lakeflow Pipelines</span>
+    <span class="chip"><svg class="ico"><use href="#i-shield"/></svg> Unity Catalog</span>
+  </div>
+</header>
+
+<div class="wrap">
+
+<div class="callout def reveal" id="scope">
+  <strong class="label">How this guide fits with the other two</strong>
+  This is the third leg of a set. <a href="../databricks/">Databricks: Lakehouse Concepts &amp; an End-to-End Project</a> gives the platform-wide tour (what each service is, why it exists) and a worked project stitching them together. <a href="../spark-essentials/">Apache Spark &mdash; The Complete Guide</a> covers the execution engine underneath everything (driver/executor model, Catalyst, shuffles, memory, tuning) independent of Databricks. This guide assumes both and goes deep on the parts of the job that are <em>specifically</em> "being a data engineer on Databricks day to day" &mdash; the ingestion, pipeline, governance, orchestration and operational code you're expected to write and reason about in an interview.
+</div>
+
+<div class="toc reveal">
+  <strong>Contents</strong>
+  <a href="#uc"><svg class="ico"><use href="#i-shield"/></svg>01 &middot; Unity Catalog for Data Engineers</a>
+  <a href="#autoloader"><svg class="ico"><use href="#i-funnel"/></svg>02 &middot; Auto Loader Deep Dive</a>
+  <a href="#ingest-other"><svg class="ico"><use href="#i-plug"/></svg>03 &middot; COPY INTO, Lakeflow Connect &amp; Choosing a Tool</a>
+  <a href="#streaming"><svg class="ico"><use href="#i-repeat"/></svg>04 &middot; Structured Streaming on Databricks</a>
+  <a href="#delta-internals"><svg class="ico"><use href="#i-layers"/></svg>05 &middot; Delta Lake Internals</a>
+  <a href="#delta-perf"><svg class="ico"><use href="#i-gauge"/></svg>06 &middot; Delta Lake Performance</a>
+  <a href="#cdc"><svg class="ico"><use href="#i-merge"/></svg>07 &middot; CDC &amp; Incremental Patterns</a>
+  <a href="#dlt"><svg class="ico"><use href="#i-dag"/></svg>08 &middot; Lakeflow Declarative Pipelines (DLT)</a>
+  <a href="#tuning"><svg class="ico"><use href="#i-bolt"/></svg>09 &middot; Spark Performance Tuning on Databricks</a>
+  <a href="#orchestration"><svg class="ico"><use href="#i-workflow"/></svg>10 &middot; Orchestration: Jobs &amp; Workflows</a>
+  <a href="#dabs"><svg class="ico"><use href="#i-box"/></svg>11 &middot; Databricks Asset Bundles &amp; CI/CD</a>
+  <a href="#testing"><svg class="ico"><use href="#i-check"/></svg>12 &middot; Testing Data Pipelines</a>
+  <a href="#monitoring"><svg class="ico"><use href="#i-eye"/></svg>13 &middot; Monitoring, Observability &amp; Data Quality</a>
+  <a href="#security"><svg class="ico"><use href="#i-lock"/></svg>14 &middot; Security &amp; Governance Operations</a>
+  <a href="#cost"><svg class="ico"><use href="#i-scale"/></svg>15 &middot; Cost Optimization</a>
+  <a href="#troubleshooting"><svg class="ico"><use href="#i-search"/></svg>16 &middot; Interview Scenarios &amp; Troubleshooting</a>
+  <a href="#cheatsheet"><svg class="ico"><use href="#i-list"/></svg>17 &middot; Quick-Reference Cheat Sheet</a>
+  <a href="#glossary"><svg class="ico"><use href="#i-book"/></svg>18 &middot; Glossary</a>
+</div>
+
+<!-- ============ 01 UNITY CATALOG ============ -->
+<section class="reveal" id="uc">
+  <h2><span class="hico"><svg class="ico"><use href="#i-shield"/></svg></span><span class="n">01.</span> Unity Catalog for Data Engineers</h2>
+  <p class="lede">Unity Catalog (UC) is the governance layer every table, volume, and function on Databricks lives under. As a data engineer you touch it constantly: every table you create is governed by it, every grant you write goes through it, and most access-denied bugs in an interview scenario trace back to a missing grant somewhere in this hierarchy.</p>
+
+  <h3>The Securable Object Hierarchy</h3>
+  <p>Everything in UC nests inside a single account-level <strong>metastore</strong> (one per region, attached to a workspace). Below that, four levels matter day to day:</p>
+
+  <figure class="diagram-wrap">
+    <svg viewBox="0 0 900 300" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Unity Catalog object hierarchy: metastore, catalog, schema, then tables, views, volumes and functions">
+      <defs><marker id="uch1" markerWidth="9" markerHeight="9" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="#9AA0B4"/></marker></defs>
+      <g font-family="sans-serif">
+        <rect x="360" y="14" width="180" height="46" rx="9" fill="#1D1D26" stroke="#5AC8FF" stroke-width="1.5"/>
+        <text x="450" y="42" text-anchor="middle" font-size="12.5" font-weight="700" fill="#F1F1F1">Metastore (per region)</text>
+        <line x1="450" y1="60" x2="450" y2="86" stroke="#9AA0B4" stroke-width="1.4" marker-end="url(#uch1)"/>
+
+        <rect x="150" y="88" width="200" height="46" rx="9" fill="#1D1D26" stroke="#5C78FF" stroke-width="1.5"/>
+        <text x="250" y="116" text-anchor="middle" font-size="12" font-weight="700" fill="#F1F1F1">Catalog: dev</text>
+        <rect x="360" y="88" width="200" height="46" rx="9" fill="#1D1D26" stroke="#5C78FF" stroke-width="1.5"/>
+        <text x="460" y="116" text-anchor="middle" font-size="12" font-weight="700" fill="#F1F1F1">Catalog: prod</text>
+        <rect x="570" y="88" width="200" height="46" rx="9" fill="#1D1D26" stroke="#5C78FF" stroke-width="1.5"/>
+        <text x="670" y="116" text-anchor="middle" font-size="12" font-weight="700" fill="#F1F1F1">Catalog: restaurant_prod</text>
+        <path d="M450 86 C 450 100, 250 100, 250 86" fill="none" stroke="#9AA0B4" stroke-width="1.2"/>
+        <line x1="460" y1="134" x2="460" y2="160" stroke="#9AA0B4" stroke-width="1.4" marker-end="url(#uch1)"/>
+
+        <rect x="290" y="162" width="140" height="42" rx="8" fill="#1D1D26" stroke="#A56BFF" stroke-width="1.4"/>
+        <text x="360" y="188" text-anchor="middle" font-size="11.5" font-weight="700" fill="#F1F1F1">schema: bronze</text>
+        <rect x="440" y="162" width="140" height="42" rx="8" fill="#1D1D26" stroke="#A56BFF" stroke-width="1.4"/>
+        <text x="510" y="188" text-anchor="middle" font-size="11.5" font-weight="700" fill="#F1F1F1">schema: silver</text>
+        <rect x="590" y="162" width="140" height="42" rx="8" fill="#1D1D26" stroke="#A56BFF" stroke-width="1.4"/>
+        <text x="660" y="188" text-anchor="middle" font-size="11.5" font-weight="700" fill="#F1F1F1">schema: gold</text>
+        <line x1="510" y1="204" x2="510" y2="228" stroke="#9AA0B4" stroke-width="1.4" marker-end="url(#uch1)"/>
+
+        <rect x="330" y="230" width="110" height="40" rx="7" fill="#1D1D26" stroke="#FFB454" stroke-width="1.3"/>
+        <text x="385" y="254" text-anchor="middle" font-size="10.5" fill="#F1F1F1">table</text>
+        <rect x="450" y="230" width="110" height="40" rx="7" fill="#1D1D26" stroke="#FFB454" stroke-width="1.3"/>
+        <text x="505" y="254" text-anchor="middle" font-size="10.5" fill="#F1F1F1">view</text>
+        <rect x="570" y="230" width="110" height="40" rx="7" fill="#1D1D26" stroke="#FFB454" stroke-width="1.3"/>
+        <text x="625" y="254" text-anchor="middle" font-size="10.5" fill="#F1F1F1">volume</text>
+        <rect x="690" y="230" width="110" height="40" rx="7" fill="#1D1D26" stroke="#FFB454" stroke-width="1.3"/>
+        <text x="745" y="254" text-anchor="middle" font-size="10.5" fill="#F1F1F1">function / model</text>
+
+        <text x="450" y="290" text-anchor="middle" font-size="11" fill="#E7E7EE">Three-level name: <tspan fill="#5AC8FF">catalog.schema.table</tspan> &mdash; e.g. restaurant_prod.silver.orders_clean</text>
+      </g>
+    </svg>
+    <figcaption>Fig. 1 &mdash; Grants can be set at any level and are inherited downward; a grant on a catalog applies to every schema and table inside it unless overridden.</figcaption>
+  </figure>
+
+  <h3>Managed vs. External Tables and Volumes</h3>
+  <p>A <strong>managed table</strong> stores its data files in storage that UC owns and controls (under the catalog's or schema's managed storage location) &mdash; you never specify a path, and <code>DROP TABLE</code> deletes the underlying data. An <strong>external table</strong> points at a path you specify, backed by an <strong>external location</strong> that UC has been granted access to; <code>DROP TABLE</code> only drops the metadata, the files stay put. The same distinction exists for <strong>volumes</strong>, which govern access to non-tabular files (images, PDFs, arbitrary CSVs an ingestion job lands before it's a table, model checkpoints) the same way tables govern access to structured data.</p>
+
+  <pre><code>-- Managed: Databricks owns the storage path
+CREATE CATALOG IF NOT EXISTS restaurant_prod;
+CREATE SCHEMA IF NOT EXISTS restaurant_prod.silver;
+CREATE TABLE restaurant_prod.silver.orders_clean (
+  order_id STRING, restaurant_id STRING, order_amount DECIMAL(10,2), order_ts TIMESTAMP
+);
+
+-- External: you own the storage path, UC just governs access to it
+CREATE STORAGE CREDENTIAL restaurant_s3_cred
+  WITH (AWS_IAM_ROLE = 'arn:aws:iam::123456789012:role/uc-access-role');
+
+CREATE EXTERNAL LOCATION restaurant_landing
+  URL 's3://restaurant-landing-zone/raw/'
+  WITH (STORAGE CREDENTIAL restaurant_s3_cred);
+
+CREATE TABLE restaurant_prod.bronze.orders_raw
+  LOCATION 's3://restaurant-landing-zone/raw/orders/'
+  AS SELECT * FROM json.`s3://restaurant-landing-zone/raw/orders/`;
+
+-- A volume for arbitrary files an Auto Loader job will pick up
+CREATE VOLUME restaurant_prod.bronze.incoming_files;
+-- Path form: /Volumes/restaurant_prod/bronze/incoming_files/orders/2026-09-17.json</code></pre>
+
+  <div class="callout warn">
+    <strong class="label">Interview angle</strong>
+    "When would you use an external table over a managed one?" &mdash; when data must live in a specific bucket for cost/compliance reasons, when another system also writes to the same path, when migrating an existing lake into UC without moving petabytes of files, or when you need the data to survive a <code>DROP TABLE</code> by design. Default to managed tables otherwise: they get automatic file layout optimization and you never have to think about storage paths.
+  </div>
+
+  <h3>Grants &amp; Privilege Model</h3>
+  <p>UC uses standard SQL <code>GRANT</code>/<code>REVOKE</code> syntax. Privileges are additive and inherit downward: a <code>USE CATALOG</code> + <code>USE SCHEMA</code> + <code>SELECT</code> grant chain is the minimum to read a table you don't own.</p>
+  <pre><code>GRANT USE CATALOG ON CATALOG restaurant_prod TO `analysts`;
+GRANT USE SCHEMA ON SCHEMA restaurant_prod.gold TO `analysts`;
+GRANT SELECT ON SCHEMA restaurant_prod.gold TO `analysts`;
+
+GRANT CREATE TABLE, MODIFY ON SCHEMA restaurant_prod.silver TO `data-engineers`;
+GRANT ALL PRIVILEGES ON CATALOG restaurant_prod TO `platform-admins`;
+
+REVOKE SELECT ON TABLE restaurant_prod.gold.customer_pii FROM `analysts`;</code></pre>
+  <p>Common privileges: <code>USE CATALOG</code>/<code>USE SCHEMA</code> (a "can see inside" gate with no data access on its own), <code>SELECT</code>, <code>MODIFY</code> (insert/update/delete/merge), <code>CREATE TABLE</code>/<code>CREATE SCHEMA</code>, <code>EXECUTE</code> (for functions/models), and <code>ALL PRIVILEGES</code>. Ownership (<code>ALTER ... OWNER TO</code>) is separate from grants &mdash; the owner can always grant/revoke on the object regardless of their own explicit privileges.</p>
+
+  <h3>Row Filters &amp; Column Masks</h3>
+  <p>Rather than maintaining separate "safe" views by hand, UC lets you attach a filter/mask function directly to a table so every query &mdash; SQL, PySpark, BI tool &mdash; is filtered the same way with no way to bypass it.</p>
+  <pre><code>-- Column mask: analysts see a redacted email, engineers on the "pii-access" group see it raw
+CREATE FUNCTION restaurant_prod.silver.mask_email(email STRING)
+RETURNS STRING
+RETURN CASE WHEN is_member('pii-access') THEN email ELSE '***redacted***' END;
+
+ALTER TABLE restaurant_prod.silver.customers
+  ALTER COLUMN email SET MASK restaurant_prod.silver.mask_email;
+
+-- Row filter: each restaurant chain only sees its own rows
+CREATE FUNCTION restaurant_prod.silver.filter_by_chain(chain_id STRING)
+RETURNS BOOLEAN
+RETURN chain_id = current_user_chain() OR is_member('platform-admins');
+
+ALTER TABLE restaurant_prod.silver.orders_clean
+  SET ROW FILTER restaurant_prod.silver.filter_by_chain ON (chain_id);</code></pre>
+  <p>Before this native feature, the standard pattern was a <strong>dynamic view</strong> wrapping the base table with <code>CASE WHEN is_member(...)</code> logic and granting access to the view instead of the table &mdash; still valid, still common in older codebases and worth recognizing, but row filters/column masks are the current best practice since they attach to the table itself rather than requiring everyone to remember to query the view.</p>
+
+  <h3>Lineage &amp; System Tables</h3>
+  <p>UC automatically captures table- and column-level lineage for anything that reads and writes through Spark or Databricks SQL &mdash; no extra instrumentation needed. It's visible in Catalog Explorer's lineage graph, and queryable directly:</p>
+  <pre><code>-- Which tables feed restaurant_prod.gold.daily_sales?
+SELECT source_table_full_name, target_table_full_name
+FROM system.access.table_lineage
+WHERE target_table_full_name = 'restaurant_prod.gold.daily_sales';
+
+-- Who queried a sensitive table in the last 7 days?
+SELECT user_identity.email, request_params.full_name_arg, event_time
+FROM system.access.audit
+WHERE action_name = 'getTable' AND event_time > current_timestamp() - INTERVAL 7 DAYS;</code></pre>
+  <p>The <code>system</code> catalog is UC's built-in operational data warehouse: <code>system.access.audit</code> (every action, by whom), <code>system.access.table_lineage</code>/<code>column_lineage</code>, <code>system.billing.usage</code> (DBU consumption by workspace/SKU/job), <code>system.compute.clusters</code>, and <code>system.lakeflow.job_run_timeline</code>. These are covered in more depth in <a href="#monitoring">&sect;13</a>, but knowing they exist &mdash; and that they're just Delta tables you can query with SQL &mdash; is a strong interview signal.</p>
+</section>
+
+<!-- ============ 02 AUTO LOADER ============ -->
+<section class="reveal" id="autoloader">
+  <h2><span class="hico"><svg class="ico"><use href="#i-funnel"/></svg></span><span class="n">02.</span> Auto Loader Deep Dive</h2>
+  <p class="lede">Auto Loader (<code>cloudFiles</code>) is the default way to incrementally ingest files landing in cloud storage into a Delta table. It's a Structured Streaming source under the hood, which means it inherits checkpointing, exactly-once semantics, and everything else in <a href="#streaming">&sect;04</a> &mdash; the part that's genuinely new is how it discovers files and infers schema.</p>
+
+  <h3>The Core Pattern</h3>
+  <pre><code>raw_stream = (spark.readStream
+  .format("cloudFiles")
+  .option("cloudFiles.format", "json")
+  .option("cloudFiles.schemaLocation", "/Volumes/restaurant_prod/bronze/_schemas/orders")
+  .option("cloudFiles.inferColumnTypes", "true")
+  .load("/Volumes/restaurant_prod/bronze/incoming_files/orders/"))
+
+(raw_stream.writeStream
+  .option("checkpointLocation", "/Volumes/restaurant_prod/bronze/_checkpoints/orders")
+  .trigger(availableNow=True)
+  .toTable("restaurant_prod.bronze.orders_raw"))</code></pre>
+
+  <h3>Two File-Discovery Modes</h3>
+  <div class="grid-2">
+    <div class="mini-card"><h4>Directory Listing (default)</h4><p>Lists the target directory each trigger and diffs against a tracked state (RocksDB-backed) to find new files. Zero setup, works everywhere, scales to millions of files with incremental listing. Default and usually sufficient.</p></div>
+    <div class="mini-card"><h4>File Notification</h4><p><code>cloudFiles.useNotifications=true</code> sets up a cloud-native event queue (S3 event notifications + SQS, or ADLS + Event Grid/Queue Storage) so new files are pushed instead of polled. Set up once per source with <code>cloudFiles.region</code>/IAM permissions; worth it at very high file-arrival rates or very deep/wide directory trees where listing itself becomes the bottleneck.</p></div>
+  </div>
+
+  <h3>Schema Inference &amp; Evolution</h3>
+  <p>On first run, Auto Loader samples the data to infer a schema and persists it to <code>cloudFiles.schemaLocation</code> so restarts don't have to re-infer. <code>cloudFiles.schemaEvolutionMode</code> controls what happens when new files show a schema change:</p>
+  <div class="table-wrap"><table>
+    <thead><tr><th>Mode</th><th>Behavior</th></tr></thead>
+    <tbody>
+      <tr><td><strong>addNewColumns</strong> (default)</td><td>Stream fails once, schema is updated with the new column, then the stream is restarted (manually, or automatically under Lakeflow Declarative Pipelines) and continues.</td></tr>
+      <tr><td><strong>rescue</strong></td><td>Unrecognized fields are captured in a <code>_rescued_data</code> JSON string column instead of failing the stream &mdash; nothing is silently dropped, but the pipeline never breaks on new fields.</td></tr>
+      <tr><td><strong>failOnNewColumns</strong></td><td>Stream fails and stays failed until you update the schema by hand. Use when an unexpected new column should be a human decision, not an automatic one.</td></tr>
+      <tr><td><strong>none</strong></td><td>New columns are silently ignored. Rarely what you want &mdash; usually paired with an explicit schema and <code>rescue</code> for anything unexpected instead.</td></tr>
+    </tbody>
+  </table></div>
+  <div class="callout">
+    <strong class="label">The Rescued Data Column</strong>
+    Even with an explicit schema, mismatched types (a string where a number was expected) or extra columns land in <code>_rescued_data</code> rather than causing a failed row or a silent null. This is the single most interview-relevant Auto Loader detail: it's the mechanism that makes "what happens when upstream sends a malformed record?" answerable with "nothing breaks, and nothing is lost &mdash; check <code>_rescued_data</code>."
+  </div>
+
+  <h3>Key Options Worth Knowing Cold</h3>
+  <pre><code>.option("cloudFiles.maxFilesPerTrigger", "1000")   # cap files processed per micro-batch
+.option("cloudFiles.maxBytesPerTrigger", "10g")     # cap bytes processed per micro-batch
+.option("cloudFiles.schemaHints", "order_id STRING, order_amount DOUBLE")  # pin specific column types
+.option("pathGlobFilter", "*.json")                  # only match certain files
+.option("cloudFiles.partitionColumns", "ingest_date") # infer partitions from the file path</code></pre>
+
+  <h3>Triggers for Batch-Like Ingestion</h3>
+  <p>Auto Loader is almost always run with <code>trigger(availableNow=True)</code> rather than a continuously running stream: it processes everything currently available, then stops &mdash; behaving like an incremental batch job you can schedule every 15 minutes via Workflows, without paying for an always-on cluster. See <a href="#streaming">&sect;04</a> for the full trigger comparison.</p>
+</section>
+
+<!-- ============ 03 INGEST OTHER ============ -->
+<section class="reveal" id="ingest-other">
+  <h2><span class="hico"><svg class="ico"><use href="#i-plug"/></svg></span><span class="n">03.</span> COPY INTO, Lakeflow Connect &amp; Choosing a Tool</h2>
+  <p class="lede">Auto Loader isn't the only ingestion path, and picking the wrong one for the scenario is a common interview trip-up.</p>
+
+  <h3>COPY INTO</h3>
+  <p>A simpler, SQL-native, idempotent bulk-load statement. Databricks tracks which files have already been loaded (metadata-only, no streaming infrastructure), so re-running the same statement is safe and only new files are loaded.</p>
+  <pre><code>COPY INTO restaurant_prod.bronze.orders_raw
+FROM '/Volumes/restaurant_prod/bronze/incoming_files/orders/'
+FILEFORMAT = JSON
+FORMAT_OPTIONS ('inferSchema' = 'true')
+COPY_OPTIONS ('mergeSchema' = 'true');</code></pre>
+  <p><code>COPY INTO</code> is the right call for occasional or ad hoc loads and when you don't want streaming checkpoint infrastructure at all. It doesn't scale to millions of small files or very high-frequency micro-batches nearly as well as Auto Loader &mdash; that tracking metadata grows unbounded and eventually becomes the bottleneck. Rule of thumb: <strong>COPY INTO for thousands of files loaded occasionally, Auto Loader for continuous or high-volume arrival.</strong></p>
+
+  <h3>Lakeflow Connect: Managed Source Connectors</h3>
+  <p>Lakeflow Connect is Databricks' managed ingestion service for standard sources &mdash; databases (via CDC: SQL Server, Postgres, MySQL, Oracle), SaaS applications (Salesforce, Workday, ServiceNow, Google Analytics), and message buses. Instead of hand-rolling a JDBC pull-and-diff job, you declare a connection and a destination and Databricks manages schema drift, incremental snapshots, and CDC replication for you.</p>
+  <pre><code>CREATE CONNECTION sqlserver_orders TYPE SQLSERVER
+OPTIONS (host 'orders-db.internal', port '1433', user secret('scope','user'), password secret('scope','pwd'));
+
+CREATE TABLE restaurant_prod.bronze.orders_cdc
+FROM STREAM sqlserver_orders TABLE 'dbo.orders'
+CDC_TYPE = 'CHANGE_TRACKING';</code></pre>
+  <p>This matters for an interview because it's the modern answer to "how would you replicate an OLTP Postgres table into the Lakehouse without a heavy Debezium/Kafka stack?" &mdash; Lakeflow Connect (or its predecessor pattern using a JDBC full/incremental read plus <a href="#cdc">MERGE</a>) is a legitimate, low-maintenance answer for straightforward cases; a Kafka+Debezium pipeline still wins for very high-throughput, sub-second-latency, or non-Databricks-destination requirements.</p>
+
+  <h3>Choosing an Ingestion Tool</h3>
+  <div class="table-wrap"><table>
+    <thead><tr><th>Source shape</th><th>Reach for</th></tr></thead>
+    <tbody>
+      <tr><td>Files landing continuously in cloud storage (JSON/CSV/Parquet/Avro logs, exports)</td><td><strong>Auto Loader</strong></td></tr>
+      <tr><td>A one-off or occasional bulk file load</td><td><strong>COPY INTO</strong></td></tr>
+      <tr><td>An OLTP database you need to replicate (CDC)</td><td><strong>Lakeflow Connect</strong> (managed) or a Debezium/Kafka pipeline landed via Auto Loader (custom, high control)</td></tr>
+      <tr><td>A SaaS application (Salesforce, Workday, ...)</td><td><strong>Lakeflow Connect</strong> connector, or a third-party tool (Fivetran) landing files/tables for Auto Loader to pick up</td></tr>
+      <tr><td>A Kafka/Kinesis/Event Hub topic</td><td><strong>Structured Streaming</strong> reading the topic directly (<a href="#streaming">&sect;04</a>) &mdash; no Auto Loader needed, there are no files</td></tr>
+      <tr><td>Another Delta/warehouse table you can query directly</td><td>A plain batch <code>spark.read.table(...)</code>, or <code>Delta Sharing</code> if it's in a different metastore/organization</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<!-- ============ 04 STRUCTURED STREAMING ============ -->
+<section class="reveal" id="streaming">
+  <h2><span class="hico"><svg class="ico"><use href="#i-repeat"/></svg></span><span class="n">04.</span> Structured Streaming on Databricks</h2>
+  <p class="lede">Structured Streaming treats a stream as an unbounded table that keeps growing, and re-runs the same DataFrame logic you'd write for a batch job against each new chunk. This "batch code, streaming execution" model is why so much Databricks ingestion &mdash; Auto Loader included &mdash; is a streaming query underneath, even when the intent is closer to "run this incrementally every 15 minutes."</p>
+
+  <h3>The Micro-Batch Model</h3>
+  <p>Under the default execution engine, Spark repeatedly: (1) checks the source for new data, (2) processes it as one micro-batch through the same query plan, (3) writes results, (4) records progress in the checkpoint, (5) waits for the next trigger. Each cycle is atomic &mdash; a crash mid-batch just replays that batch on restart, using the checkpoint to know exactly where it left off.</p>
+
+  <h3>Triggers: Controlling the Cadence</h3>
+  <div class="table-wrap"><table>
+    <thead><tr><th>Trigger</th><th>Behavior</th><th>When to use</th></tr></thead>
+    <tbody>
+      <tr><td><code>.trigger(processingTime="30 seconds")</code></td><td>Fires a micro-batch every fixed interval, on an always-running cluster.</td><td>Genuine low-latency streaming (dashboards, alerting) where a cluster running 24/7 is acceptable cost.</td></tr>
+      <tr><td><code>.trigger(availableNow=True)</code></td><td>Processes everything currently available, in as many micro-batches as needed, then stops the stream.</td><td>The default for scheduled Databricks ingestion &mdash; run on a job cluster every N minutes, get full parallelism and rate-limiting, pay only while it runs.</td></tr>
+      <tr><td><code>.trigger(once=True)</code></td><td>Legacy predecessor to <code>availableNow</code> &mdash; processes everything in a single micro-batch.</td><td>Superseded; <code>availableNow</code> is strictly better for large backlogs (multiple smaller batches instead of one huge one).</td></tr>
+      <tr><td><code>.trigger(continuous="1 second")</code></td><td>An experimental low-latency execution mode with millisecond-level latency and only at-least-once guarantees.</td><td>Rarely used in practice; know it exists, don't reach for it without a specific sub-second latency requirement.</td></tr>
+    </tbody>
+  </table></div>
+  <div class="callout">
+    <strong class="label">Interview angle</strong>
+    "Is Auto Loader batch or streaming?" &mdash; it's a streaming source almost always run with <code>availableNow</code> triggers, which is why people call the same pipeline both "batch" and "streaming" and both answers are defensible. The precise answer: it uses the Structured Streaming engine (checkpointing, exactly-once, incremental state) but is scheduled and billed like a batch job.
+  </div>
+
+  <h3>Checkpoints &amp; Exactly-Once</h3>
+  <p>The <code>checkpointLocation</code> stores two things: offsets (what's been read from the source) and a write-ahead log of what's been committed to the sink. Together, these let Spark guarantee <strong>end-to-end exactly-once</strong> processing for idempotent sinks like Delta tables, even across driver failures &mdash; a restarted stream replays only the uncommitted portion of the last micro-batch, never double-processes committed data. This is the mechanism that makes "what happens if the cluster dies mid-write?" answerable with "nothing, it resumes exactly where it left off" rather than "you get duplicates."</p>
+  <div class="callout warn">
+    <strong class="label">A checkpoint is tied to one query</strong>
+    Changing the transformation logic in incompatible ways (adding a stateful aggregation, changing partition columns) after a checkpoint exists can break the stream on restart. Never point two different streaming queries at the same checkpoint location, and never delete/move a checkpoint you intend to keep running &mdash; that's equivalent to restarting the pipeline from scratch.
+  </div>
+
+  <h3>Stateful Operations, Watermarking &amp; Late Data</h3>
+  <p>Aggregations, joins, and deduplication across a streaming DataFrame require Spark to keep state between micro-batches (e.g. "the running total for restaurant X so far"). Left unbounded, that state grows forever. A <strong>watermark</strong> tells Spark how late data is allowed to arrive before it's considered droppable, which bounds state size and lets Spark clean up state for windows that will never see another update.</p>
+  <pre><code>from pyspark.sql.functions import window, col
+
+windowed = (orders_stream
+  .withWatermark("order_ts", "10 minutes")           # tolerate up to 10 min of lateness
+  .groupBy(window(col("order_ts"), "5 minutes"), col("restaurant_id"))
+  .sum("order_amount"))
+
+# Streaming deduplication - also needs a watermark to bound the dedup state
+deduped = (orders_stream
+  .withWatermark("order_ts", "1 hour")
+  .dropDuplicatesWithinWatermark(["order_id"]))</code></pre>
+  <p>A row arriving more than 10 minutes late (per the watermark above) relative to the max event time already seen is silently dropped from that aggregation &mdash; a direct trade of correctness-for-arbitrarily-late-data against bounded memory. Setting the watermark is a business decision as much as a technical one: too short and you drop legitimately late data (a mobile order synced after being offline); too long and state balloons, slowing every micro-batch.</p>
+
+  <h3>foreachBatch: The Escape Hatch</h3>
+  <p><code>foreachBatch</code> hands each micro-batch to you as an ordinary (static) DataFrame, which is how you do anything the streaming write API doesn't support natively &mdash; most commonly, a streaming <code>MERGE</code> for upserts (see <a href="#cdc">&sect;07</a>), writing to multiple sinks, or per-batch custom logic.</p>
+  <pre><code>def upsert_batch(microBatchDf, batchId):
+    (microBatchDf.createOrReplaceTempView("updates"))
+    microBatchDf.sparkSession.sql("""
+        MERGE INTO restaurant_prod.silver.orders_clean t
+        USING updates s ON t.order_id = s.order_id
+        WHEN MATCHED THEN UPDATE SET *
+        WHEN NOT MATCHED THEN INSERT *
+    """)
+
+(orders_stream.writeStream
+  .foreachBatch(upsert_batch)
+  .option("checkpointLocation", "/Volumes/restaurant_prod/silver/_checkpoints/orders")
+  .trigger(availableNow=True)
+  .start())</code></pre>
+</section>
+
+<!-- ============ 05 DELTA INTERNALS ============ -->
+<section class="reveal" id="delta-internals">
+  <h2><span class="hico"><svg class="ico"><use href="#i-layers"/></svg></span><span class="n">05.</span> Delta Lake Internals</h2>
+  <p class="lede">Knowing Delta Lake as "ACID transactions and time travel" gets you through a definitions question. Knowing what's actually in the <code>_delta_log</code> folder gets you through the follow-up.</p>
+
+  <h3>What's Actually on Disk</h3>
+  <pre><code>restaurant_prod.db/orders_clean/
+├── part-00000-....snappy.parquet         ← the actual data, plain Parquet
+├── part-00001-....snappy.parquet
+├── ...
+└── _delta_log/
+    ├── 00000000000000000000.json        ← commit 0: CREATE TABLE
+    ├── 00000000000000000001.json        ← commit 1: a MERGE
+    ├── 00000000000000000002.json        ← commit 2: an OPTIMIZE
+    ├── 00000000000000000010.checkpoint.parquet   ← periodic full-state snapshot
+    └── _last_checkpoint                 ← pointer to the latest checkpoint</code></pre>
+  <p>Each commit is one JSON file containing an ordered list of <strong>actions</strong>: <code>add</code> (a new data file, with stats), <code>remove</code> (a file logically removed, tombstoned rather than deleted from disk immediately), <code>metaData</code> (schema/partitioning changes), <code>protocol</code> (minimum reader/writer version), and <code>commitInfo</code> (who/when/what operation). The current state of the table at any version is just "replay every commit up to that version and keep the surviving <code>add</code> files" &mdash; which is exactly what makes time travel possible: <code>VERSION AS OF 5</code> replays the log up to commit 5.</p>
+  <p>Because replaying thousands of small JSON commits from scratch would be slow, Delta writes a <strong>checkpoint</strong> (a Parquet snapshot of the fully-reconciled state) every 10 commits by default, so a reader only needs the latest checkpoint plus any commits after it.</p>
+
+  <h3>Optimistic Concurrency Control</h3>
+  <p>Delta doesn't use locks. A writer reads the table version it started from, computes its changes, and tries to commit the <em>next</em> sequential version number. If another writer already committed that version first, the loser re-reads the new state, checks whether its changes still conflict (not just "someone else wrote something," but "did they touch the same files/partitions"), and retries if safe, or fails if a genuine conflict exists (e.g. two concurrent <code>MERGE</code>s touching overlapping rows).</p>
+  <div class="callout warn">
+    <strong class="label">Interview angle</strong>
+    "How does Delta handle two jobs writing to the same table at once?" &mdash; optimistic concurrency control via atomic commit-file creation on the metastore/storage layer, not pessimistic locking. Non-overlapping writes (different partitions, blind appends) succeed concurrently with automatic retry; truly conflicting writes to the same rows fail one of the transactions, which the caller must retry.
+  </div>
+
+  <h3>ACID Guarantees, Concretely</h3>
+  <div class="grid-2">
+    <div class="mini-card"><h4>Atomicity</h4><p>A commit JSON either lands in full or not at all &mdash; readers never see a partially-written set of files as "the table."</p></div>
+    <div class="mini-card"><h4>Consistency</h4><p>Schema enforcement rejects writes that violate the declared schema before they're ever committed.</p></div>
+    <div class="mini-card"><h4>Isolation</h4><p>Snapshot isolation: every reader sees a single consistent version for the duration of its query, never a version that changes mid-read.</p></div>
+    <div class="mini-card"><h4>Durability</h4><p>Once a commit file exists in cloud storage (itself durable, replicated object storage), the write is permanent.</p></div>
+  </div>
+
+  <h3>Table Features &amp; Protocol Versions</h3>
+  <p>Newer capabilities (deletion vectors, column mapping, liquid clustering, change data feed) are gated behind a <strong>reader/writer protocol version</strong> recorded in the log's <code>protocol</code> action. A table using a feature your client doesn't support simply refuses to open &mdash; this is why an older open-source Spark/Delta client sometimes can't read a table a newer Databricks Runtime just wrote to, and why <code>DESCRIBE DETAIL</code> and <code>SHOW TBLPROPERTIES</code> are useful first commands when debugging a compatibility error.</p>
+  <pre><code>DESCRIBE DETAIL restaurant_prod.silver.orders_clean;
+SHOW TBLPROPERTIES restaurant_prod.silver.orders_clean;
+-- delta.minReaderVersion, delta.minWriterVersion, delta.feature.deletionVectors, etc.</code></pre>
+
+  <h3>Deletion Vectors</h3>
+  <p>Historically, a single-row <code>DELETE</code> or <code>UPDATE</code> rewrote the entire Parquet file that row lived in &mdash; correct, but expensive at scale. <strong>Deletion vectors</strong> (enabled by default on newer Databricks Runtime versions) instead record "row N in file X is deleted" in a small side file, leaving the original Parquet untouched. Reads transparently apply the deletion vector to filter those rows out. This turns row-level <code>DELETE</code>/<code>UPDATE</code>/<code>MERGE</code> from an "O(file size)" operation into something closer to "O(rows changed)" &mdash; a large part of why <code>MERGE</code> performance improved substantially on recent runtimes. Deletion vectors are eventually reconciled away by a subsequent <code>OPTIMIZE</code>, which does the full file rewrite once, in bulk.</p>
+</section>
+
+<!-- ============ 06 DELTA PERFORMANCE ============ -->
+<section class="reveal" id="delta-perf">
+  <h2><span class="hico"><svg class="ico"><use href="#i-gauge"/></svg></span><span class="n">06.</span> Delta Lake Performance</h2>
+  <p class="lede">Every Delta performance feature is really solving one of two problems: <strong>too many small files</strong>, or <strong>scanning data you don't need</strong>. Keep that framing and the whole feature set organizes itself.</p>
+
+  <h3>The Small-Files Problem</h3>
+  <p>Streaming and frequent-micro-batch writes naturally produce many small files (one small write, one small file). Small files hurt because listing and opening thousands of tiny files has fixed per-file overhead that swamps the actual I/O, and because Spark schedules roughly one task per file/split &mdash; too many tiny tasks means the cluster spends more time on scheduling overhead than computation.</p>
+  <pre><code>OPTIMIZE restaurant_prod.silver.orders_clean;
+
+-- Or automatically: enable on the table so small writes get compacted continuously
+ALTER TABLE restaurant_prod.silver.orders_clean
+SET TBLPROPERTIES (
+  'delta.autoOptimize.optimizeWrite' = 'true',   -- coalesce output files at write time
+  'delta.autoOptimize.autoCompact'   = 'true'    -- opportunistically compact small files after writes
+);</code></pre>
+  <p><code>OPTIMIZE</code> compacts many small files into fewer, right-sized ones (target ~1 GB per file by default) by rewriting them &mdash; it does not change query results, only file layout, and old files are only removed from the live table version (still recoverable via time travel until <code>VACUUM</code> runs).</p>
+
+  <h3>Z-Ordering vs. Liquid Clustering</h3>
+  <p>Both exist to answer the same question: "when a query filters on column X, how do we avoid scanning files that couldn't possibly contain a match?" Delta tracks min/max stats per file per column; if a query's filter range doesn't overlap a file's stats, that file is skipped entirely (<strong>data skipping</strong>). Both features work by physically co-locating similar values into the same files so those min/max ranges stay narrow and useful.</p>
+  <pre><code>-- Z-Order: co-locate by columns, computed at OPTIMIZE time
+OPTIMIZE restaurant_prod.silver.orders_clean
+ZORDER BY (restaurant_id, order_ts);
+
+-- Liquid Clustering: declared once, maintained incrementally on every write
+CREATE TABLE restaurant_prod.silver.orders_clean (...)
+CLUSTER BY (restaurant_id, order_ts);
+-- or on an existing table:
+ALTER TABLE restaurant_prod.silver.orders_clean CLUSTER BY (restaurant_id, order_ts);</code></pre>
+  <div class="table-wrap"><table>
+    <thead><tr><th></th><th>Z-Ordering</th><th>Liquid Clustering (current default recommendation)</th></tr></thead>
+    <tbody>
+      <tr><td><strong>When applied</strong></td><td>Only when you run <code>OPTIMIZE ... ZORDER BY</code></td><td>Incrementally, on every write, without a full rewrite each time</td></tr>
+      <tr><td><strong>Changing the key</strong></td><td>Must fully re-cluster from scratch</td><td><code>ALTER TABLE ... CLUSTER BY</code> takes effect for new data immediately, old data reclusters lazily</td></tr>
+      <tr><td><strong>Partitioning interaction</strong></td><td>Combined with (potentially over-eager) Hive-style partitioning</td><td>Replaces the need for partition columns in most cases &mdash; cluster keys serve the same pruning purpose without the small-partition problems below</td></tr>
+      <tr><td><strong>Cardinality</strong></td><td>Works best on low-to-medium cardinality columns used together</td><td>Handles high-cardinality columns (like an ID) well too</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>Partitioning: When It Helps and When It Hurts</h3>
+  <p>Classic Hive-style partitioning (<code>PARTITIONED BY (order_date)</code>) physically splits data into subdirectories per partition value. It's a coarse, powerful pruning tool for a well-chosen, moderate-cardinality column (a date) that most queries filter on &mdash; but the classic interview trap is <strong>over-partitioning</strong>: partitioning by a high-cardinality column (a customer ID, a UUID) creates thousands of tiny partition directories, each with its own small-file problem, and defeats the whole point. The current best practice for most new Databricks tables is to skip explicit partitioning altogether and use <strong>liquid clustering</strong> instead, which avoids this failure mode entirely.</p>
+  <div class="callout bad">
+    <strong class="label">Common mistake</strong>
+    Partitioning a large fact table by <code>customer_id</code> or another near-unique column "for faster customer lookups." This produces one file per customer, catastrophic write amplification, and a directory listing problem at scale. Use Z-Order/liquid clustering on that column instead of partitioning by it.
+  </div>
+
+  <h3>VACUUM &amp; Retention</h3>
+  <p><code>OPTIMIZE</code> and <code>DELETE</code>/<code>UPDATE</code>/<code>MERGE</code> leave old, no-longer-referenced Parquet files on disk (still needed for time travel to older versions). <code>VACUUM</code> permanently deletes files older than the retention threshold that are no longer referenced by any version within that window.</p>
+  <pre><code>VACUUM restaurant_prod.silver.orders_clean;               -- default 7-day retention
+VACUUM restaurant_prod.silver.orders_clean RETAIN 168 HOURS;
+VACUUM restaurant_prod.silver.orders_clean DRY RUN;        -- list what would be deleted, delete nothing</code></pre>
+  <div class="callout warn">
+    <strong class="label">Interview angle</strong>
+    Setting retention below 7 days (Databricks requires explicitly disabling a safety check to go lower) risks corrupting a table for anyone with a still-running query or a concurrent writer that started before the <code>VACUUM</code> and is reading files it assumes still exist. Never shorten retention just to save storage cost without confirming no long-running readers/writers span that window.
+  </div>
+
+  <h3>Table Statistics &amp; ANALYZE</h3>
+  <p>Delta automatically collects min/max/null-count statistics for the first 32 columns of every file at write time (used for data skipping); for the cost-based optimizer's join and aggregation planning more broadly, keep table-level statistics fresh with <code>ANALYZE TABLE ... COMPUTE STATISTICS</code> after large data changes, especially before a query with several joins where the optimizer has to choose a join strategy (see <a href="#tuning">&sect;09</a>).</p>
+</section>
+
+<!-- ============ 07 CDC ============ -->
+<section class="reveal" id="cdc">
+  <h2><span class="hico"><svg class="ico"><use href="#i-merge"/></svg></span><span class="n">07.</span> CDC &amp; Incremental Patterns</h2>
+  <p class="lede">Almost every real pipeline is incremental: new rows arrive, existing rows change, some rows are deleted. This section is the single most interview-tested area of Databricks data engineering &mdash; expect to write <code>MERGE</code> from memory.</p>
+
+  <h3>MERGE INTO, Clause by Clause</h3>
+  <pre><code>MERGE INTO restaurant_prod.silver.orders_clean AS target
+USING staged_updates AS source
+  ON target.order_id = source.order_id
+WHEN MATCHED AND source.op = 'DELETE' THEN DELETE
+WHEN MATCHED AND source.updated_at > target.updated_at THEN
+  UPDATE SET target.status = source.status, target.updated_at = source.updated_at
+WHEN NOT MATCHED THEN
+  INSERT (order_id, restaurant_id, status, updated_at)
+  VALUES (source.order_id, source.restaurant_id, source.status, source.updated_at);</code></pre>
+  <p>Each <code>WHEN</code> clause can carry its own extra condition, and clauses are evaluated in order &mdash; the first matching clause wins for a given row. <code>WHEN NOT MATCHED BY SOURCE</code> (matched in the target but absent from the source) is the fourth clause type, used to detect deletions when a full snapshot is the source rather than a stream of explicit delete events.</p>
+
+  <div class="callout bad">
+    <strong class="label">The classic MERGE bug</strong>
+    If <code>source</code> contains more than one row per join key (duplicate events, or a source batch that wasn't deduplicated), <code>MERGE</code> throws <code>UnsupportedOperationException: multiple source rows matched</code> for the <code>UPDATE</code>/<code>DELETE</code> clauses. Always deduplicate the source batch on the join key before merging &mdash; typically by keeping only the latest event per key with a window function, exactly the fix shown in the deduplication subsection below.
+  </div>
+
+  <h3>Change Data Feed (CDF)</h3>
+  <p>CDF turns a Delta table into a source of row-level changes &mdash; not just its current state &mdash; so downstream tables can process only what changed since they last looked, instead of re-scanning everything.</p>
+  <pre><code>ALTER TABLE restaurant_prod.silver.orders_clean
+SET TBLPROPERTIES (delta.enableChangeDataFeed = true);
+
+-- Downstream: read only what changed between two versions
+SELECT * FROM table_changes('restaurant_prod.silver.orders_clean', 10, 20);
+
+-- Or as a stream, continuously
+spark.readStream.format("delta") \
+  .option("readChangeFeed", "true") \
+  .option("startingVersion", 10) \
+  .table("restaurant_prod.silver.orders_clean")</code></pre>
+  <p>Each CDF row carries a <code>_change_type</code> column (<code>insert</code>, <code>update_preimage</code>, <code>update_postimage</code>, <code>delete</code>), plus <code>_commit_version</code> and <code>_commit_timestamp</code>. This is the mechanism that makes it practical to propagate an upstream <code>UPDATE</code>/<code>DELETE</code> all the way to a gold table without re-processing the whole table &mdash; and it's exactly what <code>APPLY CHANGES INTO</code> in Lakeflow Declarative Pipelines uses under the hood (<a href="#dlt">&sect;08</a>).</p>
+
+  <h3>Slowly Changing Dimensions: Type 1 vs. Type 2</h3>
+  <p><strong>SCD Type 1</strong> overwrites the old value &mdash; you lose history, but the table stays simple. That's exactly what the plain <code>MERGE</code> above does for the <code>status</code> column. <strong>SCD Type 2</strong> keeps every historical version as its own row, with validity date ranges, so you can ask "what was this customer's address on March 3rd?"</p>
+  <pre><code>-- SCD Type 2: expire the old row, insert the new one, in a single MERGE
+MERGE INTO restaurant_prod.silver.customer_dim AS target
+USING (
+  SELECT customer_id, address, city, current_timestamp() AS effective_ts
+  FROM staged_customer_updates
+) AS source
+ON target.customer_id = source.customer_id AND target.is_current = true
+WHEN MATCHED AND (target.address != source.address OR target.city != source.city) THEN
+  UPDATE SET target.is_current = false, target.valid_to = source.effective_ts
+WHEN NOT MATCHED THEN
+  INSERT (customer_id, address, city, valid_from, valid_to, is_current)
+  VALUES (source.customer_id, source.address, source.city, source.effective_ts, NULL, true);
+
+-- Note: a plain MERGE can only touch each existing row once per statement, so a genuine
+-- "expire old + insert new" SCD2 in one pass typically needs the source pre-joined against
+-- the current row (as above) or two statements/passes for expire vs. insert; Lakeflow
+-- Declarative Pipelines' AUTO CDC APPLY AS SCD TYPE 2 (see §08) handles this natively.</code></pre>
+
+  <h3>Deduplication Patterns</h3>
+  <pre><code># Batch: keep the latest event per key
+from pyspark.sql import Window
+from pyspark.sql.functions import row_number, col
+
+w = Window.partitionBy("order_id").orderBy(col("updated_at").desc())
+deduped = (raw_events
+  .withColumn("rn", row_number().over(w))
+  .filter("rn = 1")
+  .drop("rn"))
+
+# Or, when you truly only need first-seen-wins across the whole table history:
+deduped_table = spark.read.table("bronze.orders_raw").dropDuplicates(["order_id"])</code></pre>
+  <p>For streaming, use <code>dropDuplicatesWithinWatermark</code> (shown in <a href="#streaming">&sect;04</a>) rather than plain <code>dropDuplicates</code>, which would otherwise have to retain state for every key ever seen, forever.</p>
+
+  <h3>Idempotent Writes</h3>
+  <p>A pipeline that might reprocess the same micro-batch (after a failure, or via manual backfill) needs writes that are safe to repeat. <code>MERGE</code> keyed on a natural or event ID is idempotent by construction &mdash; running it twice with the same input produces the same result. A plain <code>append</code> is not: reprocessing produces duplicate rows unless the source is deduplicated first or the sink itself de-duplicates (e.g. <code>foreachBatch</code> using <code>MERGE</code>, as in &sect;04, is the standard way to make a streaming <em>append</em> workload idempotent).</p>
+</section>
+
+<!-- ============ 08 DLT / LAKEFLOW PIPELINES ============ -->
+<section class="reveal" id="dlt">
+  <h2><span class="hico"><svg class="ico"><use href="#i-dag"/></svg></span><span class="n">08.</span> Lakeflow Declarative Pipelines (Delta Live Tables)</h2>
+  <p class="lede">Lakeflow Declarative Pipelines &mdash; the current name for what was branded Delta Live Tables (DLT); both names are in active use and refer to the same engine &mdash; let you declare <em>what</em> each table should contain and let Databricks work out dependency ordering, incremental processing, retries, and cluster management, instead of hand-writing an imperative script that calls tables in the right order.</p>
+
+  <h3>The Three Table Types</h3>
+  <div class="grid-3">
+    <div class="mini-card"><h4>Streaming Table</h4><p>Processes each input row exactly once, incrementally. Backed by Auto Loader or another streaming source. The default choice for bronze/silver ingestion.</p></div>
+    <div class="mini-card"><h4>Materialized View</h4><p>Recomputed (fully or incrementally, when possible) from its query whenever its inputs change. The default choice for gold-layer aggregations that need to reflect the full current state.</p></div>
+    <div class="mini-card"><h4>View</h4><p>Not persisted at all &mdash; a named, reusable query, recomputed on every read. Useful for intermediate logic you don't want materialized as its own table.</p></div>
+  </div>
+
+  <h3>Python Syntax</h3>
+  <pre><code>import dlt
+from pyspark.sql.functions import col
+
+@dlt.table(
+  comment="Raw orders landed via Auto Loader",
+  table_properties={"quality": "bronze"}
+)
+def orders_raw():
+    return (spark.readStream.format("cloudFiles")
+        .option("cloudFiles.format", "json")
+        .load("/Volumes/restaurant_prod/bronze/incoming_files/orders/"))
+
+@dlt.table(comment="Cleaned, validated orders")
+@dlt.expect_or_drop("valid_amount", "order_amount > 0")
+@dlt.expect_or_fail("has_order_id", "order_id IS NOT NULL")
+def orders_clean():
+    return (dlt.read_stream("orders_raw")
+        .filter(col("status").isNotNull())
+        .select("order_id", "restaurant_id", "order_amount", "status", "updated_at"))
+
+@dlt.table(comment="Daily sales per restaurant")
+def daily_sales():
+    return (dlt.read("orders_clean")
+        .groupBy("restaurant_id")
+        .sum("order_amount"))</code></pre>
+
+  <h3>SQL Syntax</h3>
+  <pre><code>CREATE OR REFRESH STREAMING TABLE orders_raw
+AS SELECT * FROM STREAM read_files(
+  '/Volumes/restaurant_prod/bronze/incoming_files/orders/', format => 'json'
+);
+
+CREATE OR REFRESH STREAMING TABLE orders_clean (
+  CONSTRAINT valid_amount EXPECT (order_amount > 0) ON VIOLATION DROP ROW,
+  CONSTRAINT has_order_id EXPECT (order_id IS NOT NULL) ON VIOLATION FAIL UPDATE
+)
+AS SELECT order_id, restaurant_id, order_amount, status, updated_at
+FROM STREAM orders_raw
+WHERE status IS NOT NULL;
+
+CREATE OR REFRESH MATERIALIZED VIEW daily_sales
+AS SELECT restaurant_id, sum(order_amount) AS total
+FROM orders_clean GROUP BY restaurant_id;</code></pre>
+
+  <h3>Expectations: Declarative Data Quality</h3>
+  <div class="table-wrap"><table>
+    <thead><tr><th>Decorator / Clause</th><th>On violation</th></tr></thead>
+    <tbody>
+      <tr><td><code>@dlt.expect</code> / <code>EXPECT ... ON VIOLATION</code> (default)</td><td>Row is kept, violation is counted in the pipeline's quality metrics. Use for monitoring without blocking.</td></tr>
+      <tr><td><code>@dlt.expect_or_drop</code> / <code>ON VIOLATION DROP ROW</code></td><td>Row is silently dropped from this table's output.</td></tr>
+      <tr><td><code>@dlt.expect_or_fail</code> / <code>ON VIOLATION FAIL UPDATE</code></td><td>The entire pipeline update fails &mdash; use for invariants that must never be violated (a null primary key).</td></tr>
+      <tr><td><code>@dlt.expect_all_or_drop</code></td><td>Takes a dict of multiple named expectations, drops a row failing any of them.</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>APPLY CHANGES INTO / AUTO CDC: Native CDC Handling</h3>
+  <p>Rather than hand-writing the <code>MERGE</code> from <a href="#cdc">&sect;07</a>, a declarative pipeline can consume a CDC feed (from Lakeflow Connect, CDF, or a Debezium-style stream) directly, including out-of-order events and SCD Type 2 history, in one declaration:</p>
+  <pre><code>import dlt
+
+dlt.create_streaming_table("customer_dim")
+
+dlt.apply_changes(
+  target="customer_dim",
+  source="customer_cdc_events",
+  keys=["customer_id"],
+  sequence_by="updated_at",       # resolves out-of-order events correctly
+  apply_as_deletes="op = 'DELETE'",
+  except_column_list=["op"],
+  stored_as_scd_type=2            # or 1 - handles history automatically
+)</code></pre>
+  <p>This single declaration replaces the hand-rolled SCD Type 2 <code>MERGE</code> pattern from &sect;07 &mdash; <code>sequence_by</code> makes it correct even when CDC events arrive out of order (a real-world guarantee that's genuinely hard to hand-code correctly).</p>
+
+  <h3>Pipeline Modes &amp; Unity Catalog Integration</h3>
+  <p>A pipeline runs in <strong>triggered</strong> mode (processes available data, then stops &mdash; the common case, scheduled via Workflows) or <strong>continuous</strong> mode (stays running, picking up new data with low latency, at the cost of an always-on cluster). Every table a pipeline creates is a normal Unity Catalog-governed Delta table &mdash; queryable with plain SQL from outside the pipeline the moment it's written, and covered by the same grants, lineage, and row filters described in <a href="#uc">&sect;01</a>.</p>
+
+  <div class="callout">
+    <strong class="label">Interview angle</strong>
+    "Why use Lakeflow Declarative Pipelines instead of hand-written PySpark jobs orchestrated by Workflows?" &mdash; you get automatic dependency resolution from the query graph (no manually ordering tasks), built-in data quality enforcement (expectations), automatic incremental processing for streaming tables, and a managed pipeline UI showing data quality and lineage per run. The trade-off: less imperative control, and a learning curve around its specific decorators/clauses. For simple, mostly-independent jobs, plain Workflows tasks are often still simpler.
+  </div>
+</section>
+
+<!-- ============ 09 SPARK TUNING ============ -->
+<section class="reveal" id="tuning">
+  <h2><span class="hico"><svg class="ico"><use href="#i-bolt"/></svg></span><span class="n">09.</span> Spark Performance Tuning on Databricks</h2>
+  <p class="lede"><a href="../spark-essentials/">The Spark guide</a> covers the execution model in full; this is the condensed, Databricks-specific checklist for when a job is slow and you have five minutes to diagnose it.</p>
+
+  <h3>Adaptive Query Execution (AQE)</h3>
+  <p>AQE (on by default) re-optimizes the query plan mid-execution using real runtime statistics instead of only static pre-execution estimates. Three concrete things it does:</p>
+  <div class="grid-3">
+    <div class="mini-card"><h4>Coalesce shuffle partitions</h4><p>Merges many small post-shuffle partitions into fewer, right-sized ones, fixing the classic "200 shuffle partitions for a tiny dataset" overhead problem automatically.</p></div>
+    <div class="mini-card"><h4>Switch join strategy</h4><p>Converts a sort-merge join to a broadcast join mid-plan once actual data size (not just the estimate) proves one side is small enough.</p></div>
+    <div class="mini-card"><h4>Skew join optimization</h4><p>Detects a disproportionately large partition after a shuffle and automatically splits it into smaller sub-partitions processed in parallel.</p></div>
+  </div>
+
+  <h3>Joins: Broadcast vs. Shuffle</h3>
+  <pre><code>from pyspark.sql.functions import broadcast
+
+# Force a broadcast join when you know one side is small (or AQE's estimate is wrong)
+result = orders.join(broadcast(restaurants), "restaurant_id")
+
+spark.conf.set("spark.sql.autoBroadcastJoinThreshold", 100 * 1024 * 1024)  # default 10MB</code></pre>
+  <p>A <strong>broadcast join</strong> ships the entire smaller table to every executor, avoiding a shuffle of the (usually much larger) other side entirely &mdash; the single biggest join speedup available, but only viable when one side fits comfortably in executor memory. Two large tables force a <strong>sort-merge join</strong>, which shuffles both sides by join key &mdash; expensive, but unavoidable at that scale.</p>
+
+  <h3>Data Skew</h3>
+  <p>Skew is when one partition key holds vastly more rows than others (one restaurant chain with 40% of all orders), so one task takes far longer than the rest and the whole stage waits on it. AQE's automatic skew join handling covers many cases; when it doesn't (a skewed <code>groupBy</code> rather than a join, for instance), the manual fix is <strong>salting</strong>: append a random suffix to the skewed key to spread it across more partitions, then aggregate again to remove the salt.</p>
+  <pre><code>from pyspark.sql.functions import concat, lit, rand, floor
+
+salted = orders.withColumn("salted_key",
+    concat(col("restaurant_id"), lit("_"), floor(rand() * 10).cast("int")))
+partial = salted.groupBy("salted_key", "restaurant_id").sum("order_amount")
+final = partial.groupBy("restaurant_id").sum("sum(order_amount)")</code></pre>
+
+  <h3>Caching</h3>
+  <p><code>.cache()</code>/<code>.persist()</code> keeps a DataFrame's computed result in memory/disk across multiple actions, which only pays off when you actually re-read the same DataFrame more than once (an interactive notebook exploring the same intermediate result repeatedly; a table read by several downstream branches of the same job). Caching something read exactly once is pure overhead. Always <code>.unpersist()</code> when done, and remember Delta's own file-level caching (disk cache on Databricks clusters) already accelerates repeated reads of unmodified cloud files without any code change.</p>
+
+  <h3>Reading the Spark UI / Query Profile</h3>
+  <p>The fastest diagnostic loop for "why is this slow": open the query's <strong>Query Profile</strong> (or Spark UI's SQL tab), find the stage with the longest wall-clock time, and check for (1) a huge shuffle read/write size relative to input &mdash; a join or aggregation exploding row counts; (2) a large skew between min/median/max task duration in that stage &mdash; data skew; (3) heavy <strong>spill</strong> (data written to disk because it didn't fit in executor memory) &mdash; undersized executors or too few shuffle partitions for the data volume.</p>
+
+  <h3>Photon</h3>
+  <p>Photon (see also the <a href="../databricks/#workspace">overview guide</a>) is a vectorized native-code execution engine, a drop-in replacement for Spark's row-at-a-time JVM execution for supported operators &mdash; scans, filters, joins, aggregations, most write paths. It requires zero code changes; enable it on the cluster (or use it by default on SQL warehouses/serverless) and eligible operators run faster. Not every operator is Photon-eligible yet (some UDFs and complex data types fall back to standard Spark), which is why the Query Profile shows exactly which operators ran on Photon versus the JVM engine for a given query &mdash; useful when Photon is enabled but a job isn't seeing the expected speedup.</p>
+
+  <div class="callout warn">
+    <strong class="label">Interview angle</strong>
+    "A job got slower after adding a UDF." &mdash; Python UDFs force row-by-row serialization between the JVM and a Python process for every row (and are not Photon-eligible), which is often dramatically slower than an equivalent built-in Spark SQL function or a vectorized Pandas UDF (<code>@pandas_udf</code>, which batches rows and uses Arrow for serialization). Always prefer a built-in function first, a Pandas UDF second, and a plain row-at-a-time Python UDF last.
+  </div>
+</section>
+
+<!-- ============ 10 ORCHESTRATION ============ -->
+<section class="reveal" id="orchestration">
+  <h2><span class="hico"><svg class="ico"><use href="#i-workflow"/></svg></span><span class="n">10.</span> Orchestration: Jobs &amp; Workflows</h2>
+  <p class="lede">Databricks Jobs (the UI/product is called Workflows, part of the broader Lakeflow Jobs branding) is the native scheduler: a DAG of tasks, each with its own compute, retries, and dependencies, triggered on a schedule, a file arrival, or another job's completion.</p>
+
+  <h3>Task Types</h3>
+  <div class="grid-3">
+    <div class="mini-card"><h4>Notebook / Python script / Python wheel</h4><p>The most common task: run a notebook, a <code>.py</code> file, or an installed wheel's entry point.</p></div>
+    <div class="mini-card"><h4>Lakeflow Declarative Pipeline</h4><p>Trigger a full pipeline run (§08) as one task, with the pipeline's own internal DAG hidden inside it.</p></div>
+    <div class="mini-card"><h4>SQL task</h4><p>Run a query, a dashboard refresh, or an alert check against a SQL warehouse.</p></div>
+    <div class="mini-card"><h4>dbt task</h4><p>Run a dbt project's models directly as a job task, with dbt's own DAG respected.</p></div>
+    <div class="mini-card"><h4>Run Job task</h4><p>Trigger another job as a task &mdash; the mechanism for composing large pipelines out of smaller, independently-testable jobs.</p></div>
+    <div class="mini-card"><h4>Condition / For Each</h4><p>Branch on a value, or fan out the same task across a list of inputs (e.g. one set of transformations per restaurant chain) without duplicating task definitions.</p></div>
+  </div>
+
+  <h3>Dependencies, Parameters &amp; Task Values</h3>
+  <p>Tasks declare <code>depends_on</code> another task by key, forming a DAG (fan-out and fan-in both supported). Two ways data flows between tasks:</p>
+  <pre><code># Inside an upstream task's notebook - pass a small value forward
+dbutils.jobs.taskValues.set(key="row_count", value=42193)
+
+# Inside a downstream task - read it back
+upstream_count = dbutils.jobs.taskValues.get(taskKey="ingest_orders", key="row_count")
+
+# Job-level parameters, referenced anywhere as {{job.parameters.env}}
+# set at trigger time (UI, API, or a scheduled trigger's fixed value)</code></pre>
+  <p>Task values are for small pieces of metadata (a row count, a computed file path, a flag) &mdash; not a substitute for writing actual data to a table between tasks.</p>
+
+  <h3>Retries, Timeouts &amp; Alerts</h3>
+  <pre><code>{
+  "task_key": "ingest_orders",
+  "retry_on_timeout": true,
+  "max_retries": 2,
+  "min_retry_interval_millis": 60000,
+  "timeout_seconds": 3600,
+  "email_notifications": {"on_failure": ["data-eng@company.com"]},
+  "notification_settings": {"alert_on_last_attempt": true}
+}</code></pre>
+  <p>Set retries on tasks that hit genuinely transient failures (a flaky upstream API, a brief cloud storage throttling event) &mdash; not on tasks with a logic bug, where retrying just delays the failure notification. <code>alert_on_last_attempt</code> avoids paging someone on the first of three retries when the second or third might still succeed.</p>
+
+  <h3>Compute per Task</h3>
+  <p>Each task can run on its own job cluster (created for the run, torn down after &mdash; the default and usually cheapest for production), a shared job cluster reused across the run's tasks (faster startup for a chain of small tasks, at the cost of resource contention between them), an existing all-purpose cluster (fast for development iteration, not recommended for production), or serverless compute (no cluster configuration at all).</p>
+
+  <h3>Triggering: Schedule, File Arrival, Continuous</h3>
+  <pre><code>-- Cron-based schedule (quartz syntax), a file-arrival trigger, or continuous mode
+"trigger": {
+  "file_arrival": {"url": "/Volumes/restaurant_prod/bronze/incoming_files/orders/"}
+}
+-- vs.
+"schedule": {"quartz_cron_expression": "0 */15 * * * ?", "timezone_id": "UTC"}</code></pre>
+  <p>A <strong>file arrival trigger</strong> starts a job shortly after new files land in a path &mdash; useful for event-driven ingestion without a tight polling schedule, and complementary to (not a replacement for) Auto Loader's own incremental file tracking once the job is running.</p>
+
+  <h3>REST API &amp; CLI</h3>
+  <pre><code># List recent runs of a job
+databricks jobs list-runs --job-id 123456789
+
+# Trigger a run with overridden parameters
+databricks jobs run-now 123456789 --python-params '["--env", "staging"]'
+
+curl -X POST https://<workspace>/api/2.2/jobs/run-now \
+  -H "Authorization: Bearer $TOKEN" \
+  -d '{"job_id": 123456789}'</code></pre>
+  <p>Every UI action has a REST API and CLI equivalent &mdash; the foundation for the CI/CD story in <a href="#dabs">&sect;11</a>: jobs are never clicked into existence in production, they're deployed from a definition file.</p>
+</section>
+
+<!-- ============ 11 DABs / CI-CD ============ -->
+<section class="reveal" id="dabs">
+  <h2><span class="hico"><svg class="ico"><use href="#i-box"/></svg></span><span class="n">11.</span> Databricks Asset Bundles &amp; CI/CD</h2>
+  <p class="lede">Databricks Asset Bundles (DABs) are the current, recommended infrastructure-as-code format for Databricks: a YAML definition of jobs, pipelines, and their resources, deployed identically to dev, staging, and prod via one CLI command &mdash; the direct answer to "how do you avoid clicking through the UI to build a job in production?"</p>
+
+  <h3>Project Structure</h3>
+  <pre><code>my_project/
+├── databricks.yml          # bundle definition: name, targets, included resources
+├── resources/
+│   ├── ingest_job.yml       # a Job definition
+│   └── orders_pipeline.yml  # a Lakeflow Declarative Pipeline definition
+├── src/
+│   └── ingest_orders.py
+└── tests/
+    └── test_transforms.py</code></pre>
+
+  <h3>databricks.yml</h3>
+  <pre><code>bundle:
+  name: restaurant-analytics
+
+include:
+  - resources/*.yml
+
+targets:
+  dev:
+    mode: development
+    default: true
+    workspace:
+      host: https://dev-workspace.cloud.databricks.com
+    variables:
+      catalog: restaurant_dev
+  prod:
+    mode: production
+    workspace:
+      host: https://prod-workspace.cloud.databricks.com
+    variables:
+      catalog: restaurant_prod
+    permissions:
+      - level: CAN_MANAGE_RUN
+        group_name: data-engineers</code></pre>
+  <pre><code># resources/ingest_job.yml
+resources:
+  jobs:
+    ingest_orders:
+      name: "ingest-orders-${bundle.target}"
+      tasks:
+        - task_key: ingest
+          notebook_task:
+            notebook_path: ../src/ingest_orders.py
+          new_cluster:
+            spark_version: "15.4.x-scala2.12"
+            node_type_id: "Standard_DS3_v2"
+            num_workers: 2
+      schedule:
+        quartz_cron_expression: "0 0 * * * ?"
+        timezone_id: "UTC"</code></pre>
+
+  <h3>The Deploy Loop</h3>
+  <pre><code>databricks bundle validate               # catch config errors before deploying
+databricks bundle deploy -t dev          # deploy to the dev target
+databricks bundle run -t dev ingest_orders   # trigger a run to test it
+databricks bundle deploy -t prod         # promote the same bundle, unchanged, to prod</code></pre>
+  <p><code>mode: development</code> prefixes resource names with the deployer's username and defaults to paused schedules, so multiple developers can each deploy their own isolated copy of the same bundle without colliding. <code>mode: production</code> deploys resources exactly as named, generally under a service principal rather than a personal identity.</p>
+
+  <h3>CI/CD with GitHub Actions</h3>
+  <pre><code>name: deploy
+on:
+  push:
+    branches: [main]
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: databricks/setup-cli@main
+      - run: databricks bundle deploy -t prod
+        env:
+          DATABRICKS_HOST: ${{ secrets.DATABRICKS_HOST }}
+          DATABRICKS_CLIENT_ID: ${{ secrets.DATABRICKS_CLIENT_ID }}
+          DATABRICKS_CLIENT_SECRET: ${{ secrets.DATABRICKS_CLIENT_SECRET }}</code></pre>
+  <p>Authenticate CI as a <strong>service principal</strong> (OAuth client ID/secret, see <a href="#security">&sect;14</a>), never a personal access token &mdash; a departing employee's PAT shouldn't be the thing production deploys break on. A typical flow: PR opens &rarr; CI runs <code>bundle validate</code> and unit tests (&sect;12) against a dev target &rarr; merge to main &rarr; CI deploys to staging, runs integration tests &rarr; a manual approval gate &rarr; CI deploys to prod.</p>
+
+  <div class="callout">
+    <strong class="label">Interview angle</strong>
+    "How do you promote a pipeline from dev to prod on Databricks?" &mdash; Asset Bundles with per-target variables (different catalogs, cluster sizes, schedules) deployed via CI, not manually re-creating the job in a different workspace by hand. Before DABs existed, teams used the older <code>dbx</code> CLI tool or hand-rolled Terraform with the Databricks provider &mdash; both still seen in older codebases, worth recognizing by name.
+  </div>
+</section>
+
+<!-- ============ 12 TESTING ============ -->
+<section class="reveal" id="testing">
+  <h2><span class="hico"><svg class="ico"><use href="#i-check"/></svg></span><span class="n">12.</span> Testing Data Pipelines</h2>
+  <p class="lede">Data pipeline testing has the same pyramid shape as any software: fast unit tests for pure logic, slower integration tests against real (dev) infrastructure, and declarative data-quality checks running continuously in production.</p>
+
+  <h3>Unit Testing PySpark Transformations</h3>
+  <p>The core trick: write transformation functions that take and return DataFrames, with no I/O inside them, so tests can pass in small in-memory DataFrames and assert on the output &mdash; no cluster, no real table, no cloud storage required.</p>
+  <pre><code># src/transforms.py
+def clean_orders(df):
+    return df.filter(df.order_amount > 0).dropDuplicates(["order_id"])
+
+# tests/test_transforms.py
+import pytest
+from chispa.dataframe_comparer import assert_df_equality
+from src.transforms import clean_orders
+
+def test_clean_orders_filters_negative_amounts(spark):
+    input_df = spark.createDataFrame(
+        [("o1", 10.0), ("o2", -5.0)], ["order_id", "order_amount"])
+    expected = spark.createDataFrame([("o1", 10.0)], ["order_id", "order_amount"])
+    assert_df_equality(clean_orders(input_df), expected, ignore_row_order=True)</code></pre>
+  <p><code>chispa</code> (a PySpark-native assertion library) gives readable diffs on DataFrame mismatches instead of a generic assertion error. A local <code>SparkSession</code> fixture (started once per test session, not per test, for speed) is all the infrastructure this needs &mdash; it runs in CI without touching Databricks at all.</p>
+
+  <h3>Testing Delta / MERGE Logic</h3>
+  <pre><code>def test_merge_upserts_existing_and_inserts_new(spark, tmp_path):
+    table_path = str(tmp_path / "orders")
+    spark.createDataFrame([("o1", "pending")], ["order_id", "status"]) \
+        .write.format("delta").save(table_path)
+
+    updates = spark.createDataFrame(
+        [("o1", "shipped"), ("o2", "pending")], ["order_id", "status"])
+    updates.createOrReplaceTempView("updates")
+    spark.sql(f"""
+        MERGE INTO delta.`{table_path}` t USING updates s ON t.order_id = s.order_id
+        WHEN MATCHED THEN UPDATE SET * WHEN NOT MATCHED THEN INSERT *
+    """)
+
+    result = spark.read.format("delta").load(table_path)
+    assert result.count() == 2
+    assert result.filter("order_id = 'o1'").first().status == "shipped"</code></pre>
+  <p>A local Delta table on a temp path (no Unity Catalog, no cloud storage) is enough to genuinely exercise <code>MERGE</code> semantics in a fast unit test.</p>
+
+  <h3>DLT Expectations as Continuous Data Quality Tests</h3>
+  <p>The expectations from <a href="#dlt">&sect;08</a> are effectively assertions that run on every pipeline update in production, not just in CI &mdash; a form of testing that never goes stale because it can't be skipped or forgotten before a deploy.</p>
+
+  <h3>Integration Testing</h3>
+  <p>For logic that genuinely needs Databricks (Unity Catalog grants, a real Auto Loader run against cloud storage, an actual Job's task dependencies), run the real thing against an isolated dev catalog/schema created and torn down per test run &mdash; exactly what a DAB's <code>mode: development</code> target (&sect;11) is designed to make cheap and collision-free between developers and CI runs.</p>
+</section>
+
+<!-- ============ 13 MONITORING ============ -->
+<section class="reveal" id="monitoring">
+  <h2><span class="hico"><svg class="ico"><use href="#i-eye"/></svg></span><span class="n">13.</span> Monitoring, Observability &amp; Data Quality</h2>
+  <p class="lede">Once a pipeline is in production, the question shifts from "does it work" to "how would I know if it stopped working, or started producing wrong numbers, at 3am." Databricks answers this with two layers: <strong>system tables</strong> for operational telemetry, and <strong>Lakehouse Monitoring</strong> for data-quality drift.</p>
+
+  <h3>System Tables: Queryable Platform Telemetry</h3>
+  <div class="table-wrap"><table>
+    <thead><tr><th>Table</th><th>What it holds</th></tr></thead>
+    <tbody>
+      <tr><td><code>system.lakeflow.job_run_timeline</code></td><td>Every job run, its status, start/end time &mdash; the basis for "which jobs failed last night" dashboards.</td></tr>
+      <tr><td><code>system.billing.usage</code></td><td>DBU consumption by workspace, SKU, cluster, and tag &mdash; the basis for cost attribution (§15).</td></tr>
+      <tr><td><code>system.access.audit</code></td><td>Every action taken by every principal &mdash; who queried what, who changed a grant, who deleted a table.</td></tr>
+      <tr><td><code>system.access.table_lineage</code> / <code>column_lineage</code></td><td>Upstream/downstream dependencies between tables and columns (§01).</td></tr>
+      <tr><td><code>system.compute.clusters</code> / <code>node_timeline</code></td><td>Cluster configuration history and per-node utilization over time.</td></tr>
+      <tr><td><code>system.query.history</code></td><td>Every SQL query run, its duration, bytes scanned, and warehouse.</td></tr>
+    </tbody>
+  </table></div>
+  <pre><code>-- Jobs that failed in the last 24 hours, most recent first
+SELECT job_id, run_id, period_start_time, result_state
+FROM system.lakeflow.job_run_timeline
+WHERE result_state = 'FAILED' AND period_start_time > current_timestamp() - INTERVAL 1 DAY
+ORDER BY period_start_time DESC;</code></pre>
+  <p>Because these are just Delta tables, you build alerting and dashboards on them the same way as any other data &mdash; a Databricks SQL alert, a scheduled query feeding a dashboard, or an export to an existing observability stack. No separate monitoring product is required to answer basic operational questions.</p>
+
+  <h3>Job Alerts &amp; SQL Alerts</h3>
+  <p>Beyond the <code>email_notifications</code>/<code>on_failure</code> config shown in <a href="#orchestration">&sect;10</a>, a <strong>Databricks SQL alert</strong> runs a query on a schedule and notifies when a threshold condition is met &mdash; the natural tool for "alert me if yesterday's order count drops by more than 20%" business-logic monitoring, as distinct from "alert me if the job itself crashed."</p>
+
+  <h3>Lakehouse Monitoring: Data Quality &amp; Drift</h3>
+  <pre><code>-- Attach a monitor to a table; Databricks computes and tracks profile metrics over time
+CREATE OR REPLACE MONITOR restaurant_prod.silver.orders_clean
+AS INFERENCE PROFILE  -- or TIME_SERIES / SNAPSHOT, depending on the table's shape
+OPTIONS (
+  timestamp_col => 'updated_at',
+  granularities => ARRAY('1 day')
+);</code></pre>
+  <p>Lakehouse Monitoring automatically computes and tracks statistical profiles (null rates, distinct counts, distributions) of a table over time in two generated tables (a profile table and a drift table), so a silent upstream schema/semantic change &mdash; a currency field switching units, a category suddenly all-null &mdash; shows up as a metric change you can alert on, rather than a customer noticing a wrong number in a dashboard weeks later.</p>
+
+  <div class="callout">
+    <strong class="label">Interview angle</strong>
+    "How would you know if an upstream source silently started sending bad data?" &mdash; the layered answer: DLT/pipeline expectations catch known invariants at write time (§08); Lakehouse Monitoring catches unknown drift in distributions/nulls over time; system tables catch operational failures (a job stopped running at all). A strong answer names all three rather than reaching for one.
+  </div>
+</section>
+
+<!-- ============ 14 SECURITY ============ -->
+<section class="reveal" id="security">
+  <h2><span class="hico"><svg class="ico"><use href="#i-lock"/></svg></span><span class="n">14.</span> Security &amp; Governance Operations</h2>
+  <p class="lede">Beyond the grants covered in <a href="#uc">&sect;01</a>, a data engineer needs to know how credentials, identities, and network boundaries actually work day to day.</p>
+
+  <h3>Secrets</h3>
+  <pre><code># Databricks-managed secret scope (or an Azure Key Vault-backed scope)
+databricks secrets create-scope orders-db
+databricks secrets put-secret orders-db password
+
+# Referenced from a notebook - the value is redacted from logs/output automatically
+password = dbutils.secrets.get(scope="orders-db", key="password")</code></pre>
+  <p>Secrets referenced this way are automatically redacted (shown as <code>[REDACTED]</code>) anywhere they'd otherwise appear in notebook output or logs &mdash; never hardcode a credential in a notebook cell, and never pass a secret value into a plain <code>print()</code>/string concatenation, which can defeat the redaction.</p>
+
+  <h3>Service Principals vs. Users</h3>
+  <p>A <strong>service principal</strong> is a non-human identity for automation &mdash; every production job, every CI/CD deploy, every scheduled pipeline should run as one, not as an individual's personal identity. This is what makes "an engineer leaves the company" a non-event operationally: nothing production depends on their personal account, OAuth token, or PAT. Grant a service principal exactly the UC privileges its job needs (&sect;01), scoped as narrowly as the pipeline allows.</p>
+
+  <h3>Network: Where Compute Actually Runs</h3>
+  <p>Recall the control-plane/data-plane split (see the <a href="../databricks/#workspace">overview guide</a>): clusters run inside your own cloud VPC/VNet, not Databricks'. For stricter environments, <strong>PrivateLink</strong> (AWS) or private endpoints (Azure) keep all traffic between the control plane and data plane off the public internet, and <strong>IP access lists</strong> restrict which networks can reach the workspace UI/API at all. Knowing these exist &mdash; and that "your data never leaves your cloud account" is the underlying reason they're even possible &mdash; is usually enough depth for a DE interview; the fine network configuration is typically a platform/cloud team's job.</p>
+
+  <h3>A Deprecation Worth Knowing: Credential Passthrough</h3>
+  <p><strong>Table access control lists via credential passthrough</strong> (a cluster inheriting the logged-in user's own cloud IAM identity to enforce access at the storage layer) predates Unity Catalog and is deprecated in its favor. If asked about it, the correct framing is historical: "that was the pre-Unity-Catalog way to enforce fine-grained access; UC's grant model (&sect;01) replaced it and is what any new workspace should use."</p>
+
+  <h3>External Metastore Migration</h3>
+  <p>Workspaces that predate Unity Catalog often ran on the legacy Hive metastore (per-workspace, no cross-workspace governance, no lineage, no row/column security). Migrating existing Hive-metastore tables into UC (<code>SYNC TABLE</code>, or Databricks' bundled migration tooling) is a common real-world project &mdash; worth knowing it's a named, common undertaking rather than a rare edge case, since many production environments are mid-migration at any given time.</p>
+</section>
+
+<!-- ============ 15 COST ============ -->
+<section class="reveal" id="cost">
+  <h2><span class="hico"><svg class="ico"><use href="#i-scale"/></svg></span><span class="n">15.</span> Cost Optimization</h2>
+  <p class="lede">Databricks bills for two things: the underlying cloud VM cost, and DBUs (Databricks Units) &mdash; a per-second usage metric that varies by compute type and workload tier. Most cost optimization is really "use the cheapest compute type/shape that meets the latency requirement," which is a much smaller set of levers than it first appears.</p>
+
+  <h3>Job Clusters vs. All-Purpose Clusters</h3>
+  <p>An all-purpose cluster left running for interactive development is billed continuously whether or not it's doing useful work; a job cluster is created for a run and torn down immediately after. <strong>Every scheduled production workload should run on a job cluster (or serverless), never on a shared all-purpose cluster</strong> &mdash; this single practice is the most common cost-review finding in real Databricks accounts.</p>
+
+  <h3>Serverless vs. Spot vs. On-Demand</h3>
+  <div class="grid-3">
+    <div class="mini-card"><h4>Serverless</h4><p>No cluster to size at all; near-instant start; a usage-based price that bundles infrastructure overhead in. Best when engineering time saved on sizing/tuning outweighs a potentially higher per-DBU rate, and for spiky/unpredictable workloads.</p></div>
+    <div class="mini-card"><h4>Spot / Preemptible</h4><p>Spare cloud capacity at a steep discount, revocable with short notice. Good for fault-tolerant, retryable batch jobs (Spark re-schedules lost tasks); risky for anything with a hard SLA, since the whole point is that it can be pulled back at any time.</p></div>
+    <div class="mini-card"><h4>On-Demand</h4><p>Guaranteed availability at full price. The right choice for the driver node always (losing the driver kills the whole job) and for latency-sensitive production workloads.</p></div>
+  </div>
+  <p>A common pattern: on-demand driver, spot workers with a fallback to on-demand if spot capacity isn't available &mdash; balancing cost against the risk of losing worker capacity mid-job.</p>
+
+  <h3>Cluster Policies</h3>
+  <p>An admin-defined policy (see <a href="../databricks/#workspace">the overview guide's cluster section</a>) restricts which cluster shapes users can even create &mdash; capping max node count, pinning approved instance types, forcing autoscaling within a bounded range, or requiring spot for non-production. This turns cost governance into a platform-level control instead of a per-engineer discipline that erodes over time.</p>
+
+  <h3>Autoscaling: min/max Tuning</h3>
+  <p>An autoscaling range that's too wide (min: 1, max: 20 "just in case") means Spark spends real time scaling up mid-job when the workload is predictable and could just start at the right size; a range that's too narrow throttles genuinely spiky workloads. For a recurring job with stable, known data volume, a fixed-size cluster (no autoscaling at all) is often both cheaper and faster than badly-tuned autoscaling, because there's no scale-up latency to pay every run.</p>
+
+  <h3>Right-Sizing from Actual Usage</h3>
+  <pre><code>-- Find clusters that are consistently over-provisioned (low CPU utilization)
+SELECT cluster_id, avg(cpu_user_percent + cpu_system_percent) AS avg_cpu_pct
+FROM system.compute.node_timeline
+WHERE start_time > current_timestamp() - INTERVAL 7 DAYS
+GROUP BY cluster_id
+HAVING avg_cpu_pct < 30
+ORDER BY avg_cpu_pct;</code></pre>
+  <p>Pair this with <code>system.billing.usage</code> (tag-based cost attribution) to find the specific jobs/teams driving spend, rather than guessing. This is the direct, boring, and highly effective answer to "how would you reduce our Databricks bill by 30%": look at the actual utilization and billing system tables before touching any code.</p>
+
+  <div class="callout warn">
+    <strong class="label">Interview angle</strong>
+    Photon and serverless typically cost more per DBU-hour but finish faster and need fewer workers &mdash; the total bill can go either way. Always reason in terms of total job cost (rate × duration × node count), never rate alone.
+  </div>
+</section>
+
+<!-- ============ 16 TROUBLESHOOTING ============ -->
+<section class="reveal" id="troubleshooting">
+  <h2><span class="hico"><svg class="ico"><use href="#i-search"/></svg></span><span class="n">16.</span> Interview Scenarios &amp; Troubleshooting</h2>
+  <p class="lede">A curated set of "what would you check" scenarios, phrased the way an interviewer actually asks them. Each answer names the mechanism, not just the fix &mdash; that's what distinguishes a memorized answer from a genuinely understood one.</p>
+
+  <div class="qa">
+    <p class="q">A streaming ingestion job that used to take 2 minutes now takes 40, and the data volume hasn't changed.</p>
+    <p class="a">Check for the small-files problem first (§06) &mdash; run <code>DESCRIBE DETAIL</code> and look at <code>numFiles</code> vs. table size; if it's grown much faster than the data, run <code>OPTIMIZE</code> and turn on <code>autoOptimize</code>. Second check: the Spark UI/query profile for a stage with heavy shuffle spill, which points to undersized executors or a shuffle-partition count that no longer fits the data.</p>
+  </div>
+  <div class="qa">
+    <p class="q">A nightly <code>MERGE</code> job starts throwing "multiple source rows matched the target row" after months of working fine.</p>
+    <p class="a">The source batch now contains duplicate keys it didn't before &mdash; almost always an upstream change (a source system started sending an update event twice, or a join upstream fanned out unexpectedly). Fix at the source of the batch: deduplicate on the join key with a window function (§07) before the <code>MERGE</code>, and add a row-count assertion on the deduplicated batch as a regression guard.</p>
+  </div>
+  <div class="qa">
+    <p class="q">A job fails with a driver out-of-memory error, but the executors look fine.</p>
+    <p class="a">Something is pulling too much data to the driver: a <code>.collect()</code>/<code>.toPandas()</code> on a large DataFrame, or a broadcast join where the "small" side turned out to be much larger than expected (the driver builds and ships the broadcast). Check for both; replace <code>.collect()</code> with an action that stays distributed (<code>.write</code>, or aggregate before collecting), and check <code>spark.sql.autoBroadcastJoinThreshold</code> against the actual size of the broadcast side.</p>
+  </div>
+  <div class="qa">
+    <p class="q">A user with a UC grant on a table still gets "PERMISSION_DENIED."</p>
+    <p class="a">Almost always a missing grant further up the hierarchy (§01): <code>SELECT</code> on the table means nothing without <code>USE CATALOG</code> on its catalog and <code>USE SCHEMA</code> on its schema too &mdash; all three are required. Check the full chain, not just the table-level grant that seems most relevant.</p>
+  </div>
+  <div class="qa">
+    <p class="q">A streaming job restarted after a code change and now fails immediately with a schema-related error.</p>
+    <p class="a">The checkpoint (§04) recorded a query plan/schema that's no longer compatible with the new code &mdash; e.g. a changed stateful aggregation or a changed source schema Auto Loader hasn't reconciled yet. Check <code>cloudFiles.schemaEvolutionMode</code> (§02) first for an ingestion job; for a genuinely incompatible logic change, a new checkpoint location is sometimes the only option, understanding that means reprocessing from the configured starting point.</p>
+  </div>
+  <div class="qa">
+    <p class="q">Time travel to a table version from three weeks ago fails with "file not found."</p>
+    <p class="a"><code>VACUUM</code> ran with a retention window shorter than three weeks and physically deleted the Parquet files that version depended on (§06) &mdash; the commit log entry still exists, but the data files it points to don't. This is unrecoverable without a backup; the preventive fix is a retention policy that matches the organization's actual time-travel/audit requirements before running <code>VACUUM</code>, not after.</p>
+  </div>
+  <div class="qa">
+    <p class="q">A DLT pipeline's row counts silently dropped by 15% after a source schema change, with no failure or alert.</p>
+    <p class="a">Likely an <code>expect_or_drop</code> expectation (§08) silently filtering more rows than before because an upstream field started arriving null or malformed &mdash; drop-on-violation expectations don't fail the pipeline by design. Check the pipeline's data quality metrics tab for a spike in the specific expectation's failure count; the fix is either correcting the upstream issue or, if some rows should always block the run, changing that expectation to <code>expect_or_fail</code>.</p>
+  </div>
+  <div class="qa">
+    <p class="q">A job cluster takes 10+ minutes to acquire nodes and sits "pending."</p>
+    <p class="a">Usually cloud capacity constraints for the requested instance type/availability zone (common with spot instances, or a popular instance type during peak hours), or an account-level quota limit. Check the cluster event log for the specific reason; mitigations are an on-demand fallback for spot, a less contended instance type, or requesting a quota increase from the cloud provider.</p>
+  </div>
+  <div class="qa">
+    <p class="q">Photon is enabled but a specific query shows no speedup.</p>
+    <p class="a">Not every operator is Photon-eligible (§09) &mdash; a Python UDF, certain complex nested-type operations, or specific older connectors can force a fallback to standard JVM Spark for part of the plan. The Query Profile shows exactly which operators ran on Photon; find the non-Photon operator and either replace it (a built-in function instead of a UDF) or accept that portion won't benefit.</p>
+  </div>
+  <div class="qa">
+    <p class="q">The monthly Databricks bill spiked 3x with no corresponding change in data volume.</p>
+    <p class="a">Query <code>system.billing.usage</code> grouped by cluster/job/tag first (§15) to find which workload actually grew, rather than guessing. Common real causes: a job accidentally left running on an all-purpose cluster instead of a job cluster, an autoscaling max set too high combined with a bug causing excessive retries, or a new DLT/streaming pipeline switched to continuous mode instead of triggered.</p>
+  </div>
+</section>
+
+<!-- ============ 17 CHEAT SHEET ============ -->
+<section class="reveal" id="cheatsheet">
+  <h2><span class="hico"><svg class="ico"><use href="#i-list"/></svg></span><span class="n">17.</span> Quick-Reference Cheat Sheet</h2>
+  <p class="lede">The snippets worth having memorized, or at least recognized instantly, grouped by topic.</p>
+
+  <h3>Unity Catalog</h3>
+  <pre><code>GRANT USE CATALOG, USE SCHEMA, SELECT ON SCHEMA cat.schema TO `group`;
+CREATE TABLE cat.schema.t (id STRING) LOCATION 's3://bucket/path/'; -- external
+SELECT * FROM system.access.audit WHERE action_name = 'getTable';</code></pre>
+
+  <h3>Delta Lake</h3>
+  <pre><code>MERGE INTO t USING s ON t.id = s.id
+  WHEN MATCHED THEN UPDATE SET * WHEN NOT MATCHED THEN INSERT *;
+SELECT * FROM t VERSION AS OF 5;
+OPTIMIZE t ZORDER BY (col_a, col_b);
+ALTER TABLE t CLUSTER BY (col_a, col_b);
+VACUUM t RETAIN 168 HOURS;
+DESCRIBE HISTORY t;</code></pre>
+
+  <h3>Ingestion &amp; Streaming</h3>
+  <pre><code>spark.readStream.format("cloudFiles").option("cloudFiles.format", "json")...
+.trigger(availableNow=True)   # scheduled incremental batch behavior
+.withWatermark("ts", "10 minutes").groupBy(window("ts", "5 minutes"))...
+.foreachBatch(lambda df, batch_id: ...)   # for streaming MERGE</code></pre>
+
+  <h3>CDC</h3>
+  <pre><code>ALTER TABLE t SET TBLPROPERTIES (delta.enableChangeDataFeed = true);
+SELECT * FROM table_changes('cat.schema.t', 10, 20);
+dlt.apply_changes(target="t", source="s", keys=["id"],
+                   sequence_by="updated_at", stored_as_scd_type=2)</code></pre>
+
+  <h3>Performance</h3>
+  <pre><code>from pyspark.sql.functions import broadcast
+df1.join(broadcast(df2), "key")
+spark.conf.set("spark.sql.autoBroadcastJoinThreshold", 100*1024*1024)
+df.explain(mode="formatted")  # check the physical plan
+ANALYZE TABLE t COMPUTE STATISTICS;</code></pre>
+
+  <h3>Jobs CLI</h3>
+  <pre><code>databricks bundle validate
+databricks bundle deploy -t prod
+databricks jobs run-now &lt;job-id&gt;
+databricks jobs list-runs --job-id &lt;job-id&gt;</code></pre>
+
+  <h3>System Tables for Ops</h3>
+  <pre><code>system.lakeflow.job_run_timeline   -- job run history
+system.billing.usage               -- cost attribution
+system.access.audit                -- who did what
+system.access.table_lineage        -- upstream/downstream tables
+system.compute.node_timeline       -- cluster utilization</code></pre>
+</section>
+
+<!-- ============ 18 GLOSSARY ============ -->
+<section class="reveal" id="glossary">
+  <h2><span class="hico"><svg class="ico"><use href="#i-book"/></svg></span><span class="n">18.</span> Glossary</h2>
+  <div class="glossary">
+    <dl>
+      <dt>Unity Catalog (UC)</dt><dd>Databricks' governance layer: one namespace, one grant model, lineage, and audit across every workspace attached to a metastore.</dd>
+      <dt>Metastore</dt><dd>The top-level UC container, one per region, attached to one or more workspaces.</dd>
+      <dt>Managed vs. external table/volume</dt><dd>Managed: Databricks owns the storage path, deleted with the object. External: you own the path, UC only governs access via a storage credential + external location.</dd>
+      <dt>Row filter / column mask</dt><dd>A function attached directly to a table that transparently filters rows or redacts a column for every query, based on the querying user.</dd>
+      <dt>Auto Loader (cloudFiles)</dt><dd>Databricks' incremental file-ingestion source, built on Structured Streaming, with schema inference/evolution and a rescued-data column for malformed records.</dd>
+      <dt>Rescued data column</dt><dd>A JSON string column (<code>_rescued_data</code>) Auto Loader routes unexpected/mistyped fields into instead of failing or silently dropping them.</dd>
+      <dt>COPY INTO</dt><dd>A simpler, idempotent, SQL-native bulk load statement that tracks already-loaded files; best for occasional loads rather than continuous high-volume ingestion.</dd>
+      <dt>Lakeflow Connect</dt><dd>Databricks' managed connector service for databases (via CDC) and SaaS applications.</dd>
+      <dt>Micro-batch</dt><dd>One cycle of Structured Streaming's execution: read new data, process it, write results, checkpoint progress.</dd>
+      <dt>Trigger (availableNow / processingTime / continuous)</dt><dd>Controls a streaming query's cadence: process everything available then stop; fire on a fixed interval; or an experimental low-latency continuous mode.</dd>
+      <dt>Checkpoint (streaming)</dt><dd>The offsets + write-ahead log a streaming query uses to resume exactly where it left off after a failure, enabling exactly-once processing.</dd>
+      <dt>Watermark</dt><dd>The maximum lateness a streaming aggregation tolerates before dropping late data and freeing the associated state.</dd>
+      <dt>foreachBatch</dt><dd>A streaming sink that hands each micro-batch to you as a static DataFrame &mdash; the standard way to run a streaming MERGE.</dd>
+      <dt>_delta_log</dt><dd>The folder of ordered JSON commit files (plus periodic Parquet checkpoints) that is the actual source of truth for a Delta table's state and history.</dd>
+      <dt>Optimistic concurrency control</dt><dd>Delta's approach to concurrent writes: attempt the next version number, detect and retry/fail on genuine conflicts, rather than locking.</dd>
+      <dt>Deletion vector</dt><dd>A side file marking specific rows as deleted without rewriting their Parquet file &mdash; makes row-level DELETE/UPDATE/MERGE far cheaper.</dd>
+      <dt>OPTIMIZE</dt><dd>Compacts small files into larger, right-sized ones. Combined with <code>ZORDER BY</code>, also co-locates data for better data skipping.</dd>
+      <dt>Z-Ordering</dt><dd>A one-time, OPTIMIZE-triggered physical co-location of rows by column values, to narrow file-level min/max stats for data skipping.</dd>
+      <dt>Liquid Clustering</dt><dd>The current-generation replacement for Z-Ordering and much of Hive-style partitioning: declared once, maintained incrementally on every write.</dd>
+      <dt>Data skipping</dt><dd>Skipping entire Parquet files at query time because their tracked min/max stats can't match the query's filter.</dd>
+      <dt>VACUUM</dt><dd>Permanently deletes data files no longer referenced within the retention window &mdash; breaks time travel to versions older than that window.</dd>
+      <dt>MERGE INTO</dt><dd>The atomic upsert/delete statement that's the backbone of incremental Delta pipelines; fails if the source has duplicate keys per matched row.</dd>
+      <dt>Change Data Feed (CDF)</dt><dd>A per-row change stream (insert/update_preimage/update_postimage/delete) a Delta table can expose so downstream consumers process only what changed.</dd>
+      <dt>SCD Type 1 / Type 2</dt><dd>Type 1 overwrites old values (no history). Type 2 keeps every historical version as its own row with validity date ranges.</dd>
+      <dt>Lakeflow Declarative Pipelines (DLT)</dt><dd>Declarative ETL: define what each table contains, Databricks handles dependency ordering, incremental processing, and data quality enforcement.</dd>
+      <dt>Streaming table / Materialized view / View</dt><dd>The three DLT table types: incremental exactly-once processing; recomputed-on-change aggregation; not persisted at all.</dd>
+      <dt>Expectation</dt><dd>A DLT data-quality constraint with a configurable violation action: keep-and-count, drop the row, or fail the whole pipeline update.</dd>
+      <dt>APPLY CHANGES INTO / AUTO CDC</dt><dd>DLT's native CDC-to-table mechanism, including out-of-order event handling and SCD Type 1/2, replacing a hand-written MERGE.</dd>
+      <dt>Adaptive Query Execution (AQE)</dt><dd>Runtime query re-optimization using real statistics: coalescing shuffle partitions, switching join strategy, splitting skewed partitions.</dd>
+      <dt>Broadcast join</dt><dd>Ships the smaller side of a join to every executor, avoiding a shuffle of the larger side entirely.</dd>
+      <dt>Data skew / salting</dt><dd>One key holding disproportionately more rows than others, slowing a whole stage; salting spreads a skewed key across synthetic sub-keys to parallelize it.</dd>
+      <dt>Spill</dt><dd>Data written to disk mid-shuffle/aggregation because it didn't fit in executor memory &mdash; a strong signal of undersized executors or too few partitions.</dd>
+      <dt>Photon</dt><dd>Databricks' vectorized native execution engine; a drop-in speedup for eligible operators with no code changes.</dd>
+      <dt>Job / Workflow</dt><dd>A DAG of tasks (notebooks, pipelines, SQL, dbt, other jobs) with its own compute, retries, and triggers.</dd>
+      <dt>Task values</dt><dd>Small pieces of metadata passed between job tasks (<code>dbutils.jobs.taskValues</code>) &mdash; not a substitute for writing real data between tasks.</dd>
+      <dt>Databricks Asset Bundles (DABs)</dt><dd>YAML-defined infrastructure-as-code for jobs and pipelines, deployed identically across dev/staging/prod via the CLI &mdash; the current standard for Databricks CI/CD.</dd>
+      <dt>Service principal</dt><dd>A non-human identity for automation; every production job and CI/CD deploy should run as one, not as a personal account.</dd>
+      <dt>System tables</dt><dd>Built-in, queryable Delta tables under the <code>system</code> catalog covering audit, lineage, billing, job runs, and compute utilization.</dd>
+      <dt>Lakehouse Monitoring</dt><dd>Automatic statistical profiling and drift detection for a table over time, surfacing silent data-quality regressions.</dd>
+      <dt>DBU (Databricks Unit)</dt><dd>Databricks' per-second usage billing metric, layered on top of the underlying cloud VM cost and varying by compute type/tier.</dd>
+      <dt>Job cluster vs. all-purpose cluster</dt><dd>Job cluster: created for a run, torn down after &mdash; cheaper for production. All-purpose: persistent, shared, billed continuously &mdash; for interactive development.</dd>
+    </dl>
+  </div>
+</section>
+
+</div><!-- /wrap -->
+
+<a href="#top" class="back-top" id="backTop" aria-label="Back to top">&uarr;</a>
+
+<div class="wrap">
+<hr/>
+<footer class="end reveal">
+  <p><a href="../essentials.html">&larr; Back to all essentials</a></p>
+  <p>&copy; 2026 &middot; Hao Tieu Kim &middot; Built with GitHub Pages</p>
+</footer>
+</div>
+
+<script>
+  var bar=document.getElementById('bar');
+  function prog(){var h=document.documentElement;var s=h.scrollTop||document.body.scrollTop;var max=(h.scrollHeight-h.clientHeight)||1;bar.style.width=(s/max*100)+'%';}
+  document.addEventListener('scroll',prog,{passive:true});prog();
+  var backTop=document.getElementById('backTop');
+  function toggleBackTop(){if(window.scrollY>600){backTop.classList.add('show');}else{backTop.classList.remove('show');}}
+  document.addEventListener('scroll',toggleBackTop,{passive:true});toggleBackTop();
+  function revealAll(){document.querySelectorAll('.reveal').forEach(function(el){el.classList.add('in');});}
+  try{
+    var io=new IntersectionObserver(function(es){es.forEach(function(e){if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}});},{threshold:.06});
+    document.querySelectorAll('.reveal').forEach(function(el){io.observe(el);});
+    window.addEventListener('load',function(){setTimeout(revealAll,1500);});
+    setTimeout(revealAll,2200);
+  }catch(e){revealAll();}
+</script>
+</body>
+</html>
