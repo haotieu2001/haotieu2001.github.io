@@ -69,12 +69,6 @@
   .callout strong.label{display:block;font-size:11px;text-transform:uppercase;letter-spacing:.1em;margin-bottom:5px;color:var(--muted);}
   .callout.bad strong.label{color:#ff8fb0;}
 
-  .qa{border:1px solid var(--border);background:var(--panel);border-radius:14px;padding:18px 22px;margin:18px 0;}
-  .qa .q{color:var(--cyan2);font-weight:700;margin-bottom:8px;display:flex;gap:9px;}
-  .qa .q::before{content:"Q·";color:var(--blue);font-weight:800;}
-  .qa .a{margin:0;}
-  .qa .a::before{content:"A· ";color:var(--blue);font-weight:800;}
-
   .grid-2{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
   .grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:14px;}
   .mini-card{background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:16px 18px;}
@@ -173,7 +167,7 @@
 <header class="hero">
   <div class="kicker">Databricks &middot; Data Engineering Deep Dive</div>
   <h1>Databricks for Data Engineers: Deep-Dive Reference &amp; Code Playbook</h1>
-  <p class="dek">The hands-on toolkit a working Databricks data engineer actually reaches for, in interview-ready depth: <strong>Unity Catalog</strong> governance mechanics, <strong>Auto Loader</strong> and CDC ingestion, <strong>Structured Streaming</strong> internals, <strong>Delta Lake</strong>'s transaction log and performance features, <strong>Lakeflow Declarative Pipelines</strong> (Delta Live Tables), <strong>MERGE</strong>/CDF/SCD patterns, <strong>Spark performance tuning</strong>, <strong>Jobs &amp; Workflows</strong> orchestration, <strong>Asset Bundles</strong> &amp; CI/CD, testing, monitoring, cost, and a curated set of troubleshooting scenarios interviewers love to ask &mdash; every concept paired with runnable PySpark/SQL.</p>
+  <p class="dek">The hands-on toolkit a working Databricks data engineer actually reaches for, in interview-ready depth: <strong>Unity Catalog</strong> governance mechanics, <strong>Auto Loader</strong> and CDC ingestion, <strong>Structured Streaming</strong> internals, <strong>Delta Lake</strong>'s transaction log and performance features, <strong>Lakeflow Declarative Pipelines</strong> (Delta Live Tables), <strong>MERGE</strong>/CDF/SCD patterns, <strong>Spark performance tuning</strong>, <strong>Jobs &amp; Workflows</strong> orchestration, <strong>Asset Bundles</strong> &amp; CI/CD, testing, monitoring, and cost &mdash; every concept paired with runnable PySpark/SQL.</p>
   <div class="byline">~55 min read &middot; reference &amp; interview prep &middot; heavy on runnable code</div>
   <div class="stack reveal">
     <span class="chip"><svg class="ico"><use href="#i-database"/></svg> Delta Lake</span>
@@ -207,9 +201,8 @@
   <a href="#monitoring"><svg class="ico"><use href="#i-eye"/></svg>13 &middot; Monitoring, Observability &amp; Data Quality</a>
   <a href="#security"><svg class="ico"><use href="#i-lock"/></svg>14 &middot; Security &amp; Governance Operations</a>
   <a href="#cost"><svg class="ico"><use href="#i-scale"/></svg>15 &middot; Cost Optimization</a>
-  <a href="#troubleshooting"><svg class="ico"><use href="#i-search"/></svg>16 &middot; Interview Scenarios &amp; Troubleshooting</a>
-  <a href="#cheatsheet"><svg class="ico"><use href="#i-list"/></svg>17 &middot; Quick-Reference Cheat Sheet</a>
-  <a href="#glossary"><svg class="ico"><use href="#i-book"/></svg>18 &middot; Glossary</a>
+  <a href="#cheatsheet"><svg class="ico"><use href="#i-list"/></svg>16 &middot; Quick-Reference Cheat Sheet</a>
+  <a href="#glossary"><svg class="ico"><use href="#i-book"/></svg>17 &middot; Glossary</a>
 </div>
 
 <!-- ============ 01 UNITY CATALOG ============ -->
@@ -1135,56 +1128,9 @@ ORDER BY avg_cpu_pct;</code></pre>
   </div>
 </section>
 
-<!-- ============ 16 TROUBLESHOOTING ============ -->
-<section class="reveal" id="troubleshooting">
-  <h2><span class="hico"><svg class="ico"><use href="#i-search"/></svg></span><span class="n">16.</span> Interview Scenarios &amp; Troubleshooting</h2>
-  <p class="lede">A curated set of "what would you check" scenarios, phrased the way an interviewer actually asks them. Each answer names the mechanism, not just the fix &mdash; that's what distinguishes a memorized answer from a genuinely understood one.</p>
-
-  <div class="qa">
-    <p class="q">A streaming ingestion job that used to take 2 minutes now takes 40, and the data volume hasn't changed.</p>
-    <p class="a">Check for the small-files problem first (§06) &mdash; run <code>DESCRIBE DETAIL</code> and look at <code>numFiles</code> vs. table size; if it's grown much faster than the data, run <code>OPTIMIZE</code> and turn on <code>autoOptimize</code>. Second check: the Spark UI/query profile for a stage with heavy shuffle spill, which points to undersized executors or a shuffle-partition count that no longer fits the data.</p>
-  </div>
-  <div class="qa">
-    <p class="q">A nightly <code>MERGE</code> job starts throwing "multiple source rows matched the target row" after months of working fine.</p>
-    <p class="a">The source batch now contains duplicate keys it didn't before &mdash; almost always an upstream change (a source system started sending an update event twice, or a join upstream fanned out unexpectedly). Fix at the source of the batch: deduplicate on the join key with a window function (§07) before the <code>MERGE</code>, and add a row-count assertion on the deduplicated batch as a regression guard.</p>
-  </div>
-  <div class="qa">
-    <p class="q">A job fails with a driver out-of-memory error, but the executors look fine.</p>
-    <p class="a">Something is pulling too much data to the driver: a <code>.collect()</code>/<code>.toPandas()</code> on a large DataFrame, or a broadcast join where the "small" side turned out to be much larger than expected (the driver builds and ships the broadcast). Check for both; replace <code>.collect()</code> with an action that stays distributed (<code>.write</code>, or aggregate before collecting), and check <code>spark.sql.autoBroadcastJoinThreshold</code> against the actual size of the broadcast side.</p>
-  </div>
-  <div class="qa">
-    <p class="q">A user with a UC grant on a table still gets "PERMISSION_DENIED."</p>
-    <p class="a">Almost always a missing grant further up the hierarchy (§01): <code>SELECT</code> on the table means nothing without <code>USE CATALOG</code> on its catalog and <code>USE SCHEMA</code> on its schema too &mdash; all three are required. Check the full chain, not just the table-level grant that seems most relevant.</p>
-  </div>
-  <div class="qa">
-    <p class="q">A streaming job restarted after a code change and now fails immediately with a schema-related error.</p>
-    <p class="a">The checkpoint (§04) recorded a query plan/schema that's no longer compatible with the new code &mdash; e.g. a changed stateful aggregation or a changed source schema Auto Loader hasn't reconciled yet. Check <code>cloudFiles.schemaEvolutionMode</code> (§02) first for an ingestion job; for a genuinely incompatible logic change, a new checkpoint location is sometimes the only option, understanding that means reprocessing from the configured starting point.</p>
-  </div>
-  <div class="qa">
-    <p class="q">Time travel to a table version from three weeks ago fails with "file not found."</p>
-    <p class="a"><code>VACUUM</code> ran with a retention window shorter than three weeks and physically deleted the Parquet files that version depended on (§06) &mdash; the commit log entry still exists, but the data files it points to don't. This is unrecoverable without a backup; the preventive fix is a retention policy that matches the organization's actual time-travel/audit requirements before running <code>VACUUM</code>, not after.</p>
-  </div>
-  <div class="qa">
-    <p class="q">A DLT pipeline's row counts silently dropped by 15% after a source schema change, with no failure or alert.</p>
-    <p class="a">Likely an <code>expect_or_drop</code> expectation (§08) silently filtering more rows than before because an upstream field started arriving null or malformed &mdash; drop-on-violation expectations don't fail the pipeline by design. Check the pipeline's data quality metrics tab for a spike in the specific expectation's failure count; the fix is either correcting the upstream issue or, if some rows should always block the run, changing that expectation to <code>expect_or_fail</code>.</p>
-  </div>
-  <div class="qa">
-    <p class="q">A job cluster takes 10+ minutes to acquire nodes and sits "pending."</p>
-    <p class="a">Usually cloud capacity constraints for the requested instance type/availability zone (common with spot instances, or a popular instance type during peak hours), or an account-level quota limit. Check the cluster event log for the specific reason; mitigations are an on-demand fallback for spot, a less contended instance type, or requesting a quota increase from the cloud provider.</p>
-  </div>
-  <div class="qa">
-    <p class="q">Photon is enabled but a specific query shows no speedup.</p>
-    <p class="a">Not every operator is Photon-eligible (§09) &mdash; a Python UDF, certain complex nested-type operations, or specific older connectors can force a fallback to standard JVM Spark for part of the plan. The Query Profile shows exactly which operators ran on Photon; find the non-Photon operator and either replace it (a built-in function instead of a UDF) or accept that portion won't benefit.</p>
-  </div>
-  <div class="qa">
-    <p class="q">The monthly Databricks bill spiked 3x with no corresponding change in data volume.</p>
-    <p class="a">Query <code>system.billing.usage</code> grouped by cluster/job/tag first (§15) to find which workload actually grew, rather than guessing. Common real causes: a job accidentally left running on an all-purpose cluster instead of a job cluster, an autoscaling max set too high combined with a bug causing excessive retries, or a new DLT/streaming pipeline switched to continuous mode instead of triggered.</p>
-  </div>
-</section>
-
-<!-- ============ 17 CHEAT SHEET ============ -->
+<!-- ============ 16 CHEAT SHEET ============ -->
 <section class="reveal" id="cheatsheet">
-  <h2><span class="hico"><svg class="ico"><use href="#i-list"/></svg></span><span class="n">17.</span> Quick-Reference Cheat Sheet</h2>
+  <h2><span class="hico"><svg class="ico"><use href="#i-list"/></svg></span><span class="n">16.</span> Quick-Reference Cheat Sheet</h2>
   <p class="lede">The snippets worth having memorized, or at least recognized instantly, grouped by topic.</p>
 
   <h3>Unity Catalog</h3>
@@ -1236,7 +1182,7 @@ system.compute.node_timeline       -- cluster utilization</code></pre>
 
 <!-- ============ 18 GLOSSARY ============ -->
 <section class="reveal" id="glossary">
-  <h2><span class="hico"><svg class="ico"><use href="#i-book"/></svg></span><span class="n">18.</span> Glossary</h2>
+  <h2><span class="hico"><svg class="ico"><use href="#i-book"/></svg></span><span class="n">17.</span> Glossary</h2>
   <div class="glossary">
     <dl>
       <dt>Unity Catalog (UC)</dt><dd>Databricks' governance layer: one namespace, one grant model, lineage, and audit across every workspace attached to a metastore.</dd>
