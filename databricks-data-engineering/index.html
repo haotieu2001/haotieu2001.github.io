@@ -195,7 +195,7 @@
   <div class="kicker">Databricks &middot; Data Engineering Deep Dive</div>
   <h1>Databricks for Data Engineers</h1>
   <p class="dek">One reference for the whole Databricks data-engineering job, in interview-ready depth. It is organized around the <strong>data engineering lifecycle</strong> (generation, ingestion, storage, transformation, serving) and the <strong>six undercurrents</strong> (security, data management, DataOps, data architecture, orchestration, software engineering), and covers the <strong>platform</strong> and compute, <strong>notebooks and DBUtils</strong>, <strong>Unity Catalog</strong> and <strong>PII</strong>, <strong>Auto Loader</strong>, <strong>Lakeflow Connect</strong>, <strong>Structured Streaming</strong>, <strong>Delta Lake</strong>, <strong>declarative pipelines</strong>, <strong>data modeling</strong>, <strong>Jobs</strong>, <strong>Declarative Automation Bundles</strong>, monitoring and cost, then <strong>metric views</strong>, <strong>AI/BI and Genie</strong>, <strong>Genie Code</strong> and <strong>agentic AI</strong>. It closes with architecture principles, end-to-end blueprints, system-design practice and an interview question bank, with runnable PySpark and SQL throughout.</p>
-  <div class="byline">~3 hr 25 min read &middot; reference &amp; interview prep &middot; heavy on runnable code</div>
+  <div class="byline">~4 hr 5 min read &middot; reference &amp; interview prep &middot; heavy on runnable code</div>
   <div class="stack reveal">
     <span class="chip"><svg class="ico"><use href="#i-cycle"/></svg> Lifecycle &amp; Undercurrents</span>
     <span class="chip"><svg class="ico"><use href="#i-database"/></svg> Delta Lake</span>
@@ -291,7 +291,8 @@
         <tr><td>Databricks interview questions by a senior data architect</td><td><a href="#interview">&sect;33 Interview Bank</a></td></tr>
         <tr><td>Metric views: building a semantic layer</td><td><a href="#metric-views">&sect;27 Metric Views</a></td></tr>
         <tr><td>Genie Code: skills, MCP, jobs, notebooks, dashboards</td><td><a href="#ai-dev">&sect;29 Genie Code</a></td></tr>
-        <tr><td>Retail end-to-end project (Salesforce + Postgres)</td><td><a href="#architectures">&sect;32 Blueprint B</a></td></tr>
+        <tr><td>Retail end-to-end project (Salesforce + Postgres)</td><td><a href="#architectures">&sect;32 Blueprint B</a>, <a href="#ingest-other">&sect;11</a></td></tr>
+        <tr><td>End-to-end Spark Streaming project (Databricks + Kafka + PostgreSQL + real-time dashboard)</td><td><a href="#architectures">&sect;32 Blueprint C</a>, <a href="#streaming">&sect;12 Structured Streaming</a></td></tr>
         <tr><td>Agentic AI for beginners: end-to-end agent</td><td><a href="#agents">&sect;30 GenAI and Agents</a></td></tr>
         <tr><td>Data modeling end to end</td><td><a href="#modeling">&sect;17 Data Modeling</a></td></tr>
         <tr><td>Productivity hacks: shortcuts, command palette</td><td><a href="#notebooks">&sect;04 Notebooks</a>, <a href="#ai-dev">&sect;29 Genie Code</a></td></tr>
@@ -1540,6 +1541,34 @@ latest = (spark.table("prod.bronze.orders").withColumn("_rn", F.row_number().ove
 
   <h3>Triggers for Batch-Like Ingestion</h3>
   <p>Auto Loader is almost always run with <code>trigger(availableNow=True)</code> rather than a continuously running stream: it processes everything currently available, then stops - behaving like an incremental batch job you can schedule every 15 minutes via Workflows, without paying for an always-on cluster. See <a href="#streaming">&sect;12</a> for the full trigger comparison.</p>
+
+  <h3>Auto Loader Patterns from the Projects</h3>
+  <p>Three small, real Auto Loader uses (a CSV transactions drop, JSON files carrying a fraud watchlist, and partner CSV extracts) show the details that separate a working demo from a dependable load:</p>
+  <pre><code>from pyspark.sql import functions as F
+
+src = "/Volumes/finguard/source/fraud_watchlist/source_data/"
+stream = (spark.readStream.format("cloudFiles")
+          .option("cloudFiles.format", "json")
+          .option("cloudFiles.schemaLocation", "/Volumes/finguard/source/fraud_watchlist/_schema/")   # persisted inferred schema
+          .option("cloudFiles.inferColumnTypes", "true")
+          .load(src)
+          .withColumn("source_file", F.col("_metadata.file_path"))           # lineage: which file did this row come from
+          .withColumn("ingestion_timestamp", F.current_timestamp()))
+
+q = (stream.writeStream.format("delta").outputMode("append")
+     .option("checkpointLocation", "/Volumes/finguard/source/fraud_watchlist/_checkpoint/")
+     .trigger(availableNow=True)                                              # process what is there, then stop
+     .toTable("finguard.bronze.fraud_watchlist"))
+q.awaitTermination()                                                          # without this a notebook cell can appear to finish while the query is still running</code></pre>
+  <ul>
+    <li><strong>CSV arrives as strings.</strong> Even with <code>inferSchema</code>, numeric and timestamp columns often land as strings (especially with formats like <code>dd-MMM-yyyy HH:mm:ss</code>). Bronze stays as landed; silver casts explicitly (<code>cast("int")</code>, <code>to_timestamp(col, "MM/dd/yyyy hh:mm:ss a")</code>) and derives simple columns (gross amount = quantity x price).</li>
+    <li><strong>Schema and checkpoint locations belong next to the data</strong> (in the volume), one pair per source, so each source has independent state and can be reset on its own.</li>
+    <li><strong><code>_rescued_data</code> is your safety net.</strong> A row whose values do not fit the schema does not fail the stream; the unmatched fields go to <code>_rescued_data</code>. Count non-null rescued rows as a data-quality signal.</li>
+    <li><strong>Incremental means "new files only."</strong> Upload a second file and rerun: only the new file is read, tracked by the checkpoint. It does not detect changes <em>inside</em> an already processed file, so agree with the source that files are immutable.</li>
+    <li><strong>An AI assistant will happily write a query that never ends.</strong> Generated Auto Loader code often used a continuous trigger, so the cell ran forever until it was stopped and re-prompted for "process the available files and exit." Always check the trigger and add <code>awaitTermination()</code> for scheduled runs (<a href="#ai-dev">&sect;29</a>).</li>
+    <li><strong>Simulating file streams for practice:</strong> a small generator that writes one JSON file per record into the volume, resuming from the highest id already written, lets you rehearse late and incremental arrival without a real source.</li>
+  </ul>
+
 </section>
 
 <!-- ============ 11 COPY INTO LAKEFLOW CONNECT &; CHOOSING A TOOL ============ -->
@@ -1611,6 +1640,25 @@ COPY_OPTIONS ('mergeSchema' = 'true');</code></pre>
     <strong class="label">Managed vs. custom, again</strong>
     Lakeflow Connect removes the code you would write for incremental extraction, schema drift and delete handling. It does not remove design work: you still choose SCD1 vs. SCD2 per table, decide what silver does with closed-out rows, and set the schedule against your SLA and cost. When you need to onboard hundreds of tables, an unsupported source or bespoke logic, a metadata-driven framework (<a href="#architectures">&sect;32</a>) is the better fit.
   </div>
+
+    <h3>Two Sources, Two Behaviors: Postgres and Salesforce</h3>
+  <p>Building the same pipeline against a relational database and a SaaS app in one project shows what differs in practice. In both, no ingestion code is written; the differences are in configuration and expectations:</p>
+  <div class="table-wrap"><table>
+    <thead><tr><th></th><th>PostgreSQL (database connector)</th><th>Salesforce (SaaS connector)</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Connection</strong></td><td>Host, port, user and password (from the provider's connection string; treat that string as a secret, and do not paste it into a chat tool).</td><td>OAuth sign-in with the Salesforce <em>username</em> (not the email); the workspace finds the org URL itself.</td></tr>
+      <tr><td><strong>Choosing tables</strong></td><td>Pick a database, then schema, then tables. You must supply a <strong>cursor column</strong> per table (for example <code>updated_date</code>) so incremental reads know what changed; with none, choose a full load every run.</td><td>A large fixed catalog of standard objects appears (most are empty, the structure is standard). The change column is a standard system timestamp, so no cursor is asked for.</td></tr>
+      <tr><td><strong>History tracking</strong></td><td>Off: SCD Type 1 mirror. On: SCD Type 2 with start and end columns; the row's end is set when it is superseded and the current row has a null end.</td><td>Same options, same start/end columns. Standard identity columns cannot be deselected; optional columns can, and "include future columns" adds new source fields automatically.</td></tr>
+      <tr><td><strong>Column names</strong></td><td>Already snake_case.</td><td>PascalCase or system-style names, so silver should rename to your convention and drop the many always-null standard columns (column pruning).</td></tr>
+      <tr><td><strong>Deletes</strong></td><td>SCD1 removes the row; SCD2 closes it with an end value (the row is kept).</td><td>Same behavior; also a soft-delete flag in the object that gold should filter on.</td></tr>
+    </tbody>
+  </table></div>
+  <ul>
+    <li><strong>Watch the run summary.</strong> After a change in the source, an SCD1 table reports "1 record upserted" while an SCD2 table reports 2 (one closed, one new). That counter is a fast sanity check.</li>
+    <li><strong>The first run can fail for boring reasons</strong> (a serverless database waking up). A retry succeeded; this is why the pipeline's failure notification and retry settings matter.</li>
+    <li><strong>Trial and free-tier limits shape the job.</strong> On the Free Edition only one ingestion pipeline can run at a time, so the orchestrating job chains the two ingestion tasks serially where a paid workspace would run them in parallel.</li>
+    <li><strong>Test with a sabotaged source.</strong> Seed a few invalid rows in the source on purpose (null name, negative price) so that the silver expectations have something to catch (<a href="#dlt">&sect;16</a>).</li>
+  </ul>
 
   <h3>Choosing an Ingestion Tool</h3>
   <div class="table-wrap"><table>
@@ -1687,6 +1735,165 @@ deduped = (orders_stream
   .option("checkpointLocation", "/Volumes/restaurant_prod/silver/_checkpoints/orders")
   .trigger(availableNow=True)
   .start())</code></pre>
+
+  <h3>Kafka in Ten Minutes</h3>
+  <p>Kafka is the most common streaming source you will meet, so an interviewer expects you to explain it without notes. It is a distributed, durable, append-only <strong>log</strong>. Producers append records; consumers read them at their own pace and can rewind.</p>
+  <div class="table-wrap"><table>
+    <thead><tr><th>Concept</th><th>What it is</th><th>Why it matters to a data engineer</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Topic</strong></td><td>A named stream of records (for example <code>credit_card_transactions</code>).</td><td>The unit you subscribe to.</td></tr>
+      <tr><td><strong>Partition</strong></td><td>A topic is split into partitions, each an ordered, immutable log.</td><td>Parallelism (one Spark task reads roughly one partition) and the <em>only</em> place ordering is guaranteed.</td></tr>
+      <tr><td><strong>Offset</strong></td><td>A record's position within its partition.</td><td>What Spark stores in its checkpoint so it can resume exactly where it stopped.</td></tr>
+      <tr><td><strong>Key</strong></td><td>Optional field that decides the partition (same key, same partition).</td><td>Keying by <code>customer_id</code> keeps one customer's events ordered; a skewed key creates a hot partition.</td></tr>
+      <tr><td><strong>Broker / cluster</strong></td><td>The servers that store partitions; each partition is replicated across brokers.</td><td>Replication factor is the durability and availability knob; managed offerings such as Confluent Cloud run it for you.</td></tr>
+      <tr><td><strong>Producer</strong></td><td>A client that publishes records.</td><td>Reliability settings live here: <code>acks=all</code> (wait for all in-sync replicas), <code>enable.idempotence=true</code> (no duplicates from retries), retries with backoff.</td></tr>
+      <tr><td><strong>Consumer group</strong></td><td>Consumers sharing a group id split a topic's partitions between them.</td><td>Lets a topic be read by several independent applications. Structured Streaming manages its own offsets in the checkpoint rather than relying on group commits.</td></tr>
+      <tr><td><strong>Retention</strong></td><td>How long records are kept (time or size), independent of whether they were read.</td><td>Your replay window. If a job is down longer than retention, data is lost (<code>failOnDataLoss</code>), which is why bronze persists everything.</td></tr>
+    </tbody>
+  </table></div>
+  <p>Delivery semantics: a well-configured producer gives <em>at-least-once</em> (idempotent producers remove producer-retry duplicates within a session); consumers get records in order per partition; and true end-to-end exactly-once is something you build from at-least-once delivery plus an idempotent sink or transactional writes, which is exactly what Spark checkpoints plus Delta give you for table sinks.</p>
+
+  <h3>Reading Kafka with Structured Streaming</h3>
+  <pre><code>import json
+from pyspark.sql import functions as F
+
+# One JSON secret holds the connection details (bootstrap server, topic, API key and secret).
+cfg  = json.loads(dbutils.secrets.get("finguard-scope", "kafka_connection"))
+jaas = ('kafkashaded.org.apache.kafka.common.security.plain.PlainLoginModule required '
+        f'username="{cfg["api_key"]}" password="{cfg["api_secret"]}";')       # Databricks bundles a "shaded" Kafka client
+
+raw = (spark.readStream.format("kafka")
+       .option("kafka.bootstrap.servers", cfg["bootstrap_servers"])
+       .option("subscribe", cfg["topic"])
+       .option("kafka.security.protocol", "SASL_SSL")                       # Confluent Cloud: TLS + SASL PLAIN with an API key
+       .option("kafka.sasl.mechanism", "PLAIN")
+       .option("kafka.sasl.jaas.config", jaas)
+       .option("startingOffsets", "earliest")                               # applies only when there is no checkpoint yet
+       .option("maxOffsetsPerTrigger", 50000)                               # backpressure: cap each micro-batch
+       .load())
+
+# The Kafka source always returns the same columns. key and value are BINARY: cast them.
+bronze = raw.select(
+    F.col("key").cast("string").alias("key"),
+    F.col("value").cast("string").alias("value"),            # keep the payload as text: bronze stays lossless
+    "topic", "partition", "offset", "timestamp", "timestampType",
+    F.current_timestamp().alias("ingestion_timestamp"))
+
+(bronze.writeStream.format("delta")
+    .option("checkpointLocation", "/Volumes/finguard/source/transactions/_checkpoint/")
+    .trigger(availableNow=True)                              # a scheduled, incremental load; use processingTime for always-on
+    .toTable("finguard.bronze.transactions"))</code></pre>
+  <ul>
+    <li><strong>Explore with a batch read first.</strong> The same options with <code>spark.read.format("kafka")</code> (batch) let you count and inspect the topic before committing to a stream. It is the fastest debugging tool for a new topic.</li>
+    <li><strong><code>startingOffsets</code> only matters the first time.</strong> After the first run the checkpoint decides. Pointing an existing query at a <em>new</em> checkpoint location with <code>earliest</code> silently reprocesses the whole topic.</li>
+    <li><strong>Keep the Kafka metadata</strong> (<code>topic</code>, <code>partition</code>, <code>offset</code>, <code>timestamp</code>) in bronze: <code>(topic, partition, offset)</code> is a natural unique key for de-duplication and for tracing a bad record back to the source.</li>
+    <li><strong>Secrets.</strong> Never print the credential JSON or the token you used to create the scope (a demo notebook that prints an API token is a habit to break). Read the secret inside the code that needs it; in pipelines, read it inside the dataset function.</li>
+    <li><strong>Serialization.</strong> JSON is easy but schema-less. For production, prefer Avro or Protobuf with a schema registry so producers cannot silently change the contract (<a href="#data-management">&sect;07</a>).</li>
+  </ul>
+  <p><strong>Parse in silver, not bronze.</strong> Bronze keeps the raw string; silver applies an explicit schema and turns bad records into rows you can count and quarantine:</p>
+  <pre><code>from pyspark.sql.types import *
+schema = StructType([StructField("transaction_id", StringType()), StructField("customer_id", StringType()),
+    StructField("card_number", StringType()), StructField("amount", DoubleType()),
+    StructField("transaction_timestamp", TimestampType()), StructField("is_international", BooleanType())])   # ...and the rest
+
+silver = (spark.readStream.table("finguard.bronze.transactions")
+    .select(F.from_json("value", schema).alias("d"), "topic", "partition", "offset")
+    .select("d.*", "topic", "partition", "offset"))         # a malformed JSON yields a row of NULLs: catch it with expectations</code></pre>
+
+  <h3>Joining Streams: Stream-Static vs. Stream-Stream</h3>
+  <p>Streaming joins are where most real-time designs go wrong, so know the two kinds and when each is right.</p>
+  <div class="table-wrap"><table>
+    <thead><tr><th></th><th>Stream-static join</th><th>Stream-stream join</th></tr></thead>
+    <tbody>
+      <tr><td><strong>What it joins</strong></td><td>A stream with a table that is not a stream (a Delta dimension, reference data).</td><td>Two event streams that must be correlated in time.</td></tr>
+      <tr><td><strong>State</strong></td><td>None kept by Spark. Stateless, so cheap.</td><td>Both sides are buffered in state until a match or until the watermark expires them.</td></tr>
+      <tr><td><strong>Freshness of the static side</strong></td><td>The Delta table is read at each micro-batch, so changes appear in later batches. Records processed <em>before</em> a dimension row arrived are not corrected retroactively.</td><td>An event arriving late can still match, within the watermark and time bound.</td></tr>
+      <tr><td><strong>Typical use</strong></td><td>Enrich transactions with customer attributes; compare an amount with that customer's limit; flag a card that is on a watchlist.</td><td>Match ad impressions to clicks; correlate a payment with a subsequent chargeback event within 30 minutes.</td></tr>
+      <tr><td><strong>Watermark needed?</strong></td><td>No.</td><td>Yes, on both sides, plus an <strong>event-time range condition</strong> so Spark knows when state can be dropped.</td></tr>
+    </tbody>
+  </table></div>
+  <pre><code># Stream-static: flag transactions above the customer's own limit. The customers table is re-read each micro-batch.
+tx        = spark.readStream.table("finguard.silver.transactions")
+customers = spark.read.table("finguard.silver.customers")
+high_value = (tx.join(customers, "customer_id", "left")
+                .where(F.col("amount") &gt; F.col("transaction_limit"))
+                .select(F.concat_ws("-", F.lit("ALERT"), "transaction_id").alias("alert_id"), "customer_id", "amount", "transaction_limit"))
+
+# Stream-stream: BOTH sides need a watermark and the join needs a time-range condition, otherwise state never expires.
+tx = spark.readStream.table("finguard.silver.transactions").withWatermark("transaction_timestamp", "5 minutes").alias("tx")
+cb = spark.readStream.table("prod.silver.chargebacks").withWatermark("chargeback_ts", "5 minutes").alias("cb")
+matched = tx.join(cb,
+    F.expr("""tx.transaction_id = cb.transaction_id
+              AND cb.chargeback_ts BETWEEN tx.transaction_timestamp AND tx.transaction_timestamp + interval 30 minutes"""), "inner")</code></pre>
+  <div class="callout warn">
+    <strong class="label">A common design mistake</strong>
+    A join on an equality key alone (say, card number equals watchlist entity id) between two watermarked streams, with <em>no</em> time-range condition, keeps state for every key forever, because Spark cannot know that an old transaction can never match a future watchlist row. The state store grows until micro-batches slow down and the query fails. Ask two questions whenever you write a stream-stream join: <em>can I express a time bound?</em> and <em>is one side really reference data?</em> A watchlist that changes slowly and applies indefinitely is reference data, so a stream-static join against an "active entries" table is the simpler, cheaper and usually more correct design. Reserve stream-stream joins for genuinely correlated events.
+  </div>
+
+  <h3>Windows and Aggregations</h3>
+  <div class="table-wrap"><table>
+    <thead><tr><th>Window type</th><th>Definition</th><th>Example</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Tumbling</strong></td><td>Fixed-size, non-overlapping. Each event falls in exactly one window.</td><td><code>window(ts, "1 minute")</code>: transactions per minute.</td></tr>
+      <tr><td><strong>Sliding (hopping)</strong></td><td>Fixed-size, overlapping, advancing by a slide interval. Each event falls in several windows.</td><td><code>window(ts, "5 minutes", "1 minute")</code>: a rolling 5-minute count refreshed every minute (each event is counted in 5 windows).</td></tr>
+      <tr><td><strong>Session</strong></td><td>Dynamic windows that close after a gap of inactivity.</td><td><code>session_window(ts, "10 minutes")</code>: a user's browsing session.</td></tr>
+    </tbody>
+  </table></div>
+  <pre><code>per_minute = (tx.withWatermark("transaction_timestamp", "5 minutes")
+    .groupBy(F.window("transaction_timestamp", "1 minute"))
+    .agg(F.count("*").alias("transaction_count"))
+    .select(F.col("window.start").alias("window_start"), F.col("window.end").alias("window_end"), "transaction_count"))</code></pre>
+  <p><strong>Output modes</strong> decide what a streaming aggregation writes each batch. <em>Append</em>: only rows that are final. With a watermark this means a window is written <strong>after</strong> it closes (window end plus the watermark), so a 1-minute window with a 5-minute watermark appears about 6 minutes late; this is the correct mode for Delta tables. <em>Update</em>: only rows changed since the last batch. <em>Complete</em>: the whole result table every batch (only for small aggregates). Two consequences to state in interviews: real-time dashboards over a windowed table lag by the watermark, and shrinking the watermark trades completeness for freshness.</p>
+
+  <h3>Stateless vs. Stateful Processing</h3>
+  <div class="table-wrap"><table>
+    <thead><tr><th>Stateless (per record or per batch)</th><th>Stateful (remembers across batches)</th></tr></thead>
+    <tbody>
+      <tr><td><code>select</code>, <code>filter</code>, <code>withColumn</code>, <code>from_json</code>, stream-static joins</td><td>Windowed and running aggregations, <code>dropDuplicates</code>, stream-stream joins, <code>flatMapGroupsWithState</code></td></tr>
+      <tr><td>No state store; restarts are trivial; scales linearly.</td><td>State lives in a store (RocksDB is recommended for large state) persisted in the checkpoint; watermarks bound it.</td></tr>
+      <tr><td>Changing the logic is easy.</td><td>Changing the state schema or grouping keys usually requires a new checkpoint and a reprocess.</td></tr>
+    </tbody>
+  </table></div>
+  <p>Design rule: <strong>keep bronze and silver stateless</strong> (parse, validate, enrich) and put stateful logic (windows, correlations) in a small number of clearly-owned gold streams, so that a state problem does not stall the ingestion path. Monitor state size and rows in the query progress, and set a watermark you can defend to the business.</p>
+
+  <h3>Alerting Sinks and Idempotency</h3>
+  <p>An alert (an email, a page, a call to an API) is a <strong>side effect</strong>, and side effects are not covered by Delta's exactly-once guarantee. A micro-batch that fails halfway is retried, so anything that sends to the outside world must tolerate running twice. In a declarative pipeline a <code>foreach_batch_sink</code> runs your function once per micro-batch with the batch DataFrame; delivery is <em>at-least-once</em>.</p>
+  <pre><code>from pyspark import pipelines as dp
+
+@dp.foreach_batch_sink(name="fraud_email_sink")
+def send_alerts(df, batch_id):
+    # 1) claim the alerts first: only rows never sent before survive the anti-join (idempotent, safe on retry)
+    new = df.join(spark.table("finguard.ops.alerts_sent"), "alert_id", "left_anti")
+    for row in new.limit(500).collect():                     # bounded batch; collect() moves rows to the driver, keep it small
+        try:
+            send_email(row.customer_email, build_subject(row), build_body(row))          # SMTP, or better: an API or a queue
+            spark.createDataFrame([(row.alert_id,)], "alert_id string").write.mode("append").saveAsTable("finguard.ops.alerts_sent")
+        except Exception as e:                               # one bad address must not stall the whole stream
+            log_failure(row.alert_id, str(e))
+
+@dp.append_flow(target="fraud_email_sink")
+def fraud_alert_stream():
+    return spark.readStream.table("finguard.gold.fraud_card_alert")</code></pre>
+  <ul>
+    <li><strong>Deduplicate on a deterministic alert id</strong> (for example <code>FRAUD-{transaction_id}-{watchlist_id}</code>) and record what was sent. Databricks also documents writing to Delta from a batch sink with <code>txnVersion</code> and <code>txnAppId</code> so retried writes are skipped.</li>
+    <li><strong>Do not put slow, failure-prone I/O in the hot path.</strong> Sending mail row by row inside a micro-batch blocks the stream. Better: write alerts to a Delta table (an outbox) and let a separate notifier task or a queue deliver them, with retries and rate limits.</li>
+    <li><strong>Mask what you send.</strong> A card number in an email should be last four digits only (<a href="#pii">&sect;06</a>); keep secrets (SMTP app password, API keys) in secret scopes.</li>
+    <li><strong>Suppress storms.</strong> One compromised card can trigger hundreds of transactions; alert once per card per window, not once per transaction.</li>
+  </ul>
+
+  <h3>Operating a Streaming Query</h3>
+  <div class="table-wrap"><table>
+    <thead><tr><th>Signal</th><th>What it tells you</th><th>What to do</th></tr></thead>
+    <tbody>
+      <tr><td>Input rate vs. processed rate</td><td>Whether you keep up.</td><td>If input exceeds processing for long, add compute, raise <code>maxOffsetsPerTrigger</code> carefully, or fix a slow operator.</td></tr>
+      <tr><td>Offset lag (<code>avgOffsetsBehindLatest</code>, <code>maxOffsetsBehindLatest</code>)</td><td>How far behind the head of the topic you are.</td><td>Alert on sustained growth; it is the streaming freshness SLI.</td></tr>
+      <tr><td>Batch duration</td><td>Trend of per-batch time.</td><td>A steady rise usually means growing state or a data skew.</td></tr>
+      <tr><td>State rows and memory</td><td>Whether watermarks are bounding state.</td><td>A monotonic increase points to a missing time bound or an over-long watermark.</td></tr>
+      <tr><td>Query status</td><td>The stream stopped.</td><td>Run always-on streams as a job with restart on failure and an alert; never rely on someone watching a notebook.</td></tr>
+    </tbody>
+  </table></div>
+  <p><strong>Choose the cadence by the requirement, not by the technology.</strong> If the business needs "within about a minute," a continuous or short <code>processingTime</code> stream on a dedicated cluster is justified. If "every 15 minutes" is fine, <code>availableNow</code> on a schedule costs far less for the same code. Use <code>availableNow</code> for development and tests too: it terminates, so you can inspect the result.</p>
+
 </section>
 
 <!-- ============ 13 DELTA LAKE INTERNALS ============ -->
@@ -1995,6 +2202,50 @@ LIMIT 20;</code></pre>
     <strong class="label">Interview angle</strong>
     "Why use Lakeflow Declarative Pipelines instead of hand-written PySpark jobs orchestrated by Workflows?" - you get automatic dependency resolution from the query graph (no manually ordering tasks), built-in data quality enforcement (expectations), automatic incremental processing for streaming tables, and a managed pipeline UI showing data quality and lineage per run. The trade-off: less imperative control, and a learning curve around its specific decorators/clauses. For simple, mostly-independent jobs, plain Workflows tasks are often still simpler.
   </div>
+
+  <h3>Patterns from Building Real Pipelines</h3>
+  <h4>A streaming source inside a declarative table</h4>
+  <p>A dataset function can read from Kafka or Auto Loader directly and return the streaming DataFrame; the pipeline owns the checkpoint. Everything downstream reads the previous table as a stream:</p>
+  <pre><code>from pyspark import pipelines as dp
+from pyspark.sql import functions as F
+
+import json
+
+@dp.table(name="finguard.bronze.transactions", comment="Raw card transactions from Kafka")
+def transactions_bronze():
+    cfg = json.loads(dbutils.secrets.get("finguard-scope", "kafka_connection"))    # read secrets inside the function
+    return (spark.readStream.format("kafka")
+            .option("kafka.bootstrap.servers", cfg["bootstrap_servers"]).option("subscribe", cfg["topic"])
+            # ... SASL options as in the Structured Streaming section ...
+            .load().select(F.col("value").cast("string").alias("value"), "topic", "partition", "offset", "timestamp",
+                           F.current_timestamp().alias("ingestion_timestamp")))
+
+@dp.table(name="finguard.silver.transactions", comment="Parsed and validated transactions")
+@dp.expect_or_drop("valid_transaction_id", "transaction_id IS NOT NULL")
+@dp.expect_or_drop("valid_card_number",    "card_number IS NOT NULL")
+@dp.expect("valid_amount", "amount &gt; 0")                            # warn only: keep the row, count the violation
+def transactions_silver():
+    return spark.readStream.table("finguard.bronze.transactions").select(F.from_json("value", schema).alias("d"), "offset").select("d.*", "offset")</code></pre>
+
+  <h4>Expectations: what "warn" and "drop" look like in practice</h4>
+  <p>In a build with six rules on a product table, the run showed 23 rows written, one dropped and one allowed with a violation. The one dropped failed an <code>expect_or_drop</code> (a null product name); the one allowed failed a plain <code>expect</code> (a zero price). The pipeline UI lists every rule with its pass and fail counts, which is your data-quality dashboard for free. Design guidance:</p>
+  <ul>
+    <li><strong>Drop</strong> when a row is unusable (null key). <strong>Warn</strong> when it is suspicious but you would rather see it than lose it (price of zero, unknown category). <strong>Fail the update</strong> only for invariants where wrong output is worse than none.</li>
+    <li><strong>Prefer several individual rules to one grouped rule</strong> so metrics say <em>which</em> check failed and each can carry its own action.</li>
+    <li><strong>Derive, do not just copy, in silver:</strong> <code>is_active</code> from a null end date of an SCD2 source, <code>deal_size</code> from an amount band, <code>inventory_status</code> from stock versus reorder level, <code>gross_amount</code> from quantity and price. Business rules encoded once, near the data.</li>
+  </ul>
+
+  <h4>Project structure and gotchas</h4>
+  <ul>
+    <li><strong>Folders group files, files hold datasets.</strong> A typical layout is <code>transformations/bronze_to_silver/</code> (one file per table) and <code>transformations/silver_to_gold/</code>. The engine builds the dependency graph from the reads, so a gold table automatically runs after the silver tables it reads, with no ordering configuration.</li>
+    <li><strong>A file must be included as pipeline source.</strong> A file created outside the configured source folders shows a "skipped" icon and silently does not run; include it as pipeline source code (or create it inside the right folder). This is a classic "why is my table missing?" cause.</li>
+    <li><strong>Set the default catalog and schema</strong> in the pipeline settings so unqualified names land where you expect.</li>
+    <li><strong>Dry run before run.</strong> It catches wrong column names and missing tables without moving data.</li>
+    <li><strong>Reruns are incremental.</strong> Running the whole pipeline again reprocesses only new source data for streaming tables; existing tables report zero new rows.</li>
+    <li><strong>Gold dimensions as views.</strong> When silver already is the clean, standardized dimension (one row per customer, active only), a view over silver avoids copying data; it always reflects current silver. Use a table when you need a snapshot, indexes on hot columns, or to protect consumers from silver changes.</li>
+    <li><strong>Review AI-generated pipeline code.</strong> A generated pipeline was structurally right but had grouped expectations, unnecessary <code>trim</code>/<code>upper</code>, and (in one case) a fact table missing the customer key that the semantic layer later needed. Prompt for a dry run, then read every expectation and every join key.</li>
+  </ul>
+
 </section>
 
 <!-- ============ 17 DATA MODELING ON DATABRICKS ============ -->
@@ -2272,6 +2523,68 @@ spark.sql(f"CREATE OR REPLACE TABLE training.jobs_demo.{t} AS SELECT * FROM samp
   </ul>
 
   
+    <h3>Job Patterns from the Projects: Nested Jobs, Run Ids and "All Done"</h3>
+  <p>Three production habits appear in every good orchestration design, and each comes with a limit worth knowing.</p>
+  <h4>1. For Each wraps exactly one task, so nest a job</h4>
+  <p>A <strong>For Each</strong> task loops one inner task over a list. If the per-item work is a <em>sequence</em> (read parameters, load to bronze, merge to silver), you cannot put three tasks inside the loop. The pattern: make the sequence its own <strong>inner job</strong> with parameters, and have the For Each's single inner task be a <strong>Run Job</strong> task that calls it once per item, passing <code>{{input}}</code>.</p>
+  <pre><code>resources:
+  jobs:
+    source_to_silver:                                  # the OUTER job for one source system
+      parameters: [{name: source_system, default: sql_server}, {name: run_id, default: "0"}]
+      tasks:
+        - task_key: get_list_of_tables                 # publishes a JSON array with dbutils.jobs.taskValues.set
+          notebook_task: {notebook_path: ../src/get_tables.py, base_parameters: {source_system: "{{job.parameters.source_system}}"}}
+        - task_key: ingest_each
+          depends_on: [{task_key: get_list_of_tables}]
+          for_each_task:
+            inputs: "{{tasks.get_list_of_tables.values.tables_metadata}}"
+            concurrency: 4
+            task:
+              task_key: ingest_one
+              run_job_task:
+                job_id: ${resources.jobs.source_to_silver_inner.id}
+                job_parameters: {table_metadata: "{{input}}", run_id: "{{job.parameters.run_id}}"}
+
+    source_to_silver_inner:                            # ONE table: three notebooks in sequence
+      parameters: [{name: table_metadata}, {name: run_id}]
+      tasks:
+        - task_key: read_table_parameters
+          notebook_task: {notebook_path: ../src/read_params.py}
+        - task_key: source_to_bronze
+          depends_on: [{task_key: read_table_parameters}]
+          notebook_task:
+            notebook_path: ../src/source_to_bronze.py
+            base_parameters: {table_parameters: "{{tasks.read_table_parameters.values.table_parameters}}"}
+        - task_key: bronze_to_silver
+          depends_on: [{task_key: source_to_bronze}]
+          notebook_task: {notebook_path: ../src/bronze_to_silver.py}</code></pre>
+  <p>The names in <code>base_parameters</code> must match the notebook's widgets exactly, or the value silently does not arrive. Set the For Each <code>concurrency</code> deliberately: it is a cap on parallel iterations (and the platform enforces a maximum), and each iteration starts its own run, so it multiplies compute.</p>
+
+  <h4>2. Propagate one run id end to end</h4>
+  <p>A <em>master job</em> should pass <code>{{job.run_id}}</code> (its own run id) into every child as a parameter. Every child writes that id into the audit table, so one query answers "what happened in last night's run across all sources and layers?" and the summary email can be built from a single id. Give the run id a harmless default (for example <code>"0"</code>) so children can be run alone in testing.</p>
+
+  <h4>3. "Run if" choices are design decisions, not defaults</h4>
+  <pre><code>tasks:
+  - {task_key: sql_server_to_silver, run_job_task: {job_id: ${resources.jobs.source_to_silver.id}, job_parameters: {source_system: sql_server, run_id: "{{job.run_id}}"}}}
+  - {task_key: blob_to_silver,       run_job_task: {job_id: ${resources.jobs.source_to_silver.id}, job_parameters: {source_system: blob,       run_id: "{{job.run_id}}"}}}
+  - task_key: silver_to_gold
+    depends_on: [{task_key: sql_server_to_silver}, {task_key: blob_to_silver}]
+    run_if: ALL_DONE                                   # rebuild gold from whatever silver holds, even if one source failed
+    run_job_task: {job_id: ${resources.jobs.silver_to_gold.id}, job_parameters: {source_system: silver, run_id: "{{job.run_id}}"}}
+  - task_key: send_email
+    depends_on: [{task_key: silver_to_gold}]
+    run_if: ALL_DONE                                   # always send the summary, success or failure
+    notebook_task: {notebook_path: ../src/send_email.py, base_parameters: {run_id: "{{job.run_id}}"}}</code></pre>
+  <div class="table-wrap"><table>
+    <thead><tr><th>Choice</th><th>Effect</th><th>Trade-off</th></tr></thead>
+    <tbody>
+      <tr><td><code>ALL_SUCCESS</code> (default)</td><td>Gold runs only if both sources loaded.</td><td>Safe and consistent, but one flaky source blocks the whole platform.</td></tr>
+      <tr><td><code>ALL_DONE</code></td><td>Gold and the email run regardless of upstream outcome.</td><td>Right for the notification. For gold it favors availability over consistency: dashboards may combine fresh and stale data, so surface freshness in the output and in the email.</td></tr>
+      <tr><td><code>NONE_FAILED</code></td><td>Runs unless an upstream failed (skips allowed).</td><td>Good with conditional branches.</td></tr>
+    </tbody>
+  </table></div>
+  <p>Other details from the same builds: a first attempt may fail against a database that is waking up, so the default retries (about three, immediately) usually rescue it; keep the <em>audit write idempotent on <code>(run_id, table_id)</code></em> so a retried task updates its own row instead of adding a second one; a dashboard refresh is just another task (with a warehouse and optional subscribers) placed after gold; and views and metric views need no refresh task, because they read current data at query time (<a href="#aibi">&sect;28</a>).</p>
+
   <h3>Orchestration Principles (Tool-Independent)</h3>
   <p>Orchestration is the undercurrent that runs the whole pipeline in the right order at the right time. Whatever tool you use, good orchestration rests on the same ideas, which is exactly what an interviewer probes when they ask "Airflow or Databricks Jobs?":</p>
   <ul>
@@ -3600,7 +3913,7 @@ Daily batch aggregation reads ~200 GB     -&gt; a mid-size cluster in tens of mi
 <!-- ============ 32 END-TO-END ARCHITECTURES &; SYSTEM DESIGN ============ -->
 <section class="reveal" id="architectures">
   <h2><span class="hico"><svg class="ico"><use href="#i-blueprint"/></svg></span><span class="n">32.</span> End-to-End Architectures &amp; System Design</h2>
-  <p class="lede">A system-design round asks you to combine everything above into one coherent platform and defend the trade-offs. This section gives you two complete reference blueprints (a metadata-driven bank pipeline and a modern Lakeflow retail platform), a repeatable framework for any design question, a short disaster-recovery primer, and five practice scenarios with model-answer outlines.</p>
+  <p class="lede">A system-design round asks you to combine everything above into one coherent platform and defend the trade-offs. This section gives you three complete reference blueprints (a metadata-driven bank pipeline, a modern Lakeflow retail platform and a real-time Kafka fraud-detection stream), a way to present a project in an interview, a repeatable framework for any design question, a short disaster-recovery primer, and six practice scenarios with model-answer outlines.</p>
 
   <h3>Blueprint A: Metadata-Driven Batch Platform (Neo Bank)</h3>
   <p><strong>Problem.</strong> A bank's data is scattered: a core banking SQL Server database (branches, customers, accounts, transactions), plus files from external parties (credit-bureau scores, payment-gateway logs). Manual pipelines per table are slow, brittle and do not scale; business users have no self-service view. <strong>Solution.</strong> A reusable, <em>metadata-driven</em> framework on the medallion architecture, where adding a table means adding a row of metadata, not writing a pipeline.</p>
@@ -3704,6 +4017,69 @@ def load_table(table_id: str, run_id: str):
         ).write.mode("append").saveAsTable("banking.metadata.audit_log")</code></pre>
   <p>Look for the design decisions that interviewers care about: the watermark is advanced <em>after</em> success (so a crash re-reads rather than skips); the silver write is a MERGE (idempotent, so a retry does not duplicate; the same retry re-appends those rows to bronze, which is acceptable for a raw layer and easy to trace if you stamp a run id on each batch); the audit row is written in <code>finally</code> (so failures are recorded too); credentials come from a secret scope; and the function is parameterized by <code>table_id</code>, so a <strong>For Each</strong> task can fan out over the tables of a given <code>load_order</code> in parallel (<a href="#orchestration">&sect;19</a>).</p>
 
+    <h4>How the framework is wired: the job graph</h4>
+  <p>The loader function above is the idea; in the actual build it is split into small, reusable notebooks stitched together by jobs. Knowing this wiring lets you draw it on a whiteboard, which is what an interviewer asks for.</p>
+  <figure class="diagram-wrap">
+    <svg viewBox="0 0 900 318" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Job graph: a master job runs the source-to-silver job for SQL Server and for blob storage in parallel, then silver-to-gold, then a send-email notebook and a dashboard refresh; the source-to-silver job gets a list of tables, then a For Each loop runs an inner job per table that reads parameters, loads bronze and merges to silver">
+      <defs><marker id="jg1" markerWidth="9" markerHeight="9" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="#9AA0B4"/></marker></defs>
+      <g font-family="sans-serif" text-anchor="middle">
+        <text x="450" y="16" font-size="12" font-weight="700" fill="#E7E7EE">MASTER JOB (passes its own run id to every child)</text>
+        <rect x="14" y="26" width="200" height="40" rx="8" fill="#1D1D26" stroke="#A56BFF" stroke-width="1.5"/><text x="114" y="44" font-size="11" fill="#F1F1F1">Run job: source_to_silver</text><text x="114" y="58" font-size="10" fill="#E7E7EE">source = SQL Server</text>
+        <rect x="14" y="76" width="200" height="40" rx="8" fill="#1D1D26" stroke="#A56BFF" stroke-width="1.5"/><text x="114" y="94" font-size="11" fill="#F1F1F1">Run job: source_to_silver</text><text x="114" y="108" font-size="10" fill="#E7E7EE">source = blob (parallel)</text>
+        <line x1="214" y1="46" x2="256" y2="68" stroke="#9AA0B4" stroke-width="1.5" marker-end="url(#jg1)"/><line x1="214" y1="96" x2="256" y2="78" stroke="#9AA0B4" stroke-width="1.5" marker-end="url(#jg1)"/>
+        <rect x="258" y="50" width="170" height="52" rx="8" fill="#1D1D26" stroke="#A56BFF" stroke-width="1.5"/><text x="343" y="70" font-size="11" fill="#F1F1F1">Run job: silver_to_gold</text><text x="343" y="86" font-size="10" fill="#E7E7EE">run if ALL DONE</text>
+        <line x1="428" y1="76" x2="470" y2="76" stroke="#9AA0B4" stroke-width="1.6" marker-end="url(#jg1)"/>
+        <rect x="472" y="50" width="170" height="52" rx="8" fill="#1D1D26" stroke="#5AC8FF" stroke-width="1.5"/><text x="557" y="70" font-size="11" fill="#F1F1F1">Notebook: send_email</text><text x="557" y="86" font-size="10" fill="#E7E7EE">summary from audit table</text>
+        <line x1="642" y1="76" x2="684" y2="76" stroke="#9AA0B4" stroke-width="1.6" marker-end="url(#jg1)"/>
+        <rect x="686" y="50" width="190" height="52" rx="8" fill="#1D1D26" stroke="#FF6B9D" stroke-width="1.5"/><text x="781" y="70" font-size="11" fill="#F1F1F1">Dashboard refresh task</text><text x="781" y="86" font-size="10" fill="#E7E7EE">warehouse + subscribers</text>
+
+        <text x="450" y="150" font-size="12" font-weight="700" fill="#E7E7EE">EACH source_to_silver JOB (For Each can wrap only ONE task, so the loop body is a job)</text>
+        <rect x="14" y="166" width="170" height="60" rx="8" fill="#1D1D26" stroke="#5AC8FF" stroke-width="1.5"/><text x="99" y="188" font-size="11" fill="#F1F1F1">get_list_of_tables</text><text x="99" y="204" font-size="10" fill="#E7E7EE">reads metadata, sets</text><text x="99" y="217" font-size="10" fill="#E7E7EE">a task value (JSON)</text>
+        <line x1="184" y1="196" x2="216" y2="196" stroke="#9AA0B4" stroke-width="1.6" marker-end="url(#jg1)"/>
+        <rect x="218" y="166" width="170" height="60" rx="8" fill="#1D1D26" stroke="#FFB454" stroke-width="1.5"/><text x="303" y="188" font-size="11" fill="#F1F1F1">For Each: concurrency 4</text><text x="303" y="204" font-size="10" fill="#E7E7EE">one Run Job task</text><text x="303" y="217" font-size="10" fill="#E7E7EE">per table ({{input}})</text>
+        <line x1="388" y1="196" x2="420" y2="196" stroke="#9AA0B4" stroke-width="1.6" marker-end="url(#jg1)"/>
+        <rect x="422" y="158" width="462" height="76" rx="10" fill="#191921" stroke="#A56BFF" stroke-width="1.4" stroke-dasharray="5 4"/><text x="653" y="174" font-size="10.5" fill="#C9A5FF">inner job, one table at a time</text>
+        <rect x="434" y="184" width="136" height="42" rx="7" fill="#1D1D26" stroke="#5AC8FF" stroke-width="1.3"/><text x="502" y="202" font-size="10.5" fill="#F1F1F1">read_table_parameters</text><text x="502" y="216" font-size="9.5" fill="#E7E7EE">load type, keys</text>
+        <line x1="570" y1="205" x2="584" y2="205" stroke="#9AA0B4" stroke-width="1.5" marker-end="url(#jg1)"/>
+        <rect x="586" y="184" width="136" height="42" rx="7" fill="#1D1D26" stroke="#5AC8FF" stroke-width="1.3"/><text x="654" y="202" font-size="10.5" fill="#F1F1F1">source_to_bronze</text><text x="654" y="216" font-size="9.5" fill="#E7E7EE">JDBC or Auto Loader</text>
+        <line x1="722" y1="205" x2="736" y2="205" stroke="#9AA0B4" stroke-width="1.5" marker-end="url(#jg1)"/>
+        <rect x="738" y="184" width="138" height="42" rx="7" fill="#1D1D26" stroke="#5AC8FF" stroke-width="1.3"/><text x="807" y="202" font-size="10.5" fill="#F1F1F1">bronze_to_silver</text><text x="807" y="216" font-size="9.5" fill="#E7E7EE">merge, append, or full</text>
+
+        <rect x="14" y="254" width="870" height="50" rx="9" fill="#191921" stroke="#5AC8FF" stroke-width="1.4"/>
+        <text x="450" y="274" font-size="11.5" font-weight="700" fill="#5AC8FF">Metadata tables drive everything</text>
+        <text x="450" y="292" font-size="10.5" fill="#F1F1F1">tables | table_parameters | table_watermarks | pipeline_runs (audit, keyed by run id + table id)</text>
+      </g>
+    </svg>
+    <figcaption>Fig. 9 - A generic notebook per stage plus jobs that fan out over a metadata list. The same jobs run for SQL Server, blob files and (with a different driver notebook) the gold layer.</figcaption>
+  </figure>
+  <div class="table-wrap"><table>
+    <thead><tr><th>Element</th><th>What the build actually does</th></tr></thead>
+    <tbody>
+      <tr><td><code>tables</code> metadata</td><td>One row per table (10 to start: 4 SQL Server, 2 blob, 4 gold): system, source schema/table or file path, target layer, bronze and silver schema, <code>load_order</code>, and an <code>active_flag</code> so a table can be disabled without deleting its row. The job's <code>source_system</code> parameter selects the rows (<code>sql_server</code>, <code>blob</code>, <code>silver</code> for the gold tables).</td></tr>
+      <tr><td><code>table_parameters</code></td><td>Name/value rows per table: <code>load_type</code> (merge for mutable entities, append for immutable events such as transactions, full for a tiny table such as branches), <code>primary_key</code>, <code>watermark_column</code>. Adding a new behavior is a new parameter name, not a schema change.</td></tr>
+      <tr><td><code>table_watermarks</code></td><td>Last processed value per incremental table, seeded with a very old date (year 1900) so the first run loads history; updated only after the silver write, from the maximum watermark value in the batch, using a MERGE (insert if missing, else update).</td></tr>
+      <tr><td><code>pipeline_runs</code> (audit)</td><td>The bronze step inserts an "in progress" row; the silver step (in a <code>finally</code> block) sets end time, status, record count and error. Both steps <em>upsert on (run id, table id)</em> so a retried task updates its own row instead of adding a duplicate. A failure handler must include the run id in its UPDATE, otherwise it marks every historical row for that table as failed (a bug found and fixed on camera).</td></tr>
+      <tr><td>Bronze vs. silver</td><td>Bronze is always <strong>append</strong> (a history of what arrived each day). Silver is the merged or refreshed copy of the source: merge by key, append, or overwrite according to <code>load_type</code>.</td></tr>
+      <tr><td>Gold layer</td><td>Gold logic is one notebook per table (branch performance, customer 360 with a high/medium/low value segment from balance thresholds, daily bank KPIs, risk summary, transaction channel summary), each ending with <code>dbutils.notebook.exit(count)</code>. A driver notebook runs the right one via <code>dbutils.notebook.run</code>, writes the audit row and re-raises on failure. Gold tables are full rebuilds (<code>CREATE OR REPLACE</code>), so no parameters are needed.</td></tr>
+      <tr><td>Email</td><td>A notebook joins the audit rows for the run with the <code>tables</code> metadata, builds an HTML table, sets the subject to success or failure from the statuses, and sends through SMTP using an app password from a secret scope. Job notifications alone cannot say which tables loaded or how many rows.</td></tr>
+      <tr><td>Result</td><td>An incremental run across both sources, gold and the email took about 16 minutes on free serverless compute, with per-table counts in the email.</td></tr>
+    </tbody>
+  </table></div>
+
+  <h4>Hardening notes: what to fix before calling it production</h4>
+  <div class="table-wrap"><table>
+    <thead><tr><th>Weak spot</th><th>Why it bites</th><th>Fix</th></tr></thead>
+    <tbody>
+      <tr><td>Bronze append happens in one task, silver in the next</td><td>If the task after a successful bronze append is retried, bronze gets the same rows twice; for an <em>append-type</em> table the silver append then duplicates them.</td><td>Stamp a batch id on bronze rows and dedupe or MERGE insert-only on the business key in silver; or write bronze and silver in one idempotent step.</td></tr>
+      <tr><td>Watermark taken as the maximum seen</td><td>A late-committing row with an older timestamp is skipped forever; deletes are invisible.</td><td>Read with a small overlap (for example the last watermark minus a margin) and rely on MERGE to dedupe; reconcile counts periodically; use CDC for deletes.</td></tr>
+      <tr><td>SQL built by string concatenation from metadata</td><td>Safe only while metadata is trusted; a bad value is an injection or a broken query.</td><td>Restrict who can edit metadata, validate names against the catalog, quote identifiers.</td></tr>
+      <tr><td>The whole connection stored as one JSON secret</td><td>Convenient, but any reader of the secret gets every field, and rotation touches all consumers.</td><td>Separate secrets per credential, or Unity Catalog connections; grant read to the job's service principal only.</td></tr>
+      <tr><td><code>notebook.run(..., timeout 0)</code></td><td>A hung gold notebook blocks the job indefinitely.</td><td>Set a realistic timeout and let the job's own timeout and alerting catch overruns.</td></tr>
+      <tr><td><code>ALL_DONE</code> gold rebuild</td><td>Gold can silently mix fresh and stale sources.</td><td>Record source freshness in gold or the email, or switch to <code>NONE_FAILED</code> when consistency matters more than availability.</td></tr>
+      <tr><td>Test run ids hard-coded</td><td>Harmless in demos, confusing in audit history.</td><td>Always default to the job's run id in production; mark test rows.</td></tr>
+    </tbody>
+  </table></div>
+
   <h4>Design trade-offs to be ready to defend</h4>
   <ul>
     <li><strong>Where to keep metadata:</strong> Delta tables are simplest when everything is on Databricks and get lineage and governance for free; an external transactional database is better when non-Databricks systems must edit or read the config, or when you need row-level transactional updates at high frequency.</li>
@@ -3748,7 +4124,7 @@ def load_table(table_id: str, run_id: str):
         <text x="450" y="266" font-size="11.5" fill="#F1F1F1">One daily Databricks Job orchestrates ingest, pipeline, dashboard refresh  |  Unity Catalog governs everything  |  Genie Code accelerates build</text>
       </g>
     </svg>
-    <figcaption>Fig. 9 - The Lakeflow-native alternative to Blueprint A: less custom code, more managed services, semantic layer for consumption.</figcaption>
+    <figcaption>Fig. 10 - The Lakeflow-native alternative to Blueprint A: less custom code, more managed services, semantic layer for consumption.</figcaption>
   </figure>
   <ul>
     <li><strong>Ingestion.</strong> Lakeflow Connect ingestion pipelines pull Salesforce and Postgres with managed incremental logic. Per table you choose <em>history tracking</em>: off = SCD Type 1 (a current-state mirror; deleted source rows are deleted), on = SCD Type 2 (start/end validity columns; a deleted source row is closed out rather than removed). Files land through Auto Loader (<a href="#autoloader">&sect;10</a>).</li>
@@ -3756,16 +4132,129 @@ def load_table(table_id: str, run_id: str):
     <li><strong>Semantics and consumption.</strong> A metric view over the star schema defines revenue, units and average order value once; an AI/BI dashboard and a Genie space both read it (<a href="#metric-views">&sect;27</a>, <a href="#aibi">&sect;28</a>).</li>
     <li><strong>Orchestration.</strong> One job: ingestion pipeline(s) then the transformation pipeline then dashboard refresh, on a daily schedule with failure notifications.</li>
   </ul>
+    <h4>What the Retail build teaches: layer by layer</h4>
   <div class="table-wrap"><table>
-    <thead><tr><th>Decision</th><th>Blueprint A (metadata-driven)</th><th>Blueprint B (Lakeflow-native)</th></tr></thead>
+    <thead><tr><th>Layer</th><th>What was built</th><th>Design point to be able to defend</th></tr></thead>
     <tbody>
-      <tr><td>Ingestion</td><td>Custom JDBC + Auto Loader in a generic loader</td><td>Lakeflow Connect managed connectors + Auto Loader</td></tr>
-      <tr><td>Transformation</td><td>Notebooks with MERGE, custom audit</td><td>Declarative pipelines with expectations and lineage</td></tr>
-      <tr><td>Best when</td><td>Hundreds of tables, unusual sources, or full control and non-Databricks metadata consumers</td><td>Supported sources, a handful of key entities, small team, want minimal maintenance</td></tr>
-      <tr><td>Weak spot</td><td>You maintain the framework; watermark limits</td><td>Connector coverage and per-connector cost; less bespoke logic</td></tr>
-      <tr><td>Scaling to new tables</td><td>Insert a metadata row</td><td>Add the table to the pipeline definition</td></tr>
+      <tr><td><strong>Sources</strong></td><td>Postgres (product catalog, inventory), Salesforce (accounts, opportunities), and a blob-style volume of transaction CSVs. Deliberately seeded with a few bad rows.</td><td>Three different ingestion mechanics for three source types (<a href="#ingest-other">&sect;11</a>, <a href="#autoloader">&sect;10</a>). Product catalog uses SCD2, inventory SCD1, chosen per table by whether history has business value.</td></tr>
+      <tr><td><strong>Silver</strong></td><td>Five clean tables: product catalog (adds <code>is_active</code> from the SCD2 end date and a price-band <code>product_segment</code>), inventory (<code>inventory_status</code> from stock vs. reorder level), account (renamed to <code>customers</code>, snake_case columns, always-null Salesforce columns pruned), opportunity (<code>deal_size</code>), transactions (casts, timestamp parsing, <code>gross_amount</code>).</td><td>Silver is where you standardize names and types, prune noise, and derive the first business columns. Expectations run here (<a href="#dlt">&sect;16</a>).</td></tr>
+      <tr><td><strong>Gold</strong></td><td>A star schema: <code>fact_sales</code> (transactions left-joined to opportunities) with dimensions for customer, product and calendar; the customer and product dimensions are <em>views</em> over silver that keep only active, non-deleted rows; a calendar dimension generated once with a date sequence; inventory kept as its own view.</td><td>Not everything fits the star: inventory is a snapshot fact with a different grain. Views avoid copying data but pin consumers to silver's shape (<a href="#modeling">&sect;17</a>).</td></tr>
+      <tr><td><strong>Semantic layer</strong></td><td>A metric view over the fact with joins to product, customer and calendar: about six measures (transaction count, revenue, quantity, discount, average transaction value, unique customers) and fifteen dimensions.</td><td>Define KPIs once; every dashboard and Genie question slices them at query time (<a href="#metric-views">&sect;27</a>).</td></tr>
+      <tr><td><strong>Consumption</strong></td><td>An AI-assisted dashboard over the metric view, a Genie space over the gold tables, and the business-user front end that answers a question by consulting both.</td><td>One semantic layer feeding several tools (<a href="#aibi">&sect;28</a>).</td></tr>
+      <tr><td><strong>Orchestration</strong></td><td>One job: Postgres ingestion, Salesforce ingestion (serial on the free tier), the blob notebook, the transformation pipeline, then a dashboard refresh; scheduled daily with failure email and default retries. Views, metric views and Genie need no refresh task.</td><td>Know which artifacts hold data (refresh them) and which read live (do not) (<a href="#orchestration">&sect;19</a>).</td></tr>
     </tbody>
   </table></div>
+
+  <h4>Design smells worth naming in an interview</h4>
+  <div class="table-wrap"><table>
+    <thead><tr><th>Smell</th><th>Consequence</th><th>Better</th></tr></thead>
+    <tbody>
+      <tr><td>The fact table joins transactions to opportunities on <em>opportunity name</em>, because the two sources share no id.</td><td>Names are not unique. A repeated name fans out into duplicate fact rows and inflates revenue; a typo loses the link. A left join keeps every transaction (good) but hides the mismatch.</td><td>Carry the opportunity id in the transaction feed, or build a governed mapping table with a uniqueness test; add a test that <code>count(*)</code> of the fact equals the transaction count.</td></tr>
+      <tr><td>The customer key was missing from the fact and only discovered while building the metric view.</td><td>Rework in the pipeline after the semantic layer existed.</td><td>Draw the bus matrix (which dimensions each fact needs, with keys) <em>before</em> building gold.</td></tr>
+      <tr><td>The customer dimension view keeps only the current version (active rows).</td><td>Facts join to today's attributes, not those valid when the sale happened: history is lost for reporting.</td><td>Decide deliberately: Type 1 behavior is fine for name changes; for segment or region history, join facts to the SCD2 row valid at the transaction time.</td></tr>
+      <tr><td>Generated code accepted with only a glance.</td><td>Grouped expectations that hide which rule failed; a continuous trigger where a one-shot load was intended; an unresponsive dashboard build that had to be re-prompted.</td><td>Treat AI output as a draft from a fast junior: dry-run it, read the joins and triggers, and keep the review step in your process (<a href="#ai-dev">&sect;29</a>).</td></tr>
+    </tbody>
+  </table></div>
+
+    <div class="table-wrap"><table>
+    <thead><tr><th>Decision</th><th>A: metadata-driven batch</th><th>B: Lakeflow-native</th><th>C: real-time streaming</th></tr></thead>
+    <tbody>
+      <tr><td>Freshness</td><td>Daily or hourly batch</td><td>Daily or hourly, managed increments</td><td>Seconds to a minute, with alerts</td></tr>
+      <tr><td>Ingestion</td><td>Custom JDBC + Auto Loader in a generic loader</td><td>Lakeflow Connect managed connectors + Auto Loader</td><td>Kafka source (append-only log) + Lakeflow Connect for the reference table + Auto Loader for files</td></tr>
+      <tr><td>Transformation</td><td>Notebooks with MERGE, custom audit</td><td>Declarative pipelines with expectations and lineage</td><td>Declarative streaming tables, stream-static and stream-stream joins, windows, alert sinks</td></tr>
+      <tr><td>Main risk</td><td>You maintain the framework; watermark and duplicate edge cases</td><td>Connector coverage and cost; less bespoke logic</td><td>State growth, non-idempotent side effects, always-on cost, late data</td></tr>
+      <tr><td>Best when</td><td>Hundreds of tables, unusual sources, full control</td><td>Supported sources, a handful of entities, small team</td><td>A business decision depends on data that is minutes old</td></tr>
+      <tr><td>Scaling to new tables</td><td>Insert a metadata row</td><td>Add the table to the pipeline definition</td><td>Add a topic or dataset; capacity is partitions and cluster size</td></tr>
+      <tr><td>Cost shape</td><td>Pay per run</td><td>Pay per run and per connector</td><td>Pay for always-on compute (or short triggers)</td></tr>
+    </tbody>
+  </table></div>
+
+    <h3>Blueprint C: Real-Time Fraud Detection with Kafka and Structured Streaming (FinGuard)</h3>
+  <p><strong>Problem.</strong> A card issuer wants to react within a minute to suspicious card activity: alert a customer when a single transaction exceeds their personal limit, alert when a card that is on a fraud watchlist is used, and show operations a near-real-time dashboard of volumes and alerts. <strong>Solution.</strong> A streaming lakehouse: transactions flow from Kafka into bronze, silver and gold streaming tables; customer attributes (a slowly changing table) and a watchlist (files) enrich them; alerts are written as gold tables and delivered by email; windows produce live volume metrics; a dashboard and jobs finish the loop.</p>
+  <figure class="diagram-wrap">
+    <svg viewBox="0 0 900 326" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Fraud detection streaming design: a Kafka topic, a Postgres customers table and watchlist JSON files are ingested by the Spark Kafka source, Lakeflow Connect and Auto Loader into a declarative pipeline with bronze, silver and gold layers, producing alert tables and windowed counts consumed by email alert sinks and a dashboard; jobs, watermarks and secrets underneath">
+      <defs><marker id="fg1" markerWidth="9" markerHeight="9" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="#9AA0B4"/></marker></defs>
+      <g font-family="sans-serif" text-anchor="middle">
+        <rect x="10" y="30" width="140" height="58" rx="8" fill="#1D1D26" stroke="#FFB454" stroke-width="1.5"/><text x="80" y="52" font-size="11" fill="#FFB454">Kafka topic</text><text x="80" y="68" font-size="9.5" fill="#E7E7EE">card transactions (JSON)</text><text x="80" y="80" font-size="9.5" fill="#E7E7EE">Confluent Cloud</text>
+        <rect x="10" y="100" width="140" height="58" rx="8" fill="#1D1D26" stroke="#FFB454" stroke-width="1.5"/><text x="80" y="122" font-size="11" fill="#FFB454">Postgres</text><text x="80" y="138" font-size="9.5" fill="#E7E7EE">customers: history +</text><text x="80" y="150" font-size="9.5" fill="#E7E7EE">incremental updates</text>
+        <rect x="10" y="170" width="140" height="58" rx="8" fill="#1D1D26" stroke="#FFB454" stroke-width="1.5"/><text x="80" y="192" font-size="11" fill="#FFB454">Watchlist files</text><text x="80" y="208" font-size="9.5" fill="#E7E7EE">JSON dropped in a</text><text x="80" y="220" font-size="9.5" fill="#E7E7EE">volume over time</text>
+        <line x1="150" y1="59" x2="172" y2="59" stroke="#9AA0B4" stroke-width="1.5" marker-end="url(#fg1)"/><line x1="150" y1="129" x2="172" y2="129" stroke="#9AA0B4" stroke-width="1.5" marker-end="url(#fg1)"/><line x1="150" y1="199" x2="172" y2="199" stroke="#9AA0B4" stroke-width="1.5" marker-end="url(#fg1)"/>
+        <rect x="174" y="30" width="128" height="58" rx="8" fill="#1D1D26" stroke="#5AC8FF" stroke-width="1.5"/><text x="238" y="52" font-size="11" fill="#5AC8FF">Spark Kafka source</text><text x="238" y="68" font-size="9.5" fill="#E7E7EE">SASL_SSL, offsets in</text><text x="238" y="80" font-size="9.5" fill="#E7E7EE">checkpoint</text>
+        <rect x="174" y="100" width="128" height="58" rx="8" fill="#1D1D26" stroke="#5AC8FF" stroke-width="1.5"/><text x="238" y="122" font-size="11" fill="#5AC8FF">Lakeflow Connect</text><text x="238" y="138" font-size="9.5" fill="#E7E7EE">cursor column,</text><text x="238" y="150" font-size="9.5" fill="#E7E7EE">managed increments</text>
+        <rect x="174" y="170" width="128" height="58" rx="8" fill="#1D1D26" stroke="#5AC8FF" stroke-width="1.5"/><text x="238" y="192" font-size="11" fill="#5AC8FF">Auto Loader</text><text x="238" y="208" font-size="9.5" fill="#E7E7EE">cloudFiles JSON,</text><text x="238" y="220" font-size="9.5" fill="#E7E7EE">rescued data</text>
+        <line x1="302" y1="59" x2="322" y2="100" stroke="#9AA0B4" stroke-width="1.5" marker-end="url(#fg1)"/><line x1="302" y1="129" x2="322" y2="129" stroke="#9AA0B4" stroke-width="1.5" marker-end="url(#fg1)"/><line x1="302" y1="199" x2="322" y2="160" stroke="#9AA0B4" stroke-width="1.5" marker-end="url(#fg1)"/>
+
+        <rect x="324" y="20" width="420" height="220" rx="12" fill="#191921" stroke="#A56BFF" stroke-width="1.4" stroke-dasharray="5 4"/>
+        <text x="534" y="38" font-size="11.5" font-weight="700" fill="#C9A5FF">Lakeflow Declarative Pipelines (streaming tables)</text>
+        <rect x="334" y="48" width="126" height="182" rx="8" fill="#CD7F32"/><text x="397" y="68" font-size="12.5" font-weight="700" fill="#14141C">Bronze</text><text x="397" y="92" font-size="10" fill="#14141C">transactions</text><text x="397" y="105" font-size="9" fill="#14141C">raw value + Kafka meta</text><text x="397" y="128" font-size="10" fill="#14141C">customers</text><text x="397" y="141" font-size="9" fill="#14141C">via Lakeflow Connect</text><text x="397" y="164" font-size="10" fill="#14141C">fraud_watchlist</text><text x="397" y="177" font-size="9" fill="#14141C">files + source path</text>
+        <rect x="468" y="48" width="126" height="182" rx="8" fill="#C0C0C0"/><text x="531" y="68" font-size="12.5" font-weight="700" fill="#14141C">Silver</text><text x="531" y="92" font-size="10" fill="#14141C">transactions</text><text x="531" y="105" font-size="9" fill="#14141C">from_json, expectations</text><text x="531" y="128" font-size="10" fill="#14141C">customers</text><text x="531" y="141" font-size="9" fill="#14141C">typed, limit per card</text><text x="531" y="164" font-size="10" fill="#14141C">fraud_watchlist</text><text x="531" y="177" font-size="9" fill="#14141C">normalized, timestamped</text>
+        <rect x="602" y="48" width="134" height="182" rx="8" fill="#E6B800"/><text x="669" y="68" font-size="12.5" font-weight="700" fill="#14141C">Gold</text><text x="669" y="92" font-size="9.5" fill="#14141C">high_value_alert</text><text x="669" y="104" font-size="8.5" fill="#14141C">stream-static join</text><text x="669" y="126" font-size="9.5" fill="#14141C">fraud_card_alert</text><text x="669" y="138" font-size="8.5" fill="#14141C">stream-stream join</text><text x="669" y="160" font-size="9.5" fill="#14141C">count_by_minute</text><text x="669" y="172" font-size="8.5" fill="#14141C">tumbling window</text><text x="669" y="194" font-size="9.5" fill="#14141C">count_5min_sliding</text><text x="669" y="206" font-size="8.5" fill="#14141C">1-minute slide</text>
+
+        <line x1="744" y1="90" x2="768" y2="70" stroke="#9AA0B4" stroke-width="1.5" marker-end="url(#fg1)"/><line x1="744" y1="170" x2="768" y2="170" stroke="#9AA0B4" stroke-width="1.5" marker-end="url(#fg1)"/>
+        <rect x="770" y="40" width="120" height="66" rx="8" fill="#1D1D26" stroke="#FF6B9D" stroke-width="1.5"/><text x="830" y="62" font-size="11" fill="#FF9DBD">Alert sinks</text><text x="830" y="78" font-size="9.5" fill="#E7E7EE">email per alert,</text><text x="830" y="90" font-size="9.5" fill="#E7E7EE">masked card</text>
+        <rect x="770" y="136" width="120" height="66" rx="8" fill="#1D1D26" stroke="#FF6B9D" stroke-width="1.5"/><text x="830" y="158" font-size="11" fill="#FF9DBD">Dashboard</text><text x="830" y="174" font-size="9.5" fill="#E7E7EE">counters, trends,</text><text x="830" y="186" font-size="9.5" fill="#E7E7EE">alerts by type</text>
+
+        <rect x="10" y="252" width="880" height="28" rx="7" fill="#191921" stroke="#5C78FF" stroke-width="1.3"/><text x="450" y="270" font-size="10.5" fill="#F1F1F1">Watermark 5 min on event time | checkpoints in volumes | availableNow for tests, always-on for production | Unity Catalog governs all tables</text>
+        <rect x="10" y="290" width="880" height="28" rx="7" fill="#191921" stroke="#5AC8FF" stroke-width="1.3"/><text x="450" y="308" font-size="10.5" fill="#F1F1F1">Secrets in a scope (Kafka API key, SMTP app password) | Jobs run the pipeline and refresh the dashboard | idempotent producer (acks=all)</text>
+      </g>
+    </svg>
+    <figcaption>Fig. 11 - Three source types, one declarative pipeline. Kafka feeds the fast path; the reference tables (customers, watchlist) arrive by different mechanisms and enrich it.</figcaption>
+  </figure>
+
+  <h4>The event, and the simulator that produces it</h4>
+  <p>Each Kafka record is a JSON card transaction: transaction id, customer id, card number, merchant id, name and category, amount, currency, transaction type, payment channel, device id, city, country, event timestamp, an international flag and a status. The producer is a small Python service using the Confluent client with reliability settings worth memorizing: <code>acks=all</code>, <code>enable.idempotence=true</code>, retries with backoff, message key = transaction id, graceful shutdown on signals. Its rate (transactions per second) and fraud percentage are configurable, and separate producers emit "normal" traffic and deliberately fraudulent traffic for one specific test card, so you can trigger a watchlist alert on demand.</p>
+  <p>The simulator also runs a <strong>rule-based fraud engine</strong> that scores each transaction (high value 40, impossible travel 50, new device 20, high-risk merchant 25, blacklisted merchant 60, international 25, velocity 45, card testing 30; capped at 100) but <em>removes the score and reason before publishing</em>. That is a good pattern: you keep ground-truth labels aside for evaluating the detector, and the pipeline has to detect fraud from the raw event, as in production.</p>
+
+  <h4>The pipeline, dataset by dataset</h4>
+  <div class="table-wrap"><table>
+    <thead><tr><th>Dataset</th><th>Logic</th><th>Key point</th></tr></thead>
+    <tbody>
+      <tr><td><code>bronze.transactions</code></td><td>Kafka source, <code>value</code> cast to string, Kafka topic/partition/offset/timestamp kept, ingestion time added.</td><td>Lossless; parsing deferred (<a href="#streaming">&sect;12</a>).</td></tr>
+      <tr><td><code>silver.transactions</code></td><td><code>from_json</code> with an explicit schema; expectations drop rows with null transaction, customer, card or merchant id and warn on non-positive amounts; adds Kafka lineage and a silver timestamp.</td><td>Stateless, so a bad batch never poisons state.</td></tr>
+      <tr><td><code>bronze/silver.customers</code></td><td>Lakeflow Connect from Postgres: a historical load, then an incremental load (new rows and updates) driven by an update-timestamp cursor; silver types the columns and carries the customer's email and <code>transaction_limit</code>.</td><td>Slowly changing reference data, a batch source next to a stream.</td></tr>
+      <tr><td><code>bronze/silver.fraud_watchlist</code></td><td>Auto Loader on JSON files dropped over time (a generator writes them and resumes from the last id); silver upper-cases keys and parses the effective timestamp.</td><td>Files-as-a-stream; <code>_rescued_data</code> catches bad records.</td></tr>
+      <tr><td><code>gold.high_value_transactions_alert</code></td><td>Stream-static join of transactions with customers; keeps rows where amount exceeds that customer's limit; builds an alert id.</td><td>Reference join, stateless (<a href="#streaming">&sect;12</a>).</td></tr>
+      <tr><td><code>gold.fraud_card_alert</code></td><td>Stream-stream join of transactions with the watchlist on card number = entity id, both sides watermarked at 5 minutes, then a left join to customers for name and email.</td><td>Correct idea, but see the hardening table for the missing time bound.</td></tr>
+      <tr><td><code>gold.transaction_count_by_minute</code></td><td>Tumbling one-minute window count with a 5-minute watermark.</td><td>Appears after the window closes plus the watermark.</td></tr>
+      <tr><td><code>gold.transaction_count_..._sliding_window</code></td><td>Five-minute window sliding every minute.</td><td>Each event is counted in five windows.</td></tr>
+      <tr><td>Alert notifiers</td><td>A per-batch sink for each alert table sends an HTML email per row (masked card, amount, merchant, location, watchlist reason and required action), with credentials from a secret scope.</td><td>A side effect: see idempotency below.</td></tr>
+    </tbody>
+  </table></div>
+  <p>The dashboard is a set of SQL datasets over silver and gold (counters for alerts today, transactions today, average amount and high-risk customers; trends by hour and by minute; alerts by type and status; top merchants, categories, channels and countries; watchlist risk levels), published and refreshed by a job task. Because windowed gold tables trail by the watermark, "near real time" here means a minute or a few, not seconds.</p>
+
+  <h4>Hardening notes: what an interviewer will probe</h4>
+  <div class="table-wrap"><table>
+    <thead><tr><th>Weak spot</th><th>Why it matters</th><th>Better design</th></tr></thead>
+    <tbody>
+      <tr><td>The watchlist stream-stream join has no event-time range condition</td><td>State for every card and every watchlist entry is retained indefinitely; state and batch time grow without bound.</td><td>Treat the watchlist as reference data: stream-static join to an <code>ACTIVE</code> entries table (add an effective/expiry filter). If a stream-stream join is truly needed, add a time bound so state expires.</td></tr>
+      <tr><td>Email sinks are at-least-once and non-idempotent; they <code>collect()</code> and send row by row inside the batch</td><td>A retry resends emails; one slow SMTP call stalls the stream; a bad address raises per row.</td><td>Write alerts to a Delta outbox with a deterministic alert id; a separate notifier sends, records what was sent and retries with limits; suppress repeat alerts per card per window.</td></tr>
+      <tr><td>Customers read as a static table at each micro-batch</td><td>A transaction that arrives before its customer row exists gets a null email and silently no alert.</td><td>Left join plus a "missing customer" metric and quarantine; reprocess late-arriving dimensions; or make onboarding precede card activation.</td></tr>
+      <tr><td>Full card number stored in gold and silver</td><td>PII and PCI exposure to anyone who can read the tables.</td><td>Tokenize or encrypt the card number in silver, mask for analysts, keep the last four for emails (<a href="#pii">&sect;06</a>).</td></tr>
+      <tr><td>JSON payload with an inferred, unregistered schema</td><td>A producer change silently turns fields into nulls.</td><td>A schema registry with Avro or Protobuf and compatibility rules; contract tests (<a href="#data-management">&sect;07</a>).</td></tr>
+      <tr><td>Malformed messages become null rows</td><td>They are counted by expectations but not kept for repair.</td><td>Route unparseable records to a quarantine table with the raw payload and offsets.</td></tr>
+      <tr><td><code>startingOffsets=earliest</code> with a new checkpoint</td><td>Reprocesses the whole topic and re-alerts on old data.</td><td>Alert only on events newer than a cutoff, or suppress alerts during backfills.</td></tr>
+      <tr><td>Detection is rules on a few fields</td><td>Cannot learn new patterns.</td><td>Keep the pipeline as the feature and alert backbone, and add a model served behind an endpoint for scoring, using the simulator's labels for evaluation (<a href="#agents">&sect;30</a>).</td></tr>
+      <tr><td>Secrets and identities</td><td>A personal token and a personal mailbox in code.</td><td>Service principals, a secret scope with least-privilege ACLs, a transactional email provider.</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>How to Present a Project in an Interview</h3>
+  <p>Tutorial-derived projects are common; what distinguishes a candidate is how they talk about them. Use this structure and keep it to about two minutes before the interviewer digs in:</p>
+  <ol>
+    <li><strong>Problem and stakes (one sentence).</strong> "A card issuer needs fraud alerts within a minute, and today analysts find out the next day."</li>
+    <li><strong>Constraints.</strong> Volume and latency targets, team size, free-tier limits, what you could not change.</li>
+    <li><strong>Architecture in 60 seconds, by lifecycle stage.</strong> Sources, ingestion, layers, serving, then the undercurrents you actually handled (secrets, quality rules, orchestration, monitoring).</li>
+    <li><strong>Two or three decisions with alternatives.</strong> For example: stream-static vs. stream-stream for the watchlist; append-only bronze with parsing in silver; Type 2 history only for the product table; a metric view instead of many aggregated views.</li>
+    <li><strong>The hardest problem and how you solved it.</strong> Growing state, duplicate alerts on retry, a fan-out from a name-based join, a stuck streaming cell.</li>
+    <li><strong>Numbers you measured.</strong> Events per second, end-to-end latency, rows per layer, rules failing and dropping, run time, cost per day.</li>
+    <li><strong>What you would change for production.</strong> Use the hardening tables above: it shows judgment and it is honest about the demo.</li>
+    <li><strong>What is yours.</strong> Say what you extended beyond the tutorial (a time-bounded join, an outbox for alerts, a quarantine table, tests), and offer the repository.</li>
+  </ol>
+  <div class="callout">
+    <strong class="label">A 90-second script (real-time fraud)</strong>
+    "I built a streaming fraud pipeline on Databricks. Card transactions arrive as JSON in Kafka at a few events a second in tests (the simulator rate is configurable); customer limits come from Postgres through Lakeflow Connect and a watchlist arrives as JSON files through Auto Loader. Bronze keeps the raw Kafka value and offsets; silver parses with an explicit schema and applies expectations; gold has two alert tables, one a stream-static join against the customer's limit and one matching cards to the watchlist, plus one-minute and five-minute window counts with a five-minute watermark. Alerts go by email with the card masked, and a dashboard shows volumes and alerts. Two decisions I would defend: parse in silver so a bad producer never breaks ingestion, and treat the watchlist as reference data rather than a second stream, because a stream-stream join without a time bound keeps state forever. For production I would send alerts through an outbox so retries cannot duplicate emails, tokenize the card number, and register the schema."
+  </div>
+  <p><strong>Follow-ups to rehearse:</strong> why <code>availableNow</code> in tests but continuous in production; what happens on restart with a new checkpoint; how you would size the cluster for 10x volume (partitions bound parallelism); how a late transaction is handled; how you prove alerts are not lost or duplicated; where the watermark lag shows up on the dashboard; how you would backfill three days of history without re-alerting.</p>
 
   <h3>A Framework for Any Design Question</h3>
   <p>Do not start with tools. Walk these steps out loud; each one has a place in this guide:</p>
@@ -3839,6 +4328,17 @@ def load_table(table_id: str, run_id: str):
       <li>Right-size with <code>system.compute.node_timeline</code> utilization; fixed size for stable jobs; spot workers for retryable batch; standard-mode serverless for non-urgent jobs.</li>
       <li>Then optimize the code: small files (OPTIMIZE / liquid clustering), skew, unnecessary shuffles, full refreshes that could be incremental, Photon only where it pays.</li>
       <li>Prevent regression: cluster policies, tag enforcement, budget alerts, a cost dashboard reviewed monthly.</li>
+    </ul>
+  </div></details>
+  <details class="qa"><summary>6. Real-time card fraud alerting (Kafka in, alerts within a minute)</summary><div class="ans">
+    <ul>
+      <li><strong>Clarify:</strong> events per second and peak, alert latency (seconds or a minute), who receives alerts and through what channel, false-positive tolerance, retention, PII and PCI scope, whether a model or only rules will score.</li>
+      <li><strong>Ingest:</strong> Kafka topic keyed by card or customer (partition count sets parallelism); idempotent producers; Spark Kafka source into bronze holding the raw value plus topic, partition and offset; parse and validate in silver with expectations and a quarantine for malformed events.</li>
+      <li><strong>Detect:</strong> stream-static joins for reference data (customer limits, active watchlist); windowed aggregations for velocity (transactions per card in a sliding window) with a watermark; stateful logic confined to few gold streams; state monitored.</li>
+      <li><strong>Alert:</strong> write alerts to a Delta outbox with a deterministic id; a notifier delivers, records what was sent, retries, and suppresses repeats per card and window; mask card numbers.</li>
+      <li><strong>Serve:</strong> operations dashboard over silver and gold; optionally a low-latency store for analysts' lookups; score with a served model later.</li>
+      <li><strong>Undercurrents:</strong> secrets in a scope, service principals, tokenized card numbers and row/column controls, freshness and consumer-lag SLOs, an always-on job with restart and alerts, bundles and tests including a replay test, cost of an always-on cluster versus a short trigger.</li>
+      <li><strong>Failure modes:</strong> hot partition, growing state, late or out-of-order events, a producer schema change, duplicate alerts on retry, reprocessing after a checkpoint reset. See Blueprint C's hardening table.</li>
     </ul>
   </div></details>
 </section>
@@ -3925,6 +4425,22 @@ def load_table(table_id: str, run_id: str):
   <details class="qa"><summary>What are the pitfalls of reverse ETL?</summary><div class="ans"><p>Non-idempotent writes after partial failure, flooding the target with unchanged records, API rate limits, missing audit trail, sending more personal data than the destination needs, and unclear ownership of the field's meaning. Use keyed upserts, diff against a sync-state table, throttle and resume, log what was sent. (<a href="#serving">&sect;26</a>)</p></div></details>
   <details class="qa"><summary>Airflow or Databricks Jobs?</summary><div class="ans"><p>Jobs when the workflow lives mostly in Databricks (managed, native repair, For Each, lineage). Airflow when you orchestrate many systems or the company already runs it. A common split: Airflow owns the cross-system schedule and calls a Databricks job as a task; Jobs owns the multi-task logic inside the platform. Either way tasks must be idempotent and backfills routine. (<a href="#orchestration">&sect;19</a>)</p></div></details>
   <details class="qa"><summary>How do you decide between batch and streaming?</summary><div class="ans"><p>Ask what decision depends on the freshness. If minutes-old data changes no decision, run micro-batch or hourly batch, which is cheaper and simpler to operate. Choose continuous streaming only when a latency requirement justifies always-on compute and stateful complexity. Streaming and batch are a continuum on Delta, so start slow and tighten the cadence if the business proves it needs to.</p></div></details>
+
+  <h3>Streaming and Project Deep Dives</h3>
+  <details class="qa"><summary>Explain Kafka to someone who has only used databases.</summary><div class="ans"><p>A durable, append-only log split into partitions and replicated across brokers. Producers append records; consumers read at their own pace using offsets and can rewind within the retention period. Ordering is guaranteed only within a partition; the record key decides the partition. It decouples producers from consumers and gives replay. (<a href="#streaming">&sect;12</a>)</p></div></details>
+  <details class="qa"><summary>How does Spark Structured Streaming know where it stopped in Kafka after a restart?</summary><div class="ans"><p>It stores the consumed offsets per partition, plus a write-ahead log of committed batches, in the checkpoint location, not in Kafka consumer-group commits. <code>startingOffsets</code> only applies when there is no checkpoint; a new checkpoint location with <code>earliest</code> reprocesses the entire topic.</p></div></details>
+  <details class="qa"><summary>Why keep the raw Kafka value in bronze and parse in silver?</summary><div class="ans"><p>Bronze stays lossless and never fails on a schema surprise, so nothing is lost and you can reparse when logic changes. Silver applies an explicit schema, expectations and quarantine. Parsing in bronze couples ingestion to the producer's schema and turns a producer change into a lost-data incident.</p></div></details>
+  <details class="qa"><summary>Stream-static vs. stream-stream joins: when do you use each?</summary><div class="ans"><p>Stream-static when one side is reference data in a table (customer limits, an active watchlist): stateless, cheap, and the static side is re-read each micro-batch, though earlier records are not corrected retroactively. Stream-stream when two event streams must be correlated in time: it keeps state for both sides, so it needs watermarks on both and an event-time range condition so state can expire. A watchlist is usually reference data, so a stream-stream join is often the wrong tool.</p></div></details>
+  <details class="qa"><summary>What is a watermark and what does it cost you?</summary><div class="ans"><p>The maximum lateness tolerated for event-time operations, computed from the maximum event time seen minus the delay. It bounds state and lets windows close. The costs: events later than the watermark are dropped from those aggregations, and in append mode a window's result appears only after the window ends plus the watermark, so dashboards lag by that amount. It is a business decision about acceptable lateness versus freshness.</p></div></details>
+  <details class="qa"><summary>Tumbling vs. sliding vs. session windows?</summary><div class="ans"><p>Tumbling: fixed, non-overlapping (each event in one window). Sliding: fixed size that advances by a smaller slide, so events land in several windows (a 5-minute window sliding every minute counts each event five times). Session: dynamic, closes after an inactivity gap.</p></div></details>
+  <details class="qa"><summary>Stateless vs. stateful streaming, and why does it matter?</summary><div class="ans"><p>Stateless operations (select, filter, parse, stream-static join) need no memory of past batches and restart trivially. Stateful ones (aggregations, deduplication, stream-stream joins) keep state in a store persisted in the checkpoint, grow with keys unless bounded by watermarks, and can force a new checkpoint when their logic changes. Keep ingestion stateless and confine state to a few monitored gold streams.</p></div></details>
+  <details class="qa"><summary>How do you avoid sending duplicate alert emails when a micro-batch is retried?</summary><div class="ans"><p>Delivery to the outside world is at-least-once. Give each alert a deterministic id, write alerts to an outbox table, have a notifier record what it sent (or anti-join against a sent table) before or immediately after sending, and suppress repeats per entity per window. For Delta writes from a batch sink use <code>txnVersion</code> and <code>txnAppId</code> so retried writes are skipped.</p></div></details>
+  <details class="qa"><summary>Availablenow vs. processingTime vs. continuous: how do you choose?</summary><div class="ans"><p>Choose by the freshness requirement. <code>availableNow</code> processes what is there and stops (scheduled incremental loads, tests): cheapest. <code>processingTime</code> runs micro-batches on an interval on an always-on cluster for near-real-time. Continuous mode is experimental sub-second. If minutes are acceptable, scheduled <code>availableNow</code> gives the same code at much lower cost.</p></div></details>
+  <details class="qa"><summary>How do you monitor a streaming job?</summary><div class="ans"><p>Input rate versus processing rate, offset lag (<code>avgOffsetsBehindLatest</code>), batch duration trend, state rows and memory, and the query status. Run it as a job with restart and alerts, and treat consumer lag as the freshness SLI.</p></div></details>
+  <details class="qa"><summary>In the metadata-driven framework, why does a For Each need an inner job?</summary><div class="ans"><p>A For Each task can contain only one task. If the per-table work is a sequence (read parameters, load bronze, merge silver), that sequence is a separate job, and the loop's single task is a Run Job task called once per item with the item passed as a parameter. (<a href="#orchestration">&sect;19</a>)</p></div></details>
+  <details class="qa"><summary>Why pass the master job's run id to every child?</summary><div class="ans"><p>So all audit rows, across sources and layers, share one id: one query shows a whole run, the summary email is built from one id, and a retried task can upsert its own audit row on (run id, table id) instead of duplicating it.</p></div></details>
+  <details class="qa"><summary>Retail project: what is wrong with joining transactions to opportunities on name?</summary><div class="ans"><p>Names are not unique or stable, so repeats fan out into duplicate fact rows and inflate revenue, and typos lose links. Carry the source key through the feed or build a governed mapping table with a uniqueness test, and assert that the fact's row count equals the transaction count. Also design the fact's dimension keys before building gold. (<a href="#architectures">&sect;32</a>)</p></div></details>
+  <details class="qa"><summary>Walk me through a project you built.</summary><div class="ans"><p>State the problem and stakes in one sentence, the constraints, the architecture by lifecycle stage (with the undercurrents you handled), two or three decisions with alternatives, the hardest problem and its fix, the numbers you measured, and what you would change for production. Say clearly what you extended beyond a tutorial. (<a href="#architectures">&sect;32</a>, "How to Present a Project in an Interview")</p></div></details>
 
 </section>
 
@@ -4118,6 +4634,18 @@ WHERE u.usage_metadata.job_run_id = '&lt;run_id&gt;';</code></pre>
       <dt>Architecture decision record (ADR)</dt><dd>A short document recording a decision, its context, the options considered and the consequences.</dd>
       <dt>Strangler pattern</dt><dd>Migrating a legacy system incrementally by routing one domain at a time to its replacement.</dd>
       <dt>RTO / RPO</dt><dd>Recovery time objective (acceptable downtime) and recovery point objective (acceptable data loss).</dd>
+      <dt>Kafka topic / partition / offset</dt><dd>A named stream of records; its ordered, replicated slices (the only unit of ordering); and a record's position in a partition, which Spark stores in its checkpoint.</dd>
+      <dt>Idempotent producer</dt><dd>A Kafka producer setting (<code>enable.idempotence</code>) that prevents duplicate writes caused by retries; used with <code>acks=all</code>.</dd>
+      <dt>Stream-static join</dt><dd>A streaming DataFrame joined to a non-streaming table; stateless, with the static side re-read each micro-batch.</dd>
+      <dt>Stream-stream join</dt><dd>A join of two streams that keeps state for both; needs watermarks and an event-time range condition to bound state.</dd>
+      <dt>Tumbling / sliding / session window</dt><dd>Fixed non-overlapping, fixed overlapping, and inactivity-gap time windows for event-time aggregation.</dd>
+      <dt>Output mode</dt><dd>What a streaming query writes each batch: append (final rows only), update (changed rows), complete (whole result).</dd>
+      <dt>Foreach batch sink</dt><dd>A sink that runs your function on each micro-batch; delivery is at-least-once, so side effects must be idempotent.</dd>
+      <dt>Outbox pattern</dt><dd>Writing intended side effects (alerts, messages) to a table first, with a separate deliverer that records what was sent, so retries cannot duplicate them.</dd>
+      <dt>Cursor column</dt><dd>The source column (such as an update timestamp) a managed connector uses to find changed rows incrementally.</dd>
+      <dt>Run job task / For Each task</dt><dd>A job task that triggers another job, and a task that runs one inner task per list element; combine them to loop over a multi-step sequence.</dd>
+      <dt>Run if condition</dt><dd>The rule for when a task runs relative to upstream outcomes: all success, all done, none failed, at least one failed, and so on.</dd>
+      <dt>Bus matrix</dt><dd>A grid of business processes (facts) against the dimensions each needs, used to design keys and conformed dimensions before building gold.</dd>
     </dl>
   </div>
 </section>
