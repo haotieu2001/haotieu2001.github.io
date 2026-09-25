@@ -130,16 +130,6 @@
   .nav-links a.active{color:#5AC8FF;border-color:#28B9FF55;background:#28B9FF14;}
   :focus-visible{outline:2px solid #5AC8FF;outline-offset:3px;border-radius:6px;}
 
-  details.qa{background:var(--panel);border:1px solid var(--border);border-radius:12px;margin:10px 0;}
-  details.qa>summary{cursor:pointer;padding:12px 18px;font-weight:700;color:#fff;list-style:none;font-size:14.5px;line-height:1.5;}
-  details.qa>summary::-webkit-details-marker{display:none;}
-  details.qa>summary::before{content:"+";color:var(--cyan2);margin-right:10px;font-weight:800;display:inline-block;width:1ch;}
-  details.qa[open]>summary::before{content:"\2212";}
-  details.qa[open]>summary{border-bottom:1px solid var(--border);}
-  details.qa>.ans{padding:14px 18px 6px;}
-  details.qa>.ans p:last-child,details.qa>.ans ul:last-child{margin-bottom:8px;}
-  details.qa>summary:hover{color:var(--cyan2);}
-  #coverage{margin:0 0 44px;}
 </style>
 </head>
 <body>
@@ -246,48 +236,6 @@
   <a href="#architectures"><svg class="ico"><use href="#i-blueprint"/></svg>32 &middot; End-to-End Architectures &amp; System Design</a>
 </div>
 
-<details class="qa reveal" id="coverage">
-  <summary>Study map: which section covers each video in the DataBeli "Databricks All in One" playlist</summary>
-  <div class="ans">
-    <p>Use this to check coverage or to jump from a video you are watching to the written reference.</p>
-    <div class="table-wrap"><table>
-      <thead><tr><th>Video topic</th><th>Where it lives</th></tr></thead>
-      <tbody>
-        <tr><td>Databricks intro, history, founders, open-source projects</td><td><a href="#platform">&sect;02 Platform Overview</a></td></tr>
-        <tr><td>Architecture: accounts, workspaces, Unity Catalog, control and compute planes</td><td><a href="#platform">&sect;02 Platform Overview</a></td></tr>
-        <tr><td>Workspace tour, Free Edition</td><td><a href="#platform">&sect;02 Platform Overview</a></td></tr>
-        <tr><td>Roles and features to learn by experience level</td><td><a href="#platform">&sect;02 Platform Overview</a></td></tr>
-        <tr><td>Notebooks: UI, magic commands, widgets, collaboration</td><td><a href="#notebooks">&sect;04 Notebooks and DBUtils</a></td></tr>
-        <tr><td>%run vs. dbutils.notebook.run</td><td><a href="#notebooks">&sect;04 Notebooks and DBUtils</a></td></tr>
-        <tr><td>Secret scopes</td><td><a href="#notebooks">&sect;04</a>, <a href="#security">&sect;08 Security</a></td></tr>
-        <tr><td>Managing files and folders with DBUtils</td><td><a href="#notebooks">&sect;04 Notebooks and DBUtils</a></td></tr>
-        <tr><td>Jobs: loops, parameters, failure handling, alerts</td><td><a href="#orchestration">&sect;19 Orchestration</a></td></tr>
-        <tr><td>Auto Loader (batch and near real time)</td><td><a href="#autoloader">&sect;10 Auto Loader</a></td></tr>
-        <tr><td>Debugging code in Databricks</td><td><a href="#notebooks">&sect;04 Notebooks and DBUtils</a></td></tr>
-        <tr><td>Clusters: types, use cases, costs</td><td><a href="#compute">&sect;03 Compute</a>, <a href="#cost">&sect;25 Cost</a></td></tr>
-        <tr><td>Unity Catalog</td><td><a href="#uc">&sect;05 Unity Catalog</a></td></tr>
-        <tr><td>Databricks AI Assistant for programmers</td><td><a href="#ai-dev">&sect;29 Genie Code</a></td></tr>
-        <tr><td>Job run cost calculation with SQL</td><td><a href="#monitoring">&sect;23 Monitoring</a></td></tr>
-        <tr><td>Lakeflow Connect and ingestion pipelines</td><td><a href="#ingest-other">&sect;11 Lakeflow Connect</a></td></tr>
-        <tr><td>Lakeflow Declarative Pipelines: SQL, PySpark, data quality, end to end ETL</td><td><a href="#dlt">&sect;16 Declarative Pipelines</a></td></tr>
-        <tr><td>Genie agents (spaces), full demo</td><td><a href="#aibi">&sect;28 AI/BI, Genie, Databricks One</a></td></tr>
-        <tr><td>Dashboard from scratch with AI features</td><td><a href="#aibi">&sect;28 AI/BI, Genie, Databricks One</a></td></tr>
-        <tr><td>Finance domain end-to-end project (metadata-driven)</td><td><a href="#architectures">&sect;32 Blueprint A</a></td></tr>
-        <tr><td>CI/CD with Declarative Automation Bundles</td><td><a href="#dabs">&sect;20 Bundles and CI/CD</a></td></tr>
-        <tr><td>PII masterclass: encryption, masking, tokenization</td><td><a href="#pii">&sect;06 PII</a></td></tr>
-        <tr><td>Metric views: building a semantic layer</td><td><a href="#metric-views">&sect;27 Metric Views</a></td></tr>
-        <tr><td>Genie Code: skills, MCP, jobs, notebooks, dashboards</td><td><a href="#ai-dev">&sect;29 Genie Code</a></td></tr>
-        <tr><td>Retail end-to-end project (Salesforce + Postgres)</td><td><a href="#architectures">&sect;32 Blueprint B</a>, <a href="#ingest-other">&sect;11</a></td></tr>
-        <tr><td>End-to-end Spark Streaming project (Databricks + Kafka + PostgreSQL + real-time dashboard)</td><td><a href="#architectures">&sect;32 Blueprint C</a>, <a href="#streaming">&sect;12 Structured Streaming</a></td></tr>
-        <tr><td>Agentic AI for beginners: end-to-end agent</td><td><a href="#agents">&sect;30 GenAI and Agents</a></td></tr>
-        <tr><td>Data modeling end to end</td><td><a href="#modeling">&sect;17 Data Modeling</a></td></tr>
-        <tr><td>Productivity hacks: shortcuts, command palette</td><td><a href="#notebooks">&sect;04 Notebooks</a>, <a href="#ai-dev">&sect;29 Genie Code</a></td></tr>
-        <tr><td>Genie Ontology</td><td><a href="#aibi">&sect;28 AI/BI, Genie, Databricks One</a></td></tr>
-        <tr><td>How to become a Databricks MVP</td><td>Career and community topic, not technical: intentionally out of scope</td></tr>
-      </tbody>
-    </table></div>
-  </div>
-</details>
 <!-- ============ 01 THE DATA ENGINEERING LIFECYCLE &; THE SIX UNDERCURRENTS ============ -->
 <section class="reveal" id="lifecycle">
   <h2><span class="hico"><svg class="ico"><use href="#i-cycle"/></svg></span><span class="n">01.</span> The Data Engineering Lifecycle &amp; the Six Undercurrents</h2>
