@@ -3591,40 +3591,15 @@ Daily batch aggregation reads ~200 GB      -&gt; a mid-size cluster, tens of min
     </tbody>
   </table></div>
 
-  <h4>The generic loader</h4>
-  <pre><code>def load_table(table_id: str, run_id: str):
-    cfg    = spark.table("banking.metadata.tables").where(F.col("table_id") == table_id).first()
-    params = {r.parameter_name: r.parameter_value for r in
-              spark.table("banking.metadata.table_parameters").where(F.col("table_id") == table_id).collect()}
-    started, status, n, err = datetime.utcnow(), "success", 0, None
-    try:
-        # 1) extract: only new rows for incremental loads
-        src = f"{cfg.source_schema}.{cfg.table_name}"
-        if params["load_strategy"] == "incremental":
-            wm  = spark.table("banking.metadata.table_watermarks").where(F.col("table_id") == table_id).first().last_watermark
-            src = f"(SELECT * FROM {src} WHERE {params['watermark_column']} &gt; '{wm}') q"
-        df = (spark.read.format("jdbc").option("url", jdbc_url).option("dbtable", src)
-                   .option("user", user).option("password", pwd).load())          # credentials from a secret scope
-        n = df.count()
-
-        # 2) land raw in bronze, then upsert (or overwrite) silver
-        df.write.mode("append").saveAsTable(f"banking.bronze.{cfg.table_name}")
-        if params["load_strategy"] == "incremental":
-            cond = " AND ".join(f"t.{k} = s.{k}" for k in params["merge_keys"].split(","))
-            (DeltaTable.forName(spark, f"banking.silver.{cfg.table_name}").alias("t")
-                .merge(df.alias("s"), cond).whenMatchedUpdateAll().whenNotMatchedInsertAll().execute())
-            # 3) advance the watermark ONLY after the write succeeded
-            new_wm = df.agg(F.max(params["watermark_column"])).first()[0]
-            if new_wm is not None:
-                update_watermark(table_id, new_wm)                                # a MERGE into table_watermarks
-        else:
-            df.write.mode("overwrite").saveAsTable(f"banking.silver.{cfg.table_name}")
-    except Exception as e:
-        status, err = "failed", str(e)[:2000]
-        raise
-    finally:
-        write_audit(run_id, table_id, cfg.target_layer, started, status, n, err)  # failures are recorded too</code></pre>
-  <p><strong>Design decisions built in:</strong> the watermark advances only after success (a crash re-reads instead of skipping); silver is a MERGE (a retry does not duplicate); the audit row is written in <code>finally</code>; credentials come from a secret scope; and the function takes a <code>table_id</code>, so a <strong>For Each</strong> task fans out over tables in parallel (<a href="#orchestration">&sect;19</a>).</p>
+  <h4>How the generic loader works</h4>
+  <ol>
+    <li><strong>Read the config:</strong> the table's row in <code>tables</code> and its <code>table_parameters</code>.</li>
+    <li><strong>Extract:</strong> a full load reads the whole source table over JDBC; an incremental load reads only rows whose watermark column is greater than the stored watermark. Credentials come from a secret scope.</li>
+    <li><strong>Land and merge:</strong> append the batch to bronze, then MERGE into silver on the configured keys (incremental) or overwrite silver (full).</li>
+    <li><strong>Advance the watermark, only now:</strong> take the batch's maximum watermark value and MERGE it into <code>table_watermarks</code> after the silver write succeeded.</li>
+    <li><strong>Audit:</strong> write the audit row in a <code>finally</code> step, so failures are recorded too.</li>
+  </ol>
+  <p><strong>Why it holds up:</strong> a crash re-reads instead of skipping, a retry does not duplicate silver, failures are audited, and because everything is parameterized by a <code>table_id</code>, a <strong>For Each</strong> task can fan out over the tables in parallel (<a href="#orchestration">&sect;19</a>).</p>
 
   <h4>How the jobs are wired</h4>
     <figure class="diagram-wrap">
@@ -3827,75 +3802,18 @@ Daily batch aggregation reads ~200 GB      -&gt; a mid-size cluster, tens of min
     <tbody>
       <tr><td><strong>1. Namespace</strong></td><td>One catalog, a schema per layer, a managed volume for stream checkpoints; engineers write bronze and silver, analysts only read gold.</td><td>Catalog, Create catalog; Permissions tab</td></tr>
       <tr><td><strong>2. CDC reference data</strong></td><td>A Lakeflow Connect ingestion pipeline from Azure SQL: one full sync, then only changes. Credentials live in a governed connection object, not in the file.</td><td>Data Ingestion, SQL Server connector</td></tr>
-      <tr><td><strong>3. Stream orders</strong></td><td>Event Hub exposes a Kafka endpoint, so the built-in Kafka source reads it. Bronze keeps the raw JSON string; parsing happens in silver.</td><td>Workspace, Import notebook; Compute</td></tr>
-      <tr><td><strong>4. Silver</strong></td><td>Parse with an explicit schema, drop rows failing expectations, dedupe, and join to the restaurants table so every consumer gets names attached.</td><td>Pipelines, Create ETL pipeline</td></tr>
+      <tr><td><strong>3. Stream orders</strong></td><td>Event Hub exposes a Kafka endpoint, so the built-in Kafka source reads it. Bronze keeps the raw JSON string; parsing happens in silver. The secret comes from a scope, and inside a job the stream uses <code>availableNow</code> (see hardening).</td><td>Workspace, Import notebook; Compute</td></tr>
+      <tr><td><strong>4. Silver</strong></td><td>Parse with an explicit schema, drop rows failing expectations, dedupe, and join to the restaurants table so every consumer gets names attached. <code>expect_or_drop</code> removes failing rows and counts them in the event log; plain <code>expect</code> only flags.</td><td>Pipelines, Create ETL pipeline</td></tr>
       <tr><td><strong>5. Gold</strong></td><td>Daily sales by restaurant, recomputed from silver (a full read, not a stream, because the aggregate needs the whole picture).</td><td>Same pipeline, second source file</td></tr>
       <tr><td><strong>6. Job</strong></td><td>CDC and stream tasks run in parallel; the pipeline waits for both (fan-in); sentiment, then the dashboard refresh follow.</td><td>Workflows, Create job</td></tr>
-      <tr><td><strong>7. Sentiment</strong></td><td>One SQL statement scores each review with a built-in AI function: no model to train or serve.</td><td>SQL Editor</td></tr>
+      <tr><td><strong>7. Sentiment</strong></td><td>One SQL statement scores each review with <code>ai_analyze_sentiment</code> (positive, negative, neutral or mixed): no model to train or serve.</td><td>SQL Editor</td></tr>
       <tr><td><strong>8. Dashboard</strong></td><td>Two datasets over gold (sales trend, sentiment mix) and optionally a Genie space over the same schema. Dashboards are a UI object, so keep the JSON in Git (<a href="#aibi">&sect;28</a>).</td><td>Dashboards, Create dashboard</td></tr>
       <tr><td><strong>9. Verify</strong></td><td>Lineage from both gold tables back to both bronze sources, event-log drop counts per expectation, rows synced per CDC run, weekly <code>OPTIMIZE</code>, periodic grant review.</td><td>Lineage tab; pipeline Event log</td></tr>
     </tbody>
   </table></div>
 
-  <pre><code>-- 1) namespace and grants
-CREATE CATALOG IF NOT EXISTS restaurant_prod;
-CREATE SCHEMA  IF NOT EXISTS restaurant_prod.bronze;   -- likewise silver, gold
-CREATE VOLUME  IF NOT EXISTS restaurant_prod.bronze.landing;
-GRANT USE CATALOG ON CATALOG restaurant_prod TO `data-engineers`;
-GRANT USE SCHEMA, CREATE TABLE, MODIFY, SELECT ON SCHEMA restaurant_prod.bronze TO `data-engineers`;
-GRANT USE SCHEMA, SELECT ON SCHEMA restaurant_prod.gold TO `analysts`;</code></pre>
-  <pre><code># 2) Lakeflow Connect ingestion pipeline (bundle resource)
-resources:
-  pipelines:
-    restaurant_reference_cdc:
-      catalog: restaurant_prod
-      target: bronze
-      ingestion_definition:
-        connection_name: azure_sql_prod_connection          # a Unity Catalog connection, no password here
-        objects:
-          - table: {source_catalog: RestaurantDB, source_schema: dbo, source_table: Restaurants, destination_table: restaurants}
-          - table: {source_catalog: RestaurantDB, source_schema: dbo, source_table: MenuItems,  destination_table: menu_items}</code></pre>
-  <pre><code># 3) Event Hub through the Kafka source
-from pyspark.sql import functions as F
-conn =dbutils.secrets.get("restaurant-scope", "eventhub-connection-string")
-opts = {"kafka.bootstrap.servers": "restaurant-orders-eh.servicebus.windows.net:9093",
-        "kafka.security.protocol": "SASL_SSL", "kafka.sasl.mechanism": "PLAIN",
-        "kafka.sasl.jaas.config": 'kafkashaded.org.apache.kafka.common.security.plain.PlainLoginModule required '
-                                  f'username="$ConnectionString" password="{conn}";',
-        "subscribe": "orders", "startingOffsets": "earliest"}
-(spark.readStream.format("kafka").options(**opts).load()
-    .withColumn("_ingested_at", F.current_timestamp())
-    .withColumn("json_value", F.col("value").cast("string"))
-    .writeStream.option("checkpointLocation", "/Volumes/restaurant_prod/bronze/landing/_checkpoints/orders")
-    .trigger(availableNow=True)                             # drain what is there, then stop (see hardening)
-    .toTable("restaurant_prod.bronze.orders_raw"))</code></pre>
-  <pre><code># 4-5) silver and gold in one declarative pipeline (default schema: silver)
-import dlt
-from pyspark.sql import functions as F
-schema = "order_id STRING, restaurant_id STRING, customer_id STRING, quantity INT, order_amount DOUBLE, order_timestamp TIMESTAMP, review_text STRING"
+  <p>The pipeline code still imports <code>dlt</code> (the product was Delta Live Tables before it became Lakeflow Declarative Pipelines, <a href="#dlt">&sect;16</a>). The job is the fan-out and fan-in graph from <a href="#orchestration">&sect;19</a>: <code>cdc_ingest_reference_data</code> and <code>stream_ingest_orders</code> run in parallel, <code>run_lakeflow_pipeline</code> depends on both, then <code>sentiment_analysis</code> (a SQL task), then <code>refresh_dashboard</code>.</p>
 
-@dlt.table(name="orders_clean")
-@dlt.expect_or_drop("valid_quantity", "quantity &gt; 0")
-@dlt.expect_or_drop("valid_amount", "order_amount &gt; 0")
-@dlt.expect("has_restaurant_id", "restaurant_id IS NOT NULL")     # flag, keep the row
-def orders_clean():
-    orders = (dlt.read_stream("restaurant_prod.bronze.orders_raw")
-                 .select(F.from_json("json_value", schema).alias("o")).select("o.*")
-                 .dropDuplicates(["order_id"]))
-    return orders.join(dlt.read("restaurant_prod.bronze.restaurants"), "restaurant_id", "left")
-
-@dlt.table(name="daily_sales_by_restaurant")
-def daily_sales_by_restaurant():
-    return (dlt.read("restaurant_prod.silver.orders_clean")
-               .groupBy("restaurant_id", "restaurant_name", F.to_date("order_timestamp").alias("sales_date"))
-               .agg(F.sum("order_amount").alias("total_sales"), F.sum("quantity").alias("total_units"),
-                    F.countDistinct("customer_id").alias("unique_customers")))</code></pre>
-  <pre><code>-- 7) sentiment scoring: positive, negative, neutral or mixed, no model to manage
-CREATE OR REPLACE TABLE restaurant_prod.gold.review_sentiment AS
-SELECT order_id, restaurant_id, review_text, ai_analyze_sentiment(review_text) AS sentiment
-FROM restaurant_prod.silver.orders_clean
-WHERE review_text IS NOT NULL;</code></pre>
-  <p>The Python library still says <code>dlt</code> (the product was Delta Live Tables before it became Lakeflow Declarative Pipelines, <a href="#dlt">&sect;16</a>). <code>expect_or_drop</code> removes failing rows and counts them in the event log; plain <code>expect</code> only flags. The job is the fan-out and fan-in graph from <a href="#orchestration">&sect;19</a>: <code>cdc_ingest_reference_data</code> and <code>stream_ingest_orders</code> run in parallel, <code>run_lakeflow_pipeline</code> depends on both, then <code>sentiment_analysis</code> (a SQL task), then <code>refresh_dashboard</code>.</p>
 
   <h4>Harden before production</h4>
   <div class="table-wrap"><table>
