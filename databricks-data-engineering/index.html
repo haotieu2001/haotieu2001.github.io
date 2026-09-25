@@ -189,8 +189,8 @@
 <header class="hero">
   <div class="kicker">Databricks &middot; Data Engineering Deep Dive</div>
   <h1>Databricks for Data Engineers</h1>
-  <p class="dek">One reference for the whole Databricks data-engineering job, in interview-ready depth. It is organized around the <strong>data engineering lifecycle</strong> (generation, ingestion, storage, transformation, serving) and the <strong>six undercurrents</strong> (security, data management, DataOps, data architecture, orchestration, software engineering), and covers the <strong>platform</strong> and compute, <strong>notebooks and DBUtils</strong>, <strong>Unity Catalog</strong> and <strong>PII</strong>, <strong>Auto Loader</strong>, <strong>Lakeflow Connect</strong>, <strong>Structured Streaming</strong>, <strong>Delta Lake</strong>, <strong>declarative pipelines</strong>, <strong>data modeling</strong>, <strong>Jobs</strong>, <strong>Declarative Automation Bundles</strong>, monitoring and cost, then <strong>metric views</strong>, <strong>AI/BI and Genie</strong>, <strong>Genie Code</strong> and <strong>agentic AI</strong>. It closes with the reference architecture, its principles and patterns, and three end-to-end blueprints, with runnable PySpark and SQL throughout.</p>
-  <div class="byline">~2 hr 45 min read &middot; reference &amp; interview prep &middot; heavy on runnable code</div>
+  <p class="dek">One reference for the whole Databricks data-engineering job, in interview-ready depth. It is organized around the <strong>data engineering lifecycle</strong> (generation, ingestion, storage, transformation, serving) and the <strong>six undercurrents</strong> (security, data management, DataOps, data architecture, orchestration, software engineering), and covers the <strong>platform</strong> and compute, <strong>notebooks and DBUtils</strong>, <strong>Unity Catalog</strong> and <strong>PII</strong>, <strong>Auto Loader</strong>, <strong>Lakeflow Connect</strong>, <strong>Structured Streaming</strong>, <strong>Delta Lake</strong>, <strong>declarative pipelines</strong>, <strong>data modeling</strong>, <strong>Jobs</strong>, <strong>Declarative Automation Bundles</strong>, monitoring and cost, then <strong>metric views</strong>, <strong>AI/BI and Genie</strong>, <strong>Genie Code</strong> and <strong>agentic AI</strong>. It closes with the reference architecture, its principles and patterns, and four end-to-end blueprints, with runnable PySpark and SQL throughout.</p>
+  <div class="byline">~2 hr 55 min read &middot; reference &amp; interview prep &middot; heavy on runnable code</div>
   <div class="stack reveal">
     <span class="chip"><svg class="ico"><use href="#i-cycle"/></svg> Lifecycle &amp; Undercurrents</span>
     <span class="chip"><svg class="ico"><use href="#i-database"/></svg> Delta Lake</span>
@@ -206,7 +206,7 @@
 
 <div class="callout def reveal" id="scope">
   <strong class="label">How this guide fits with the rest of the set</strong>
-  This is the data-engineer-focused leg of a set. <a href="../databricks/">Databricks: Lakehouse Concepts &amp; an End-to-End Project</a> gives the broad platform tour and a worked project. <a href="../spark-essentials/">Apache Spark for Data Engineers</a> covers the execution engine underneath everything. <a href="../data-modeling/">Data Modeling for Data Engineers</a> covers the modeling theory that &sect;17 applies to Delta. For the same system-design framework on AWS see <a href="../aws-core-services/">Core AWS Services for Data Engineers</a>. Start with &sect;01, which maps the data engineering lifecycle and the six undercurrents onto Databricks with a coverage scorecard, then use the <a href="#coverage">study map</a> below the contents to see where each playlist topic lives.
+  This is the data-engineer-focused leg of a set. The short <a href="../databricks/">Databricks: Lakehouse Concepts</a> overview is the gentler platform tour; its restaurant project, Lakebase, Databricks Apps, sharing and MLflow material now live in &sect;32 (Blueprint D), &sect;26 and &sect;30 here.<a href="../spark-essentials/">Apache Spark for Data Engineers</a> covers the execution engine underneath everything. <a href="../data-modeling/">Data Modeling for Data Engineers</a> covers the modeling theory that &sect;17 applies to Delta. For the same system-design framework on AWS see <a href="../aws-core-services/">Core AWS Services for Data Engineers</a>. Start with &sect;01, which maps the data engineering lifecycle and the six undercurrents onto Databricks with a coverage scorecard, then use the <a href="#coverage">study map</a> below the contents to see where each playlist topic lives.
 </div>
 
 <div class="toc reveal">
@@ -241,7 +241,7 @@
   <a href="#dataops"><svg class="ico"><use href="#i-pulse"/></svg>24 &middot; DataOps: SLOs &amp; Incident Response</a>
   <a href="#cost"><svg class="ico"><use href="#i-scale"/></svg>25 &middot; Cost Optimization</a>
   <span class="toc-grp">Part V &middot; Serving, analytics &amp; AI</span>
-  <a href="#serving"><svg class="ico"><use href="#i-send"/></svg>26 &middot; Serving Data: BI, ML, Reverse ETL &amp; Sharing</a>
+  <a href="#serving"><svg class="ico"><use href="#i-send"/></svg>26 &middot; Serving Data: BI, ML, Apps, Reverse ETL &amp; Sharing</a>
   <a href="#metric-views"><svg class="ico"><use href="#i-cube"/></svg>27 &middot; Metric Views &amp; the Semantic Layer</a>
   <a href="#aibi"><svg class="ico"><use href="#i-chart"/></svg>28 &middot; AI/BI Dashboards, Genie &amp; Databricks One</a>
   <a href="#ai-dev"><svg class="ico"><use href="#i-spark"/></svg>29 &middot; AI-Assisted Development: Genie Code</a>
@@ -3026,7 +3026,7 @@ ORDER BY avg_cpu_pct;</code></pre>
 
 <!-- ============ 26 SERVING DATA BI ML REVERSE ETL &; SHARING ============ -->
 <section class="reveal" id="serving">
-  <h2><span class="hico"><svg class="ico"><use href="#i-send"/></svg></span><span class="n">26.</span> Serving Data: BI, ML, Reverse ETL &amp; Sharing</h2>
+  <h2><span class="hico"><svg class="ico"><use href="#i-send"/></svg></span><span class="n">26.</span> Serving Data: BI, ML, Apps, Reverse ETL &amp; Sharing</h2>
   <p class="lede">Serving is the last lifecycle stage and the one the business sees. Perfect bronze and silver layers still fail here if the numbers are slow, untrusted or unreachable by the systems that need them. Pick the mechanism from the consumer's need and latency.</p>
 
   <div class="table-wrap"><table>
@@ -3054,6 +3054,65 @@ ORDER BY avg_cpu_pct;</code></pre>
         crm_client.upsert(external_id=row.account_id, fields=row.payload)            # idempotent upsert by key
     # record success ONLY after the API accepted the data
     changed.select("account_id", "payload_hash").write.mode("append").saveAsTable("prod.ops.crm_sync_state_updates")</code></pre>
+
+  <h3>Operational serving: Lakebase and Databricks Apps</h3>
+  <p>Spark, Delta and SQL warehouses are built to scan and aggregate history (OLAP). None suits an application that reads or writes one row in milliseconds, thousands of times a second (OLTP). <strong>Lakebase</strong> is a managed, Postgres-compatible database inside the platform for exactly that pattern, so you do not stand up a separate database service.</p>
+  <figure class="diagram-wrap">
+    <svg viewBox="0 0 900 200" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="A gold Delta table syncs into Lakebase and Lakebase changes are captured back to Delta; Lakebase serves a Databricks App or AI agent; an instant copy-on-write branch hangs off Lakebase for dev and test">
+      <defs><marker id="lb1" markerWidth="9" markerHeight="9" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="#9AA0B4"/></marker></defs>
+      <g font-family="sans-serif" text-anchor="middle">
+        <rect x="30" y="50" width="170" height="60" rx="10" fill="#1D1D26" stroke="#5AC8FF" stroke-width="1.4"/><text x="115" y="76" font-size="12" font-weight="700" fill="#F1F1F1">Gold Delta table</text><text x="115" y="94" font-size="10.5" fill="#E7E7EE">analytics, scans</text>
+        <line x1="200" y1="72" x2="308" y2="72" stroke="#9AA0B4" stroke-width="1.6" marker-end="url(#lb1)"/><text x="254" y="64" font-size="10.5" fill="#E7E7EE">sync</text>
+        <line x1="308" y1="94" x2="200" y2="94" stroke="#9AA0B4" stroke-width="1.6" marker-end="url(#lb1)"/><text x="254" y="112" font-size="10.5" fill="#E7E7EE">capture changes</text>
+        <rect x="310" y="40" width="200" height="80" rx="10" fill="#1D1D26" stroke="#FFB454" stroke-width="1.6"/><text x="410" y="72" font-size="12.5" font-weight="700" fill="#F1F1F1">Lakebase</text><text x="410" y="90" font-size="10.5" fill="#E7E7EE">Postgres, autoscaled</text><text x="410" y="106" font-size="10.5" fill="#E7E7EE">governed by Unity Catalog</text>
+        <line x1="510" y1="80" x2="618" y2="80" stroke="#9AA0B4" stroke-width="1.6" marker-end="url(#lb1)"/><text x="564" y="72" font-size="10.5" fill="#E7E7EE">row reads/writes</text>
+        <rect x="620" y="50" width="250" height="60" rx="10" fill="#1D1D26" stroke="#FF6B9D" stroke-width="1.4"/><text x="745" y="76" font-size="12" font-weight="700" fill="#F1F1F1">Databricks App or AI agent</text><text x="745" y="94" font-size="10.5" fill="#E7E7EE">milliseconds, per-row</text>
+        <line x1="410" y1="120" x2="410" y2="148" stroke="#9AA0B4" stroke-width="1.4" stroke-dasharray="3 3" marker-end="url(#lb1)"/>
+        <rect x="310" y="150" width="200" height="40" rx="9" fill="#191921" stroke="#9AA0B4" stroke-width="1.2" stroke-dasharray="4 3"/><text x="410" y="174" font-size="10.5" fill="#E7E7EE">instant dev branch, copy-on-write</text>
+      </g>
+    </svg>
+    <figcaption>Fig. 6 - Lakebase sits between the lakehouse and a low-latency consumer, syncing both ways, with instant branching for dev and test.</figcaption>
+  </figure>
+  <div class="table-wrap"><table>
+    <thead><tr><th>Capability</th><th>What it gives you</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Unity Catalog governance</strong></td><td>The same permissions model and audit trail as Delta tables; no second security system.</td></tr>
+      <tr><td><strong>Two-way sync</strong></td><td>Sync a gold Delta table into Lakebase for low-latency serving, and capture Lakebase changes back to Delta for analytics and audit.</td></tr>
+      <tr><td><strong>Branching</strong></td><td>Copy-on-write copies of a database in seconds; unchanged data is shared with the parent, so dev and test branches are cheap.</td></tr>
+      <tr><td><strong>Autoscaling</strong></td><td>Compute follows load within limits you set and scales to zero when idle.</td></tr>
+      <tr><td><strong>pgvector</strong></td><td>Similarity search next to transactional data, so an agent's retrieval and its reads and writes hit one database.</td></tr>
+    </tbody>
+  </table></div>
+  <p>Typical uses: the backend of a Databricks App, an online feature store, an agent's conversation and tool-call state, and small hot summary tables synced from gold without loading the SQL warehouse. It is <em>managed</em> Postgres, not unrestricted Postgres: no host access or superuser (a <code>databricks_superuser</code> role covers routine administration), and native logical replication in or out is not available, so design around those limits.</p>
+  <p><strong>Databricks Apps</strong> hosts the front end. An app is a folder of source plus an <code>app.yaml</code>, deployed from the UI, the CLI or a Git repository, on serverless compute. It inherits Databricks OAuth and the viewer's identity, so queries against Unity Catalog and SQL warehouses respect the same permissions as everywhere else. Python (Streamlit, Dash, Gradio, Flask) and Node.js are both supported, and a growing share of apps are chat front ends for agents.</p>
+  <pre><code># app.yaml
+command: ["streamlit", "run", "app.py"]
+
+# deploy once the source is synced to the workspace
+databricks apps deploy churn-dashboard --source-code-path ./churn_app
+
+# app.py - query a governed gold table with the app's own credentials
+import os, streamlit as st
+from databricks import sql
+from databricks.sdk.core import Config
+
+cfg = Config()                                              # picks up the app's injected identity
+with sql.connect(server_hostname=cfg.host,
+                 http_path=os.getenv("DATABRICKS_WAREHOUSE_HTTP_PATH"),
+                 credentials_provider=lambda: cfg.authenticate) as conn, conn.cursor() as cur:
+    cur.execute("SELECT restaurant_id, revenue FROM restaurant_prod.gold.daily_sales_by_restaurant")
+    st.bar_chart(cur.fetchall_arrow().to_pandas(), x="restaurant_id", y="revenue")</code></pre>
+
+  <h3>Sharing across organizations</h3>
+  <p>Three points on one spectrum, all governed by Unity Catalog rather than a separate security system:</p>
+  <div class="table-wrap"><table>
+    <thead><tr><th>Mechanism</th><th>What it does</th><th>Use when</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Delta Sharing</strong></td><td>An open protocol: a provider creates a <code>SHARE</code> of tables and adds recipients; a recipient reads live data through Unity Catalog or an open client (pandas, Spark, Power BI). The recipient's compute runs the query, and nothing is copied or exported.</td><td>"Let this other party read my table."</td></tr>
+      <tr><td><strong>Marketplace</strong></td><td>A public discovery layer over Delta Sharing for datasets, notebooks and models, so a recipient needs no prior relationship with the provider.</td><td>Publishing data for anyone to find and request.</td></tr>
+      <tr><td><strong>Clean Rooms</strong></td><td>A governed multi-party environment where each side brings its own data and only pre-approved queries run; only aggregated results leave, never either party's rows.</td><td>Joint analysis where neither side may see the other's records (ad measurement, cross-institution healthcare or finance).</td></tr>
+    </tbody>
+  </table></div>
 
   <h3>Making served data trustworthy</h3>
   <ul>
@@ -3110,7 +3169,7 @@ ORDER BY avg_cpu_pct;</code></pre>
         <rect x="680" y="184" width="200" height="36" rx="8" fill="#1D1D26" stroke="#FF6B9D" stroke-width="1.3"/><text x="780" y="207" font-size="11.5" fill="#F1F1F1">Alerts and BI tools</text>
       </g>
     </svg>
-    <figcaption>Fig. 6 - The semantic layer sits after gold. Every consumer asks the same object for the same definitions.</figcaption>
+    <figcaption>Fig. 7 - The semantic layer sits after gold. Every consumer asks the same object for the same definitions.</figcaption>
   </figure>
 
   <h3>Anatomy of a metric view</h3>
@@ -3345,7 +3404,7 @@ description: Calculates the dollar cost and DBUs of a Databricks job run from it
         <text x="450" y="346" font-size="11" fill="#F1F1F1">PDFs in a volume: parse, chunk, Delta table (CDF on), Vector Search index  |  CSV / OLTP: Delta tables, UC functions</text>
       </g>
     </svg>
-    <figcaption>Fig. 7 - The agent is the small box in the middle. Everything around it (documents, tables, freshness, permissions, cost, tracing) is data-platform work.</figcaption>
+    <figcaption>Fig. 8 - The agent is the small box in the middle. Everything around it (documents, tables, freshness, permissions, cost, tracing) is data-platform work.</figcaption>
   </figure>
   <p><strong>Read it left to right.</strong> The user chats in a Databricks App, which calls the agent on a Model Serving endpoint. The agent plans, calls tools (Vector Search for documents, UC functions for tables, MCP servers for actions) and asks the foundation model to reason and answer; MLflow traces every call. The bottom band is the data engineering part that keeps the knowledge base correct and fresh.</p>
 
@@ -3370,6 +3429,27 @@ SELECT ticket_id,
        ai_mask(ticket_text, ARRAY('person', 'email', 'phone'))             AS redacted_text
 FROM support.silver.tickets;</code></pre>
   <p>AI Functions run per row, so cost is rows x tokens: test on a sample, cache results in a Delta table, run them in a pipeline or job (not a live dashboard query) and handle failures per row. <code>ai_mask</code> fits the PII stage of <a href="#pii">&sect;06</a>: redact free text before it reaches an index or a model.</p>
+
+  <h3>Pick the lightest AI path that works</h3>
+  <div class="table-wrap"><table>
+    <thead><tr><th>Path</th><th>Use when</th><th>Example</th></tr></thead>
+    <tbody>
+      <tr><td><strong>AI Function</strong></td><td>The task is generic and a foundation model already does it: nothing to train or maintain.</td><td><code>ai_analyze_sentiment(review_text)</code> in one line of SQL.</td></tr>
+      <tr><td><strong>MLflow custom model</strong></td><td>The task is specific to your business and a general model cannot do it well enough.</td><td>Forecasting your own demand pattern from your history.</td></tr>
+      <tr><td><strong>Agent Bricks</strong></td><td>You need consistent quality and cost control at volume: it generates synthetic evaluation data and benchmarks, then tunes the agent against them.</td><td>Information extraction, a knowledge assistant, a multi-agent supervisor (Genie spaces and MCP tools can be its tools).</td></tr>
+      <tr><td><strong>Custom agent framework</strong></td><td>A requirement genuinely exceeds the packaged products.</td><td>Bespoke orchestration; existing LangGraph or similar code deployed on Databricks Apps.</td></tr>
+    </tbody>
+  </table></div>
+  <p>Training your own model uses <strong>MLflow</strong>: tracking logs each run's parameters and metrics so experiments are comparable, the model registry versions the model in Unity Catalog (addressed like a table, <code>catalog.schema.name</code>), and promoting a version to serve traffic is an alias change or one API call, not a redeploy.</p>
+  <pre><code>import mlflow
+mlflow.set_registry_uri("databricks-uc")                      # register models in Unity Catalog
+
+with mlflow.start_run():
+    model = train_model(X_train, y_train)                     # any scikit-learn, XGBoost or PyTorch model
+    mlflow.log_param("max_depth", 6)
+    mlflow.log_metric("accuracy", model.score(X_test, y_test))
+    mlflow.sklearn.log_model(model, artifact_path="model",
+                             registered_model_name="restaurant_prod.ml.demand_forecaster")</code></pre>
 
   <h3>Building the knowledge base (where the DE work is)</h3>
   <ol>
@@ -3483,7 +3563,7 @@ GRANT EXECUTE ON FUNCTION agentic.tools.get_customer_returns TO `support-agent-s
         <rect x="745" y="282" width="136" height="54" rx="9" fill="#1D1D26" stroke="#5C78FF" stroke-width="1.3"/><text x="813" y="305" font-size="10.5" font-weight="700" fill="#F1F1F1">Software engineering</text><text x="813" y="322" font-size="10" fill="#E7E7EE">bundles, tests, IaC</text>
       </g>
     </svg>
-    <figcaption>Fig. 8 - The lifecycle runs left to right (generate, ingest, store and transform, serve); the six undercurrents run underneath all of it.</figcaption>
+    <figcaption>Fig. 9 - The lifecycle runs left to right (generate, ingest, store and transform, serve); the six undercurrents run underneath all of it.</figcaption>
   </figure>
   <ol>
     <li><strong>Generate and ingest:</strong> pick the mechanism per source, not one tool for everything: managed CDC for databases and SaaS, Auto Loader for files, the Kafka source for streams (<a href="#generation">&sect;09</a> to <a href="#ingest-other">&sect;11</a>).</li>
@@ -3548,7 +3628,7 @@ GRANT EXECUTE ON FUNCTION agentic.tools.get_customer_returns TO `support-agent-s
         <text x="675" y="216" font-size="10.5" fill="#E7E7EE">backfill = the same code, replayed from bronze</text>
       </g>
     </svg>
-    <figcaption>Fig. 9 - Delta tables serve batch and streaming reads and writes, so one incremental code path gives most of Kappa's benefit while keeping batch reprocessing.</figcaption>
+    <figcaption>Fig. 10 - Delta tables serve batch and streaming reads and writes, so one incremental code path gives most of Kappa's benefit while keeping batch reprocessing.</figcaption>
   </figure>
   <ul>
     <li><strong>Lambda vs. Kappa on Databricks:</strong> choose lambda-style separation only when the fast path has a genuinely different definition of correctness, for example an approximate real-time count that a nightly job later corrects.</li>
@@ -3603,17 +3683,17 @@ Daily batch aggregation reads ~200 GB      -&gt; a mid-size cluster, tens of min
 <!-- ============ 32 END-TO-END ARCHITECTURES &; SYSTEM DESIGN ============ -->
 <section class="reveal" id="architectures">
   <h2><span class="hico"><svg class="ico"><use href="#i-blueprint"/></svg></span><span class="n">32.</span> End-to-End Architectures &amp; System Design</h2>
-  <p class="lede">Three complete reference builds put the pieces together: a metadata-driven batch platform, a Lakeflow-native retail platform and a real-time Kafka fraud stream. Each shows the architecture, how data flows through it, and what to harden before production. The section ends with a repeatable design framework and a short disaster-recovery primer.</p>
+  <p class="lede">Four complete reference builds put the pieces together: a metadata-driven batch platform, a Lakeflow-native retail platform, a real-time Kafka fraud stream, and a streaming-plus-CDC restaurant platform with AI sentiment. Each shows the architecture, how data flows through it, and what to harden before production. The section ends with a repeatable design framework and a short disaster-recovery primer.</p>
 
   <div class="table-wrap"><table>
-    <thead><tr><th></th><th>A: metadata-driven batch</th><th>B: Lakeflow-native</th><th>C: real-time streaming</th></tr></thead>
+    <thead><tr><th></th><th>A: metadata-driven batch</th><th>B: Lakeflow-native</th><th>C: real-time streaming</th><th>D: streaming + CDC + AI</th></tr></thead>
     <tbody>
-      <tr><td><strong>Freshness</strong></td><td>Daily or hourly</td><td>Daily or hourly, managed increments</td><td>Seconds to a minute</td></tr>
-      <tr><td><strong>Ingestion</strong></td><td>Custom JDBC + Auto Loader</td><td>Lakeflow Connect + Auto Loader</td><td>Kafka source + Lakeflow Connect + Auto Loader</td></tr>
-      <tr><td><strong>Transformation</strong></td><td>Notebooks, MERGE, custom audit</td><td>Declarative pipelines with expectations</td><td>Declarative streaming tables, stream joins, windows</td></tr>
-      <tr><td><strong>Best when</strong></td><td>Hundreds of tables, unusual sources, full control</td><td>Supported sources, a few entities, small team</td><td>A decision depends on data that is minutes old</td></tr>
-      <tr><td><strong>Main risk</strong></td><td>You maintain the framework; watermark and duplicate edge cases</td><td>Connector coverage and cost</td><td>State growth, non-idempotent side effects, always-on cost</td></tr>
-      <tr><td><strong>Cost shape</strong></td><td>Pay per run</td><td>Pay per run and per connector</td><td>Always-on compute (or short triggers)</td></tr>
+      <tr><td><strong>Freshness</strong></td><td>Daily or hourly</td><td>Daily or hourly, managed increments</td><td>Seconds to a minute</td><td>Daily; the stream is drained each run</td></tr>
+      <tr><td><strong>Ingestion</strong></td><td>Custom JDBC + Auto Loader</td><td>Lakeflow Connect + Auto Loader</td><td>Kafka source + Lakeflow Connect + Auto Loader</td><td>Kafka source (Event Hub) + Lakeflow Connect CDC</td></tr>
+      <tr><td><strong>Transformation</strong></td><td>Notebooks, MERGE, custom audit</td><td>Declarative pipelines with expectations</td><td>Declarative streaming tables, stream joins, windows</td><td>Declarative pipeline, stream-static join, AI function</td></tr>
+      <tr><td><strong>Best when</strong></td><td>Hundreds of tables, unusual sources, full control</td><td>Supported sources, a few entities, small team</td><td>A decision depends on data that is minutes old</td><td>Mixed streaming and reference-data sources feeding one dashboard</td></tr>
+      <tr><td><strong>Main risk</strong></td><td>You maintain the framework; watermark and duplicate edge cases</td><td>Connector coverage and cost</td><td>State growth, non-idempotent side effects, always-on cost</td><td>Stream trigger inside a job, unbounded dedupe state, AI cost growth</td></tr>
+      <tr><td><strong>Cost shape</strong></td><td>Pay per run</td><td>Pay per run and per connector</td><td>Always-on compute (or short triggers)</td><td>Pay per run plus AI Function tokens</td></tr>
     </tbody>
   </table></div>
 
@@ -3660,7 +3740,7 @@ Daily batch aggregation reads ~200 GB      -&gt; a mid-size cluster, tens of min
         <text x="800" y="282" font-size="11.5" font-weight="700" fill="#F1F1F1">Email summary</text><text x="800" y="300" font-size="10.5" fill="#E7E7EE">built from audit_log</text>
       </g>
     </svg>
-    <figcaption>Fig. 10 - The medallion layers do the data work; the four metadata tables make the framework reusable and observable.</figcaption>
+    <figcaption>Fig. 11 - The medallion layers do the data work; the four metadata tables make the framework reusable and observable.</figcaption>
   </figure>
   <p><strong>How it works.</strong> Jobs read the metadata tables to decide what to load; a generic loader lands each table in bronze (append-only), merges or overwrites it into silver, rebuilds gold for analytics, and writes an audit row per table per run. The email summary and dashboards read the audit table.</p>
   <div class="table-wrap"><table>
@@ -3740,7 +3820,7 @@ Daily batch aggregation reads ~200 GB      -&gt; a mid-size cluster, tens of min
         <text x="450" y="292" font-size="10.5" fill="#F1F1F1">tables | table_parameters | table_watermarks | pipeline_runs (audit, keyed by run id + table id)</text>
       </g>
     </svg>
-    <figcaption>Fig. 11 - A generic notebook per stage plus jobs that fan out over a metadata list. The same jobs run for SQL Server, blob files and (with a different driver notebook) the gold layer.</figcaption>
+    <figcaption>Fig. 12 - A generic notebook per stage plus jobs that fan out over a metadata list. The same jobs run for SQL Server, blob files and (with a different driver notebook) the gold layer.</figcaption>
   </figure>
   <ul>
     <li><strong>For Each wraps exactly one task,</strong> so the loop body is an inner job (read parameters, source to bronze, bronze to silver) called once per table with <code>{{input}}</code>.</li>
@@ -3793,7 +3873,7 @@ Daily batch aggregation reads ~200 GB      -&gt; a mid-size cluster, tens of min
         <text x="450" y="266" font-size="11.5" fill="#F1F1F1">One daily Databricks Job orchestrates ingest, pipeline, dashboard refresh  |  Unity Catalog governs everything  |  Genie Code accelerates build</text>
       </g>
     </svg>
-    <figcaption>Fig. 12 - The Lakeflow-native alternative to Blueprint A: less custom code, more managed services, semantic layer for consumption.</figcaption>
+    <figcaption>Fig. 13 - The Lakeflow-native alternative to Blueprint A: less custom code, more managed services, semantic layer for consumption.</figcaption>
   </figure>
   <div class="table-wrap"><table>
     <thead><tr><th>Layer</th><th>What was built</th><th>Design point</th></tr></thead>
@@ -3841,7 +3921,7 @@ Daily batch aggregation reads ~200 GB      -&gt; a mid-size cluster, tens of min
         <rect x="10" y="290" width="880" height="28" rx="7" fill="#191921" stroke="#5AC8FF" stroke-width="1.3"/><text x="450" y="308" font-size="10.5" fill="#F1F1F1">Secrets in a scope (Kafka API key, SMTP app password) | Jobs run the pipeline and refresh the dashboard | idempotent producer (acks=all)</text>
       </g>
     </svg>
-    <figcaption>Fig. 13 - Three source types, one declarative pipeline. Kafka feeds the fast path; the reference tables (customers, watchlist) arrive by different mechanisms and enrich it.</figcaption>
+    <figcaption>Fig. 14 - Three source types, one declarative pipeline. Kafka feeds the fast path; the reference tables (customers, watchlist) arrive by different mechanisms and enrich it.</figcaption>
   </figure>
   <div class="table-wrap"><table>
     <thead><tr><th>Dataset</th><th>Logic</th></tr></thead>
@@ -3867,6 +3947,127 @@ Daily batch aggregation reads ~200 GB      -&gt; a mid-size cluster, tens of min
       <tr><td>The full card number sits in silver and gold.</td><td>Tokenize or encrypt in silver, mask for analysts, keep the last four for emails (<a href="#pii">&sect;06</a>).</td></tr>
       <tr><td>An unregistered JSON schema; malformed messages become null rows.</td><td>A schema registry (Avro or Protobuf) with compatibility rules; route unparseable records to a quarantine table with raw payload and offsets.</td></tr>
       <tr><td><code>startingOffsets=earliest</code> with a new checkpoint reprocesses the whole topic and re-alerts.</td><td>Alert only on events newer than a cutoff, or suppress alerts during backfills.</td></tr>
+    </tbody>
+  </table></div>
+
+  <h3>Blueprint D: Streaming orders and CDC reference data with AI sentiment (restaurant analytics)</h3>
+  <p><strong>Problem.</strong> A restaurant group has live order events on Azure Event Hub (some carry a customer review) and restaurant and menu reference data in Azure SQL. Managers want sales performance and review sentiment in one place. <strong>Solution.</strong> Two very different sources merge in bronze, flow through silver and gold, and end as one dashboard: sales from a declarative pipeline, sentiment from a built-in AI function, everything under Unity Catalog and one job.</p>
+  <figure class="diagram-wrap">
+    <svg viewBox="0 0 900 266" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Restaurant analytics: Azure Event Hub is read by the Kafka source and Azure SQL by Lakeflow Connect CDC; both land in bronze; a declarative pipeline builds silver orders_clean joined to restaurants and gold daily sales and review sentiment; an AI/BI dashboard and Genie space consume gold; one job orchestrates and Unity Catalog governs everything">
+      <defs><marker id="rd1" markerWidth="9" markerHeight="9" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="#9AA0B4"/></marker></defs>
+      <g font-family="sans-serif" text-anchor="middle">
+        <rect x="180" y="6" width="710" height="28" rx="8" fill="#191921" stroke="#A56BFF" stroke-width="1.3"/><text x="535" y="24" font-size="10.5" fill="#F1F1F1">One Databricks Job (daily): CDC and stream in parallel, then pipeline, sentiment, dashboard refresh</text>
+
+        <rect x="10" y="52" width="130" height="50" rx="9" fill="#1D1D26" stroke="#FFB454" stroke-width="1.4"/><text x="75" y="74" font-size="11" font-weight="700" fill="#F1F1F1">Azure Event Hub</text><text x="75" y="90" font-size="10" fill="#E7E7EE">streaming orders</text>
+        <rect x="10" y="132" width="130" height="50" rx="9" fill="#1D1D26" stroke="#FFB454" stroke-width="1.4"/><text x="75" y="154" font-size="11" font-weight="700" fill="#F1F1F1">Azure SQL</text><text x="75" y="170" font-size="10" fill="#E7E7EE">restaurants, menu</text>
+        <line x1="140" y1="77" x2="168" y2="77" stroke="#9AA0B4" stroke-width="1.6" marker-end="url(#rd1)"/>
+        <line x1="140" y1="157" x2="168" y2="157" stroke="#9AA0B4" stroke-width="1.6" marker-end="url(#rd1)"/>
+        <rect x="170" y="52" width="130" height="50" rx="9" fill="#1D1D26" stroke="#5AC8FF" stroke-width="1.4"/><text x="235" y="74" font-size="11" font-weight="700" fill="#F1F1F1">Kafka source</text><text x="235" y="90" font-size="10" fill="#E7E7EE">Structured Streaming</text>
+        <rect x="170" y="132" width="130" height="50" rx="9" fill="#1D1D26" stroke="#5AC8FF" stroke-width="1.4"/><text x="235" y="154" font-size="11" font-weight="700" fill="#F1F1F1">Lakeflow Connect</text><text x="235" y="170" font-size="10" fill="#E7E7EE">CDC, incremental</text>
+        <line x1="300" y1="77" x2="328" y2="100" stroke="#9AA0B4" stroke-width="1.6" marker-end="url(#rd1)"/>
+        <line x1="300" y1="157" x2="328" y2="134" stroke="#9AA0B4" stroke-width="1.6" marker-end="url(#rd1)"/>
+
+        <rect x="330" y="52" width="120" height="130" rx="10" fill="#CD7F32"/><text x="390" y="82" font-size="13" font-weight="700" fill="#14141C">Bronze</text><text x="390" y="108" font-size="10" fill="#14141C">orders_raw</text><text x="390" y="124" font-size="10" fill="#14141C">restaurants</text><text x="390" y="140" font-size="10" fill="#14141C">menu_items</text>
+        <line x1="450" y1="117" x2="478" y2="117" stroke="#9AA0B4" stroke-width="1.6" marker-end="url(#rd1)"/>
+        <rect x="480" y="52" width="120" height="130" rx="10" fill="#C0C0C0"/><text x="540" y="82" font-size="13" font-weight="700" fill="#14141C">Silver</text><text x="540" y="108" font-size="10" fill="#14141C">orders_clean</text><text x="540" y="124" font-size="9.5" fill="#14141C">expectations,</text><text x="540" y="138" font-size="9.5" fill="#14141C">join to restaurants</text>
+        <line x1="600" y1="117" x2="628" y2="117" stroke="#9AA0B4" stroke-width="1.6" marker-end="url(#rd1)"/>
+        <rect x="630" y="52" width="130" height="130" rx="10" fill="#E6B800"/><text x="695" y="82" font-size="13" font-weight="700" fill="#14141C">Gold</text><text x="695" y="106" font-size="9.5" fill="#14141C">daily_sales_by_</text><text x="695" y="118" font-size="9.5" fill="#14141C">restaurant</text><text x="695" y="140" font-size="9.5" fill="#14141C">review_sentiment</text><text x="695" y="153" font-size="9" fill="#14141C">ai_analyze_sentiment</text>
+
+        <line x1="760" y1="82" x2="788" y2="82" stroke="#9AA0B4" stroke-width="1.6" marker-end="url(#rd1)"/>
+        <line x1="760" y1="152" x2="788" y2="152" stroke="#9AA0B4" stroke-width="1.6" marker-end="url(#rd1)"/>
+        <rect x="790" y="52" width="100" height="60" rx="9" fill="#1D1D26" stroke="#FF6B9D" stroke-width="1.4"/><text x="840" y="86" font-size="11" fill="#F1F1F1">AI/BI dashboard</text>
+        <rect x="790" y="122" width="100" height="60" rx="9" fill="#1D1D26" stroke="#FF6B9D" stroke-width="1.4"/><text x="840" y="156" font-size="11" fill="#F1F1F1">Genie space</text>
+
+        <rect x="10" y="206" width="880" height="40" rx="10" fill="#191921" stroke="#5C78FF" stroke-width="1.4"/><text x="450" y="230" font-size="11" fill="#F1F1F1">Unity Catalog governs every table, grant and lineage edge  |  secrets in a scope  |  job clusters end after each run</text>
+      </g>
+    </svg>
+    <figcaption>Fig. 15 - Streaming orders and batch reference data land in bronze, meet in silver, and split into a sales aggregate and an AI-scored sentiment table.</figcaption>
+  </figure>
+
+  <div class="table-wrap"><table>
+    <thead><tr><th>Step</th><th>What it does</th><th>Where to click</th></tr></thead>
+    <tbody>
+      <tr><td><strong>1. Namespace</strong></td><td>One catalog, a schema per layer, a managed volume for stream checkpoints; engineers write bronze and silver, analysts only read gold.</td><td>Catalog, Create catalog; Permissions tab</td></tr>
+      <tr><td><strong>2. CDC reference data</strong></td><td>A Lakeflow Connect ingestion pipeline from Azure SQL: one full sync, then only changes. Credentials live in a governed connection object, not in the file.</td><td>Data Ingestion, SQL Server connector</td></tr>
+      <tr><td><strong>3. Stream orders</strong></td><td>Event Hub exposes a Kafka endpoint, so the built-in Kafka source reads it. Bronze keeps the raw JSON string; parsing happens in silver.</td><td>Workspace, Import notebook; Compute</td></tr>
+      <tr><td><strong>4. Silver</strong></td><td>Parse with an explicit schema, drop rows failing expectations, dedupe, and join to the restaurants table so every consumer gets names attached.</td><td>Pipelines, Create ETL pipeline</td></tr>
+      <tr><td><strong>5. Gold</strong></td><td>Daily sales by restaurant, recomputed from silver (a full read, not a stream, because the aggregate needs the whole picture).</td><td>Same pipeline, second source file</td></tr>
+      <tr><td><strong>6. Job</strong></td><td>CDC and stream tasks run in parallel; the pipeline waits for both (fan-in); sentiment, then the dashboard refresh follow.</td><td>Workflows, Create job</td></tr>
+      <tr><td><strong>7. Sentiment</strong></td><td>One SQL statement scores each review with a built-in AI function: no model to train or serve.</td><td>SQL Editor</td></tr>
+      <tr><td><strong>8. Dashboard</strong></td><td>Two datasets over gold (sales trend, sentiment mix) and optionally a Genie space over the same schema. Dashboards are a UI object, so keep the JSON in Git (<a href="#aibi">&sect;28</a>).</td><td>Dashboards, Create dashboard</td></tr>
+      <tr><td><strong>9. Verify</strong></td><td>Lineage from both gold tables back to both bronze sources, event-log drop counts per expectation, rows synced per CDC run, weekly <code>OPTIMIZE</code>, periodic grant review.</td><td>Lineage tab; pipeline Event log</td></tr>
+    </tbody>
+  </table></div>
+
+  <pre><code>-- 1) namespace and grants
+CREATE CATALOG IF NOT EXISTS restaurant_prod;
+CREATE SCHEMA  IF NOT EXISTS restaurant_prod.bronze;   -- likewise silver, gold
+CREATE VOLUME  IF NOT EXISTS restaurant_prod.bronze.landing;
+GRANT USE CATALOG ON CATALOG restaurant_prod TO `data-engineers`;
+GRANT USE SCHEMA, CREATE TABLE, MODIFY, SELECT ON SCHEMA restaurant_prod.bronze TO `data-engineers`;
+GRANT USE SCHEMA, SELECT ON SCHEMA restaurant_prod.gold TO `analysts`;</code></pre>
+  <pre><code># 2) Lakeflow Connect ingestion pipeline (bundle resource)
+resources:
+  pipelines:
+    restaurant_reference_cdc:
+      catalog: restaurant_prod
+      target: bronze
+      ingestion_definition:
+        connection_name: azure_sql_prod_connection          # a Unity Catalog connection, no password here
+        objects:
+          - table: {source_catalog: RestaurantDB, source_schema: dbo, source_table: Restaurants, destination_table: restaurants}
+          - table: {source_catalog: RestaurantDB, source_schema: dbo, source_table: MenuItems,  destination_table: menu_items}</code></pre>
+  <pre><code># 3) Event Hub through the Kafka source
+from pyspark.sql import functions as F
+conn =dbutils.secrets.get("restaurant-scope", "eventhub-connection-string")
+opts = {"kafka.bootstrap.servers": "restaurant-orders-eh.servicebus.windows.net:9093",
+        "kafka.security.protocol": "SASL_SSL", "kafka.sasl.mechanism": "PLAIN",
+        "kafka.sasl.jaas.config": 'kafkashaded.org.apache.kafka.common.security.plain.PlainLoginModule required '
+                                  f'username="$ConnectionString" password="{conn}";',
+        "subscribe": "orders", "startingOffsets": "earliest"}
+(spark.readStream.format("kafka").options(**opts).load()
+    .withColumn("_ingested_at", F.current_timestamp())
+    .withColumn("json_value", F.col("value").cast("string"))
+    .writeStream.option("checkpointLocation", "/Volumes/restaurant_prod/bronze/landing/_checkpoints/orders")
+    .trigger(availableNow=True)                             # drain what is there, then stop (see hardening)
+    .toTable("restaurant_prod.bronze.orders_raw"))</code></pre>
+  <pre><code># 4-5) silver and gold in one declarative pipeline (default schema: silver)
+import dlt
+from pyspark.sql import functions as F
+schema = "order_id STRING, restaurant_id STRING, customer_id STRING, quantity INT, order_amount DOUBLE, order_timestamp TIMESTAMP, review_text STRING"
+
+@dlt.table(name="orders_clean")
+@dlt.expect_or_drop("valid_quantity", "quantity &gt; 0")
+@dlt.expect_or_drop("valid_amount", "order_amount &gt; 0")
+@dlt.expect("has_restaurant_id", "restaurant_id IS NOT NULL")     # flag, keep the row
+def orders_clean():
+    orders = (dlt.read_stream("restaurant_prod.bronze.orders_raw")
+                 .select(F.from_json("json_value", schema).alias("o")).select("o.*")
+                 .dropDuplicates(["order_id"]))
+    return orders.join(dlt.read("restaurant_prod.bronze.restaurants"), "restaurant_id", "left")
+
+@dlt.table(name="daily_sales_by_restaurant")
+def daily_sales_by_restaurant():
+    return (dlt.read("restaurant_prod.silver.orders_clean")
+               .groupBy("restaurant_id", "restaurant_name", F.to_date("order_timestamp").alias("sales_date"))
+               .agg(F.sum("order_amount").alias("total_sales"), F.sum("quantity").alias("total_units"),
+                    F.countDistinct("customer_id").alias("unique_customers")))</code></pre>
+  <pre><code>-- 7) sentiment scoring: positive, negative, neutral or mixed, no model to manage
+CREATE OR REPLACE TABLE restaurant_prod.gold.review_sentiment AS
+SELECT order_id, restaurant_id, review_text, ai_analyze_sentiment(review_text) AS sentiment
+FROM restaurant_prod.silver.orders_clean
+WHERE review_text IS NOT NULL;</code></pre>
+  <p>The Python library still says <code>dlt</code> (the product was Delta Live Tables before it became Lakeflow Declarative Pipelines, <a href="#dlt">&sect;16</a>). <code>expect_or_drop</code> removes failing rows and counts them in the event log; plain <code>expect</code> only flags. The job is the fan-out and fan-in graph from <a href="#orchestration">&sect;19</a>: <code>cdc_ingest_reference_data</code> and <code>stream_ingest_orders</code> run in parallel, <code>run_lakeflow_pipeline</code> depends on both, then <code>sentiment_analysis</code> (a SQL task), then <code>refresh_dashboard</code>.</p>
+
+  <h4>Harden before production</h4>
+  <div class="table-wrap"><table>
+    <thead><tr><th>Weak spot</th><th>Better design</th></tr></thead>
+    <tbody>
+      <tr><td>A stream with a <code>processingTime</code> trigger inside a scheduled job never finishes, so every dependent task waits forever.</td><td>Use <code>availableNow=True</code> to drain and stop inside a job, or run the stream always-on outside the job DAG (<a href="#streaming">&sect;12</a>).</td></tr>
+      <tr><td><code>dropDuplicates</code> on the order id with no watermark keeps state for every order forever.</td><td>Add a watermark on the event time and use <code>dropDuplicatesWithinWatermark</code>.</td></tr>
+      <tr><td>Silver joins a stream to a static table: an order arriving before its restaurant row gets a null name.</td><td>Left join plus a "missing restaurant" metric and a quarantine or reprocess path; land reference data first.</td></tr>
+      <tr><td><code>CREATE OR REPLACE</code> re-scores every review on every run, so AI cost grows with history.</td><td>Score only new order ids (MERGE into the sentiment table) and cache results (<a href="#agents">&sect;30</a>).</td></tr>
+      <tr><td><code>startingOffsets=earliest</code> with a new checkpoint reprocesses the whole topic.</td><td>Move checkpoints deliberately; alert on unexpected volume jumps (<a href="#monitoring">&sect;23</a>).</td></tr>
     </tbody>
   </table></div>
 
