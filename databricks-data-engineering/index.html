@@ -30,7 +30,7 @@
     font-size:clamp(26px,5vw,44px);line-height:1.2;margin:14px auto 12px;max-width:26ch;font-weight:800;
     color:#5AC8FF;
   }
-  .dek{max-width:72ch;margin:0 auto;color:var(--muted);font-size:16px;}
+  .dek{max-width:896px;margin:0 auto;color:var(--muted);font-size:16px;overflow-wrap:break-word;}
   .byline{margin-top:16px;font-size:12.5px;color:var(--dim);}
   .stack{margin-top:18px;display:flex;align-items:center;gap:10px;font-size:12px;color:var(--dim);flex-wrap:wrap;justify-content:center;}
   .chip{display:inline-flex;align-items:center;gap:7px;padding:5px 12px;border-radius:999px;border:1px solid #2b4a80;background:#0e2740;color:#5AC8FF;font-weight:700;font-size:11.5px;}
@@ -118,7 +118,7 @@
 
   @media (max-width: 720px){
     .grid-2,.grid-3{grid-template-columns:1fr;}
-    header.hero{padding:44px 16px 22px;}
+    header.hero{padding:44px 22px 22px;}
   }
 
   .nav{position:sticky;top:0;z-index:60;background:rgba(25,25,33,.82);backdrop-filter:blur(10px);border-bottom:1px solid var(--border);}
@@ -189,8 +189,8 @@
 <header class="hero">
   <div class="kicker">Databricks &middot; Data Engineering Deep Dive</div>
   <h1>Databricks for Data Engineers</h1>
-  <p class="dek">One reference for the whole Databricks data-engineering job, in interview-ready depth. It is organized around the <strong>data engineering lifecycle</strong> (generation, ingestion, storage, transformation, serving) and the <strong>six undercurrents</strong> (security, data management, DataOps, data architecture, orchestration, software engineering), and covers the <strong>platform</strong> and compute, <strong>notebooks and DBUtils</strong>, <strong>Unity Catalog</strong> and <strong>PII</strong>, <strong>Auto Loader</strong>, <strong>Lakeflow Connect</strong>, <strong>Structured Streaming</strong>, <strong>Delta Lake</strong>, <strong>declarative pipelines</strong>, <strong>data modeling</strong>, <strong>Jobs</strong>, <strong>Declarative Automation Bundles</strong>, monitoring and cost, then <strong>metric views</strong>, <strong>AI/BI and Genie</strong>, <strong>Genie Code</strong> and <strong>agentic AI</strong>. It closes with the reference architecture, its principles and patterns, and four end-to-end blueprints, with runnable PySpark and SQL throughout.</p>
-  <div class="byline">~2 hr 55 min read &middot; reference &amp; interview prep &middot; heavy on runnable code</div>
+  <p class="dek">One reference for the whole Databricks data-engineering job, organized around the <strong>data engineering lifecycle</strong> and the <strong>six undercurrents</strong>: platform and compute, Unity Catalog and PII, ingestion, Delta Lake, streaming and pipelines, orchestration and CI/CD, monitoring and cost, serving and AI, then the reference architecture and four end-to-end blueprints, with runnable PySpark and SQL throughout.</p>
+  <div class="byline">~2 hr 50 min read &middot; reference guide &middot; heavy on runnable code</div>
   <div class="stack reveal">
     <span class="chip"><svg class="ico"><use href="#i-cycle"/></svg> Lifecycle &amp; Undercurrents</span>
     <span class="chip"><svg class="ico"><use href="#i-database"/></svg> Delta Lake</span>
@@ -203,11 +203,6 @@
 </header>
 
 <div class="wrap">
-
-<div class="callout def reveal" id="scope">
-  <strong class="label">How this guide fits with the rest of the set</strong>
-  This is the data-engineer-focused leg of a set. It is self-contained for Databricks: the platform tour is &sect;02, and the end-to-end restaurant project, Lakebase, Databricks Apps, sharing and MLflow material live in &sect;32 (Blueprint D), &sect;26 and &sect;30. <a href="../spark-essentials/">Apache Spark for Data Engineers</a> covers the execution engine underneath everything. <a href="../data-modeling/">Data Modeling for Data Engineers</a> covers the modeling theory that &sect;17 applies to Delta. For the same system-design framework on AWS see <a href="../aws-core-services/">Core AWS Services for Data Engineers</a>. Start with &sect;01, which maps the data engineering lifecycle and the six undercurrents onto Databricks with a coverage scorecard, then use the <a href="#coverage">study map</a> below the contents to see where each playlist topic lives.
-</div>
 
 <div class="toc reveal">
   <strong>Contents</strong>
@@ -3027,36 +3022,25 @@ ORDER BY avg_cpu_pct;</code></pre>
 <!-- ============ 26 SERVING DATA BI ML REVERSE ETL &; SHARING ============ -->
 <section class="reveal" id="serving">
   <h2><span class="hico"><svg class="ico"><use href="#i-send"/></svg></span><span class="n">26.</span> Serving Data: BI, ML, Apps, Reverse ETL &amp; Sharing</h2>
-  <p class="lede">Serving is the last lifecycle stage and the one the business sees. Perfect bronze and silver layers still fail here if the numbers are slow, untrusted or unreachable by the systems that need them. Pick the mechanism from the consumer's need and latency.</p>
+  <p class="lede">Serving is the last lifecycle stage and the one the business sees. Perfect bronze and silver still fail here if the numbers are slow, untrusted or unreachable. Pick the mechanism from the consumer's need and latency.</p>
 
   <div class="table-wrap"><table>
-    <thead><tr><th>Consumer and need</th><th>Databricks mechanism</th><th>Latency</th></tr></thead>
+    <thead><tr><th>Consumer</th><th>Databricks mechanism</th><th>Latency</th></tr></thead>
     <tbody>
-      <tr><td><strong>Analysts and BI:</strong> interactive SQL, dashboards, governed KPIs</td><td>Serverless SQL warehouse over gold tables or a metric view; JDBC/ODBC for Power BI, Tableau, Looker (<a href="#aibi">&sect;28</a>)</td><td>Seconds</td></tr>
-      <tr><td><strong>Business users:</strong> plain-language questions</td><td>Genie spaces and Databricks One (<a href="#aibi">&sect;28</a>)</td><td>Seconds</td></tr>
-      <tr><td><strong>Data scientists:</strong> training sets and features</td><td>Delta tables and Unity Catalog feature tables, MLflow</td><td>Batch</td></tr>
-      <tr><td><strong>ML and AI apps:</strong> features and retrieval at inference</td><td>Online feature serving, Vector Search, model serving (<a href="#agents">&sect;30</a>)</td><td>Milliseconds</td></tr>
-      <tr><td><strong>Operational apps:</strong> point lookups, transactional reads</td><td>Lakebase (managed Postgres) synced from Delta; Databricks Apps; SQL Statement Execution API</td><td>Milliseconds to seconds</td></tr>
-      <tr><td><strong>Business systems</strong> (CRM, marketing): results pushed back</td><td>Reverse ETL: a job writing through the tool's API, or a partner tool</td><td>Minutes to hours</td></tr>
-      <tr><td><strong>Partners:</strong> live access without copies</td><td>Delta Sharing, Marketplace, Clean Rooms (<a href="#uc">&sect;05</a>)</td><td>Live or scheduled</td></tr>
-      <tr><td><strong>Regulators and vendors:</strong> periodic files</td><td>Scheduled export to a locked-down location, with an audit record</td><td>Batch</td></tr>
+      <tr><td><strong>Analysts and BI</strong></td><td>Serverless SQL warehouse over gold or a metric view; JDBC/ODBC for Power BI, Tableau, Looker (<a href="#aibi">&sect;28</a>)</td><td>Seconds</td></tr>
+      <tr><td><strong>Business users</strong></td><td>Genie spaces and Databricks One (<a href="#aibi">&sect;28</a>)</td><td>Seconds</td></tr>
+      <tr><td><strong>Data scientists</strong></td><td>Delta and feature tables in Unity Catalog, MLflow</td><td>Batch</td></tr>
+      <tr><td><strong>ML and AI apps</strong></td><td>Online feature serving, Vector Search, model serving (<a href="#agents">&sect;30</a>)</td><td>Milliseconds</td></tr>
+      <tr><td><strong>Operational apps</strong></td><td>Lakebase synced from Delta, Databricks Apps, SQL Statement Execution API</td><td>Milliseconds to seconds</td></tr>
+      <tr><td><strong>CRM, marketing tools</strong></td><td>Reverse ETL: a job writing through the tool's API</td><td>Minutes to hours</td></tr>
+      <tr><td><strong>Partners</strong></td><td>Delta Sharing, Marketplace, Clean Rooms</td><td>Live or scheduled</td></tr>
+      <tr><td><strong>Regulators, vendors</strong></td><td>Scheduled export to a locked-down location, with an audit record</td><td>Batch</td></tr>
     </tbody>
   </table></div>
-  <p><strong>For BI</strong>, dashboards read aggregates, not raw data; size the warehouse for concurrency (clusters) and query speed (size). <strong>For embedded analytics</strong>, use a service principal per app, strict tenant isolation with row filters, and warehouses sized for unpredictable load. <strong>For ML</strong>, compute features once, register them as governed tables and reuse the same definitions for training and inference; training rows must only see feature values that existed at their event time (point-in-time correctness).</p>
+  <p>For BI, dashboards read aggregates, not raw data; size the warehouse for concurrency (clusters) and speed (size). For ML, compute features once as governed tables and reuse them for training and inference, with point-in-time correctness so training rows never see the future.</p>
 
-  <h3>Reverse ETL: pushing data into operational tools</h3>
-  <p>Moving a churn score or customer segment into a CRM looks easy and is full of traps: the API is called again after partial failures (<strong>upsert on the target's id</strong>, never blind inserts), rate limits apply (<strong>push only what changed</strong>, batch, back off on 429s, resume from a checkpoint), and privacy applies (send only the fields the destination needs, record what was sent).</p>
-  <pre><code>def push_batch(batch_df, batch_id):
-    changed = (batch_df.alias("n")
-        .join(spark.table("prod.ops.crm_sync_state").alias("s"), "account_id", "left")
-        .where("s.payload_hash IS NULL OR s.payload_hash != n.payload_hash"))        # only what changed
-    for row in changed.toLocalIterator():
-        crm_client.upsert(external_id=row.account_id, fields=row.payload)            # idempotent upsert by key
-    # record success ONLY after the API accepted the data
-    changed.select("account_id", "payload_hash").write.mode("append").saveAsTable("prod.ops.crm_sync_state_updates")</code></pre>
-
-  <h3>Operational serving: Lakebase and Databricks Apps</h3>
-  <p>Spark, Delta and SQL warehouses are built to scan and aggregate history (OLAP). None suits an application that reads or writes one row in milliseconds, thousands of times a second (OLTP). <strong>Lakebase</strong> is a managed, Postgres-compatible database inside the platform for exactly that pattern, so you do not stand up a separate database service.</p>
+  <h3>Operational apps: Lakebase and Databricks Apps</h3>
+  <p>Warehouses scan history (OLAP); an application needs one row in milliseconds, thousands of times a second (OLTP). <strong>Lakebase</strong> is a managed, Postgres-compatible database inside the platform for that pattern; <strong>Databricks Apps</strong> hosts the front end on serverless compute.</p>
   <figure class="diagram-wrap">
     <svg viewBox="0 0 900 200" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="A gold Delta table syncs into Lakebase and Lakebase changes are captured back to Delta; Lakebase serves a Databricks App or AI agent; an instant copy-on-write branch hangs off Lakebase for dev and test">
       <defs><marker id="lb1" markerWidth="9" markerHeight="9" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="#9AA0B4"/></marker></defs>
@@ -3073,64 +3057,52 @@ ORDER BY avg_cpu_pct;</code></pre>
     </svg>
     <figcaption>Fig. 6 - Lakebase sits between the lakehouse and a low-latency consumer, syncing both ways, with instant branching for dev and test.</figcaption>
   </figure>
-  <div class="table-wrap"><table>
-    <thead><tr><th>Capability</th><th>What it gives you</th></tr></thead>
-    <tbody>
-      <tr><td><strong>Unity Catalog governance</strong></td><td>The same permissions model and audit trail as Delta tables; no second security system.</td></tr>
-      <tr><td><strong>Two-way sync</strong></td><td>Sync a gold Delta table into Lakebase for low-latency serving, and capture Lakebase changes back to Delta for analytics and audit.</td></tr>
-      <tr><td><strong>Branching</strong></td><td>Copy-on-write copies of a database in seconds; unchanged data is shared with the parent, so dev and test branches are cheap.</td></tr>
-      <tr><td><strong>Autoscaling</strong></td><td>Compute follows load within limits you set and scales to zero when idle.</td></tr>
-      <tr><td><strong>pgvector</strong></td><td>Similarity search next to transactional data, so an agent's retrieval and its reads and writes hit one database.</td></tr>
-    </tbody>
-  </table></div>
-  <p>Typical uses: the backend of a Databricks App, an online feature store, an agent's conversation and tool-call state, and small hot summary tables synced from gold without loading the SQL warehouse. It is <em>managed</em> Postgres, not unrestricted Postgres: no host access or superuser (a <code>databricks_superuser</code> role covers routine administration), and native logical replication in or out is not available, so design around those limits.</p>
-  <p><strong>Databricks Apps</strong> hosts the front end. An app is a folder of source plus an <code>app.yaml</code>, deployed from the UI, the CLI or a Git repository, on serverless compute. It inherits Databricks OAuth and the viewer's identity, so queries against Unity Catalog and SQL warehouses respect the same permissions as everywhere else. Python (Streamlit, Dash, Gradio, Flask) and Node.js are both supported, and a growing share of apps are chat front ends for agents.</p>
+  <ul>
+    <li><strong>Lakebase:</strong> governed by Unity Catalog like a Delta table; syncs a gold table in for serving and captures its changes back out for analytics; copy-on-write branches for dev and test in seconds; autoscales to zero; <code>pgvector</code> for retrieval next to transactional data. It is managed Postgres, so no host access or superuser and no native logical replication.</li>
+    <li><strong>Apps:</strong> a source folder plus <code>app.yaml</code>, deployed from the UI, CLI or Git. It inherits Databricks OAuth and the viewer's identity, so queries respect Unity Catalog permissions. Python (Streamlit, Dash, Gradio, Flask) and Node.js both work.</li>
+  </ul>
   <pre><code># app.yaml
 command: ["streamlit", "run", "app.py"]
 
-# deploy once the source is synced to the workspace
-databricks apps deploy churn-dashboard --source-code-path ./churn_app
-
-# app.py - query a governed gold table with the app's own credentials
+# app.py - query gold with the app's own identity
 import os, streamlit as st
 from databricks import sql
 from databricks.sdk.core import Config
-
-cfg = Config()                                              # picks up the app's injected identity
-with sql.connect(server_hostname=cfg.host,
-                 http_path=os.getenv("DATABRICKS_WAREHOUSE_HTTP_PATH"),
+cfg = Config()
+with sql.connect(server_hostname=cfg.host, http_path=os.getenv("DATABRICKS_WAREHOUSE_HTTP_PATH"),
                  credentials_provider=lambda: cfg.authenticate) as conn, conn.cursor() as cur:
     cur.execute("SELECT restaurant_id, revenue FROM restaurant_prod.gold.daily_sales_by_restaurant")
     st.bar_chart(cur.fetchall_arrow().to_pandas(), x="restaurant_id", y="revenue")</code></pre>
 
+  <h3>Reverse ETL: pushing data into operational tools</h3>
+  <p>Moving a churn score into a CRM has three traps. The API will be called again after partial failures, so <strong>upsert on the target's id</strong>, never blind inserts. Rate limits apply, so <strong>push only what changed</strong> and record success only after the API accepted the data. Privacy applies, so send only the fields the destination needs and log what was sent.</p>
+  <pre><code>def push_batch(batch_df, batch_id):
+    changed = (batch_df.alias("n").join(spark.table("prod.ops.crm_sync_state").alias("s"), "account_id", "left")
+               .where("s.payload_hash IS NULL OR s.payload_hash != n.payload_hash"))     # diff against last sync
+    for row in changed.toLocalIterator():
+        crm_client.upsert(external_id=row.account_id, fields=row.payload)                # idempotent by key
+    changed.select("account_id", "payload_hash").write.mode("append").saveAsTable("prod.ops.crm_sync_state_updates")</code></pre>
+
   <h3>Sharing across organizations</h3>
-  <p>Three points on one spectrum, all governed by Unity Catalog rather than a separate security system:</p>
   <div class="table-wrap"><table>
     <thead><tr><th>Mechanism</th><th>What it does</th><th>Use when</th></tr></thead>
     <tbody>
-      <tr><td><strong>Delta Sharing</strong></td><td>An open protocol: a provider creates a <code>SHARE</code> of tables and adds recipients; a recipient reads live data through Unity Catalog or an open client (pandas, Spark, Power BI). The recipient's compute runs the query, and nothing is copied or exported.</td><td>"Let this other party read my table."</td></tr>
-      <tr><td><strong>Marketplace</strong></td><td>A public discovery layer over Delta Sharing for datasets, notebooks and models, so a recipient needs no prior relationship with the provider.</td><td>Publishing data for anyone to find and request.</td></tr>
-      <tr><td><strong>Clean Rooms</strong></td><td>A governed multi-party environment where each side brings its own data and only pre-approved queries run; only aggregated results leave, never either party's rows.</td><td>Joint analysis where neither side may see the other's records (ad measurement, cross-institution healthcare or finance).</td></tr>
+      <tr><td><strong>Delta Sharing</strong></td><td>Open protocol: a provider creates a <code>SHARE</code>; recipients read live data through Unity Catalog or an open client (pandas, Spark, Power BI) on their own compute. No copies.</td><td>"Let them read my table."</td></tr>
+      <tr><td><strong>Marketplace</strong></td><td>Public discovery over Delta Sharing for datasets, notebooks and models.</td><td>Publishing for anyone to find.</td></tr>
+      <tr><td><strong>Clean Rooms</strong></td><td>Each side brings its own data; only approved queries run and only aggregates leave, never rows.</td><td>Joint analysis where neither side may see the other's records.</td></tr>
     </tbody>
   </table></div>
 
   <h3>Making served data trustworthy</h3>
-  <ul>
-    <li><strong>Owner, SLA and contract</strong> per data product; tag tables with an owner and a freshness target (<a href="#dataops">&sect;24</a>).</li>
-    <li><strong>One definition per KPI</strong> in a metric view over gold (<a href="#metric-views">&sect;27</a>).</li>
-    <li><strong>Documented and certified</strong> tables: Unity Catalog comments and tags also feed Genie and the AI assistants.</li>
-    <li><strong>Quality visible to consumers</strong> on the table, not buried in a job log (<a href="#monitoring">&sect;23</a>).</li>
-    <li><strong>Stable, least-privilege interfaces:</strong> consumers read a curated schema, with grants, masks and row filters that match the audience (<a href="#pii">&sect;06</a>); breaking changes follow a deprecation process.</li>
-  </ul>
+  <p>A named owner, SLA and contract per data product (<a href="#dataops">&sect;24</a>); one definition per KPI in a metric view (<a href="#metric-views">&sect;27</a>); Unity Catalog comments and certification so people and AI tools find the right table; quality results visible on the table (<a href="#monitoring">&sect;23</a>); a stable curated schema with least-privilege grants, masks and row filters (<a href="#pii">&sect;06</a>).</p>
 </section>
 
 <!-- ============ 27 METRIC VIEWS &; THE SEMANTIC LAYER ============ -->
 <section class="reveal" id="metric-views">
   <h2><span class="hico"><svg class="ico"><use href="#i-cube"/></svg></span><span class="n">27.</span> Metric Views &amp; the Semantic Layer</h2>
-  <p class="lede">Gold tables are clean, but they do not say what "revenue" or "active customer" means, so ten analysts write ten slightly different SQL definitions. A <strong>semantic layer</strong> puts business definitions (dimensions and measures) in one governed place. In Databricks that object is the <strong>metric view</strong>, and it is also what makes Genie's answers trustworthy.</p>
-  <p>A metric view separates <em>what</em> you measure (measures) from <em>how you slice it</em> (dimensions) and applies the aggregation at <strong>query time</strong>. Define <code>total_revenue</code> once, then group it by day, country or anything else without creating a view per grain. It ends KPI drift, duplicated join logic and guesswork by AI tools.</p>
+  <p class="lede">Gold tables are clean but do not say what "revenue" means, so ten analysts write ten definitions. A <strong>metric view</strong> is the governed semantic layer: define dimensions and measures once, aggregate at <strong>query time</strong> by any grain, and give Genie something trustworthy to answer from.</p>
 
-    <figure class="diagram-wrap">
+  <figure class="diagram-wrap">
     <svg viewBox="0 0 900 250" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Sources feed a metric view defined in YAML in Unity Catalog, which is consumed by dashboards, Genie, SQL and notebooks, alerts and BI tools">
       <defs><marker id="mv1" markerWidth="9" markerHeight="9" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="#9AA0B4"/></marker></defs>
       <g font-family="sans-serif" text-anchor="middle">
@@ -3172,195 +3144,141 @@ with sql.connect(server_hostname=cfg.host,
     <figcaption>Fig. 7 - The semantic layer sits after gold. Every consumer asks the same object for the same definitions.</figcaption>
   </figure>
 
-  <h3>Anatomy of a metric view</h3>
-  <p>A metric view is a Unity Catalog object whose body is <strong>YAML</strong>. Author it as code and create it with SQL so it lives in version control.</p>
   <pre><code>CREATE OR REPLACE VIEW retail_prod.semantic.order_metrics
 WITH METRICS
 LANGUAGE YAML
 AS $$
 version: 1.1                                  # the spec version, not your revision
-comment: "Order revenue KPIs, one row per order"
-source: samples.tpch.orders                   # a table, view, another metric view, or a SQL query
+source: samples.tpch.orders                   # a table, view, another metric view, or a query
 filter: o_totalprice &gt; 0                      # applied to every query
-
 joins:                                        # star schema; nest 'joins' for a snowflake
   - name: customer
     source: samples.tpch.customer
     on: source.o_custkey = customer.c_custkey
-    joins:
-      - name: nation
-        source: samples.tpch.nation
-        on: customer.c_nationkey = nation.n_nationkey
-
 dimensions:
   - name: order_year
     expr: year(o_orderdate)
-  - name: order_status
-    expr: |
-      CASE o_orderstatus WHEN 'F' THEN 'Fulfilled' WHEN 'O' THEN 'Open' WHEN 'P' THEN 'Processing' END
-  - name: country
-    expr: customer.nation.n_name              # a joined column needs its alias path
-
+  - name: customer_name
+    expr: customer.c_name                     # a joined column needs its alias
 measures:
   - name: total_revenue                       # ATOMIC: a direct aggregate
     expr: SUM(o_totalprice)
     display_name: Total Revenue
-    synonyms: [sales, revenue, total sales]   # maps the words users say to this measure (Genie)
-    format: {type: currency, currency_code: USD, decimal_places: 0, abbreviation: compact}
+    synonyms: [sales, revenue]                # maps the words users say to this measure
+    format: {type: currency, currency_code: USD, abbreviation: compact}
   - name: order_count
     expr: COUNT(1)
-  - name: avg_order_value                     # COMPOSED: built from other measures
+  - name: avg_order_value                     # COMPOSED from other measures
     expr: MEASURE(total_revenue) / MEASURE(order_count)
-$$;</code></pre>
-  <p>A column from a joined table must be referenced through its alias, or it resolves against the source and fails, and YAML is indentation-sensitive (an AI assistant helps here, but check the result). <strong>Window measures</strong> (trailing, cumulative, running totals) also exist and are experimental.</p>
+$$;
 
-  <h3>Querying with MEASURE()</h3>
-  <pre><code>SELECT order_year, country,
-       MEASURE(total_revenue)   AS revenue,
-       MEASURE(avg_order_value) AS aov
+SELECT order_year, MEASURE(total_revenue) AS revenue, MEASURE(avg_order_value) AS aov
 FROM retail_prod.semantic.order_metrics
-WHERE order_status = 'Fulfilled'
-GROUP BY ALL                      -- group by every dimension in the SELECT
-ORDER BY order_year, revenue DESC;</code></pre>
-  <p>Measures are read only through <code>MEASURE()</code>, dimensions are selected and grouped normally, and <code>SELECT *</code> is not supported. Change the dimensions and the aggregation changes with them. The engine runs only the joins a query needs.</p>
-
-  <h3>Materialization, governance and limits</h3>
+GROUP BY ALL;                                 -- change the dimensions, the aggregation follows</code></pre>
   <ul>
-    <li><strong>Materialization</strong> precomputes chosen dimensions x measures (a managed pipeline refreshes it incrementally). Queries covered by it read the precomputed data and the rest is computed from source, invisibly. <strong>Do not materialize up front:</strong> ship the metric view, watch what users query, then materialize the hot slices. It costs compute and storage and is experimental.</li>
-    <li><strong>Governed like any UC object:</strong> grants, lineage, tags, certification, usage insights. Consumers need <code>SELECT</code> on the metric view, not on every source table.</li>
-    <li><strong>Consumers:</strong> AI/BI dashboards, Genie, alerts, notebooks, SQL. Third-party BI depends on connector support, so verify your tool. Metric views need a recent runtime (14.3 or later, newer for newer YAML features).</li>
-    <li><strong>Versus alternatives:</strong> a regular view fixes the grain, a materialized view stores one fixed result, a metric view stores <em>definitions</em> and computes the grain per query. The trade-offs are the <code>MEASURE()</code> syntax and one more object to maintain.</li>
+    <li><strong>Querying:</strong> measures are read only through <code>MEASURE()</code>; <code>SELECT *</code> is not supported. The engine runs only the joins a query needs. Window measures (trailing, cumulative) exist and are experimental.</li>
+    <li><strong>Metadata for humans and AI:</strong> <code>display_name</code>, <code>synonyms</code>, <code>format</code> and <code>comment</code> feed dashboards and Genie. Needs a recent runtime (14.3 or later).</li>
+    <li><strong>Materialization</strong> precomputes hot dimension x measure slices, refreshed incrementally, and is invisible to queries. Do not materialize up front: ship, watch usage, then materialize. It is experimental.</li>
+    <li><strong>Governance:</strong> grants, lineage, tags and certification like any Unity Catalog object; consumers need <code>SELECT</code> on the metric view, not its sources. Third-party BI depends on connector support, so verify yours.</li>
+    <li><strong>Versus alternatives:</strong> a view fixes the grain, a materialized view stores one result, a metric view stores <em>definitions</em>. The cost is the <code>MEASURE()</code> syntax and one more object to maintain.</li>
   </ul>
 </section>
 
 <!-- ============ 28 AI/BI DASHBOARDS GENIE &; DATABRICKS ONE ============ -->
 <section class="reveal" id="aibi">
   <h2><span class="hico"><svg class="ico"><use href="#i-chart"/></svg></span><span class="n">28.</span> AI/BI Dashboards, Genie &amp; Databricks One</h2>
-  <p class="lede">Data engineers rarely make charts pretty, but they are expected to know how dashboards are built, refreshed, secured and deployed, how a Genie space is configured to answer correctly, and what compute they run on. All three surfaces should sit on the semantic layer (<a href="#metric-views">&sect;27</a>).</p>
+  <p class="lede">Data engineers rarely make charts pretty, but they own how dashboards are refreshed, secured and deployed and how a Genie space is configured to answer correctly. Build all three surfaces on the semantic layer (<a href="#metric-views">&sect;27</a>).</p>
 
   <h3>AI/BI dashboards</h3>
-  <p>A dashboard (formerly Lakeview) is <strong>datasets</strong> (a query or table) plus <strong>visualizations</strong> on a canvas, with filters, cross-filtering and multiple pages for different audiences. An AI assistant can draft a chart from plain language; always read the generated SQL, because a wrong join silently double-counts.</p>
+  <p>A dashboard (formerly Lakeview) is <strong>datasets</strong> (queries) plus visualizations, with filters and pages per audience. An AI assistant can draft a chart from plain language; read the generated SQL, because a wrong join silently double-counts.</p>
   <ul>
-    <li><strong>Publish and credentials.</strong> A dashboard has a draft and a published version. <em>Viewer credentials</em> apply each reader's Unity Catalog permissions (row filters and masks work); <em>embedded credentials</em> run queries as the publisher, so readers need no table access but see what the publisher sees.</li>
-    <li><strong>Compute.</strong> Datasets run on a SQL warehouse, serverless by default. Cost follows the number of widgets refreshed and the weight of each query.</li>
-    <li><strong>Refresh in the pipeline.</strong> A job's <em>Dashboard task</em> refreshes a published dashboard right after gold updates and emails subscribers (<a href="#orchestration">&sect;19</a>).</li>
-    <li><strong>Dashboards as code.</strong> A dashboard serializes to <code>.lvdash.json</code>, versioned in Git and deployed as a bundle resource with the catalog parameterized per environment (<a href="#dabs">&sect;20</a>).</li>
-    <li><strong>Performance.</strong> A slow dashboard is almost always a dataset problem: point at aggregated gold or a metric view, select only needed columns, push filters into the dataset.</li>
+    <li><strong>Credentials:</strong> <em>viewer credentials</em> apply each reader's Unity Catalog permissions (row filters and masks work); <em>embedded credentials</em> run as the publisher, so readers need no table access.</li>
+    <li><strong>Compute and performance:</strong> datasets run on a SQL warehouse, serverless by default. A slow dashboard is almost always a dataset problem: point at aggregated gold or a metric view, select only needed columns, push filters into the dataset.</li>
+    <li><strong>In the pipeline:</strong> a job's Dashboard task refreshes it right after gold updates (<a href="#orchestration">&sect;19</a>), and <code>.lvdash.json</code> lives in Git and deploys as a bundle resource with the catalog parameterized per environment (<a href="#dabs">&sect;20</a>).</li>
     <li><strong>SQL alerts</strong> watch business signals; job notifications watch pipeline health (<a href="#monitoring">&sect;23</a>).</li>
   </ul>
 
   <h3>Genie: natural-language analytics</h3>
   <div class="grid-3">
-    <div class="mini-card"><h4>Genie space / agent</h4><p>A curated agent over chosen tables, views and metric views. This is what a data engineer configures.</p></div>
-    <div class="mini-card"><h4>Genie One</h4><p>The business-user product: ask questions and delegate tasks from the web, Slack, Teams or mobile.</p></div>
-    <div class="mini-card"><h4>Genie Ontology</h4><p>The context layer beneath both (public preview): business meaning from Unity Catalog semantics plus meaning inferred from dashboards, queries and agents, ranked by authority.</p></div>
+    <div class="mini-card"><h4>Genie space</h4><p>A curated agent over chosen tables, views and metric views. This is what a data engineer configures.</p></div>
+    <div class="mini-card"><h4>Genie One</h4><p>The business-user product: ask questions and delegate tasks from web, Slack, Teams or mobile.</p></div>
+    <div class="mini-card"><h4>Genie Ontology</h4><p>The context layer beneath both (public preview): meaning from Unity Catalog semantics plus what is inferred from dashboards and queries.</p></div>
   </div>
-  <p><strong>How it answers:</strong> Genie retrieves relevant tables, columns, instructions and example queries, generates SQL, runs it on a SQL warehouse under the asking user's permissions (grants, row filters and masks apply), then summarizes and charts the result. It always shows the SQL.</p>
-
-  <h4>Configuring a space so it is accurate</h4>
+  <p>Genie retrieves relevant tables, instructions and example queries, generates SQL, runs it on a warehouse under the asking user's permissions (grants, filters and masks apply) and always shows the SQL.</p>
   <div class="table-wrap"><table>
-    <thead><tr><th>Setting</th><th>What to put in it</th></tr></thead>
+    <thead><tr><th>Space setting</th><th>What to put in it</th></tr></thead>
     <tbody>
-      <tr><td><strong>Data</strong></td><td>A small curated set of gold tables, views and metric views (5 well-described tables beat 50). Unity Catalog comments are part of Genie's context, so write them.</td></tr>
-      <tr><td><strong>Instructions</strong></td><td>Business context, metric definitions, time rules ("fiscal year starts in April"), defaults (exclude test accounts).</td></tr>
-      <tr><td><strong>Joins</strong></td><td>Explicit conditions and cardinality, so column-name guessing stops.</td></tr>
-      <tr><td><strong>SQL expressions</strong></td><td>Reusable measures, filters and dimensions with synonyms. For shared KPIs prefer a metric view.</td></tr>
-      <tr><td><strong>Example SQL</strong></td><td>Trusted queries for frequent or tricky questions.</td></tr>
-      <tr><td><strong>Benchmarks</strong></td><td>Question plus ground-truth SQL pairs; rerun after every change. This is the space's regression suite.</td></tr>
+      <tr><td><strong>Data</strong></td><td>A few curated gold tables and metric views (5 well-described tables beat 50). Unity Catalog comments are part of its context.</td></tr>
+      <tr><td><strong>Instructions and joins</strong></td><td>Business context, time rules ("fiscal year starts in April"), defaults, and explicit join conditions with cardinality.</td></tr>
+      <tr><td><strong>SQL expressions and examples</strong></td><td>Reusable measures, filters and dimensions with synonyms, plus trusted queries for tricky questions. For shared KPIs prefer a metric view.</td></tr>
+      <tr><td><strong>Benchmarks</strong></td><td>Question plus ground-truth SQL pairs, rerun after every change: the space's regression suite.</td></tr>
       <tr><td><strong>Monitoring</strong></td><td>Review asked questions, generated SQL and ratings to find missing synonyms and wrong joins.</td></tr>
     </tbody>
   </table></div>
   <div class="callout warn">
     <strong class="label">Debugging a wrong answer</strong>
-    Open the generated SQL. Wrong join: add an explicit join. "Revenue" defined differently: make it a measure (better, in a metric view) with synonyms. Ambiguous column: improve its comment. Then add the question and correct SQL as a benchmark so it cannot regress. A Genie space is a data product with an owner and a test suite, not a demo.
+    Open the generated SQL. Wrong join: add an explicit join. "Revenue" defined differently: make it a measure, ideally in a metric view. Ambiguous column: improve its comment. Then add the question as a benchmark so it cannot regress. Treat a space as a data product with an owner and a test suite, not a demo.
   </div>
 
   <h3>Databricks One</h3>
-  <p>The workspace UI overwhelms business users. <strong>Databricks One</strong> is a minimal UI showing only dashboards, Genie and apps. Admins grant consumer access rather than full workspace entitlements; permissions are unchanged, so Unity Catalog grants still decide what data users see. The engineering work is to publish dashboards and spaces and share them with the right groups. The better modeled and documented your gold layer and metric views are, the better every Genie surface performs.</p>
+  <p>A minimal UI showing only dashboards, Genie and apps, for business users who get consumer access instead of full workspace entitlements. Permissions do not change: Unity Catalog grants still decide what they see. The better modeled and documented your gold layer and metric views, the better every Genie surface performs.</p>
 </section>
 
 <!-- ============ 29 AI-ASSISTED DEVELOPMENT GENIE CODE ============ -->
 <section class="reveal" id="ai-dev">
   <h2><span class="hico"><svg class="ico"><use href="#i-spark"/></svg></span><span class="n">29.</span> AI-Assisted Development: Genie Code</h2>
-  <p class="lede">Genie Code (the evolution of the Databricks Assistant) is the in-workspace AI coding agent. It is part of a data engineer's daily tooling, and what sets it apart from general coding agents is Unity Catalog integration: it knows your tables, lineage, permissions and conventions.</p>
+  <p class="lede">Genie Code (the evolution of the Databricks Assistant) is the in-workspace AI coding agent. Its edge over general coding agents is Unity Catalog integration: it knows your tables, lineage, permissions and conventions.</p>
 
   <div class="grid-2">
-    <div class="mini-card"><h4>Chat mode</h4><p>Answers, explains and suggests code but executes nothing. Good for "what does this error mean".</p></div>
-    <div class="mini-card"><h4>Agent mode (recommended)</h4><p>Plans a multi-step task and does it: writes and runs notebook cells, fixes its own errors, builds pipelines (dry run, then run), dashboards and jobs. You accept or reject each change.</p></div>
+    <div class="mini-card"><h4>Chat mode</h4><p>Answers, explains and suggests code but executes nothing.</p></div>
+    <div class="mini-card"><h4>Agent mode (recommended)</h4><p>Plans a multi-step task and does it: runs notebook cells, fixes its own errors, builds pipelines (dry run, then run), dashboards and jobs. You accept or reject each change.</p></div>
   </div>
 
-  <h3>The everyday toolkit</h3>
   <div class="table-wrap"><table>
     <thead><tr><th>Feature</th><th>How</th></tr></thead>
     <tbody>
-      <tr><td><strong>Generate or edit in a cell</strong></td><td>Genie icon or <code>Ctrl/Cmd+I</code> on selected lines; returns a diff to accept or reject. Selecting only the lines to change keeps edits surgical.</td></tr>
+      <tr><td><strong>Generate or edit</strong></td><td>Genie icon or <code>Ctrl/Cmd+I</code> on selected lines; returns a diff to accept or reject. Selecting only the lines to change keeps edits surgical.</td></tr>
       <tr><td><strong>Diagnose error</strong></td><td>Button under a failed cell or <code>/fix</code>; in agent mode it can find the cause in another cell.</td></tr>
-      <tr><td><strong>Slash commands</strong></td><td><code>/doc</code>, <code>/explain</code>, <code>/rename</code>, <code>/prettify</code>, <code>/optimize</code>, <code>/migrate</code> (Oracle, Snowflake or T-SQL to Databricks SQL), <code>/findTables</code>. Comments and renames are the best low-risk uses.</td></tr>
-      <tr><td><strong>@ mentions</strong></td><td><code>@orders</code> resolves to the exact governed table, table, notebook, file or dashboard instead of a guess.</td></tr>
+      <tr><td><strong>Slash commands</strong></td><td><code>/doc</code>, <code>/explain</code>, <code>/rename</code>, <code>/prettify</code>, <code>/optimize</code>, <code>/migrate</code> (Oracle, Snowflake or T-SQL to Databricks SQL), <code>/findTables</code>.</td></tr>
+      <tr><td><strong>@ mentions</strong></td><td><code>@orders</code> resolves to the exact governed table, notebook, file or dashboard instead of a guess.</td></tr>
     </tbody>
   </table></div>
 
-  <h3>Guardrails and standards</h3>
+  <h3>Standards, skills and guardrails</h3>
   <ul>
-    <li><strong>Permissions.</strong> It asks <em>allow once</em>, <em>allow for this thread</em> or <em>always allow</em>; destructive statements such as <code>CREATE OR REPLACE TABLE</code> always need an explicit review click. Never "always allow" anything that can overwrite production data.</li>
-    <li><strong>One chat per task.</strong> Each prompt resends the whole conversation, so an unrelated history hurts quality and latency.</li>
-    <li><strong>Instructions</strong> are a Markdown file read on every request: per user (<code>/Users/&lt;you&gt;/.assistant_instructions.md</code>) for personal style, and per workspace (admin-set) for team standards such as naming, "always add expectations" and approved libraries. Both combine.</li>
-    <li><strong>Skills</strong> teach a repeatable job: a folder with a <code>SKILL.md</code> (YAML <code>name</code> and <code>description</code>, then steps) and optional scripts, loaded automatically when relevant or via <code>@</code>. Keep them small, single-purpose and in Git. Workspace skills (<code>/Workspace/.assistant/skills/</code>) suit organization standards such as PII handling.</li>
-    <li><strong>MCP</strong> (Model Context Protocol) is an open standard for agents to call external tools and read external data. Genie Code can use managed connections (Google Drive, SharePoint), Databricks MCP servers (UC functions, Vector Search, Genie spaces) and custom servers. A realistic use: keep the source-to-target mapping sheet in Drive and ask it to build the notebook the sheet describes.</li>
+    <li><strong>Instructions</strong> are a Markdown file read on every request: per user for personal style, per workspace (admin-set) for team standards such as naming and "always add expectations". Both combine.</li>
+    <li><strong>Skills</strong> teach a repeatable job: a folder with a <code>SKILL.md</code> (YAML <code>name</code> and <code>description</code>, then steps) and optional scripts, loaded when relevant or via <code>@</code>. Keep them small and in Git. <strong>MCP</strong> connects it to external tools and data (Drive, SharePoint, Databricks MCP servers, custom servers), for example a source-to-target mapping sheet it turns into a notebook.</li>
+    <li><strong>Permissions:</strong> it asks allow once, for this thread, or always; destructive statements such as <code>CREATE OR REPLACE TABLE</code> always need an explicit click. Never "always allow" anything that can overwrite production. Use one chat per task, since every prompt resends the history.</li>
   </ul>
   <pre><code>---
 name: job-cost-calculator
-description: Calculates the dollar cost and DBUs of a Databricks job run from its run ID using system.billing tables. Use when the user asks what a job run cost.
+description: Calculates the dollar cost and DBUs of a Databricks job run from its run ID using system.billing tables. Use when the user asks what a run cost.
 ---
-1. Take the job run ID from the user.
-2. Join system.billing.usage to system.billing.list_prices (time-aware) and sum usage_quantity * effective price.
-3. Report total USD, DBUs, SKU and the price applied. If no rows exist yet, billing can lag: suggest retrying.</code></pre>
-
-  <h3>Using it well</h3>
-  <ol>
-    <li><strong>Be specific and give context, not noise:</strong> "Read <code>@samples.tpch.orders</code>, filter 1995 onwards, write to <code>silver_orders</code>" beats "clean the orders".</li>
-    <li><strong>Break work down:</strong> notebook, then pipeline, then dashboard, then job, verifying each.</li>
-    <li><strong>Always review:</strong> read diffs, run tests, check generated SQL for wrong joins and grain. You own the code however it was written.</li>
-  </ol>
+1. Take the job run ID. 2. Join system.billing.usage to list_prices (time-aware) and sum usage_quantity * price.
+3. Report USD, DBUs and SKU; if no rows exist yet, billing can lag, so suggest retrying.</code></pre>
   <div class="callout warn">
-    <strong class="label">Guardrails for a team</strong>
-    Give it dev catalogs and pull requests, not production write access. Put standards in workspace instructions and skills, keep humans on destructive statements, and track adoption with the importable usage dashboard. The assistant has no separate charge; the compute its code runs on is billed normally.
+    <strong class="label">Use it well</strong>
+    Be specific ("read <code>@samples.tpch.orders</code>, filter 1995 onwards, write to <code>silver_orders</code>"), break work into notebook, pipeline, dashboard, job, and always review diffs and generated SQL for wrong joins and grain. You own the code however it was written. Give it dev catalogs and pull requests, not production write access. The assistant has no separate charge; the compute its code runs on is billed normally.
   </div>
 </section>
 
 <!-- ============ 30 GENAI &; AGENTIC AI ON DATABRICKS ============ -->
 <section class="reveal" id="agents">
   <h2><span class="hico"><svg class="ico"><use href="#i-bot"/></svg></span><span class="n">30.</span> GenAI &amp; Agentic AI on Databricks</h2>
-  <p class="lede">Most of the work in agentic AI is data engineering: parsing documents, chunking, keeping indexes fresh, exposing tables as safe tools, governing access and monitoring cost and quality. You need the vocabulary, the architecture and the pipeline-side responsibilities, not ML research.</p>
+  <p class="lede">Most of agentic AI is data engineering: parsing documents, chunking, keeping indexes fresh, exposing tables as safe tools, governing access and watching cost and quality. You need the vocabulary, the architecture and the pipeline-side duties, not ML research.</p>
 
-  <h3>Vocabulary</h3>
   <div class="table-wrap"><table>
     <thead><tr><th>Term</th><th>Meaning</th></tr></thead>
     <tbody>
-      <tr><td><strong>LLM, token, context window</strong></td><td>A model that generates text from text. Tokens (about three quarters of a word) meter cost, speed and limits; the context window is the most it can read at once, which is why retrieval exists.</td></tr>
-      <tr><td><strong>Embedding</strong></td><td>Numbers representing the meaning of text, so similar meanings are close. It powers semantic search.</td></tr>
-      <tr><td><strong>RAG</strong></td><td>Retrieve relevant chunks from your data, augment the prompt with them, generate the answer from that evidence.</td></tr>
-      <tr><td><strong>Agent</strong></td><td>An LLM that plans, plus <em>tools</em> (functions, APIs, search) and <em>memory</em>. It breaks a task into steps, calls tools, reads results and continues. An agentic system is several agents coordinated by an orchestrator.</td></tr>
+      <tr><td><strong>LLM, token, context window</strong></td><td>A model that generates text from text; tokens meter cost and limits; the context window is the most it can read at once, which is why retrieval exists.</td></tr>
+      <tr><td><strong>Embedding, RAG</strong></td><td>An embedding is numbers representing meaning, so similar text is close. RAG retrieves relevant chunks from your data, adds them to the prompt, and generates from that evidence.</td></tr>
+      <tr><td><strong>Agent</strong></td><td>An LLM that plans, plus <em>tools</em> (functions, APIs, search) and <em>memory</em>. It breaks a task into steps, calls tools, reads results and continues. An agentic system is several agents under an orchestrator.</td></tr>
       <tr><td><strong>MCP</strong></td><td>The open standard for exposing tools and data to agents (<a href="#ai-dev">&sect;29</a>).</td></tr>
     </tbody>
   </table></div>
 
-  <h3>Databricks building blocks</h3>
-  <div class="table-wrap"><table>
-    <thead><tr><th>Need</th><th>Databricks piece</th></tr></thead>
-    <tbody>
-      <tr><td>Call a model</td><td><strong>Foundation Model APIs</strong> (hosted, pay-per-token, OpenAI-compatible under <code>/serving-endpoints</code>); <strong>AI Playground</strong> to try them and export code.</td></tr>
-      <tr><td>LLM in SQL or pipelines</td><td><strong>AI Functions</strong>: <code>ai_query</code>, <code>ai_parse_document</code>, <code>ai_classify</code>, <code>ai_extract</code>, <code>ai_summarize</code>, <code>ai_mask</code> and more: batch enrichment at table scale.</td></tr>
-      <tr><td>Semantic search</td><td><strong>Vector Search</strong> (endpoint plus index); a Delta Sync index follows a Delta table.</td></tr>
-      <tr><td>Structured data as tools</td><td><strong>Unity Catalog functions</strong> or a Genie space (<a href="#aibi">&sect;28</a>), governed by the same grants as the tables.</td></tr>
-      <tr><td>Build, trace, evaluate</td><td><strong>MLflow</strong>: agent logging, tracing of every step, evaluation with LLM judges.</td></tr>
-      <tr><td>Deploy and expose</td><td><strong>Model Serving</strong> endpoint plus <strong>AI Gateway</strong> (rate limits, usage tracking, guardrails, payload logging); <strong>Databricks Apps</strong> for a UI; <strong>Lakebase</strong> or Delta for chat state and memory.</td></tr>
-      <tr><td>Prebuilt patterns</td><td><strong>Agent Bricks</strong>: managed builders for knowledge assistants, extraction and multi-agent setups. Start here before hand-building.</td></tr>
-    </tbody>
-  </table></div>
-
-  <h3>Reference architecture: a RAG agent over documents and tables</h3>
-    <figure class="diagram-wrap">
+  <h3>Architecture: a RAG agent over documents and tables</h3>
+  <figure class="diagram-wrap">
     <svg viewBox="0 0 900 372" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="A user chats through a Databricks App; the app calls an agent deployed on a Model Serving endpoint; the agent uses a foundation model and calls tools: a Vector Search index, Unity Catalog functions over Delta tables, and MCP servers; MLflow traces every call; a data pipeline builds the knowledge base">
       <defs><marker id="ag1" markerWidth="9" markerHeight="9" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8 Z" fill="#9AA0B4"/></marker></defs>
       <g font-family="sans-serif" text-anchor="middle">
@@ -3406,102 +3324,74 @@ description: Calculates the dollar cost and DBUs of a Databricks job run from it
     </svg>
     <figcaption>Fig. 8 - The agent is the small box in the middle. Everything around it (documents, tables, freshness, permissions, cost, tracing) is data-platform work.</figcaption>
   </figure>
-  <p><strong>Read it left to right.</strong> The user chats in a Databricks App, which calls the agent on a Model Serving endpoint. The agent plans, calls tools (Vector Search for documents, UC functions for tables, MCP servers for actions) and asks the foundation model to reason and answer; MLflow traces every call. The bottom band is the data engineering part that keeps the knowledge base correct and fresh.</p>
-
-  <h3>Calling a model from Python and SQL</h3>
-  <pre><code># Python: the endpoint is OpenAI-compatible, so the standard client works
-from openai import OpenAI
-token = dbutils.notebook.entry_point.getDbutils().notebook().getContext().apiToken().get()
-host  = spark.conf.get("spark.databricks.workspaceUrl")
-client = OpenAI(api_key=token, base_url=f"https://{host}/serving-endpoints")
-resp = client.chat.completions.create(
-    model="databricks-gpt-oss-120b",
-    messages=[{"role": "system", "content": "You are a concise data engineering assistant."},
-              {"role": "user",   "content": "Why are AI agents getting popular?"}],
-    max_tokens=400)
-# Reasoning models return content blocks: a 'reasoning' block, then the 'text' block you want.
-content = resp.choices[0].message.content
-text = next(b["text"] for b in content if b["type"] == "text") if isinstance(content, list) else content</code></pre>
-  <pre><code>-- SQL: table-scale enrichment with no client code
-SELECT ticket_id,
-       ai_classify(ticket_text, ARRAY('billing', 'bug', 'feature request')) AS category,
-       ai_extract(ticket_text, ARRAY('product_name', 'order_id'))          AS entities,
-       ai_mask(ticket_text, ARRAY('person', 'email', 'phone'))             AS redacted_text
-FROM support.silver.tickets;</code></pre>
-  <p>AI Functions run per row, so cost is rows x tokens: test on a sample, cache results in a Delta table, run them in a pipeline or job (not a live dashboard query) and handle failures per row. <code>ai_mask</code> fits the PII stage of <a href="#pii">&sect;06</a>: redact free text before it reaches an index or a model.</p>
+  <p>The user chats in a Databricks App, which calls the agent on a Model Serving endpoint. The agent plans, calls tools (Vector Search for documents, UC functions for tables, MCP servers for actions) and asks the foundation model to reason; MLflow traces every call. The bottom band is the data engineering part.</p>
+  <div class="table-wrap"><table>
+    <thead><tr><th>Need</th><th>Databricks piece</th></tr></thead>
+    <tbody>
+      <tr><td>Call a model</td><td><strong>Foundation Model APIs</strong> (hosted, pay-per-token, OpenAI-compatible under <code>/serving-endpoints</code>) and <strong>AI Playground</strong>.</td></tr>
+      <tr><td>LLM in SQL or pipelines</td><td><strong>AI Functions</strong> (<code>ai_query</code>, <code>ai_parse_document</code>, <code>ai_classify</code>, <code>ai_extract</code>, <code>ai_analyze_sentiment</code>, <code>ai_mask</code>): batch enrichment at table scale.</td></tr>
+      <tr><td>Semantic search</td><td><strong>Vector Search</strong>: a Delta Sync index follows a Delta table.</td></tr>
+      <tr><td>Tables as tools</td><td><strong>Unity Catalog functions</strong> or a Genie space, governed by the same grants.</td></tr>
+      <tr><td>Build, trace, evaluate</td><td><strong>MLflow</strong>: agent logging, tracing, evaluation with LLM judges.</td></tr>
+      <tr><td>Deploy and expose</td><td><strong>Model Serving</strong> plus <strong>AI Gateway</strong> (rate limits, guardrails, payload logging); <strong>Apps</strong> for the UI; <strong>Lakebase</strong> for chat state (<a href="#serving">&sect;26</a>).</td></tr>
+    </tbody>
+  </table></div>
 
   <h3>Pick the lightest AI path that works</h3>
   <div class="table-wrap"><table>
-    <thead><tr><th>Path</th><th>Use when</th><th>Example</th></tr></thead>
+    <thead><tr><th>Path</th><th>Use when</th></tr></thead>
     <tbody>
-      <tr><td><strong>AI Function</strong></td><td>The task is generic and a foundation model already does it: nothing to train or maintain.</td><td><code>ai_analyze_sentiment(review_text)</code> in one line of SQL.</td></tr>
-      <tr><td><strong>MLflow custom model</strong></td><td>The task is specific to your business and a general model cannot do it well enough.</td><td>Forecasting your own demand pattern from your history.</td></tr>
-      <tr><td><strong>Agent Bricks</strong></td><td>You need consistent quality and cost control at volume: it generates synthetic evaluation data and benchmarks, then tunes the agent against them.</td><td>Information extraction, a knowledge assistant, a multi-agent supervisor (Genie spaces and MCP tools can be its tools).</td></tr>
-      <tr><td><strong>Custom agent framework</strong></td><td>A requirement genuinely exceeds the packaged products.</td><td>Bespoke orchestration; existing LangGraph or similar code deployed on Databricks Apps.</td></tr>
+      <tr><td><strong>AI Function</strong></td><td>The task is generic (sentiment, classification, summarizing): one line of SQL, nothing to train.</td></tr>
+      <tr><td><strong>MLflow custom model</strong></td><td>The task is specific to your business, such as forecasting your own demand.</td></tr>
+      <tr><td><strong>Agent Bricks</strong></td><td>You need consistent quality and cost at volume: it generates evaluation data and tunes the agent (extraction, knowledge assistant, multi-agent supervisor).</td></tr>
+      <tr><td><strong>Custom agent framework</strong></td><td>A requirement exceeds the packaged products.</td></tr>
     </tbody>
   </table></div>
-  <p>Training your own model uses <strong>MLflow</strong>: tracking logs each run's parameters and metrics so experiments are comparable, the model registry versions the model in Unity Catalog (addressed like a table, <code>catalog.schema.name</code>), and promoting a version to serve traffic is an alias change or one API call, not a redeploy.</p>
-  <pre><code>import mlflow
-mlflow.set_registry_uri("databricks-uc")                      # register models in Unity Catalog
-
+  <pre><code>-- AI Functions: table-scale enrichment from SQL. Cost is rows x tokens: test on a sample and cache results.
+SELECT ticket_id,
+       ai_classify(ticket_text, ARRAY('billing', 'bug', 'feature request')) AS category,
+       ai_mask(ticket_text, ARRAY('person', 'email', 'phone'))             AS redacted_text   -- the PII stage (&sect;06)
+FROM support.silver.tickets;</code></pre>
+  <pre><code>import mlflow                                                 # training your own model
+mlflow.set_registry_uri("databricks-uc")                      # versions live in Unity Catalog as catalog.schema.name
 with mlflow.start_run():
-    model = train_model(X_train, y_train)                     # any scikit-learn, XGBoost or PyTorch model
-    mlflow.log_param("max_depth", 6)
-    mlflow.log_metric("accuracy", model.score(X_test, y_test))
-    mlflow.sklearn.log_model(model, artifact_path="model",
-                             registered_model_name="restaurant_prod.ml.demand_forecaster")</code></pre>
+    model = train_model(X_train, y_train)
+    mlflow.log_param("max_depth", 6); mlflow.log_metric("accuracy", model.score(X_test, y_test))
+    mlflow.sklearn.log_model(model, "model", registered_model_name="restaurant_prod.ml.demand_forecaster")</code></pre>
 
-  <h3>Building the knowledge base (where the DE work is)</h3>
+  <h3>The knowledge base (where the DE work is)</h3>
   <ol>
-    <li><strong>Land and parse.</strong> PDFs go in a Unity Catalog volume; <code>ai_parse_document</code> turns them into text, one row per document with metadata.</li>
-    <li><strong>Chunk.</strong> Split into retrievable pieces: fixed-size (500 to 1000 tokens with 10 to 20% overlap), structure-aware (by heading) or semantic. Keep source, page, section and access group on every chunk. Chunking is the biggest lever on answer quality.</li>
-    <li><strong>Embed and index.</strong> Enable Change Data Feed on the chunk table and create a Delta Sync index.</li>
+    <li><strong>Parse:</strong> PDFs land in a Unity Catalog volume; <code>ai_parse_document</code> gives one row per document with metadata.</li>
+    <li><strong>Chunk:</strong> fixed-size (500 to 1000 tokens, 10 to 20% overlap), structure-aware or semantic, with source, page and access group on every chunk. Chunking is the biggest lever on answer quality.</li>
+    <li><strong>Index:</strong> enable Change Data Feed on the chunk table and create a Delta Sync index.</li>
   </ol>
   <pre><code>ALTER TABLE agentic.docs.product_chunks SET TBLPROPERTIES (delta.enableChangeDataFeed = true);</code></pre>
   <pre><code>from databricks.vector_search.client import VectorSearchClient
 vsc = VectorSearchClient()
 vsc.create_endpoint(name="vs_endpoint_1", endpoint_type="STANDARD")
-
-index = vsc.create_delta_sync_index(
-    endpoint_name="vs_endpoint_1",
-    index_name="agentic.docs.product_chunks_index",
-    source_table_name="agentic.docs.product_chunks",
-    pipeline_type="TRIGGERED",                       # sync on demand; CONTINUOUS for near-real-time
-    primary_key="chunk_id",
-    embedding_source_column="chunk_text",            # Databricks computes the embeddings
-    embedding_model_endpoint_name="databricks-gte-large-en")
-
+index = vsc.create_delta_sync_index(endpoint_name="vs_endpoint_1", index_name="agentic.docs.product_chunks_index",
+    source_table_name="agentic.docs.product_chunks", pipeline_type="TRIGGERED", primary_key="chunk_id",
+    embedding_source_column="chunk_text", embedding_model_endpoint_name="databricks-gte-large-en")
 hits = index.similarity_search(query_text="Where are the Account Pro tutorial videos?",
-    columns=["chunk_id", "chunk_text", "product"], filters={"product": "Account Pro"}, num_results=3)</code></pre>
-  <p><strong>Keep it fresh.</strong> Run parse and chunk as a job with a file-arrival trigger (<a href="#orchestration">&sect;19</a>), MERGE into the chunk table so deletions propagate, then trigger the index sync. A ghost chunk from a deleted document is a correctness and compliance bug. <strong>Retrieval quality knobs:</strong> chunk size and overlap, metadata filters, hybrid search (vector plus keyword, better for IDs and product codes), a reranker and the embedding model.</p>
-
-  <h4>Structured data: tables as tools</h4>
-  <p>An agent cannot safely run arbitrary SQL, so give it narrow, parameterized functions. The <code>COMMENT</code> is not decoration: the LLM reads it to decide when to call the tool. Grant <code>EXECUTE</code> on exactly the tools the agent's identity needs.</p>
+    columns=["chunk_id", "chunk_text"], filters={"product": "Account Pro"}, num_results=3)</code></pre>
+  <p><strong>Keep it fresh:</strong> run parse and chunk as a job with a file-arrival trigger (<a href="#orchestration">&sect;19</a>), MERGE into the chunk table so deletions propagate, then sync the index; a ghost chunk from a deleted document is a correctness and compliance bug. Retrieval quality also depends on metadata filters, hybrid search (better for IDs and codes), a reranker and the embedding model.</p>
+  <p><strong>Tables as tools:</strong> an agent cannot safely run arbitrary SQL, so give it narrow, parameterized functions. The <code>COMMENT</code> is what the LLM reads to decide when to call it; grant <code>EXECUTE</code> on exactly the tools its identity needs.</p>
   <pre><code>CREATE OR REPLACE FUNCTION agentic.tools.get_customer_returns(customer_email STRING)
-RETURNS TABLE (order_id STRING, return_date DATE, reason STRING, status STRING)
+RETURNS TABLE (order_id STRING, return_date DATE, status STRING)
 COMMENT 'Returns every return request filed by a customer, looked up by email. Use for questions about return status or history.'
-RETURN SELECT order_id, return_date, reason, status FROM agentic.crm.returns WHERE email = customer_email;
-
+RETURN SELECT order_id, return_date, status FROM agentic.crm.returns WHERE email = customer_email;
 GRANT EXECUTE ON FUNCTION agentic.tools.get_customer_returns TO `support-agent-sp`;</code></pre>
 
-  <h3>From prototype to production</h3>
-  <ol>
-    <li><strong>Prototype in the Playground:</strong> pick a model, write the system prompt, add tools, test questions needing a document, a table, and both.</li>
-    <li><strong>Export as an agent notebook</strong> (<em>Get code, Create agent notebook</em>): it defines the agent, logs it to MLflow, registers it in Unity Catalog and deploys it to serving. You own the code in Git.</li>
-    <li><strong>Evaluate:</strong> an evaluation set of questions with expected facts, scored by MLflow with LLM judges (correctness, groundedness, relevance, safety); gate releases on the scores like a test suite. Traces show tool calls, latency and tokens per step.</li>
-    <li><strong>Serve and operate:</strong> AI Gateway for rate limits, guardrails and payload logging; a Databricks App with user-authorization scopes so it calls the endpoint as the signed-in user. Monitor cost per conversation, latency, errors, score drift and index freshness; version, canary and keep a rollback (<a href="#monitoring">&sect;23</a>).</li>
-  </ol>
-
-  <h3>Risks and how you design around them</h3>
+  <h3>To production, and the risks</h3>
+  <p>Prototype in the Playground, export an agent notebook (it logs to MLflow, registers in Unity Catalog and deploys to serving; you own the code in Git), evaluate with LLM judges (correctness, groundedness, relevance, safety) and gate releases on the scores, then serve behind AI Gateway with a Databricks App calling as the signed-in user. Operate it like a job: cost per conversation, latency, score drift and index freshness (<a href="#monitoring">&sect;23</a>), with versioning, canaries and rollback.</p>
   <div class="table-wrap"><table>
     <thead><tr><th>Risk</th><th>Mitigation</th></tr></thead>
     <tbody>
       <tr><td>Hallucination</td><td>Ground answers in retrieved chunks, require citations, evaluate groundedness, allow "I don't know".</td></tr>
-      <tr><td>Leakage across users</td><td>Run tools as the end user or filter retrieval by metadata and ACL; never put restricted documents in a shared, unfiltered index.</td></tr>
-      <tr><td>PII in prompts and logs</td><td>Redact with <code>ai_mask</code> before indexing, set payload logging deliberately, minimize what tools return (<a href="#pii">&sect;06</a>).</td></tr>
+      <tr><td>Leakage across users</td><td>Run tools as the end user or filter retrieval by metadata and ACL; never index restricted documents into an unfiltered shared index.</td></tr>
+      <tr><td>PII in prompts and logs</td><td>Redact with <code>ai_mask</code> before indexing, set payload logging deliberately, minimize what tools return.</td></tr>
       <tr><td>Prompt injection</td><td>Treat retrieved text as untrusted; narrow read-only tool scopes; confirm state-changing actions.</td></tr>
-      <tr><td>Runaway cost</td><td>Token limits, AI Gateway rate limits, scale-to-zero endpoints, cached AI Function results, budget alerts.</td></tr>
-      <tr><td>Stale knowledge</td><td>Job-driven incremental re-parse and index sync; a freshness metric on the chunk table.</td></tr>
+      <tr><td>Runaway cost, stale knowledge</td><td>Token limits, gateway rate limits, scale-to-zero, cached AI results, budget alerts; incremental re-parse and index sync with a freshness metric.</td></tr>
     </tbody>
   </table></div>
 </section>
