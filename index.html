@@ -268,8 +268,8 @@
           <li>Delivered <b>145 source tables across 300 model files</b> from Oracle, PostgreSQL and SQL Server into the Delta lakehouse — 19 domains, roughly a quarter of a 1,200-model production estate.</li>
           <li>Federated source databases into <b>Unity Catalog as foreign catalogs</b>, so Spark queries them directly without a staging copy.</li>
           <li>Authored <b>21 Databricks Workflows</b>: split one large daily pipeline into separate light and heavy jobs, and isolated unreliable sources so one failure no longer blocks the rest.</li>
-          <li>Designed <b>source-freshness gating</b> for daily ingestion — fail / warn / non-blocking strategies plus upstream job-completion signals — so jobs wait on the real source SLA instead of a fixed clock.</li>
-          <li>Fixed a production <b>Spark outage on EMR</b> caused by reclaimed spot nodes: added executor exclusion so the driver stops sending work to dead executors, and moved shuffle data to S3 so it survives node loss.</li>
+          <li>Extended <b>source-freshness gating</b> with an upstream job-completion signal and re-tuned gate strategies from run history, so daily jobs wait on the real source SLA, not a fixed clock.</li>
+          <li>Fixed a production <b>Spark failure on EMR</b> caused by a "zombie" executor that absorbed every retry: enabled executor exclusion so it is quarantined and replaced, and cut the executor churn that produced it.</li>
           <li>Led a <b>Delta Liquid Clustering migration</b> on a multi-terabyte lakehouse, converting 90+ tables out of a 108-table pilot and raising average file size <b>7×</b> — from 5.4 MB to 37.2 MB.</li>
           <li>Designed an <b>S3 cost program</b> targeting a 50% storage cut on four production buckets, built in Terraform with lifecycle rules and Intelligent-Tiering.</li>
           <li>Cut <b>EMR cost</b> by capping on-demand fallback to the fleet baseline, and moved daily Databricks jobs onto right-sized job clusters.</li>
