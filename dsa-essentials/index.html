@@ -2169,13 +2169,13 @@
 <p class="sectionsub reveal">Why every sort is <code>O(n log n)</code>, what a merge really does, the join that falls out of it for free — and merge sort, the one sort worth writing</p>
 
 <div class="prose reveal">
-<p>You will not be asked to implement quicksort. You will be asked, in some form, <em>why sorting costs what it costs</em> — because sorting is the hidden price on a large share of what a data platform does. <code>ORDER BY</code>, <code>DISTINCT</code>, window functions, a sort-merge join, and most shuffles all pay it. So this section is one picture that makes <code>O(n log n)</code> obvious, then the merge routine, then merge sort built from it. That is the one sort genuinely worth being able to write.</p>
+<p>You will not be asked to recite a shelf of sorting algorithms. You will be asked, in some form, <em>why sorting costs what it costs</em> — because sorting is the hidden price on a large share of what a data platform does. <code>ORDER BY</code>, <code>DISTINCT</code>, window functions, a sort-merge join, and most shuffles all pay it. So this section is one picture that makes <code>O(n log n)</code> obvious, then the merge routine, then merge sort built from it. That is the one sort genuinely worth being able to write.</p>
 </div>
 
 <div class="def reveal">
 <p class="t">Why merge sort, and only merge sort</p>
 <p style="margin:0">No interviewer is testing whether you have a shelf of sorting algorithms memorised. Merge sort is the one worth writing for two concrete reasons. First, it is <code>O(n log n)</code> on <em>every</em> input, stable, and its merge step is reused across LeetCode problems, from merging lists to counting inversions. Second, it is how sorting works once data no longer fits in memory on one machine. A big <code>ORDER BY</code> that spills to disk and a Spark sort shuffle merging partitions from many executors are both running the "merge two sorted runs" routine below, just at a larger scale.</p>
-<p class="ex">Heapsort comes along for free with the heap in §11. For everything else, call <code>sorted()</code>.</p>
+<p class="ex">One sort is enough. Whenever you just need data in order, call <code>sorted()</code>.</p>
 </div>
 
 <figure class="diagram reveal">
@@ -2244,8 +2244,8 @@
 
 <div class="def reveal">
 <p class="t">Why <code>O(n log n)</code> is a floor, not an accident</p>
-<p style="margin:0">Any sort that works by <em>comparing pairs</em> cannot beat <code>O(n log n)</code> — there are <code>n!</code> possible orderings and each comparison splits the possibilities roughly in half, so you need about <code>log₂(n!) ≈ n log n</code> comparisons to pin down one. Quicksort, merge sort, heapsort and Timsort all land on the same bound because they are all comparison sorts.</p>
-<p class="ex">Sorts that <em>beat</em> it do not compare — they exploit the shape of the keys. Counting sort and radix sort are <code>O(n + k)</code> and <code>O(n × digits)</code>. This is not trivia: <b>a bucketed or range-partitioned table is a radix sort you already paid for</b>, which is why a join or an aggregation on the clustering key can skip the sort entirely. That connection is a genuinely strong interview answer.</p>
+<p style="margin:0">Any sort that works by <em>comparing pairs</em> cannot beat <code>O(n log n)</code> — there are <code>n!</code> possible orderings and each comparison splits the possibilities roughly in half, so you need about <code>log₂(n!) ≈ n log n</code> comparisons to pin down one. Merge sort sits exactly on that bound, which is why no comparison sort can do better than it.</p>
+<p class="ex">The only way under the floor is to not compare at all and use the shape of the keys instead. That is what a bucketed or range-partitioned table does: <b>the rows are already grouped by key, so the sort is already paid for</b>, which is why a join or an aggregation on the clustering key can skip the sort entirely. That connection is a genuinely strong interview answer.</p>
 </div>
 
 <div class="callout mg reveal">
@@ -2623,7 +2623,7 @@
 <h3 class="reveal">Merge sort, written out</h3>
 <div class="prose reveal">
 <p>Put the two halves of this section together and you have the whole algorithm. The level diagram at the top is the recursion: split down the middle until every run is one item long. The merge from the previous section is the combine step: walk two sorted runs with two pointers and emit the smaller head each time. Merge sort is nothing more than those two pieces, so there is no new idea to learn here, only the base case and the split to get right.</p>
-<p>It is also the only sort worth writing from memory for LeetCode-style practice. It is <code>O(n log n)</code> on every input, with no bad pivot to defend against. It is stable. And its merge step is a hook a whole family of problems hangs from. Heapsort lives with the heap in §11, and for everything else <code>sorted()</code> is the answer.</p>
+<p>It is also the only sort worth writing from memory for LeetCode-style practice. It is <code>O(n log n)</code> on every input, whatever the data looks like. It is stable. And its merge step is a hook a whole family of problems hangs from. One sort is enough for LeetCode, and for everything else <code>sorted()</code> is the answer.</p>
 </div>
 
 <pre><code><span class="ln"> 1</span>  <span class="g">&quot;&quot;</span>&quot;Merge sort — the one divide-<span class="k">and</span>-conquer sort worth writing.
