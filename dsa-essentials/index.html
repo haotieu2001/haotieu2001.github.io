@@ -174,7 +174,7 @@
 <div class="tldr reveal">
 <h4>❯ What this page covers</h4>
 <p><span class="tier">TIER 1 · MUST KNOW</span><br/>
-<b>§01</b> where the DSA bar really sits, and the two ways candidates fail. <b>§02</b> Big-O intuition — not the formulas, just naming your own loop. <b>§03</b> arrays, strings and log parsing, plus two pointers and both forms of binary search. <b>§04</b> linked lists, singly and doubly — not something you'll write, but the shape behind call stacks, tree nodes, and the one trick (O(1) removal) a second pointer buys. <b>§05</b> hashmaps and sets — counting, grouping, de-duplicating, and the hash join they explain. <b>§06</b> sorting — why it costs what it costs, the merge, the sort-merge join, and the sorting algorithms themselves, with code. <b>§07</b> stacks and queues, and the <code>pop(0)</code> that quietly squares your runtime. <b>§08</b> recursion — the call stack, made explicit. <b>§09</b> trees, the three traversals, DFS vs BFS, and what makes a DAG a DAG. <b>§10</b> just enough 1-D dynamic programming not to panic.</p>
+<b>§01</b> where the DSA bar really sits, and the two ways candidates fail. <b>§02</b> Big-O intuition — not the formulas, just naming your own loop. <b>§03</b> arrays, strings and log parsing, plus two pointers and both forms of binary search. <b>§04</b> linked lists, singly and doubly — not something you'll write, but the shape behind call stacks, tree nodes, and the one trick (O(1) removal) a second pointer buys. <b>§05</b> hashmaps and sets — counting, grouping, de-duplicating, and the hash join they explain. <b>§06</b> sorting — why it costs what it costs, the merge, the sort-merge join, and merge sort itself, with code. <b>§07</b> stacks and queues, and the <code>pop(0)</code> that quietly squares your runtime. <b>§08</b> recursion — the call stack, made explicit. <b>§09</b> trees, the three traversals, DFS vs BFS, and what makes a DAG a DAG. <b>§10</b> just enough 1-D dynamic programming not to panic.</p>
 <p><span class="tier b">TIER 2 · GOOD TO KNOW</span><br/>
 <b>§11</b> heaps, and top-K without sorting. <b>§12</b> sliding window and prefix sums. <b>§13</b> topological sort — literally what your orchestrator runs — and where BFS stops being enough.</p>
 <p style="margin-bottom:0"><span class="tier w">TIER 3 · SKIP</span><br/>
@@ -2166,16 +2166,16 @@
 
 <p class="promptline">~/de-dsa <b>❯</b> tier 1 · lesson 5 · the cost you pay on every shuffle</p>
 <h2 id="s06" class="reveal"><span class="hico"><svg class="ico"><use href="#i-sort"/></svg></span><span class="n">06.</span><span>Sorting, merging, and the other join</span></h2>
-<p class="sectionsub reveal">Why every sort is <code>O(n log n)</code>, what a merge really does, the join that falls out of it for free — and the sorting algorithms themselves, traced and coded</p>
+<p class="sectionsub reveal">Why every sort is <code>O(n log n)</code>, what a merge really does, the join that falls out of it for free — and merge sort, the one sort worth writing</p>
 
 <div class="prose reveal">
-<p>You will not be asked to implement quicksort. You will be asked, in some form, <em>why sorting costs what it costs</em> — because sorting is the hidden price on a large share of what a data platform does. <code>ORDER BY</code>, <code>DISTINCT</code>, window functions, a sort-merge join, and most shuffles all pay it. So the first half of this section is one picture that makes <code>O(n log n)</code> obvious and then the merge routine, which is the piece genuinely worth being able to write. The second half is the reference: the rest of the shelf — seven algorithms, each with a trace, the code, and the property that decides when it is the right one.</p>
+<p>You will not be asked to implement quicksort. You will be asked, in some form, <em>why sorting costs what it costs</em> — because sorting is the hidden price on a large share of what a data platform does. <code>ORDER BY</code>, <code>DISTINCT</code>, window functions, a sort-merge join, and most shuffles all pay it. So this section is one picture that makes <code>O(n log n)</code> obvious, then the merge routine, then merge sort built from it. That is the one sort genuinely worth being able to write.</p>
 </div>
 
 <div class="def reveal">
-<p class="t">Why merge sort, specifically, and not the rest of the shelf</p>
-<p style="margin:0">Quicksort (average case), heapsort and merge sort all reach the <code>O(n log n)</code> lower bound that <em>any</em> comparison sort is provably stuck with; insertion sort, selection sort and bubble sort are <code>O(n²)</code> and exist mainly to show what quadratic looks like in practice. So no interviewer is testing whether you have all six implementations memorised. Merge sort is the one worth being able to write for a concrete reason: it is the <em>only</em> one of the <code>O(n log n)</code> family that is also how sorting works once data no longer fits in memory on one machine. A big <code>ORDER BY</code> that spills to disk, and a Spark sort shuffle merging partitions from many executors, are both doing exactly the "merge two sorted runs" routine below, at a larger scale. Quicksort and heapsort optimise for a single machine with everything in RAM — a real concern for a systems engineer, and not the shape of a data platform's sorting problem.</p>
-<p class="ex">If you are targeting a Data Platform or SWE–Data role (§01's tier-three signals), the in-memory family is back in scope, and quicksort's average-case <code>O(n log n)</code> with worst-case <code>O(n²)</code> — the input-order dependence that a random pivot exists to defeat — is worth knowing cold. The rest of the shelf is written out at the end of this section, one family at a time, for exactly that reading.</p>
+<p class="t">Why merge sort, and only merge sort</p>
+<p style="margin:0">No interviewer is testing whether you have a shelf of sorting algorithms memorised. Merge sort is the one worth writing for two concrete reasons. First, it is <code>O(n log n)</code> on <em>every</em> input, stable, and its merge step is reused across LeetCode problems, from merging lists to counting inversions. Second, it is how sorting works once data no longer fits in memory on one machine. A big <code>ORDER BY</code> that spills to disk and a Spark sort shuffle merging partitions from many executors are both running the "merge two sorted runs" routine below, just at a larger scale.</p>
+<p class="ex">Heapsort comes along for free with the heap in §11. For everything else, call <code>sorted()</code>.</p>
 </div>
 
 <figure class="diagram reveal">
@@ -2245,7 +2245,7 @@
 <div class="def reveal">
 <p class="t">Why <code>O(n log n)</code> is a floor, not an accident</p>
 <p style="margin:0">Any sort that works by <em>comparing pairs</em> cannot beat <code>O(n log n)</code> — there are <code>n!</code> possible orderings and each comparison splits the possibilities roughly in half, so you need about <code>log₂(n!) ≈ n log n</code> comparisons to pin down one. Quicksort, merge sort, heapsort and Timsort all land on the same bound because they are all comparison sorts.</p>
-<p class="ex">Sorts that <em>beat</em> it do not compare — they exploit the shape of the keys. Counting sort and radix sort are <code>O(n + k)</code> and <code>O(n × digits)</code>. This is not trivia: <b>a bucketed or range-partitioned table is a radix sort you already paid for</b>, which is why a join or an aggregation on the clustering key can skip the sort entirely. That connection is a genuinely strong interview answer, and the counting sort at the end of this section takes the mechanism apart.</p>
+<p class="ex">Sorts that <em>beat</em> it do not compare — they exploit the shape of the keys. Counting sort and radix sort are <code>O(n + k)</code> and <code>O(n × digits)</code>. This is not trivia: <b>a bucketed or range-partitioned table is a radix sort you already paid for</b>, which is why a join or an aggregation on the clustering key can skip the sort entirely. That connection is a genuinely strong interview answer.</p>
 </div>
 
 <div class="callout mg reveal">
@@ -2620,521 +2620,18 @@
 <p style="margin:0;font-size:14.5px">This is worth rehearsing, because some version of it gets asked constantly. <b>"If one side is small enough to fit in memory, a hash join wins — build from the small side, probe once, <code>O(n + m)</code> time for <code>O(n)</code> memory. If both sides are huge but already sorted or bucketed on the join key, a sort-merge join wins, because it streams in <code>O(1)</code> memory and the sort is already paid for. A nested loop join is the fallback when there is no equality condition to hash on at all — and it is <code>O(n × m)</code>, so at scale it is a bug report waiting to happen."</b></p>
 </div>
 
-<h3 class="reveal">The rest of the shelf, one family at a time</h3>
+<h3 class="reveal">Merge sort, written out</h3>
 <div class="prose reveal">
-<p>Everything above is the part of sorting a data platform actually collides with: what it costs, the stability guarantee, the merge, and the join that falls out of the merge. What follows is the reference half of this section — the seven algorithms worth knowing by name, grouped into the three families they fall into, each with working code and the one property that tells it apart.</p>
-<p>Two reasons it is here. The first is the question that does get asked: <em>"implement a sort"</em> on a whiteboard, or far more often <em>"which sort would you use here, and why"</em>. The second is that each one is an engine behaviour in disguise. Insertion sort is what <code>sorted()</code> does to short runs. Quicksort is what an in-memory engine runs. Heapsort is the safety net that keeps quicksort honest. Counting sort is a partition column, used as an address instead of compared. Knowing the shelf is how you read a query plan and recognise which sort it chose, and why.</p>
+<p>Put the two halves of this section together and you have the whole algorithm. The level diagram at the top is the recursion: split down the middle until every run is one item long. The merge from the previous section is the combine step: walk two sorted runs with two pointers and emit the smaller head each time. Merge sort is nothing more than those two pieces, so there is no new idea to learn here, only the base case and the split to get right.</p>
+<p>It is also the only sort worth writing from memory for LeetCode-style practice. It is <code>O(n log n)</code> on every input, with no bad pivot to defend against. It is stable. And its merge step is a hook a whole family of problems hangs from. Heapsort lives with the heap in §11, and for everything else <code>sorted()</code> is the answer.</p>
 </div>
-
-<figure class="diagram reveal">
-<svg viewBox="0 0 880 372" role="img" aria-label="The sorting algorithms split into three families. The quadratic family — bubble, selection and insertion sort — is for tiny or nearly sorted input. The comparison family — merge sort, quicksort and heapsort — runs in n log n and is what a library ships. The non-comparison family, represented here by counting sort, beats n log n by using the key itself as an address, which needs keys that are small integers.">
-  <text x="440.0" y="26.0" font-size="11" fill="#E7E7EE" text-anchor="middle" letter-spacing="1.6">THE SHELF, IN THREE FAMILIES — AND WHAT PICKS THE FAMILY</text>
-  <rect x="40.0" y="52.0" width="253.0" height="30.0" rx="6" fill="#23232c" stroke="#FFB454" stroke-width="1.2"/>
-  <text x="166.5" y="72.0" font-size="10.5" fill="#FFB454" text-anchor="middle" font-weight="700" letter-spacing="0.6">QUADRATIC · O(n²)</text>
-  <rect x="40.0" y="98.0" width="253.0" height="44.0" rx="6" fill="#1D1D26" stroke="#3a3a48" stroke-width="1.2"/>
-  <text x="52.0" y="116.0" font-size="11.5" fill="#E7E7EE" text-anchor="start" font-weight="700">bubble sort</text>
-  <text x="52.0" y="132.0" font-size="9" fill="#FFB454" text-anchor="start">neighbour swaps · stable · O(n) if sorted</text>
-  <rect x="40.0" y="150.0" width="253.0" height="44.0" rx="6" fill="#1D1D26" stroke="#3a3a48" stroke-width="1.2"/>
-  <text x="52.0" y="168.0" font-size="11.5" fill="#E7E7EE" text-anchor="start" font-weight="700">selection sort</text>
-  <text x="52.0" y="184.0" font-size="9" fill="#FFB454" text-anchor="start">exactly n−1 swaps · not stable</text>
-  <rect x="40.0" y="202.0" width="253.0" height="44.0" rx="6" fill="#1D1D26" stroke="#3a3a48" stroke-width="1.2"/>
-  <text x="52.0" y="220.0" font-size="11.5" fill="#E7E7EE" text-anchor="start" font-weight="700">insertion sort</text>
-  <text x="52.0" y="236.0" font-size="9" fill="#FFB454" text-anchor="start">O(n) on nearly sorted · stable</text>
-  <text x="166.5" y="272.0" font-size="9.5" fill="#E7E7EE" text-anchor="middle">only for tiny or nearly sorted input</text>
-  <rect x="313.0" y="52.0" width="253.0" height="30.0" rx="6" fill="#23232c" stroke="#5AC8FF" stroke-width="1.2"/>
-  <text x="439.5" y="72.0" font-size="10.5" fill="#5AC8FF" text-anchor="middle" font-weight="700" letter-spacing="0.6">COMPARISON · O(n log n)</text>
-  <rect x="313.0" y="98.0" width="253.0" height="44.0" rx="6" fill="#1D1D26" stroke="#3a3a48" stroke-width="1.2"/>
-  <text x="325.0" y="116.0" font-size="11.5" fill="#E7E7EE" text-anchor="start" font-weight="700">merge sort</text>
-  <text x="325.0" y="132.0" font-size="9" fill="#5AC8FF" text-anchor="start">stable · O(n) memory · runs out of core</text>
-  <rect x="313.0" y="150.0" width="253.0" height="44.0" rx="6" fill="#1D1D26" stroke="#3a3a48" stroke-width="1.2"/>
-  <text x="325.0" y="168.0" font-size="11.5" fill="#E7E7EE" text-anchor="start" font-weight="700">quicksort</text>
-  <text x="325.0" y="184.0" font-size="9" fill="#5AC8FF" text-anchor="start">in place · worst case O(n²) · unstable</text>
-  <rect x="313.0" y="202.0" width="253.0" height="44.0" rx="6" fill="#1D1D26" stroke="#3a3a48" stroke-width="1.2"/>
-  <text x="325.0" y="220.0" font-size="11.5" fill="#E7E7EE" text-anchor="start" font-weight="700">heapsort</text>
-  <text x="325.0" y="236.0" font-size="9" fill="#5AC8FF" text-anchor="start">in place · no bad case · unstable</text>
-  <text x="439.5" y="272.0" font-size="9.5" fill="#E7E7EE" text-anchor="middle">the default, and what a library ships</text>
-  <rect x="586.0" y="52.0" width="253.0" height="30.0" rx="6" fill="#23232c" stroke="#A56BFF" stroke-width="1.2"/>
-  <text x="712.5" y="72.0" font-size="10.5" fill="#A56BFF" text-anchor="middle" font-weight="700" letter-spacing="0.6">NO COMPARISON · O(n + k)</text>
-  <rect x="586.0" y="98.0" width="253.0" height="44.0" rx="6" fill="#1D1D26" stroke="#3a3a48" stroke-width="1.2"/>
-  <text x="598.0" y="116.0" font-size="11.5" fill="#E7E7EE" text-anchor="start" font-weight="700">counting sort</text>
-  <text x="598.0" y="132.0" font-size="9" fill="#A56BFF" text-anchor="start">keys are ints in 0..k · stable</text>
-  <text x="712.5" y="272.0" font-size="9.5" fill="#E7E7EE" text-anchor="middle">when the key is a small integer</text>
-  <text x="440.0" y="314.0" font-size="10.5" fill="#E7E7EE" text-anchor="middle">every comparison sort is stuck at O(n log n) — the right-hand family sidesteps the bound by never comparing</text>
-  <text x="440.0" y="338.0" font-size="10.5" fill="#5AC8FF" text-anchor="middle" font-weight="700">what an interview asks: name the family, justify the choice, then write one of them</text>
-</svg>
-<figcaption>Seven algorithms, three families, and the property that separates them. Read it as a decision rather than a list. If the input is tiny or nearly ordered, the left column is fine and insertion sort is the one to write. If you know nothing about the input, you are in the middle column, and the choice there is between stability (merge), memory (quick, heap) and a bound that holds on every input (heap). If the key is a small integer you can use as an index, the right-hand column is open to you, and it is cheaper than anything in the middle. The line at the bottom is the one worth quoting in an interview: a comparison sort cannot beat <code>O(n log n)</code>, so beating it means not comparing.</figcaption>
-</figure>
-
-<div class="prose reveal">
-<p>The same shelf as a table, for revision. The last column is the one to read first — it is the difference between knowing an algorithm's name and knowing where it lives.</p>
-</div>
-
-<div class="tablewrap reveal">
-<table>
-<thead><tr><th>Algorithm</th><th>Time</th><th>Extra memory</th><th>Stability</th><th>In place?</th><th>Where you actually meet it</th></tr></thead>
-<tbody>
-<tr><td><b>bubble sort</b></td><td><code>O(n²) · O(n) if already sorted</code></td><td><code>O(1)</code></td><td>stable</td><td>in place</td><td>nowhere in production — it is the clearest picture of quadratic cost</td></tr>
-<tr><td><b>selection sort</b></td><td><code>O(n²) on every input</code></td><td><code>O(1)</code></td><td>not stable</td><td>in place</td><td>when a write costs far more than a read: exactly n−1 swaps</td></tr>
-<tr><td><b>insertion sort</b></td><td><code>O(n²) · O(n) if nearly sorted</code></td><td><code>O(1)</code></td><td>stable</td><td>in place</td><td>inside <code>sorted()</code>, on every run shorter than about 64 items</td></tr>
-<tr><td><b>merge sort</b></td><td><code>O(n log n) on every input</code></td><td><code>O(n)</code></td><td>stable</td><td>not in place</td><td>external sorts, a Spark sort shuffle — anything larger than memory</td></tr>
-<tr><td><b>quicksort</b></td><td><code>O(n log n) average · <b>O(n²) worst</b></code></td><td><code>O(log n) stack</code></td><td>not stable</td><td>in place</td><td>in-memory sorts: <code>std::sort</code>, <code>numpy.sort</code> — both as introsort</td></tr>
-<tr><td><b>heapsort</b></td><td><code>O(n log n) on every input</code></td><td><code>O(1)</code></td><td>not stable</td><td>in place</td><td>introsort's safety net, and code that must not allocate</td></tr>
-<tr><td><b>counting sort</b></td><td><code>O(n + k)</code></td><td><code>O(n + k)</code></td><td>stable</td><td>not in place</td><td>small integer keys: status codes, hours, day of week</td></tr>
-</tbody>
-</table>
-</div>
-
-<div class="def reveal">
-<p class="t">Four words that do all the distinguishing</p>
-<p style="margin:0"><b>Stable</b> — rows with equal keys keep their input order. It is the only one of the four with a daily use: it is what makes "latest row per key" two lines above, and what lets two sorts compose (<code>ORDER BY</code> on one key, then another) instead of the second destroying the first. <b>In place</b> — <code>O(1)</code> extra memory beyond the input. Merge sort is the one that is not, which is exactly why it is the one that spills to disk. <b>Adaptive</b> — faster on input that is already partly ordered. Insertion sort and Timsort are; selection sort and heapsort never are, whatever you hand them. <b>Comparison-based</b> — the algorithm only ever asks "is <code>a &lt; b</code>". That is the family stuck at <code>O(n log n)</code>.</p>
-<p class="ex">Attach those four words to each name in the table and you can answer any sorting question a data engineering interview will ask, including the ones that sound like trivia. "Is quicksort stable?" is not a memory test — it follows from the fact that a partition swap moves values across the array, which can jump one equal key past another.</p>
-</div>
-
-<div class="callout mg reveal">
-<p style="margin:.2em 0"><span class="t"><svg class="ico"><use href="#i-check"/></svg> What to actually memorize</span></p>
-<p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">Of the seven, three are worth being able to <b>write from memory</b>: <b>insertion sort</b> (the one you're actually handed on a whiteboard), <b>merge sort</b> (the one that explains <code>ORDER BY</code>, external sorts, and the sort-merge join), and <b>counting sort</b> (the one that explains why a partitioned table skips the sort). For the other four — bubble, selection, quicksort, heapsort — a data engineering interview only needs the diagram, the complexity, and the one property that names it. Being able to say "quicksort partitions around a pivot, average <code>O(n log n)</code>, worst <code>O(n²)</code> on already-sorted input with a bad pivot" is worth more than code you are unlikely to be asked to produce for this role. The exception is a Data Platform or SWE–Data track (§01's tier-three signals) — there, quicksort's partition is worth writing too.</p>
-</div>
-
-<h3 class="reveal">The quadratic three: bubble, selection, insertion</h3>
-<div class="prose reveal">
-<p>These are what people mean when they say "the sorting algorithms", and they are the three you will never ship. They are still worth twenty minutes. They are the clearest available picture of what <code>O(n²)</code> costs; one of them runs inside <code>sorted()</code> on every call; and when an interviewer does ask for a sort on a whiteboard, it is almost always one of these — what is being checked is whether you handle loop boundaries and the swap cleanly, not whether you know something clever.</p>
-</div>
-
-<figure class="diagram reveal">
-<svg viewBox="0 0 880 470" role="img" aria-label="Bubble sort, selection sort and insertion sort run on the same six values — 38, 27, 43, 9, 82, 10 — with one row per pass, so the three columns can be read across. Bubble sort finishes the back of the array first, one value per pass. Selection sort finishes the front, one value per pass. Insertion sort keeps the front sorted but not final, because a later value can still slide into it. All three take five passes and all three are quadratic.">
-  <text x="440.0" y="26.0" font-size="11" fill="#E7E7EE" text-anchor="middle" letter-spacing="1.6">THE QUADRATIC THREE, ON THE SAME SIX VALUES</text>
-  <text x="150.0" y="68.0" font-size="11" fill="#FFB454" text-anchor="middle" font-weight="700" letter-spacing="1.2">BUBBLE</text>
-  <text x="150.0" y="86.0" font-size="9.5" fill="#E7E7EE" text-anchor="middle">biggest value walks right</text>
-  <rect x="60.0" y="118.0" width="30.0" height="26.0" rx="0" fill="#1D1D26" stroke="#3a3a48" stroke-width="1.2"/>
-  <text x="75.0" y="134.8" font-size="10.5" fill="#E7E7EE" text-anchor="middle" font-weight="700">38</text>
-  <rect x="90.0" y="118.0" width="30.0" height="26.0" rx="0" fill="#1D1D26" stroke="#3a3a48" stroke-width="1.2"/>
-  <text x="105.0" y="134.8" font-size="10.5" fill="#E7E7EE" text-anchor="middle" font-weight="700">27</text>
-  <rect x="120.0" y="118.0" width="30.0" height="26.0" rx="0" fill="#1D1D26" stroke="#3a3a48" stroke-width="1.2"/>
-  <text x="135.0" y="134.8" font-size="10.5" fill="#E7E7EE" text-anchor="middle" font-weight="700">43</text>
-  <rect x="150.0" y="118.0" width="30.0" height="26.0" rx="0" fill="#1D1D26" stroke="#3a3a48" stroke-width="1.2"/>
-  <text x="165.0" y="134.8" font-size="10.5" fill="#E7E7EE" text-anchor="middle" font-weight="700">9</text>
-  <rect x="180.0" y="118.0" width="30.0" height="26.0" rx="0" fill="#1D1D26" stroke="#3a3a48" stroke-width="1.2"/>
-  <text x="195.0" y="134.8" font-size="10.5" fill="#E7E7EE" text-anchor="middle" font-weight="700">82</text>
-  <rect x="210.0" y="118.0" width="30.0" height="26.0" rx="0" fill="#1D1D26" stroke="#3a3a48" stroke-width="1.2"/>
-  <text x="225.0" y="134.8" font-size="10.5" fill="#E7E7EE" text-anchor="middle" font-weight="700">10</text>
-  <text x="48.0" y="135.0" font-size="9.5" fill="#E7E7EE" text-anchor="end">start</text>
-  <rect x="60.0" y="162.0" width="30.0" height="26.0" rx="0" fill="#1D1D26" stroke="#3a3a48" stroke-width="1.2"/>
-  <text x="75.0" y="178.8" font-size="10.5" fill="#E7E7EE" text-anchor="middle" font-weight="700">27</text>
-  <rect x="90.0" y="162.0" width="30.0" height="26.0" rx="0" fill="#1D1D26" stroke="#3a3a48" stroke-width="1.2"/>
-  <text x="105.0" y="178.8" font-size="10.5" fill="#E7E7EE" text-anchor="middle" font-weight="700">38</text>
-  <rect x="120.0" y="162.0" width="30.0" height="26.0" rx="0" fill="#1D1D26" stroke="#3a3a48" stroke-width="1.2"/>
-  <text x="135.0" y="178.8" font-size="10.5" fill="#E7E7EE" text-anchor="middle" font-weight="700">9</text>
-  <rect x="150.0" y="162.0" width="30.0" height="26.0" rx="0" fill="#1D1D26" stroke="#3a3a48" stroke-width="1.2"/>
-  <text x="165.0" y="178.8" font-size="10.5" fill="#E7E7EE" text-anchor="middle" font-weight="700">43</text>
-  <rect x="180.0" y="162.0" width="30.0" height="26.0" rx="0" fill="#1D1D26" stroke="#3a3a48" stroke-width="1.2"/>
-  <text x="195.0" y="178.8" font-size="10.5" fill="#E7E7EE" text-anchor="middle" font-weight="700">10</text>
-  <rect x="210.0" y="162.0" width="30.0" height="26.0" rx="0" fill="#A56BFF33" stroke="#A56BFF" stroke-width="1.2"/>
-  <text x="225.0" y="178.8" font-size="10.5" fill="#E7E7EE" text-anchor="middle" font-weight="700">82</text>
-  <text x="48.0" y="179.0" font-size="9.5" fill="#E7E7EE" text-anchor="end">pass 1</text>
-  <rect x="60.0" y="206.0" width="30.0" height="26.0" rx="0" fill="#1D1D26" stroke="#3a3a48" stroke-width="1.2"/>
-  <text x="75.0" y="222.8" font-size="10.5" fill="#E7E7EE" text-anchor="middle" font-weight="700">27</text>
-  <rect x="90.0" y="206.0" width="30.0" height="26.0" rx="0" fill="#1D1D26" stroke="#3a3a48" stroke-width="1.2"/>
-  <text x="105.0" y="222.8" font-size="10.5" fill="#E7E7EE" text-anchor="middle" font-weight="700">9</text>
-  <rect x="120.0" y="206.0" width="30.0" height="26.0" rx="0" fill="#1D1D26" stroke="#3a3a48" stroke-width="1.2"/>
-  <text x="135.0" y="222.8" font-size="10.5" fill="#E7E7EE" text-anchor="middle" font-weight="700">38</text>
-  <rect x="150.0" y="206.0" width="30.0" height="26.0" rx="0" fill="#1D1D26" stroke="#3a3a48" stroke-width="1.2"/>
-  <text x="165.0" y="222.8" font-size="10.5" fill="#E7E7EE" text-anchor="middle" font-weight="700">10</text>
-  <rect x="180.0" y="206.0" width="30.0" height="26.0" rx="0" fill="#A56BFF33" stroke="#A56BFF" stroke-width="1.2"/>
-  <text x="195.0" y="222.8" font-size="10.5" fill="#E7E7EE" text-anchor="middle" font-weight="700">43</text>
-  <rect x="210.0" y="206.0" width="30.0" height="26.0" rx="0" fill="#A56BFF33" stroke="#A56BFF" stroke-width="1.2"/>
-  <text x="225.0" y="222.8" font-size="10.5" fill="#E7E7EE" text-anchor="middle" font-weight="700">82</text>
-  <text x="48.0" y="223.0" font-size="9.5" fill="#E7E7EE" text-anchor="end">pass 2</text>
-  <rect x="60.0" y="250.0" width="30.0" height="26.0" rx="0" fill="#1D1D26" stroke="#3a3a48" stroke-width="1.2"/>
-  <text x="75.0" y="266.8" font-size="10.5" fill="#E7E7EE" text-anchor="middle" font-weight="700">9</text>
-  <rect x="90.0" y="250.0" width="30.0" height="26.0" rx="0" fill="#1D1D26" stroke="#3a3a48" stroke-width="1.2"/>
-  <text x="105.0" y="266.8" font-size="10.5" fill="#E7E7EE" text-anchor="middle" font-weight="700">27</text>
-  <rect x="120.0" y="250.0" width="30.0" height="26.0" rx="0" fill="#1D1D26" stroke="#3a3a48" stroke-width="1.2"/>
-  <text x="135.0" y="266.8" font-size="10.5" fill="#E7E7EE" text-anchor="middle" font-weight="700">10</text>
-  <rect x="150.0" y="250.0" width="30.0" height="26.0" rx="0" fill="#A56BFF33" stroke="#A56BFF" stroke-width="1.2"/>
-  <text x="165.0" y="266.8" font-size="10.5" fill="#E7E7EE" text-anchor="middle" font-weight="700">38</text>
-  <rect x="180.0" y="250.0" width="30.0" height="26.0" rx="0" fill="#A56BFF33" stroke="#A56BFF" stroke-width="1.2"/>
-  <text x="195.0" y="266.8" font-size="10.5" fill="#E7E7EE" text-anchor="middle" font-weight="700">43</text>
-  <rect x="210.0" y="250.0" width="30.0" height="26.0" rx="0" fill="#A56BFF33" stroke="#A56BFF" stroke-width="1.2"/>
-  <text x="225.0" y="266.8" font-size="10.5" fill="#E7E7EE" text-anchor="middle" font-weight="700">82</text>
-  <text x="48.0" y="267.0" font-size="9.5" fill="#E7E7EE" text-anchor="end">pass 3</text>
-  <rect x="60.0" y="294.0" width="30.0" height="26.0" rx="0" fill="#1D1D26" stroke="#3a3a48" stroke-width="1.2"/>
-  <text x="75.0" y="310.8" font-size="10.5" fill="#E7E7EE" text-anchor="middle" font-weight="700">9</text>
-  <rect x="90.0" y="294.0" width="30.0" height="26.0" rx="0" fill="#1D1D26" stroke="#3a3a48" stroke-width="1.2"/>
-  <text x="105.0" y="310.8" font-size="10.5" fill="#E7E7EE" text-anchor="middle" font-weight="700">10</text>
-  <rect x="120.0" y="294.0" width="30.0" height="26.0" rx="0" fill="#A56BFF33" stroke="#A56BFF" stroke-width="1.2"/>
-  <text x="135.0" y="310.8" font-size="10.5" fill="#E7E7EE" text-anchor="middle" font-weight="700">27</text>
-  <rect x="150.0" y="294.0" width="30.0" height="26.0" rx="0" fill="#A56BFF33" stroke="#A56BFF" stroke-width="1.2"/>
-  <text x="165.0" y="310.8" font-size="10.5" fill="#E7E7EE" text-anchor="middle" font-weight="700">38</text>
-  <rect x="180.0" y="294.0" width="30.0" height="26.0" rx="0" fill="#A56BFF33" stroke="#A56BFF" stroke-width="1.2"/>
-  <text x="195.0" y="310.8" font-size="10.5" fill="#E7E7EE" text-anchor="middle" font-weight="700">43</text>
-  <rect x="210.0" y="294.0" width="30.0" height="26.0" rx="0" fill="#A56BFF33" stroke="#A56BFF" stroke-width="1.2"/>
-  <text x="225.0" y="310.8" font-size="10.5" fill="#E7E7EE" text-anchor="middle" font-weight="700">82</text>
-  <text x="48.0" y="311.0" font-size="9.5" fill="#E7E7EE" text-anchor="end">pass 4</text>
-  <rect x="60.0" y="338.0" width="30.0" height="26.0" rx="0" fill="#1D1D26" stroke="#3a3a48" stroke-width="1.2"/>
-  <text x="75.0" y="354.8" font-size="10.5" fill="#E7E7EE" text-anchor="middle" font-weight="700">9</text>
-  <rect x="90.0" y="338.0" width="30.0" height="26.0" rx="0" fill="#A56BFF33" stroke="#A56BFF" stroke-width="1.2"/>
-  <text x="105.0" y="354.8" font-size="10.5" fill="#E7E7EE" text-anchor="middle" font-weight="700">10</text>
-  <rect x="120.0" y="338.0" width="30.0" height="26.0" rx="0" fill="#A56BFF33" stroke="#A56BFF" stroke-width="1.2"/>
-  <text x="135.0" y="354.8" font-size="10.5" fill="#E7E7EE" text-anchor="middle" font-weight="700">27</text>
-  <rect x="150.0" y="338.0" width="30.0" height="26.0" rx="0" fill="#A56BFF33" stroke="#A56BFF" stroke-width="1.2"/>
-  <text x="165.0" y="354.8" font-size="10.5" fill="#E7E7EE" text-anchor="middle" font-weight="700">38</text>
-  <rect x="180.0" y="338.0" width="30.0" height="26.0" rx="0" fill="#A56BFF33" stroke="#A56BFF" stroke-width="1.2"/>
-  <text x="195.0" y="354.8" font-size="10.5" fill="#E7E7EE" text-anchor="middle" font-weight="700">43</text>
-  <rect x="210.0" y="338.0" width="30.0" height="26.0" rx="0" fill="#A56BFF33" stroke="#A56BFF" stroke-width="1.2"/>
-  <text x="225.0" y="354.8" font-size="10.5" fill="#E7E7EE" text-anchor="middle" font-weight="700">82</text>
-  <text x="48.0" y="355.0" font-size="9.5" fill="#E7E7EE" text-anchor="end">pass 5</text>
-  <text x="248.0" y="355.0" font-size="9" fill="#FFB454" text-anchor="start">no swaps → stop</text>
-  <text x="150.0" y="386.0" font-size="9.5" fill="#FFB454" text-anchor="middle" font-weight="700">the back is final, pass by pass</text>
-  <text x="440.0" y="68.0" font-size="11" fill="#FF6B9D" text-anchor="middle" font-weight="700" letter-spacing="1.2">SELECTION</text>
-  <text x="440.0" y="86.0" font-size="9.5" fill="#E7E7EE" text-anchor="middle">smallest value is fetched</text>
-  <rect x="350.0" y="118.0" width="30.0" height="26.0" rx="0" fill="#1D1D26" stroke="#3a3a48" stroke-width="1.2"/>
-  <text x="365.0" y="134.8" font-size="10.5" fill="#E7E7EE" text-anchor="middle" font-weight="700">38</text>
-  <rect x="380.0" y="118.0" width="30.0" height="26.0" rx="0" fill="#1D1D26" stroke="#3a3a48" stroke-width="1.2"/>
-  <text x="395.0" y="134.8" font-size="10.5" fill="#E7E7EE" text-anchor="middle" font-weight="700">27</text>
-  <rect x="410.0" y="118.0" width="30.0" height="26.0" rx="0" fill="#1D1D26" stroke="#3a3a48" stroke-width="1.2"/>
-  <text x="425.0" y="134.8" font-size="10.5" fill="#E7E7EE" text-anchor="middle" font-weight="700">43</text>
-  <rect x="440.0" y="118.0" width="30.0" height="26.0" rx="0" fill="#1D1D26" stroke="#3a3a48" stroke-width="1.2"/>
-  <text x="455.0" y="134.8" font-size="10.5" fill="#E7E7EE" text-anchor="middle" font-weight="700">9</text>
-  <rect x="470.0" y="118.0" width="30.0" height="26.0" rx="0" fill="#1D1D26" stroke="#3a3a48" stroke-width="1.2"/>
-  <text x="485.0" y="134.8" font-size="10.5" fill="#E7E7EE" text-anchor="middle" font-weight="700">82</text>
-  <rect x="500.0" y="118.0" width="30.0" height="26.0" rx="0" fill="#1D1D26" stroke="#3a3a48" stroke-width="1.2"/>
-  <text x="515.0" y="134.8" font-size="10.5" fill="#E7E7EE" text-anchor="middle" font-weight="700">10</text>
-  <rect x="350.0" y="162.0" width="30.0" height="26.0" rx="0" fill="#A56BFF33" stroke="#A56BFF" stroke-width="1.2"/>
-  <text x="365.0" y="178.8" font-size="10.5" fill="#E7E7EE" text-anchor="middle" font-weight="700">9</text>
-  <rect x="380.0" y="162.0" width="30.0" height="26.0" rx="0" fill="#1D1D26" stroke="#3a3a48" stroke-width="1.2"/>
-  <text x="395.0" y="178.8" font-size="10.5" fill="#E7E7EE" text-anchor="middle" font-weight="700">27</text>
-  <rect x="410.0" y="162.0" width="30.0" height="26.0" rx="0" fill="#1D1D26" stroke="#3a3a48" stroke-width="1.2"/>
-  <text x="425.0" y="178.8" font-size="10.5" fill="#E7E7EE" text-anchor="middle" font-weight="700">43</text>
-  <rect x="440.0" y="162.0" width="30.0" height="26.0" rx="0" fill="#1D1D26" stroke="#3a3a48" stroke-width="1.2"/>
-  <text x="455.0" y="178.8" font-size="10.5" fill="#E7E7EE" text-anchor="middle" font-weight="700">38</text>
-  <rect x="470.0" y="162.0" width="30.0" height="26.0" rx="0" fill="#1D1D26" stroke="#3a3a48" stroke-width="1.2"/>
-  <text x="485.0" y="178.8" font-size="10.5" fill="#E7E7EE" text-anchor="middle" font-weight="700">82</text>
-  <rect x="500.0" y="162.0" width="30.0" height="26.0" rx="0" fill="#1D1D26" stroke="#3a3a48" stroke-width="1.2"/>
-  <text x="515.0" y="178.8" font-size="10.5" fill="#E7E7EE" text-anchor="middle" font-weight="700">10</text>
-  <rect x="350.0" y="206.0" width="30.0" height="26.0" rx="0" fill="#A56BFF33" stroke="#A56BFF" stroke-width="1.2"/>
-  <text x="365.0" y="222.8" font-size="10.5" fill="#E7E7EE" text-anchor="middle" font-weight="700">9</text>
-  <rect x="380.0" y="206.0" width="30.0" height="26.0" rx="0" fill="#A56BFF33" stroke="#A56BFF" stroke-width="1.2"/>
-  <text x="395.0" y="222.8" font-size="10.5" fill="#E7E7EE" text-anchor="middle" font-weight="700">10</text>
-  <rect x="410.0" y="206.0" width="30.0" height="26.0" rx="0" fill="#1D1D26" stroke="#3a3a48" stroke-width="1.2"/>
-  <text x="425.0" y="222.8" font-size="10.5" fill="#E7E7EE" text-anchor="middle" font-weight="700">43</text>
-  <rect x="440.0" y="206.0" width="30.0" height="26.0" rx="0" fill="#1D1D26" stroke="#3a3a48" stroke-width="1.2"/>
-  <text x="455.0" y="222.8" font-size="10.5" fill="#E7E7EE" text-anchor="middle" font-weight="700">38</text>
-  <rect x="470.0" y="206.0" width="30.0" height="26.0" rx="0" fill="#1D1D26" stroke="#3a3a48" stroke-width="1.2"/>
-  <text x="485.0" y="222.8" font-size="10.5" fill="#E7E7EE" text-anchor="middle" font-weight="700">82</text>
-  <rect x="500.0" y="206.0" width="30.0" height="26.0" rx="0" fill="#1D1D26" stroke="#3a3a48" stroke-width="1.2"/>
-  <text x="515.0" y="222.8" font-size="10.5" fill="#E7E7EE" text-anchor="middle" font-weight="700">27</text>
-  <rect x="350.0" y="250.0" width="30.0" height="26.0" rx="0" fill="#A56BFF33" stroke="#A56BFF" stroke-width="1.2"/>
-  <text x="365.0" y="266.8" font-size="10.5" fill="#E7E7EE" text-anchor="middle" font-weight="700">9</text>
-  <rect x="380.0" y="250.0" width="30.0" height="26.0" rx="0" fill="#A56BFF33" stroke="#A56BFF" stroke-width="1.2"/>
-  <text x="395.0" y="266.8" font-size="10.5" fill="#E7E7EE" text-anchor="middle" font-weight="700">10</text>
-  <rect x="410.0" y="250.0" width="30.0" height="26.0" rx="0" fill="#A56BFF33" stroke="#A56BFF" stroke-width="1.2"/>
-  <text x="425.0" y="266.8" font-size="10.5" fill="#E7E7EE" text-anchor="middle" font-weight="700">27</text>
-  <rect x="440.0" y="250.0" width="30.0" height="26.0" rx="0" fill="#1D1D26" stroke="#3a3a48" stroke-width="1.2"/>
-  <text x="455.0" y="266.8" font-size="10.5" fill="#E7E7EE" text-anchor="middle" font-weight="700">38</text>
-  <rect x="470.0" y="250.0" width="30.0" height="26.0" rx="0" fill="#1D1D26" stroke="#3a3a48" stroke-width="1.2"/>
-  <text x="485.0" y="266.8" font-size="10.5" fill="#E7E7EE" text-anchor="middle" font-weight="700">82</text>
-  <rect x="500.0" y="250.0" width="30.0" height="26.0" rx="0" fill="#1D1D26" stroke="#3a3a48" stroke-width="1.2"/>
-  <text x="515.0" y="266.8" font-size="10.5" fill="#E7E7EE" text-anchor="middle" font-weight="700">43</text>
-  <rect x="350.0" y="294.0" width="30.0" height="26.0" rx="0" fill="#A56BFF33" stroke="#A56BFF" stroke-width="1.2"/>
-  <text x="365.0" y="310.8" font-size="10.5" fill="#E7E7EE" text-anchor="middle" font-weight="700">9</text>
-  <rect x="380.0" y="294.0" width="30.0" height="26.0" rx="0" fill="#A56BFF33" stroke="#A56BFF" stroke-width="1.2"/>
-  <text x="395.0" y="310.8" font-size="10.5" fill="#E7E7EE" text-anchor="middle" font-weight="700">10</text>
-  <rect x="410.0" y="294.0" width="30.0" height="26.0" rx="0" fill="#A56BFF33" stroke="#A56BFF" stroke-width="1.2"/>
-  <text x="425.0" y="310.8" font-size="10.5" fill="#E7E7EE" text-anchor="middle" font-weight="700">27</text>
-  <rect x="440.0" y="294.0" width="30.0" height="26.0" rx="0" fill="#A56BFF33" stroke="#A56BFF" stroke-width="1.2"/>
-  <text x="455.0" y="310.8" font-size="10.5" fill="#E7E7EE" text-anchor="middle" font-weight="700">38</text>
-  <rect x="470.0" y="294.0" width="30.0" height="26.0" rx="0" fill="#1D1D26" stroke="#3a3a48" stroke-width="1.2"/>
-  <text x="485.0" y="310.8" font-size="10.5" fill="#E7E7EE" text-anchor="middle" font-weight="700">82</text>
-  <rect x="500.0" y="294.0" width="30.0" height="26.0" rx="0" fill="#1D1D26" stroke="#3a3a48" stroke-width="1.2"/>
-  <text x="515.0" y="310.8" font-size="10.5" fill="#E7E7EE" text-anchor="middle" font-weight="700">43</text>
-  <rect x="350.0" y="338.0" width="30.0" height="26.0" rx="0" fill="#A56BFF33" stroke="#A56BFF" stroke-width="1.2"/>
-  <text x="365.0" y="354.8" font-size="10.5" fill="#E7E7EE" text-anchor="middle" font-weight="700">9</text>
-  <rect x="380.0" y="338.0" width="30.0" height="26.0" rx="0" fill="#A56BFF33" stroke="#A56BFF" stroke-width="1.2"/>
-  <text x="395.0" y="354.8" font-size="10.5" fill="#E7E7EE" text-anchor="middle" font-weight="700">10</text>
-  <rect x="410.0" y="338.0" width="30.0" height="26.0" rx="0" fill="#A56BFF33" stroke="#A56BFF" stroke-width="1.2"/>
-  <text x="425.0" y="354.8" font-size="10.5" fill="#E7E7EE" text-anchor="middle" font-weight="700">27</text>
-  <rect x="440.0" y="338.0" width="30.0" height="26.0" rx="0" fill="#A56BFF33" stroke="#A56BFF" stroke-width="1.2"/>
-  <text x="455.0" y="354.8" font-size="10.5" fill="#E7E7EE" text-anchor="middle" font-weight="700">38</text>
-  <rect x="470.0" y="338.0" width="30.0" height="26.0" rx="0" fill="#A56BFF33" stroke="#A56BFF" stroke-width="1.2"/>
-  <text x="485.0" y="354.8" font-size="10.5" fill="#E7E7EE" text-anchor="middle" font-weight="700">43</text>
-  <rect x="500.0" y="338.0" width="30.0" height="26.0" rx="0" fill="#1D1D26" stroke="#3a3a48" stroke-width="1.2"/>
-  <text x="515.0" y="354.8" font-size="10.5" fill="#E7E7EE" text-anchor="middle" font-weight="700">82</text>
-  <text x="440.0" y="386.0" font-size="9.5" fill="#FF6B9D" text-anchor="middle" font-weight="700">the front is final, pass by pass</text>
-  <text x="730.0" y="68.0" font-size="11" fill="#5AC8FF" text-anchor="middle" font-weight="700" letter-spacing="1.2">INSERTION</text>
-  <text x="730.0" y="86.0" font-size="9.5" fill="#E7E7EE" text-anchor="middle">each value slides back</text>
-  <rect x="640.0" y="118.0" width="30.0" height="26.0" rx="0" fill="#1D1D26" stroke="#3a3a48" stroke-width="1.2"/>
-  <text x="655.0" y="134.8" font-size="10.5" fill="#E7E7EE" text-anchor="middle" font-weight="700">38</text>
-  <rect x="670.0" y="118.0" width="30.0" height="26.0" rx="0" fill="#1D1D26" stroke="#3a3a48" stroke-width="1.2"/>
-  <text x="685.0" y="134.8" font-size="10.5" fill="#E7E7EE" text-anchor="middle" font-weight="700">27</text>
-  <rect x="700.0" y="118.0" width="30.0" height="26.0" rx="0" fill="#1D1D26" stroke="#3a3a48" stroke-width="1.2"/>
-  <text x="715.0" y="134.8" font-size="10.5" fill="#E7E7EE" text-anchor="middle" font-weight="700">43</text>
-  <rect x="730.0" y="118.0" width="30.0" height="26.0" rx="0" fill="#1D1D26" stroke="#3a3a48" stroke-width="1.2"/>
-  <text x="745.0" y="134.8" font-size="10.5" fill="#E7E7EE" text-anchor="middle" font-weight="700">9</text>
-  <rect x="760.0" y="118.0" width="30.0" height="26.0" rx="0" fill="#1D1D26" stroke="#3a3a48" stroke-width="1.2"/>
-  <text x="775.0" y="134.8" font-size="10.5" fill="#E7E7EE" text-anchor="middle" font-weight="700">82</text>
-  <rect x="790.0" y="118.0" width="30.0" height="26.0" rx="0" fill="#1D1D26" stroke="#3a3a48" stroke-width="1.2"/>
-  <text x="805.0" y="134.8" font-size="10.5" fill="#E7E7EE" text-anchor="middle" font-weight="700">10</text>
-  <rect x="640.0" y="162.0" width="30.0" height="26.0" rx="0" fill="#5AC8FF33" stroke="#5AC8FF" stroke-width="1.2"/>
-  <text x="655.0" y="178.8" font-size="10.5" fill="#E7E7EE" text-anchor="middle" font-weight="700">27</text>
-  <rect x="670.0" y="162.0" width="30.0" height="26.0" rx="0" fill="#5AC8FF33" stroke="#5AC8FF" stroke-width="1.2"/>
-  <text x="685.0" y="178.8" font-size="10.5" fill="#E7E7EE" text-anchor="middle" font-weight="700">38</text>
-  <rect x="700.0" y="162.0" width="30.0" height="26.0" rx="0" fill="#1D1D26" stroke="#3a3a48" stroke-width="1.2"/>
-  <text x="715.0" y="178.8" font-size="10.5" fill="#E7E7EE" text-anchor="middle" font-weight="700">43</text>
-  <rect x="730.0" y="162.0" width="30.0" height="26.0" rx="0" fill="#1D1D26" stroke="#3a3a48" stroke-width="1.2"/>
-  <text x="745.0" y="178.8" font-size="10.5" fill="#E7E7EE" text-anchor="middle" font-weight="700">9</text>
-  <rect x="760.0" y="162.0" width="30.0" height="26.0" rx="0" fill="#1D1D26" stroke="#3a3a48" stroke-width="1.2"/>
-  <text x="775.0" y="178.8" font-size="10.5" fill="#E7E7EE" text-anchor="middle" font-weight="700">82</text>
-  <rect x="790.0" y="162.0" width="30.0" height="26.0" rx="0" fill="#1D1D26" stroke="#3a3a48" stroke-width="1.2"/>
-  <text x="805.0" y="178.8" font-size="10.5" fill="#E7E7EE" text-anchor="middle" font-weight="700">10</text>
-  <rect x="640.0" y="206.0" width="30.0" height="26.0" rx="0" fill="#5AC8FF33" stroke="#5AC8FF" stroke-width="1.2"/>
-  <text x="655.0" y="222.8" font-size="10.5" fill="#E7E7EE" text-anchor="middle" font-weight="700">27</text>
-  <rect x="670.0" y="206.0" width="30.0" height="26.0" rx="0" fill="#5AC8FF33" stroke="#5AC8FF" stroke-width="1.2"/>
-  <text x="685.0" y="222.8" font-size="10.5" fill="#E7E7EE" text-anchor="middle" font-weight="700">38</text>
-  <rect x="700.0" y="206.0" width="30.0" height="26.0" rx="0" fill="#5AC8FF33" stroke="#5AC8FF" stroke-width="1.2"/>
-  <text x="715.0" y="222.8" font-size="10.5" fill="#E7E7EE" text-anchor="middle" font-weight="700">43</text>
-  <rect x="730.0" y="206.0" width="30.0" height="26.0" rx="0" fill="#1D1D26" stroke="#3a3a48" stroke-width="1.2"/>
-  <text x="745.0" y="222.8" font-size="10.5" fill="#E7E7EE" text-anchor="middle" font-weight="700">9</text>
-  <rect x="760.0" y="206.0" width="30.0" height="26.0" rx="0" fill="#1D1D26" stroke="#3a3a48" stroke-width="1.2"/>
-  <text x="775.0" y="222.8" font-size="10.5" fill="#E7E7EE" text-anchor="middle" font-weight="700">82</text>
-  <rect x="790.0" y="206.0" width="30.0" height="26.0" rx="0" fill="#1D1D26" stroke="#3a3a48" stroke-width="1.2"/>
-  <text x="805.0" y="222.8" font-size="10.5" fill="#E7E7EE" text-anchor="middle" font-weight="700">10</text>
-  <rect x="640.0" y="250.0" width="30.0" height="26.0" rx="0" fill="#5AC8FF33" stroke="#5AC8FF" stroke-width="1.2"/>
-  <text x="655.0" y="266.8" font-size="10.5" fill="#E7E7EE" text-anchor="middle" font-weight="700">9</text>
-  <rect x="670.0" y="250.0" width="30.0" height="26.0" rx="0" fill="#5AC8FF33" stroke="#5AC8FF" stroke-width="1.2"/>
-  <text x="685.0" y="266.8" font-size="10.5" fill="#E7E7EE" text-anchor="middle" font-weight="700">27</text>
-  <rect x="700.0" y="250.0" width="30.0" height="26.0" rx="0" fill="#5AC8FF33" stroke="#5AC8FF" stroke-width="1.2"/>
-  <text x="715.0" y="266.8" font-size="10.5" fill="#E7E7EE" text-anchor="middle" font-weight="700">38</text>
-  <rect x="730.0" y="250.0" width="30.0" height="26.0" rx="0" fill="#5AC8FF33" stroke="#5AC8FF" stroke-width="1.2"/>
-  <text x="745.0" y="266.8" font-size="10.5" fill="#E7E7EE" text-anchor="middle" font-weight="700">43</text>
-  <rect x="760.0" y="250.0" width="30.0" height="26.0" rx="0" fill="#1D1D26" stroke="#3a3a48" stroke-width="1.2"/>
-  <text x="775.0" y="266.8" font-size="10.5" fill="#E7E7EE" text-anchor="middle" font-weight="700">82</text>
-  <rect x="790.0" y="250.0" width="30.0" height="26.0" rx="0" fill="#1D1D26" stroke="#3a3a48" stroke-width="1.2"/>
-  <text x="805.0" y="266.8" font-size="10.5" fill="#E7E7EE" text-anchor="middle" font-weight="700">10</text>
-  <rect x="640.0" y="294.0" width="30.0" height="26.0" rx="0" fill="#5AC8FF33" stroke="#5AC8FF" stroke-width="1.2"/>
-  <text x="655.0" y="310.8" font-size="10.5" fill="#E7E7EE" text-anchor="middle" font-weight="700">9</text>
-  <rect x="670.0" y="294.0" width="30.0" height="26.0" rx="0" fill="#5AC8FF33" stroke="#5AC8FF" stroke-width="1.2"/>
-  <text x="685.0" y="310.8" font-size="10.5" fill="#E7E7EE" text-anchor="middle" font-weight="700">27</text>
-  <rect x="700.0" y="294.0" width="30.0" height="26.0" rx="0" fill="#5AC8FF33" stroke="#5AC8FF" stroke-width="1.2"/>
-  <text x="715.0" y="310.8" font-size="10.5" fill="#E7E7EE" text-anchor="middle" font-weight="700">38</text>
-  <rect x="730.0" y="294.0" width="30.0" height="26.0" rx="0" fill="#5AC8FF33" stroke="#5AC8FF" stroke-width="1.2"/>
-  <text x="745.0" y="310.8" font-size="10.5" fill="#E7E7EE" text-anchor="middle" font-weight="700">43</text>
-  <rect x="760.0" y="294.0" width="30.0" height="26.0" rx="0" fill="#5AC8FF33" stroke="#5AC8FF" stroke-width="1.2"/>
-  <text x="775.0" y="310.8" font-size="10.5" fill="#E7E7EE" text-anchor="middle" font-weight="700">82</text>
-  <rect x="790.0" y="294.0" width="30.0" height="26.0" rx="0" fill="#1D1D26" stroke="#3a3a48" stroke-width="1.2"/>
-  <text x="805.0" y="310.8" font-size="10.5" fill="#E7E7EE" text-anchor="middle" font-weight="700">10</text>
-  <rect x="640.0" y="338.0" width="30.0" height="26.0" rx="0" fill="#5AC8FF33" stroke="#5AC8FF" stroke-width="1.2"/>
-  <text x="655.0" y="354.8" font-size="10.5" fill="#E7E7EE" text-anchor="middle" font-weight="700">9</text>
-  <rect x="670.0" y="338.0" width="30.0" height="26.0" rx="0" fill="#5AC8FF33" stroke="#5AC8FF" stroke-width="1.2"/>
-  <text x="685.0" y="354.8" font-size="10.5" fill="#E7E7EE" text-anchor="middle" font-weight="700">10</text>
-  <rect x="700.0" y="338.0" width="30.0" height="26.0" rx="0" fill="#5AC8FF33" stroke="#5AC8FF" stroke-width="1.2"/>
-  <text x="715.0" y="354.8" font-size="10.5" fill="#E7E7EE" text-anchor="middle" font-weight="700">27</text>
-  <rect x="730.0" y="338.0" width="30.0" height="26.0" rx="0" fill="#5AC8FF33" stroke="#5AC8FF" stroke-width="1.2"/>
-  <text x="745.0" y="354.8" font-size="10.5" fill="#E7E7EE" text-anchor="middle" font-weight="700">38</text>
-  <rect x="760.0" y="338.0" width="30.0" height="26.0" rx="0" fill="#5AC8FF33" stroke="#5AC8FF" stroke-width="1.2"/>
-  <text x="775.0" y="354.8" font-size="10.5" fill="#E7E7EE" text-anchor="middle" font-weight="700">43</text>
-  <rect x="790.0" y="338.0" width="30.0" height="26.0" rx="0" fill="#5AC8FF33" stroke="#5AC8FF" stroke-width="1.2"/>
-  <text x="805.0" y="354.8" font-size="10.5" fill="#E7E7EE" text-anchor="middle" font-weight="700">82</text>
-  <text x="730.0" y="386.0" font-size="9.5" fill="#5AC8FF" text-anchor="middle" font-weight="700">the front is sorted, not final</text>
-  <text x="440.0" y="406.0" font-size="10.5" fill="#E7E7EE" text-anchor="middle">purple cells are in their final slot · cyan cells are sorted, but a later value can still slide in</text>
-  <text x="440.0" y="428.0" font-size="10.5" fill="#E7E7EE" text-anchor="middle">same input, same answer, five passes each — and roughly n²/2 comparisons to get there</text>
-  <text x="440.0" y="452.0" font-size="10.5" fill="#5AC8FF" text-anchor="middle" font-weight="700">only insertion sort survives into real code: Timsort runs it on every run shorter than about 64 items</text>
-</svg>
-<figcaption>The same six values sorted three ways, one row per pass, so the columns can be read across. The difference worth seeing is <b>which region is finished</b>. Bubble sort fixes the back of the array, one value per pass. Selection sort fixes the front. Insertion sort's front is <em>sorted but not final</em> — 10 is still to come, and it will slide into the middle of that prefix. Bubble sort's last row is its early exit: a full pass with no swap proves the array is in order, and that flag is the only reason bubble sort is ever <code>O(n)</code>. All three do roughly <code>n²/2</code> comparisons, which at a million rows is about <code>5 × 10¹¹</code> of them — hours of CPU for something <code>sorted()</code> finishes in under a second.</figcaption>
-</figure>
-
-<div class="def reveal">
-<p class="t">Bubble and selection sort — concept only, no code to memorize</p>
-<p style="margin:0"><b>Bubble sort</b> repeatedly swaps adjacent out-of-order neighbours, which drags the largest remaining value to the right end each pass; stable, <code>O(n²)</code>, and its one trick is an early exit — a pass with no swaps proves the array is sorted, the only reason it is ever <code>O(n)</code>. <b>Selection sort</b> scans the unsorted tail for the smallest value and swaps it into place; not stable, always <code>O(n²)</code> with no early exit to add, but it does exactly <code>n−1</code> swaps, its one virtue when a write costs far more than a read. Neither ships in real code — they exist to make quadratic cost visible, and the diagram above is the whole of what is worth carrying from them.</p>
-</div>
-
-<pre><code><span class="ln"> 1</span>  <span class="g">&quot;&quot;</span>&quot;Insertion sort — the one quadratic sort that earns its place.
-<span class="ln"> 2</span>
-<span class="ln"> 3</span>  Bubble and selection sort are above <span class="k">as</span> concepts only; nobody ships them.
-<span class="ln"> 4</span>  Insertion sort <span class="k">is</span> the exception, because Timsort runs it on every short
-<span class="ln"> 5</span>  run inside sorted().
-<span class="ln"> 6</span>  <span class="g">&quot;&quot;</span>&quot;
-<span class="ln"> 7</span>
-<span class="ln"> 8</span>  DATA = [38, 27, 43, 9, 82, 10]
-<span class="ln"> 9</span>  NEARLY = [9, 10, 27, 38, 43, 82, 12]        <span class="c"># one value out of place</span>
-<span class="ln">10</span>
-<span class="ln">11</span>
-<span class="ln">12</span>  <span class="k">def</span> insertion_sort(xs):
-<span class="ln">13</span>      <span class="g">&quot;&quot;</span>&quot;Slide each value back into the sorted prefix. O(n^2), O(n) <span class="k">if</span> nearly
-<span class="ln">14</span>      sorted, stable, <span class="k">and</span> the sort a human uses on a hand of cards.<span class="g">&quot;&quot;</span>&quot;
-<span class="ln">15</span>      a = list(xs)
-<span class="ln">16</span>      <span class="k">for</span> i <span class="k">in</span> range(1, len(a)):
-<span class="ln">17</span>          val = a[i]
-<span class="ln">18</span>          j = i - 1
-<span class="ln">19</span>          <span class="k">while</span> j &gt;= 0 <span class="k">and</span> a[j] &gt; val:         <span class="c"># shift only while you must</span>
-<span class="ln">20</span>              a[j + 1] = a[j]
-<span class="ln">21</span>              j -= 1
-<span class="ln">22</span>          a[j + 1] = val                       <span class="c"># the hole left behind is where</span>
-<span class="ln">23</span>      <span class="k">return</span> a                                 <span class="c"># val belongs</span>
-<span class="ln">24</span>
-<span class="ln">25</span>
-<span class="ln">26</span>  <span class="k">if</span> __name__ == <span class="g">&#x27;__main__&#x27;</span>:
-<span class="ln">27</span>      print(<span class="g">&#x27;insertion_sort            :&#x27;</span>, insertion_sort(DATA), insertion_sort(DATA) == sorted(DATA))
-<span class="ln">28</span>      print(<span class="g">&#x27;insertion on nearly sorted:&#x27;</span>, insertion_sort(NEARLY))</code></pre>
-
-<div class="callout mg reveal">
-<p style="margin:.2em 0"><span class="t"><svg class="ico"><use href="#i-map"/></svg> Where insertion sort actually runs</span></p>
-<p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">As the callout at the top of this section says, <code>sorted()</code> and <code>list.sort()</code> begin by scanning for runs that are already in order. When a run is shorter than a threshold computed from <code>n</code> — between 32 and 64 items — they do not recurse: they <b>extend that run with insertion sort</b>, because at that size its tiny constant factor beats a merge. So the answer to "is insertion sort ever useful?" is that it runs inside every call to <code>sorted()</code> you have ever made, and it is a large part of why <code>sorted()</code> is near-linear on the partly-ordered data most pipelines produce.</p>
-</div>
-
-<h3 class="reveal">Divide and conquer: merge sort and quicksort</h3>
-<div class="prose reveal">
-<p>Two algorithms, one idea: split the problem roughly in half, solve both halves the same way, combine. What separates them is <em>when</em> the work happens. Merge sort splits blindly down the middle and does everything on the way back up, in the merge routine from earlier in this section. Quicksort does the work on the way down, in the partition, and its combine step is nothing at all — once a value is on the correct side of the pivot, and the pivot is in its final slot, there is nothing left to do.</p>
-<p>That single difference explains every other difference between them. Merge sort needs somewhere to merge into, so it allocates <code>O(n)</code> and can stream from disk; quicksort rearranges the array it was given, so it allocates nothing and cannot. Merge sort's split is data-independent, so its cost is <code>O(n log n)</code> on every input; quicksort's split depends on the pivot, so a bad pivot costs it everything.</p>
-</div>
-
-<figure class="diagram reveal">
-<svg viewBox="0 0 880 620" role="img" aria-label="One Lomuto partition of 38, 27, 43, 9, 82, 10 traced comparison by comparison. The random pivot, 38, is swapped to the end of the array. A pointer j then walks left to right: every value smaller than the pivot is moved below the boundary i, which advances. Ten and 27 are already below the boundary, 43 is skipped, 9 is swapped down past 43, and 82 is skipped. Finally the pivot is swapped into the boundary slot, where it is now in its final position — everything smaller lies to its left and everything larger to its right, so each side can be sorted independently.">
-  <text x="440.0" y="26.0" font-size="11" fill="#E7E7EE" text-anchor="middle" letter-spacing="1.6">QUICKSORT'S ONE IDEA: PARTITION AROUND A PIVOT</text>
-  <rect x="224.0" y="49.0" width="26.0" height="18.0" rx="0" fill="#FFB45442" stroke="#FFB454" stroke-width="1.2"/>
-  <text x="258.0" y="62.0" font-size="10" fill="#E7E7EE" text-anchor="start">the pivot</text>
-  <rect x="342.0" y="49.0" width="26.0" height="18.0" rx="0" fill="#8AA0FF38" stroke="#8AA0FF" stroke-width="1.2"/>
-  <text x="376.0" y="62.0" font-size="10" fill="#E7E7EE" text-anchor="start">proved &lt; pivot</text>
-  <rect x="490.0" y="49.0" width="26.0" height="18.0" rx="0" fill="#5AC8FF42" stroke="#5AC8FF" stroke-width="1.2"/>
-  <text x="524.0" y="62.0" font-size="10" fill="#E7E7EE" text-anchor="start">the value j is reading</text>
-  <rect x="120.0" y="96.0" width="54.0" height="28.0" rx="0" fill="#FFB45442" stroke="#FFB454" stroke-width="1.2"/>
-  <text x="147.0" y="114.3" font-size="12" fill="#E7E7EE" text-anchor="middle" font-weight="700">38</text>
-  <rect x="174.0" y="96.0" width="54.0" height="28.0" rx="0" fill="#1D1D26" stroke="#3a3a48" stroke-width="1.2"/>
-  <text x="201.0" y="114.3" font-size="12" fill="#E7E7EE" text-anchor="middle" font-weight="700">27</text>
-  <rect x="228.0" y="96.0" width="54.0" height="28.0" rx="0" fill="#1D1D26" stroke="#3a3a48" stroke-width="1.2"/>
-  <text x="255.0" y="114.3" font-size="12" fill="#E7E7EE" text-anchor="middle" font-weight="700">43</text>
-  <rect x="282.0" y="96.0" width="54.0" height="28.0" rx="0" fill="#1D1D26" stroke="#3a3a48" stroke-width="1.2"/>
-  <text x="309.0" y="114.3" font-size="12" fill="#E7E7EE" text-anchor="middle" font-weight="700">9</text>
-  <rect x="336.0" y="96.0" width="54.0" height="28.0" rx="0" fill="#1D1D26" stroke="#3a3a48" stroke-width="1.2"/>
-  <text x="363.0" y="114.3" font-size="12" fill="#E7E7EE" text-anchor="middle" font-weight="700">82</text>
-  <rect x="390.0" y="96.0" width="54.0" height="28.0" rx="0" fill="#1D1D26" stroke="#3a3a48" stroke-width="1.2"/>
-  <text x="417.0" y="114.3" font-size="12" fill="#E7E7EE" text-anchor="middle" font-weight="700">10</text>
-  <text x="106.0" y="114.0" font-size="10" fill="#E7E7EE" text-anchor="end">start</text>
-  <text x="468.0" y="110.0" font-size="9.5" fill="#E7E7EE" text-anchor="start">pick a pivot at random: 38</text>
-  <rect x="120.0" y="152.0" width="54.0" height="28.0" rx="0" fill="#5AC8FF42" stroke="#5AC8FF" stroke-width="1.2"/>
-  <text x="147.0" y="170.3" font-size="12" fill="#E7E7EE" text-anchor="middle" font-weight="700">10</text>
-  <rect x="174.0" y="152.0" width="54.0" height="28.0" rx="0" fill="#1D1D26" stroke="#3a3a48" stroke-width="1.2"/>
-  <text x="201.0" y="170.3" font-size="12" fill="#E7E7EE" text-anchor="middle" font-weight="700">27</text>
-  <rect x="228.0" y="152.0" width="54.0" height="28.0" rx="0" fill="#1D1D26" stroke="#3a3a48" stroke-width="1.2"/>
-  <text x="255.0" y="170.3" font-size="12" fill="#E7E7EE" text-anchor="middle" font-weight="700">43</text>
-  <rect x="282.0" y="152.0" width="54.0" height="28.0" rx="0" fill="#1D1D26" stroke="#3a3a48" stroke-width="1.2"/>
-  <text x="309.0" y="170.3" font-size="12" fill="#E7E7EE" text-anchor="middle" font-weight="700">9</text>
-  <rect x="336.0" y="152.0" width="54.0" height="28.0" rx="0" fill="#1D1D26" stroke="#3a3a48" stroke-width="1.2"/>
-  <text x="363.0" y="170.3" font-size="12" fill="#E7E7EE" text-anchor="middle" font-weight="700">82</text>
-  <rect x="390.0" y="152.0" width="54.0" height="28.0" rx="0" fill="#FFB45442" stroke="#FFB454" stroke-width="1.2"/>
-  <text x="417.0" y="170.3" font-size="12" fill="#E7E7EE" text-anchor="middle" font-weight="700">38</text>
-  <text x="106.0" y="170.0" font-size="10" fill="#E7E7EE" text-anchor="end">setup</text>
-  <text x="468.0" y="166.0" font-size="9.5" fill="#E7E7EE" text-anchor="start">swap the pivot to the end · i and j both start left</text>
-  <text x="147.0" y="145.5" font-size="11" fill="#5AC8FF" text-anchor="middle" font-weight="700">i j</text>
-  <rect x="120.0" y="208.0" width="54.0" height="28.0" rx="0" fill="#8AA0FF38" stroke="#8AA0FF" stroke-width="1.2"/>
-  <text x="147.0" y="226.3" font-size="12" fill="#E7E7EE" text-anchor="middle" font-weight="700">10</text>
-  <rect x="174.0" y="208.0" width="54.0" height="28.0" rx="0" fill="#1D1D26" stroke="#3a3a48" stroke-width="1.2"/>
-  <text x="201.0" y="226.3" font-size="12" fill="#E7E7EE" text-anchor="middle" font-weight="700">27</text>
-  <rect x="228.0" y="208.0" width="54.0" height="28.0" rx="0" fill="#1D1D26" stroke="#3a3a48" stroke-width="1.2"/>
-  <text x="255.0" y="226.3" font-size="12" fill="#E7E7EE" text-anchor="middle" font-weight="700">43</text>
-  <rect x="282.0" y="208.0" width="54.0" height="28.0" rx="0" fill="#1D1D26" stroke="#3a3a48" stroke-width="1.2"/>
-  <text x="309.0" y="226.3" font-size="12" fill="#E7E7EE" text-anchor="middle" font-weight="700">9</text>
-  <rect x="336.0" y="208.0" width="54.0" height="28.0" rx="0" fill="#1D1D26" stroke="#3a3a48" stroke-width="1.2"/>
-  <text x="363.0" y="226.3" font-size="12" fill="#E7E7EE" text-anchor="middle" font-weight="700">82</text>
-  <rect x="390.0" y="208.0" width="54.0" height="28.0" rx="0" fill="#FFB45442" stroke="#FFB454" stroke-width="1.2"/>
-  <text x="417.0" y="226.3" font-size="12" fill="#E7E7EE" text-anchor="middle" font-weight="700">38</text>
-  <text x="106.0" y="226.0" font-size="10" fill="#E7E7EE" text-anchor="end">j = 0</text>
-  <text x="468.0" y="222.0" font-size="9.5" fill="#E7E7EE" text-anchor="start">10 &lt; 38 → it belongs left of i, so i advances</text>
-  <text x="201.0" y="201.5" font-size="11" fill="#8AA0FF" text-anchor="middle" font-weight="700">i</text>
-  <text x="147.0" y="201.5" font-size="11" fill="#5AC8FF" text-anchor="middle" font-weight="700">j</text>
-  <rect x="120.0" y="264.0" width="54.0" height="28.0" rx="0" fill="#8AA0FF38" stroke="#8AA0FF" stroke-width="1.2"/>
-  <text x="147.0" y="282.3" font-size="12" fill="#E7E7EE" text-anchor="middle" font-weight="700">10</text>
-  <rect x="174.0" y="264.0" width="54.0" height="28.0" rx="0" fill="#8AA0FF38" stroke="#8AA0FF" stroke-width="1.2"/>
-  <text x="201.0" y="282.3" font-size="12" fill="#E7E7EE" text-anchor="middle" font-weight="700">27</text>
-  <rect x="228.0" y="264.0" width="54.0" height="28.0" rx="0" fill="#1D1D26" stroke="#3a3a48" stroke-width="1.2"/>
-  <text x="255.0" y="282.3" font-size="12" fill="#E7E7EE" text-anchor="middle" font-weight="700">43</text>
-  <rect x="282.0" y="264.0" width="54.0" height="28.0" rx="0" fill="#1D1D26" stroke="#3a3a48" stroke-width="1.2"/>
-  <text x="309.0" y="282.3" font-size="12" fill="#E7E7EE" text-anchor="middle" font-weight="700">9</text>
-  <rect x="336.0" y="264.0" width="54.0" height="28.0" rx="0" fill="#1D1D26" stroke="#3a3a48" stroke-width="1.2"/>
-  <text x="363.0" y="282.3" font-size="12" fill="#E7E7EE" text-anchor="middle" font-weight="700">82</text>
-  <rect x="390.0" y="264.0" width="54.0" height="28.0" rx="0" fill="#FFB45442" stroke="#FFB454" stroke-width="1.2"/>
-  <text x="417.0" y="282.3" font-size="12" fill="#E7E7EE" text-anchor="middle" font-weight="700">38</text>
-  <text x="106.0" y="282.0" font-size="10" fill="#E7E7EE" text-anchor="end">j = 1</text>
-  <text x="468.0" y="278.0" font-size="9.5" fill="#E7E7EE" text-anchor="start">27 &lt; 38 → i advances again</text>
-  <text x="255.0" y="257.5" font-size="11" fill="#8AA0FF" text-anchor="middle" font-weight="700">i</text>
-  <text x="201.0" y="257.5" font-size="11" fill="#5AC8FF" text-anchor="middle" font-weight="700">j</text>
-  <rect x="120.0" y="320.0" width="54.0" height="28.0" rx="0" fill="#8AA0FF38" stroke="#8AA0FF" stroke-width="1.2"/>
-  <text x="147.0" y="338.3" font-size="12" fill="#E7E7EE" text-anchor="middle" font-weight="700">10</text>
-  <rect x="174.0" y="320.0" width="54.0" height="28.0" rx="0" fill="#8AA0FF38" stroke="#8AA0FF" stroke-width="1.2"/>
-  <text x="201.0" y="338.3" font-size="12" fill="#E7E7EE" text-anchor="middle" font-weight="700">27</text>
-  <rect x="228.0" y="320.0" width="54.0" height="28.0" rx="0" fill="#5AC8FF42" stroke="#5AC8FF" stroke-width="1.2"/>
-  <text x="255.0" y="338.3" font-size="12" fill="#E7E7EE" text-anchor="middle" font-weight="700">43</text>
-  <rect x="282.0" y="320.0" width="54.0" height="28.0" rx="0" fill="#1D1D26" stroke="#3a3a48" stroke-width="1.2"/>
-  <text x="309.0" y="338.3" font-size="12" fill="#E7E7EE" text-anchor="middle" font-weight="700">9</text>
-  <rect x="336.0" y="320.0" width="54.0" height="28.0" rx="0" fill="#1D1D26" stroke="#3a3a48" stroke-width="1.2"/>
-  <text x="363.0" y="338.3" font-size="12" fill="#E7E7EE" text-anchor="middle" font-weight="700">82</text>
-  <rect x="390.0" y="320.0" width="54.0" height="28.0" rx="0" fill="#FFB45442" stroke="#FFB454" stroke-width="1.2"/>
-  <text x="417.0" y="338.3" font-size="12" fill="#E7E7EE" text-anchor="middle" font-weight="700">38</text>
-  <text x="106.0" y="338.0" font-size="10" fill="#E7E7EE" text-anchor="end">j = 2</text>
-  <text x="468.0" y="334.0" font-size="9.5" fill="#E7E7EE" text-anchor="start">43 &gt; 38 → leave it where it is, i stays put</text>
-  <text x="255.0" y="313.5" font-size="11" fill="#5AC8FF" text-anchor="middle" font-weight="700">i j</text>
-  <rect x="120.0" y="376.0" width="54.0" height="28.0" rx="0" fill="#8AA0FF38" stroke="#8AA0FF" stroke-width="1.2"/>
-  <text x="147.0" y="394.3" font-size="12" fill="#E7E7EE" text-anchor="middle" font-weight="700">10</text>
-  <rect x="174.0" y="376.0" width="54.0" height="28.0" rx="0" fill="#8AA0FF38" stroke="#8AA0FF" stroke-width="1.2"/>
-  <text x="201.0" y="394.3" font-size="12" fill="#E7E7EE" text-anchor="middle" font-weight="700">27</text>
-  <rect x="228.0" y="376.0" width="54.0" height="28.0" rx="0" fill="#8AA0FF38" stroke="#8AA0FF" stroke-width="1.2"/>
-  <text x="255.0" y="394.3" font-size="12" fill="#E7E7EE" text-anchor="middle" font-weight="700">9</text>
-  <rect x="282.0" y="376.0" width="54.0" height="28.0" rx="0" fill="#5AC8FF42" stroke="#5AC8FF" stroke-width="1.2"/>
-  <text x="309.0" y="394.3" font-size="12" fill="#E7E7EE" text-anchor="middle" font-weight="700">43</text>
-  <rect x="336.0" y="376.0" width="54.0" height="28.0" rx="0" fill="#1D1D26" stroke="#3a3a48" stroke-width="1.2"/>
-  <text x="363.0" y="394.3" font-size="12" fill="#E7E7EE" text-anchor="middle" font-weight="700">82</text>
-  <rect x="390.0" y="376.0" width="54.0" height="28.0" rx="0" fill="#FFB45442" stroke="#FFB454" stroke-width="1.2"/>
-  <text x="417.0" y="394.3" font-size="12" fill="#E7E7EE" text-anchor="middle" font-weight="700">38</text>
-  <text x="106.0" y="394.0" font-size="10" fill="#E7E7EE" text-anchor="end">j = 3</text>
-  <text x="468.0" y="390.0" font-size="9.5" fill="#E7E7EE" text-anchor="start">9 &lt; 38 → swap it with a[i] = 43, then i advances</text>
-  <text x="309.0" y="369.5" font-size="11" fill="#5AC8FF" text-anchor="middle" font-weight="700">i j</text>
-  <rect x="120.0" y="432.0" width="54.0" height="28.0" rx="0" fill="#8AA0FF38" stroke="#8AA0FF" stroke-width="1.2"/>
-  <text x="147.0" y="450.3" font-size="12" fill="#E7E7EE" text-anchor="middle" font-weight="700">10</text>
-  <rect x="174.0" y="432.0" width="54.0" height="28.0" rx="0" fill="#8AA0FF38" stroke="#8AA0FF" stroke-width="1.2"/>
-  <text x="201.0" y="450.3" font-size="12" fill="#E7E7EE" text-anchor="middle" font-weight="700">27</text>
-  <rect x="228.0" y="432.0" width="54.0" height="28.0" rx="0" fill="#8AA0FF38" stroke="#8AA0FF" stroke-width="1.2"/>
-  <text x="255.0" y="450.3" font-size="12" fill="#E7E7EE" text-anchor="middle" font-weight="700">9</text>
-  <rect x="282.0" y="432.0" width="54.0" height="28.0" rx="0" fill="#1D1D26" stroke="#3a3a48" stroke-width="1.2"/>
-  <text x="309.0" y="450.3" font-size="12" fill="#E7E7EE" text-anchor="middle" font-weight="700">43</text>
-  <rect x="336.0" y="432.0" width="54.0" height="28.0" rx="0" fill="#5AC8FF42" stroke="#5AC8FF" stroke-width="1.2"/>
-  <text x="363.0" y="450.3" font-size="12" fill="#E7E7EE" text-anchor="middle" font-weight="700">82</text>
-  <rect x="390.0" y="432.0" width="54.0" height="28.0" rx="0" fill="#FFB45442" stroke="#FFB454" stroke-width="1.2"/>
-  <text x="417.0" y="450.3" font-size="12" fill="#E7E7EE" text-anchor="middle" font-weight="700">38</text>
-  <text x="106.0" y="450.0" font-size="10" fill="#E7E7EE" text-anchor="end">j = 4</text>
-  <text x="468.0" y="446.0" font-size="9.5" fill="#E7E7EE" text-anchor="start">82 &gt; 38 → leave it · j has reached the pivot</text>
-  <text x="309.0" y="425.5" font-size="11" fill="#8AA0FF" text-anchor="middle" font-weight="700">i</text>
-  <text x="363.0" y="425.5" font-size="11" fill="#5AC8FF" text-anchor="middle" font-weight="700">j</text>
-  <rect x="120.0" y="488.0" width="54.0" height="28.0" rx="0" fill="#8AA0FF38" stroke="#8AA0FF" stroke-width="1.2"/>
-  <text x="147.0" y="506.3" font-size="12" fill="#E7E7EE" text-anchor="middle" font-weight="700">10</text>
-  <rect x="174.0" y="488.0" width="54.0" height="28.0" rx="0" fill="#8AA0FF38" stroke="#8AA0FF" stroke-width="1.2"/>
-  <text x="201.0" y="506.3" font-size="12" fill="#E7E7EE" text-anchor="middle" font-weight="700">27</text>
-  <rect x="228.0" y="488.0" width="54.0" height="28.0" rx="0" fill="#8AA0FF38" stroke="#8AA0FF" stroke-width="1.2"/>
-  <text x="255.0" y="506.3" font-size="12" fill="#E7E7EE" text-anchor="middle" font-weight="700">9</text>
-  <rect x="282.0" y="488.0" width="54.0" height="28.0" rx="0" fill="#FFB45442" stroke="#FFB454" stroke-width="1.2"/>
-  <text x="309.0" y="506.3" font-size="12" fill="#E7E7EE" text-anchor="middle" font-weight="700">38</text>
-  <rect x="336.0" y="488.0" width="54.0" height="28.0" rx="0" fill="#1D1D26" stroke="#3a3a48" stroke-width="1.2"/>
-  <text x="363.0" y="506.3" font-size="12" fill="#E7E7EE" text-anchor="middle" font-weight="700">82</text>
-  <rect x="390.0" y="488.0" width="54.0" height="28.0" rx="0" fill="#1D1D26" stroke="#3a3a48" stroke-width="1.2"/>
-  <text x="417.0" y="506.3" font-size="12" fill="#E7E7EE" text-anchor="middle" font-weight="700">43</text>
-  <text x="106.0" y="506.0" font-size="10" fill="#E7E7EE" text-anchor="end">place</text>
-  <text x="468.0" y="502.0" font-size="9.5" fill="#E7E7EE" text-anchor="start">swap the pivot into slot i = 3</text>
-  <text x="468.0" y="521.0" font-size="9.5" fill="#5AC8FF" text-anchor="start" font-weight="700">recurse on each side — the pivot never moves again</text>
-  <text x="309.0" y="481.5" font-size="11" fill="#8AA0FF" text-anchor="middle" font-weight="700">i</text>
-  <path d="M120.0 527.0 L120.0 534.0 L282.0 534.0 L282.0 527.0" fill="none" stroke="#8AA0FF" stroke-width="1.4"/>
-  <text x="201.0" y="551.0" font-size="9.5" fill="#8AA0FF" text-anchor="middle" font-weight="700">all &lt; 38</text>
-  <path d="M336.0 527.0 L336.0 534.0 L444.0 534.0 L444.0 527.0" fill="none" stroke="#5AC8FF" stroke-width="1.4"/>
-  <text x="390.0" y="551.0" font-size="9.5" fill="#5AC8FF" text-anchor="middle" font-weight="700">all &gt; 38</text>
-  <text x="440.0" y="578.0" font-size="10.5" fill="#E7E7EE" text-anchor="middle">one partition is O(n) and fixes one value forever · about log n levels of them when the pivot lands near the middle</text>
-  <text x="440.0" y="602.0" font-size="10.5" fill="#FFB454" text-anchor="middle">a pivot that always lands at one end gives n levels instead — that is quicksort's O(n²), and why the pivot is random</text>
-</svg>
-<figcaption>One partition, comparison by comparison. <code>i</code> is the boundary — everything to its left has been proved smaller than the pivot — and <code>j</code> is the scan. Each value <code>j</code> reads either belongs below the boundary, in which case it is swapped with <code>a[i]</code> and <code>i</code> advances, or it stays exactly where it is. When <code>j</code> reaches the pivot, one last swap drops the pivot into slot <code>i</code>, and <b>that value is now in its final position in the finished array</b> — 38 is never touched again. This is the whole of quicksort: the recursion is the same routine on the two shorter sides, and there is no combine step at all.</figcaption>
-</figure>
 
 <pre><code><span class="ln"> 1</span>  <span class="g">&quot;&quot;</span>&quot;Merge sort — the one divide-<span class="k">and</span>-conquer sort worth writing.
 <span class="ln"> 2</span>
-<span class="ln"> 3</span>  Quicksort <span class="k">is</span> concept only below: partition around a pivot, recurse on each
-<span class="ln"> 4</span>  side, average O(n log n) <span class="k">but</span> O(n^2) on an adversarial pivot. Merge sort <span class="k">is</span>
-<span class="ln"> 5</span>  the one that earns its code, because it <span class="k">is</span> how sorting works once data no
-<span class="ln"> 6</span>  longer fits <span class="k">in</span> memory on one machine.
+<span class="ln"> 3</span>  O(n log n) on every input, stable, <span class="k">and</span> the merge step <span class="k">is</span> the hook <span class="k">for</span> a
+<span class="ln"> 4</span>  whole family of LeetCode problems. It <span class="k">is</span> also how sorting works once data
+<span class="ln"> 5</span>  no longer fits <span class="k">in</span> memory on one machine: sort chunks, spill them <span class="k">as</span>
+<span class="ln"> 6</span>  sorted runs, merge the runs.
 <span class="ln"> 7</span>  <span class="g">&quot;&quot;</span>&quot;
 <span class="ln"> 8</span>  DATA = [38, 27, 43, 9, 82, 10]
 <span class="ln"> 9</span>
@@ -3165,162 +2662,17 @@
 <span class="ln">34</span>      print(<span class="g">&#x27;merge_sort :&#x27;</span>, merge_sort(DATA), merge_sort(DATA) == sorted(DATA))
 <span class="ln">35</span>      print(<span class="g">&#x27;untouched  :&#x27;</span>, DATA, <span class="g">&#x27;- merge_sort copies its input, never mutates it&#x27;</span>)</code></pre>
 
-<div class="def reveal">
-<p class="t">Quicksort — concept only, no code to memorize for a DE interview</p>
-<p style="margin:0">The diagram above is the whole mechanism: swap a random pivot to the end, walk a pointer across the rest, and swap anything smaller below a boundary that advances with it — one pass, and the pivot lands in its final position with nothing left to do. Recurse on each side and there is no combine step at all, which is what makes it in place.</p>
-<p class="ex">The bad case is not exotic: take the last element as a fixed pivot, hand it an already sorted array, and every partition splits off one item instead of half — <code>n</code> levels of <code>O(n)</code> work, so <code>O(n²)</code> on the most likely input in the world. Three defences, in increasing order of how much they impress: <b>a random pivot</b> (makes a bad split unlikely rather than impossible), <b>median-of-three</b> (sample first, middle and last, pivot on the middle value — what most C libraries do), and <b>recurse into the smaller side, loop on the larger</b>, which does not fix the time but caps the recursion depth at <code>O(log n)</code>. The production answer is that nobody ships plain quicksort: <code>std::sort</code> and <code>numpy.sort</code>'s default are <b>introsort</b> — quicksort that switches to heapsort once its recursion gets too deep, and to insertion sort on small partitions, so the worst case becomes <code>O(n log n)</code> by construction. Naming introsort is a strong signal precisely because it shows you know what each of the three algorithms was brought in to supply. Targeting a Data Platform or SWE–Data track instead (§01's tier-three signals)? Write the partition — it is also the mechanism behind quickselect and "top K", below.</p>
-</div>
-
-<div class="callout reveal">
-<p style="margin:.2em 0"><span class="t"><svg class="ico"><use href="#i-check"/></svg> The partition also answers "top K"</span></p>
-<p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">Run one partition and you know where the pivot belongs. If that index is past the <code>k</code> you want, recurse into the left side only; if it is before, recurse into the right. That is <b>quickselect</b>, and because each step discards a fraction of the array it is <code>O(n)</code> on average rather than <code>O(n log n)</code> — the k-th smallest value without sorting anything. It needs the whole array in memory and rearranges it, so for a stream, or for "top 10 by latency" over a file you are reading once, the min-heap in §11 is the better answer. Both are worth having: the heap for streams, quickselect for an array you already hold.</p>
-</div>
-
-<h3 class="reveal">Heapsort: no bad case, no extra memory</h3>
-<div class="prose reveal">
-<p>Heapsort is the algorithm that gives up nothing on paper. <code>O(n log n)</code> on every input, like merge sort. <code>O(1)</code> extra memory and in place, like quicksort. No recursion, so no stack to blow. It is also the one you are least likely to find inside a standard library, and the reason why is a genuinely useful story about what a complexity class leaves out.</p>
-<p>The structure it runs on is the heap from §11 — a binary tree stored in a flat array, where the children of index <code>i</code> sit at <code>2i+1</code> and <code>2i+2</code>. The sort is two phases: arrange the array into a max-heap, then repeatedly take the root (the largest value left), swap it to the back, and repair the heap that remains. The sorted region grows from the right, and it never needs a second array.</p>
-</div>
-
-<div class="def reveal">
-<p class="t">Heapsort — concept only, no code to memorize</p>
-<p style="margin:0">Two phases, both in place. First, arrange the array into a max-heap: starting from the last node with a child and working backwards, sift each node down until it is larger than both children — cheap at the bottom where there are many nodes, expensive at the top where there is one, and the sum comes out to <code>O(n)</code>, not <code>O(n log n)</code>. Second, repeatedly swap the root (the largest value left) to the back of the unsorted region and sift the new root down to repair the heap — <code>n</code> iterations of <code>O(log n)</code>, so the sorted region grows from the right while the live heap shrinks from the left, sharing one array. Not stable: a swap can carry the root past an equal value anywhere in the heap. <code>heapq.heapify</code> plus repeated <code>heappop</code> is the same idea in three lines, at the cost of <code>O(n)</code> for a second list.</p>
-</div>
 <div class="callout mg reveal">
-<p style="margin:.2em 0"><span class="t"><svg class="ico"><use href="#i-gauge"/></svg> Then why does nothing ship it?</span></p>
-<p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd">Because <code>O(n log n)</code> counts comparisons and hardware charges for memory access. Heapsort jumps from index <code>i</code> to <code>2i+1</code>, so on a large array almost every step is a cache miss, while merge sort and quicksort walk memory in order and get the cache line they are about to need for free. That constant factor is large enough that Timsort and introsort beat heapsort in practice on nearly every real input — and both are stable or in place in ways heapsort is not. It survives as introsort's safety net, and in code that must not allocate or must hold a <em>guaranteed</em> bound: real-time systems, kernels, embedded. <b>This is the cleanest example on the page of a case where the complexity class does not decide the winner.</b></p>
+<p style="margin:.2em 0"><span class="t"><svg class="ico"><use href="#i-check"/></svg> Where it shows up on LeetCode</span></p>
+<p style="margin:.5em 0 0;font-size:14.5px;color:#cdd0dd"><b>Sort an Array (912)</b> is the function above, verbatim. <b>Sort List (148)</b> is the same recursion on a linked list: find the middle with slow and fast pointers (§04), split, and merge by relinking nodes instead of appending. <b>Merge Two Sorted Lists (21)</b> and <b>Merge Sorted Array (88)</b> are the merge alone. <b>Merge k Sorted Lists (23)</b> is the merge generalised with a heap (§11). The interesting group counts something <em>during</em> the merge. When a value from the right half is emitted, every value still waiting in the left half is larger than it, so the count of pairs it forms is <code>len(left) - i</code> in <code>O(1)</code>. That one line is <b>Count Inversions</b>, <b>Reverse Pairs (493)</b> and <b>Count of Smaller Numbers After Self (315)</b>, all in <code>O(n log n)</code> instead of the <code>O(n²)</code> pair loop.</p>
 </div>
-
-<h3 class="reveal">Counting sort: beating <code>O(n log n)</code> by not comparing</h3>
-<div class="prose reveal">
-<p>The <code>O(n log n)</code> floor applies to algorithms that decide by comparing pairs of values. Nothing forces a sort to do that. If the key itself can be used as an <em>address</em> — a small integer — you can sort with no comparisons at all, in <code>O(n + k)</code>, where <code>k</code> is the size of the key space. Counting sort is that idea in its clearest form, and it is the one member of this family worth being able to write.</p>
-<p>It is also the family a data engineer should be quickest to recognise, because you have probably paid for one already without writing any code. A table bucketed or partitioned on a key was sorted into ordered ranges at write time, which is why an engine can skip the shuffle and the sort for a join or a window function on that key. Naming that connection is worth more in an interview than any implementation.</p>
-</div>
-
-<figure class="diagram reveal">
-<svg viewBox="0 0 880 462" role="img" aria-label="Counting sort over six events keyed by hour. The input is hour 14 event a, hour 9 event b, hour 14 event c, hour 11 event d, hour 9 event e and hour 14 event f. One pass counts two rows at hour 9, one at hour 11 and three at hour 14. A running total turns those counts into the first output slot for each hour: 0 for hour 9, 2 for hour 11 and 3 for hour 14. A second pass writes each row straight to its slot and advances that hour's cursor, which keeps rows sharing an hour in arrival order.">
-  <text x="440.0" y="26.0" font-size="11" fill="#E7E7EE" text-anchor="middle" letter-spacing="1.6">COUNTING SORT: COUNT, RUNNING TOTAL, THEN WRITE</text>
-  <text x="194.0" y="82.0" font-size="10" fill="#E7E7EE" text-anchor="end">input</text>
-  <rect x="210.0" y="62.0" width="74.0" height="32.0" rx="4" fill="#1D1D26" stroke="#3a3a48" stroke-width="1.2"/>
-  <text x="247.0" y="82.1" font-size="11.5" fill="#E7E7EE" text-anchor="middle" font-weight="700">14:a</text>
-  <rect x="284.0" y="62.0" width="74.0" height="32.0" rx="4" fill="#1D1D26" stroke="#3a3a48" stroke-width="1.2"/>
-  <text x="321.0" y="82.1" font-size="11.5" fill="#E7E7EE" text-anchor="middle" font-weight="700">9:b</text>
-  <rect x="358.0" y="62.0" width="74.0" height="32.0" rx="4" fill="#1D1D26" stroke="#3a3a48" stroke-width="1.2"/>
-  <text x="395.0" y="82.1" font-size="11.5" fill="#E7E7EE" text-anchor="middle" font-weight="700">14:c</text>
-  <rect x="432.0" y="62.0" width="74.0" height="32.0" rx="4" fill="#1D1D26" stroke="#3a3a48" stroke-width="1.2"/>
-  <text x="469.0" y="82.1" font-size="11.5" fill="#E7E7EE" text-anchor="middle" font-weight="700">11:d</text>
-  <rect x="506.0" y="62.0" width="74.0" height="32.0" rx="4" fill="#1D1D26" stroke="#3a3a48" stroke-width="1.2"/>
-  <text x="543.0" y="82.1" font-size="11.5" fill="#E7E7EE" text-anchor="middle" font-weight="700">9:e</text>
-  <rect x="580.0" y="62.0" width="74.0" height="32.0" rx="4" fill="#1D1D26" stroke="#3a3a48" stroke-width="1.2"/>
-  <text x="617.0" y="82.1" font-size="11.5" fill="#E7E7EE" text-anchor="middle" font-weight="700">14:f</text>
-  <text x="432.0" y="110.0" font-size="9.5" fill="#5AC8FF" text-anchor="middle">six rows, in the order they arrived</text>
-  <text x="194.0" y="180.0" font-size="10" fill="#E7E7EE" text-anchor="end">counts</text>
-  <text x="247.0" y="152.0" font-size="9" fill="#E7E7EE" text-anchor="middle">hour 9</text>
-  <text x="321.0" y="152.0" font-size="9" fill="#E7E7EE" text-anchor="middle">hour 10</text>
-  <text x="395.0" y="152.0" font-size="9" fill="#E7E7EE" text-anchor="middle">hour 11</text>
-  <text x="469.0" y="152.0" font-size="9" fill="#E7E7EE" text-anchor="middle">hour 12</text>
-  <text x="543.0" y="152.0" font-size="9" fill="#E7E7EE" text-anchor="middle">hour 13</text>
-  <text x="617.0" y="152.0" font-size="9" fill="#E7E7EE" text-anchor="middle">hour 14</text>
-  <rect x="210.0" y="160.0" width="74.0" height="32.0" rx="4" fill="#5AC8FF42" stroke="#5AC8FF" stroke-width="1.2"/>
-  <text x="247.0" y="180.1" font-size="11.5" fill="#E7E7EE" text-anchor="middle" font-weight="700">2</text>
-  <rect x="284.0" y="160.0" width="74.0" height="32.0" rx="4" fill="#1D1D26" stroke="#2c2c38" stroke-width="1.2"/>
-  <text x="321.0" y="180.1" font-size="11.5" fill="#E7E7EE" text-anchor="middle" font-weight="700">0</text>
-  <rect x="358.0" y="160.0" width="74.0" height="32.0" rx="4" fill="#5AC8FF42" stroke="#5AC8FF" stroke-width="1.2"/>
-  <text x="395.0" y="180.1" font-size="11.5" fill="#E7E7EE" text-anchor="middle" font-weight="700">1</text>
-  <rect x="432.0" y="160.0" width="74.0" height="32.0" rx="4" fill="#1D1D26" stroke="#2c2c38" stroke-width="1.2"/>
-  <text x="469.0" y="180.1" font-size="11.5" fill="#E7E7EE" text-anchor="middle" font-weight="700">0</text>
-  <rect x="506.0" y="160.0" width="74.0" height="32.0" rx="4" fill="#1D1D26" stroke="#2c2c38" stroke-width="1.2"/>
-  <text x="543.0" y="180.1" font-size="11.5" fill="#E7E7EE" text-anchor="middle" font-weight="700">0</text>
-  <rect x="580.0" y="160.0" width="74.0" height="32.0" rx="4" fill="#5AC8FF42" stroke="#5AC8FF" stroke-width="1.2"/>
-  <text x="617.0" y="180.1" font-size="11.5" fill="#E7E7EE" text-anchor="middle" font-weight="700">3</text>
-  <text x="432.0" y="208.0" font-size="9.5" fill="#5AC8FF" text-anchor="middle">one pass over the input · no row compared to another</text>
-  <text x="194.0" y="278.0" font-size="10" fill="#E7E7EE" text-anchor="end">starts</text>
-  <text x="247.0" y="250.0" font-size="9" fill="#E7E7EE" text-anchor="middle">hour 9</text>
-  <text x="321.0" y="250.0" font-size="9" fill="#E7E7EE" text-anchor="middle">hour 10</text>
-  <text x="395.0" y="250.0" font-size="9" fill="#E7E7EE" text-anchor="middle">hour 11</text>
-  <text x="469.0" y="250.0" font-size="9" fill="#E7E7EE" text-anchor="middle">hour 12</text>
-  <text x="543.0" y="250.0" font-size="9" fill="#E7E7EE" text-anchor="middle">hour 13</text>
-  <text x="617.0" y="250.0" font-size="9" fill="#E7E7EE" text-anchor="middle">hour 14</text>
-  <rect x="210.0" y="258.0" width="74.0" height="32.0" rx="4" fill="#1D1D26" stroke="#3a3a48" stroke-width="1.2"/>
-  <text x="247.0" y="278.1" font-size="11.5" fill="#E7E7EE" text-anchor="middle" font-weight="700">0</text>
-  <rect x="284.0" y="258.0" width="74.0" height="32.0" rx="4" fill="#1D1D26" stroke="#3a3a48" stroke-width="1.2"/>
-  <text x="321.0" y="278.1" font-size="11.5" fill="#E7E7EE" text-anchor="middle" font-weight="700">2</text>
-  <rect x="358.0" y="258.0" width="74.0" height="32.0" rx="4" fill="#1D1D26" stroke="#3a3a48" stroke-width="1.2"/>
-  <text x="395.0" y="278.1" font-size="11.5" fill="#E7E7EE" text-anchor="middle" font-weight="700">2</text>
-  <rect x="432.0" y="258.0" width="74.0" height="32.0" rx="4" fill="#1D1D26" stroke="#3a3a48" stroke-width="1.2"/>
-  <text x="469.0" y="278.1" font-size="11.5" fill="#E7E7EE" text-anchor="middle" font-weight="700">3</text>
-  <rect x="506.0" y="258.0" width="74.0" height="32.0" rx="4" fill="#1D1D26" stroke="#3a3a48" stroke-width="1.2"/>
-  <text x="543.0" y="278.1" font-size="11.5" fill="#E7E7EE" text-anchor="middle" font-weight="700">3</text>
-  <rect x="580.0" y="258.0" width="74.0" height="32.0" rx="4" fill="#1D1D26" stroke="#3a3a48" stroke-width="1.2"/>
-  <text x="617.0" y="278.1" font-size="11.5" fill="#E7E7EE" text-anchor="middle" font-weight="700">3</text>
-  <text x="432.0" y="306.0" font-size="9.5" fill="#5AC8FF" text-anchor="middle">a running total over counts — where each hour's block begins</text>
-  <text x="194.0" y="370.0" font-size="10" fill="#E7E7EE" text-anchor="end">output</text>
-  <rect x="210.0" y="350.0" width="74.0" height="32.0" rx="4" fill="#5AC8FF33" stroke="#5AC8FF" stroke-width="1.2"/>
-  <text x="247.0" y="370.1" font-size="11.5" fill="#E7E7EE" text-anchor="middle" font-weight="700">9:b</text>
-  <rect x="284.0" y="350.0" width="74.0" height="32.0" rx="4" fill="#5AC8FF33" stroke="#5AC8FF" stroke-width="1.2"/>
-  <text x="321.0" y="370.1" font-size="11.5" fill="#E7E7EE" text-anchor="middle" font-weight="700">9:e</text>
-  <rect x="358.0" y="350.0" width="74.0" height="32.0" rx="4" fill="#5AC8FF33" stroke="#5AC8FF" stroke-width="1.2"/>
-  <text x="395.0" y="370.1" font-size="11.5" fill="#E7E7EE" text-anchor="middle" font-weight="700">11:d</text>
-  <rect x="432.0" y="350.0" width="74.0" height="32.0" rx="4" fill="#5AC8FF33" stroke="#5AC8FF" stroke-width="1.2"/>
-  <text x="469.0" y="370.1" font-size="11.5" fill="#E7E7EE" text-anchor="middle" font-weight="700">14:a</text>
-  <rect x="506.0" y="350.0" width="74.0" height="32.0" rx="4" fill="#5AC8FF33" stroke="#5AC8FF" stroke-width="1.2"/>
-  <text x="543.0" y="370.1" font-size="11.5" fill="#E7E7EE" text-anchor="middle" font-weight="700">14:c</text>
-  <rect x="580.0" y="350.0" width="74.0" height="32.0" rx="4" fill="#5AC8FF33" stroke="#5AC8FF" stroke-width="1.2"/>
-  <text x="617.0" y="370.1" font-size="11.5" fill="#E7E7EE" text-anchor="middle" font-weight="700">14:f</text>
-  <text x="440.0" y="408.0" font-size="10.5" fill="#E7E7EE" text-anchor="middle">O(n + k) time and memory, where k is the size of the key range — 24 hours here, not the 3 that appear</text>
-  <text x="440.0" y="432.0" font-size="10.5" fill="#A56BFF" text-anchor="middle" font-weight="700">a, c and f stay in that order inside hour 14 — writing left to right is the whole of the stability guarantee</text>
-</svg>
-<figcaption>Counting sort in three passes over six event rows keyed by hour. The first pass counts. The second turns those counts into a running total, which gives the <em>first output slot</em> for each hour. The third walks the input again and writes each row straight into its slot, advancing that hour's cursor as it goes — and no row is ever compared with another row. Because that last pass runs left to right, the three hour-14 rows land in arrival order, which is what makes counting sort stable. The cost is <code>O(n + k)</code> in both time and memory, where <code>k</code> is the <b>range</b> of the key — 24 here, even though only three hours appear, which is also the trap: on a key like <code>user_id</code> the counts array is larger than the data.</figcaption>
-</figure>
-
-<pre><code><span class="ln"> 1</span>  <span class="g">&quot;&quot;</span>&quot;Sorting without comparing — <span class="k">and</span> the pipeline idea hiding inside it.
-<span class="ln"> 2</span>  
-<span class="ln"> 3</span>  Every sort above compares pairs of values, which <span class="k">is</span> why none of them can beat
-<span class="ln"> 4</span>  O(n log n). This one never compares: it uses the key itself <span class="k">as</span> an address. The
-<span class="ln"> 5</span>  price <span class="k">is</span> that the key has to be a small integer — which <span class="k">is</span> exactly what a
-<span class="ln"> 6</span>  status code, an hour, <span class="k">or</span> a day-of-week column already <span class="k">is</span>.
-<span class="ln"> 7</span>  <span class="g">&quot;&quot;</span>&quot;
-<span class="ln"> 8</span>  
-<span class="ln"> 9</span>  EVENTS = [(14, <span class="g">&#x27;a&#x27;</span>), (9, <span class="g">&#x27;b&#x27;</span>), (14, <span class="g">&#x27;c&#x27;</span>), (11, <span class="g">&#x27;d&#x27;</span>), (9, <span class="g">&#x27;e&#x27;</span>), (14, <span class="g">&#x27;f&#x27;</span>)]
-<span class="ln">10</span>  
-<span class="ln">11</span>  
-<span class="ln">12</span>  <span class="k">def</span> counting_sort_by(rows, key, k):
-<span class="ln">13</span>      <span class="g">&quot;&quot;</span>&quot;Rows whose key <span class="k">is</span> an int <span class="k">in</span> [0, k). O(n + k) time <span class="k">and</span> memory, stable —
-<span class="ln">14</span>      <span class="k">and</span> no comparison between two rows happens anywhere <span class="k">in</span> here.<span class="g">&quot;&quot;</span>&quot;
-<span class="ln">15</span>      counts = [0] * k
-<span class="ln">16</span>      <span class="k">for</span> row <span class="k">in</span> rows:
-<span class="ln">17</span>          counts[key(row)] += 1                 <span class="c"># how many rows carry each key</span>
-<span class="ln">18</span>      starts = [0] * k
-<span class="ln">19</span>      total = 0
-<span class="ln">20</span>      <span class="k">for</span> v <span class="k">in</span> range(k):
-<span class="ln">21</span>          starts[v] = total                     <span class="c"># where key v&#x27;s block begins</span>
-<span class="ln">22</span>          total += counts[v]                    <span class="c"># -&gt; a prefix sum over counts</span>
-<span class="ln">23</span>      out = [<span class="k">None</span>] * len(rows)
-<span class="ln">24</span>      <span class="k">for</span> row <span class="k">in</span> rows:                          <span class="c"># left to right, so the first</span>
-<span class="ln">25</span>          v = key(row)                          <span class="c"># row holding a key stays first</span>
-<span class="ln">26</span>          out[starts[v]] = row                  <span class="c"># -&gt; the sort is stable</span>
-<span class="ln">27</span>          starts[v] += 1
-<span class="ln">28</span>      <span class="k">return</span> out
-<span class="ln">29</span>  
-<span class="ln">30</span>  
-<span class="ln">31</span>  <span class="k">if</span> __name__ == <span class="g">&#x27;__main__&#x27;</span>:
-<span class="ln">32</span>      by_hour = counting_sort_by(EVENTS, <span class="k">lambda</span> r: r[0], 24)
-<span class="ln">33</span>      print(<span class="g">&#x27;by hour  :&#x27;</span>, by_hour)
-<span class="ln">34</span>      print(<span class="g">&#x27;hour 14  :&#x27;</span>, [e <span class="k">for</span> h, e <span class="k">in</span> by_hour <span class="k">if</span> h == 14],
-<span class="ln">35</span>            <span class="g">&#x27;&lt;- a, c, f: arrival order kept, so it is stable&#x27;</span>)
-<span class="ln">36</span>      print(<span class="g">&#x27;matches  :&#x27;</span>, by_hour == sorted(EVENTS, key=<span class="k">lambda</span> r: r[0]),
-<span class="ln">37</span>            <span class="g">&#x27;- same answer as a stable comparison sort, without comparing&#x27;</span>)</code></pre>
 
 <div class="fix reveal">
-<h4>The answer that lands, when they ask how you would sort it</h4>
-<p style="margin:0;font-size:14.5px"><b>"A comparison sort cannot beat <code>O(n log n)</code>, so if we need better we have to stop comparing. When the key is a small integer — a status code, an hour, a day of week — counting sort is <code>O(n + k)</code> and stable, because the key can be used as an index instead. But the version I meet most often is not code I write at all: a table bucketed or partitioned on the sort key was already put into ordered ranges at write time, so the engine can skip the shuffle and the sort entirely. That is the same trade, paid for once, at ingestion."</b></p>
+<h4>The answer that lands, when they ask which sort you would write</h4>
+<p style="margin:0;font-size:14.5px"><b>"Merge sort. It is <code>O(n log n)</code> on every input because the split is always down the middle, whatever the data looks like. It is stable because the merge takes from the left run on a tie. The price is <code>O(n)</code> extra memory for the merged output. That same merge is how an engine sorts data that does not fit in memory: it sorts chunks, spills them to disk as sorted runs, and merges the runs back."</b></p>
 </div>
 
-<div class="prose reveal">
-<p>One last piece of scope, because a reference should say what it leaves out. Shell sort, cocktail sort, gnome sort and the rest of the long tail are not here and do not need to be: they are historical variants of the quadratic three, they appear in no standard library, and no data engineering interview has ever turned on them. Radix and bucket sort are named in the <code>O(n log n)</code> floor box above and left there, because the half of them that matters to a data engineer is the data-modelling point — a partitioned table is a sort you already paid for — rather than the code. The seven above are the ones you will see named in a query plan, a library's documentation, or an interview question.</p>
-</div>
-
-<div class="cx reveal"><span>comparison sort <b>O(n log n)</b></span><span>Timsort — stable, <b>O(n)</b> on sorted input</span><span>merge <b>O(n + m)</b></span><span>sort-merge join <b>O(1)</b> memory</span><span>insertion sort <b>O(n)</b> nearly sorted</span><span>quicksort <b>worst O(n²)</b></span><span>heapsort <b>O(1)</b> memory, no bad case</span><span>counting sort <b>O(n + k)</b></span><span class="w">a large sort <b>spills to disk</b></span></div>
+<div class="cx reveal"><span>comparison sort <b>O(n log n)</b></span><span>Timsort — stable, <b>O(n)</b> on sorted input</span><span>merge <b>O(n + m)</b></span><span>sort-merge join <b>O(1)</b> memory</span><span>merge sort <b>O(n log n)</b> every input, <b>O(n)</b> memory</span><span class="w">a large sort <b>spills to disk</b></span></div>
 
 
 <p class="promptline">~/de-dsa <b>❯</b> tier 1 · lesson 6 · two containers, one silent performance bug</p>
@@ -5317,7 +4669,7 @@
 <p class="when">Skip it · know the costs and the trade-offs, use the library</p>
 <p>Writing your own hash table, balanced BST or heap from scratch is a teaching exercise, not an interview requirement — §04 covers a linked list because it is the mental model behind the call stack and behind tree nodes, not because you will build one to spec. Nobody will ask a data engineer to implement a red-black tree, and if they do, that interview is a mismatch worth noticing.</p>
 <p>What you are asked is one level up: <em>which</em> structure, <em>why</em>, and <em>what it costs</em>. Use <code>dict</code>, <code>set</code>, <code>collections.deque</code>, <code>heapq</code> and <code>bisect</code>, and be able to explain what each is doing underneath — which is what §05, §07, §11 and §03 respectively gave you.</p>
-<p class="watch"><b>The exception:</b> the <em>small</em> routines are fair game and worth being fluent in — the hash join in §05, the merge and one sort of your choosing in §06, BFS in §09, Kahn's sort in §13. Fifteen lines each, and each one explains a piece of your platform.</p>
+<p class="watch"><b>The exception:</b> the <em>small</em> routines are fair game and worth being fluent in — the hash join in §05, the merge and merge sort in §06, BFS in §09, Kahn's sort in §13. Fifteen lines each, and each one explains a piece of your platform.</p>
 </div>
 
 <div class="callout reveal">
@@ -5352,11 +4704,8 @@
 <tr><td>linked list — read node <code>k</code> / reverse</td><td><code>O(n)</code></td><td><code>O(1)</code></td><td>no random access; save <code>next</code> before overwriting it</td></tr>
 <tr><td>doubly linked — remove a held node</td><td><code>O(1)</code></td><td><code>O(1)</code></td><td>the one thing singly linked can't match</td></tr>
 <tr><td>comparison sort — <code>sorted()</code></td><td><code>O(n log n)</code></td><td><code>O(n)</code></td><td>a big sort spills to disk</td></tr>
-<tr><td>bubble / selection / insertion sort</td><td><code>O(n²)</code></td><td><code>O(1)</code></td><td>insertion sort is the only adaptive one</td></tr>
 <tr><td>merge sort</td><td><code>O(n log n)</code></td><td><code>O(n)</code></td><td>the only one that runs out of core</td></tr>
-<tr><td>quicksort</td><td><code>O(n log n)</code> avg</td><td><code>O(log n)</code> stack</td><td><b>worst case <code>O(n²)</code></b>; randomise the pivot</td></tr>
 <tr><td>heapsort</td><td><code>O(n log n)</code></td><td><code>O(1)</code></td><td>no bad case, but cache-hostile and unstable</td></tr>
-<tr><td>counting sort</td><td><code>O(n + k)</code></td><td><code>O(n + k)</code></td><td>needs small integer keys; <code>k</code> is the key <em>range</em></td></tr>
 <tr><td>merge two sorted runs</td><td><code>O(n + m)</code></td><td><code>O(n + m)</code></td><td>forgetting to drain the tail</td></tr>
 <tr><td>hash join</td><td><code>O(n + m)</code></td><td><code>O(n)</code> small side</td><td>build side must fit; skew and join explosion</td></tr>
 <tr><td>sort-merge join</td><td><code>O(n + m)</code></td><td><code>O(1)</code></td><td>needs both sides sorted on the key</td></tr>
@@ -5399,7 +4748,7 @@
 <tr><td>"reverse this chain", "walk to the Nth node"</td><td>linked list, pointer-chasing</td><td>§04</td></tr>
 <tr><td>"remove this node, given a reference to it"</td><td>doubly linked list</td><td>§04</td></tr>
 <tr><td>"latest record per key"</td><td>one pass keeping the max, or a stable sort</td><td>§06</td></tr>
-<tr><td>"write me a sort", "which sort would you use"</td><td>name the family first, then insertion / merge / counting</td><td>§06</td></tr>
+<tr><td>"write me a sort", "which sort would you use"</td><td>merge sort — stable, <code>O(n log n)</code> on every input</td><td>§06</td></tr>
 <tr><td>"validate nesting", "matching brackets", "undo"</td><td>stack</td><td>§07</td></tr>
 <tr><td>"process in arrival order", "level by level"</td><td><code>deque</code> as a queue / BFS</td><td>§07, §09</td></tr>
 <tr><td>"break this into a smaller version of itself"</td><td>recursion — base case first</td><td>§08</td></tr>
